@@ -1,31 +1,22 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
-export function useReducedMotion(): boolean {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+export function useReducedMotion() {
+  const [prm, setPrm] = useState(false)
 
   useEffect(() => {
-    // Check if we're in the browser
-    if (typeof window === 'undefined') {
-      return
-    }
+    if (typeof window === "undefined") return
 
-    // Check initial preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const update = () => setPrm(mq.matches)
 
-    // Listen for changes
-    const handleChange = (event: MediaQueryListEvent) => {
-      setPrefersReducedMotion(event.matches)
-    }
+    update()
+    mq.addEventListener?.("change", update)
+    document.documentElement.dataset.prm = mq.matches ? "1" : "0"
 
-    mediaQuery.addEventListener('change', handleChange)
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange)
-    }
+    return () => mq.removeEventListener?.("change", update)
   }, [])
 
-  return prefersReducedMotion
+  return prm
 }

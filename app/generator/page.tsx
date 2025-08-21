@@ -9,6 +9,8 @@ import { HistoryPanel } from "@/components/generator/HistoryPanel"
 import { TelemetryBadge } from "@/components/ui/TelemetryBadge"
 import { PaywallModal } from "@/components/paywall/PaywallModal"
 import { PremiumGate } from "@/lib/premium-features"
+import { Header } from "@/components/Header"
+import { SkipLink } from "@/components/SkipLink"
 import { modules } from "@/lib/modules"
 import type { SevenDConfig, GeneratedPrompt, TestResult } from "@/types/promptforge"
 
@@ -164,23 +166,27 @@ requirements: ${module.requirements}`
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <header className="border-b border-lead-gray/20 bg-black/90 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-white font-montserrat">Generezi. Testezi. Exporți.</h1>
-              <p className="text-lead-gray mt-1">7-D controlează tot. Scor ≥80 sau îl strângem.</p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-lead-gray">Plan: {currentTier.name}</div>
-              <div className="text-xs text-gold-industrial">
-                {premiumGate.getUsageStats().runs.used}/
-                {currentTier.limits.monthlyRuns === -1 ? "∞" : currentTier.limits.monthlyRuns} runs
+      <SkipLink />
+      <Header showBreadcrumbs={true} />
+      
+      <main id="main" tabIndex={-1}>
+        <section className="border-b border-lead-gray/20 bg-black/90 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-white font-montserrat">Generezi. Testezi. Exporți.</h1>
+                <p className="text-lead-gray mt-1">7-D controlează tot. Scor ≥80 sau îl strângem.</p>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-lead-gray">Plan: {currentTier.name}</div>
+                <div className="text-xs text-gold-industrial">
+                  {premiumGate.getUsageStats().runs.used}/
+                  {currentTier.limits.monthlyRuns === -1 ? "∞" : currentTier.limits.monthlyRuns} runs
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+        </section>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
@@ -258,6 +264,7 @@ requirements: ${module.requirements}`
       )}
 
       <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} trigger={paywallTrigger} />
+      </main>
     </div>
   )
 }

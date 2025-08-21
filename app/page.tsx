@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input"
 import { AnimatedCodeBlock } from "@/components/ui/animated-code-block"
 import { BrandLinterAlert } from "@/components/ui/brand-linter-alert"
 import { CyberPoeticBackground } from "@/components/background/cyber-poetic-background"
+import { SkipLink } from "@/components/SkipLink"
 import { brandLinter } from "@/lib/brand-linter"
+import { COPY } from "@/lib/copy"
 import {
   Zap,
   Crown,
@@ -133,71 +135,9 @@ Generate the optimized ${demoInput} strategy now.`
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-mono relative">
+      <SkipLink />
       <CyberPoeticBackground />
-
-      <header className="sticky top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-gray-800/50 transition-all duration-300 ease-out">
-        <div className="max-w-[1440px] mx-auto px-6">
-          <div className="flex items-center py-2 text-xs text-gray-400 border-b border-gray-800/30">
-            <Home className="w-3 h-3 mr-1" />
-            <span>Prompt-Forge™</span>
-            <ChevronRight className="w-3 h-3 mx-1" />
-            <span className="text-[#d1a954]">Cognitive OS</span>
-            <ChevronRight className="w-3 h-3 mx-1" />
-            <span>Homepage</span>
-          </div>
-
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex items-center space-x-3">
-                <div className="text-[#d1a954] font-black text-xl tracking-wider font-mono">Prompt-Forge™</div>
-                <div className="px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-xs font-mono text-green-400">
-                  FREE
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-6">
-              <nav className="hidden md:flex items-center space-x-4 text-sm font-mono">
-                <span className="text-gray-400">€29/mo</span>
-                <span className="text-gray-600">|</span>
-                 <button
-                  className="text-white font-bold tracking-wider underline cursor-pointer font-mono hover:text-[#d1a954] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                  aria-label="Navigate to Generator"
-                >
-                  GENERATOR
-                </button>
-                <button
-                  className="text-white font-bold tracking-wider underline cursor-pointer font-mono hover:text-[#d1a954] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                  aria-label="View Pricing"
-                >
-                  PRICING
-                </button>
-                <button
-                  className="text-white font-bold tracking-wider underline cursor-pointer font-mono hover:text-[#d1a954] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                  aria-label="Join Community"
-                >
-                  COMMUNITY
-                </button>
-              </nav>
-
-              <div className="flex items-center space-x-2">
-                <Button
-                  className="btn-primary px-6 py-3 font-bold text-sm font-mono transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                  aria-label="Sign up for Prompt-Forge"
-                >
-                  SIGN UP
-                </Button>
-                <Button
-                  className="btn-secondary px-6 py-3 font-bold text-sm font-mono transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
-                  aria-label="Sign in to Prompt-Forge"
-                >
-                  SIGN IN
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <button
         onClick={() => setShowExitPopup(true)}
@@ -208,7 +148,8 @@ Generate the optimized ${demoInput} strategy now.`
         FREE TRIAL
       </button>
 
-      <section className="relative overflow-hidden pt-24 min-h-screen flex items-center cyber-bg-layer-7">
+      <main id="main" tabIndex={-1}>
+        <section className="relative overflow-hidden pt-24 min-h-screen flex items-center cyber-bg-layer-7">
         <div className="max-w-[1440px] mx-auto px-6 w-full">
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 text-center">
@@ -686,6 +627,7 @@ const prompt = await generatePrompt({
           </Card>
         </div>
       )}
+      </main>
     </div>
   )
 }
