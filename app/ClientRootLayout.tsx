@@ -84,11 +84,15 @@ html {
 }
         `}</style>
       </head>
-      <body className={`${montserrat.variable} ${openSans.variable} antialiased bg-[#0a0a0a] text-zinc-200`}>
-        <ClientReady />
-        <MatrixTokens />
-        {children}
-        <Footer />
+      <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell`}>
+        <div id="bg-root" />
+        <div id="bg-overlay" />
+        <div id="app" data-layer="ui">
+          <ClientReady />
+          <MatrixTokens />
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   )
