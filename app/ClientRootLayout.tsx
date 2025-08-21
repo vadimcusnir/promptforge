@@ -3,18 +3,15 @@
 import type React from "react"
 import { Montserrat } from "next/font/google"
 import { Open_Sans } from "next/font/google"
-import { Footer } from "@/components/Footer"
-import { Header } from "@/components/Header"
-import { SkipLink } from "@/components/SkipLink"
-import { BackgroundRoot } from "@/components/background/BackgroundRoot"
+import { Footer } from "@/components/ui/footer"
 import { useFontsReady } from "@/hooks/use-fonts-ready"
+import { useRouteOverlay } from "@/hooks/use-route-overlay"
+import { QuoteFocusProvider } from "@/hooks/use-quote-focus"
 import { useEffect } from "react"
-import { usePathname } from "next/navigation"
+import MatrixTokens from "@/components/background/matrix-tokens"
 import "./globals.css"
 import "./styles/variables.css"
 import "./styles/animations.css"
-import "../styles/header-footer.css"
-import "../styles/background.css"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -31,24 +28,29 @@ const openSans = Open_Sans({
 })
 
 function ClientReady() {
-  return <ReadySetter />
+  return (
+    <>
+      <ReadySetter />
+      <RouteOverlayManager />
+    </>
+  )
+}
+
+function RouteOverlayManager() {
+  const { currentRoute } = useRouteOverlay()
+  
+  useEffect(() => {
+    console.log(`[ClientRootLayout] Route overlay manager active for: ${currentRoute}`)
+  }, [currentRoute])
+
+  return null
 }
 
 function ReadySetter() {
   const fontsReady = useFontsReady()
-  const pathname = usePathname()
-
-  // Route detection for overlay opacity control
-  const getRouteClass = (path: string) => {
-    if (path === "/" || path.startsWith("/pricing")) return "route-marketing"
-    if (path.startsWith("/generator")) return "route-generator"
-    if (path.startsWith("/dashboard")) return "route-dashboard"
-    return "route-marketing" // default
-  }
 
   useEffect(() => {
     const html = document.documentElement
-    const body = document.body
 
     const markReady = () => {
       if (!html.classList.contains("matrix-animations-ready")) {
@@ -77,46 +79,6 @@ function ReadySetter() {
     }
   }, [fontsReady])
 
-  // Route-based overlay management
-  useEffect(() => {
-    const body = document.body
-    const routeClass = getRouteClass(pathname)
-    
-    // Remove all existing route classes
-    body.classList.remove("route-marketing", "route-generator", "route-dashboard")
-    
-    // Add current route class
-    body.classList.add(routeClass)
-    
-    console.log(`[Overlay] Route changed to: ${pathname} -> ${routeClass}`)
-  }, [pathname])
-
-  // Quote focus mode management
-  useEffect(() => {
-    const body = document.body
-
-    // Listen for quote visibility events
-    const handleQuoteShow = () => {
-      body.classList.add("quote-active")
-      console.log("[Overlay] Quote active - reducing token opacity")
-    }
-
-    const handleQuoteHide = () => {
-      body.classList.remove("quote-active")
-      console.log("[Overlay] Quote inactive - restoring token opacity")
-    }
-
-    // Listen for custom events from quote components
-    document.addEventListener("quote:show", handleQuoteShow)
-    document.addEventListener("quote:hide", handleQuoteHide)
-
-    // Cleanup
-    return () => {
-      document.removeEventListener("quote:show", handleQuoteShow)
-      document.removeEventListener("quote:hide", handleQuoteHide)
-    }
-  }, [])
-
   return null
 }
 
@@ -125,9 +87,6 @@ export default function ClientRootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const pathname = usePathname()
-  const isDashboard = pathname.startsWith('/dashboard')
-  
   return (
     <html lang="en" className="dark tracking-wide leading-[1.95rem] mx-0">
       <head>
@@ -142,19 +101,16 @@ html {
 }
         `}</style>
       </head>
-      <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell ${isDashboard ? 'dashboard-layout' : ''}`}>
-        <SkipLink />
-        <BackgroundRoot isDashboard={isDashboard} />
-        
-        <div className="app-content min-h-screen flex flex-col">
-          <ClientReady />
-          <Header />
-          
-          <main id="main" className="flex-1" tabIndex={-1}>
+      <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell`}>
+        <div id="bg-root" />
+        <div id="bg-overlay" />
+        <div id="app" data-layer="ui">
+          <QuoteFocusProvider>
+            <ClientReady />
+            <MatrixTokens />
             {children}
-          </main>
-          
-          <Footer />
+            <Footer />
+          </QuoteFocusProvider>
         </div>
       </body>
     </html>

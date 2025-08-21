@@ -143,71 +143,54 @@
     z-index: 0;
   }
 
-  /* Route-Specific Overlay System */
-  :root {
-    --overlay-opacity-start: 0.2;
-    --overlay-opacity-end: 0.6;
-    --overlay-transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
   #bg-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(to bottom, 
-      rgba(0,0,0,var(--overlay-opacity-start)), 
-      rgba(0,0,0,var(--overlay-opacity-end))
-    );
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
     z-index: 1;
-    transition: var(--overlay-transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Route-specific overlay variants */
-  .route-marketing #bg-overlay {
-    --overlay-opacity-start: 0.45;
-    --overlay-opacity-end: 0.55;
+  /* Route-specific overlay opacity control */
+  #bg-overlay.route-marketing {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
   }
 
-  .route-generator #bg-overlay {
-    --overlay-opacity-start: 0.40;
-    --overlay-opacity-end: 0.48;
+  #bg-overlay.route-generator {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.40), rgba(0,0,0,0.48));
   }
 
-  .route-dashboard #bg-overlay {
-    --overlay-opacity-start: 0.28;
-    --overlay-opacity-end: 0.35;
+  #bg-overlay.route-dashboard {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.28), rgba(0,0,0,0.35));
   }
 
-  /* Quote focus mode - reduces token visibility */
-  .quote-active #bg-overlay {
-    --overlay-opacity-start: calc(var(--overlay-opacity-start) + 0.1);
-    --overlay-opacity-end: calc(var(--overlay-opacity-end) + 0.15);
+  /* Quote focus mode - reduces background intensity */
+  #bg-overlay.quote-active {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.25));
   }
 
-  .quote-active .matrix-token {
-    opacity: 0.35 !important;
-    transition: opacity 0.4s ease-out;
+  #bg-overlay.route-marketing.quote-active {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.40));
   }
 
-  /* Enhanced quote focus effects */
-  .quote-active .cyber-bg-layer-3,
-  .quote-active .cyber-bg-layer-4 {
-    opacity: 0.35;
-    transition: opacity 0.4s ease-out;
+  #bg-overlay.route-generator.quote-active {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.35));
   }
 
-  .quote-active .cyber-bg-layer-5 {
-    opacity: 1;
-    transition: opacity 0.3s ease-out;
+  #bg-overlay.route-dashboard.quote-active {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.25));
   }
 
   /* Noise texture variant - can be enabled with additional class */
   #bg-overlay.with-noise {
-    background: url('/noise.png'), 
-      linear-gradient(to bottom, 
-        rgba(0,0,0,var(--overlay-opacity-start)), 
-        rgba(0,0,0,var(--overlay-opacity-end))
-      );
+    background: url('/noise.png'), linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
     background-blend-mode: overlay;
+  }
+
+  /* Matrix tokens opacity control for quote focus */
+  .matrix-tokens.quote-focus {
+    opacity: 0.65; /* ~35% reduction from normal opacity */
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   #app {
