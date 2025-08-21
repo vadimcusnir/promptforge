@@ -1,0 +1,111 @@
+/* Background System - 3-Level Z-Index Structure */
+
+/* Level 0: Background Root - Grid, Figures, Tokens, Quotes */
+#bg-root {
+  z-index: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: none !important;
+  will-change: auto;
+}
+
+/* Level 1: Background Overlay - Subtle darkening */
+#bg-overlay {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  transform: none !important;
+}
+
+/* Level 2: Application UI/Content */
+.app-content {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+}
+
+/* Ensure no transforms on background ancestors */
+#bg-root,
+#bg-root *,
+#bg-overlay {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Performance optimizations for background elements */
+.matrix-token,
+.geometric-figure,
+.narrative-quote {
+  backface-visibility: hidden;
+  transform-style: flat;
+  contain: layout style paint;
+}
+
+/* Reduced motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  #bg-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .matrix-token {
+    transform: none !important;
+  }
+  
+  .geometric-figure {
+    transform: none !important;
+  }
+  
+  .narrative-quote {
+    opacity: 0 !important; /* Hide quotes completely */
+  }
+}
+
+/* Dashboard-specific optimizations */
+.dashboard-layout #bg-root .geometric-figure,
+.dashboard-layout #bg-root .narrative-quote {
+  display: none;
+}
+
+.dashboard-layout #bg-root .matrix-token {
+  animation-duration: 30s; /* Slower animations */
+  opacity: 0.2; /* More subtle */
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .matrix-token {
+    font-size: 0.75rem;
+  }
+  
+  .narrative-quote {
+    max-width: 250px;
+    font-size: 0.875rem;
+  }
+  
+  .geometric-figure {
+    opacity: 0.1; /* More subtle on mobile */
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  #bg-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .matrix-token,
+  .narrative-quote {
+    opacity: 0.3;
+  }
+}

@@ -61,6 +61,9 @@ export const matrixTokens = [
   { id: 60, text: "PRECISION" },
 ]
 
+// Array of token strings for background animation
+export const MATRIX_TOKENS = matrixTokens.map(token => token.text)
+
 export type MatrixToken = {
   id: number
   text: string
