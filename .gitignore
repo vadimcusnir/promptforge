@@ -235,7 +235,6 @@ config/secrets.json
 # Build artifacts
 build/
 dist/
-lib/
 
 # SBOM files (generated)
 sbom.json
