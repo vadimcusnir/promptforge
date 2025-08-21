@@ -1,0 +1,95 @@
+"use client"
+
+import type React from "react"
+import { Montserrat } from "next/font/google"
+import { Open_Sans } from "next/font/google"
+import { Footer } from "@/components/ui/footer"
+import { useFontsReady } from "@/hooks/use-fonts-ready"
+import { useEffect } from "react"
+import MatrixTokens from "@/components/background/matrix-tokens"
+import "./globals.css"
+import "./styles/variables.css"
+import "./styles/animations.css"
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-montserrat",
+  weight: ["400", "600", "700", "900"],
+})
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-open-sans",
+  weight: ["400", "500", "600"],
+})
+
+function ClientReady() {
+  return <ReadySetter />
+}
+
+function ReadySetter() {
+  const fontsReady = useFontsReady()
+
+  useEffect(() => {
+    const html = document.documentElement
+
+    const markReady = () => {
+      if (!html.classList.contains("matrix-animations-ready")) {
+        html.classList.add("matrix-animations-ready")
+        document.dispatchEvent(new CustomEvent("matrix:ready"))
+        console.log("[v0] matrix-animations-ready class added via markReady")
+      }
+    }
+
+    const readyNow = () => requestAnimationFrame(markReady)
+
+    if (fontsReady) {
+      console.log("[v0] Fonts ready, initiating matrix ready sequence")
+
+      // Immediate attempt
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        readyNow()
+      } else {
+        window.addEventListener("DOMContentLoaded", readyNow, { once: true })
+      }
+
+      // Self-healing timeouts to handle race conditions
+      setTimeout(markReady, 0)
+      setTimeout(markReady, 100)
+      setTimeout(markReady, 300)
+    }
+  }, [fontsReady])
+
+  return null
+}
+
+export default function ClientRootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en" className="dark tracking-wide leading-[1.95rem] mx-0">
+      <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+        <link rel="shortcut icon" href="/favicon-32x32.png" />
+        <style>{`
+html {
+  font-family: ${openSans.style.fontFamily};
+  --font-sans: ${openSans.variable};
+  --font-heading: ${montserrat.variable};
+}
+        `}</style>
+      </head>
+      <body className={`${montserrat.variable} ${openSans.variable} antialiased bg-[#0a0a0a] text-zinc-200`}>
+        <ClientReady />
+        <MatrixTokens />
+        {children}
+        <Footer />
+      </body>
+    </html>
+  )
+}

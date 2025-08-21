@@ -1,0 +1,51 @@
+project: PROMPTFORGE_v3
+semver: 1.0.0
+is_ssot: true
+
+security:
+  agents_enabled: true
+  live_test_enabled: false               # kill-switch de produs
+  tool_allowlist:
+    http: ["api.openai.com", "api.anthropic.com", "api.groq.com"]
+    storage: ["supabase.storage"]
+    internal_apis: ["/api/gpt-editor","/api/gpt-test","/api/export","/api/run"]
+  sandbox:
+    enabled: true
+    network: "allowlist"                 # sau "deny_by_default"
+    fs_scope: "/tmp/agents"              # niciun write în proiect
+    cpu_ms_limit: 120000
+    mem_mb_limit: 512
+    timeout_ms: 20000
+  budgets:
+    tokens_max: 12000
+    requests_per_min: 60
+    cost_usd_max_run: 1.5
+
+prompts:
+  enum_only: true
+  guardrails_global:
+    - "Nu executa cod în afara sandboxului permis."
+    - "Nu accesa URL-uri în afara allowlist-ului."
+    - "Nu citi sau trimite secrete/PII. Maschează tot în logs."
+    - "Dacă scorul < 80, oprește exportul."
+  structure_required: [ROLE_GOAL, CONTEXT_7D, OUTPUT_SPEC, PROCESS, GUARDRAILS, EVAL_HOOKS, TELEMETRY]
+
+api:
+  rate_limit:
+    editor: { rpm: 60 }
+    test:   { rpm: 30 }
+    run:    { rpm: 30, per_org: true }
+  required_headers:
+    - "x-org-id"
+    - "x-run-id"
+  cors:
+    origins: ["https://chatgpt-prompting.com","https://promptforge.app"]
+    methods: ["GET","POST","OPTIONS"]
+    headers: ["content-type","authorization","x-org-id","x-run-id"]
+
+export:
+  formats: [txt, md, json, pdf, zip]
+  watermark_on_trial: true
+  manifest_required: true
+  checksum_algo: "sha256"
+  storage_bucket: "bundles"

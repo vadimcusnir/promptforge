@@ -1,0 +1,428 @@
+
+
+
+
+
+promptforge/
+├─ app/
+│  ├─ layout.tsx
+│  ├─ page.tsx                       # Landing: H1 „50 module. 7-D Parameter Engine. Export bundle.”
+│  ├─ generator/
+│  │  └─ page.tsx                    # Editor + Test (gated) + Export bar
+│  ├─ pricing/
+│  │  └─ page.tsx                    # Planuri + feature matrix + CTA Stripe
+│  ├─ dashboard/
+│  │  └─ page.tsx                    # Istoric rulari + bundles + re-run
+│  ├─ docs/
+│  │  └─ api/
+│  │     └─ page.tsx                 # API docs + link la /swagger + /openapi.json
+│  ├─ coming-soon/
+│  │  └─ page.tsx                    # Fallback (SSR off pentru background)
+│  ├─ sitemap.ts
+│  ├─ robots.ts
+│  ├─ opengraph-image.tsx            # OG dinamic pentru / și rute cheie
+│  └─ api/
+│     ├─ gpt-editor/route.ts         # POST: tighten prompt (no gating)
+│     ├─ gpt-test/route.ts           # POST: live test + rubric (gated canUseGptTestReal)
+│     ├─ export/
+│     │  └─ bundle/route.ts          # POST: export md/pdf/json (+zip Ent) + manifest + checksum
+│     ├─ run/
+│     │  └─ [moduleId]/route.ts      # POST: Enterprise API (API key + rate-limit org)
+│     ├─ stripe/
+│     │  └─ webhook/route.ts         # Stripe webhooks → subscriptions + entitlements
+│     ├─ telemetry/
+│     │  └─ vitals/route.ts          # Web Vitals + KPIs (fără PII)
+│     └─ openapi/route.ts            # (opțional) servire dinamică a OpenAPI; altfel în /public/openapi.json
+│
+├─ components/
+│  ├─ Header.tsx                     # Nav + CTA
+│  ├─ Footer.tsx
+│  ├─ Badge.tsx
+│  ├─ Button.tsx
+│  ├─ Card.tsx
+│  ├─ PaywallModal.tsx               # data-gate="pro|ent|api|zip|cloud"
+│  ├─ ExportBar.tsx                  # Butoane export + gating vizibil
+│  ├─ ScoreBadge.tsx                 # PASS/FAIL/Partial + breakdown
+│  ├─ TelemetryBadge.tsx             # run_id + score + durată
+│  ├─ PricingTable.tsx               # Planuri + entitlements
+│  ├─ BackgroundRoot.tsx             # "use client" + portal
+│  ├─ background/
+│  │  ├─ LayerGrid.tsx
+│  │  ├─ LayerTokens.tsx
+│  │  ├─ LayerFigures.tsx
+│  │  └─ LayerQuotes.tsx
+│  └─ generator/
+│     ├─ ModuleSelector.tsx
+│     ├─ SevenDControls.tsx          # 7-D cu enum-only + fallback per domain
+│     ├─ PromptEditor.tsx
+│     ├─ LiveTestPanel.tsx
+│     └─ ResultsViewer.tsx
+│
+├─ lib/
+│  ├─ config.ts                      # Env safe-parse (Stripe, Supabase, site URL)
+│  ├─ sevenD.ts                      # Enums CORE-25 + normalize7D() + signature_7d
+│  ├─ rulebook.ts                    # STANDARD_SECTIONS + DoR/DoD validators
+│  ├─ modules.ts                     # Catalog M01–M50 (id, name, vector, spec tags)
+│  ├─ gating.ts                      # withEntitlementGate(flag) + UI helpers
+│  ├─ rateLimiter.ts                 # per-org /api/run limit
+│  ├─ simulate.ts                    # simulateGptResponse(seed) (Free)
+│  ├─ scoring.ts                     # rubric + tighten-once
+│  ├─ exports.ts                     # md/pdf/json + manifest + checksum + zip
+│  ├─ stripe.ts                      # checkout URLs + webhooks mapping → flags
+│  ├─ supabase.ts                    # client + RLS helpers
+│  ├─ telemetry.ts                   # logEvent() (fără PII)
+│  └─ types.ts
+│
+├─ data/
+│  ├─ tokens.json                    # 100 termeni (BG tokens)
+│  └─ quotes.json                    # 20 citate (≤140c)
+│
+├─ public/
+│  ├─ openapi.json                   # OpenAPI static (alternativ la /app/api/openapi)
+│  ├─ favicon.ico
+│  ├─ fonts/
+│  │  └─ …                           # fonturi locale (license-safe)
+│  ├─ og/
+│  │  ├─ landing.png
+│  │  ├─ generator.png
+│  │  └─ pricing.png
+│  ├─ press/
+│  │  ├─ press-kit.pdf               # 1-pager + wordmark + monogram
+│  │  ├─ logo-wordmark.svg
+│  │  └─ logo-monogram.svg
+│  ├─ demo-bundles/                  # 3 bundle-uri demo pentru Landing
+│  │  ├─ M12_simulated_bundle.zip
+│  │  ├─ M13_simulated_bundle.zip
+│  │  └─ M01_simulated_bundle.zip
+│  └─ anim/
+│     ├─ A01_hourglass.svg
+│     ├─ A02_bleeding_hours.svg
+│     ├─ A03_7led_ring.svg
+│     ├─ A04_before_after_flip.svg
+│     ├─ A05_start_the_forge.svg
+│     ├─ A06_grid_pulse.svg
+│     ├─ A07_vector_wave.svg
+│     ├─ A08_token_spark.svg
+│     ├─ A09_link_orbit.svg
+│     ├─ A10_cursor_blink.svg
+│     ├─ A11_bracket_expand.svg
+│     ├─ A12_bolt_minimal.svg
+│     ├─ A13_triangle_scan.svg
+│     ├─ A14_square_shift.svg
+│     ├─ A15_circle_breathe.svg
+│     ├─ A16_double_helix_mini.svg
+│     ├─ A17_dot_matrix.svg
+│     ├─ A18_path_loader.svg
+│     ├─ A19_cut_mark.svg
+│     ├─ A20_sigil_lambda.svg
+│     ├─ A21_hash_spin.svg
+│     ├─ A22_arrow_chase.svg
+│     ├─ A23_brace_morph.svg
+│     ├─ A24_quote_mark.svg
+│     ├─ A25_chain_link.svg
+│     ├─ A26_check_glow.svg
+│     ├─ A27_x_snap.svg
+│     ├─ A28_sync.svg
+│     ├─ A29_play_pulse.svg
+│     ├─ A30_pause_equal.svg
+│     ├─ A31_record_dot.svg
+│     ├─ A32_eye_scan.svg
+│     ├─ A33_key_turn.svg
+│     ├─ A34_lock_pulse.svg
+│     ├─ A35_unlock.svg
+│     ├─ A36_shield_guard.svg
+│     ├─ A37_fire_min.svg
+│     ├─ A38_drop_min.svg
+│     ├─ A39_clock_sweep.svg
+│     ├─ A40_compass.svg
+│     ├─ A41_target.svg
+│     ├─ A42_radar.svg
+│     ├─ A43_wifi.svg
+│     ├─ A44_battery.svg
+│     ├─ A45_cpu.svg
+│     ├─ A46_memory.svg
+│     ├─ A47_gpu.svg
+│     ├─ A48_cloud_edge.svg
+│     ├─ A49_shard.svg
+│     ├─ A50_zip.svg
+│     ├─ A51_json_braces.svg
+│     ├─ A52_pdf_mark.svg
+│     ├─ A53_md_tilde.svg
+│     ├─ A54_txt_line.svg
+│     ├─ A55_api_key.svg
+│     ├─ A56_rate_limit.svg
+│     ├─ A57_retry.svg
+│     ├─ A58_backoff.svg
+│     ├─ A59_score_meter.svg
+│     ├─ A60_pass_badge.svg
+│     ├─ A61_fail_badge.svg
+│     ├─ A62_partial_badge.svg
+│     ├─ A63_entropy.svg
+│     ├─ A64_vector_db.svg
+│     ├─ A65_chunk.svg
+│     ├─ A66_overlap.svg
+│     ├─ A67_search.svg
+│     ├─ A68_compare.svg
+│     ├─ A69_diff.svg
+│     ├─ A70_guard.svg
+│     ├─ A71_mask.svg
+│     ├─ A72_clip.svg
+│     ├─ A73_pathfinder.svg
+│     ├─ A74_glitch.svg
+│     └─ A75_signal.svg
+│
+├─ styles/
+│  ├─ globals.css                    # Reset + tokens + theming
+│  └─ animations.css                 # Keyframes (respectă prefers-reduced-motion)
+│
+├─ db/
+│  ├─ schema.sql                     # orgs, users, org_members, runs, prompt_scores, bundles, entitlements, api_keys…
+│  ├─ migrations/                    # migrații versionate
+│  └─ seeds.sql                      # M01–M50, plans, flags, demo bundles
+│
+├─ .github/
+│  └─ workflows/
+│     ├─ pr.yml                      # lint + typecheck + drift + e2e
+│     ├─ lighthouse-ci.yml
+│     └─ release.yml                 # supabase db push + vercel --prod
+│
+├─ cursor/
+│  ├─ init                           # SSOT pentru agentul Cursor (ordine fișiere forge_v3_*)
+│  ├─ agent.ts                       # reguli de neabătut + referință la /cursor/init
+│  └─ docs/
+│     ├─ coming_soon/
+│     ├─ industry_packs_bundle/
+│     ├─ licensing/
+│     └─ supabase_migrations/
+│
+├─ docs/
+│  ├─ 03_api_routes_gating.md
+│  ├─ 04_animations_backgrounds.md
+│  ├─ 05_pricing_stripe_entitlements.md
+│  └─ 06_launch_ops_ci_qa.md
+│
+├─ ruleset.yml                       # SSOT: 7-D CORE-25 + fallback per domain + DoR/DoD + export bundle + telemetry
+├─ vercel.json
+├─ next.config.mjs
+├─ tailwind.config.ts
+├─ postcss.config.js
+├─ tsconfig.json
+├─ eslint.config.mjs
+├─ package.json
+├─ pnpm-lock.yaml
+├─ lighthouserc.json
+├─ playwright.config.ts
+├─ tests/
+│  ├─ e2e/
+│  │  ├─ generator.gated.spec.ts
+│  │  ├─ export.bundle.spec.ts
+│  │  └─ reduce-motion.spec.ts
+│  └─ unit/
+│     ├─ exports.checksum.spec.ts
+│     └─ sevenD.normalize.spec.ts
+├─ scripts/
+│  ├─ seed.ts                        # seed DB + demo bundles
+│  ├─ build-openapi.ts               # generează public/openapi.json din surse TS
+│  └─ verify-determinism.ts          # test local bundle determinist
+├─ .env.example
+├─ LICENSE
+└─ README.md
+
+
+
+
+
+
+
+
+/                                # Landing (H1: 50 module, 7-D Engine, bundle export)
+/generator                       # Editor + Test + Export (indexabil)
+/pricing                         # Planuri + ancore: #pro, #enterprise
+/docs/api                        # API docs (indexabil)
+/modules                         # Hub M01–M50
+/modules/m01-ai-idei-sopforge    # Pagină modul (una per modul)
+/packs                           # Hub vertical packs
+/packs/fintech                   # Pack page (FinTech)
+/packs/education                 # Pack page (Edu)
+/packs/ecommerce                 # Pack page (E-com)
+/use-cases                       # Hub “Use Cases” (CORE-25)
+/use-cases/fintech               # 1 pagină/industry (mapată 1:1 la CORE-25)
+/7d-parameter-engine             # Explică 7-D (cornerstone)
+/bundle-export                   # Explică manifest + checksum + zip
+/changelog                       # Release notes (indexabil)
+/blog                            # (opțional) cluster educațional
+/blog/{yyyy}/{mm}/{slug}         # Articol
+/faq                             # întrebări frecvente
+/legal/terms                     # ToS
+/legal/privacy                   # Privacy
+/legal/dpa                       # DPA (Enterprise)
+
+
+
+
+
+
+2) Reguli slugs & canonical
+
+Construiți slug-uri: {id-lower}-{3-6-cuvinte-relevante} pentru module (m12-evaluator-score-engine).
+
+Elimină stopwords. Fără diacritice în slug.
+
+Canonical unic per conținut:
+
+/generator?module=M12 → canonical către /generator (parametrii doar pentru pre-fill, nu pentru indexare).
+
+UTM, ref, ab → canonical la ruta fără parametri.
+
+Alege o singură politică: cu slash la final sau fără. Setează 301 pentru cealaltă.
+
+3) Hartă de linking intern (hub → spoke → CTA)
+
+Hub principal: /modules → link către toate paginile modul (M01–M50).
+
+Spoke: fiecare /modules/{slug}:
+
+link în primul ecran către /generator?module=Mxx (rel=“follow”, canonical rămâne la /generator).
+
+link spre /pricing#pro (pentru Run Live) și /pricing#enterprise (pentru ZIP/API).
+
+breadcrumb: Home > Modules > Mxx.
+
+Cluster vertical: /packs/{vertical} → link spre 3–5 module recomandate + /use-cases/{vertical}.
+
+Cornerstones:
+
+/7d-parameter-engine și /bundle-export primesc link din header/footer + din toate paginile de modul.
+
+Blog → Produs: fiecare articol din /blog/... conține 2–3 link-uri contextuale către module/7-D/Generator.
+
+Footer: către /modules, /packs, /use-cases, /pricing, /docs/api, /bundle-export, /7d-parameter-engine.
+
+Adâncime de click: orice pagină critică ≤2 click-uri de la /.
+
+4) Breadcrumbs, schema & OG
+Breadcrumbs (JSON-LD, pe toate paginile secundare)
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://chatgpt-prompting.com/"},
+    {"@type":"ListItem","position":2,"name":"Modules","item":"https://chatgpt-prompting.com/modules"},
+    {"@type":"ListItem","position":3,"name":"M12 — Evaluator Score Engine","item":"https://chatgpt-prompting.com/modules/m12-evaluator-score-engine"}
+  ]
+}
+
+Tipuri Schema
+
+/modules/* → SoftwareApplication + TechArticle (hibrid acceptabil dacă partea de ghid e consistentă).
+
+/docs/api → TechArticle.
+
+/pricing → OfferCatalog + Product (Pro/Enterprise).
+
+/packs/* → Product cu isRelatedTo modulele sugerate.
+
+5) Robots & sitemap (split logic)
+
+robots.ts
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /coming-soon
+Sitemap: https://chatgpt-prompting.com/sitemap.xml
+
+
+Sitemap master: împarte în 4 sitemaps pentru scalare:
+
+/sitemap.xml                       # index → listează cele de mai jos
+/sitemap-core.xml                  # /, /generator, /pricing, /docs/api, /7d-parameter-engine, /bundle-export, /packs, /modules, /use-cases
+/sitemap-modules.xml               # M01–M50
+/sitemap-packs.xml                 # fintech, education, ecommerce
+/sitemap-blog.xml                  # articole (dacă activezi blogul)
+
+6) Conținut minim per tip de pagină (pentru E-E-A-T & UX)
+
+/modules/{slug}:
+
+H1 cu numele modulului, intro 50–80c.
+
+Secțiuni: “Ce rezolvă”, “Cum rulezi în 60s”, “Scoring & Telemetrie”, “Export bundle (manifest + checksum)”.
+
+CTA primar: “Open in Generator” → /generator?module=Mxx.
+
+FAQ 3–5 întrebări specifice.
+
+Internal links: către /7d-parameter-engine, /bundle-export, /pricing#pro|#enterprise.
+
+/packs/{vertical}: problem-solution per industrie, 3 module recomandate, lints/compliance listate, CTA spre /pricing.
+
+/use-cases/{industry}: 3 scenarii concrete, 2 screenshot-uri (optimizate), link către 2–4 module.
+
+7) Ancore utile (gating “momente aha”)
+
+/pricing#pro → targetează buton “Run Live (Pro)”.
+
+/pricing#enterprise → targetează “ZIP + API + Seats”.
+
+/bundle-export#manifest și #checksum pentru deep-link din UI după export.
+
+/docs/api#run-endpoint pentru link direct din generator (tab API).
+
+8) Noindex/Canonical pentru pagini sensibile
+
+/dashboard → <meta name="robots" content="noindex,nofollow">.
+
+/generator?* → <link rel="canonical" href="/generator">.
+
+/coming-soon după lansare → 410 (Gone) + elimină din sitemap.
+
+Toate /api/* → header X-Robots-Tag: noindex.
+
+9) Redirect map (301)
+
+http → https (HSTS după confirmare).
+
+www → apex (sau invers, alege o singură versiune).
+
+Trailing slash policy: /path/ → /path (sau invers) global, cu 301.
+
+Vechi /docs generice → /docs/api.
+
+Orice aliasuri modul vechi → noul /modules/{id-slug}.
+
+10) Ancore de text (evită generice)
+
+Folosește ancore descriptive:
+
+“Vezi scor real (7-D Parameter Engine)” → /generator
+
+“Export bundle (manifest + checksum)” → /bundle-export
+
+“50 module de prompt engineering” → /modules
+
+“API: rulează module programatic” → /docs/api
+
+11) Măsurători & guardrails SEO
+
+Titlu ≤60c, meta ≤155c; include “50 module”, “7-D Parameter Engine”, “bundle export” în /.
+
+OG per pagină (imagine 1200×630 optimizată, unică).
+
+Timp de răspuns TTFB < 500ms pe pagini statice (ISR).
+
+Link depth ≤3 către orice modul.
+
+2–4 link-uri interne noi din fiecare post de blog către produse.
+
+12) Implementare rapidă (Next 14)
+
+Sitemap: app/sitemap.ts generează split-urile (modules/packs/blog).
+
+Canonical: în metadata per pagină; pentru /generator setează canonical fix.
+
+Breadcrumbs: componentă <JsonLdBreadcrumbs items=[...] />.
+
+Noindex: middleware pentru /api/* cu X-Robots-Tag: noindex.
+
