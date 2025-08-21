@@ -5,7 +5,8 @@ import { Montserrat } from "next/font/google"
 import { Open_Sans } from "next/font/google"
 import { Footer } from "@/components/ui/footer"
 import { useFontsReady } from "@/hooks/use-fonts-ready"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import MatrixTokens from "@/components/background/matrix-tokens"
 import "./globals.css"
 import "./styles/variables.css"
@@ -31,9 +32,19 @@ function ClientReady() {
 
 function ReadySetter() {
   const fontsReady = useFontsReady()
+  const pathname = usePathname()
+
+  // Route detection for overlay opacity control
+  const getRouteClass = (path: string) => {
+    if (path === "/" || path.startsWith("/pricing")) return "route-marketing"
+    if (path.startsWith("/generator")) return "route-generator"
+    if (path.startsWith("/dashboard")) return "route-dashboard"
+    return "route-marketing" // default
+  }
 
   useEffect(() => {
     const html = document.documentElement
+    const body = document.body
 
     const markReady = () => {
       if (!html.classList.contains("matrix-animations-ready")) {
@@ -61,6 +72,46 @@ function ReadySetter() {
       setTimeout(markReady, 300)
     }
   }, [fontsReady])
+
+  // Route-based overlay management
+  useEffect(() => {
+    const body = document.body
+    const routeClass = getRouteClass(pathname)
+    
+    // Remove all existing route classes
+    body.classList.remove("route-marketing", "route-generator", "route-dashboard")
+    
+    // Add current route class
+    body.classList.add(routeClass)
+    
+    console.log(`[Overlay] Route changed to: ${pathname} -> ${routeClass}`)
+  }, [pathname])
+
+  // Quote focus mode management
+  useEffect(() => {
+    const body = document.body
+
+    // Listen for quote visibility events
+    const handleQuoteShow = () => {
+      body.classList.add("quote-active")
+      console.log("[Overlay] Quote active - reducing token opacity")
+    }
+
+    const handleQuoteHide = () => {
+      body.classList.remove("quote-active")
+      console.log("[Overlay] Quote inactive - restoring token opacity")
+    }
+
+    // Listen for custom events from quote components
+    document.addEventListener("quote:show", handleQuoteShow)
+    document.addEventListener("quote:hide", handleQuoteHide)
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("quote:show", handleQuoteShow)
+      document.removeEventListener("quote:hide", handleQuoteHide)
+    }
+  }, [])
 
   return null
 }
