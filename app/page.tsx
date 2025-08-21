@@ -157,7 +157,7 @@ Generate the optimized ${demoInput} strategy now.`
             </div>
 
             <div className="flex items-center space-x-6">
-              <div className="hidden md:flex items-center space-x-4 text-sm font-mono">
+              <nav className="hidden md:flex items-center space-x-4 text-sm font-mono">
                 <span className="text-gray-400">€29/mo</span>
                 <span className="text-gray-600">|</span>
                  <button
