@@ -1,0 +1,57 @@
+---
+description: Standardul de bază al proiectului PROMPTFORGE™ v3 (stil, stack, convenții).
+globs:
+alwaysApply: true
+---
+
+# 00-foundation.mdc — PROMPTFORGE™ v3 Foundation
+
+## Tip proiect
+- Next.js + TypeScript, App Router, API Routes
+- UI compact PROMPTFORGE v3 design system
+- Supabase backend (Auth + DB + Storage + Edge Functions)
+- Stripe pentru billing și subscription management
+
+## Principii de cod
+- Lint strict, tipare clare, fără magie
+- Zod pentru validare API și formuri
+- Error-first: toate funcțiile returnează Result<T, Error>
+- Idempotent: toate operațiile pot fi reluate fără efecte adverse
+
+## Arhitectură modulară
+- Construcție pe module M01–M50 (nume + contract + handler + output KPI)
+- Fiecare modul = endpoint POST /api/run/{moduleId}
+- Contract standard: input (7D params) → process → output + telemetry
+
+## Export & Artefacte
+- Toate prompturile = artefacte exportabile (txt/md/json/pdf)
+- Bundle system cu checksum SHA256 și manifest semnat
+- Telemetrie obligatorie per run (tokens, cost, scoruri, policy hits)
+
+## Guardrails fundamentale
+- Nu inventezi date financiare sau medicale
+- Citezi surse în domenii reglementate
+- Blochezi promisiuni nerealiste
+- Logging obligatoriu pentru audit și compliance
+
+## Stack tehnic
+- Database: Supabase PostgreSQL cu RLS strict
+- Auth: Supabase Auth cu JWT claims (org_id)
+- Storage: Supabase Storage pentru bundle-uri și artefacte
+- Payments: Stripe Checkout + webhooks pentru sincronizare entitlements
+- AI: OpenAI GPT-4/5 cu retry logic și cost tracking
+
+## Convenții fișiere
+- /api/run/{moduleId} pentru module M01-M50
+- /api/gpt-* pentru editor și test engine
+- /api/export pentru bundle generation
+- /api/stripe pentru webhook handling
+- /lib pentru logică business reutilizabilă
+- /components pentru UI modulară
+
+## Environment & Security
+- .env.local obligatoriu pentru development
+- Toate cheile API în environment variables
+- CORS locked pentru production
+- Validare Zod pe toate endpoint-urile
+- Rate limiting pe API-uri publice

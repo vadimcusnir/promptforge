@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // Types for entitlements
 export interface UserEntitlements {
   canUseAllModules: boolean;
@@ -173,7 +173,12 @@ export const DEFAULT_PILOT_ENTITLEMENTS: UserEntitlements = {
   hasAPI: false,
   hasWhiteLabel: false,
   hasSeatsGT1: false,
-
+  hasExportDesigner: false,
+  hasFinTechPack: false,
+  hasEduPack: false,
+  hasIndustryTemplates: false,
+  maxRunsPerDay: 10,
+  maxSeats: 1,
 };
 
 /**
@@ -188,6 +193,7 @@ export function useEntitlement(orgId: string, feature: keyof UserEntitlements): 
 /**
  * Context provider for entitlements (optional, for global state)
  */
+import { createContext, useContext, ReactNode } from 'react';
 
 interface EntitlementsContextValue {
   entitlements: UserEntitlements | null;

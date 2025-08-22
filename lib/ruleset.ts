@@ -3,7 +3,7 @@
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import { z } from 'zod';
 
 // Types pentru 7D Framework

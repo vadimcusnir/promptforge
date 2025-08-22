@@ -1,0 +1,51 @@
+---
+description: Param Engine 7D — Domain, Scale, Urgency, Complexity, Resources, Application, Output.
+globs:
+alwaysApply: true
+---
+
+# 01-parameters-7d.mdc — Param Engine 7D
+
+## Schema obligatorie pentru fiecare run
+Impune schema JSON pentru fiecare generare de prompt:
+
+```json
+{
+  "domain": "...",      // CORE 25: saas|fintech|ecommerce|consulting|education|etc
+  "scale": "...",       // personal_brand|solo|startup|boutique_agency|smb|corporate|enterprise
+  "urgency": "...",     // low|planned|sprint|pilot|crisis
+  "complexity": "...",  // foundational|standard|advanced|expert
+  "resources": "...",   // minimal|solo|lean_team|agency_stack|full_stack_org|enterprise_budget
+  "application": "...", // training|audit|implementation|strategy_design|crisis_response|experimentation|documentation
+  "output_format": "..." // txt|md|checklist|spec|playbook|json|yaml|diagram|bundle
+}
+```
+
+## Adaptare automată
+- **Ton & Stil**: domain determină registrul (FinTech=formal, Education=gamified)
+- **Guardrails**: compliance notes din domain config (SEC/FCA, GDPR, etc.)
+- **KPI**: indicatori specifici domeniului (fraud_rate, completion_rate, etc.)
+- **Format**: output adaptat la nevoile domeniului și aplicației
+
+## Domain Packs injectabile
+- **FinTech Pack**: KYC/AML presets, audit-grade exports
+- **E-Commerce Pack**: CR/AOV/LTV KPIs, playbook focus
+- **Education Pack**: completion/engagement metrics, rubric-driven
+
+## Validare strictă
+- Toate câmpurile sunt obligatorii
+- Valorile trebuie să fie din enumerări permise
+- Domain config trebuie să existe în system
+- Defaults aplicați automat pe baza domeniului
+
+## Context injection
+- Jargon specific domeniului injectat în prompt
+- KPIs relevante incluse în evaluare
+- Compliance notes aplicați ca guardrails
+- Style bias determinat de domain + scale + urgency
+
+## Template engine
+- Folosește 7D pentru popularea template-urilor
+- Fallback strategies bazate pe complexity + resources
+- Crisis mode override pentru urgency=crisis
+- Enterprise bias pentru scale=enterprise

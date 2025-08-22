@@ -1,0 +1,103 @@
+---
+description: Export Bundle (txt + md + json + pdf + checksum) — artefact comercial.
+globs:
+  - "app/api/export/**"
+  - "lib/export/**"
+alwaysApply: false
+---
+
+# 05-export-bundle.mdc — Export Bundle System
+
+## Generare artefacte multiformat
+Fiecare rulare produce bundle complet cu:
+- **prompt.txt** — conținut brut (Free+)
+- **prompt.md** — raport lizibil cu KPI și spec (Creator+)  
+- **prompt.json** — config + metadata + telemetrie (Pro+)
+- **prompt.pdf** — export comercial brand-uit (Pro+)
+- **telemetry.json** — scoruri, cost, policy hits (Pro+)
+- **checksum.txt** — SHA256 pentru toate fișierele (Pro+)
+- **manifest.json** — metadata bundle + semnătură (Enterprise)
+
+## Gating pe plan
+```typescript
+interface ExportGating {
+  free: ["txt"];
+  creator: ["txt", "md"];
+  pro: ["txt", "md", "json", "pdf"];
+  enterprise: ["txt", "md", "json", "pdf", "bundle.zip"];
+}
+```
+
+## Naming convention
+```
+/exports/{org_id}/{module_id}/{run_hash}/
+├── prompt.txt
+├── prompt.md  
+├── prompt.json
+├── prompt.pdf
+├── telemetry.json
+├── checksum.txt
+└── manifest.json
+```
+
+## Bundle ZIP structure (Enterprise only)
+```
+bundle-{module_id}-{run_hash}.zip
+├── manifest.json
+├── prompt.txt
+├── prompt.md
+├── prompt.json  
+├── prompt.pdf
+├── telemetry.json
+└── checksum.txt
+```
+
+## Manifest schema
+```json
+{
+  "bundle_id": "uuid",
+  "run_id": "uuid", 
+  "module_id": "M07",
+  "version": "1.0.3",
+  "exported_at": "2025-08-19T00:00:00Z",
+  "formats": ["txt","md","json","pdf"],
+  "artifacts": [
+    {"file":"prompt.txt","checksum":"sha256:...","bytes":1234}
+  ],
+  "signature": {
+    "algorithm": "ed25519",
+    "signed_by": "PROMPTFORGE_KEY_ID", 
+    "signature": "base64..."
+  },
+  "parameter_set_7d": {},
+  "telemetry": {}
+}
+```
+
+## Checksum standard
+```
+sha256  9a0364b9e99bb480dd25e1f0284c8555 prompt.txt
+sha256  2b576ac0f17d3a6f7e3f86a1d4fbe6af prompt.md
+sha256  3a7bd3e2360a9b7d9ce9d6f4a7e4d6f8 prompt.json
+sha256  4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s prompt.pdf
+sha256  5a7d9f0c8b6e2d4a7e1b2c3d4e5f6a7b telemetry.json
+```
+
+## PDF template (Pro/Enterprise)
+- Header cu logo PROMPTFORGE™ și org branding
+- Secțiuni: Context 7D, Specificație, KPI, Guardrails  
+- Footer cu run_id, timestamp, checksum
+- White-label pentru Enterprise (logo custom)
+
+## Semnătură digitală (Enterprise)
+- Algoritm: ed25519
+- Cheie generată per organizație
+- Semnat întregul manifest.json
+- Verificare: verify(manifest, signature, public_key)
+
+## Template usage
+Folosește @bundle-exporter-template.ts pentru:
+- JSZip pentru compresie
+- Puppeteer/react-pdf pentru PDF
+- Crypto pentru checksum și semnături
+- Supabase Storage pentru persistență

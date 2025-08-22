@@ -146,17 +146,33 @@ export function middleware(req: NextRequest) {
     );
   }
 
-  // Required headers validation
+  // Required headers validation (SACF)
   if (!req.headers.get("x-org-id")) {
-    return new NextResponse(JSON.stringify({ error: "MISSING_ORG" }), {
-      status: 400,
-    });
+    return new NextResponse(
+      JSON.stringify({ 
+        error: "MISSING_HEADERS", 
+        message: "x-org-id header is required",
+        required_headers: ["x-org-id", "x-run-id"]
+      }), 
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   }
 
-  if (!req.headers.get("x-run-id")) {
-    return new NextResponse(JSON.stringify({ error: "MISSING_RUN_ID" }), {
-      status: 400,
-    });
+  // x-run-id este opțional pentru entitlements, dar obligatoriu pentru operații
+  if (!req.headers.get("x-run-id") && !url.pathname.includes('/entitlements')) {
+    return new NextResponse(
+      JSON.stringify({ 
+        error: "MISSING_HEADERS", 
+        message: "x-run-id header is required for this operation" 
+      }), 
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   }
 
   const res = NextResponse.next();
