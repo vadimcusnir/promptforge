@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
 
 export function ModuleCardSkeleton() {
   return (
@@ -56,6 +57,35 @@ export function ProcessingIndicator({
     <div className="flex items-center gap-3 p-4 glass-effect rounded-lg animate-pulse-glow">
       <LoadingSpinner />
       <span className="text-sm text-muted-foreground">{message}</span>
+    </div>
+  );
+}
+
+export function PromptForgeLoading({ 
+  size = "md", 
+  message = "Forging..." 
+}: { 
+  size?: "sm" | "md" | "lg";
+  message?: string;
+}) {
+  const sizeClasses = {
+    sm: "w-8 h-8",
+    md: "w-12 h-12",
+    lg: "w-16 h-16",
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-3 p-4">
+      <div className={`${sizeClasses[size]} relative animate-pulse-glow`}>
+        <Image
+          src="/forge_v3_logo/nav_static_03_loading.webp"
+          alt="Loading..."
+          width={size === "sm" ? 32 : size === "md" ? 48 : 64}
+          height={size === "sm" ? 32 : size === "md" ? 48 : 64}
+          className={`${sizeClasses[size]} object-contain animate-spin-slow`}
+        />
+      </div>
+      <span className="text-sm text-muted-foreground font-mono">{message}</span>
     </div>
   );
 }
