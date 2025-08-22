@@ -54,4 +54,201 @@ GitHub
 
 
 
+🗺️ Nou plan de priorități
+
+Având în vedere noile funcționalități și structura, iată planul de implementare ordonat (P0 = critic, P4 = nice to have):
+
+P0 — Consolidează Hub-ul v1 🔴
+
+Integrează tot într-o singură pagină /dashboard cu taburi:
+
+Tools: 7‑D config → Module Grid (M01–M50) → Prompt Editor (GPT) → Test → Export.
+
+Analytics: Afișează componentele din analytics-dashboard.tsx (metrice utilizator și business)
+GitHub
+.
+
+QA: Integrează testing-dashboard.tsx pentru rularea testelor și vizualizarea rezultatelor
+GitHub
+.
+
+History/Library: listă minimală de rulări/bundle-uri, cu acces la export.
+
+Resources: link-uri către documentație și planuri.
+
+Gating clar: folosește hooks/useEntitlements și lib/entitlements/plan-manager.ts pentru a ascunde funcții (Edit, Test, PDF/JSON/ZIP) în funcție de plan
+GitHub
+.
+
+Integrare reală OpenAI: utilizează POST /api/gpt-editor cu validare 7‑D și scoring (real GPT‑4o)
+GitHub
+.
+
+Integrează Telemetria: loghează fiecare acțiune via analytics.track*
+GitHub
+.
+
+P1 — Autentificare & abonamente 🔴
+
+Integrează Supabase Auth și gestionează sesiunea; folosește lib/auth/session-manager.ts (inclus în repo) pentru a obține utilizatorul.
+
+Conectează entitlements la planurile reale din DB (via PlanManager și Subscription).
+
+Afișează planuri și permite upgrade (poți crea /pricing ca interfață simplă conectată la Stripe, deși codul nu e încă).
+
+P2 — API run (module) & Export bundle 🟠
+
+Implementarea endpointului POST /api/run/{moduleId} pentru toate modulele M01–M50 cu validare 7‑D, scoring și output multiplu (txt/md/json/pdf/zip).
+
+Utilizează ExportBundleManager din lib/export-bundle.ts (citit anterior) pentru a genera artefactele și manifest.json + checksum.
+
+Păstrează gating: txt/md pentru Pilot, json/pdf pentru Pro, zip pentru Enterprise.
+
+P3 — Analytics & QA complete 🟠
+
+Îmbunătățește dashboardul Analytics cu vizualizări suplimentare (monthly growth, funnel conversion etc.) și finalizează API‑urile /api/analytics/user, /api/analytics/business, /api/analytics/export
+GitHub
+.
+
+Extinde Testing Dashboard cu test suites suplimentare și integrate (API, performance, security), folosind test-framework.ts.
+
+Salvează și afișează rezultatele testelor în istoric; notifică prin sistemul de notificări la eșecuri critice.
+
+P4 — Notificări & Escalare 🟢
+
+Expune sistemul de notificări: permite utilizatorilor Pro/Enterprise să configureze Slack/GitHub/Email pentru alerte de securitate/performance/erori
+GitHub
+.
+
+Adaugă o pagină /notifications cu panou de control (componenta NotificationDashboard descrisă în README notificări).
+
+Conectează evenimentele de test și analytics la notificări (ex: alertă când rata de succes scade sub 80%).
+
+P5 — Extensii viitoare 🟢
+
+Module Marketplace: încărcarea altor module și licențierea pe industrie (menționate în plan).
+
+Multi‑tenant: suport pentru organizații multiple, gestionat prin tabelele orgs și org_members din Supabase.
+
+Advanced caching & performance: optimizarea încărcării datelor și a rate limiting‑ului.
+
+Neuron Explorer: eventual reintroducerea librăriei de neuroni ca tab secundar odată ce fluxul principal e stabil.
+
+✅ De ce „neuronul” nu mai e prioritizat?
+
+Fișierele de planificare anterioare propuneau o librărie de „neuroni” (unități minime de prompt) și mai multe pagini (/modules, /generator, etc.), dar acestea nu sunt prezente în codul actual. În schimb, v3 se concentrează pe:
+
+Funcționalități complete (OpenAI, export, analytics, rate‑limiting, testing, notificări) — deja implementate.
+
+Un Hub central pentru a accesa rapid toate aceste instrumente, fără a dispersa experiența în mai multe pagini.
+
+Entitlements și planuri robuste (via plan-manager.ts) care gestionează accesul la funcții și limite
+GitHub
+.
+
+Scalabilitate enterprise: codul include gestionarea abonamentelor Stripe, planuri, rate‑limiting, sisteme de securitate și monitorizare.
+
+Prin urmare, „neuronul” rămâne un concept util pentru organizarea internă a prompturilor, dar nu mai este prezentat ca feature UI în v3. În locul său, se integrează direct modulele M01–M50 în workflow‑ul generator → editor → test → export.
+
+Concluzie
+
+Site‑ul actual are doar câteva pagini (dashboard, docs, test), dar include un backend complet pentru analytics, testare, entitlements și notificări.
+
+Obiectivul imediat este să consolidezi totul într‑un singur Hub la /dashboard, cu flux clar 7‑D → Generate → Edit → Test → Export → Analytics → QA.
+
+Gatingul pe planuri trebuie integrat complet, iar autentificarea și plățile devin următoarea prioritate pentru monetizare.
+
+
+
+
+Faci regulile ca un profesionist: pui un SSOT și un sistem de reguli versionate pe proiect. Asta înseamnă un ruleset.yml (singura sursă de adevăr) + un pachet .cursor/rules cu reguli Always / Auto-Attached / Agent-Requested care guvernează FE, API, Export, Telemetrie, Entitlements, Security.
+
+1) Cuprinsul (TOC) setului de reguli — minimal dar complet
+
+Creezi exact arborele de mai jos; fiecare fișier e o regulă MDC cu front-matter și tip (Always/Auto/Agent).
+
+.cursor/rules/00-foundation.mdc (Always) – stil, stack, convenții.
+
+.cursor/rules/01-parameters-7d.mdc (Always) – motorul 7-D.
+
+.cursor/rules/02-modules-index.mdc (Agent Requested) – catalog M01–M50.
+
+.cursor/rules/03-api-run-modules.mdc (Auto Attached) – contract /api/run/{moduleId}.
+
+04-gpt-live-editor-test.mdc, 05-export-bundle.mdc, 06-telemetry-observability.mdc, 07-versioning-modules.mdc, 08-entitlements-pricing.mdc, 09-security-guardrails.mdc.
+
+backend/20-supabase.mdc, 21-stripe.mdc, 22-openai-runtime.mdc
+
+frontend/30-ui-standards.mdc, 31-test-engine-ui.mdc, 32-product-led-upsell.mdc
+
+templates/@api-route-template.ts, @bundle-exporter-template.ts, @evaluator-prompt-template.txt, @rule-module-template.mdc.
+Notele oficiale cer exact formatul MDC + ierarhia de mai sus; .cursorrules e legacy — folosește Project Rules.
+
+2) Ce scrii concret în reguli (esențial)
+
+00-foundation.mdc (Always): Next.js + TS, discipline de cod, „fără magie”, prompturile = artefacte exportabile.
+
+01-parameters-7d.mdc (Always): impui JSON strict (enum-only), mapezi ton/KPI/guardrails pe fiecare 7-D, activezi domain packs.
+
+03-api-run-modules.mdc (Auto): validatezi 7-D, verifici entitlement, răspunzi cu hash/timestamp/KPI/cost și loghezi run_id.
+
+05-export-bundle.mdc (Auto): standardizezi bundle: .txt .md .json .pdf telemetry.json checksum + manifest.
+
+06-telemetry-observability.mdc (Auto): definești schema de telemetrie + SLO-uri (TTA p95, pass rate etc.).
+
+08-entitlements-pricing.mdc (Auto): gates Pro/Enterprise, flux Stripe→Supabase, enforcement la API/Export.
+
+3) SSOT — ruleset.yml (ce impui, nu negociezi)
+
+Structură de prompt în 7 straturi (Context, Cerință, Spec, KPI, Guardrails, Fallback, Output).
+
+7-D: enum_only: true, raise_on_invalid: true, fallback by-domain. (validatorii trebuie să blocheze valori în afara enumurilor)
+
+Output & planuri: Free (.txt), Creator (.txt/.md), Pro (+.json/.pdf), Enterprise (bundle .zip).
+
+DoR/DoD: gate la score ≥ 80, bundle complet, manifest + checksum, telemetrie salvată.
+
+4) Entitlements & Gating (planuri, add-ons, packs)
+
+Flag-uri canonice: canUseAllModules, canExportMD/PDF/JSON, canUseGptTestReal, hasCloudHistory/EvaluatorAI, hasAPI/WhiteLabel, canExportBundleZip, hasSeatsGT1.
+
+Matrice planuri (Free/Creator/Pro/Enterprise) — ce deblochează fiecare și allowlist module.
+
+Enforcement: orice run/export/API verifică entitlements_effective server-side; UI doar afișează paywall/upsell.
+
+5) Exportul canonic (artefacte + manifest + checksum)
+
+Standard bundle: prompt.txt, prompt.md, prompt.json, prompt.pdf, telemetry.json, checksum, manifest.json.
+
+DoD cere manifest complet + checksum valid + license_notice.
+
+6) Cum livrezi regulile — plan de execuție în 6 pași
+
+P0 – .cursor/rules (TOC + tipuri): creezi fișierele din cuprins și setezi tipurile (Always/Auto/Agent). Scop: agentul încetează să improvizeze.
+
+P1 – ruleset.yml + validatori 7-D: integrezi enum_only/raise_on_invalid; blochezi generarea pe valori invalide.
+
+P2 – API-uri live: app/api/gpt-editor, app/api/gpt-test, app/api/run/[moduleId] + wiring în UI (înlocuiești simulările).
+
+P3 – Entitlements & Stripe: tabele plans/subscriptions/entitlements + webhook; enforcement la /api/run și Export.
+
+P4 – Export & Evaluator: exporter/bundle.ts, șabloane PDF/MD, rubrică Evaluator; test e2e pe Bundle.
+
+P5 – Telemetrie & SLO: loghezi TTA, tokens, cost, scor; alerte pe p95 și pass-rate.
+
+7) Definiții de control (copy-ready)
+
+DoR: 7-D valid (cu semnătură), entitlements OK, output_spec încărcat, testcases definite, input minim existent.
+
+DoD: score ≥ 80, output complet, checksum valid, manifest scris (+license), telemetrie salvată.
+
+8) De ce exact așa
+
+.cursor/rules + Project Rules e standardul oficial pentru a “dresa” agentul pe repo viu; MDC + tipuri + globs, nu reguli difuze.
+
+Repo-ul devine manualul echipei & agentului; fiecare run se închide ca artefact vândabil, nu ca “text”.
+
+
+
+
 

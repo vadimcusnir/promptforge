@@ -12,7 +12,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
 // Verifică dacă utilizatorul este membru al organizației
 export async function assertMembership(orgId?: string, userId?: string) {
-  const h = headers();
+  const h = await headers();
   
   // Folosește parametrii dacă sunt furnizați, altfel încearcă din headers
   const finalOrgId = orgId || h.get('x-org-id');
@@ -257,8 +257,8 @@ export function handleSecurityError(error: unknown): Response {
 }
 
 // Validează headers SACF
-export function validateSACFHeaders(): { orgId: string; runId?: string } {
-  const h = headers();
+export async function validateSACFHeaders(): Promise<{ orgId: string; runId?: string }> {
+  const h = await headers();
   const orgId = h.get('x-org-id');
   const runId = h.get('x-run-id');
   

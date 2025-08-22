@@ -1,433 +1,338 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { createHash } from "crypto";
-import {
-  RunModuleRequestSchema,
-  normalize7D,
-  assertDoR,
-  assertDoD,
-} from "@/lib/server/validation";
-import { optimizePrompt, runGPTTest, tightenPrompt } from "@/lib/server/openai";
-import { generateBundle, type BundleContent } from "@/lib/server/bundle";
-import {
-  verifyAPIKey,
-  hasEntitlement,
-  getModule,
-  createRun,
-  updateRunStatus,
-  savePromptScore,
-  createBundle,
-  checkRateLimit,
-} from "@/lib/server/supabase";
-import {
-  createErrorResponse,
-  createValidationErrorResponse,
-  createRateLimitResponse,
-  createSuccessResponse,
-  createEntitlementErrorResponse,
-  create7DErrorResponse,
-  createCORSResponse,
-  withErrorHandler,
-} from "@/lib/server/errors";
+import { NextRequest, NextResponse } from "next/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import { z } from "zod";
+import { withEntitlementGate } from "@/lib/gating";
+import { logRunTelemetry } from "@/lib/telemetry";
+import { generatePrompt } from "@/lib/ai/generator";
+import { evaluatePrompt } from "@/lib/ai/evaluator";
+import { createBundle } from "@/lib/exports";
+import { validateParams7D } from "@/lib/param-engine";
 
-/**
- * POST /api/run/[moduleId] - Enterprise API Orchestrator
- *
- * Public API endpoint for Enterprise customers with API access.
- * Requires valid API key, enforces rate limits, and provides full workflow.
- */
-const _POST = async (
+// Request schema validation
+const RunRequestSchema = z.object({
+  // 7D Parameters (required)
+  domain: z.enum([
+    "saas", "fintech", "ecommerce", "consulting", "education", 
+    "healthcare", "legal", "marketing", "media", "real_estate",
+    "hr", "ngo", "government", "web3", "aiml", "cybersecurity",
+    "manufacturing", "logistics", "travel", "gaming", 
+    "fashion", "beauty", "spiritual", "architecture", "agriculture"
+  ]),
+  scale: z.enum(["personal_brand", "solo", "startup", "boutique_agency", "smb", "corporate", "enterprise"]),
+  urgency: z.enum(["low", "planned", "sprint", "pilot", "crisis"]),
+  complexity: z.enum(["foundational", "standard", "advanced", "expert"]),
+  resources: z.enum(["minimal", "solo", "lean_team", "agency_stack", "full_stack_org", "enterprise_budget"]),
+  application: z.enum(["training", "audit", "implementation", "strategy_design", "crisis_response", "experimentation", "documentation"]),
+  output_format: z.enum(["txt", "md", "checklist", "spec", "playbook", "json", "yaml", "diagram", "bundle"]),
+  
+  // Optional context
+  context?: z.string().max(5000).optional(),
+  specific_requirements?: z.string().max(2000).optional(),
+  
+  // API key (for Enterprise external access)
+  api_key?: z.string().optional()
+});
+
+export async function POST(
   request: NextRequest,
-  { params }: { params: { moduleId: string } },
-) => {
+  { params }: { params: { moduleId: string } }
+) {
   const startTime = Date.now();
+  let runId: string;
+  let orgId: string;
+  let userId: string;
+
+  try {
+    // Parse request body
+    const body = await request.json();
+    const validatedInput = RunRequestSchema.parse(body);
   const { moduleId } = params;
 
-  // Parse and validate request
-  const body = await request.json();
-  const validation = RunModuleRequestSchema.safeParse({
-    ...body,
-    moduleId,
-  });
+    // Initialize Supabase client
+    const supabase = createRouteHandlerClient({ cookies });
 
-  if (!validation.success) {
-    return createValidationErrorResponse(validation.error);
-  }
+    // Authentication & authorization
+    let user;
+    if (validatedInput.api_key) {
+      // API key authentication (Enterprise)
+      const { data: apiKey } = await supabase
+        .from("api_keys")
+        .select("org_id, scopes, rate_limit_rpm, revoked_at")
+        .eq("key_hash", validatedInput.api_key)
+        .is("revoked_at", null)
+        .single();
 
-  const {
-    sevenD,
-    prompt,
-    testMode = false,
-    exportFormats = [],
-  } = validation.data;
-
-  // Authenticate via API key
-  const apiKeyHeader = request.headers.get("x-pf-key");
-  if (!apiKeyHeader) {
-    return createErrorResponse(
-      "UNAUTHENTICATED",
-      null,
-      "API key required in x-pf-key header",
-    );
-  }
-
-  // Hash API key for lookup
-  const keyHash = createHash("sha256").update(apiKeyHeader).digest("hex");
-  const apiKeyData = await verifyAPIKey(keyHash);
-
-  if (!apiKeyData) {
+      if (!apiKey) {
     return NextResponse.json(
-      { error: "UNAUTHENTICATED", message: "Invalid or disabled API key" },
-      { status: 401 },
-    );
-  }
+          { error: "Invalid API key" },
+          { status: 401 }
+        );
+      }
 
-  const { orgId } = apiKeyData;
-
-  // Verify Enterprise entitlements
-  const [hasAPI, hasEnterprise] = await Promise.all([
-    hasEntitlement(orgId, "hasAPI"),
-    hasEntitlement(orgId, "plan_enterprise"), // Assuming enterprise plan flag
-  ]);
-
-  if (!hasAPI || !hasEnterprise) {
+      if (!apiKey.scopes.includes("run_modules")) {
     return NextResponse.json(
-      {
-        error: "ENTITLEMENT_REQUIRED",
-        message: "Enterprise subscription with API access required",
-        required_entitlements: ["hasAPI", "plan_enterprise"],
-      },
-      { status: 403 },
-    );
-  }
+          { error: "API key lacks run_modules scope" },
+          { status: 403 }
+        );
+      }
 
-  // Rate limiting per organization (30 requests per minute)
-  const rateLimit = await checkRateLimit(`api-run:${orgId}`, 30);
-  if (!rateLimit.allowed) {
+      orgId = apiKey.org_id;
+      userId = "api_user"; // Special user for API calls
+    } else {
+      // Session authentication
+      const { data: { user: sessionUser } } = await supabase.auth.getUser();
+      if (!sessionUser) {
     return NextResponse.json(
-      {
-        error: "RATE_LIMITED",
-        message: "API rate limit exceeded",
-        resetTime: rateLimit.resetTime,
-        remaining: rateLimit.remaining,
-      },
-      {
-        status: 429,
-        headers: {
-          "X-RateLimit-Limit": "30",
-          "X-RateLimit-Remaining": rateLimit.remaining.toString(),
-          "X-RateLimit-Reset": Math.ceil(rateLimit.resetTime / 1000).toString(),
-        },
-      },
-    );
-  }
+          { error: "Authentication required" },
+          { status: 401 }
+        );
+      }
+      user = sessionUser;
+      userId = user.id;
 
-  // Validate module exists and is enabled
-  const module = await getModule(moduleId);
-  if (!module) {
+      // Get user's org
+      const { data: orgMember } = await supabase
+        .from("org_members")
+        .select("org_id")
+        .eq("user_id", userId)
+        .single();
+
+      if (!orgMember) {
     return NextResponse.json(
-      {
-        error: "MODULE_NOT_FOUND",
-        message: `Module ${moduleId} not found or disabled`,
-      },
-      { status: 404 },
-    );
-  }
+          { error: "User not associated with any organization" },
+          { status: 403 }
+        );
+      }
+      orgId = orgMember.org_id;
+    }
 
-  // Normalize 7D configuration (SSOT enforcement)
-  let normalized7D;
-  try {
-    normalized7D = normalize7D(sevenD);
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error: "INVALID_7D_ENUM",
-        message:
-          error instanceof Error ? error.message : "7D validation failed",
-      },
-      { status: 400 },
-    );
-  }
+    // Validate module exists and user can access it
+    const { data: module } = await supabase
+      .from("modules")
+      .select("id, title, vectors, complexity_min")
+      .eq("id", moduleId)
+      .single();
 
-  // For chain modules, verify signature compatibility (simplified)
-  if (body.previousSignature) {
-    if (body.previousSignature !== normalized7D.signature_7d) {
+    if (!module) {
       return NextResponse.json(
-        {
-          error: "SEVEND_SIGNATURE_MISMATCH",
-          message: "7D signature mismatch in chain execution",
-          expected: body.previousSignature,
-          actual: normalized7D.signature_7d,
-        },
-        { status: 422 },
+        { error: "Module not found" },
+        { status: 404 }
       );
     }
-  }
 
-  // Assert DoR (Definition of Ready)
-  try {
-    assertDoR({
-      sevenDValid: true,
-      entitlementsValid: hasAPI && hasEnterprise,
-      outputSpecLoaded: true, // Module spec loaded
-      testsDefined: testMode ? true : true, // Always allow for API
+    // Check entitlements
+    await withEntitlementGate(orgId, ["canUseAllModules"], async () => {
+      // Additional module-specific checks
+      const allowedModules = await supabase.rpc("pf_get_allowed_modules", { p_org: orgId });
+      if (!allowedModules.includes(moduleId)) {
+        throw new Error("Module not included in current plan");
+      }
     });
-  } catch (error) {
-    if (error instanceof APIError) {
+
+    // Validate 7D parameters
+    const normalizedParams = await validateParams7D(validatedInput, moduleId);
+
+    // Check complexity requirements
+    const complexityLevels = ["foundational", "standard", "advanced", "expert"];
+    const minComplexityIndex = complexityLevels.indexOf(module.complexity_min);
+    const userComplexityIndex = complexityLevels.indexOf(validatedInput.complexity);
+    
+    if (userComplexityIndex < minComplexityIndex) {
       return NextResponse.json(
-        { error: error.apiCode, message: error.message },
-        { status: error.code },
+        { 
+          error: "Complexity level too low for this module",
+          minimum_required: module.complexity_min,
+          provided: validatedInput.complexity
+        },
+        { status: 400 }
       );
     }
-    throw error;
+
+    // Generate unique run ID and hash
+    runId = crypto.randomUUID();
+    const runHash = await generateRunHash(normalizedParams, moduleId);
+
+    // Check for duplicate run (same module + same params)
+    const { data: existingRun } = await supabase
+      .from("runs")
+      .select("id, status, created_at")
+      .eq("org_id", orgId)
+      .eq("module_id", moduleId) 
+      .eq("run_hash", runHash)
+      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()) // Last 24h
+      .single();
+
+    if (existingRun && existingRun.status === "ok") {
+      // Return cached result if recent and successful
+      const { data: existingBundle } = await supabase
+        .from("bundles")
+        .select("*")
+        .eq("run_id", existingRun.id)
+        .single();
+
+      if (existingBundle) {
+        return NextResponse.json({
+          run_id: existingRun.id,
+          status: "cached",
+          bundle_id: existingBundle.id,
+          created_at: existingRun.created_at
+        });
+      }
   }
 
   // Create run record
-  const run = await createRun({
+    const { error: runError } = await supabase
+      .from("runs")
+      .insert({
+        id: runId,
     org_id: orgId,
-    user_id: "api", // API user
+        user_id: userId,
     module_id: moduleId,
-    seven_d: normalized7D,
-    signature_7d: normalized7D.signature_7d,
-    status: "queued",
-    tokens_in: 0,
-    tokens_out: 0,
-    cost_usd: 0,
-  });
+        run_hash: runHash,
+        parameter_set_7d: normalizedParams,
+        mode: validatedInput.api_key ? "real" : "sim", // API calls default to real mode
+        status: "running"
+      });
 
-  let finalPrompt = prompt;
-  let totalUsage = {
-    tokens_in: 0,
-    tokens_out: 0,
-    cost_usd: 0,
-  };
-  let scores: any = null;
-  let artifacts: string[] = [];
-
-  try {
-    // Step 1: Optimize prompt if requested or if no prompt provided
-    if (!prompt || body.optimize) {
-      const optimizeResult = await optimizePrompt(
-        prompt ||
-          `Generate a ${normalized7D.domain} prompt for ${normalized7D.application}`,
-        { domain: normalized7D.domain },
-      );
-
-      finalPrompt =
-        JSON.parse(optimizeResult.content).editedPrompt ||
-        optimizeResult.content;
-      totalUsage.tokens_in += optimizeResult.usage.prompt_tokens;
-      totalUsage.tokens_out += optimizeResult.usage.completion_tokens;
-      totalUsage.cost_usd += optimizeResult.usage.cost_usd;
-
-      artifacts.push("prompt_optimization");
+    if (runError) {
+      throw new Error(`Failed to create run record: ${runError.message}`);
     }
 
-    // Step 2: Run GPT test if requested
-    if (testMode) {
-      const testResult = await runGPTTest(finalPrompt, normalized7D.domain, []);
-      scores = testResult.scores;
+    // Generate prompt
+    const generationStart = Date.now();
+    const promptResult = await generatePrompt({
+      moduleId,
+      parameters: normalizedParams,
+      context: validatedInput.context,
+      requirements: validatedInput.specific_requirements
+    });
+    const generationTime = Date.now() - generationStart;
 
-      totalUsage.tokens_in += testResult.response.usage.prompt_tokens;
-      totalUsage.tokens_out += testResult.response.usage.completion_tokens;
-      totalUsage.cost_usd += testResult.response.usage.cost_usd;
+    // Evaluate prompt (if real mode and entitlement allows)
+    let evaluation = null;
+    if (validatedInput.api_key || await hasEntitlement(orgId, "hasEvaluatorAI")) {
+      const evaluationStart = Date.now();
+      evaluation = await evaluatePrompt(promptResult.content, normalizedParams.domain);
+      const evaluationTime = Date.now() - evaluationStart;
 
-      artifacts.push("gpt_test_results");
-
-      // Auto-tighten if score < 80
-      if (scores.composite < 80) {
-        const tightenResult = await tightenPrompt(
-          finalPrompt,
-          normalized7D.domain,
-          scores.composite,
-        );
-        if (tightenResult.content !== finalPrompt) {
-          finalPrompt = tightenResult.content;
-
-          // Re-test
-          const retestResult = await runGPTTest(
-            finalPrompt,
-            normalized7D.domain,
-            [],
-          );
-          scores = retestResult.scores;
-
-          totalUsage.tokens_in +=
-            tightenResult.usage.prompt_tokens +
-            retestResult.response.usage.prompt_tokens;
-          totalUsage.tokens_out +=
-            tightenResult.usage.completion_tokens +
-            retestResult.response.usage.completion_tokens;
-          totalUsage.cost_usd +=
-            tightenResult.usage.cost_usd + retestResult.response.usage.cost_usd;
-
-          artifacts.push("auto_tighten");
-        }
-      }
-
-      // Save scores
-      await savePromptScore({
-        run_id: run.id,
-        clarity: scores.clarity,
-        execution: scores.execution,
-        ambiguity: scores.ambiguity,
-        business_fit: scores.business_fit,
-        composite: scores.composite,
-        breakdown: { api_execution: true },
-        created_at: new Date().toISOString(),
+      // Store evaluation
+      await supabase.from("scores").insert({
+        run_id: runId,
+        clarity: evaluation.scores.clarity,
+        execution: evaluation.scores.execution,
+        ambiguity: evaluation.scores.ambiguity,
+        business_fit: evaluation.scores.business_fit,
+        composite: evaluation.scores.composite,
+        verdict: evaluation.verdict,
+        thresholds: evaluation.thresholds,
+        weights: evaluation.weights,
+        feedback: evaluation.feedback
       });
     }
 
-    // Step 3: Generate export bundle if formats requested
-    let bundleData = null;
-    if (exportFormats.length > 0) {
-      // Verify export permissions
-      const exportEntitlements = await Promise.all([
-        hasEntitlement(orgId, "canExportMD"),
-        hasEntitlement(orgId, "canExportPDF"),
-        hasEntitlement(orgId, "canExportJSON"),
-        hasEntitlement(orgId, "canExportBundleZip"),
-        hasEntitlement(orgId, "hasWhiteLabel"),
-      ]);
+    // Create export bundle
+    const bundleStart = Date.now();
+    const bundle = await createBundle({
+      runId,
+      moduleId,
+      content: promptResult.content,
+      parameters: normalizedParams,
+      evaluation,
+      outputFormat: validatedInput.output_format,
+      orgId
+    });
+    const bundleTime = Date.now() - bundleStart;
 
-      const [
-        canExportMD,
-        canExportPDF,
-        canExportJSON,
-        canExportZip,
-        hasWhiteLabel,
-      ] = exportEntitlements;
+    // Update run with success status and telemetry
+    const totalTime = Date.now() - startTime;
+    const telemetryData = {
+      generation_time_ms: generationTime,
+      evaluation_time_ms: evaluation ? Date.now() - startTime - generationTime - bundleTime : null,
+      bundle_time_ms: bundleTime,
+      total_time_ms: totalTime,
+      tokens_used: promptResult.usage?.total_tokens || 0,
+      estimated_cost_usd: promptResult.usage?.estimated_cost || 0
+    };
 
-      const allowedFormats = ["txt"];
-      if (canExportMD) allowedFormats.push("md");
-      if (canExportPDF) allowedFormats.push("pdf");
-      if (canExportJSON) allowedFormats.push("json");
-      if (canExportZip) allowedFormats.push("zip");
+    await supabase
+      .from("runs")
+      .update({
+        status: "ok",
+        runtime_ms: totalTime,
+        tokens: telemetryData.tokens_used,
+        cost_usd: telemetryData.estimated_cost_usd,
+        telemetry: telemetryData
+      })
+      .eq("id", runId);
 
-      const unauthorizedFormats = exportFormats.filter(
-        (f) => !allowedFormats.includes(f),
-      );
-      if (unauthorizedFormats.length > 0) {
-        throw new APIError(
-          "ENTITLEMENT_REQUIRED",
-          `Unauthorized export formats: ${unauthorizedFormats.join(", ")}`,
-        );
-      }
-
-      // Generate bundle
-      const bundleContent: BundleContent = {
-        prompt: finalPrompt,
-        sevenD: normalized7D,
-        scores: scores || undefined,
-        metadata: {
-          runId: run.id,
-          moduleId: moduleId,
-          orgId: orgId,
-          userId: "api",
-          createdAt: new Date().toISOString(),
-          version: "1.0.0",
-        },
-        telemetry: {
-          tokens_used: totalUsage.tokens_in + totalUsage.tokens_out,
-          duration_ms: Date.now() - startTime,
-          cost_usd: totalUsage.cost_usd,
-        },
-      };
-
-      const bundle = await generateBundle(
-        bundleContent,
-        exportFormats,
-        hasWhiteLabel,
-      );
-
-      // Save bundle record
-      const bundleRecord = await createBundle({
-        run_id: run.id,
-        org_id: orgId,
-        formats: exportFormats,
-        manifest: bundle.manifest,
-        checksum: bundle.bundleChecksum,
-        license_notice: bundle.manifest.metadata.license_notice,
-        storage_path: `api-bundles/${orgId}/${bundle.manifest.bundle_id}`,
-      });
-
-      bundleData = {
-        bundle_id: bundleRecord.id,
-        checksum: bundle.bundleChecksum,
-        formats: exportFormats,
-        manifest: bundle.manifest,
-      };
-
-      artifacts.push("export_bundle");
-    }
-
-    // Update run with success status
-    await updateRunStatus(run.id, "success", {
-      tokens_in: totalUsage.tokens_in,
-      tokens_out: totalUsage.tokens_out,
-      cost_usd: totalUsage.cost_usd,
-      score_total: scores?.composite,
+    // Log telemetry
+    await logRunTelemetry({
+      runId,
+      orgId,
+      userId,
+      moduleId,
+      parameters: normalizedParams,
+      telemetry: telemetryData,
+      evaluation
     });
 
-    // Assert DoD if testing was performed
-    if (testMode && scores) {
-      try {
-        assertDoD({
-          score: scores.composite,
-          manifestPresent: bundleData ? true : true,
-          checksumValid: bundleData ? bundleData.checksum.length === 64 : true,
-          telemetryClean: true,
-        });
-      } catch (error) {
-        if (error instanceof APIError) {
-          await updateRunStatus(run.id, "error");
-          return NextResponse.json(
-            { error: error.apiCode, message: error.message },
-            { status: error.code },
-          );
-        }
-        throw error;
-      }
-    }
-
-    // Generate response hash for consistency
-    const responseHash = createHash("sha256")
-      .update(finalPrompt + normalized7D.signature_7d + run.id)
-      .digest("hex")
-      .substring(0, 16);
-
-    return createSuccessResponse({
-      hash: responseHash,
-      run_id: run.id,
-      module_id: moduleId,
-      seven_d: normalized7D,
-      prompt: finalPrompt,
-      status: "success",
-      scores: scores || null,
-      artifacts: artifacts,
-      bundle: bundleData || null,
+    return NextResponse.json({
+      run_id: runId,
+      bundle_id: bundle.id,
+      status: "completed",
+      evaluation: evaluation ? {
+        scores: evaluation.scores,
+        verdict: evaluation.verdict
+      } : null,
       telemetry: {
-        tokens_used: totalUsage.tokens_in + totalUsage.tokens_out,
-        cost_usd: totalUsage.cost_usd,
-        duration_ms: Date.now() - startTime,
-        processing_steps: artifacts.length,
+        total_time_ms: totalTime,
+        tokens_used: telemetryData.tokens_used,
+        estimated_cost_usd: telemetryData.estimated_cost_usd
       },
-      metadata: {
-        api_version: "1.0.0",
-        module_name: module.name,
-        created_at: new Date().toISOString(),
-      },
+      created_at: new Date().toISOString()
     });
+
   } catch (error) {
-    // Update run with error status
-    await updateRunStatus(run.id, "error");
-    throw error;
+    console.error("Run API error:", error);
+
+    // Update run status to failed if run was created
+    if (runId) {
+      await supabase.from("runs").update({
+        status: "failed",
+        runtime_ms: Date.now() - startTime
+      }).eq("id", runId);
+    }
+
+    if (error.message.includes("entitlement") || error.message.includes("plan")) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 402 } // Payment required
+      );
+    }
+
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
-};
+}
 
-// Export with error handler wrapper
-export const POST = withErrorHandler(_POST);
+// Helper functions
+async function generateRunHash(params: any, moduleId: string): Promise<string> {
+  const hashInput = JSON.stringify({ ...params, moduleId });
+  const encoder = new TextEncoder();
+  const data = encoder.encode(hashInput);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
 
-// OPTIONS handler for CORS
-export async function OPTIONS(request: NextRequest) {
-  return createCORSResponse();
+async function hasEntitlement(orgId: string, flag: string): Promise<boolean> {
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data } = await supabase.rpc("pf_has_entitlement", { 
+    p_org: orgId, 
+    p_flag: flag 
+  });
+  return data || false;
 }

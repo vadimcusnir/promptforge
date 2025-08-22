@@ -115,3 +115,396 @@ Revizuire cod: cere revizuiri de PR cu checklist‑ul de reguli şi refactorizea
 
 
 
+Legăturile către pagini inexistente reprezintă o problemă de routing şi configurare, nu doar de conţinut. Iată o analiză detaliată a situaţiei, împreună cu acţiunile recomandate pentru agentul PromptForge:
+
+Ce se întâmplă acum
+
+Navigarea principală și footerul conțin linkuri către „Modules”, „Pricing”, „Docs”, „Login”, „API Reference”, „Guides”, „About”, „Contact”, „Privacy Policy” și „Terms of Service”. Multe dintre aceste legături returnează o pagină 404 „This page could not be found”
+chatgpt-prompting.com
+chatgpt-prompting.com
+chatgpt-prompting.com
+chatgpt-prompting.com
+.
+
+Rutele /modules și /pricing există ca pagini în cod (ex. app/pricing/page.tsx conține logică și UI pentru planuri), dar în versiunea live se văd doar headerul și footerul fără conținut
+chatgpt-prompting.com
+chatgpt-prompting.com
+.
+
+Acest comportament indică faptul că fie aceste rute nu sunt incluse în build‑ul Next.js, fie sunt filtrate de o configurație din next.config.js/routes.ts (de exemplu, printr‑un sistem de feature‑flags care ascunde paginile până la lansare).
+
+Cauza probabilă
+
+Nealocarea routelor în build. În proiectul PromptForge, modulul „app/” ar trebui să genereze automat rutele pentru fiecare folder cu page.tsx. Dacă în next.config.js există un experimental.appDir fals sau un basePath greșit, aceste rute pot fi excluse.
+
+Feature‑gating neimplementat: Conform regulilor PromptForge, anumite pagini ar trebui să apară doar când sunt gata sau când planul de abonament le permite. Lipsa componentelor ComingSoonInteractive/EntitlementGate face ca navigarea să trimită utilizatorii direct la 404.
+
+Învechirea build‑ului: Este posibil ca site‑ul live să ruleze o versiune veche, publicată înainte ca fișierele app/pricing/page.tsx și app/modules/page.tsx să fie adăugate în repo.
+
+Cum trebuie procedat
+
+Verifică configurația Next.js: deschide next.config.js și app/layout.tsx/routes.ts în repo. Asigură‑te că experimental.appDir este activ și că nu există rewrites care să filtreze /pricing sau /modules.
+
+În cazul paginilor nefinalizate:
+
+Înlocuiește linkurile din header/footer cu un component ComingSoonInteractive care indică clar „Coming soon” și setează flag="comingSoon".
+
+Elimină temporar din meniu linkurile către pagini neimplementate (ex. „Guides”, „About”, „Contact”) pentru a evita frustrările.
+
+Activează build‑ul pentru rutele existente: dacă paginile app/pricing/page.tsx și app/modules/page.tsx sunt prezente în repo, asigură‑te că sunt exportate corect de Next.js. Un build incomplet poate fi cauzat de erori tipice (ex. importuri incorecte sau hook‑uri neutilizate). Verifică logurile de build și rulează next build local pentru a depista eventuale erori.
+
+Folosește entitlements & feature flags: pentru paginile ce depind de abonament (de ex. API Docs pentru planul Enterprise), înlocuiește 404 cu EntitlementGate – acesta va afișa un paywall clar (ex. „Disponibil doar pentru Pro/Enterprise”) în loc să trimită utilizatorul la o pagină inexistentă.
+
+Actualizează navigaţia: după ce toate paginile sunt configurate corect, actualizează headerul şi footerul astfel încât butoanele să apară doar dacă ruta există și este publică. Pentru orice nouă pagină creată, confirmă că app/<pagina>/page.tsx și layout‑urile relevante sunt incluse în build.
+
+Prin aceste ajustări, utilizatorii nu vor mai vedea pagini 404 la click pe elemente din meniu, iar agentul PromptForge va respecta cerinţele de gating („Coming soon” vs. „Entitlement” vs. „Live”).
+
+
+
+
+
+
+Pentru a transforma complet și coerent funcționalitatea modulului „Module Grid” și a butoanelor de export, este nevoie de o reproiectare care să țină cont atât de experiența utilizatorului, cât și de respectarea modelului de entitlements definit de PromptForge. Mai jos găsești o dezvoltare detaliată pe fiecare aspect identificat:
+
+1. Structurarea și încărcarea datelor modulare
+
+Vizibilitate completă: În loc de cele 12 module prezente în landing, grila trebuie să afișeze toate cele 50 de module disponibile (M01–M50). Datele modulelor se pot obține fie dintr-un fișier local (lib/modules.ts conține catalogul cu id, name, vectors și spec tags), fie dintr‑o tabelă Supabase. Asigură‑te că toate modulele sunt ordonate crescător după id și că vectorii (V1 – V3) sunt evidențiați prin badge‑uri colorate.
+
+Elemente interactive: Pentru fiecare module card, afișează:
+
+Titlul (ex. “Strategic Planning”) și vectorii asociați (V1 – V3), vizibile pe fața cardului.
+
+Rezumat scurt (“Generate comprehensive strategic plans”), pentru a indica scopul modulului.
+
+Buton de detalii (“Specs” sau “View specs”) care, la click, deschide fie un panou expandat în card, fie te navighează către /modules/[slug]/spec unde se găsește specificația completă (se recomandă ruta separată pentru SEO și structură clară).
+
+Export icons (.md, .json Pro, .pdf Pro) care declanșează generarea fișierelor.
+
+2. Implementarea căutării și filtrării
+
+Căutare în timp real: Adaugă un câmp de căutare (componentă <Input />) legat de un state searchQuery. Folosește un hook useMemo pentru a filtra modulele după nume sau descriere în funcție de searchQuery, exact cum sugerează implementarea din components/module-grid.tsx:
+
+const filteredModules = useMemo(() => {
+  let modules = Object.values(MODULES);
+  if (vectorFilter !== "all") {
+    modules = getModulesByVector(Number.parseInt(vectorFilter));
+  }
+  if (searchQuery.trim()) {
+    modules = searchModules(searchQuery).filter((module) =>
+      vectorFilter === "all" || module.vectors.includes(Number.parseInt(vectorFilter))
+    );
+  }
+  return modules.sort((a, b) => a.id - b.id);
+}, [vectorFilter, searchQuery]);
+
+
+Filtru după vector: Creează butoane „pills” pentru “All”, “V1 – Strategy”, “V2 – Content” și “V3 – Analysis”, care actualizează un state vectorFilter. La selecție, filteredModules este recalculat.
+
+Output types filter: În cazul în care se dorește filtrarea după tip de output (Spec vs Playbook vs JSON vs PDF), adaugă un meniu drop‑down pentru outputFilter și integrează‑l în useMemo.
+
+3. Gestionarea „View Specs” și spec‑urilor
+
+Rutare /modul: În loc ca butonul „View Specs” să nu facă nimic (așa cum se întâmplă acum pe landing
+chatgpt-prompting.com
+), acesta trebuie să navigheze spre o pagină /modules/[id]/spec. În această pagină, prelucrezi fișierul spec (din lib/modules.ts sau DB) și afișezi: descriere detaliată, structura promptului, exemple de 7D parameters și hook‑urile de evaluare.
+
+Fallback pentru Coming Soon: Dacă specificația pentru un modul nu este încă gata, folosește un ComingSoonInteractive cu mesaj “Specificația va fi disponibilă în curând”, astfel încât utilizatorul să nu primească o pagină 404.
+
+4. Integrările de export și entitlements
+
+Nivele de plan:
+
+Planul Free trebuie să permită doar exportul .txt (cu watermark);
+
+Planul Creator – export .md fără watermark;
+
+Planul Pro – export .json și .pdf;
+
+Planul Enterprise – bundle .zip cu toate formatele + checksum.
+
+Componente dedicate: Pentru fiecare icon de export de pe card, învelește butonul cu EntitlementGate și setează requiredEntitlement corespunzător (ex. "export:md" pentru planul Creator). Dacă utilizatorul nu deține nivelul, afișează PaywallGate cu un mesaj “Upgrade to Pro to download PDF/JSON” și un link către pagina de pricing.
+
+De fapt generare: Conectează butoanele la funcțiile din lib/exports.ts: exportTxt, exportMd, exportJson, exportPdf, iar pentru Enterprise apelează exportBundleZip. Toate exporturile trebuie să genereze un fișier, să salveze un checksum și să fie livrate printr‑un endpoint API, eventual api/export/[moduleId]. În trial sau planuri inferioare, adaugă watermarkul “Simulated” sau “Trial”.
+
+5. Îmbunătățiri UX și stări goale
+
+Indicator de număr de module: După filtrare sau căutare, afișează “X modules found” astfel încât utilizatorul să știe rezultatul.
+
+Empty state: Dacă filteredModules este gol, afișează un mesaj clar (“No modules found for the selected criteria”) și un buton “Reset filters” care resetează atât searchQuery, cât și vectorFilter, așa cum e sugerat la liniile 120–127 din componenta ModuleGrid.
+
+Reacții vizuale: Folosește starea hover cu highlight auriu/roșu pentru a indica interacțiunea, în concordanță cu branding‑ul ritualic. La click pe “Details” sau “Specifications”, cardul ar trebui să se expandeze cu o animație fluidă.
+
+6. Gestiunea performanței și scalabilității
+
+Prefetch limitat: Pentru linkurile către /modules/[slug]/spec, setează prefetch={false} pe <Link> pentru a evita încărcarea inutilă a zeci de pagini în fundal. Acest lucru este important mai ales pe mobil.
+
+Memoizare și lazy loading: Folosește React.lazy și Suspense pentru a încărca componentele modul de specificație doar când utilizatorul accesează pagina. De asemenea, aplică useMemo pentru filtrare, astfel încât re‑randerizarea să fie minimă.
+
+Persistarea stării: Dacă dorești să reții ce modul este selectat după navigare, salvează selectedModule în query string sau context (ex. ?module=M12), pentru ca utilizatorul să poată reveni la modulul studiat.
+
+Prin implementarea acestor elemente (rutare clară, filtru funcțional, gating la exporturi, pagini de specificații dedicate și fallback Coming Soon), modulul “Module Grid” va oferi o experiență completă și va respecta pe deplin regulile PromptForge pentru entitlements și artefacte.
+
+
+
+Itemul 3 se referă la butoanele și CTA‑urile care nu fac nimic – o problemă severă de UX și de respectare a super‑regulei. Iată o analiză tehnică aprofundată a situației și pașii pentru remediere:
+
+1. Ce nu funcționează (și de ce)
+
+Run a 30‑minute test (în secțiunea “You’re Bleeding Hours”) – butonul apare în landing, dar clickul nu duce nicăieri
+chatgpt-prompting.com
+. În repo există o pagină app/test/page.tsx care definește un flux de test cu funcția runBasicTests (apelează /api/analytics/user, /api/gpt-editor și /api/testing/run-tests pentru verificări)
+GitHub
+, dar această rută nu este linkată de buton. Probabil developerul a uitat să creeze un <Link> sau să atașeze onClick la butonul din landing.
+
+Upgrade to save & export / Preview Demo Bundle (în secțiunea „See It in Action”) – ambele CTA‑uri sunt prezente vizual, dar nu trimit nici la pagina de pricing, nici nu declanșează exportul
+chatgpt-prompting.com
+. În cod nu există un handler pentru generarea bundle‑ului sau pentru redirecționarea spre checkout.
+
+Preview Demo (secondary hero CTA) și alte butoane („Witness the Protocol”, „Run Feature Tests”) suferă același lucru – fie lipsesc rutele, fie funcționalitatea este protejată de entitlements și nu este controlată prin EntitlementGate.
+
+2. Cum se repară – implementare detaliată
+a. Conectarea butoanelor la rutele și funcțiile corecte
+
+Butonul “Run a 30‑minute test”
+
+Creează un component Link cu href="/test" sau atașează onClick={() => router.push('/test')}.
+
+În app/test/page.tsx, asigură‑te că butonul de pe pagină pornește runBasicTests() (deja prezent în cod
+GitHub
+).
+
+Dacă testul durează 30 de minute, folosește un cronometru și afişează progresul testului; altfel, revizuiește textul CTA.
+
+“Upgrade to save & export” și “Preview Demo Bundle”
+
+Înființează o pagină /pricing sau /upgrade (dacă nu există) și asociază butoanele cu <Link href="/pricing" prefetch={false}>.
+
+Pentru exporturi, integrează EntitlementGate ca wrapper pentru buton:
+
+<EntitlementGate requiredEntitlement="canExportBundleZip">
+  <Button onClick={() => exportBundle(moduleId)}>Preview Demo Bundle</Button>
+</EntitlementGate>
+
+
+Dacă utilizatorul nu are entitlement, EntitlementGate trebuie să afişeze automat PaywallGate cu un mesaj de upgrade și un link spre pricing.
+
+“Preview Demo” (hero secundar)
+
+Implementează un modal PreviewDemoModal care prezintă un exemplu de workflow (de ex., M01 cu parametri predefiniți). Ataşează-l la buton cu onClick={() => setShowModal(true)}.
+
+“Witness the Protocol”
+
+Creează o pagină /protocol sau un modul ProtocolModal. Dacă nu este gata, înlocuiește butonul cu ComingSoonInteractive cu flag="comingSoon" pentru a evita 404‑ul.
+
+Campanii de test și administrare
+
+În meniul Admin (Ctrl + Shift + A), butonul „Run Feature Tests” din app/test/page.tsx rulează testele automat
+GitHub
+; asigură‑te că această funcție este accesibilă doar adminilor și nu este afișată în landing.
+
+b. Respectarea super‑regulei (UI și entitlements)
+
+Foloseşte butoane brutaliste (auriu/roşu), cu aria-label şi microcopy de încredere (ex.: „No credit card required”).
+
+Pentru fiecare CTA principal adaugă data-gtm-event pentru analytics (ex. data-gtm-event="cta_run_test_click").
+
+Dacă funcţionalitatea nu este gata, nu lăsa butonul inert; înlocuiește-l cu ComingSoonInteractive care afişează “Coming soon” și colectează adrese de e‑mail pentru waitlist.
+
+Oferă fallback clar pentru entitlements lipsă: PaywallGate trebuie să afișeze un mesaj scurt (“Export PDF available in Pro plan”) și să redirecționeze la upgrade.
+
+c. Testare automată și QA
+
+Adaugă în Playwright teste care confirmă că fiecare CTA are un href valid (nu #) sau un handler; simulatează click‑uri și verifică redirecționarea (pentru “Run test”) ori deschiderea de modale (pentru “Preview Demo Bundle”).
+
+Testele de acces la entitlements trebuie să verifice că utilizatorii fără drepturi primesc PaywallGate, iar cei cu drepturi accesează exporturile.
+
+3. Pași suplimentari
+
+Actualizează documentația pentru noile rute și explică entitlements necesare.
+
+Monitorizează analytics; folosește lib/telemetry/analytics.ts pentru a urmări click‑urile pe CTA‑uri și a optimiza funnel‑ul.
+
+Integrează cu stripe/supabase pentru upgrade; documentul SUPABASE_STRIPE_INTEGRATION.md conține pașii necesari.
+
+Prin implementarea acestor acțiuni, CTA‑urile vor deveni funcționale și vor respecta super‑regula PromptForge, asigurând o experiență coerentă și clară pentru utilizator.
+
+
+
+
+
+
+Pentru a înțelege în profunzime de ce generatorul 7D și test‑engine‑ul PromptForge nu funcționează pe site și cum pot fi remediate, este util să privim atât codul din repo, cât și designul cerut de super‑regulă. Secțiunea 4 se referă la 7D Configurator și Test Engine, adică un flux complet: alegerea modulului, setarea parametrilor, generarea promptului, testarea calității cu patru metrici și exportul în diverse formate. Analiza detaliată de mai jos pornește de la observarea faptului că pe site butoanele „Run Test” și exporturile sunt inactive
+chatgpt-prompting.com
+chatgpt-prompting.com
+ și că butonul „Generate Prompt” nu respectă stilul brutalist
+chatgpt-prompting.com
+.
+
+1. Ce există în cod (7D Engine, Prompt Generator și Test Engine)
+
+Pagina generator: app/generator/page.tsx este aproape goală, conținând doar importuri și un placeholder
+GitHub
+. Asta explică de ce interfața de pe site nu conectează 7D configuratorul și test engine‑ul.
+
+Componentele 7D Engine și Prompt Generator:
+
+SevenDEngine.tsx creează un UI pentru setarea celor șapte dimensiuni (Domain, Scale, Urgency, Complexity, Resources, Application, Output). Componenta folosește useMemo și useState pentru a stoca setările și oferă un collapsed description pentru fiecare parametru
+GitHub
+. Nu există însă legătură cu generarea promptului sau cu testarea.
+
+PromptGenerator.tsx primește proprietățile selectedModule și config (rezultatul 7D) și, când se apasă butonul Generate Prompt, apelează funcția generatePrompt() din lib/prompt-generator. Apoi actualizează starea generatedPrompt și arată un toast cu succes sau eroare
+GitHub
+. Componenta include și funcții de copiere și export în .txt, dar acestea sunt limitate; nu există butoane pentru .md, .json sau .pdf.
+
+Test Engine:
+
+TestEngine.tsx se ocupă de rularea testelor GPT. Funcția handleRunTest generează un vector de parametri pe baza 7D config și face un request la api/gpt-test pentru fiecare dintre cele patru tipuri de test (clarity, execution, ambiguity, business fit)
+GitHub
+. Rezultatele sunt agregate, se calculează scorurile și se setează starea testResult
+GitHub
+. UI‑ul oferă opțiuni de validare, modul de test (e.g., real GPT vs. mock) și prezintă scorurile și recomandările. Cu toate acestea, componenta nu este importată în pagina generator, deci nu este vizibilă.
+
+API‑ul GPT Test: app/api/gpt-test/route.ts validează strict parametrii 7D și verifică entitlements; dacă utilizatorul nu are canUseGptTestReal, returnează eroare 403
+GitHub
+. În momentul de față, endpoint‑ul returnează scoruri mock (ex. clarity 85, execution 78, ambiguity 92, business_fit 88) și recomandări hard‑codate
+GitHub
+.
+
+Validarea și scorurile: lib/test-engine.ts conține funcții precum calculateTestScores() și validatePromptStructure(). Prima calculează scorurile pe baza numărului de secțiuni și a altor factori
+GitHub
+, a doua detectează lipsa anumitor secțiuni (brief, persona, guardrails etc.) și returnează mesaje de eroare cu sugestii
+GitHub
+.
+
+2. Problemele întâlnite pe site
+
+GeneratorPage nu include 7D Engine, PromptGenerator și TestEngine – de aceea UI‑ul nu afișează test engine‑ul, iar butonul de generare folosește doar un buton verde simplu care nu respectă designul.
+
+Butonul „Run Test” nu are efect – lipsa importului lui TestEngine în pagina generator împiedică executarea codului care apelează /api/gpt-test. Pe site se vede „Not tested” după click
+chatgpt-prompting.com
+.
+
+Exporturile nu funcționează – componenta PromptGenerator exportă doar .txt ca fișier simplu. Exporturile .md, .json, .pdf și .zip nu există, iar designul prezent nu include gating pentru planuri diferite.
+
+Lipsa entitlements gating – API‑ul gpt-test verifică planul utilizatorului, dar în UI nu există un EntitlementGate/PaywallGate care să prevină apăsarea butonului de testare pentru utilizatorii planului Free; astfel, experiența rămâne confuză.
+
+Designul nu respectă super‑regula – butoanele au culori neconforme (verde fluorescent în loc de gradient auriu/roșu), iar animațiile de glitch/pulse lipsesc.
+
+3. Recomandări detaliate pentru agentul Cursor
+3.1 Construirea paginii generator complete
+
+Integrează componentele 7D și modulul ales: În app/generator/page.tsx trebuie importate SevenDEngine, ModuleSelector (sau grila de module cu filtrare) și PromptGenerator. Starea selectedModule și config (7D) trebuie pasată ca props către PromptGenerator.
+
+Include TestEngine: La generarea promptului, adaugă componenta TestEngine care primește generatedPrompt și config. Astfel, după ce promptul este generat cu succes, utilizatorul poate rula testele.
+
+Un pseudo‑cod:
+
+// app/generator/page.tsx
+export default function GeneratorPage() {
+  const [config, setConfig] = useState<SevenDConfig>(DEFAULT_CONFIG);
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const [prompt, setPrompt] = useState<string | null>(null);
+
+  return (
+    <div className="generator-grid">
+      <SevenDEngine config={config} onChange={setConfig} />
+      <ModuleGrid onSelect={setSelectedModule} />
+      <PromptGenerator
+        config={config}
+        selectedModule={selectedModule}
+        onPromptGenerated={setPrompt}
+      />
+      {prompt && <TestEngine prompt={prompt} config={config} />}
+    </div>
+  );
+}
+
+
+Adaugă gating la nivel de pagină: Întreg fluxul generator/test ar trebui învelit într‑un EntitlementGate requiredEntitlement="canUseGptGenerator" pentru a ascunde generatorul utilizatorilor care nu au planul potrivit. Dacă planul nu permite, afișează PaywallGate cu text de upgrade.
+
+3.2 Exporturi în diferite formate, cu entitlements
+
+Creează funcții de export în lib/exports.ts pentru .md, .json, .pdf și .zip. Fiecare funcție va primi prompt, moduleId și testResult, va genera fișierul pe server (de ex. folosind jszip pentru .zip) și va returna un link de download sau un Blob.
+
+Gating per plan: Folosește EntitlementGate pentru a restricționa accesul la butoanele de export:
+
+.txt → plan Free (cu watermark “Trial” la final);
+
+.md → plan Creator;
+
+.json și .pdf → plan Pro;
+
+.zip → plan Enterprise.
+Exemple de cod:
+
+<EntitlementGate requiredEntitlement="export:txt">
+  <IconButton onClick={() => exportTxt(prompt, config)}>TXT</IconButton>
+</EntitlementGate>
+<EntitlementGate requiredEntitlement="export:pdf">
+  <IconButton onClick={() => exportPdf(prompt, testResult)}>PDF</IconButton>
+</EntitlementGate>
+
+
+Fallback pentru entitlements lipsă: Dacă utilizatorul nu are entitlement, EntitlementGate va afișa PaywallGate cu mesajul „Upgrade to Pro to download PDF” și un link spre /pricing.
+
+3.3 Integrarea TestEngine cu API și UI
+
+Conectează handleRunTest la API: În TestEngine, handleRunTest trebuie să trimită prompt, config, userId și planId la /api/gpt-test și să proceseze răspunsul. Endpoint‑ul verifică planul și poate returna cod 403 sau 400 dacă parametrii 7D lipsesc
+GitHub
+. Afișează mesaje clare în UI: “Test available only for Pro plan” sau “Please fill all 7D parameters”.
+
+Afișează scorurile și recomandările: Folosește starea testResult și codul existent pentru a afișa metricele (clarity, execution, ambiguity, business-fit) și pentru a colora scorurile sub 80 în roșu. Folosește progres bar și secțiuni pentru “Validation issues” și “Recommendations” conform funcțiilor validatePromptStructure() și calculateTestScores()
+GitHub
+GitHub
+.
+
+Persistă rezultatele: Salvează rezultatele testului (prompt + scoruri) în lib/database.ts (ex. Supabase) pentru a permite compararea trendurilor (funcția compareTestResults() există în lib/test-engine.ts
+GitHub
+). În UI, prezintă un grafic cu evoluția scorurilor.
+
+3.4 UI și design
+
+Butonul “Generate Prompt” trebuie să fie brutalist: gradient auriu/roșu cu glitch la hover, etichetă “GENERATE PROMPT” și microcopy sub el (“Generates within <60 seconds”).
+
+Butonul “Run Test” trebuie de asemenea stilizat (gradient roșu, puls la hover). Dacă test engine nu este disponibil, înlocuiește butonul cu ComingSoonInteractive.
+
+Feedback vizual: În timp ce generatorul sau test engine‑ul rulează, afișează un spinner ritualic (de ex. un hexagon rotativ) și dezactivează butoanele.
+
+Validare de formă: Toate input‑urile 7D trebuie să aibă label‑uri vizibile și aria-describedby. Dacă un parametru lipsește, accentuează câmpul cu roșu.
+
+3.5 Testare automată și QA
+
+Teste Jest/Playwright pentru generator:
+
+Verifică că butonul “Generate Prompt” trimite un request la generatePrompt() și că promptul generat respectă structura așteptată (ex. conține secțiunile Persona, Objective, Steps).
+
+Verifică că butonul “Run Test” returnează metrice valide și că userii fără canUseGptTestReal văd PaywallGate.
+
+Verifică gating‑ul pentru export: deconectează un user Free și asigură‑te că butoanele pentru .json/.pdf sunt blocate; conectează user Pro și confirmă că exporturile funcționează.
+
+CI/CD: Adaugă aceste teste în GitHub Actions; configurarea ci.yml poate include npm run test -- --file=generator.spec.ts și un job Playwright npm run test:e2e. Build‑urile ar trebui blocate dacă oricare dintre teste eșuează.
+
+4. Rezultatul dorit
+
+Implementând modificările de mai sus, generatorul 7D și test engine‑ul vor deveni complet funcționale. Utilizatorii vor putea:
+
+Seta rapid parametrii 7D și alege un modul;
+
+Genera prompturi ritualice consistente, cu titlu și subhead conform super‑regulei;
+
+Rula teste de calitate (clarity, execution, ambiguity, business fit) și primi scoruri și recomandări în UI;
+
+Exporta prompturile și rapoartele de test în formatele suportate, în funcție de plan;
+
+Vedea butoane și microcopy aliniate stilului brutalist cu glitch/pulse.
+
+Aceste îmbunătățiri vor aduce generatorul și test engine‑ul în linie cu super‑regula PromptForge și vor evita confuziile actuale în care butoanele nu fac nimic și designul este inconsistent
+chatgpt-prompting.com
+chatgpt-prompting.com
+.
+
+
+
+
+
+

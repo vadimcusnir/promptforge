@@ -47,7 +47,7 @@ async function getEntitlements(orgId: string): Promise<Record<string, boolean>> 
 // GET - Listează toate pack-urile disponibile pentru organizație
 export async function GET(req: NextRequest) {
   try {
-    const { orgId } = validateSACFHeaders();
+    const { orgId } = await validateSACFHeaders();
     const url = new URL(req.url);
     const domain = url.searchParams.get('domain') as Domain;
 
@@ -146,7 +146,7 @@ export async function GET(req: NextRequest) {
 // POST - Generează conținut folosind template dintr-un industry pack
 export async function POST(req: NextRequest) {
   try {
-    const { orgId } = validateSACFHeaders();
+    const { orgId } = await validateSACFHeaders();
     const body = await req.json();
     const { domain, templateId, customParameters, userInputs } = body;
 
