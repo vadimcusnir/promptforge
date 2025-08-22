@@ -1,15 +1,17 @@
 import { cookies, headers } from "next/headers";
 
-export function getMotionMode() {
+export async function getMotionMode() {
   // 1) hard override din UI (cookie "motion=off|on")
-  const c = cookies().get("motion")?.value;
+  const cookieStore = await cookies();
+  const c = cookieStore.get("motion")?.value;
   if (c === "off" || c === "on") return c as "off"|"on";
 
   // 2) ENV (fallback temporar)
   if (process.env.NEXT_PUBLIC_MOTION === "off") return "off";
 
   // 3) respectă preferința userului (Reduce Motion)
-  const hdr = headers().get("Sec-CH-Prefers-Reduced-Motion") || "";
+  const headerStore = await headers();
+  const hdr = headerStore.get("Sec-CH-Prefers-Reduced-Motion") || "";
   if (/\breduce\b/i.test(hdr)) return "off";
 
   return "on";

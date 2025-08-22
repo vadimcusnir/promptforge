@@ -63,12 +63,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const mode = getMotionMode(); // "off" | "on"
+  const mode = await getMotionMode(); // "off" | "on"
   return (
     <html lang="en" data-motion={mode}>
       <head>
