@@ -4,10 +4,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!
-);
+// SACF - Development mode fallback pentru testing
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
+const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
 // Verifică dacă utilizatorul este membru al organizației
 export async function assertMembership(orgId?: string, userId?: string) {

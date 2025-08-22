@@ -1,0 +1,117 @@
+
+
+
+
+
+
+Mai jos găseşti descrierea erorilor, cauzele probabile și recomandări sub formă de prompts pentru agentul Cursor ca să le remedieze.
+
+1. Legături către pagini inexistente (404 sau pagini goale)
+
+Observaţie: Multe elemente din meniu și din footer (Modules, Pricing, Docs, Login, API Reference, Guides, About, Contact, Privacy Policy, Terms of Service) nu au conţinut. Exemple: /docs, /login, /privacy și /terms returnează pagini „404 – This page could not be found”
+chatgpt-prompting.com
+chatgpt-prompting.com
+chatgpt-prompting.com
+chatgpt-prompting.com
+, iar /modules și /pricing afişează doar headerul şi footerul fără conţinut
+chatgpt-prompting.com
+chatgpt-prompting.com
+.
+
+Cauză: Rutele corespunzătoare nu sunt generate în build sau sunt eliminate din sistemul de routing Next.js.
+
+Recomandare pentru agent: actualizează fișierul routes.ts/next.config.js astfel încât toate legăturile de navigare să aibă rute valide. Dacă anumite pagini nu sunt încă gata, înlocuieşte linkurile cu componenta ComingSoonInteractive şi setează flag="comingSoon" pentru a anunţa că pagina e în construcţie. Elimină din header şi footer linkurile inutile până la finalizarea lor.
+
+2. Gridul de module și butoanele „View Specs” / export
+
+Observaţie: Gridul de module din homepage conţine cărţi pentru M01–M12 cu butoane „View Specs” şi insigne de export (.md, .json Pro, .pdf Pro). La click nu se întâmplă nimic
+chatgpt-prompting.com
+. Filtrele „Vector” şi „Output” sau câmpul de căutare nu actualizează lista – chiar după selecţia „V1 - Strategy” şi introducerea textului „Risk” nu apar modificări
+chatgpt-prompting.com
+.
+
+Cauză: lipsesc handler‑ele de evenimente sau legăturile către paginile de specificaţii; filtrarea nu este implementată.
+
+Recomandare pentru agent: creează componenta ModuleCard cu un Link spre /modules/[slug]/spec şi setează prefetch={false}. Implementează filtru şi căutare pentru gridul de 50 de module (poţi interoga API‑ul intern). Pentru insignele de export, foloseşte componenta EntitlementGate cu requiredEntitlement adecvat (.md → plan Free, .json/.pdf → plan Pro+), iar la click declanşează generarea de fişiere. Dacă funcţionalitatea nu e pregătită, foloseşte PaywallGate cu mesaj de upgrade.
+
+3. Butoane şi CTA‑uri inoperative
+
+Run a 30‑minute test: butonul din secţiunea „You're Bleeding Hours.” nu are nicio acţiune, deşi ar trebui să ducă la un formular de înscriere sau la un demo
+chatgpt-prompting.com
+.
+
+Upgrade to save & export / Preview Demo Bundle: în secţiunea „See It in Action”, aceste butoane nu deschid nimic
+chatgpt-prompting.com
+.
+
+Recomandare pentru agent: ataşează un href spre pagina de pricing sau spre modalul de upgrade, însoţit de un data-gtm-event="cta_upgrade_click". Dacă programul de testare/înregistrare nu este gata, foloseşte ComingSoonInteractive.
+
+4. Generatorul 7D şi Test Engine
+
+Observaţie: În pagina generator, configuratorul 7D funcţionează, dar test engine‑ul (Clarity, Execution, Ambiguity, Business‑fit) nu returnează rezultate după click pe „Run Test” – verdictul rămâne „Not tested”
+chatgpt-prompting.com
+, iar exporturile .txt, .md, .json/.pdf, .zip nu fac nimic
+chatgpt-prompting.com
+. Butonul „Generate Prompt” foloseşte o culoare verde fluorescentă, diferită de CTA‑urile brutaliste din super‑regulă
+chatgpt-prompting.com
+.
+
+Cauză: lipseşte integrarea cu API‑ul de testare şi generare de fişiere; designul butonului nu respectă guideline‑urile.
+
+Recomandare pentru agent: conectează RunTest la serviciul de evaluare şi afişează scorurile (≥80) în UI. Implementează exporturile printr‑un endpoint de generare, utilizând EntitlementGate pentru limitare. Schimbă butonul la stil brutalist (gradient auriu/roşu) şi aplică glitch/pulse la hover.
+
+5. Demo‑ul „Invoke Reality”
+
+Observaţie: butonul „Invoke Reality” funcţionează şi generează un „Manifested Reality”, dar butonul „Witness the Protocol” nu deschide nimic; de asemenea, în colţul panoului de manifestare apare cuvântul „Extract” suprapus
+chatgpt-prompting.com
+.
+
+Cauză: cod rezidual (probabil un tooltip) şi lipsă de handler pentru vizualizarea protocolului.
+
+Recomandare pentru agent: elimină overlay‑ul „Extract” din UI şi adaugă un dialog/modal pentru „Witness the Protocol” în care să explici paşii agenţilor. Dacă este în dezvoltare, foloseşte ComingSoonInteractive.
+
+6. Secţiunea „See It in Action” & scorul
+
+Observaţie: Generarea promptului şi scorul (90/100) funcţionează, dar exporturile sunt blocate şi butoanele de upgrade nu duc nicăieri
+chatgpt-prompting.com
+.
+
+Recomandare: Similar cu generatorul 7D, ataşează butonul „Upgrade to save & export” la pagina de pricing sau implementează gating.
+
+7. Probleme de design și accesibilitate
+
+Header ne‑sticky şi inconsistent: bara de navigare dispare la scroll; nu are position: sticky.
+
+Footer conține linkuri fără pagini: conţine About, Contact, Privacy etc., care duc la 404
+chatgpt-prompting.com
+.
+
+Contraste şi culori: unele texte gri pe fundal negru pot să nu atingă contrastul recomandat; CTA‑uri verzi nu respectă paleta auriu/roşu din super‑regulă.
+
+Formulare fără label‑uri: câmpurile din generator nu au etichete vizibile pentru accesibilitate.
+
+Recomandare: adaptează headerul cu position: sticky; top: 0; şi uniformizează fonturile/culorile conform scalei de tipografie. Înlocuieşte linkurile inutile din footer cu ComingSoonInteractive sau ascunde-le. Adaugă aria-label şi label pentru toate input‑urile.
+
+8. Localizarea și consistenţa limbajului
+
+Observaţie: În generatorul 7D apar cuvinte în limba română (de ex. „7D Configurator” generează text cu „limba”, „surse cu autor+data”)
+chatgpt-prompting.com
+, deşi restul site‑ului e în engleză.
+
+Recomandare: uniformizează copy‑ul în limba principală (EN) şi foloseşte i18n pentru localizare.
+
+Paşi următori
+
+SSOT actualizat: extinde ruleset.yml cu aceste erori şi cerinţe, astfel încât agenţii să valideze prezenţa tuturor paginilor, gating‑urilor şi UI‑ului brutalist.
+
+Implementare Coming Soon & Paywall: acolo unde funcţionalitatea nu este gata, foloseşte ComingSoonInteractive şi PaywallGate cu requiredEntitlement pentru a evita linkuri moarte.
+
+Scripturi de testare: actualizează testele Jest/Playwright pentru a verifica funcţionalitatea butoanelor, routing‑ul către pagini şi exporturi.
+
+Reîmprospătare design: aliniează CTA‑urile la paleta ritualică (auriu/roşu), fă headerul sticky şi optimizează contrastul.
+
+Revizuire cod: cere revizuiri de PR cu checklist‑ul de reguli şi refactorizează unde este nevoie.
+
+
+
+

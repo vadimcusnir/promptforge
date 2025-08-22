@@ -1,0 +1,44 @@
+{
+  "industry": "Healthcare",
+  "slug": "healthcare",
+  "jargon": [
+    "EMR", "EHR", "HIPAA", "HL7", "telehealth", "clinical trial",
+    "patient journey", "ICD-10", "precision medicine"
+  ],
+  "kpis": [
+    "patient_outcome_improvement", "readmission_rate", "treatment_adherence",
+    "teleconsultation_volume", "clinical_trial_success_rate", "time_to_diagnosis"
+  ],
+  "compliance_notes": "HIPAA (US), GDPR (EU patient data), FDA / EMA (drugs & devices), CE Marking, Medical Ethics Boards",
+  "style_bias": "formal, etic, cu accent pe siguranță și dovezi clinice",
+  "default_output_format": "spec",
+  "risk_level": "high",
+  "defaults_7d": {
+    "scale": "corporate",
+    "urgency": "crisis",
+    "complexity": "expert",
+    "resources": "full_stack_org",
+    "application": "implementation",
+    "output": ["spec", "checklist"]
+  },
+  "guardrails": [
+    "No medical diagnosis or treatment advice",
+    "Recommend consultation with healthcare professionals",
+    "Cite peer-reviewed medical literature only",
+    "HIPAA compliance for patient data",
+    "No unverified health claims",
+    "Include appropriate medical disclaimers"
+  ],
+  "evaluation_weights": {
+    "clarity": 0.25,
+    "execution": 0.40,
+    "ambiguity_inv": 0.20,
+    "business_fit": 0.15
+  },
+  "thresholds": {
+    "clarity_min": 85,
+    "execution_min": 85,
+    "ambiguity_max": 15,
+    "business_fit_min": 80
+  }
+}

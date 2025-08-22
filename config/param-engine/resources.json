@@ -1,0 +1,144 @@
+{
+  "parameter": "resources",
+  "description": "Capacitate operațională disponibilă - determină pragmatismul soluțiilor, tool stack assumptions și implementation approach",
+  
+  "values": {
+    "minimal": {
+      "label": "Minimal Resources",
+      "description": "Resurse foarte limitate, focus pe solutions gratuite/low-cost",
+      "budget_assumptions": "0-500€/month total",
+      "team_size": "1 persoană part-time",
+      "tool_stack": "free tools, basic subscriptions, manual processes",
+      "implementation_approach": "DIY, step-by-step manual execution",
+      "timeline_factor": "slower execution due to resource constraints",
+      "examples": ["personal project", "side hustle", "bootstrap startup"]
+    },
+    
+    "solo": {
+      "label": "Solo Operator", 
+      "description": "O persoană full-time cu buget modest pentru tools",
+      "budget_assumptions": "500-2000€/month",
+      "team_size": "1 persoană full-time", 
+      "tool_stack": "productivity tools, basic SaaS subscriptions, some automation",
+      "implementation_approach": "efficient solo workflows, selective tool investment",
+      "timeline_factor": "normal execution speed, single-person bottleneck",
+      "examples": ["freelancer", "solo consultant", "single-person agency"]
+    },
+    
+    "lean_team": {
+      "label": "Lean Team",
+      "description": "Echipă mică 2-5 persoane cu buget controlat",
+      "budget_assumptions": "2000-8000€/month",
+      "team_size": "2-5 persoane",
+      "tool_stack": "team collaboration tools, mid-tier SaaS, some custom development",
+      "implementation_approach": "collaborative execution, role specialization",
+      "timeline_factor": "faster than solo, coordination overhead",
+      "examples": ["startup team", "small agency department", "project team"]
+    },
+    
+    "agency_stack": {
+      "label": "Agency Stack",
+      "description": "Agenție cu tools profesionale și procese stabilite",
+      "budget_assumptions": "8000-25000€/month",
+      "team_size": "5-20 persoane", 
+      "tool_stack": "professional tools, automation platforms, client management systems",
+      "implementation_approach": "systematized processes, client delivery focus",
+      "timeline_factor": "efficient execution, proven methodologies",
+      "examples": ["digital agency", "consultancy firm", "specialized service provider"]
+    },
+    
+    "full_stack_org": {
+      "label": "Full Stack Organization",
+      "description": "Organizație cu departamente multiple și buget substanțial",
+      "budget_assumptions": "25000-100000€/month",
+      "team_size": "20-100 persoane",
+      "tool_stack": "enterprise software, custom development, integrated systems",
+      "implementation_approach": "cross-functional teams, formal project management",
+      "timeline_factor": "robust execution, coordination complexity",
+      "examples": ["mid-size company", "corporate division", "scale-up organization"]
+    },
+    
+    "enterprise_budget": {
+      "label": "Enterprise Budget",
+      "description": "Resources practic nelimitate, focus pe quality și compliance",
+      "budget_assumptions": "100000€+/month",
+      "team_size": "100+ persoane", 
+      "tool_stack": "enterprise-grade everything, custom development, unlimited tools",
+      "implementation_approach": "formal governance, enterprise architecture, compliance-first",
+      "timeline_factor": "thorough execution, extensive governance overhead",
+      "examples": ["Fortune 500 company", "large government agency", "multinational corporation"]
+    }
+  },
+  
+  "adaptation_rules": {
+    "tool_recommendations": {
+      "minimal": ["Google Workspace", "Canva", "Buffer", "manual spreadsheets"],
+      "solo": ["Notion", "Zapier starter", "basic CRM", "simple analytics"],
+      "lean_team": ["Slack", "Asana", "HubSpot starter", "team collaboration tools"],
+      "agency_stack": ["enterprise CRM", "automation platforms", "client portals", "advanced analytics"],
+      "full_stack_org": ["Salesforce", "enterprise automation", "BI platforms", "custom integrations"],
+      "enterprise_budget": ["custom enterprise solutions", "unlimited SaaS budget", "dedicated dev teams"]
+    },
+    
+    "implementation_style": {
+      "minimal": "step-by-step manual processes, heavy documentation",
+      "solo": "efficient personal workflows, selective automation",
+      "lean_team": "collaborative processes, shared responsibilities", 
+      "agency_stack": "client-focused delivery, systematized approaches",
+      "full_stack_org": "formal project management, cross-functional coordination",
+      "enterprise_budget": "enterprise governance, compliance-driven processes"
+    },
+    
+    "complexity_constraints": {
+      "minimal": "avoid complex solutions requiring expensive tools",
+      "solo": "balance automation with manual oversight",
+      "lean_team": "scalable solutions that don't require large teams",
+      "agency_stack": "client-deliverable quality, professional presentation",
+      "full_stack_org": "enterprise-ready, scalable across departments", 
+      "enterprise_budget": "enterprise-grade, compliance-ready, audit-trail"
+    }
+  },
+  
+  "scale_interactions": {
+    "compatibility_matrix": {
+      "personal_brand": ["minimal", "solo"],
+      "solo": ["minimal", "solo", "lean_team"],
+      "startup": ["lean_team", "agency_stack"],
+      "boutique_agency": ["agency_stack", "full_stack_org"],
+      "smb": ["agency_stack", "full_stack_org"],
+      "corporate": ["full_stack_org", "enterprise_budget"],
+      "enterprise": ["enterprise_budget"]
+    },
+    "mismatch_warnings": {
+      "enterprise + minimal": "Enterprise scale incompatible with minimal resources",
+      "personal_brand + enterprise_budget": "Resource overkill for personal brand scale"
+    }
+  },
+  
+  "output_adaptation": {
+    "minimal": {
+      "focus": "free/low-cost solutions, manual processes, detailed step-by-step",
+      "avoid": "expensive tool recommendations, complex automation"
+    },
+    "solo": {
+      "focus": "efficiency tools, personal productivity, selective automation",
+      "avoid": "team-dependent processes, expensive enterprise tools"
+    },
+    "lean_team": {
+      "focus": "team collaboration, scalable processes, mid-tier tools",
+      "avoid": "enterprise complexity, resource-intensive solutions"
+    },
+    "agency_stack": {
+      "focus": "client delivery, professional tools, systematized processes",
+      "avoid": "manual workarounds, basic/amateur tools"
+    },
+    "full_stack_org": {
+      "focus": "enterprise integration, cross-functional coordination, robust systems",
+      "avoid": "simple manual processes, limited-scale solutions"
+    },
+    "enterprise_budget": {
+      "focus": "enterprise-grade solutions, compliance, unlimited tool access",
+      "avoid": "budget constraints, manual workarounds, simple tools"
+    }
+  }
+}

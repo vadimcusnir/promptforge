@@ -1,0 +1,164 @@
+{
+  "modules": [
+    {
+      "id": "M21",
+      "title": "Learning Path Designer",
+      "description": "Curriculum design adaptiv cu skill progression tracking",
+      "category": "education",
+      "vectors": [1, 5, 6],
+      "domains": ["education", "hr", "consulting"],
+      "complexity_min": "standard",
+      "typical_use_cases": ["curriculum design", "skill development", "learning optimization"],
+      "contract": {
+        "input_required": ["learning_objectives", "skill_assessment", "target_audience"],
+        "output_format": ["playbook", "json", "diagram"],
+        "success_metrics": ["learning_outcomes", "completion_rate", "skill_improvement"],
+        "execution_time": "3-5 days"
+      }
+    },
+    {
+      "id": "M22",
+      "title": "SOP Lead Gen",
+      "description": "Make/Notion/Telegram failover pentru lead generation",
+      "category": "automation",
+      "vectors": [3, 6],
+      "domains": ["marketing", "saas", "consulting"],
+      "complexity_min": "standard",
+      "typical_use_cases": ["lead generation", "automation workflows", "multi-channel outreach"],
+      "contract": {
+        "input_required": ["lead_sources", "qualification_criteria", "CRM_setup"],
+        "output_format": ["playbook", "json", "yaml"],
+        "success_metrics": ["lead_quality", "cost_per_lead", "conversion_rate"],
+        "execution_time": "2-4 days"
+      }
+    },
+    {
+      "id": "M23",
+      "title": "Cohort Analytics Engine",
+      "description": "Analiză cohort cu predictive insights și recommendations",
+      "category": "analytics",
+      "vectors": [6, 1],
+      "domains": ["saas", "ecommerce", "education"],
+      "complexity_min": "advanced",
+      "typical_use_cases": ["cohort analysis", "user behavior tracking", "retention prediction"],
+      "contract": {
+        "input_required": ["user_data", "engagement_metrics", "business_goals"],
+        "output_format": ["json", "spec", "diagram"],
+        "success_metrics": ["prediction_accuracy", "insight_actionability", "business_impact"],
+        "execution_time": "3-7 days"
+      }
+    },
+    {
+      "id": "M24",
+      "title": "Content Performance Optimizer",
+      "description": "AI-powered content optimization cu engagement prediction",
+      "category": "content",
+      "vectors": [3, 6],
+      "domains": ["marketing", "education", "media"],
+      "complexity_min": "advanced",
+      "typical_use_cases": ["content optimization", "engagement prediction", "performance improvement"],
+      "contract": {
+        "input_required": ["content_library", "performance_data", "audience_insights"],
+        "output_format": ["playbook", "json", "checklist"],
+        "success_metrics": ["engagement_improvement", "content_efficiency", "ROI_increase"],
+        "execution_time": "3-5 days"
+      }
+    },
+    {
+      "id": "M25",
+      "title": "Assessment Builder Pro",
+      "description": "Creator assessments interactiv cu scoring automat",
+      "category": "assessment",
+      "vectors": [1, 6],
+      "domains": ["education", "hr", "consulting"],
+      "complexity_min": "standard",
+      "typical_use_cases": ["skill assessment", "knowledge testing", "certification programs"],
+      "contract": {
+        "input_required": ["assessment_goals", "skill_framework", "scoring_criteria"],
+        "output_format": ["json", "spec", "playbook"],
+        "success_metrics": ["assessment_validity", "user_completion", "skill_measurement"],
+        "execution_time": "2-4 days"
+      }
+    },
+    {
+      "id": "M26",
+      "title": "Influencer Collaboration Manager",
+      "description": "Workflow influencer outreach cu tracking și ROI measurement",
+      "category": "collaboration",
+      "vectors": [3, 4],
+      "domains": ["marketing", "ecommerce", "media"],
+      "complexity_min": "standard",
+      "typical_use_cases": ["influencer marketing", "collaboration management", "campaign tracking"],
+      "contract": {
+        "input_required": ["campaign_goals", "influencer_criteria", "brand_guidelines"],
+        "output_format": ["playbook", "checklist", "json"],
+        "success_metrics": ["campaign_ROI", "engagement_rate", "brand_awareness"],
+        "execution_time": "2-3 days"
+      }
+    },
+    {
+      "id": "M27",
+      "title": "Crisis Communication Protocol",
+      "description": "Playbook crisis management cu rapid response procedures",
+      "category": "crisis",
+      "vectors": [2, 7],
+      "domains": ["consulting", "healthcare", "legal"],
+      "complexity_min": "expert",
+      "typical_use_cases": ["crisis management", "reputation protection", "emergency communication"],
+      "contract": {
+        "input_required": ["crisis_scenarios", "stakeholder_map", "communication_channels"],
+        "output_format": ["playbook", "checklist", "spec"],
+        "success_metrics": ["response_time", "reputation_protection", "stakeholder_satisfaction"],
+        "execution_time": "1-2 days"
+      }
+    },
+    {
+      "id": "M28",
+      "title": "Partnership Strategy Framework",
+      "description": "Identificare și structurare partnerships strategice",
+      "category": "strategy",
+      "vectors": [2, 4],
+      "domains": ["saas", "consulting", "ecommerce"],
+      "complexity_min": "advanced",
+      "typical_use_cases": ["strategic partnerships", "channel development", "ecosystem building"],
+      "contract": {
+        "input_required": ["business_objectives", "partner_criteria", "value_proposition"],
+        "output_format": ["spec", "playbook", "diagram"],
+        "success_metrics": ["partnership_success", "revenue_impact", "strategic_alignment"],
+        "execution_time": "3-5 days"
+      }
+    },
+    {
+      "id": "M29",
+      "title": "Data Privacy Compliance Engine",
+      "description": "GDPR/CCPA compliance cu automated audit trails",
+      "category": "compliance",
+      "vectors": [7, 6],
+      "domains": ["legal", "saas", "healthcare"],
+      "complexity_min": "expert",
+      "typical_use_cases": ["privacy compliance", "data governance", "regulatory adherence"],
+      "contract": {
+        "input_required": ["data_inventory", "processing_activities", "compliance_requirements"],
+        "output_format": ["spec", "checklist", "json"],
+        "success_metrics": ["compliance_score", "audit_readiness", "risk_mitigation"],
+        "execution_time": "5-10 days"
+      }
+    },
+    {
+      "id": "M30",
+      "title": "Revenue Attribution Model",
+      "description": "Multi-touch attribution cu advanced analytics",
+      "category": "analytics",
+      "vectors": [4, 6],
+      "domains": ["marketing", "saas", "ecommerce"],
+      "complexity_min": "expert",
+      "typical_use_cases": ["attribution modeling", "marketing ROI", "channel optimization"],
+      "contract": {
+        "input_required": ["touchpoint_data", "conversion_events", "channel_investments"],
+        "output_format": ["json", "spec", "diagram"],
+        "success_metrics": ["attribution_accuracy", "ROI_visibility", "budget_optimization"],
+        "execution_time": "5-7 days"
+      }
+    }
+  ]
+}

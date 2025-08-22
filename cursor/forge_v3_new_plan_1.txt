@@ -1,0 +1,57 @@
+
+🔍 Structura actuală a site‑ului (rute și pagini)
+Pagina / Endpoint	Rol	Detalii relevante
+Root layout (app/layout.tsx)	Bază pentru toate paginile	Importă fonturile și definește metadatele site‑ului
+GitHub
+.
+/dashboard (app/dashboard/page.tsx)	Dashboard general (momentan mock)	Se folosește pentru afișarea rulărilor; în repo actual, conținutul este minim și folosește date fictive
+GitHub
+.
+/docs/api (app/docs/api/page.tsx)	Documentația endpoint‑ului /api/run/{moduleId}	Descrie parametrii, example request/response și rate‑limiting
+GitHub
+.
+/test (app/test/page.tsx)	Pagina de testare a funcționalităților	Randează o interfață pentru a testa rapid API‑urile (/api/analytics/user, /api/gpt-editor, /api/testing/run-tests) și afișează rezultatele
+GitHub
+.
+/api/gpt-editor	API pentru îmbunătățirea promptului cu GPT	Validează parametrii 7‑D, verifică entitlements (Pro/Enterprise), refuză intrări scurte, apelează GPT‑4o, calculează scoruri și aplică pragul ≥80
+GitHub
+GitHub
+.
+/api/analytics (user, business, export)	APIs pentru analytics	/user întoarce metricele utilizatorului
+GitHub
+; /business întoarce metricele business‑ului (admin only)
+GitHub
+; /export permite exportul JSON/CSV
+GitHub
+.
+/api/testing/run-tests	API pentru rularea testelor	Permite rularea testelor api, performance, security sau toate; întoarce rezultate și summary
+GitHub
+GitHub
+.
+components/analytics-dashboard.tsx	Interfață Analytics	Afișează total runs, rata de succes, scor mediu, distribuția calității, activitate recentă, module populare și distribuția planurilor. Permite exportul JSON/CSV
+GitHub
+GitHub
+.
+components/testing-dashboard.tsx	Interfață Testing & QA	Afișează testele disponibile, permite rularea testelor, vizualizarea rezultatelor și exportul JSON/CSV
+GitHub
+GitHub
+.
+lib/telemetry/analytics.ts	Sistem de telemetrie avansat	Urmărește apelurile GPT, acțiunile utilizatorilor, metricele de performanță și utilizarea modulelor; folosește Supabase pentru stocare
+GitHub
+GitHub
+.
+lib/entitlements/plan-manager.ts	Gestionarea planurilor	Definește structura planurilor, caracteristicile (ex: canUseGptEditor, canExportPdf, canUseAnalytics) și limitele; extrage date din tabelul plans
+GitHub
+.
+lib/testing/test-framework.ts	Framework de testare	Rulează teste API/performance/security, produce summary, calculează scor de succes și loghează rezultatele.
+lib/notifications	Sistem de notificări	Permite notificări multicanal (Slack, GitHub, Email), escalare automată și template‑uri reutilizabile
+GitHub
+.
+PRODUCTION_FEATURES.md	Lista funcționalităților v3	Documentează baza de date, autentificare, integrarea OpenAI, rate‑limiting, validarea inputurilor, analytics, API‑uri actualizate, planuri, testare & QA, etc.
+GitHub
+GitHub
+.
+
+
+
+

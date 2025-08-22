@@ -1,0 +1,156 @@
+{
+  "parameter": "application",
+  "description": "Scopul specific al prompt-ului - determină structure, success metrics și approach methodology",
+  
+  "values": {
+    "training": {
+      "label": "Training & Education",
+      "description": "Învățare, dezvoltare competențe, knowledge transfer",
+      "primary_goal": "knowledge acquisition and skill development",
+      "success_metrics": ["comprehension rate", "skill improvement", "knowledge retention", "practical application"],
+      "output_structure": "educational, step-by-step, with explanations and examples",
+      "methodology": "pedagogical approach, progressive complexity, hands-on practice",
+      "examples": ["employee onboarding", "skill development program", "educational course material"]
+    },
+    
+    "audit": {
+      "label": "Audit & Assessment",
+      "description": "Evaluare situație curentă, identificare gaps, recommendations",
+      "primary_goal": "comprehensive evaluation and gap analysis",
+      "success_metrics": ["coverage completeness", "gap identification accuracy", "recommendation relevance", "actionability"],
+      "output_structure": "analytical, systematic evaluation, findings + recommendations",
+      "methodology": "structured assessment, benchmarking, evidence-based findings",
+      "examples": ["compliance audit", "performance review", "system assessment", "competitive analysis"]
+    },
+    
+    "implementation": {
+      "label": "Implementation & Execution",
+      "description": "Execuție practică, livrare results, operational deployment",
+      "primary_goal": "practical execution and result delivery",
+      "success_metrics": ["implementation speed", "execution quality", "result achievement", "operational efficiency"],
+      "output_structure": "action-oriented, practical steps, execution roadmap",
+      "methodology": "project management approach, milestone-driven, result-focused",
+      "examples": ["system deployment", "campaign execution", "process implementation", "feature launch"]
+    },
+    
+    "strategy_design": {
+      "label": "Strategy & Design", 
+      "description": "Planning strategic, design procese, long-term vision",
+      "primary_goal": "strategic planning and systematic design",
+      "success_metrics": ["strategic alignment", "design coherence", "long-term viability", "stakeholder buy-in"],
+      "output_structure": "strategic framework, design principles, long-term roadmap",
+      "methodology": "design thinking, strategic planning, systems thinking",
+      "examples": ["business strategy", "product roadmap", "organizational design", "system architecture"]
+    },
+    
+    "crisis_response": {
+      "label": "Crisis Response",
+      "description": "Răspuns urgent, damage control, emergency procedures",
+      "primary_goal": "immediate problem resolution and damage mitigation",
+      "success_metrics": ["response time", "issue resolution", "damage limitation", "recovery speed"],
+      "output_structure": "urgent action items, escalation procedures, immediate steps",
+      "methodology": "incident response, triage approach, rapid decision-making",
+      "examples": ["security breach response", "PR crisis management", "system outage recovery", "emergency procedures"]
+    },
+    
+    "experimentation": {
+      "label": "Experimentation & Testing",
+      "description": "Testare hypotheses, pilot programs, innovation research",
+      "primary_goal": "hypothesis validation and learning generation",
+      "success_metrics": ["experiment validity", "learning quality", "hypothesis confirmation", "iteration speed"],
+      "output_structure": "experimental design, hypothesis framework, testing methodology",
+      "methodology": "scientific method, A/B testing, lean startup approach",
+      "examples": ["A/B testing", "pilot program", "proof of concept", "market research"]
+    },
+    
+    "documentation": {
+      "label": "Documentation & Knowledge",
+      "description": "Documentare procese, knowledge management, institutional memory",
+      "primary_goal": "comprehensive documentation and knowledge preservation",
+      "success_metrics": ["documentation completeness", "clarity and usability", "maintenance ease", "knowledge transfer"],
+      "output_structure": "systematic documentation, clear procedures, searchable knowledge base",
+      "methodology": "technical writing, knowledge management, information architecture",
+      "examples": ["process documentation", "API documentation", "user manuals", "knowledge base creation"]
+    }
+  },
+  
+  "adaptation_rules": {
+    "language_style": {
+      "training": "educational, explanatory, encouraging, step-by-step guidance",
+      "audit": "analytical, objective, evidence-based, professional assessment",
+      "implementation": "action-oriented, directive, practical, execution-focused",
+      "strategy_design": "strategic, visionary, framework-oriented, long-term thinking",
+      "crisis_response": "urgent, direct, decisive, immediate action required",
+      "experimentation": "hypothesis-driven, iterative, learning-focused, data-oriented",
+      "documentation": "clear, comprehensive, systematic, reference-oriented"
+    },
+    
+    "output_format_preference": {
+      "training": ["playbook", "checklist", "md"],
+      "audit": ["spec", "json", "md"],
+      "implementation": ["checklist", "playbook", "spec"],
+      "strategy_design": ["spec", "diagram", "md"],
+      "crisis_response": ["checklist", "spec"],
+      "experimentation": ["json", "spec", "md"],
+      "documentation": ["md", "spec", "bundle"]
+    },
+    
+    "success_criteria_focus": {
+      "training": "learning outcomes, skill acquisition, knowledge retention",
+      "audit": "completeness, accuracy, actionable insights",
+      "implementation": "execution speed, quality delivery, measurable results",
+      "strategy_design": "strategic coherence, stakeholder alignment, long-term value",
+      "crisis_response": "immediate resolution, damage control, rapid recovery",
+      "experimentation": "valid learning, hypothesis testing, iteration capability",
+      "documentation": "clarity, completeness, maintainability, usability"
+    }
+  },
+  
+  "urgency_interactions": {
+    "high_urgency_applications": {
+      "crisis_response": "always high urgency by definition",
+      "implementation": "often urgent when deadlines approach",
+      "experimentation": "can be urgent for rapid validation"
+    },
+    "low_urgency_applications": {
+      "training": "typically planned, methodical approach",
+      "documentation": "usually planned, comprehensive approach",
+      "strategy_design": "strategic, long-term planning horizon"
+    },
+    "urgency_adaptation": {
+      "crisis_response + low_urgency": "contradiction - escalate urgency or reconsider application",
+      "training + crisis": "focus on immediate critical knowledge only",
+      "documentation + crisis": "emergency documentation, rapid knowledge capture"
+    }
+  },
+  
+  "complexity_interactions": {
+    "complexity_requirements": {
+      "training": "adapt complexity to learner level",
+      "audit": "complexity matches evaluation depth needed",
+      "implementation": "complexity sufficient for execution requirements",
+      "strategy_design": "higher complexity for comprehensive strategy",
+      "crisis_response": "minimize complexity for rapid execution",
+      "experimentation": "complexity matches hypothesis sophistication",
+      "documentation": "complexity matches system being documented"
+    }
+  },
+  
+  "domain_adaptations": {
+    "high_risk_domains": {
+      "domains": ["fintech", "healthcare", "legal"],
+      "application_constraints": {
+        "audit": "regulatory compliance focus, legal requirements",
+        "implementation": "safety protocols, compliance verification",
+        "crisis_response": "regulatory notification requirements, escalation procedures"
+      }
+    },
+    "innovation_domains": {
+      "domains": ["aiml", "web3"],
+      "application_preferences": {
+        "experimentation": "rapid iteration, hypothesis testing",
+        "strategy_design": "innovation frameworks, emerging tech considerations"
+      }
+    }
+  }
+}

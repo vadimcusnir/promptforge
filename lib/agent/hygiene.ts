@@ -8,8 +8,8 @@ export function stripSecrets(input: string): string {
   let sanitized = input;
 
   // OpenAI API keys
-  sanitized = sanitized.replace(/sk-[A-Za-z0-9]{48,}/g, 'sk-***REDACTED***');
-  sanitized = sanitized.replace(/sk-proj-[A-Za-z0-9_-]{43,}/g, 'sk-proj-***REDACTED***');
+  sanitized = sanitized.replace(/sk-[A-Za-z0-9]{20,}/g, 'sk-***REDACTED***');
+  sanitized = sanitized.replace(/sk-proj-[A-Za-z0-9_-]{15,}/g, 'sk-proj-***REDACTED***');
   
   // Anthropic API keys
   sanitized = sanitized.replace(/sk-ant-[A-Za-z0-9_-]{40,}/g, 'sk-ant-***REDACTED***');
@@ -117,7 +117,7 @@ export function detectInjection(input: string): {
 } {
   const suspiciousPatterns = [
     // Tentative de override sistem
-    /ignore\s+(previous|all|system)\s+(instructions?|prompts?|rules?)/i,
+    /ignore\s+(all\s+previous|previous|all|system)\s+(instructions?|prompts?|rules?)/i,
     /forget\s+(everything|all|previous)/i,
     /override\s+(system|instructions?)/i,
     

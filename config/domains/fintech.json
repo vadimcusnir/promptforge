@@ -1,0 +1,44 @@
+{
+  "industry": "FinTech",
+  "slug": "fintech",
+  "jargon": [
+    "API banking", "Open Banking", "PCI DSS", "KYC", "AML", "RegTech",
+    "neobank", "embedded finance", "BNPL", "DeFi", "stablecoin", "custodial"
+  ],
+  "kpis": [
+    "transaction_volume", "user_acquisition_cost", "loan_default_rate",
+    "compliance_score", "API_uptime", "fraud_detection_rate", "customer_lifetime_value"
+  ],
+  "compliance_notes": "PCI DSS (payments), SOX (public companies), GDPR (EU), PSD2 (EU payments), MiFID II (EU investments), Dodd-Frank (US), Basel III (banking)",
+  "style_bias": "precis, orientat pe securitate, cu emphasis pe compliance și transparency",
+  "default_output_format": "spec",
+  "risk_level": "high",
+  "defaults_7d": {
+    "scale": "enterprise",
+    "urgency": "sprint",
+    "complexity": "advanced",
+    "resources": "full_stack_org",
+    "application": "implementation",
+    "output": ["spec", "checklist"]
+  },
+  "guardrails": [
+    "No specific investment advice or recommendations",
+    "No unauthorized financial data processing",
+    "Ensure PCI DSS compliance for payment data",
+    "Include appropriate financial disclaimers",
+    "No guidance on regulatory circumvention",
+    "Verify AML/KYC requirements compliance"
+  ],
+  "evaluation_weights": {
+    "clarity": 0.25,
+    "execution": 0.40,
+    "ambiguity_inv": 0.20,
+    "business_fit": 0.15
+  },
+  "thresholds": {
+    "clarity_min": 85,
+    "execution_min": 85,
+    "ambiguity_max": 15,
+    "business_fit_min": 80
+  }
+}

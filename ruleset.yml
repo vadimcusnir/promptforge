@@ -72,15 +72,15 @@ sevenD:
     government:  { scale: enterprise,    urgency: planned, complexity: advanced, resources: enterprise_budget, application: documentation, output_format: spec }
     web3:        { scale: startup,       urgency: pilot,   complexity: advanced, resources: lean_team,      application: experimentation, output_format: spec }
     aiml:        { scale: corporate,     urgency: pilot,   complexity: expert,   resources: full_stack_org, application: experimentation, output_format: spec }
-    cybersecurity:{ scale: corporate,    urgency: sprint,  complexity: advanced, resources: full_stack_org, application: crisis_response, output_format: spec }
-    manufacturing:{ scale: corporate,    urgency: planned, complexity: advanced, resources: full_stack_org, application: implementation,  output_format: spec }
+    cybersecurity: { scale: corporate,    urgency: sprint,  complexity: advanced, resources: full_stack_org, application: crisis_response, output_format: spec }
+    manufacturing: { scale: corporate,    urgency: planned, complexity: advanced, resources: full_stack_org, application: implementation,  output_format: spec }
     logistics:   { scale: smb,           urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation,  output_format: playbook }
     travel:      { scale: smb,           urgency: planned, complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
     gaming:      { scale: smb,           urgency: sprint,  complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
     fashion:     { scale: smb,           urgency: sprint,  complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
     beauty:      { scale: smb,           urgency: sprint,  complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
     spiritual:   { scale: solo,          urgency: planned, complexity: foundational, resources: minimal,    application: training,        output_format: playbook }
-    architecture:{ scale: corporate,     urgency: planned, complexity: advanced, resources: full_stack_org, application: strategy_design, output_format: spec }
+    architecture: { scale: corporate,     urgency: planned, complexity: advanced, resources: full_stack_org, application: strategy_design, output_format: spec }
     agriculture: { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: implementation,  output_format: spec }
 
 api:

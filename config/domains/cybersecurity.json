@@ -1,0 +1,43 @@
+{
+  "industry": "Cybersecurity",
+  "slug": "cybersecurity", 
+  "jargon": [
+    "SOC", "SIEM", "phishing", "zero-trust", "IAM", "incident response",
+    "CVE", "penetration testing", "endpoint security"
+  ],
+  "kpis": [
+    "MTTR (mean time to respond)", "number_of_incidents_detected", 
+    "false_positive_rate", "patching_time", "system_uptime", "breach_cost_reduction"
+  ],
+  "compliance_notes": "GDPR (data security), ISO 27001, NIS2 Directive, CCPA (US), SOC2, OWASP standards",
+  "style_bias": "formal, tehnic, focus pe risc și reziliență",
+  "default_output_format": "spec",
+  "risk_level": "high",
+  "defaults_7d": {
+    "scale": "corporate",
+    "urgency": "crisis",
+    "complexity": "advanced", 
+    "resources": "full_stack_org",
+    "application": "crisis_response",
+    "output": ["spec", "checklist"]
+  },
+  "guardrails": [
+    "No disclosure of specific vulnerabilities",
+    "Include responsible disclosure practices",
+    "No encouragement of unauthorized access",
+    "Emphasize legal and ethical boundaries",
+    "Include incident reporting procedures"
+  ],
+  "evaluation_weights": {
+    "clarity": 0.25,
+    "execution": 0.40,
+    "ambiguity_inv": 0.20,
+    "business_fit": 0.15
+  },
+  "thresholds": {
+    "clarity_min": 85,
+    "execution_min": 85,
+    "ambiguity_max": 12,
+    "business_fit_min": 75
+  }
+}
