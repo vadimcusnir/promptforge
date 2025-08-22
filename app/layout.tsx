@@ -2,6 +2,7 @@ import { Header } from "@/components/Header"
 import type React from "react"
 import type { Metadata } from "next"
 import ClientRootLayout from "./ClientRootLayout"
+import { getMotionMode } from "@/lib/motion"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -67,8 +68,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const mode = getMotionMode(); // "off" | "on"
   return (
-    <html lang="en">
+    <html lang="en" data-motion={mode}>
       <head>
         <meta httpEquiv="Content-Language" content="en" />
       </head>

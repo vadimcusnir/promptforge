@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motion Toggle Demo</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #0a0a0a; color: #fff; }
+        button { 
+            padding: 10px 20px; 
+            margin: 10px; 
+            background: #d1a954; 
+            color: #000; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        button:hover { background: #b8954a; }
+        .status { 
+            padding: 20px; 
+            background: #1a1a1a; 
+            border-radius: 4px; 
+            margin: 20px 0; 
+        }
+    </style>
+</head>
+<body>
+    <h1>PromptForge Motion Control Demo</h1>
+    
+    <div class="status">
+        <h3>Current Status:</h3>
+        <p id="status">Loading...</p>
+    </div>
+
+    <h3>Controls:</h3>
+    <button onclick="setMotion(false)">🔇 Soft Mode (Ambient)</button>
+    <button onclick="setMotion(true)">🌊 Normal Mode</button>
+    <button onclick="checkStatus()">🔄 Check Status</button>
+
+    <h3>Test Commands (Browser Console):</h3>
+    <pre>
+// Soft mode ON (ambient, fără distragere):
+fetch('/api/motion',{method:'POST',headers:{'Content-Type':'application/json'},body:'{"on":false}'})
+
+// Normal mode (efecte subtile):
+fetch('/api/motion',{method:'POST',headers:{'Content-Type':'application/json'},body:'{"on":true}'})
+    </pre>
+
+    <h3>CSS Override Test:</h3>
+    <pre>
+// Manual override în browser console:
+document.cookie = "motion=off; Path=/; SameSite=Lax";
+document.cookie = "motion=on; Path=/; SameSite=Lax";
+location.reload();
+    </pre>
+
+    <script>
+        async function setMotion(on) {
+            try {
+                const response = await fetch('/api/motion', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({on})
+                });
+                const data = await response.json();
+                document.getElementById('status').textContent = 
+                    `Motion: ${data.motion} (${on ? 'Normal effects enabled' : 'Ambient mode - static grid only'})`;
+                
+                // Reîncarcă pagina pentru a aplica schimbarea
+                setTimeout(() => location.reload(), 1000);
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        function checkStatus() {
+            const motionAttr = document.documentElement.getAttribute('data-motion');
+            const cookie = document.cookie.split(';').find(c => c.trim().startsWith('motion='));
+            const cookieValue = cookie ? cookie.split('=')[1] : 'not set';
+            
+            document.getElementById('status').textContent = 
+                `HTML data-motion: "${motionAttr}", Cookie: "${cookieValue}"`;
+        }
+
+        // Check status on load
+        checkStatus();
+    </script>
+</body>
+</html>

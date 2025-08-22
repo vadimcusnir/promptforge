@@ -10,7 +10,7 @@ import { useRouteOverlay } from "@/hooks/use-route-overlay"
 import { QuoteFocusProvider } from "@/lib/quote-focus"
 import { OverlayController } from "@/components/OverlayController"
 import { useEffect } from "react"
-import MatrixTokens from "@/components/background/matrix-tokens"
+import BackgroundRoot from "@/components/background/BackgroundRoot"
 import "./globals.css"
 import "./styles/variables.css"
 import "./styles/animations.css"
@@ -104,13 +104,11 @@ html {
         `}</style>
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell`}>
-        <div id="bg-root" />
-        <div id="bg-overlay" />
+        <BackgroundRoot ambient />
         <div id="app" data-layer="ui">
           <QuoteFocusProvider>
             <OverlayController />
             <ClientReady />
-            <MatrixTokens />
             <Header />
             {children}
             <Footer />

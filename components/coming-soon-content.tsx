@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ClientOnly } from "@/components/ClientOnly";
 import { DigitalRune } from "@/components/background/DigitalRune";
-import { CyberPoeticBackground } from "@/components/background/cyber-poetic-background";
+
 
 interface ComingSoonContentProps {
   /** Custom title override */
@@ -60,10 +60,7 @@ export function ComingSoonContent({
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white relative overflow-hidden">
-      {/* Background with ClientOnly wrapper to prevent SSR conflicts */}
-      <ClientOnly fallback={<div className="fixed inset-0 bg-[#0a0a0a]" />}>
-        <CyberPoeticBackground />
-      </ClientOnly>
+      {/* Background now handled by global BackgroundRoot */}
       
       {/* Digital Rune - Central Symbol */}
       {showDigitalRune && (

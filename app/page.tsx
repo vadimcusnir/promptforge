@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { AnimatedCodeBlock } from "@/components/ui/animated-code-block"
 import { BrandLinterAlert } from "@/components/ui/brand-linter-alert"
-import { CyberPoeticBackground } from "@/components/background/cyber-poetic-background"
+
 import { SkipLink } from "@/components/SkipLink"
 import { brandLinter, type BrandLinterResult } from "@/lib/brand-linter"
 import { COPY } from "@/lib/copy"
@@ -136,7 +136,6 @@ Generate the optimized ${demoInput} strategy now.`
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-mono relative">
       <SkipLink />
-      <CyberPoeticBackground />
 
       <button
         onClick={() => setShowExitPopup(true)}

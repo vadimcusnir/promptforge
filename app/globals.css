@@ -1585,7 +1585,34 @@
     backface-visibility: hidden;
   }
 
-  /* UI Overlay Policy: Reduced Motion Support */
+  /* Respectă reduce-motion global */
+  @media (prefers-reduced-motion: reduce) {
+    * { 
+      animation: none !important; 
+      transition: none !important; 
+    }
+  }
+
+  /* Soft mode explicit din UI: setezi pe <html data-motion="off"> */
+  html[data-motion="off"] * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Static grid pentru ambient mode */
+  .pf-grid-fixed {
+    position: fixed; 
+    inset: 0; 
+    z-index: -1; 
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 64px 64px, 64px 64px;
+    background-color: #0a0a0a;
+  }
+
+  /* UI Overlay Policy: Reduced Motion Support (legacy) */
   @media (prefers-reduced-motion: reduce) {
     #bg-overlay { 
       transition: none !important; 
@@ -1600,17 +1627,6 @@
     .cyber-bg-layer-4,
     .cyber-bg-layer-5 {
       display: none !important;
-    }
-
-    /* Disable all animations and transitions */
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      transition-delay: 0ms !important;
-      scroll-behavior: auto !important;
     }
 
     /* Disable matrix tokens and geometric figures */
