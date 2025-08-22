@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { Download, FileText, Code, Package, Lock } from "lucide-react";
+import { EntitlementGate, useFeatureAccess } from "@/components/billing/EntitlementGate";
 import type { GeneratedPrompt, TestResult } from "@/types/promptforge";
-import { PremiumGate } from "@/lib/premium-features";
 
 interface ExportBarProps {
   prompt: GeneratedPrompt;
   testResult: TestResult | null;
   onExport: (format: string) => void;
+  orgId: string; // Added for entitlements
 }
 
-export function ExportBar({ prompt, testResult, onExport }: ExportBarProps) {
+export function ExportBar({ prompt, testResult, onExport, orgId }: ExportBarProps) {
   const [showManifest, setShowManifest] = useState(false);
-  const premiumGate = PremiumGate.getInstance();
 
   const exportFormats = [
     {
@@ -27,31 +27,28 @@ export function ExportBar({ prompt, testResult, onExport }: ExportBarProps) {
       format: "md",
       label: ".md",
       icon: FileText,
-      free: true,
+      entitlement: "canExportMD" as const,
       description: "Markdown format",
     },
     {
       format: "json",
       label: ".json",
       icon: Code,
-      free: false,
-      gate: "pro",
+      entitlement: "canExportJSON" as const,
       description: "Structured JSON with metadata",
     },
     {
       format: "pdf",
       label: ".pdf",
       icon: FileText,
-      free: false,
-      gate: "pro",
+      entitlement: "canExportPDF" as const,
       description: "Professional PDF report",
     },
     {
       format: "zip",
       label: ".zip",
       icon: Package,
-      free: false,
-      gate: "enterprise",
+      entitlement: "canExportBundleZip" as const,
       description: "Complete bundle with assets",
     },
   ];
@@ -87,31 +84,40 @@ export function ExportBar({ prompt, testResult, onExport }: ExportBarProps) {
 
             <div className="flex gap-2">
               {exportFormats.map(
-                ({ format, label, icon: Icon, free, gate, description }) => {
-                  const canExport = free || premiumGate.canExportFormat(format);
+                ({ format, label, icon: Icon, free, entitlement, description }) => {
+                  if (free) {
+                    // Free formats don't need entitlement checks
+                    return (
+                      <button
+                        key={format}
+                        onClick={() => onExport(format)}
+                        className="px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-all bg-gold-industrial text-black hover:bg-gold-industrial/90"
+                        title={description}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {label}
+                      </button>
+                    );
+                  }
+
+                  // Premium formats use EntitlementGate
                   return (
-                    <button
+                    <EntitlementGate
                       key={format}
-                      onClick={() => onExport(format)}
-                      disabled={!canExport}
-                      className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-all ${
-                        canExport
-                          ? "bg-gold-industrial text-black hover:bg-gold-industrial/90"
-                          : "bg-lead-gray/20 text-lead-gray cursor-not-allowed"
-                      }`}
-                      data-gate={gate}
-                      title={
-                        canExport
-                          ? description
-                          : gate === "pro"
-                            ? "Available in Pro. See plans."
-                            : "Enterprise only. See plans."
-                      }
+                      orgId={orgId}
+                      feature={entitlement!}
+                      mode="modal"
+                      trigger={`export_${format}`}
                     >
-                      {!canExport && <Lock className="w-4 h-4" />}
-                      <Icon className="w-4 h-4" />
-                      {label}
-                    </button>
+                      <button
+                        onClick={() => onExport(format)}
+                        className="px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-all bg-gold-industrial text-black hover:bg-gold-industrial/90"
+                        title={description}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {label}
+                      </button>
+                    </EntitlementGate>
                   );
                 },
               )}

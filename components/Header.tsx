@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { COPY } from "@/lib/copy";
 import { Home, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 interface HeaderProps {
   isAuthenticated?: boolean;
@@ -45,17 +46,16 @@ export function Header({
         <div className="flex items-center justify-between h-16">
           {/* Logo (Rună Digitală) */}
           <div className="flex items-center">
-            <div className="flex items-center gap-3">
-              <div 
-                className="w-8 h-8 border-2 rotate-45 flex items-center justify-center"
-                style={{borderColor: "var(--pf-gold-600)"}}
-              >
-                <span 
-                  className="text-xs font-black rotate-[-45deg]"
-                  style={{color: "var(--pf-gold-600)"}}
-                >
-                  Ψ
-                </span>
+            <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-150">
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Image
+                  src="/forge_v3_logo/nav_static_03_loading.webp"
+                  alt="PromptForge™ Logo"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 object-contain"
+                  priority
+                />
               </div>
               <div 
                 className="text-xl font-black font-mono"
@@ -63,7 +63,7 @@ export function Header({
               >
                 {COPY.brand}
               </div>
-            </div>
+            </a>
           </div>
 
           <div className="flex items-center space-x-8">

@@ -1,75 +1,160 @@
 import { type NextRequest, NextResponse } from "next/server";
-import type { GPTEditOptions } from "@/lib/gpt-editor";
 import { validateEnglishContent } from "@/lib/english";
+import { GPTEditorRequestSchema, normalize7D, APIError } from "@/lib/server/validation";
+import { optimizePrompt } from "@/lib/server/openai";
+import { checkRateLimit } from "@/lib/server/supabase";
 
-// This would be the real GPT integration endpoint
+/**
+ * POST /api/gpt-editor - Optimize prompt (no gating required)
+ * 
+ * Tightens prompts with clarity improvements, guardrails, and domain context.
+ * Available to all authenticated users without entitlement restrictions.
+ */
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+
   try {
-    const { prompt, options }: { prompt: string; options: GPTEditOptions } =
-      await request.json();
-
-    // Validate English-only content
-    const validation = validateEnglishContent({ prompt });
-    if (!validation.isValid) {
-      return NextResponse.json(validation.error, { status: 422 });
-    }
-
-    // In a real implementation, this would call OpenAI's API
-    // const response = await openai.chat.completions.create({
-    //   model: "gpt-4",
-    //   messages: [
-    //     {
-    //       role: "system",
-    //       content: `You are a prompt optimization expert. You must respond in English only. Reject or rewrite non-English input to English.
-    //
-    //       Improve the given prompt based on these criteria:
-    //       - Focus: ${options.focus}
-    //       - Tone: ${options.tone}
-    //       - Length: ${options.length}
-    //
-    //       Return a JSON object with:
-    //       - editedPrompt: the improved prompt (MUST be in English)
-    //       - improvements: array of improvements made (MUST be in English)
-    //       - confidence: confidence score (0-100)`
-    //     },
-    //     {
-    //       role: "user",
-    //       content: prompt
-    //     }
-    //   ],
-    //   temperature: 0.3
-    // })
-
-    // For now, return a placeholder response
-    const editedPrompt = `# GPT-4 OPTIMIZED PROMPT\n\n${prompt}\n\n## APPLIED OPTIMIZATIONS\n- Improved structure\n- Added examples\n- Optimized for clarity`;
-
-    // Validate the AI response is also in English
-    const responseValidation = validateEnglishContent({ prompt: editedPrompt });
-    if (!responseValidation.isValid) {
+    // Parse and validate request
+    const body = await request.json();
+    const validation = GPTEditorRequestSchema.safeParse(body);
+    
+    if (!validation.success) {
       return NextResponse.json(
-        {
-          error: "AI_GENERATED_NON_ENGLISH",
-          message: "AI model generated non-English content. Please try again.",
+        { 
+          error: "INPUT_SCHEMA_MISMATCH",
+          details: validation.error.errors 
         },
-        { status: 500 },
+        { status: 422 }
       );
     }
 
-    return NextResponse.json({
-      editedPrompt,
-      improvements: [
-        "Improved structure",
-        "Added examples",
-        "Optimized for clarity",
-      ],
-      confidence: 92,
-      processingTime: 1500,
+    const { prompt, sevenD } = validation.data;
+
+    // Validate English-only content
+    const englishValidation = validateEnglishContent({ prompt });
+    if (!englishValidation.isValid) {
+      return NextResponse.json(
+        {
+          error: "INVALID_CONTENT_LANGUAGE",
+          message: "Content must be in English only"
+        },
+        { status: 422 }
+      );
+    }
+
+    // Normalize 7D configuration (apply domain defaults)
+    let normalized7D;
+    try {
+      normalized7D = normalize7D(sevenD);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          error: "INVALID_7D_ENUM",
+          message: error instanceof Error ? error.message : "7D validation failed"
+        },
+        { status: 400 }
+      );
+    }
+
+    // Basic rate limiting (60 requests per minute per IP)
+    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
+    const rateLimit = await checkRateLimit(`gpt-editor:${clientIP}`, 60);
+    
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: "RATE_LIMITED",
+          message: "Rate limit exceeded. Please try again later.",
+          resetTime: rateLimit.resetTime
+        },
+        { status: 429 }
+      );
+    }
+
+    // Optimize prompt using OpenAI
+    const result = await optimizePrompt(prompt, {
+      domain: normalized7D.domain,
+      focus: 'clarity',
+      tone: 'professional',
+      length: 'concise'
     });
+
+    // Parse OpenAI response
+    let optimizedData;
+    try {
+      optimizedData = JSON.parse(result.content);
+    } catch {
+      // Fallback if JSON parsing fails
+      optimizedData = {
+        editedPrompt: result.content,
+        improvements: ["Enhanced clarity", "Applied domain context", "Improved structure"],
+        confidence: 85
+      };
+    }
+
+    // Validate optimized content is still English
+    const optimizedValidation = validateEnglishContent({ 
+      prompt: optimizedData.editedPrompt || result.content 
+    });
+    
+    if (!optimizedValidation.isValid) {
+      return NextResponse.json(
+        {
+          error: "AI_GENERATED_NON_ENGLISH",
+          message: "AI model generated non-English content. Please try again."
+        },
+        { status: 500 }
+      );
+    }
+
+    // Return optimized prompt with telemetry
+    return NextResponse.json({
+      editedPrompt: optimizedData.editedPrompt || result.content,
+      improvements: optimizedData.improvements || ["Optimized for clarity"],
+      confidence: Math.min(100, Math.max(0, optimizedData.confidence || 85)),
+      sevenD: normalized7D,
+      usage: {
+        tokens: result.usage.total_tokens,
+        cost_usd: result.usage.cost_usd,
+        duration_ms: result.duration_ms
+      },
+      processingTime: Date.now() - startTime,
+      model: result.model
+    });
+
   } catch (error) {
-    console.error("GPT Editor API Error:", error);
+    console.error("[GPT Editor API] Error:", error);
+
+    // Handle specific API errors
+    if (error instanceof APIError) {
+      return NextResponse.json(
+        {
+          error: error.apiCode,
+          message: error.message,
+          details: error.details
+        },
+        { status: error.code }
+      );
+    }
+
+    // Handle OpenAI API errors
+    if (error && typeof error === 'object' && 'status' in error) {
+      return NextResponse.json(
+        {
+          error: "OPENAI_API_ERROR",
+          message: "OpenAI service temporarily unavailable"
+        },
+        { status: 503 }
+      );
+    }
+
+    // Generic error fallback
     return NextResponse.json(
-      { error: "Failed to optimize prompt" },
-      { status: 500 },
+      { 
+        error: "INTERNAL_RUN_ERROR",
+        message: "Failed to optimize prompt" 
+      },
+      { status: 500 }
     );
   }
 }

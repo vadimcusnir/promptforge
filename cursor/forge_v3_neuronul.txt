@@ -1,5 +1,152 @@
 
 
+Standardul Librăriei PromptForge v1
+1) Unități și tipuri (alfabetul tău operațional)
+
+NEU = Neuron (cea mai mică unitate executabilă): o micro‑funcție de prompting cu 1 scop, 1 intrare, 1 ieșire, testabilă.
+
+TMP = Template (schelet reutilizabil de text/structură).
+
+FRM = Framework (logică de compoziție a mai multor TMP/NEU).
+
+SOP = Procedură (pași operaționali).
+
+SWP = Swipe (exemplu real etichetat pentru inspirație).
+
+BND = Bundle (export artefacte + checksum).
+
+Toate pleacă din „librărie” (structură în 3 niveluri, nume scurte, scalabilă) — exact ce ai documentat deja pentru utilizare pe iOS și mobile, cu adâncime limitată la 3 niveluri și foldere root clare (Scriere/Optimizare/Context/AI & Automation/Quick Access) . Substructurile (Swipe/Templates/Frameworks în Scriere; Checklists/Guides/Case Studies în Optimizare; Social/E‑mail/Pagini în Context) rămân canonice .
+
+2) Metadate obligatorii (schema 7D + operare)
+
+id (slug): NEU-ttl-optimizer-v1
+
+title, summary, tags[]
+
+params7D: domain, scale, urgency, complexity, resources, application, output
+
+io: input_schema (JSON Schema), output_schema (JSON Schema)
+
+tests[]: cazuri minime (seed determinist, așteptat)
+
+telemetry: created_at, created_by, run_id?, score?
+
+entitlement: plan minim (Free/Creator/Pro/Enterprise) + add‑ons
+
+status: draft | published | deprecated
+
+license: reutilizare internă/externă
+
+Notă: Librăria se alimentează cu Templates și Swipe-uri (cu denumire + etichete + exemple) — principiul e deja în metodologiile tale (“Construirea Librăriei de Template-uri”, “Etichetare și Categorizare”, “Aplicare în campanie de test”) .
+
+3) Convenții de denumire
+
+Dosare: 01_writing/ 02_optimization/ 03_context/ 04_ai/ 05_quick/ (root)
+
+Fișiere: {TYPE}-{slug}-{vX}.{md|json} ex: NEU-ttl-optimizer-v1.json
+
+Slug: kebab-case, max 32 caractere; versiune obligatorie.
+
+4) Gating & Artefacte
+
+Free: txt; Creator: +md; Pro: +json/pdf + Test Engine live; Enterprise: +bundle.zip (toate + checksum).
+
+Export obligatoriu include: prompt.txt, prompt.md, prompt.json, opțional prompt.pdf, checksum.txt, bundle.zip (Enterprise).
+(Acest flux e coerent cu modul în care predai „librăria” ca bază de lucru: capitol distinct, cu folosire, actualizare, framework-uri) .
+
+Cum construiești Librăria (execuție în 10 pași)
+
+Schema DB (Supabase, RLS per org/workspace)
+t_assets (id, type, slug, title, summary, tags, params7D, input_schema, output_schema, entitlement, status, version, checksum, created_by, created_at),
+t_tests (asset_id, seed, input, expected, last_score),
+t_runs (run_id, asset_id, started_at, ended_at, tokens, score),
+t_bundles (run_id, paths, checksum).
+(Ținta: structură simplă, intuitivă, scalabilă — exact cum faci în “Librărie”) .
+
+Ingestor (CLI): importă .json/.md → validează schema → calculează checksum → scrie în DB → indexează.
+
+Normalizare conținut: mapează existentele Swipe, Templates, Frameworks în structura 3‑level; redenumește după convenții (vezi sus) .
+
+UI
+
+/library (filtre: Type, Tags, 7D, Plan)
+
+/library/[type] (listează + sort: newest, score)
+
+/neuron/[slug] (pagina NEU)
+
+CTA‑uri: Simulate Test (toți), Run Real (Pro+), Export (gated).
+
+Căutare: full‑text (title, summary, tags) + facete 7D.
+
+Test Engine: rulează tests[] pe fiecare NEU → salvează score; afișează badge pe card.
+
+Pipeline Export: txt/md/json/pdf (+watermark trial), checksum, bundle.zip (Ent).
+
+Governance: PR‑review → published; retrogradare → deprecated.
+
+Metrici: time_to_generate, conversion_to_export, score_avg.
+
+Seeds: 10 NEU critice (titluri, CTA, reframing, tone‑shift, headline ranker, email subject ranker etc.) ca start pack.
+
+“Neuron” — definiție și pagina standard
+Definiție (functională)
+
+Neuron = micro‑unitate de prompting cu scop unic, I/O clar, testabilă, reutilizabilă.
+Se comportă ca o funcție pură: aceeași intrare → aceeași ieșire (în simulate), toleranță controlată în live.
+
+Spec JSON (minim)
+{
+  "id": "NEU-ttl-optimizer-v1",
+  "title": "Title Optimizer",
+  "type": "NEU",
+  "summary": "Optimizezi un titlu pentru claritate, curiozitate și promisiune măsurabilă.",
+  "tags": ["title","clarity","curiosity"],
+  "params7D": { "domain":"marketing","scale":"solo","urgency":"sprint","complexity":"standard","resources":"minimal","application":"implementation","output":"txt" },
+  "input_schema": { "type":"object","properties":{ "title":{"type":"string"}, "audience":{"type":"string"} }, "required":["title"] },
+  "output_schema": { "type":"object","properties":{ "improved_title":{"type":"string"}, "rationale":{"type":"string"} }, "required":["improved_title"] },
+  "tests": [
+    { "seed": 42, "input": { "title":"Good product for everyone" }, "expected": { "improved_title": "Stop Saying 'Everyone': A Better Hook" } }
+  ],
+  "entitlement": "Creator",
+  "status": "published",
+  "version": "1.0.0"
+}
+
+Pagina /neuron/[slug] — layout & funcții
+
+Header: Titlu + badge‑uri (NEU · v1.0.0 · score 87 · Creator+).
+
+Overview: scop, tags, 7D vizual.
+
+Spec (read‑only): input/output schema + variabile.
+
+Test: form de input + butoane: Simulate (determinist, seed) / Run Real (Pro+).
+
+Artifacts: previzualizări txt/md/json + Export (gated).
+
+Changelog: versiuni, diffs.
+
+Relations: ce Templates/Frameworks îl folosesc.
+
+(Se pot popula rapid din conținutul deja structurat în “Modul 1: Librăria Textelor”, care insistă pe creare, organizare, actualizare și folosire practică a librăriei) .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 🧠 Neuronul = unitatea minimă de produs în PROMPTFORGE™
 📄 Dacă ai 7.000 pagini cu prompts, fiecare prompt este un neuron.

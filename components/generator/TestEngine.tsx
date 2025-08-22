@@ -6,6 +6,7 @@ import {
   XCircle,
   TrendingUp,
 } from "lucide-react";
+import { EntitlementGate } from "@/components/billing/EntitlementGate";
 import type { GeneratedPrompt, TestResult } from "@/types/promptforge";
 
 interface TestEngineProps {
@@ -13,7 +14,7 @@ interface TestEngineProps {
   testResult: TestResult | null;
   onRunTest: () => void;
   isTesting: boolean;
-  canUseGptTest: boolean;
+  orgId: string; // Added for entitlements
 }
 
 export function TestEngine({
@@ -21,7 +22,7 @@ export function TestEngine({
   testResult,
   onRunTest,
   isTesting,
-  canUseGptTest,
+  orgId,
 }: TestEngineProps) {
   const getScoreColor = (score: number, isInverted = false) => {
     const threshold = isInverted ? 20 : 80;
@@ -59,48 +60,37 @@ export function TestEngine({
           <TrendingUp className="w-6 h-6 text-gold-industrial" />
           <h2 className="text-xl font-semibold font-montserrat">Test Engine</h2>
         </div>
-        <button
-          onClick={onRunTest}
-          disabled={isTesting || !canUseGptTest}
-          className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
-            !canUseGptTest
-              ? "bg-lead-gray/20 text-lead-gray cursor-not-allowed"
-              : isTesting
+        <EntitlementGate
+          orgId={orgId}
+          feature="canUseGptTestReal"
+          mode="modal"
+          trigger="gpt_test_real"
+        >
+          <button
+            onClick={onRunTest}
+            disabled={isTesting}
+            className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
+              isTesting
                 ? "bg-gold-industrial/20 text-gold-industrial cursor-not-allowed"
                 : "bg-gold-industrial text-black hover:bg-gold-industrial/90 hover:shadow-lg hover:shadow-gold-industrial/20"
-          }`}
-          data-gate={!canUseGptTest ? "pro" : undefined}
-          title={
-            !canUseGptTest
-              ? "Real test scoring available in Pro. See plans."
-              : ""
-          }
-        >
-          {isTesting ? (
-            <>
-              <div className="w-4 h-4 border-2 border-gold-industrial/30 border-t-gold-industrial rounded-full animate-spin"></div>
-              Testing...
-            </>
-          ) : (
-            <>
-              <Play className="w-4 h-4" />
-              {canUseGptTest ? "Run Test (Real)" : "Run Test (Demo)"}
-            </>
-          )}
-        </button>
+            }`}
+          >
+            {isTesting ? (
+              <>
+                <div className="w-4 h-4 border-2 border-gold-industrial/30 border-t-gold-industrial rounded-full animate-spin"></div>
+                Testing...
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4" />
+                Run Test (Real)
+              </>
+            )}
+          </button>
+        </EntitlementGate>
       </div>
 
-      {!canUseGptTest && (
-        <div className="mb-6 p-4 bg-lead-gray/10 border border-lead-gray/20 rounded-lg">
-          <div className="flex items-center gap-2 text-lead-gray">
-            <AlertCircle className="w-5 h-5" />
-            <span className="text-sm">
-              Real test scoring requires Pro plan. Try demo or upgrade for full
-              features.
-            </span>
-          </div>
-        </div>
-      )}
+
 
       {testResult && (
         <div className="space-y-6">
