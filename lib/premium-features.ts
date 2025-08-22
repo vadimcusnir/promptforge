@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
 export interface PremiumTier {
-  id: string
-  name: string
-  price: number
-  features: string[]
+  id: string;
+  name: string;
+  price: number;
+  features: string[];
   limits: {
-    monthlyRuns: number
-    exportFormats: string[]
-    historyRetention: number // days
-    gptOptimizations: number
-    concurrentSessions: number
-  }
+    monthlyRuns: number;
+    exportFormats: string[];
+    historyRetention: number; // days
+    gptOptimizations: number;
+    concurrentSessions: number;
+  };
 }
 
 export const PREMIUM_TIERS: PremiumTier[] = [
@@ -32,7 +32,12 @@ export const PREMIUM_TIERS: PremiumTier[] = [
     id: "pro",
     name: "Pro",
     price: 29,
-    features: ["Unlimited prompts", "GPT optimization", "Advanced exports", "Priority support"],
+    features: [
+      "Unlimited prompts",
+      "GPT optimization",
+      "Advanced exports",
+      "Priority support",
+    ],
     limits: {
       monthlyRuns: 1000,
       exportFormats: ["txt", "json", "csv", "pdf"],
@@ -45,7 +50,13 @@ export const PREMIUM_TIERS: PremiumTier[] = [
     id: "enterprise",
     name: "Enterprise",
     price: 99,
-    features: ["Everything in Pro", "Custom modules", "API access", "White-label", "SLA"],
+    features: [
+      "Everything in Pro",
+      "Custom modules",
+      "API access",
+      "White-label",
+      "SLA",
+    ],
     limits: {
       monthlyRuns: -1, // unlimited
       exportFormats: ["txt", "json", "csv", "pdf", "docx", "bundle"],
@@ -54,40 +65,40 @@ export const PREMIUM_TIERS: PremiumTier[] = [
       concurrentSessions: 10,
     },
   },
-]
+];
 
 export interface UserEntitlements {
-  tier: string
-  runsUsed: number
-  gptOptimizationsUsed: number
-  activeSessions: number
-  lastReset: Date
+  tier: string;
+  runsUsed: number;
+  gptOptimizationsUsed: number;
+  activeSessions: number;
+  lastReset: Date;
 }
 
 export class PremiumGate {
-  private static instance: PremiumGate
-  private entitlements: UserEntitlements
+  private static instance: PremiumGate;
+  private entitlements: UserEntitlements;
 
   private constructor() {
-    this.entitlements = this.loadEntitlements()
+    this.entitlements = this.loadEntitlements();
   }
 
   static getInstance(): PremiumGate {
     if (!PremiumGate.instance) {
-      PremiumGate.instance = new PremiumGate()
+      PremiumGate.instance = new PremiumGate();
     }
-    return PremiumGate.instance
+    return PremiumGate.instance;
   }
 
   private loadEntitlements(): UserEntitlements {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("promptforge_entitlements")
+      const stored = localStorage.getItem("promptforge_entitlements");
       if (stored) {
-        const parsed = JSON.parse(stored)
+        const parsed = JSON.parse(stored);
         return {
           ...parsed,
           lastReset: new Date(parsed.lastReset),
-        }
+        };
       }
     }
     return {
@@ -96,74 +107,98 @@ export class PremiumGate {
       gptOptimizationsUsed: 0,
       activeSessions: 1,
       lastReset: new Date(),
-    }
+    };
   }
 
   private saveEntitlements(): void {
     if (typeof window !== "undefined") {
-      localStorage.setItem("promptforge_entitlements", JSON.stringify(this.entitlements))
+      localStorage.setItem(
+        "promptforge_entitlements",
+        JSON.stringify(this.entitlements),
+      );
     }
   }
 
   getCurrentTier(): PremiumTier {
-    return PREMIUM_TIERS.find((t) => t.id === this.entitlements.tier) || PREMIUM_TIERS[0]
+    return (
+      PREMIUM_TIERS.find((t) => t.id === this.entitlements.tier) ||
+      PREMIUM_TIERS[0]
+    );
   }
 
   canGeneratePrompt(): { allowed: boolean; reason?: string } {
-    const tier = this.getCurrentTier()
+    const tier = this.getCurrentTier();
 
     // Check monthly runs limit
-    if (tier.limits.monthlyRuns !== -1 && this.entitlements.runsUsed >= tier.limits.monthlyRuns) {
+    if (
+      tier.limits.monthlyRuns !== -1 &&
+      this.entitlements.runsUsed >= tier.limits.monthlyRuns
+    ) {
       return {
         allowed: false,
         reason: `Monthly limit of ${tier.limits.monthlyRuns} runs exceeded. Upgrade to continue.`,
-      }
+      };
     }
 
     // Check concurrent sessions
     if (this.entitlements.activeSessions > tier.limits.concurrentSessions) {
-      return { allowed: false, reason: `Maximum ${tier.limits.concurrentSessions} concurrent sessions allowed.` }
+      return {
+        allowed: false,
+        reason: `Maximum ${tier.limits.concurrentSessions} concurrent sessions allowed.`,
+      };
     }
 
-    return { allowed: true }
+    return { allowed: true };
   }
 
   canUseGPTOptimization(): { allowed: boolean; reason?: string } {
-    const tier = this.getCurrentTier()
+    const tier = this.getCurrentTier();
 
     if (tier.limits.gptOptimizations === 0) {
-      return { allowed: false, reason: "GPT optimization requires Pro or Enterprise plan." }
+      return {
+        allowed: false,
+        reason: "GPT optimization requires Pro or Enterprise plan.",
+      };
     }
 
-    if (tier.limits.gptOptimizations !== -1 && this.entitlements.gptOptimizationsUsed >= tier.limits.gptOptimizations) {
-      return { allowed: false, reason: `Monthly GPT optimization limit of ${tier.limits.gptOptimizations} exceeded.` }
+    if (
+      tier.limits.gptOptimizations !== -1 &&
+      this.entitlements.gptOptimizationsUsed >= tier.limits.gptOptimizations
+    ) {
+      return {
+        allowed: false,
+        reason: `Monthly GPT optimization limit of ${tier.limits.gptOptimizations} exceeded.`,
+      };
     }
 
-    return { allowed: true }
+    return { allowed: true };
   }
 
   canExportFormat(format: string): boolean {
-    const tier = this.getCurrentTier()
-    return tier.limits.exportFormats.includes(format)
+    const tier = this.getCurrentTier();
+    return tier.limits.exportFormats.includes(format);
   }
 
   consumeRun(): void {
-    this.entitlements.runsUsed++
-    this.saveEntitlements()
+    this.entitlements.runsUsed++;
+    this.saveEntitlements();
   }
 
   consumeGPTOptimization(): void {
-    this.entitlements.gptOptimizationsUsed++
-    this.saveEntitlements()
+    this.entitlements.gptOptimizationsUsed++;
+    this.saveEntitlements();
   }
 
   getUsageStats() {
-    const tier = this.getCurrentTier()
+    const tier = this.getCurrentTier();
     return {
       runs: {
         used: this.entitlements.runsUsed,
         limit: tier.limits.monthlyRuns,
-        percentage: tier.limits.monthlyRuns === -1 ? 0 : (this.entitlements.runsUsed / tier.limits.monthlyRuns) * 100,
+        percentage:
+          tier.limits.monthlyRuns === -1
+            ? 0
+            : (this.entitlements.runsUsed / tier.limits.monthlyRuns) * 100,
       },
       gptOptimizations: {
         used: this.entitlements.gptOptimizationsUsed,
@@ -171,50 +206,57 @@ export class PremiumGate {
         percentage:
           tier.limits.gptOptimizations === -1
             ? 0
-            : (this.entitlements.gptOptimizationsUsed / tier.limits.gptOptimizations) * 100,
+            : (this.entitlements.gptOptimizationsUsed /
+                tier.limits.gptOptimizations) *
+              100,
       },
-    }
+    };
   }
 
   upgradeTier(tierId: string): void {
-    this.entitlements.tier = tierId
-    this.saveEntitlements()
+    this.entitlements.tier = tierId;
+    this.saveEntitlements();
   }
 }
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 export function usePremiumFeatures() {
-  const [premiumGate] = useState(() => PremiumGate.getInstance())
-  const [tier, setTier] = useState<PremiumTier>(() => premiumGate.getCurrentTier())
-  const [usageStats, setUsageStats] = useState(() => premiumGate.getUsageStats())
+  const [premiumGate] = useState(() => PremiumGate.getInstance());
+  const [tier, setTier] = useState<PremiumTier>(() =>
+    premiumGate.getCurrentTier(),
+  );
+  const [usageStats, setUsageStats] = useState(() =>
+    premiumGate.getUsageStats(),
+  );
 
   useEffect(() => {
     // Update tier and usage stats when component mounts
-    setTier(premiumGate.getCurrentTier())
-    setUsageStats(premiumGate.getUsageStats())
-  }, [premiumGate])
+    setTier(premiumGate.getCurrentTier());
+    setUsageStats(premiumGate.getUsageStats());
+  }, [premiumGate]);
 
-  const canGeneratePrompt = () => premiumGate.canGeneratePrompt()
-  const canUseGPTOptimization = () => premiumGate.canUseGPTOptimization()
-  const canExportFormat = (format: string) => premiumGate.canExportFormat(format)
-  const canAccessCloudHistory = tier.id !== "free"
+  const canGeneratePrompt = () => premiumGate.canGeneratePrompt();
+  const canUseGPTOptimization = () => premiumGate.canUseGPTOptimization();
+  const canExportFormat = (format: string) =>
+    premiumGate.canExportFormat(format);
+  const canAccessCloudHistory = tier.id !== "free";
 
   const consumeRun = () => {
-    premiumGate.consumeRun()
-    setUsageStats(premiumGate.getUsageStats())
-  }
+    premiumGate.consumeRun();
+    setUsageStats(premiumGate.getUsageStats());
+  };
 
   const consumeGPTOptimization = () => {
-    premiumGate.consumeGPTOptimization()
-    setUsageStats(premiumGate.getUsageStats())
-  }
+    premiumGate.consumeGPTOptimization();
+    setUsageStats(premiumGate.getUsageStats());
+  };
 
   const upgradeTier = (tierId: string) => {
-    premiumGate.upgradeTier(tierId)
-    setTier(premiumGate.getCurrentTier())
-    setUsageStats(premiumGate.getUsageStats())
-  }
+    premiumGate.upgradeTier(tierId);
+    setTier(premiumGate.getCurrentTier());
+    setUsageStats(premiumGate.getUsageStats());
+  };
 
   return {
     tier: tier.name,
@@ -228,5 +270,5 @@ export function usePremiumFeatures() {
     consumeRun,
     consumeGPTOptimization,
     upgradeTier,
-  }
+  };
 }

@@ -1,7 +1,11 @@
 // lib/auth.ts
 import { cookies } from "next/headers";
 
-export type SessionUser = { id?: string; email?: string; role?: "admin" | "member" };
+export type SessionUser = {
+  id?: string;
+  email?: string;
+  role?: "admin" | "member";
+};
 
 export function getUserFromCookies(): SessionUser {
   // Simple & robust: read a "pf_role" cookie set at login (admin|member)

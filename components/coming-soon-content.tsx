@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ClientOnly } from "@/components/ClientOnly";
 import { DigitalRune } from "@/components/background/DigitalRune";
 
-
 interface ComingSoonContentProps {
   /** Custom title override */
   title?: string;
@@ -14,10 +13,10 @@ interface ComingSoonContentProps {
   showDigitalRune?: boolean;
 }
 
-export function ComingSoonContent({ 
+export function ComingSoonContent({
   title = "The 1st Cognitive OS for Prompts",
   subtitle = "50 Semantic Modules × 7D Parameter Engine → From Chaos to Execution in 30 Minutes.",
-  showDigitalRune = true 
+  showDigitalRune = true,
 }: ComingSoonContentProps) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -28,23 +27,23 @@ export function ComingSoonContent({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (isLoading) return;
-    
+
     setIsLoading(true);
     setError("");
-    
+
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          email: email.toLowerCase().trim(), 
+        body: JSON.stringify({
+          email: email.toLowerCase().trim(),
           name: name.trim(),
-          org_id: null // For future multi-tenant support
+          org_id: null, // For future multi-tenant support
         }),
       });
-      
+
       const data = await res.json();
-      
+
       if (res.ok && data.ok) {
         setSubmitted(true);
       } else {
@@ -61,7 +60,7 @@ export function ComingSoonContent({
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white relative overflow-hidden">
       {/* Background now handled by global BackgroundRoot */}
-      
+
       {/* Digital Rune - Central Symbol */}
       {showDigitalRune && (
         <ClientOnly>
@@ -73,10 +72,16 @@ export function ComingSoonContent({
       <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 text-center">
         {!submitted ? (
           <>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}>
+            <h1
+              className="text-4xl md:text-6xl font-bold mb-6 text-white"
+              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+            >
               {title}
             </h1>
-            <p className="mt-4 text-lg md:text-xl text-white/90 max-w-3xl leading-relaxed" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.6)" }}>
+            <p
+              className="mt-4 text-lg md:text-xl text-white/90 max-w-3xl leading-relaxed"
+              style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.6)" }}
+            >
               {subtitle}
             </p>
 
@@ -138,13 +143,26 @@ export function ComingSoonContent({
         ) : (
           <div className="max-w-md bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8">
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              <svg
+                className="w-8 h-8 text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
               </svg>
             </div>
-            <h2 className="text-2xl font-bold mb-4 text-white">Thank you for joining!</h2>
+            <h2 className="text-2xl font-bold mb-4 text-white">
+              Thank you for joining!
+            </h2>
             <p className="text-white/80 leading-relaxed">
-              You'll be among the first to access PromptForge and receive the free demo bundle.
+              You'll be among the first to access PromptForge and receive the
+              free demo bundle.
             </p>
             <p className="mt-4 text-sm text-white/60">
               Check your email for registration confirmation.

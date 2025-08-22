@@ -1,26 +1,29 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { ChevronRight } from "lucide-react"
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { ChevronRight } from "lucide-react";
 
 interface LogoCarouselItem {
-  name: string
-  logo: string
+  name: string;
+  logo: string;
   caseStudy?: {
-    title: string
-    description: string
-    url: string
-  }
+    title: string;
+    description: string;
+    url: string;
+  };
 }
 
 interface InteractiveLogoCarouselProps {
-  items: LogoCarouselItem[]
-  className?: string
+  items: LogoCarouselItem[];
+  className?: string;
 }
 
-export function InteractiveLogoCarousel({ items, className = "" }: InteractiveLogoCarouselProps) {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+export function InteractiveLogoCarousel({
+  items,
+  className = "",
+}: InteractiveLogoCarouselProps) {
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   return (
     <div className={`logo-carousel-container ${className}`}>
@@ -38,14 +41,19 @@ export function InteractiveLogoCarousel({ items, className = "" }: InteractiveLo
             {item.caseStudy && hoveredItem === item.name && (
               <div className="logo-carousel-hover">
                 <div className="logo-carousel-container">
-                  <div className="p small medium">{item.caseStudy.description}</div>
+                  <div className="p small medium">
+                    {item.caseStudy.description}
+                  </div>
                   <a
                     href={item.caseStudy.url}
                     className="logo-carousel-button"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Badge variant="secondary" className="bg-gold-industrial text-black">
+                    <Badge
+                      variant="secondary"
+                      className="bg-gold-industrial text-black"
+                    >
                       CASE STUDY
                     </Badge>
                     <ChevronRight className="w-4 h-4 ml-2" />
@@ -53,7 +61,10 @@ export function InteractiveLogoCarousel({ items, className = "" }: InteractiveLo
                 </div>
                 <div className="icon-logo-carousel-dropdown">
                   <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
-                    <path d="M6 0L0 6H12L6 0Z" fill="var(--color--bg-primary)"></path>
+                    <path
+                      d="M6 0L0 6H12L6 0Z"
+                      fill="var(--color--bg-primary)"
+                    ></path>
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -74,5 +85,5 @@ export function InteractiveLogoCarousel({ items, className = "" }: InteractiveLo
         ))}
       </div>
     </div>
-  )
+  );
 }

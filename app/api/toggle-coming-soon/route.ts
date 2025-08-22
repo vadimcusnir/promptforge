@@ -33,10 +33,10 @@ export async function GET(req: NextRequest) {
 
   const comingSoonCookie = req.cookies.get("coming_soon")?.value === "on";
   const comingSoonEnv = process.env.COMING_SOON === "true";
-  
-  return NextResponse.json({ 
+
+  return NextResponse.json({
     coming_soon_env: comingSoonEnv,
     coming_soon_cookie: comingSoonCookie,
-    active: comingSoonEnv || comingSoonCookie
+    active: comingSoonEnv || comingSoonCookie,
   });
 }

@@ -1,10 +1,11 @@
-import { type NextRequest, NextResponse } from "next/server"
-import type { GPTLiveOptions } from "@/lib/gpt-live"
-import { validateEnglishContent } from "@/lib/english"
+import { type NextRequest, NextResponse } from "next/server";
+import type { GPTLiveOptions } from "@/lib/gpt-live";
+import { validateEnglishContent } from "@/lib/english";
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, options }: { prompt: string; options: GPTLiveOptions } = await request.json()
+    const { prompt, options }: { prompt: string; options: GPTLiveOptions } =
+      await request.json();
 
     // Validate English-only content
     const validation = validateEnglishContent({ prompt });
@@ -19,10 +20,13 @@ export async function POST(request: NextRequest) {
       message: "GPT Live optimization would be processed here",
       options,
       promptLength: prompt.length,
-    }
+    };
 
-    return NextResponse.json(response)
+    return NextResponse.json(response);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to process GPT Live request" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to process GPT Live request" },
+      { status: 500 },
+    );
   }
 }

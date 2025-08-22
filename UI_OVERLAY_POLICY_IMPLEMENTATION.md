@@ -19,14 +19,23 @@ policies:
       quote_active: "quote-active"
       quote_focus: "quote-focus"
     diagnostics:
-      log_level: "warn"        # no console.log in prod
+      log_level: "warn" # no console.log in prod
     performance:
       hardware_accelerate: true
       respect_reduced_motion: true
     css_vars:
-      route_marketing: { "--overlay-gradient": "linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.7))" }
-      route_generator: { "--overlay-gradient": "radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.0), rgba(0,0,0,.6))" }
-      route_dashboard: { "--overlay-gradient": "linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.65))" }
+      route_marketing:
+        {
+          "--overlay-gradient": "linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.7))",
+        }
+      route_generator:
+        {
+          "--overlay-gradient": "radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.0), rgba(0,0,0,.6))",
+        }
+      route_dashboard:
+        {
+          "--overlay-gradient": "linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.65))",
+        }
 
 acceptance:
   ui_overlays:
@@ -50,6 +59,7 @@ acceptance:
 - Development-only diagnostics
 
 Key features:
+
 - Centralized route class management
 - Performance benchmarking
 - GPU optimization
@@ -65,6 +75,7 @@ Key features:
 - Type-safe API
 
 Key features:
+
 - React Context for global state
 - CSS custom properties integration
 - Automatic DOM manipulation
@@ -80,6 +91,7 @@ Key features:
 - Custom className support
 
 Key features:
+
 - Zero-configuration usage
 - Accessibility compliance
 - Extensible styling
@@ -88,6 +100,7 @@ Key features:
 ## 3. CSS Implementation (`app/globals.css`)
 
 ### Core Overlay System
+
 ```css
 #bg-overlay {
   position: fixed;
@@ -95,43 +108,60 @@ Key features:
   pointer-events: none;
   background: var(--overlay-gradient, transparent);
   opacity: var(--overlay-opacity, 0.35);
-  transition: opacity 220ms ease, transform 260ms ease; /* GPU-friendly */
+  transition:
+    opacity 220ms ease,
+    transform 260ms ease; /* GPU-friendly */
   will-change: transform, opacity; /* Hardware acceleration */
 }
 ```
 
 ### Route-Specific Gradients
+
 ```css
-.route-generator { 
-  --overlay-gradient: radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.0), rgba(0,0,0,.6)); 
+.route-generator {
+  --overlay-gradient: radial-gradient(
+    60% 60% at 50% 40%,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.6)
+  );
 }
-.route-marketing { 
-  --overlay-gradient: linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.7)); 
+.route-marketing {
+  --overlay-gradient: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.7)
+  );
 }
-.route-dashboard  { 
-  --overlay-gradient: linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.65)); 
+.route-dashboard {
+  --overlay-gradient: linear-gradient(
+    160deg,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.65)
+  );
 }
 ```
 
 ### Quote Focus States
+
 ```css
-.quote-active { 
-  --overlay-opacity: 0.55; 
+.quote-active {
+  --overlay-opacity: 0.55;
 }
-.quote-focus  { 
-  --tokens-opacity: 0.28; 
+.quote-focus {
+  --tokens-opacity: 0.28;
 }
-.matrix-tokens { 
-  opacity: var(--tokens-opacity, 1); 
-  transition: opacity 160ms ease; 
+.matrix-tokens {
+  opacity: var(--tokens-opacity, 1);
+  transition: opacity 160ms ease;
 }
 ```
 
 ### Reduced Motion Support
+
 ```css
 @media (prefers-reduced-motion: reduce) {
-  #bg-overlay { 
-    transition: none !important; 
+  #bg-overlay {
+    transition: none !important;
   }
   .matrix-tokens {
     transition: none !important;
@@ -142,8 +172,8 @@ Key features:
 ## 4. Integration (`app/ClientRootLayout.tsx`)
 
 ```tsx
-import { QuoteFocusProvider } from "@/lib/quote-focus"
-import { OverlayController } from "@/components/OverlayController"
+import { QuoteFocusProvider } from "@/lib/quote-focus";
+import { OverlayController } from "@/components/OverlayController";
 
 export default function ClientRootLayout({ children }) {
   return (
@@ -163,7 +193,7 @@ export default function ClientRootLayout({ children }) {
         </div>
       </body>
     </html>
-  )
+  );
 }
 ```
 
@@ -172,21 +202,25 @@ export default function ClientRootLayout({ children }) {
 Comprehensive test suite covering all acceptance criteria:
 
 ### Performance Tests
+
 - Route transitions ≤50ms
 - Quote focus activation ≤20ms
 - Hardware acceleration verification
 
 ### Functionality Tests
+
 - Single route class enforcement
 - Quote focus token opacity control
 - Cleanup on unmount verification
 
 ### Accessibility Tests
+
 - Reduced motion support
 - Focus management
 - Semantic HTML structure
 
 ### Production Tests
+
 - No console.log in production
 - CSS variable application
 - Memory leak prevention
@@ -194,57 +228,62 @@ Comprehensive test suite covering all acceptance criteria:
 ## 6. Usage Examples
 
 ### Basic Quote Usage
+
 ```tsx
-import { QuoteBlock } from "@/components/ui/QuoteBlock"
+import { QuoteBlock } from "@/components/ui/QuoteBlock";
 
 function MyComponent() {
   return (
     <QuoteBlock>
       "This quote automatically triggers overlay focus on hover"
     </QuoteBlock>
-  )
+  );
 }
 ```
 
 ### Manual Control
+
 ```tsx
-import { useQuoteFocus } from "@/lib/quote-focus"
+import { useQuoteFocus } from "@/lib/quote-focus";
 
 function MyComponent() {
-  const { active, set } = useQuoteFocus()
-  
+  const { active, set } = useQuoteFocus();
+
   return (
     <button onClick={() => set(!active)}>
-      {active ? 'Deactivate' : 'Activate'} Focus
+      {active ? "Deactivate" : "Activate"} Focus
     </button>
-  )
+  );
 }
 ```
 
 ### Custom Quote Implementation
+
 ```tsx
-import { useQuoteProps } from "@/components/ui/QuoteBlock"
+import { useQuoteProps } from "@/components/ui/QuoteBlock";
 
 function CustomQuote() {
-  const quoteProps = useQuoteProps()
-  
+  const quoteProps = useQuoteProps();
+
   return (
     <div {...quoteProps} className="custom-quote">
       Custom quote implementation
     </div>
-  )
+  );
 }
 ```
 
 ## 7. Performance Characteristics
 
 ### Benchmarks
+
 - **Route transitions**: <50ms (requirement: ≤50ms)
 - **Quote focus**: <20ms (target: ≤20ms)
 - **Memory usage**: Constant (no leaks)
 - **GPU acceleration**: Enabled for transforms/opacity
 
 ### Optimization Features
+
 - Hardware-accelerated transitions
 - CSS custom properties for dynamic values
 - Reduced motion compliance
@@ -254,12 +293,14 @@ function CustomQuote() {
 ## 8. Maintenance & Monitoring
 
 ### Development Tools
+
 - Performance warnings in development
 - Route class validation
 - Memory leak detection
 - Console diagnostics (dev only)
 
 ### Production Monitoring
+
 - Zero console output in production
 - Performance metrics collection
 - Error boundary protection
@@ -268,6 +309,7 @@ function CustomQuote() {
 ## 9. Migration Guide
 
 ### From Old System
+
 1. Replace `@/hooks/use-quote-focus` imports with `@/lib/quote-focus`
 2. Update `useQuoteFocus()` API calls:
    - `isQuoteFocusActive` → `active`
@@ -276,6 +318,7 @@ function CustomQuote() {
 4. Remove manual DOM manipulation code
 
 ### Breaking Changes
+
 - API signature changes in useQuoteFocus hook
 - CSS class names updated to match SSOT
 - Performance requirements now enforced
@@ -284,18 +327,21 @@ function CustomQuote() {
 ## 10. Compliance & Standards
 
 ### Performance Standards
+
 - WCAG 2.1 AA compliance
 - 50ms route transition requirement
 - Hardware acceleration mandatory
 - Reduced motion support required
 
 ### Code Standards
+
 - TypeScript strict mode
 - ESLint security rules
 - Husky pre-commit hooks
 - Conventional commits
 
 ### Testing Standards
+
 - E2E coverage for all acceptance criteria
 - Performance benchmarking
 - Cross-browser compatibility

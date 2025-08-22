@@ -3,52 +3,45 @@
  * Centralized exports and initialization for the observability infrastructure
  */
 
-export { agentWatch, AgentWatchWorker } from "./agent-watch"
-export { auditLogger, AuditLogger } from "./audit-logger"
-export { alertSystem, AlertSystem } from "./alert-system"
+export { agentWatch, AgentWatchWorker } from "./agent-watch";
+export { auditLogger, AuditLogger } from "./audit-logger";
+export { alertSystem, AlertSystem } from "./alert-system";
 
-export type { 
-  AgentMetrics, 
-  AnomalyThresholds, 
-  AnomalyAlert 
-} from "./agent-watch"
+export type {
+  AgentMetrics,
+  AnomalyThresholds,
+  AnomalyAlert,
+} from "./agent-watch";
 
-export type { 
-  AuditLogEntry, 
-  AuditLogFilter 
-} from "./audit-logger"
+export type { AuditLogEntry, AuditLogFilter } from "./audit-logger";
 
-export type { 
-  AlertChannel, 
-  AlertRule, 
-  IncidentReport 
-} from "./alert-system"
+export type { AlertChannel, AlertRule, IncidentReport } from "./alert-system";
 
 /**
  * Initialize the complete observability system
  */
 export function initializeObservability(): void {
-  console.log("[Observability] Initializing system...")
+  console.log("[Observability] Initializing system...");
 
   // Start AgentWatch monitoring
-  agentWatch.startMonitoring(30000) // 30 second intervals
+  agentWatch.startMonitoring(30000); // 30 second intervals
 
   // Initialize alert system
-  alertSystem.initialize()
+  alertSystem.initialize();
 
-  console.log("[Observability] System initialized successfully")
+  console.log("[Observability] System initialized successfully");
 }
 
 /**
  * Shutdown the observability system
  */
 export function shutdownObservability(): void {
-  console.log("[Observability] Shutting down system...")
+  console.log("[Observability] Shutting down system...");
 
   // Stop monitoring
-  agentWatch.stopMonitoring()
+  agentWatch.stopMonitoring();
 
-  console.log("[Observability] System shutdown complete")
+  console.log("[Observability] System shutdown complete");
 }
 
 /**
@@ -56,38 +49,38 @@ export function shutdownObservability(): void {
  */
 export function getSystemStatus(): {
   agent_watch: {
-    monitoring: boolean
-    metrics_summary: ReturnType<typeof agentWatch.getMetricsSummary>
-  }
+    monitoring: boolean;
+    metrics_summary: ReturnType<typeof agentWatch.getMetricsSummary>;
+  };
   audit_logger: {
-    statistics: ReturnType<typeof auditLogger.getStatistics>
-    recent_trend: ReturnType<typeof auditLogger.getLogsTrend>
-  }
+    statistics: ReturnType<typeof auditLogger.getStatistics>;
+    recent_trend: ReturnType<typeof auditLogger.getLogsTrend>;
+  };
   alert_system: {
-    statistics: ReturnType<typeof alertSystem.getAlertStatistics>
-    active_incidents: ReturnType<typeof alertSystem.getActiveIncidents>
-  }
+    statistics: ReturnType<typeof alertSystem.getAlertStatistics>;
+    active_incidents: ReturnType<typeof alertSystem.getActiveIncidents>;
+  };
   kill_switch: {
-    agents_enabled: boolean
-    degradation_mode: boolean
-  }
+    agents_enabled: boolean;
+    degradation_mode: boolean;
+  };
 } {
   return {
     agent_watch: {
       monitoring: true, // Would track actual monitoring state
-      metrics_summary: agentWatch.getMetricsSummary()
+      metrics_summary: agentWatch.getMetricsSummary(),
     },
     audit_logger: {
       statistics: auditLogger.getStatistics(),
-      recent_trend: auditLogger.getLogsTrend(24)
+      recent_trend: auditLogger.getLogsTrend(24),
     },
     alert_system: {
       statistics: alertSystem.getAlertStatistics(),
-      active_incidents: alertSystem.getActiveIncidents()
+      active_incidents: alertSystem.getActiveIncidents(),
     },
     kill_switch: {
       agents_enabled: AgentWatchWorker.areAgentsEnabled(),
-      degradation_mode: agentWatch.getMetricsSummary().degradationMode
-    }
-  }
+      degradation_mode: agentWatch.getMetricsSummary().degradationMode,
+    },
+  };
 }

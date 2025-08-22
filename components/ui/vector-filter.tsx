@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 const vectors = [
   { id: "all", name: "All Modules", color: "text-white", count: 50 },
@@ -9,14 +9,17 @@ const vectors = [
   { id: "V5", name: "Operations", color: "text-purple-400", count: 7 },
   { id: "V6", name: "Analytics", color: "text-pink-400", count: 6 },
   { id: "V7", name: "Innovation", color: "text-cyan-400", count: 8 },
-]
+];
 
 interface VectorFilterProps {
-  selectedVector: string
-  onVectorChange: (vector: string) => void
+  selectedVector: string;
+  onVectorChange: (vector: string) => void;
 }
 
-export function VectorFilter({ selectedVector, onVectorChange }: VectorFilterProps) {
+export function VectorFilter({
+  selectedVector,
+  onVectorChange,
+}: VectorFilterProps) {
   return (
     <div className="flex flex-wrap gap-3">
       {vectors.map((vector) => (
@@ -34,5 +37,5 @@ export function VectorFilter({ selectedVector, onVectorChange }: VectorFilterPro
         </button>
       ))}
     </div>
-  )
+  );
 }

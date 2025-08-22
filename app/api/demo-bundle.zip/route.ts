@@ -6,7 +6,7 @@ import { promises as fs } from "node:fs";
 const BASE = path.join(process.cwd(), "public", "demo-bundle", "pf_demo_v1");
 const NAMES = [
   "prompt.txt",
-  "prompt.md", 
+  "prompt.md",
   "prompt.json",
   "prompt.pdf",
   "telemetry.json",
@@ -17,7 +17,7 @@ const NAMES = [
 export async function GET() {
   try {
     const zip = new JSZip();
-    
+
     // Add all files to the ZIP in canonical order
     for (const name of NAMES) {
       try {
@@ -29,14 +29,14 @@ export async function GET() {
         // Continue with other files, don't fail entire ZIP
       }
     }
-    
+
     // Generate the ZIP
-    const zipBuffer = await zip.generateAsync({ 
-      type: "nodebuffer", 
+    const zipBuffer = await zip.generateAsync({
+      type: "nodebuffer",
       compression: "DEFLATE",
       compressionOptions: {
-        level: 6
-      }
+        level: 6,
+      },
     });
 
     return new NextResponse(zipBuffer, {
@@ -47,24 +47,23 @@ export async function GET() {
         "Content-Length": zipBuffer.length.toString(),
         "Cache-Control": "public, max-age=3600, immutable",
         "X-Bundle-ID": "pf-demo-v1",
-        "X-Bundle-Version": "1.0.0"
+        "X-Bundle-Version": "1.0.0",
       },
     });
-    
   } catch (error) {
     console.error("Error generating demo bundle ZIP:", error);
-    
+
     return new NextResponse(
-      JSON.stringify({ 
-        error: "Failed to generate demo bundle", 
-        message: "Unable to create ZIP file" 
-      }), 
+      JSON.stringify({
+        error: "Failed to generate demo bundle",
+        message: "Unable to create ZIP file",
+      }),
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json"
-        }
-      }
+          "Content-Type": "application/json",
+        },
+      },
     );
   }
 }

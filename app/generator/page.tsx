@@ -1,21 +1,25 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { SevenDPanel } from "@/components/generator/SevenDPanel"
-import { PromptEditor } from "@/components/generator/PromptEditor"
-import { TestEngine } from "@/components/generator/TestEngine"
-import { ExportBar } from "@/components/generator/ExportBar"
-import { HistoryPanel } from "@/components/generator/HistoryPanel"
-import { TelemetryBadge } from "@/components/ui/TelemetryBadge"
-import { PaywallModal } from "@/components/paywall/PaywallModal"
-import { PremiumGate } from "@/lib/premium-features"
-import { Header } from "@/components/Header"
-import { SkipLink } from "@/components/SkipLink"
-import { modules } from "@/lib/modules"
-import type { SevenDConfig, GeneratedPrompt, TestResult } from "@/types/promptforge"
+import { useState } from "react";
+import { SevenDPanel } from "@/components/generator/SevenDPanel";
+import { PromptEditor } from "@/components/generator/PromptEditor";
+import { TestEngine } from "@/components/generator/TestEngine";
+import { ExportBar } from "@/components/generator/ExportBar";
+import { HistoryPanel } from "@/components/generator/HistoryPanel";
+import { TelemetryBadge } from "@/components/ui/TelemetryBadge";
+import { PaywallModal } from "@/components/paywall/PaywallModal";
+import { PremiumGate } from "@/lib/premium-features";
+import { Header } from "@/components/Header";
+import { SkipLink } from "@/components/SkipLink";
+import { modules } from "@/lib/modules";
+import type {
+  SevenDConfig,
+  GeneratedPrompt,
+  TestResult,
+} from "@/types/promptforge";
 
 export default function GeneratorPage() {
-  const [selectedModule, setSelectedModule] = useState(modules[0])
+  const [selectedModule, setSelectedModule] = useState(modules[0]);
   const [sevenDConfig, setSevenDConfig] = useState<SevenDConfig>({
     domain: "business",
     scale: "enterprise",
@@ -24,29 +28,30 @@ export default function GeneratorPage() {
     resources: "unlimited",
     application: "production",
     output: "structured",
-  })
-  const [generatedPrompt, setGeneratedPrompt] = useState<GeneratedPrompt | null>(null)
-  const [testResult, setTestResult] = useState<TestResult | null>(null)
-  const [showPaywall, setShowPaywall] = useState(false)
-  const [paywallTrigger, setPaywallTrigger] = useState<string>("")
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [isTesting, setIsTesting] = useState(false)
+  });
+  const [generatedPrompt, setGeneratedPrompt] =
+    useState<GeneratedPrompt | null>(null);
+  const [testResult, setTestResult] = useState<TestResult | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallTrigger, setPaywallTrigger] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
 
-  const premiumGate = PremiumGate.getInstance()
-  const currentTier = premiumGate.getCurrentTier()
-  const canUseGptTest = premiumGate.canUseGPTOptimization().allowed
+  const premiumGate = PremiumGate.getInstance();
+  const currentTier = premiumGate.getCurrentTier();
+  const canUseGptTest = premiumGate.canUseGPTOptimization().allowed;
 
   const handleGeneratePrompt = async () => {
-    const canGenerate = premiumGate.canGeneratePrompt()
+    const canGenerate = premiumGate.canGeneratePrompt();
     if (!canGenerate.allowed) {
-      setPaywallTrigger("generate")
-      setShowPaywall(true)
-      return
+      setPaywallTrigger("generate");
+      setShowPaywall(true);
+      return;
     }
 
-    setIsGenerating(true)
+    setIsGenerating(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     const prompt: GeneratedPrompt = {
       id: `pf_${selectedModule.id}_${Date.now().toString(36)}`,
@@ -57,32 +62,32 @@ export default function GeneratorPage() {
       hash: generateHash(),
       tokens: Math.floor(Math.random() * 500) + 300,
       tta: Math.random() * 2 + 0.5,
-    }
+    };
 
-    setGeneratedPrompt(prompt)
-    premiumGate.consumeRun()
-    setIsGenerating(false)
+    setGeneratedPrompt(prompt);
+    premiumGate.consumeRun();
+    setIsGenerating(false);
 
     setTimeout(() => {
       document.getElementById("prompt-editor")?.scrollIntoView({
         behavior: "smooth",
         block: "center",
-      })
-    }, 100)
-  }
+      });
+    }, 100);
+  };
 
   const handleRunTest = async () => {
     if (!canUseGptTest) {
-      setPaywallTrigger("test")
-      setShowPaywall(true)
-      return
+      setPaywallTrigger("test");
+      setShowPaywall(true);
+      return;
     }
 
-    if (!generatedPrompt) return
+    if (!generatedPrompt) return;
 
-    setIsTesting(true)
+    setIsTesting(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const result: TestResult = {
       id: `test_${Date.now()}`,
@@ -96,38 +101,39 @@ export default function GeneratorPage() {
       verdict: "PASS",
       recommendations: [],
       timestamp: new Date(),
-    }
+    };
 
     const passCount = [
       result.scores.clarity >= 80,
       result.scores.execution >= 80,
       result.scores.ambiguity <= 20,
       result.scores.business_fit >= 75,
-    ].filter(Boolean).length
+    ].filter(Boolean).length;
 
-    result.verdict = passCount === 4 ? "PASS" : passCount >= 2 ? "PARTIAL" : "FAIL"
+    result.verdict =
+      passCount === 4 ? "PASS" : passCount >= 2 ? "PARTIAL" : "FAIL";
 
-    setTestResult(result)
-    premiumGate.consumeGPTOptimization()
-    setIsTesting(false)
+    setTestResult(result);
+    premiumGate.consumeGPTOptimization();
+    setIsTesting(false);
 
     setTimeout(() => {
       document.getElementById("test-verdict")?.scrollIntoView({
         behavior: "smooth",
         block: "center",
-      })
-    }, 100)
-  }
+      });
+    }, 100);
+  };
 
   const handleExport = (format: string) => {
     if (!premiumGate.canExportFormat(format)) {
-      setPaywallTrigger(`export-${format}`)
-      setShowPaywall(true)
-      return
+      setPaywallTrigger(`export-${format}`);
+      setShowPaywall(true);
+      return;
     }
 
-    console.log(`[v0] Exporting in format: ${format}`)
-  }
+    console.log(`[v0] Exporting in format: ${format}`);
+  };
 
   const generatePromptContent = (module: any, config: SevenDConfig): string => {
     return `# ROLE & GOAL
@@ -157,21 +163,21 @@ KPI: ${module.kpi}
 # TELEMETRY KEYS
 module_id: ${module.id}
 signature_7d: ${JSON.stringify(config)}
-requirements: ${module.requirements}`
-  }
+requirements: ${module.requirements}`;
+  };
 
   const generateHash = (): string => {
-    return Math.random().toString(36).substring(2, 10)
-  }
+    return Math.random().toString(36).substring(2, 10);
+  };
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF]">
       {/* Static Grid Background */}
       <div className="grid-static"></div>
-      
+
       <SkipLink />
       <Header showBreadcrumbs={true} />
-      
+
       <main id="main" tabIndex={-1}>
         <div className="container mx-auto max-w-[1240px] px-6 py-8">
           <div className="grid lg:grid-cols-2 gap-8">
@@ -187,7 +193,12 @@ requirements: ${module.requirements}`
                       </label>
                       <select
                         value={value}
-                        onChange={(e) => setSevenDConfig(prev => ({...prev, [key]: e.target.value}))}
+                        onChange={(e) =>
+                          setSevenDConfig((prev) => ({
+                            ...prev,
+                            [key]: e.target.value,
+                          }))
+                        }
                         className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0 w-full"
                       >
                         <option value="low">Low</option>
@@ -234,61 +245,71 @@ requirements: ${module.requirements}`
               <div className="grid md:grid-cols-4 gap-4 mb-6">
                 <div className="text-center">
                   <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.clarity || '--'}
+                    {testResult?.scores.clarity || "--"}
                   </div>
                   <div className="text-micro text-[#ECFEFF]/80">Clarity</div>
                   <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div 
+                    <div
                       className="bg-[#16A34A] h-2 rounded-full transition-all"
-                      style={{width: `${testResult?.scores.clarity || 0}%`}}
+                      style={{ width: `${testResult?.scores.clarity || 0}%` }}
                     ></div>
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.execution || '--'}
+                    {testResult?.scores.execution || "--"}
                   </div>
                   <div className="text-micro text-[#ECFEFF]/80">Execution</div>
                   <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div 
+                    <div
                       className="bg-[#16A34A] h-2 rounded-full transition-all"
-                      style={{width: `${testResult?.scores.execution || 0}%`}}
+                      style={{ width: `${testResult?.scores.execution || 0}%` }}
                     ></div>
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.ambiguity || '--'}
+                    {testResult?.scores.ambiguity || "--"}
                   </div>
                   <div className="text-micro text-[#ECFEFF]/80">Ambiguity</div>
                   <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div 
+                    <div
                       className="bg-[#F59E0B] h-2 rounded-full transition-all"
-                      style={{width: `${testResult?.scores.ambiguity || 0}%`}}
+                      style={{ width: `${testResult?.scores.ambiguity || 0}%` }}
                     ></div>
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.business_fit || '--'}
+                    {testResult?.scores.business_fit || "--"}
                   </div>
-                  <div className="text-micro text-[#ECFEFF]/80">Business-fit</div>
+                  <div className="text-micro text-[#ECFEFF]/80">
+                    Business-fit
+                  </div>
                   <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div 
+                    <div
                       className="bg-[#16A34A] h-2 rounded-full transition-all"
-                      style={{width: `${testResult?.scores.business_fit || 0}%`}}
+                      style={{
+                        width: `${testResult?.scores.business_fit || 0}%`,
+                      }}
                     ></div>
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="text-body text-[#ECFEFF]">
-                  Verdict: <span className={`font-semibold ${
-                    testResult?.verdict === 'PASS' ? 'text-[#16A34A]' : 
-                    testResult?.verdict === 'PARTIAL' ? 'text-[#F59E0B]' : 'text-[#DC2626]'
-                  }`}>
-                    {testResult?.verdict || 'Not tested'}
+                  Verdict:{" "}
+                  <span
+                    className={`font-semibold ${
+                      testResult?.verdict === "PASS"
+                        ? "text-[#16A34A]"
+                        : testResult?.verdict === "PARTIAL"
+                          ? "text-[#F59E0B]"
+                          : "text-[#DC2626]"
+                    }`}
+                  >
+                    {testResult?.verdict || "Not tested"}
                   </span>
                 </div>
                 <button
@@ -311,26 +332,26 @@ requirements: ${module.requirements}`
                 Export options based on your plan
               </div>
               <div className="flex gap-2">
-                <button 
-                  onClick={() => handleExport('txt')} 
+                <button
+                  onClick={() => handleExport("txt")}
                   className="btn-secondary text-micro px-3 py-2"
                 >
                   .txt (Free)
                 </button>
-                <button 
-                  onClick={() => handleExport('md')} 
+                <button
+                  onClick={() => handleExport("md")}
                   className="btn-secondary text-micro px-3 py-2"
                 >
                   .md (Creator+)
                 </button>
-                <button 
-                  onClick={() => handleExport('json')} 
+                <button
+                  onClick={() => handleExport("json")}
                   className="btn-secondary text-micro px-3 py-2"
                 >
                   .json/.pdf (Pro+)
                 </button>
-                <button 
-                  onClick={() => handleExport('zip')} 
+                <button
+                  onClick={() => handleExport("zip")}
                   className="btn-secondary text-micro px-3 py-2"
                 >
                   .zip (Ent)
@@ -340,8 +361,12 @@ requirements: ${module.requirements}`
           </div>
         )}
 
-        <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} trigger={paywallTrigger} />
+        <PaywallModal
+          isOpen={showPaywall}
+          onClose={() => setShowPaywall(false)}
+          trigger={paywallTrigger}
+        />
       </main>
     </div>
-  )
+  );
 }

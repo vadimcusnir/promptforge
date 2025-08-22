@@ -1,35 +1,35 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ScoreBadge } from "@/components/ui/ScoreBadge"
-import { TelemetrySummary } from "@/components/ui/TelemetrySummary"
-import { Separator } from "@/components/ui/separator"
-import { Settings, Clock, Download, RotateCcw, GitCompare } from "lucide-react"
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScoreBadge } from "@/components/ui/ScoreBadge";
+import { TelemetrySummary } from "@/components/ui/TelemetrySummary";
+import { Separator } from "@/components/ui/separator";
+import { Settings, Clock, Download, RotateCcw, GitCompare } from "lucide-react";
 
 interface RunRecord {
-  id: string
-  hash: string
-  module: string
-  moduleCode: string
-  score: number
-  status: "PASS" | "PARTIAL" | "FAIL"
-  date: Date
-  exportType: string[]
-  config7D: any
-  telemetry: any
-  actions: string[]
+  id: string;
+  hash: string;
+  module: string;
+  moduleCode: string;
+  score: number;
+  status: "PASS" | "PARTIAL" | "FAIL";
+  date: Date;
+  exportType: string[];
+  config7D: any;
+  telemetry: any;
+  actions: string[];
 }
 
 interface RunDetailsProps {
-  run: RunRecord
-  tier: string
+  run: RunRecord;
+  tier: string;
 }
 
 export function RunDetails({ run, tier }: RunDetailsProps) {
-  const canExportBundle = tier === "Enterprise"
-  const canRestore = run.score >= 80 || tier !== "Basic"
+  const canExportBundle = tier === "Enterprise";
+  const canRestore = run.score >= 80 || tier !== "Basic";
 
   return (
     <Card className="glass-strong p-6 sticky top-6">
@@ -53,7 +53,10 @@ export function RunDetails({ run, tier }: RunDetailsProps) {
           </h4>
           <div className="space-y-2">
             <p className="text-sm text-white">{run.module}</p>
-            <Badge variant="outline" className="text-blue-400 border-blue-400/30">
+            <Badge
+              variant="outline"
+              className="text-blue-400 border-blue-400/30"
+            >
               {run.moduleCode}
             </Badge>
           </div>
@@ -63,7 +66,9 @@ export function RunDetails({ run, tier }: RunDetailsProps) {
 
         {/* 7D Configuration */}
         <div>
-          <h4 className="text-sm font-medium text-white mb-3">7D Configuration</h4>
+          <h4 className="text-sm font-medium text-white mb-3">
+            7D Configuration
+          </h4>
           <div className="grid grid-cols-2 gap-2 text-xs">
             {Object.entries(run.config7D).map(([key, value]) => (
               <div key={key} className="flex justify-between">
@@ -78,7 +83,9 @@ export function RunDetails({ run, tier }: RunDetailsProps) {
 
         {/* Detailed Scores */}
         <div>
-          <h4 className="text-sm font-medium text-white mb-3">Score Breakdown</h4>
+          <h4 className="text-sm font-medium text-white mb-3">
+            Score Breakdown
+          </h4>
           <div className="space-y-2">
             <div className="flex justify-between text-xs">
               <span className="text-lead-gray">Clarity:</span>
@@ -125,12 +132,22 @@ export function RunDetails({ run, tier }: RunDetailsProps) {
 
         {/* Quick Actions */}
         <div className="space-y-2">
-          <Button variant="outline" size="sm" className="w-full justify-start bg-transparent" disabled={!canRestore}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start bg-transparent"
+            disabled={!canRestore}
+          >
             <RotateCcw className="w-4 h-4 mr-2" />
             Restore Config
           </Button>
 
-          <Button variant="outline" size="sm" className="w-full justify-start bg-transparent" disabled={run.score < 80}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start bg-transparent"
+            disabled={run.score < 80}
+          >
             <GitCompare className="w-4 h-4 mr-2" />
             Diff vs Current
           </Button>
@@ -144,7 +161,10 @@ export function RunDetails({ run, tier }: RunDetailsProps) {
             <Download className="w-4 h-4 mr-2" />
             Download Bundle
             {!canExportBundle && (
-              <Badge variant="outline" className="ml-2 text-xs text-gold-industrial">
+              <Badge
+                variant="outline"
+                className="ml-2 text-xs text-gold-industrial"
+              >
                 Enterprise
               </Badge>
             )}
@@ -153,7 +173,9 @@ export function RunDetails({ run, tier }: RunDetailsProps) {
 
         {/* Export Types */}
         <div>
-          <h4 className="text-sm font-medium text-white mb-2">Available Exports</h4>
+          <h4 className="text-sm font-medium text-white mb-2">
+            Available Exports
+          </h4>
           <div className="flex flex-wrap gap-1">
             {run.exportType.map((type) => (
               <Badge key={type} variant="outline" className="text-xs">
@@ -164,5 +186,5 @@ export function RunDetails({ run, tier }: RunDetailsProps) {
         </div>
       </div>
     </Card>
-  )
+  );
 }

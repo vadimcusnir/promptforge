@@ -1,29 +1,35 @@
-"use client"
+"use client";
 
-import { Activity, Clock, Hash, Target } from "lucide-react"
-import type { TestResult } from "@/types/promptforge"
+import { Activity, Clock, Hash, Target } from "lucide-react";
+import type { TestResult } from "@/types/promptforge";
 
 interface TelemetryBadgeProps {
-  runId: string
-  tta: number
-  tokens: number
-  score: TestResult
+  runId: string;
+  tta: number;
+  tokens: number;
+  score: TestResult;
 }
 
-export function TelemetryBadge({ runId, tta, tokens, score }: TelemetryBadgeProps) {
-  const averageScore = Object.values(score.scores).reduce((a, b) => a + b, 0) / 4
+export function TelemetryBadge({
+  runId,
+  tta,
+  tokens,
+  score,
+}: TelemetryBadgeProps) {
+  const averageScore =
+    Object.values(score.scores).reduce((a, b) => a + b, 0) / 4;
   const getScoreColor = (verdict: string) => {
     switch (verdict) {
       case "PASS":
-        return "text-gold-industrial"
+        return "text-gold-industrial";
       case "PARTIAL":
-        return "text-lead-gray"
+        return "text-lead-gray";
       case "FAIL":
-        return "text-red-500"
+        return "text-red-500";
       default:
-        return "text-lead-gray"
+        return "text-lead-gray";
     }
-  }
+  };
 
   return (
     <div className="fixed bottom-20 right-6 bg-black/90 backdrop-blur-sm border border-lead-gray/30 rounded-lg p-4 shadow-xl z-40">
@@ -60,5 +66,5 @@ export function TelemetryBadge({ runId, tta, tokens, score }: TelemetryBadgeProp
         </div>
       </div>
     </div>
-  )
+  );
 }

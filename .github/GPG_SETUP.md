@@ -154,6 +154,7 @@ git log --show-signature
 ## Support
 
 If you encounter issues:
+
 1. Check the troubleshooting section above
 2. Verify your GPG key is correctly added to GitHub
 3. Ensure your Git email matches your GPG key email

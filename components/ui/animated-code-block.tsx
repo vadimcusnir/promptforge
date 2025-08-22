@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Copy, Check, Play, Terminal } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Copy, Check, Play, Terminal } from "lucide-react";
 
 interface AnimatedCodeBlockProps {
-  code: string
-  language?: string
-  title?: string
-  showCopy?: boolean
-  showRun?: boolean
-  onRun?: () => void
-  className?: string
+  code: string;
+  language?: string;
+  title?: string;
+  showCopy?: boolean;
+  showRun?: boolean;
+  onRun?: () => void;
+  className?: string;
 }
 
 export function AnimatedCodeBlock({
@@ -23,39 +23,39 @@ export function AnimatedCodeBlock({
   onRun,
   className = "",
 }: AnimatedCodeBlockProps) {
-  const [displayedCode, setDisplayedCode] = useState("")
-  const [isTyping, setIsTyping] = useState(true)
-  const [copied, setCopied] = useState(false)
-  const [isRunning, setIsRunning] = useState(false)
+  const [displayedCode, setDisplayedCode] = useState("");
+  const [isTyping, setIsTyping] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
-    let index = 0
+    let index = 0;
     const timer = setInterval(() => {
       if (index < code.length) {
-        setDisplayedCode(code.slice(0, index + 1))
-        index++
+        setDisplayedCode(code.slice(0, index + 1));
+        index++;
       } else {
-        setIsTyping(false)
-        clearInterval(timer)
+        setIsTyping(false);
+        clearInterval(timer);
       }
-    }, 30) // Typing speed
+    }, 30); // Typing speed
 
-    return () => clearInterval(timer)
-  }, [code])
+    return () => clearInterval(timer);
+  }, [code]);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleRun = async () => {
-    if (!onRun) return
-    setIsRunning(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    onRun()
-    setIsRunning(false)
-  }
+    if (!onRun) return;
+    setIsRunning(true);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    onRun();
+    setIsRunning(false);
+  };
 
   return (
     <div className={`glass-effect rounded-lg overflow-hidden ${className}`}>
@@ -65,7 +65,9 @@ export function AnimatedCodeBlock({
             <Terminal className="w-4 h-4 text-gold-industrial" />
             <span className="text-sm font-medium text-white">{title}</span>
             {language && (
-              <span className="text-xs text-lead-gray bg-lead-gray/20 px-2 py-1 rounded">{language.toUpperCase()}</span>
+              <span className="text-xs text-lead-gray bg-lead-gray/20 px-2 py-1 rounded">
+                {language.toUpperCase()}
+              </span>
             )}
           </div>
 
@@ -87,8 +89,17 @@ export function AnimatedCodeBlock({
             )}
 
             {showCopy && (
-              <Button onClick={handleCopy} size="sm" variant="ghost" className="text-lead-gray hover:text-white">
-                {copied ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
+              <Button
+                onClick={handleCopy}
+                size="sm"
+                variant="ghost"
+                className="text-lead-gray hover:text-white"
+              >
+                {copied ? (
+                  <Check className="w-3 h-3 text-green-400" />
+                ) : (
+                  <Copy className="w-3 h-3" />
+                )}
               </Button>
             )}
           </div>
@@ -99,7 +110,9 @@ export function AnimatedCodeBlock({
         <pre className="p-4 text-sm text-white font-mono overflow-x-auto bg-black/30">
           <code>
             {displayedCode}
-            {isTyping && <span className="animate-pulse text-gold-industrial">|</span>}
+            {isTyping && (
+              <span className="animate-pulse text-gold-industrial">|</span>
+            )}
           </code>
         </pre>
 
@@ -113,5 +126,5 @@ export function AnimatedCodeBlock({
         )}
       </div>
     </div>
-  )
+  );
 }

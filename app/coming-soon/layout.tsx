@@ -1,12 +1,14 @@
-import { Metadata } from "next"
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Coming Soon - PromptForge v3 | 50 Module 7-D Parameter Engine",
-  description: "PromptForge v3 se lansează în curând. 50 de module semantice, 7-D Parameter Engine și export bundle deterministic. Înregistrează-te pentru early access.",
+  description:
+    "PromptForge v3 se lansează în curând. 50 de module semantice, 7-D Parameter Engine și export bundle deterministic. Înregistrează-te pentru early access.",
   robots: "noindex, nofollow", // Conform documentației - noindex pentru coming-soon
   openGraph: {
     title: "Coming Soon - PromptForge v3",
-    description: "Prima platformă Cognitive-OS pentru prompts cu 50 module semantice și 7-D Parameter Engine",
+    description:
+      "Prima platformă Cognitive-OS pentru prompts cu 50 module semantice și 7-D Parameter Engine",
     type: "website",
     images: [
       {
@@ -17,12 +19,12 @@ export const metadata: Metadata = {
       },
     ],
   },
-}
+};
 
 export default function ComingSoonLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  return children
+  return children;
 }

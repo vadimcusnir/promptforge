@@ -1,22 +1,22 @@
-import { notFound } from "next/navigation"
-import { modules } from "@/lib/modules"
-import { ExternalLink, Play } from "lucide-react"
-import { ModuleSpec } from "@/components/module-spec"
-import { ModuleDemo } from "@/components/module-demo"
-import { Breadcrumbs } from "@/components/ui/breadcrumbs"
+import { notFound } from "next/navigation";
+import { modules } from "@/lib/modules";
+import { ExternalLink, Play } from "lucide-react";
+import { ModuleSpec } from "@/components/module-spec";
+import { ModuleDemo } from "@/components/module-demo";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 interface ModulePageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 export default function ModulePage({ params }: ModulePageProps) {
-  const moduleId = Number.parseInt(params.id)
-  const module = modules.find((m) => m.id === moduleId)
+  const moduleId = Number.parseInt(params.id);
+  const module = modules.find((m) => m.id === moduleId);
 
   if (!module) {
-    notFound()
+    notFound();
   }
 
   const vectorColors = {
@@ -27,7 +27,7 @@ export default function ModulePage({ params }: ModulePageProps) {
     5: "text-purple-400 border-purple-400/30 bg-purple-400/10",
     6: "text-pink-400 border-pink-400/30 bg-pink-400/10",
     7: "text-cyan-400 border-cyan-400/30 bg-cyan-400/10",
-  }
+  };
 
   const vectorNames = {
     1: "Semantic Warfare",
@@ -37,7 +37,7 @@ export default function ModulePage({ params }: ModulePageProps) {
     5: "Semiotic Branding",
     6: "Crisis Management",
     7: "Growth Hacking",
-  }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -45,7 +45,10 @@ export default function ModulePage({ params }: ModulePageProps) {
         <Breadcrumbs
           items={[
             { label: "Modules", href: "/modules" },
-            { label: `M${String(module.id).padStart(2, "0")} ${module.name}`, href: `/modules/${module.id}` },
+            {
+              label: `M${String(module.id).padStart(2, "0")} ${module.name}`,
+              href: `/modules/${module.id}`,
+            },
           ]}
         />
 
@@ -59,12 +62,17 @@ export default function ModulePage({ params }: ModulePageProps) {
             <div
               className={`px-4 py-2 rounded-lg border text-sm font-semibold ${vectorColors[module.vector as keyof typeof vectorColors]}`}
             >
-              V{module.vector} {vectorNames[module.vector as keyof typeof vectorNames]}
+              V{module.vector}{" "}
+              {vectorNames[module.vector as keyof typeof vectorNames]}
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-montserrat">{module.name}</h1>
-          <p className="text-xl text-[#5a5a5a] mb-6 font-open-sans">{module.description}</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-montserrat">
+            {module.name}
+          </h1>
+          <p className="text-xl text-[#5a5a5a] mb-6 font-open-sans">
+            {module.description}
+          </p>
         </div>
 
         <ModuleSpec module={module} />
@@ -83,33 +91,46 @@ export default function ModulePage({ params }: ModulePageProps) {
         </div>
 
         <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-8">
-          <h3 className="text-2xl font-bold mb-6 text-[#d1a954] font-montserrat">Frequently Asked Questions</h3>
+          <h3 className="text-2xl font-bold mb-6 text-[#d1a954] font-montserrat">
+            Frequently Asked Questions
+          </h3>
           <div className="space-y-6">
             <div>
-              <h4 className="text-lg font-semibold mb-2 text-white">When should I use this module?</h4>
+              <h4 className="text-lg font-semibold mb-2 text-white">
+                When should I use this module?
+              </h4>
               <p className="text-[#5a5a5a] font-open-sans">
-                This module is optimized for {module.description.toLowerCase()}. Use it when you need precise,
-                industrial-grade prompts that meet the specified KPI targets.
+                This module is optimized for {module.description.toLowerCase()}.
+                Use it when you need precise, industrial-grade prompts that meet
+                the specified KPI targets.
               </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-2 text-white">What makes this different from other modules?</h4>
+              <h4 className="text-lg font-semibold mb-2 text-white">
+                What makes this different from other modules?
+              </h4>
               <p className="text-[#5a5a5a] font-open-sans">
-                Each module in Vector {module.vector} is specifically engineered for{" "}
-                {vectorNames[module.vector as keyof typeof vectorNames].toLowerCase()}
+                Each module in Vector {module.vector} is specifically engineered
+                for{" "}
+                {vectorNames[
+                  module.vector as keyof typeof vectorNames
+                ].toLowerCase()}
                 with unique guardrails and optimization parameters.
               </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-2 text-white">What do I get with Pro upgrade?</h4>
+              <h4 className="text-lg font-semibold mb-2 text-white">
+                What do I get with Pro upgrade?
+              </h4>
               <p className="text-[#5a5a5a] font-open-sans">
-                Pro users get complete export bundles (JSON/PDF), advanced telemetry, GPT Live optimization, and
-                unlimited module executions with priority processing.
+                Pro users get complete export bundles (JSON/PDF), advanced
+                telemetry, GPT Live optimization, and unlimited module
+                executions with priority processing.
               </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

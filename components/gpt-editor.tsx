@@ -1,31 +1,49 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { simulateGPTEditing, type GPTEditResult, type GPTEditOptions } from "@/lib/gpt-editor"
-import type { GeneratedPrompt } from "@/types/promptforge"
-import { Bot, Zap, CheckCircle, Clock, TrendingUp, Copy, Download } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  simulateGPTEditing,
+  type GPTEditResult,
+  type GPTEditOptions,
+} from "@/lib/gpt-editor";
+import type { GeneratedPrompt } from "@/types/promptforge";
+import {
+  Bot,
+  Zap,
+  CheckCircle,
+  Clock,
+  TrendingUp,
+  Copy,
+  Download,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface GPTEditorProps {
-  generatedPrompt: GeneratedPrompt | null
-  onEditComplete?: (result: GPTEditResult) => void
+  generatedPrompt: GeneratedPrompt | null;
+  onEditComplete?: (result: GPTEditResult) => void;
 }
 
 export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
-  const [editResult, setEditResult] = useState<GPTEditResult | null>(null)
-  const [isEditing, setIsEditing] = useState(false)
+  const [editResult, setEditResult] = useState<GPTEditResult | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [options, setOptions] = useState<GPTEditOptions>({
     focus: "comprehensive",
     tone: "professional",
     length: "detailed",
-  })
-  const { toast } = useToast()
+  });
+  const { toast } = useToast();
 
   const handleOptimizePrompt = async () => {
     if (!generatedPrompt) {
@@ -33,68 +51,68 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
         title: "Error",
         description: "No prompt to optimize!",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
-    setIsEditing(true)
+    setIsEditing(true);
 
     try {
-      const result = await simulateGPTEditing(generatedPrompt.prompt, options)
-      setEditResult(result)
-      onEditComplete?.(result)
+      const result = await simulateGPTEditing(generatedPrompt.prompt, options);
+      setEditResult(result);
+      onEditComplete?.(result);
 
       toast({
         title: "Prompt optimized successfully!",
         description: `Confidence: ${result.confidence}% | Time: ${result.processingTime}ms`,
-      })
+      });
     } catch (error) {
       toast({
         title: "Optimization error",
         description: "Could not optimize prompt. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsEditing(false)
+      setIsEditing(false);
     }
-  }
+  };
 
   const handleCopyEdited = async () => {
-    if (!editResult) return
+    if (!editResult) return;
 
     try {
-      await navigator.clipboard.writeText(editResult.editedPrompt)
+      await navigator.clipboard.writeText(editResult.editedPrompt);
       toast({
         title: "Copied to clipboard!",
         description: "Optimized prompt was copied successfully.",
-      })
+      });
     } catch (error) {
       toast({
         title: "Copy error",
         description: "Could not copy prompt.",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const handleDownloadEdited = () => {
-    if (!editResult) return
+    if (!editResult) return;
 
-    const blob = new Blob([editResult.editedPrompt], { type: "text/plain" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `prompt_optimized_${Date.now()}.txt`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    const blob = new Blob([editResult.editedPrompt], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `prompt_optimized_${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 
     toast({
       title: "Prompt downloaded!",
       description: "Optimized prompt was downloaded successfully.",
-    })
-  }
+    });
+  };
 
   return (
     <Card className="glass-effect p-6 glow-accent">
@@ -113,11 +131,20 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
 
       {/* Options Panel */}
       <div className="mb-6 p-4 glass-strong rounded-lg">
-        <h4 className="font-semibold text-foreground mb-3">Optimization Options</h4>
+        <h4 className="font-semibold text-foreground mb-3">
+          Optimization Options
+        </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">Focus</label>
-            <Select value={options.focus} onValueChange={(value: any) => setOptions({ ...options, focus: value })}>
+            <label className="block text-sm font-medium mb-2 text-foreground">
+              Focus
+            </label>
+            <Select
+              value={options.focus}
+              onValueChange={(value: any) =>
+                setOptions({ ...options, focus: value })
+              }
+            >
               <SelectTrigger className="glass-effect">
                 <SelectValue />
               </SelectTrigger>
@@ -131,8 +158,15 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">Tone</label>
-            <Select value={options.tone} onValueChange={(value: any) => setOptions({ ...options, tone: value })}>
+            <label className="block text-sm font-medium mb-2 text-foreground">
+              Tone
+            </label>
+            <Select
+              value={options.tone}
+              onValueChange={(value: any) =>
+                setOptions({ ...options, tone: value })
+              }
+            >
               <SelectTrigger className="glass-effect">
                 <SelectValue />
               </SelectTrigger>
@@ -145,8 +179,15 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">Length</label>
-            <Select value={options.length} onValueChange={(value: any) => setOptions({ ...options, length: value })}>
+            <label className="block text-sm font-medium mb-2 text-foreground">
+              Length
+            </label>
+            <Select
+              value={options.length}
+              onValueChange={(value: any) =>
+                setOptions({ ...options, length: value })
+              }
+            >
               <SelectTrigger className="glass-effect">
                 <SelectValue />
               </SelectTrigger>
@@ -162,7 +203,11 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-2 mb-6">
-        <Button onClick={handleOptimizePrompt} disabled={!generatedPrompt || isEditing} className="glow-primary">
+        <Button
+          onClick={handleOptimizePrompt}
+          disabled={!generatedPrompt || isEditing}
+          className="glow-primary"
+        >
           {isEditing ? (
             <>
               <Clock className="w-4 h-4 mr-2 animate-spin" />
@@ -178,12 +223,20 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
 
         {editResult && (
           <>
-            <Button variant="outline" onClick={handleCopyEdited} className="glass-effect bg-transparent">
+            <Button
+              variant="outline"
+              onClick={handleCopyEdited}
+              className="glass-effect bg-transparent"
+            >
               <Copy className="w-4 h-4 mr-2" />
               Copy Optimized
             </Button>
 
-            <Button variant="outline" onClick={handleDownloadEdited} className="glass-effect bg-transparent">
+            <Button
+              variant="outline"
+              onClick={handleDownloadEdited}
+              className="glass-effect bg-transparent"
+            >
               <Download className="w-4 h-4 mr-2" />
               Download Optimized
             </Button>
@@ -196,10 +249,13 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
         <div className="mb-6 p-4 glass-strong rounded-lg border-l-4 border-primary">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-4 h-4 animate-spin text-primary" />
-            <span className="font-semibold text-foreground">Processing with GPT-4o...</span>
+            <span className="font-semibold text-foreground">
+              Processing with GPT-4o...
+            </span>
           </div>
           <p className="text-sm text-muted-foreground">
-            Analyzing structure, optimizing clarity and improving prompt executability...
+            Analyzing structure, optimizing clarity and improving prompt
+            executability...
           </p>
         </div>
       )}
@@ -209,32 +265,49 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
         <div className="mb-6 p-4 glass-strong rounded-lg">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle className="w-4 h-4 text-green-400" />
-            <h4 className="font-semibold text-foreground">Optimization Complete</h4>
+            <h4 className="font-semibold text-foreground">
+              Optimization Complete
+            </h4>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-400">{editResult.confidence}%</div>
+              <div className="text-2xl font-bold text-green-400">
+                {editResult.confidence}%
+              </div>
               <div className="text-xs text-muted-foreground">Confidence</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-400">{editResult.improvements.length}</div>
+              <div className="text-2xl font-bold text-blue-400">
+                {editResult.improvements.length}
+              </div>
               <div className="text-xs text-muted-foreground">Improvements</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">{editResult.processingTime}ms</div>
-              <div className="text-xs text-muted-foreground">Processing Time</div>
+              <div className="text-2xl font-bold text-purple-400">
+                {editResult.processingTime}ms
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Processing Time
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-amber-400">
-                {Math.round((editResult.editedPrompt.length / editResult.originalPrompt.length) * 100)}%
+                {Math.round(
+                  (editResult.editedPrompt.length /
+                    editResult.originalPrompt.length) *
+                    100,
+                )}
+                %
               </div>
               <div className="text-xs text-muted-foreground">Expansion</div>
             </div>
           </div>
 
           <div className="mb-4">
-            <h5 className="font-semibold text-foreground mb-2">Applied Improvements:</h5>
+            <h5 className="font-semibold text-foreground mb-2">
+              Applied Improvements:
+            </h5>
             <div className="space-y-1">
               {editResult.improvements.map((improvement, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
@@ -286,5 +359,5 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
         </div>
       </div>
     </Card>
-  )
+  );
 }

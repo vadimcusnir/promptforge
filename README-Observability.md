@@ -33,12 +33,12 @@ This system provides comprehensive monitoring, anomaly detection, and incident r
 Monitors agent performance and detects anomalies:
 
 ```typescript
-import { agentWatch } from "@/lib/observability"
+import { agentWatch } from "@/lib/observability";
 
 // Record metrics for a run
 agentWatch.recordMetrics({
   runId: "run_123",
-  orgId: "org_456", 
+  orgId: "org_456",
   moduleId: "AI-IDEI.SOPFORGE",
   tokens: 8500,
   cost: 1.25,
@@ -46,16 +46,17 @@ agentWatch.recordMetrics({
   score: 85,
   errorRate: 0,
   timeouts: 0,
-  timestamp: new Date()
-})
+  timestamp: new Date(),
+});
 
 // Check system status
-const summary = agentWatch.getMetricsSummary()
-console.log(`Error rate: ${summary.errorRate}%`)
-console.log(`Degradation mode: ${summary.degradationMode}`)
+const summary = agentWatch.getMetricsSummary();
+console.log(`Error rate: ${summary.errorRate}%`);
+console.log(`Degradation mode: ${summary.degradationMode}`);
 ```
 
 **Thresholds (from SSOT):**
+
 - Max tokens: 12,000
 - Max cost: $1.50 per run
 - Min score: 80
@@ -67,13 +68,13 @@ console.log(`Degradation mode: ${summary.degradationMode}`)
 PII-free logging with content hashing:
 
 ```typescript
-import { auditLogger } from "@/lib/observability"
+import { auditLogger } from "@/lib/observability";
 
 // Log a run (content is hashed, not stored)
 auditLogger.logRun({
   run_id: "run_123",
   org_id: "org_456",
-  module_id: "AI-IDEI.SOPFORGE", 
+  module_id: "AI-IDEI.SOPFORGE",
   signature_7d: "fintech_enterprise_urgent_complex_full_saas_json",
   model: "gpt-4o",
   tokens: 8500,
@@ -81,18 +82,18 @@ auditLogger.logRun({
   score: 85,
   export_formats: ["txt", "json", "pdf"],
   prompt_content: "...", // Hashed, not stored
-  duration_ms: 45000
-})
+  duration_ms: 45000,
+});
 
 // Query logs
-const recentLogs = auditLogger.queryLogs({ 
-  org_id: "org_456", 
-  limit: 10 
-})
+const recentLogs = auditLogger.queryLogs({
+  org_id: "org_456",
+  limit: 10,
+});
 
 // Get statistics
-const stats = auditLogger.getStatistics()
-console.log(`Pass rate: ${stats.pass_rate}%`)
+const stats = auditLogger.getStatistics();
+console.log(`Pass rate: ${stats.pass_rate}%`);
 ```
 
 ### 3. Alert System (`lib/observability/alert-system.ts`)
@@ -100,22 +101,27 @@ console.log(`Pass rate: ${stats.pass_rate}%`)
 Incident management with notifications:
 
 ```typescript
-import { alertSystem } from "@/lib/observability"
+import { alertSystem } from "@/lib/observability";
 
 // Initialize with channels
-alertSystem.initialize()
+alertSystem.initialize();
 
 // Incidents are created automatically from AgentWatch alerts
-const activeIncidents = alertSystem.getActiveIncidents()
+const activeIncidents = alertSystem.getActiveIncidents();
 
 // Acknowledge incident
-alertSystem.acknowledgeIncident("incident_123", "admin_user")
+alertSystem.acknowledgeIncident("incident_123", "admin_user");
 
-// Resolve incident  
-alertSystem.resolveIncident("incident_123", "admin_user", "Fixed configuration")
+// Resolve incident
+alertSystem.resolveIncident(
+  "incident_123",
+  "admin_user",
+  "Fixed configuration",
+);
 ```
 
 **Alert Channels:**
+
 - Console logging (always enabled)
 - Slack webhooks (if `SLACK_WEBHOOK_URL` set)
 - Email notifications (if SMTP configured)
@@ -126,19 +132,20 @@ alertSystem.resolveIncident("incident_123", "admin_user", "Fixed configuration")
 Multi-layer kill-switch via environment and SSOT:
 
 ```typescript
-import { AgentWatchWorker } from "@/lib/observability"
+import { AgentWatchWorker } from "@/lib/observability";
 
 // Check if agents are enabled
-const enabled = AgentWatchWorker.areAgentsEnabled()
+const enabled = AgentWatchWorker.areAgentsEnabled();
 
 // Manual kill-switch activation
-agentWatch.triggerKillSwitch("Emergency maintenance required")
+agentWatch.triggerKillSwitch("Emergency maintenance required");
 
 // Environment variable kill-switch
-process.env.AGENTS_ENABLED = "false" // Disables all agents
+process.env.AGENTS_ENABLED = "false"; // Disables all agents
 ```
 
 **Kill-switch triggers:**
+
 - Environment: `AGENTS_ENABLED=false`
 - SSOT: `security.agents_enabled: false` in `cursor/ruleset.yml`
 - Automatic: High error rates, budget violations, timeout spikes
@@ -147,6 +154,7 @@ process.env.AGENTS_ENABLED = "false" // Disables all agents
 ## API Endpoints
 
 ### System Status
+
 ```bash
 GET /api/observability/status
 Authorization: Bearer <token>
@@ -174,6 +182,7 @@ Authorization: Bearer <token>
 ```
 
 ### Audit Logs
+
 ```bash
 GET /api/observability/audit?org_id=org_456&limit=50
 POST /api/observability/audit
@@ -191,11 +200,12 @@ POST /api/observability/audit
 ```
 
 ### Incident Management
+
 ```bash
 GET /api/observability/incidents?status=active
 POST /api/observability/incidents
 {
-  "action": "acknowledge", 
+  "action": "acknowledge",
   "incident_id": "incident_123",
   "user_id": "admin_user"
 }
@@ -219,6 +229,7 @@ function AdminPage() {
 ```
 
 **Dashboard Features:**
+
 - Real-time metrics and alerts
 - Agent status and kill-switch controls
 - Audit log browser with filtering
@@ -228,19 +239,23 @@ function AdminPage() {
 ## Integration Example
 
 ```typescript
-import { initializeObservability, agentWatch, auditLogger } from "@/lib/observability"
+import {
+  initializeObservability,
+  agentWatch,
+  auditLogger,
+} from "@/lib/observability";
 
 // Initialize on app startup
-initializeObservability()
+initializeObservability();
 
 // Monitor an agent run
 async function runAgent(params) {
-  const startTime = Date.now()
-  let result
-  
+  const startTime = Date.now();
+  let result;
+
   try {
-    result = await executeAgent(params)
-    
+    result = await executeAgent(params);
+
     // Record successful metrics
     agentWatch.recordMetrics({
       runId: params.runId,
@@ -252,22 +267,21 @@ async function runAgent(params) {
       score: result.score,
       errorRate: 0,
       timeouts: 0,
-      timestamp: new Date()
-    })
-    
+      timestamp: new Date(),
+    });
   } catch (error) {
     // Record error metrics
     agentWatch.recordMetrics({
       runId: params.runId,
-      orgId: params.orgId, 
+      orgId: params.orgId,
       moduleId: params.moduleId,
       tokens: 0,
       cost: 0,
       duration: Date.now() - startTime,
       errorRate: 1,
       timeouts: 0,
-      timestamp: new Date()
-    })
+      timestamp: new Date(),
+    });
   } finally {
     // Always audit log (PII-free)
     auditLogger.logRun({
@@ -282,11 +296,11 @@ async function runAgent(params) {
       export_formats: ["txt", "json"],
       prompt_content: params.prompt, // Hashed, not stored
       duration_ms: Date.now() - startTime,
-      error_code: error?.message
-    })
+      error_code: error?.message,
+    });
   }
-  
-  return result
+
+  return result;
 }
 ```
 
@@ -327,7 +341,7 @@ security:
 
 1. **Budget Exceeded**: Cost > $1.50 OR tokens > 12,000
 2. **Score Low**: Score < 80 (triggers degradation if persistent)
-3. **Error Spike**: Error rate > 5% over 5-minute window  
+3. **Error Spike**: Error rate > 5% over 5-minute window
 4. **Timeout Spike**: > 3 timeouts per run
 
 ## Response Actions
@@ -339,6 +353,7 @@ security:
 ## Degradation Mode
 
 When anomalies are detected:
+
 - Live testing disabled (`/api/gpt-test` returns 503)
 - Only simulation mode allowed
 - Flag stored in SSOT: `degrade_to_simulation: true`
@@ -357,7 +372,7 @@ When anomalies are detected:
 ```
 lib/observability/
 ├── agent-watch.ts          # Monitoring and anomaly detection
-├── audit-logger.ts         # PII-free audit logging  
+├── audit-logger.ts         # PII-free audit logging
 ├── alert-system.ts         # Incident management
 ├── index.ts                # Exports and initialization
 └── integration-example.ts  # Usage examples
@@ -367,7 +382,7 @@ components/observability/
 
 app/api/observability/
 ├── status/route.ts         # System status API
-├── audit/route.ts          # Audit log API  
+├── audit/route.ts          # Audit log API
 └── incidents/route.ts      # Incident management API
 
 middleware.ts               # Enhanced kill-switch middleware

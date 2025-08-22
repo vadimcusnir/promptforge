@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { History, RotateCcw, Cloud, HardDrive } from "lucide-react"
-import type { HistoryEntry } from "@/types/promptforge"
-import { PremiumGate } from "@/lib/premium-features"
+import { useState, useEffect } from "react";
+import { History, RotateCcw, Cloud, HardDrive } from "lucide-react";
+import type { HistoryEntry } from "@/types/promptforge";
+import { PremiumGate } from "@/lib/premium-features";
 
 interface HistoryPanelProps {
-  onRestoreConfig: (entry: HistoryEntry) => void
+  onRestoreConfig: (entry: HistoryEntry) => void;
 }
 
 export function HistoryPanel({ onRestoreConfig }: HistoryPanelProps) {
-  const [history, setHistory] = useState<HistoryEntry[]>([])
-  const [storageType, setStorageType] = useState<"local" | "cloud">("local")
-  const premiumGate = PremiumGate.getInstance()
-  const hasCloudHistory = premiumGate.getCurrentTier().id !== "free"
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [storageType, setStorageType] = useState<"local" | "cloud">("local");
+  const premiumGate = PremiumGate.getInstance();
+  const hasCloudHistory = premiumGate.getCurrentTier().id !== "free";
 
   useEffect(() => {
-    loadHistory()
-  }, [storageType])
+    loadHistory();
+  }, [storageType]);
 
   const loadHistory = () => {
     if (storageType === "cloud" && hasCloudHistory) {
@@ -39,48 +39,60 @@ export function HistoryPanel({ onRestoreConfig }: HistoryPanelProps) {
           score: 91,
           verdict: "PASS",
         },
-      ]
-      setHistory(cloudHistory)
+      ];
+      setHistory(cloudHistory);
     } else {
       // Load from localStorage
-      const stored = localStorage.getItem("pf_history")
+      const stored = localStorage.getItem("pf_history");
       if (stored) {
-        const parsed = JSON.parse(stored)
-        setHistory(parsed.map((entry: any) => ({ ...entry, timestamp: new Date(entry.timestamp) })))
+        const parsed = JSON.parse(stored);
+        setHistory(
+          parsed.map((entry: any) => ({
+            ...entry,
+            timestamp: new Date(entry.timestamp),
+          })),
+        );
       }
     }
-  }
+  };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
-  }
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const getVerdictColor = (verdict?: string) => {
     switch (verdict) {
       case "PASS":
-        return "text-gold-industrial"
+        return "text-gold-industrial";
       case "PARTIAL":
-        return "text-lead-gray"
+        return "text-lead-gray";
       case "FAIL":
-        return "text-red-500"
+        return "text-red-500";
       default:
-        return "text-lead-gray"
+        return "text-lead-gray";
     }
-  }
+  };
 
   return (
     <div className="glass-effect rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <History className="w-5 h-5 text-gold-industrial" />
-          <h2 className="text-xl font-semibold font-montserrat">Session History</h2>
+          <h2 className="text-xl font-semibold font-montserrat">
+            Session History
+          </h2>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setStorageType("local")}
             className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors ${
-              storageType === "local" ? "bg-gold-industrial text-black" : "bg-lead-gray/20 text-lead-gray"
+              storageType === "local"
+                ? "bg-gold-industrial text-black"
+                : "bg-lead-gray/20 text-lead-gray"
             }`}
           >
             <HardDrive className="w-4 h-4" />
@@ -107,7 +119,8 @@ export function HistoryPanel({ onRestoreConfig }: HistoryPanelProps) {
       {!hasCloudHistory && storageType === "cloud" && (
         <div className="mb-4 p-4 bg-lead-gray/10 border border-lead-gray/20 rounded-lg">
           <div className="text-sm text-lead-gray">
-            Cloud history sync requires Pro plan. Upgrade to access your history across devices.
+            Cloud history sync requires Pro plan. Upgrade to access your history
+            across devices.
           </div>
         </div>
       )}
@@ -121,21 +134,33 @@ export function HistoryPanel({ onRestoreConfig }: HistoryPanelProps) {
           </div>
         ) : (
           history.map((entry) => (
-            <div key={entry.id} className="p-4 bg-black/30 rounded-lg border border-lead-gray/20">
+            <div
+              key={entry.id}
+              className="p-4 bg-black/30 rounded-lg border border-lead-gray/20"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="font-mono text-sm text-gold-industrial">{entry.id}</span>
-                    <span className="text-sm text-lead-gray">{formatTime(entry.timestamp)}</span>
+                    <span className="font-mono text-sm text-gold-industrial">
+                      {entry.id}
+                    </span>
+                    <span className="text-sm text-lead-gray">
+                      {formatTime(entry.timestamp)}
+                    </span>
                     {entry.score && (
                       <span className="text-sm">
-                        <span className={getVerdictColor(entry.verdict)}>{entry.score}/100</span>
-                        <span className="text-lead-gray ml-1">({entry.verdict})</span>
+                        <span className={getVerdictColor(entry.verdict)}>
+                          {entry.score}/100
+                        </span>
+                        <span className="text-lead-gray ml-1">
+                          ({entry.verdict})
+                        </span>
                       </span>
                     )}
                   </div>
                   <div className="text-sm text-lead-gray">
-                    Module {entry.moduleId} • {entry.sevenDConfig.domain} • {entry.sevenDConfig.scale}
+                    Module {entry.moduleId} • {entry.sevenDConfig.domain} •{" "}
+                    {entry.sevenDConfig.scale}
                   </div>
                 </div>
                 <button
@@ -151,5 +176,5 @@ export function HistoryPanel({ onRestoreConfig }: HistoryPanelProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

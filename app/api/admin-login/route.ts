@@ -12,10 +12,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
-    const res = NextResponse.json({ 
-      ok: true, 
+    const res = NextResponse.json({
+      ok: true,
       message: "Admin login successful",
-      role: "admin"
+      role: "admin",
     });
 
     // Set admin cookies
@@ -52,11 +52,11 @@ export async function POST(req: NextRequest) {
 // Logout endpoint
 export async function DELETE(req: NextRequest) {
   const res = NextResponse.json({ ok: true, message: "Logged out" });
-  
+
   // Clear admin cookies
   res.cookies.set("pf_role", "", { maxAge: 0, path: "/" });
   res.cookies.set("pf_uid", "", { maxAge: 0, path: "/" });
   res.cookies.set("pf_email", "", { maxAge: 0, path: "/" });
-  
+
   return res;
 }

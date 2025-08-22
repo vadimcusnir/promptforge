@@ -21,7 +21,8 @@ export const COPY = {
   f_contact: "Contact",
   skip_to_content: "Skip to content",
   menu_toggle: "Toggle menu",
-  copyright: "© " + new Date().getFullYear() + " PROMPTFORGE™. All rights reserved."
+  copyright:
+    "© " + new Date().getFullYear() + " PROMPTFORGE™. All rights reserved.",
 } as const;
 
 export type CopyKeys = keyof typeof COPY;

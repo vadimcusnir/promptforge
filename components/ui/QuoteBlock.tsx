@@ -11,7 +11,7 @@ interface QuoteBlockProps {
 /**
  * QuoteBlock - DX-optimized component for quote focus interactions
  * Integrates with QuoteFocusProvider for centralized overlay control
- * 
+ *
  * Features:
  * - Automatic focus state management on hover
  * - Data attributes for styling hooks
@@ -46,7 +46,7 @@ export function QuoteBlock({ children, className = "" }: QuoteBlockProps) {
 
 /**
  * Alternative lightweight hook for custom quote implementations
- * 
+ *
  * Usage:
  * const quoteProps = useQuoteProps();
  * <div {...quoteProps}>Custom quote content</div>

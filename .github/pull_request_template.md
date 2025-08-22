@@ -17,22 +17,27 @@ Descrie pe scurt schimbarea (ce rută/efect ai atins) și de ce.
 ## Testing
 
 ### Local manual:
+
 - [ ] `/` aplică `.route-marketing` în ≤50ms.
 - [ ] `/generator` hover pe citat → overlay opacity ↑, `.matrix-tokens` opacity ~0.28.
 - [ ] `/dashboard` schimbare clasă fără reziduuri.
 - [ ] `prefers-reduced-motion` → fără tranziții.
 
 ### E2E:
+
 - [ ] `pnpm test:e2e:overlays` trece.
 
 ### Performance:
+
 - [ ] P95 `overlay.apply.ms` ≤ 50ms.
 - [ ] P95 `overlay.focus.ms` ≤ 20ms.
 
 ### Accessibility:
+
 - [ ] Contrast AA menținut; fără interferențe la focus vizual.
 
 ### Diagnostics:
+
 - [ ] Nicio ieșire `console.log` în producție.
 - [ ] `NEXT_PUBLIC_OVERLAY_DIAGNOSTICS=0` în prod.
 
@@ -88,6 +93,7 @@ Hover deactivate: __ms
 ---
 
 **Reviewer Notes:**
+
 - Focus pe SSOT compliance
 - Verifică performance benchmarks
 - Testează manual pe multiple rute

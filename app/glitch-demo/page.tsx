@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
 export default function GlitchDemoPage() {
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF] p-8">
       <div className="max-w-4xl mx-auto space-y-16">
-        
         {/* Header */}
         <section className="text-center">
           <h1 className="text-6xl font-bold mb-4">
             <span className="kw" data-glitch>
               <span className="kw__text">Glitch Protocol</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span> v1 Demo
+            </span>{" "}
+            v1 Demo
           </h1>
           <p className="text-xl text-[#ECFEFF]/80">
             Deterministic, seed-based glitch effects for keywords
@@ -25,12 +25,13 @@ export default function GlitchDemoPage() {
             <span className="pf-corner tr"></span>
             <span className="pf-corner bl"></span>
             <span className="pf-corner br"></span>
-            
+
             <h2 className="text-3xl font-bold mb-4">
               <span className="kw" data-glitch>
                 <span className="kw__text">Deterministic</span>
                 <span className="kw__glitch" aria-hidden="true"></span>
-              </span> Effects
+              </span>{" "}
+              Effects
             </h2>
             <p className="text-[#ECFEFF]/80 mb-4">
               Same text = same glitch pattern every time
@@ -47,12 +48,13 @@ export default function GlitchDemoPage() {
             <span className="pf-corner tr"></span>
             <span className="pf-corner bl"></span>
             <span className="pf-corner br"></span>
-            
+
             <h2 className="text-3xl font-bold mb-4">
               <span className="kw" data-glitch>
                 <span className="kw__text">Performance</span>
                 <span className="kw__glitch" aria-hidden="true"></span>
-              </span> First
+              </span>{" "}
+              First
             </h2>
             <p className="text-[#ECFEFF]/80 mb-4">
               Optimized for 60fps with minimal CLS
@@ -71,51 +73,66 @@ export default function GlitchDemoPage() {
           <span className="pf-corner tr"></span>
           <span className="pf-corner bl"></span>
           <span className="pf-corner br"></span>
-          
+
           <h2 className="text-3xl font-bold text-center mb-8">
-            Live <span className="kw" data-glitch>
+            Live{" "}
+            <span className="kw" data-glitch>
               <span className="kw__text">Examples</span>
               <span className="kw__glitch" aria-hidden="true"></span>
             </span>
           </h2>
-          
+
           <div className="pf-yard-line"></div>
-          
+
           <div className="space-y-8 text-center">
             <div>
               <h3 className="text-2xl font-bold mb-2">
-                The Future of <span className="kw" data-glitch>
+                The Future of{" "}
+                <span className="kw" data-glitch>
                   <span className="kw__text">AI</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span> Prompting
+                </span>{" "}
+                Prompting
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">H1 example with single keyword</p>
+              <p className="text-[#ECFEFF]/60 text-sm">
+                H1 example with single keyword
+              </p>
             </div>
-            
+
             <div>
               <h3 className="text-2xl font-bold mb-2">
                 <span className="kw" data-glitch>
                   <span className="kw__text">50 Modules</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span> × <span className="kw" data-glitch>
+                </span>{" "}
+                ×{" "}
+                <span className="kw" data-glitch>
                   <span className="kw__text">7D Engine</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span> → <span className="kw" data-glitch>
+                </span>{" "}
+                →{" "}
+                <span className="kw" data-glitch>
                   <span className="kw__text">Export</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
                 </span>
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">H2 example with multiple keywords</p>
+              <p className="text-[#ECFEFF]/60 text-sm">
+                H2 example with multiple keywords
+              </p>
             </div>
-            
+
             <div>
               <h3 className="text-xl mb-2">
-                Experience the <span className="kw" data-glitch>
+                Experience the{" "}
+                <span className="kw" data-glitch>
                   <span className="kw__text">Protocol</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span> in Action
+                </span>{" "}
+                in Action
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">Scroll to trigger • Hover to replay (6s cooldown)</p>
+              <p className="text-[#ECFEFF]/60 text-sm">
+                Scroll to trigger • Hover to replay (6s cooldown)
+              </p>
             </div>
           </div>
         </section>
@@ -126,16 +143,17 @@ export default function GlitchDemoPage() {
           <span className="pf-corner tr"></span>
           <span className="pf-corner bl"></span>
           <span className="pf-corner br"></span>
-          
+
           <h2 className="text-3xl font-bold text-center mb-4">
             <span className="kw" data-glitch>
               <span className="kw__text">Technical</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span> Specs
+            </span>{" "}
+            Specs
           </h2>
-          
+
           <div className="pf-yard-line"></div>
-          
+
           <div className="grid md:grid-cols-3 gap-6 text-sm">
             <div>
               <h4 className="font-bold text-[#0891B2] mb-2">Duration</h4>
@@ -156,11 +174,10 @@ export default function GlitchDemoPage() {
         <section className="text-center text-[#ECFEFF]/60">
           <p>Glitch Protocol v1 • PromptForge Tactical Design System</p>
         </section>
-
       </div>
-      
+
       {/* Glitch Protocol v1 Script */}
       <script defer src="/glitch-keywords.js"></script>
     </div>
-  )
+  );
 }

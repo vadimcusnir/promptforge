@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ChevronDown } from "lucide-react"
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
@@ -34,27 +34,34 @@ const faqs = [
     answer:
       "Team plans include unlimited seats, white-label options, and dedicated support. Pricing scales with your needs. Contact us for custom enterprise solutions.",
   },
-]
+];
 
 export function PricingFAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
-        <p className="text-[#5a5a5a]">Everything you need to know about PromptForge pricing</p>
+        <p className="text-[#5a5a5a]">
+          Everything you need to know about PromptForge pricing
+        </p>
       </div>
 
       <div className="space-y-4">
         {faqs.map((faq, index) => (
-          <div key={index} className="border border-[#5a5a5a]/30 rounded-lg glass-effect overflow-hidden">
+          <div
+            key={index}
+            className="border border-[#5a5a5a]/30 rounded-lg glass-effect overflow-hidden"
+          >
             <button
               className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-[#5a5a5a]/10 transition-colors"
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
               <span className="font-semibold">{faq.question}</span>
-              <ChevronDown className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`w-5 h-5 transition-transform ${openIndex === index ? "rotate-180" : ""}`}
+              />
             </button>
             {openIndex === index && (
               <div className="px-6 pb-4">
@@ -65,5 +72,5 @@ export function PricingFAQ() {
         ))}
       </div>
     </div>
-  )
+  );
 }

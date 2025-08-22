@@ -1,12 +1,12 @@
 export type BackgroundConfig = {
-  motionLevel: "auto" | "medium" | "low"
-  reducedFallback: boolean
-  maxQuotes: number
-  maxTokens: number
-  quoteDelayMs: [number, number]
-  tokenSpawnDelayMs: [number, number]
-  typingSpeedMs: { desktop: [number, number]; mobile: [number, number] }
-}
+  motionLevel: "auto" | "medium" | "low";
+  reducedFallback: boolean;
+  maxQuotes: number;
+  maxTokens: number;
+  quoteDelayMs: [number, number];
+  tokenSpawnDelayMs: [number, number];
+  typingSpeedMs: { desktop: [number, number]; mobile: [number, number] };
+};
 
 export const backgroundConfig: BackgroundConfig = {
   motionLevel: "auto",
@@ -16,4 +16,4 @@ export const backgroundConfig: BackgroundConfig = {
   quoteDelayMs: [15000, 20000],
   tokenSpawnDelayMs: [100, 800],
   typingSpeedMs: { desktop: [22, 32], mobile: [14, 24] },
-}
+};

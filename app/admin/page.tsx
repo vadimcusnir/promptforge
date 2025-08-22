@@ -90,7 +90,9 @@ export default function AdminPage() {
       <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center px-6">
         <Card className="w-full max-w-md bg-white/5 backdrop-blur-sm border border-white/10">
           <CardHeader>
-            <CardTitle className="text-center text-white">Admin Login</CardTitle>
+            <CardTitle className="text-center text-white">
+              Admin Login
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
@@ -102,8 +104,8 @@ export default function AdminPage() {
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
                 required
               />
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isLoading}
                 className="w-full bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-bold"
               >
@@ -121,7 +123,11 @@ export default function AdminPage() {
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">PromptForge Admin</h1>
-          <Button onClick={handleLogout} variant="outline" className="border-white/20 text-white">
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="border-white/20 text-white"
+          >
             Logout
           </Button>
         </div>
@@ -137,20 +143,40 @@ export default function AdminPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-white/70">Environment Variable:</span>
-                    <span className={comingSoonStatus.coming_soon_env ? "text-green-400" : "text-gray-400"}>
+                    <span
+                      className={
+                        comingSoonStatus.coming_soon_env
+                          ? "text-green-400"
+                          : "text-gray-400"
+                      }
+                    >
                       {comingSoonStatus.coming_soon_env ? "ON" : "OFF"}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/70">Runtime Cookie:</span>
-                    <span className={comingSoonStatus.coming_soon_cookie ? "text-green-400" : "text-gray-400"}>
+                    <span
+                      className={
+                        comingSoonStatus.coming_soon_cookie
+                          ? "text-green-400"
+                          : "text-gray-400"
+                      }
+                    >
                       {comingSoonStatus.coming_soon_cookie ? "ON" : "OFF"}
                     </span>
                   </div>
                   <div className="flex justify-between font-bold">
                     <span className="text-white">Active Status:</span>
-                    <span className={comingSoonStatus.active ? "text-red-400" : "text-green-400"}>
-                      {comingSoonStatus.active ? "COMING SOON ACTIVE" : "SITE LIVE"}
+                    <span
+                      className={
+                        comingSoonStatus.active
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }
+                    >
+                      {comingSoonStatus.active
+                        ? "COMING SOON ACTIVE"
+                        : "SITE LIVE"}
                     </span>
                   </div>
                 </div>
@@ -174,7 +200,8 @@ export default function AdminPage() {
               </div>
 
               <p className="text-xs text-white/60">
-                When enabled, public users see /coming-soon page. Admins can still access all pages.
+                When enabled, public users see /coming-soon page. Admins can
+                still access all pages.
               </p>
             </CardContent>
           </Card>
@@ -185,16 +212,28 @@ export default function AdminPage() {
               <CardTitle className="text-white">Quick Links</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <a href="/" className="block text-[#d1a954] hover:text-[#d1a954]/80 underline">
+              <a
+                href="/"
+                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+              >
                 → Homepage (Admin View)
               </a>
-              <a href="/coming-soon" className="block text-[#d1a954] hover:text-[#d1a954]/80 underline">
+              <a
+                href="/coming-soon"
+                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+              >
                 → Coming Soon Page (Public View)
               </a>
-              <a href="/dashboard" className="block text-[#d1a954] hover:text-[#d1a954]/80 underline">
+              <a
+                href="/dashboard"
+                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+              >
                 → Dashboard
               </a>
-              <a href="/generator" className="block text-[#d1a954] hover:text-[#d1a954]/80 underline">
+              <a
+                href="/generator"
+                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+              >
                 → Generator
               </a>
             </CardContent>

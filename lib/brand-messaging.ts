@@ -1,26 +1,31 @@
 export interface BrandMessage {
-  id: string
-  context: string
-  primary: string
-  secondary?: string
-  cta?: string
-  tone: "authoritative" | "technical" | "conversion" | "supportive"
-  audience: "free" | "pro" | "enterprise" | "all"
+  id: string;
+  context: string;
+  primary: string;
+  secondary?: string;
+  cta?: string;
+  tone: "authoritative" | "technical" | "conversion" | "supportive";
+  audience: "free" | "pro" | "enterprise" | "all";
 }
 
 export const BRAND_VOICE = {
   personality: "Engineering-focused, authoritative, results-driven",
   tone: "Professional yet approachable, technical without being intimidating",
   values: ["Precision", "Performance", "Innovation", "Reliability"],
-  avoid: ["Overly casual language", "Buzzwords without substance", "Vague promises"],
-}
+  avoid: [
+    "Overly casual language",
+    "Buzzwords without substance",
+    "Vague promises",
+  ],
+};
 
 export const BRAND_MESSAGES: Record<string, BrandMessage> = {
   hero_tagline: {
     id: "hero_tagline",
     context: "Main header tagline",
     primary: "Enterprise AI Prompt Engineering Platform",
-    secondary: "Transform ideas into execution-ready AI prompts with military-grade precision",
+    secondary:
+      "Transform ideas into execution-ready AI prompts with military-grade precision",
     tone: "authoritative",
     audience: "all",
   },
@@ -28,7 +33,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "value_proposition",
     context: "Core value proposition",
     primary: "From concept to deployment in minutes, not hours",
-    secondary: "50 battle-tested modules. 7 semantic vectors. Infinite possibilities.",
+    secondary:
+      "50 battle-tested modules. 7 semantic vectors. Infinite possibilities.",
     tone: "technical",
     audience: "all",
   },
@@ -36,7 +42,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "mission_config_desc",
     context: "Mission configuration section",
     primary: "Strategic Mission Parameters",
-    secondary: "Configure your operational context for maximum prompt effectiveness and business alignment",
+    secondary:
+      "Configure your operational context for maximum prompt effectiveness and business alignment",
     tone: "technical",
     audience: "all",
   },
@@ -44,7 +51,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "module_arsenal_desc",
     context: "Module selection section",
     primary: "Tactical Module Arsenal",
-    secondary: "Select from 50 specialized AI modules engineered for specific business outcomes and market conditions",
+    secondary:
+      "Select from 50 specialized AI modules engineered for specific business outcomes and market conditions",
     tone: "technical",
     audience: "all",
   },
@@ -52,7 +60,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "generator_cta",
     context: "Generator tab",
     primary: "Deploy Prompt",
-    secondary: "Generate execution-ready prompts with validated structure and KPI alignment",
+    secondary:
+      "Generate execution-ready prompts with validated structure and KPI alignment",
     cta: "Generate Now",
     tone: "conversion",
     audience: "all",
@@ -61,7 +70,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "gpt_editor_premium",
     context: "GPT Editor premium feature",
     primary: "GPT-4 Live Optimization Engine",
-    secondary: "Real-time prompt enhancement with streaming feedback and performance metrics",
+    secondary:
+      "Real-time prompt enhancement with streaming feedback and performance metrics",
     cta: "Upgrade to Pro",
     tone: "conversion",
     audience: "free",
@@ -70,7 +80,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "test_engine_desc",
     context: "Test engine section",
     primary: "Validation & Quality Assurance",
-    secondary: "Comprehensive testing suite with multi-dimensional scoring and improvement recommendations",
+    secondary:
+      "Comprehensive testing suite with multi-dimensional scoring and improvement recommendations",
     tone: "technical",
     audience: "all",
   },
@@ -78,7 +89,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "history_desc",
     context: "History section",
     primary: "Mission Intelligence Archive",
-    secondary: "Complete audit trail with advanced analytics and pattern recognition for continuous optimization",
+    secondary:
+      "Complete audit trail with advanced analytics and pattern recognition for continuous optimization",
     tone: "technical",
     audience: "all",
   },
@@ -86,7 +98,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "export_desc",
     context: "Export section",
     primary: "Enterprise Export & Intelligence",
-    secondary: "Multi-format export bundles with comprehensive analytics and white-label customization",
+    secondary:
+      "Multi-format export bundles with comprehensive analytics and white-label customization",
     tone: "technical",
     audience: "all",
   },
@@ -94,7 +107,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "analytics_desc",
     context: "Analytics section",
     primary: "Performance Intelligence Dashboard",
-    secondary: "Real-time telemetry, user behavior analysis, and system health monitoring for data-driven optimization",
+    secondary:
+      "Real-time telemetry, user behavior analysis, and system health monitoring for data-driven optimization",
     tone: "technical",
     audience: "all",
   },
@@ -102,7 +116,8 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "upgrade_urgency",
     context: "Premium upgrade messaging",
     primary: "Unlock Professional-Grade Capabilities",
-    secondary: "Join 10,000+ teams using PROMPTFORGE™ to accelerate AI implementation and drive measurable results",
+    secondary:
+      "Join 10,000+ teams using PROMPTFORGE™ to accelerate AI implementation and drive measurable results",
     cta: "Upgrade Now - 30% Off",
     tone: "conversion",
     audience: "free",
@@ -120,11 +135,12 @@ export const BRAND_MESSAGES: Record<string, BrandMessage> = {
     id: "technical_specs",
     context: "Technical specifications",
     primary: "Enterprise-Grade Architecture",
-    secondary: "99.9% uptime SLA, SOC2 compliance, advanced security, and unlimited scalability",
+    secondary:
+      "99.9% uptime SLA, SOC2 compliance, advanced security, and unlimited scalability",
     tone: "technical",
     audience: "enterprise",
   },
-}
+};
 
 export const CONVERSION_COPY = {
   urgency_indicators: [
@@ -139,8 +155,13 @@ export const CONVERSION_COPY = {
     "Enterprise-grade reliability",
     "Battle-tested by industry leaders",
   ],
-  risk_mitigation: ["30-day money-back guarantee", "No setup fees", "Cancel anytime", "Free migration support"],
-}
+  risk_mitigation: [
+    "30-day money-back guarantee",
+    "No setup fees",
+    "Cancel anytime",
+    "Free migration support",
+  ],
+};
 
 export const CTA_VARIANTS = {
   primary: {
@@ -155,30 +176,35 @@ export const CTA_VARIANTS = {
     contact_sales: "Contact Sales Team",
     documentation: "View Documentation",
   },
-}
+};
 
-export function getBrandMessage(messageId: string, userTier = "free"): BrandMessage | null {
-  const message = BRAND_MESSAGES[messageId]
-  if (!message) return null
+export function getBrandMessage(
+  messageId: string,
+  userTier = "free",
+): BrandMessage | null {
+  const message = BRAND_MESSAGES[messageId];
+  if (!message) return null;
 
   // Filter by audience
   if (message.audience !== "all" && message.audience !== userTier) {
-    return null
+    return null;
   }
 
-  return message
+  return message;
 }
 
 export function getContextualCTA(userTier: string, context: string): string {
   switch (userTier) {
     case "free":
-      return context === "premium_feature" ? CTA_VARIANTS.primary.free_to_pro : CTA_VARIANTS.primary.trial_start
+      return context === "premium_feature"
+        ? CTA_VARIANTS.primary.free_to_pro
+        : CTA_VARIANTS.primary.trial_start;
     case "pro":
-      return CTA_VARIANTS.primary.pro_to_enterprise
+      return CTA_VARIANTS.primary.pro_to_enterprise;
     case "enterprise":
-      return CTA_VARIANTS.secondary.contact_sales
+      return CTA_VARIANTS.secondary.contact_sales;
     default:
-      return CTA_VARIANTS.primary.trial_start
+      return CTA_VARIANTS.primary.trial_start;
   }
 }
 
@@ -187,7 +213,10 @@ export function getUrgencyMessage(userTier: string): string {
     free: "Join 10,000+ professionals already using PROMPTFORGE™ Pro",
     pro: "Scale your operations with Enterprise features",
     enterprise: "Optimize your deployment with our success team",
-  }
+  };
 
-  return urgencyMessages[userTier as keyof typeof urgencyMessages] || urgencyMessages.free
+  return (
+    urgencyMessages[userTier as keyof typeof urgencyMessages] ||
+    urgencyMessages.free
+  );
 }

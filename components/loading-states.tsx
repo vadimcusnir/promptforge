@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/ui/card"
+import { Card } from "@/components/ui/card";
 
 export function ModuleCardSkeleton() {
   return (
@@ -16,7 +16,7 @@ export function ModuleCardSkeleton() {
         <div className="h-5 bg-muted/30 rounded w-20"></div>
       </div>
     </Card>
-  )
+  );
 }
 
 export function PromptGeneratorSkeleton() {
@@ -30,7 +30,7 @@ export function PromptGeneratorSkeleton() {
       </div>
       <div className="h-10 bg-muted/30 rounded w-32"></div>
     </Card>
-  )
+  );
 }
 
 export function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
@@ -38,16 +38,24 @@ export function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
     sm: "w-4 h-4",
     md: "w-6 h-6",
     lg: "w-8 h-8",
-  }
+  };
 
-  return <div className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-muted border-t-primary`} />
+  return (
+    <div
+      className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-muted border-t-primary`}
+    />
+  );
 }
 
-export function ProcessingIndicator({ message = "Processing..." }: { message?: string }) {
+export function ProcessingIndicator({
+  message = "Processing...",
+}: {
+  message?: string;
+}) {
   return (
     <div className="flex items-center gap-3 p-4 glass-effect rounded-lg animate-pulse-glow">
       <LoadingSpinner />
       <span className="text-sm text-muted-foreground">{message}</span>
     </div>
-  )
+  );
 }

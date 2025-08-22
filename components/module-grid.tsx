@@ -1,51 +1,58 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ModuleCard } from "./module-card"
-import { MODULES, searchModules } from "@/lib/modules"
-import { VECTORS } from "@/types/promptforge"
-import { Search, Filter, Grid, List } from "lucide-react"
+import { useState, useMemo } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ModuleCard } from "./module-card";
+import { MODULES, searchModules } from "@/lib/modules";
+import { VECTORS } from "@/types/promptforge";
+import { Search, Filter, Grid, List } from "lucide-react";
 
 interface ModuleGridProps {
-  selectedModule: number | null
-  onSelectModule: (moduleId: number) => void
-  vectorFilter: string
-  onVectorFilterChange: (vector: string) => void
+  selectedModule: number | null;
+  onSelectModule: (moduleId: number) => void;
+  vectorFilter: string;
+  onVectorFilterChange: (vector: string) => void;
 }
 
-export function ModuleGrid({ selectedModule, onSelectModule, vectorFilter, onVectorFilterChange }: ModuleGridProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [showDetails, setShowDetails] = useState<number | null>(null)
+export function ModuleGrid({
+  selectedModule,
+  onSelectModule,
+  vectorFilter,
+  onVectorFilterChange,
+}: ModuleGridProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showDetails, setShowDetails] = useState<number | null>(null);
 
   const filteredModules = useMemo(() => {
-    let modules = Object.values(MODULES)
+    let modules = Object.values(MODULES);
 
     // Apply search filter
     if (searchQuery.trim()) {
-      modules = searchModules(searchQuery)
+      modules = searchModules(searchQuery);
     }
 
-    return modules.sort((a, b) => a.id - b.id)
-  }, [searchQuery])
+    return modules.sort((a, b) => a.id - b.id);
+  }, [searchQuery]);
 
   const modulesByVector = useMemo(() => {
-    const grouped: Record<string, typeof filteredModules> = {}
+    const grouped: Record<string, typeof filteredModules> = {};
 
     Object.entries(VECTORS).forEach(([key, vector]) => {
-      grouped[key] = filteredModules.filter((module) => module.vectors.includes(Number.parseInt(key)))
-    })
+      grouped[key] = filteredModules.filter((module) =>
+        module.vectors.includes(Number.parseInt(key)),
+      );
+    });
 
-    return grouped
-  }, [filteredModules])
+    return grouped;
+  }, [filteredModules]);
 
   const handleViewDetails = (moduleId: number) => {
-    setShowDetails(showDetails === moduleId ? null : moduleId)
-  }
+    setShowDetails(showDetails === moduleId ? null : moduleId);
+  };
 
   return (
     <div className="space-y-6">
@@ -67,10 +74,18 @@ export function ModuleGrid({ selectedModule, onSelectModule, vectorFilter, onVec
           </Badge>
 
           <div className="flex items-center gap-1">
-            <Button size="sm" variant={viewMode === "grid" ? "default" : "outline"} onClick={() => setViewMode("grid")}>
+            <Button
+              size="sm"
+              variant={viewMode === "grid" ? "default" : "outline"}
+              onClick={() => setViewMode("grid")}
+            >
               <Grid className="w-4 h-4" />
             </Button>
-            <Button size="sm" variant={viewMode === "list" ? "default" : "outline"} onClick={() => setViewMode("list")}>
+            <Button
+              size="sm"
+              variant={viewMode === "list" ? "default" : "outline"}
+              onClick={() => setViewMode("list")}
+            >
               <List className="w-4 h-4" />
             </Button>
           </div>
@@ -83,18 +98,24 @@ export function ModuleGrid({ selectedModule, onSelectModule, vectorFilter, onVec
             All ({filteredModules.length})
           </TabsTrigger>
           {Object.entries(VECTORS).map(([key, vector]) => {
-            const count = modulesByVector[key]?.length || 0
+            const count = modulesByVector[key]?.length || 0;
             return (
               <TabsTrigger key={key} value={key} className="text-xs">
                 {vector.name} ({count})
               </TabsTrigger>
-            )
+            );
           })}
         </TabsList>
 
         {/* All Modules Tab */}
         <TabsContent value="all" className="mt-6">
-          <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-3"}>
+          <div
+            className={
+              viewMode === "grid"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                : "space-y-3"
+            }
+          >
             {filteredModules.map((module) => (
               <ModuleCard
                 key={module.id}
@@ -110,12 +131,25 @@ export function ModuleGrid({ selectedModule, onSelectModule, vectorFilter, onVec
         {/* Vector-specific Tabs */}
         {Object.entries(VECTORS).map(([key, vector]) => (
           <TabsContent key={key} value={key} className="mt-6">
-            <div className="mb-4 p-4 glass-strong rounded-lg border-l-4" style={{ borderLeftColor: vector.color }}>
-              <h3 className="text-lg font-bold text-foreground mb-2">{vector.name}</h3>
-              <p className="text-sm text-muted-foreground">{vector.description}</p>
+            <div
+              className="mb-4 p-4 glass-strong rounded-lg border-l-4"
+              style={{ borderLeftColor: vector.color }}
+            >
+              <h3 className="text-lg font-bold text-foreground mb-2">
+                {vector.name}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {vector.description}
+              </p>
             </div>
 
-            <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-3"}>
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                  : "space-y-3"
+              }
+            >
               {modulesByVector[key]?.map((module) => (
                 <ModuleCard
                   key={module.id}
@@ -143,8 +177,8 @@ export function ModuleGrid({ selectedModule, onSelectModule, vectorFilter, onVec
           <Button
             variant="outline"
             onClick={() => {
-              setSearchQuery("")
-              onVectorFilterChange("all")
+              setSearchQuery("");
+              onVectorFilterChange("all");
             }}
             className="mt-4"
           >
@@ -153,5 +187,5 @@ export function ModuleGrid({ selectedModule, onSelectModule, vectorFilter, onVec
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,25 +1,28 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
-const { glob } = require('glob');
+const fs = require("fs");
+const path = require("path");
+const { glob } = require("glob");
 
 // Simple language detection - checks for non-ASCII characters and common non-English patterns
 function detectLanguage(text) {
   // Remove code blocks, HTML tags, and technical content
   const cleanText = text
-    .replace(/```[\s\S]*?```/g, ' ') // code blocks
-    .replace(/<[^>]+>/g, ' ') // HTML tags
-    .replace(/[`~!@#$%^&*()_+={}|[\]\\:";'<>?,./0-9-]/g, ' ') // punctuation and numbers
-    .replace(/\b(function|const|let|var|if|else|for|while|class|import|export|async|await|return|true|false|null|undefined)\b/gi, ' ') // JS keywords
+    .replace(/```[\s\S]*?```/g, " ") // code blocks
+    .replace(/<[^>]+>/g, " ") // HTML tags
+    .replace(/[`~!@#$%^&*()_+={}|[\]\\:";'<>?,./0-9-]/g, " ") // punctuation and numbers
+    .replace(
+      /\b(function|const|let|var|if|else|for|while|class|import|export|async|await|return|true|false|null|undefined)\b/gi,
+      " ",
+    ) // JS keywords
     .trim();
 
   // Check for non-ASCII characters, but exclude common technical symbols
-  const nonAsciiText = text.replace(/[""''–—…]/g, ''); // Remove common smart quotes and dashes
+  const nonAsciiText = text.replace(/[""''–—…]/g, ""); // Remove common smart quotes and dashes
   if (/[^\x00-\x7F]/.test(nonAsciiText)) {
     // Allow technical symbols and check if it's actual text content
-    const textContent = nonAsciiText.replace(/[^a-zA-Z\s]/g, ' ').trim();
+    const textContent = nonAsciiText.replace(/[^a-zA-Z\s]/g, " ").trim();
     if (textContent.length > 10 && /[^\x00-\x7F]/.test(textContent)) {
-      return 'NON_ASCII';
+      return "NON_ASCII";
     }
   }
 
@@ -55,37 +58,42 @@ function detectLanguage(text) {
 
   // Check patterns
   for (const pattern of romanianPatterns) {
-    if (pattern.test(cleanText)) return 'ROMANIAN';
+    if (pattern.test(cleanText)) return "ROMANIAN";
   }
   for (const pattern of cyrillicPatterns) {
-    if (pattern.test(text)) return 'CYRILLIC';
+    if (pattern.test(text)) return "CYRILLIC";
   }
   for (const pattern of frenchPatterns) {
-    if (pattern.test(cleanText)) return 'FRENCH';
+    if (pattern.test(cleanText)) return "FRENCH";
   }
   for (const pattern of germanPatterns) {
-    if (pattern.test(cleanText)) return 'GERMAN';
+    if (pattern.test(cleanText)) return "GERMAN";
   }
   for (const pattern of spanishPatterns) {
-    if (pattern.test(cleanText)) return 'SPANISH';
+    if (pattern.test(cleanText)) return "SPANISH";
   }
 
-  return 'ENGLISH';
+  return "ENGLISH";
 }
 
 async function scanFiles() {
   const patterns = process.argv.slice(2);
   if (patterns.length === 0) {
-    patterns.push('content/**/*.{md,mdx}'); // Focus on content files only for now
+    patterns.push("content/**/*.{md,mdx}"); // Focus on content files only for now
   }
 
   const allFiles = [];
   for (const pattern of patterns) {
     try {
-      const files = await glob(pattern, { ignore: ['node_modules/**', '.next/**', 'dist/**', 'build/**'] });
+      const files = await glob(pattern, {
+        ignore: ["node_modules/**", ".next/**", "dist/**", "build/**"],
+      });
       allFiles.push(...files);
     } catch (error) {
-      console.warn(`Warning: Could not process pattern ${pattern}:`, error.message);
+      console.warn(
+        `Warning: Could not process pattern ${pattern}:`,
+        error.message,
+      );
     }
   }
 
@@ -95,18 +103,24 @@ async function scanFiles() {
   for (const file of uniqueFiles) {
     try {
       if (!fs.existsSync(file)) continue;
-      
-      const text = fs.readFileSync(file, 'utf8');
-      
+
+      const text = fs.readFileSync(file, "utf8");
+
       // Skip validation for code files - focus on content files
-      if (file.endsWith('.ts') || file.endsWith('.tsx') || file.endsWith('.js') || file.endsWith('.jsx')) {
+      if (
+        file.endsWith(".ts") ||
+        file.endsWith(".tsx") ||
+        file.endsWith(".js") ||
+        file.endsWith(".jsx")
+      ) {
         // Only check string literals and comments in code files
-        const stringLiterals = text.match(/(['"`])((?:(?!\1)[^\\]|\\.)*)(\1)/g) || [];
+        const stringLiterals =
+          text.match(/(['"`])((?:(?!\1)[^\\]|\\.)*)(\1)/g) || [];
         const comments = text.match(/\/\*[\s\S]*?\*\/|\/\/.*$/gm) || [];
-        
+
         for (const literal of [...stringLiterals, ...comments]) {
           const detectedLang = detectLanguage(literal);
-          if (detectedLang !== 'ENGLISH') {
+          if (detectedLang !== "ENGLISH") {
             violations.push([file, `${detectedLang} in string/comment`]);
             break;
           }
@@ -114,7 +128,7 @@ async function scanFiles() {
       } else {
         // Full validation for content files
         const detectedLang = detectLanguage(text);
-        if (detectedLang !== 'ENGLISH') {
+        if (detectedLang !== "ENGLISH") {
           violations.push([file, detectedLang]);
         }
       }
@@ -124,17 +138,17 @@ async function scanFiles() {
   }
 
   if (violations.length > 0) {
-    console.error('❌ English-only check failed:');
+    console.error("❌ English-only check failed:");
     for (const [file, reason] of violations) {
       console.error(`  - ${file} (${reason})`);
     }
     process.exit(1);
   }
 
-  console.log('✅ English-only check passed.');
+  console.log("✅ English-only check passed.");
 }
 
-scanFiles().catch(error => {
-  console.error('Error during English scan:', error);
+scanFiles().catch((error) => {
+  console.error("Error during English scan:", error);
   process.exit(1);
 });

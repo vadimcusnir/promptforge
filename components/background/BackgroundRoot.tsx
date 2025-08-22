@@ -2,9 +2,12 @@
 import { useEffect, useState } from "react";
 
 export default function BackgroundRoot({
-  ambient = true,         // soft mode by default
-  disabled = false,       // pentru disabling complet
-}: { ambient?: boolean; disabled?: boolean }) {
+  ambient = true, // soft mode by default
+  disabled = false, // pentru disabling complet
+}: {
+  ambient?: boolean;
+  disabled?: boolean;
+}) {
   const [motionOff, setMotionOff] = useState(false);
 
   useEffect(() => {

@@ -3,7 +3,20 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 const COMING_SOON_ENV = process.env.COMING_SOON === "true";
-const BLOCKED_LOCALES = ['ro','ru','fr','de','es','it','pt','uk','zh','ja','tr','pl'];
+const BLOCKED_LOCALES = [
+  "ro",
+  "ru",
+  "fr",
+  "de",
+  "es",
+  "it",
+  "pt",
+  "uk",
+  "zh",
+  "ja",
+  "tr",
+  "pl",
+];
 
 // Routes we always allow (assets, api, coming-soon, auth etc.)
 const PUBLIC_ALLOW = [
@@ -19,10 +32,10 @@ const PUBLIC_ALLOW = [
   "/sitemap.xml",
 ];
 
-const gatedRoutes: Record<string,string> = {
+const gatedRoutes: Record<string, string> = {
   "/api/gpt-test": "canUseGptTestReal",
   "/api/export/bundle": "canExportPDF",
-  "/api/run": "hasAPI"
+  "/api/run": "hasAPI",
 };
 
 function pathAllowed(pathname: string) {
@@ -34,16 +47,16 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // English-only routing logic (preserve existing functionality)
-  const [, maybeLocale, ...rest] = url.pathname.split('/');
+  const [, maybeLocale, ...rest] = url.pathname.split("/");
   if (BLOCKED_LOCALES.includes(maybeLocale)) {
-    url.pathname = '/' + rest.join('/');
+    url.pathname = "/" + rest.join("/");
     return NextResponse.redirect(url);
   }
 
   // ?lang=ro -> force en
-  const qLang = url.searchParams.get('lang');
-  if (qLang && qLang !== 'en') {
-    url.searchParams.set('lang', 'en');
+  const qLang = url.searchParams.get("lang");
+  if (qLang && qLang !== "en") {
+    url.searchParams.set("lang", "en");
     return NextResponse.redirect(url);
   }
 
@@ -51,13 +64,16 @@ export function middleware(req: NextRequest) {
   if (pathAllowed(pathname)) {
     // Add security headers for all responses
     const response = NextResponse.next();
-    response.headers.set('Content-Language', 'en');
-    response.headers.set('X-Content-Type-Options', 'nosniff');
-    response.headers.set('X-Frame-Options', 'DENY');
-    response.headers.set('X-XSS-Protection', '1; mode=block');
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-    response.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
-    
+    response.headers.set("Content-Language", "en");
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set("X-XSS-Protection", "1; mode=block");
+    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    response.headers.set(
+      "Permissions-Policy",
+      "geolocation=(), microphone=(), camera=()",
+    );
+
     const csp = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' vercel.live",
@@ -67,10 +83,10 @@ export function middleware(req: NextRequest) {
       "connect-src 'self' https://*.supabase.co https://api.openai.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
-      "form-action 'self'"
-    ].join('; ');
-    
-    response.headers.set('Content-Security-Policy', csp);
+      "form-action 'self'",
+    ].join("; ");
+
+    response.headers.set("Content-Security-Policy", csp);
     return response;
   }
 
@@ -95,52 +111,64 @@ export function middleware(req: NextRequest) {
   }
 
   // Existing gated routes logic (preserve existing functionality)
-  const entry = Object.entries(gatedRoutes).find(([path]) => url.pathname.startsWith(path));
+  const entry = Object.entries(gatedRoutes).find(([path]) =>
+    url.pathname.startsWith(path),
+  );
   if (!entry) {
     const res = NextResponse.next();
-    res.headers.set('Content-Language', 'en');
-    res.headers.set('X-Content-Type-Options', 'nosniff');
-    res.headers.set('X-Frame-Options', 'DENY');
-    res.headers.set('X-XSS-Protection', '1; mode=block');
-    res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-    res.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    res.headers.set("Content-Language", "en");
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("X-Frame-Options", "DENY");
+    res.headers.set("X-XSS-Protection", "1; mode=block");
+    res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.headers.set(
+      "Permissions-Policy",
+      "geolocation=(), microphone=(), camera=()",
+    );
     return res;
   }
 
   // Enhanced kill switch - check ENV variable only
   if (process.env.AGENTS_ENABLED === "false") {
     return new NextResponse(
-      JSON.stringify({ 
-        error: "AGENTS_DISABLED", 
+      JSON.stringify({
+        error: "AGENTS_DISABLED",
         message: "Agent execution has been disabled by kill-switch",
-        timestamp: new Date().toISOString()
-      }), 
-      { 
+        timestamp: new Date().toISOString(),
+      }),
+      {
         status: 503,
         headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': '300'
-        }
-      }
+          "Content-Type": "application/json",
+          "Retry-After": "300",
+        },
+      },
     );
   }
 
   // Required headers validation
   if (!req.headers.get("x-org-id")) {
-    return new NextResponse(JSON.stringify({ error: "MISSING_ORG" }), { status: 400 });
+    return new NextResponse(JSON.stringify({ error: "MISSING_ORG" }), {
+      status: 400,
+    });
   }
 
   if (!req.headers.get("x-run-id")) {
-    return new NextResponse(JSON.stringify({ error: "MISSING_RUN_ID" }), { status: 400 });
+    return new NextResponse(JSON.stringify({ error: "MISSING_RUN_ID" }), {
+      status: 400,
+    });
   }
 
   const res = NextResponse.next();
-  res.headers.set('Content-Language', 'en');
-  res.headers.set('X-Content-Type-Options', 'nosniff');
-  res.headers.set('X-Frame-Options', 'DENY');
-  res.headers.set('X-XSS-Protection', '1; mode=block');
-  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  res.headers.set("Content-Language", "en");
+  res.headers.set("X-Content-Type-Options", "nosniff");
+  res.headers.set("X-Frame-Options", "DENY");
+  res.headers.set("X-XSS-Protection", "1; mode=block");
+  res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.headers.set(
+    "Permissions-Policy",
+    "geolocation=(), microphone=(), camera=()",
+  );
   return res;
 }
 

@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Play, Copy, Download } from "lucide-react"
-import type { PromptModule } from "@/types/promptforge"
+import { useState } from "react";
+import { Play, Copy, Download } from "lucide-react";
+import type { PromptModule } from "@/types/promptforge";
 
 interface ModuleDemoProps {
-  module: PromptModule
+  module: PromptModule;
 }
 
 export function ModuleDemo({ module }: ModuleDemoProps) {
-  const [inputValue, setInputValue] = useState("")
-  const [generatedPrompt, setGeneratedPrompt] = useState("")
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [inputValue, setInputValue] = useState("");
+  const [generatedPrompt, setGeneratedPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleDemo = async () => {
-    if (!inputValue.trim()) return
+    if (!inputValue.trim()) return;
 
-    setIsGenerating(true)
+    setIsGenerating(true);
 
     // Simulate API call
     setTimeout(() => {
@@ -46,20 +46,22 @@ Execute this task with precision and industrial-grade quality.
 ---
 
 RUN_ID: demo_${Date.now()}
-TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`
+TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`;
 
-      setGeneratedPrompt(demoPrompt)
-      setIsGenerating(false)
-    }, 2000)
-  }
+      setGeneratedPrompt(demoPrompt);
+      setIsGenerating(false);
+    }, 2000);
+  };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedPrompt)
-  }
+    navigator.clipboard.writeText(generatedPrompt);
+  };
 
   return (
     <div className="mb-12">
-      <h2 className="text-3xl font-bold mb-8 text-[#d1a954] font-montserrat">Interactive Demo</h2>
+      <h2 className="text-3xl font-bold mb-8 text-[#d1a954] font-montserrat">
+        Interactive Demo
+      </h2>
 
       <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6">
         <div className="mb-6">
@@ -86,7 +88,9 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`
         {generatedPrompt && (
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-semibold text-white font-montserrat">Generated Output</h4>
+              <h4 className="text-lg font-semibold text-white font-montserrat">
+                Generated Output
+              </h4>
               <div className="flex gap-2">
                 <button
                   onClick={copyToClipboard}
@@ -95,7 +99,10 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`
                 >
                   <Copy className="w-4 h-4" />
                 </button>
-                <button className="text-[#5a5a5a] hover:text-white transition-colors p-2" title="Download as file">
+                <button
+                  className="text-[#5a5a5a] hover:text-white transition-colors p-2"
+                  title="Download as file"
+                >
                   <Download className="w-4 h-4" />
                 </button>
               </div>
@@ -107,5 +114,5 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`
         )}
       </div>
     </div>
-  )
+  );
 }

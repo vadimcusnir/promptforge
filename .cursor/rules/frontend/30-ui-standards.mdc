@@ -1,6 +1,7 @@
 # UI Standards - PromptForge
 
 ---
+
 description: "UI e2b-inspired × PromptForge — homepage strict"
 globs: ["app/**", "components/**"]
 alwaysApply: false
@@ -18,10 +19,12 @@ alwaysApply: false
 - Full-bleed, fără container cu chenar.
 - H1 ≤7 cuvinte, font-weight 900, letter-spacing ușor; fără text glow.
 - Subhead = rezultat + mecanism (ex: 4h→30m + 50 Modules + 7D Engine).
-- CTA primar (auriu rafinat): background var(--pf-gold-600), text #0E0E0E, border 1px var(--pf-gold-500).
-  Hover: translateY(-1px), shadow: 0 0 0 1px var(--pf-gold-500), 0 8px 24px rgba(199,168,105,.18).
+- CTA primar (auriu rafinat): background var(--pf-gold-600), text #0E0E0E,
+  border 1px var(--pf-gold-500). Hover: translateY(-1px), shadow: 0 0 0 1px
+  var(--pf-gold-500), 0 8px 24px rgba(199,168,105,.18).
 - CTA secundar: variant outline (border var(--pf-border)), text desaturat.
-- Proof-bar imediat sub CTA, 3 bullets (TTA<60s, Score≥80, Export .md/.pdf/.json), glass discret.
+- Proof-bar imediat sub CTA, 3 bullets (TTA<60s, Score≥80, Export
+  .md/.pdf/.json), glass discret.
 
 ## Header/Scroll
 
@@ -31,17 +34,21 @@ alwaysApply: false
 ## Background
 
 - Un singur strat montat în layout (nu și în page). Fără grid vechi.
-- Implementă 4 layere: L0 solid (#0A0A0A), L1 linii H/V subtile (opacity 4–6%), L2 tokeni verzi low-density, L3 figuri analitice rare, L4 citat portocaliu 1/20s (nu se suprapun).
+- Implementă 4 layere: L0 solid (#0A0A0A), L1 linii H/V subtile (opacity
+  4–6%), L2 tokeni verzi low-density, L3 figuri analitice rare, L4 citat
+  portocaliu 1/20s (nu se suprapun).
 - prefers-reduced-motion: oprește drift, păstrează doar solid + halo.
 
 ## Footer
 
 - Un singur footer: structură „Product | Docs | Pricing | Legal".
-- Badge-uri „Stripe Verified", „GDPR Compliant" minimal: text pe background var(--pf-gold-600) 12% opacitate, border var(--pf-gold-500) 1px.
+- Badge-uri „Stripe Verified", „GDPR Compliant" minimal: text pe background
+  var(--pf-gold-600) 12% opacitate, border var(--pf-gold-500) 1px.
 
 ## Forms
 
-- Input height 40–44px; font 14–16px; padding 8px 12px; border-radius 4px; border 1px var(--pf-border).
+- Input height 40–44px; font 14–16px; padding 8px 12px; border-radius 4px;
+  border 1px var(--pf-border).
 - Placeholder sobru. Fără glow. Microcopy anti-spam 12–13px sub buton.
 
 ## Module Grid
@@ -69,4 +76,5 @@ alwaysApply: false
 
 ## Interdicții (FAIL build)
 
-- Text gradient, emoji, neon galben (#FFD700) pe body/CTA, glow saturat, două footere, background duplicat, chenar pe hero.
+- Text gradient, emoji, neon galben (#FFD700) pe body/CTA, glow saturat,
+  două footere, background duplicat, chenar pe hero.

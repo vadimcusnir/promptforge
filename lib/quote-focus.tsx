@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface QuoteFocusContextType {
   active: boolean;
@@ -12,7 +18,9 @@ const QuoteFocusContext = createContext<QuoteFocusContextType>({
   active: false,
   set: () => {
     if (process.env.NODE_ENV === "development") {
-      console.warn("[QuoteFocus] Context not properly initialized. Wrap with QuoteFocusProvider.");
+      console.warn(
+        "[QuoteFocus] Context not properly initialized. Wrap with QuoteFocusProvider.",
+      );
     }
   },
 });
@@ -24,11 +32,11 @@ interface QuoteFocusProviderProps {
 /**
  * QuoteFocusProvider - Global state management for quote focus interactions
  * Enforces UI Overlay Policy state_class_map from ruleset.yml
- * 
+ *
  * State classes applied:
  * - quote-active: When any quote is active
  * - quote-focus: When quote is in focus state
- * 
+ *
  * Controls matrix tokens opacity via --tokens-opacity CSS variable
  */
 export function QuoteFocusProvider({ children }: QuoteFocusProviderProps) {
@@ -36,8 +44,9 @@ export function QuoteFocusProvider({ children }: QuoteFocusProviderProps) {
 
   useEffect(() => {
     const overlayElement = document.querySelector<HTMLElement>("#bg-overlay");
-    const matrixTokens = document.querySelectorAll<HTMLElement>(".matrix-tokens");
-    
+    const matrixTokens =
+      document.querySelectorAll<HTMLElement>(".matrix-tokens");
+
     if (!overlayElement) {
       if (process.env.NODE_ENV === "development") {
         console.warn("[QuoteFocusProvider] #bg-overlay element not found");
@@ -48,9 +57,9 @@ export function QuoteFocusProvider({ children }: QuoteFocusProviderProps) {
     // Apply/remove state classes based on active state
     overlayElement.classList.toggle("quote-active", active);
     overlayElement.classList.toggle("quote-focus", active);
-    
+
     // Control matrix tokens opacity (acceptance criteria: quote_focus_controls_tokens_opacity)
-    matrixTokens.forEach(token => {
+    matrixTokens.forEach((token) => {
       if (active) {
         token.style.setProperty("--tokens-opacity", "0.28");
       } else {
@@ -63,7 +72,7 @@ export function QuoteFocusProvider({ children }: QuoteFocusProviderProps) {
       if (overlayElement) {
         overlayElement.classList.remove("quote-active", "quote-focus");
       }
-      matrixTokens.forEach(token => {
+      matrixTokens.forEach((token) => {
         token.style.removeProperty("--tokens-opacity");
       });
     };
@@ -89,21 +98,21 @@ export function QuoteFocusProvider({ children }: QuoteFocusProviderProps) {
 
 /**
  * useQuoteFocus - Hook for accessing quote focus state
- * 
+ *
  * Returns:
  * - active: boolean - Current focus state
  * - set: (boolean) => void - Function to update focus state
- * 
+ *
  * Usage:
  * const { active, set } = useQuoteFocus();
  * set(true); // Activate quote focus
  */
 export function useQuoteFocus(): QuoteFocusContextType {
   const context = useContext(QuoteFocusContext);
-  
+
   if (!context) {
     throw new Error("useQuoteFocus must be used within a QuoteFocusProvider");
   }
-  
+
   return context;
 }

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Check, X } from "lucide-react"
-import { GTMEvents } from "@/lib/gtm-events"
+import { Check, X } from "lucide-react";
+import { GTMEvents } from "@/lib/gtm-events";
 
 const plans = [
   {
@@ -64,7 +64,7 @@ const plans = [
       { name: "99.9% SLA guarantee", included: true },
     ],
   },
-]
+];
 
 export function PricingTable() {
   return (
@@ -73,7 +73,9 @@ export function PricingTable() {
         <div
           key={plan.id}
           className={`relative rounded-lg border p-8 glass-effect ${
-            plan.popular ? "border-[#d1a954] bg-gradient-to-b from-[#d1a954]/10 to-transparent" : "border-[#5a5a5a]/30"
+            plan.popular
+              ? "border-[#d1a954] bg-gradient-to-b from-[#d1a954]/10 to-transparent"
+              : "border-[#5a5a5a]/30"
           }`}
         >
           {plan.popular && (
@@ -90,7 +92,9 @@ export function PricingTable() {
 
             <div className="mb-4">
               {plan.originalPrice && (
-                <span className="text-[#5a5a5a] line-through text-lg mr-2">{plan.originalPrice}</span>
+                <span className="text-[#5a5a5a] line-through text-lg mr-2">
+                  {plan.originalPrice}
+                </span>
               )}
               <span className="text-4xl font-bold">{plan.price}</span>
               <span className="text-[#5a5a5a]">/{plan.period}</span>
@@ -105,14 +109,17 @@ export function PricingTable() {
                     : "bg-white text-black hover:bg-[#5a5a5a] hover:text-white"
               }`}
               onClick={() => {
-                const price = plan.id === "basic" ? 0 : plan.id === "pro" ? 29 : 99
-                GTMEvents.pricingUpgrade(plan.name, price)
+                const price =
+                  plan.id === "basic" ? 0 : plan.id === "pro" ? 29 : 99;
+                GTMEvents.pricingUpgrade(plan.name, price);
               }}
             >
               {plan.cta}
             </button>
 
-            {plan.socialProof && <p className="text-sm text-[#5a5a5a] mt-3">{plan.socialProof}</p>}
+            {plan.socialProof && (
+              <p className="text-sm text-[#5a5a5a] mt-3">{plan.socialProof}</p>
+            )}
           </div>
 
           <div className="space-y-4">
@@ -123,12 +130,16 @@ export function PricingTable() {
                 ) : (
                   <X className="w-5 h-5 text-[#5a5a5a] flex-shrink-0" />
                 )}
-                <span className={feature.included ? "text-white" : "text-[#5a5a5a]"}>{feature.name}</span>
+                <span
+                  className={feature.included ? "text-white" : "text-[#5a5a5a]"}
+                >
+                  {feature.name}
+                </span>
               </div>
             ))}
           </div>
         </div>
       ))}
     </div>
-  )
+  );
 }

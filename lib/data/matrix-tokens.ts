@@ -59,9 +59,9 @@ export const matrixTokens = [
   { id: 58, text: "MILITARY" },
   { id: 59, text: "TACTICAL" },
   { id: 60, text: "PRECISION" },
-]
+];
 
 export type MatrixToken = {
-  id: number
-  text: string
-}
+  id: number;
+  text: string;
+};

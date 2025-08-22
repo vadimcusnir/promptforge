@@ -5,6 +5,7 @@
 **File:** `cursor/ruleset.yml`
 
 Complete policy configuration with all acceptance criteria:
+
 - Max 6 keywords per page
 - Animation duration: 280-420ms
 - Deterministic output via text hash + Mulberry32 PRNG
@@ -19,23 +20,31 @@ Complete policy configuration with all acceptance criteria:
 
 ```html
 <h1 class="hero-title">
-  The 1st <span class="kw" data-glitch>
+  The 1st
+  <span class="kw" data-glitch>
     <span class="kw__text">Cognitive OS</span>
     <span class="kw__glitch" aria-hidden="true"></span>
-  </span> for Prompts
+  </span>
+  for Prompts
 </h1>
 
 <h2 class="hero-sub">
-  50 <span class="kw" data-glitch>
+  50
+  <span class="kw" data-glitch>
     <span class="kw__text">Modules</span>
     <span class="kw__glitch" aria-hidden="true"></span>
-  </span> × <span class="kw" data-glitch>
+  </span>
+  ×
+  <span class="kw" data-glitch>
     <span class="kw__text">7D</span>
     <span class="kw__glitch" aria-hidden="true"></span>
-  </span> Engine → <span class="kw" data-glitch>
+  </span>
+  Engine →
+  <span class="kw" data-glitch>
     <span class="kw__text">Export</span>
     <span class="kw__glitch" aria-hidden="true"></span>
-  </span> scored ≥80
+  </span>
+  scored ≥80
 </h2>
 ```
 
@@ -54,7 +63,7 @@ Complete policy configuration with all acceptance criteria:
   position: absolute;
   inset: 0;
   pointer-events: none;
-  color: #ECFEFF;
+  color: #ecfeff;
   display: none; /* Hidden by default */
   white-space: pre; /* Preserve spacing exactly */
   font-family: inherit; /* Match text exactly */
@@ -67,6 +76,7 @@ Complete policy configuration with all acceptance criteria:
 **File:** `public/glitch-keywords.js`
 
 Key features:
+
 - **Deterministic:** Mulberry32 PRNG seeded from text hash
 - **Performance:** requestAnimationFrame with 16ms frame limiting
 - **Accessibility:** Respects `prefers-reduced-motion` and `data-motion="off"`
@@ -79,6 +89,7 @@ Key features:
 **File:** `.github/workflows/glitch-protocol.yml`
 
 Three validation layers:
+
 1. **E2E Tests:** Playwright tests for protocol compliance
 2. **Lighthouse:** Performance gates with CLS ≤0.1, LCP ≤3s
 3. **Protocol Validation:** SSOT, script, CSS, and markup validation
@@ -88,6 +99,7 @@ Three validation layers:
 **File:** `tests/e2e/glitch-protocol.spec.ts`
 
 Comprehensive test coverage:
+
 - Max 6 keywords per page limit
 - Contract markup structure validation
 - Accessibility compliance (aria-hidden)
@@ -102,6 +114,7 @@ Comprehensive test coverage:
 **Files:** `lib/telemetry.ts` + glitch script integration
 
 Metrics tracked:
+
 - `glitch.count` (per page)
 - `glitch.run.ms_p95` (95th percentile animation duration)
 - `glitch.hover_replays` (hover interaction count)
@@ -111,37 +124,42 @@ Metrics tracked:
 
 ## 🎯 Acceptance Criteria Status
 
-| Criteria | Status | Implementation |
-|----------|--------|----------------|
-| page.h1_h2_glitch_count ≤ 6 | ✅ | Script enforces limit |
-| every_kw_has_children == [".kw__text",".kw__glitch"] | ✅ | Contract markup |
-| overlay_has_aria_hidden_true == true | ✅ | Accessibility compliant |
-| animation_total_duration_ms in [280,420] | ✅ | 14 frames @ 60fps |
-| animation_runs_once_on_viewport_entry == true | ✅ | IntersectionObserver |
-| hover_replay_cooldown_ms ≥ 6000 | ✅ | 6s cooldown enforced |
-| deterministic_output_for_same_text == true | ✅ | Text hash + Mulberry32 |
-| overlay_width_equals_text_length_ch == true | ✅ | Anti-CLS measures |
-| reduced_motion_disables == true | ✅ | Accessibility support |
-| no_infinite_loops == true | ✅ | Fixed frame count |
-| perf.cpu_pct ≤ 1 | ✅ | Optimized animations |
-| perf.frame_time_ms_p95 ≤ 16 | ✅ | 60fps targeting |
+| Criteria                                             | Status | Implementation          |
+| ---------------------------------------------------- | ------ | ----------------------- |
+| page.h1_h2_glitch_count ≤ 6                          | ✅     | Script enforces limit   |
+| every_kw_has_children == [".kw__text",".kw__glitch"] | ✅     | Contract markup         |
+| overlay_has_aria_hidden_true == true                 | ✅     | Accessibility compliant |
+| animation_total_duration_ms in [280,420]             | ✅     | 14 frames @ 60fps       |
+| animation_runs_once_on_viewport_entry == true        | ✅     | IntersectionObserver    |
+| hover_replay_cooldown_ms ≥ 6000                      | ✅     | 6s cooldown enforced    |
+| deterministic_output_for_same_text == true           | ✅     | Text hash + Mulberry32  |
+| overlay_width_equals_text_length_ch == true          | ✅     | Anti-CLS measures       |
+| reduced_motion_disables == true                      | ✅     | Accessibility support   |
+| no_infinite_loops == true                            | ✅     | Fixed frame count       |
+| perf.cpu_pct ≤ 1                                     | ✅     | Optimized animations    |
+| perf.frame_time_ms_p95 ≤ 16                          | ✅     | 60fps targeting         |
 
 ## 🚀 Operational Control
 
 ### Global Enable/Disable
+
 ```yaml
 # cursor/ruleset.yml
 policies:
   glitch_protocol:
-    enabled: true  # Set to false to disable globally
+    enabled: true # Set to false to disable globally
 ```
 
 ### Per-Page Disable
+
 ```html
-<html data-motion="off">  <!-- Disables all glitch animations -->
+<html data-motion="off">
+  <!-- Disables all glitch animations -->
+</html>
 ```
 
 ### Accessibility Auto-Disable
+
 - Respects `prefers-reduced-motion: reduce`
 - Auto-detects and disables for accessibility
 

@@ -1,11 +1,12 @@
-import type { PromptModule } from "@/types/promptforge"
+import type { PromptModule } from "@/types/promptforge";
 
 export const MODULES: Record<number, PromptModule> = {
   1: {
     id: 1,
     name: "AI-IDEI.SOPFORGE",
     description: "Pipeline multi-agent research validation SOP cu telemetrie",
-    requirements: "[SUBIECT], [NIVEL], [CONTEXT], [FORMAT], [LIMBA], [DEADLINE], [BUDGET], 6+ surse cu autor+data",
+    requirements:
+      "[SUBIECT], [NIVEL], [CONTEXT], [FORMAT], [LIMBA], [DEADLINE], [BUDGET], 6+ surse cu autor+data",
     spec: "Proces 4-agenti: SourceMiner ConflictResolver ProcedureBuilder QAPilot",
     output: "{goal,scope,roles,tools,steps,risks,fallbacks,checklist,sources}",
     kpi: "TTI, steps_passed, coverage surse, defect rate <2%",
@@ -29,7 +30,8 @@ export const MODULES: Record<number, PromptModule> = {
     description: "Generator campanii end-to-end cu KPI",
     requirements: "[PRODUS], [AVATAR], [OBIECTIV], [BUGET], [KPI]",
     spec: "Pipeline 7 etape la 1 verdict comercial",
-    output: "{wound,paradox,strip,unpacking,psych_funnel,metaphor,verdict,assets,tests}",
+    output:
+      "{wound,paradox,strip,unpacking,psych_funnel,metaphor,verdict,assets,tests}",
     kpi: "uplift CR target +15%",
     guardrails: "fara promisiuni nerealiste; probe sociale atasate",
     vectors: [2, 6],
@@ -49,47 +51,52 @@ export const MODULES: Record<number, PromptModule> = {
     id: 5,
     name: "ORAKON Memory Grid",
     description: "Memorie stratificata + politici de uitare controlata",
-    requirements: "[LAYERS:{core,project,session,ephemeral}], [TTL], [RETENTION_POLICY]",
+    requirements:
+      "[LAYERS:{core,project,session,ephemeral}], [TTL], [RETENTION_POLICY]",
     spec: "Rules: ce intra in fiecare layer; LRU + TTL",
     output: "{write_rules,read_rules,forget_rules,compaction_jobs}",
     kpi: "hit-rate >70%, leak=0",
     guardrails: "PII hashing",
     vectors: [4, 5],
   },
-}
+};
 
-export const modules = Object.values(MODULES)
+export const modules = Object.values(MODULES);
 
 export function getModulesByVector(vectorId: number): PromptModule[] {
-  return Object.values(MODULES).filter((module) => module.vectors.includes(vectorId))
+  return Object.values(MODULES).filter((module) =>
+    module.vectors.includes(vectorId),
+  );
 }
 
 export function searchModules(query: string): PromptModule[] {
-  const searchTerm = query.toLowerCase()
+  const searchTerm = query.toLowerCase();
   return Object.values(MODULES).filter(
     (module) =>
       module.name.toLowerCase().includes(searchTerm) ||
       module.description.toLowerCase().includes(searchTerm) ||
       module.kpi.toLowerCase().includes(searchTerm),
-  )
+  );
 }
 
 export function getModuleStats() {
   const vectorCounts = Object.values(MODULES).reduce(
     (acc, module) => {
       module.vectors.forEach((vector) => {
-        acc[vector] = (acc[vector] || 0) + 1
-      })
-      return acc
+        acc[vector] = (acc[vector] || 0) + 1;
+      });
+      return acc;
     },
     {} as Record<number, number>,
-  )
+  );
 
   return {
     totalModules: Object.keys(MODULES).length,
     vectorDistribution: vectorCounts,
     mostPopularVector: Object.entries(vectorCounts).reduce((a, b) =>
-      vectorCounts[Number.parseInt(a[0])] > vectorCounts[Number.parseInt(b[0])] ? a : b,
+      vectorCounts[Number.parseInt(a[0])] > vectorCounts[Number.parseInt(b[0])]
+        ? a
+        : b,
     )[0],
-  }
+  };
 }

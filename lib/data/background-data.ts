@@ -1,54 +1,54 @@
 export interface EnhancedMatrixToken {
-  id: string
-  text: string
-  x: number
-  y: number
-  opacity: number
-  scale: number
-  weight: number // 0.1-1.0 for visual prominence
-  speed: number // 0.5-2.0 multiplier for animation speed
-  rarity: number // 0.1-1.0 probability of appearance
-  jitter: number // 0-1.0 random movement intensity
-  opacityRange: [number, number] // min/max opacity values
-  glitchActive: boolean
-  animationDelay: number
+  id: string;
+  text: string;
+  x: number;
+  y: number;
+  opacity: number;
+  scale: number;
+  weight: number; // 0.1-1.0 for visual prominence
+  speed: number; // 0.5-2.0 multiplier for animation speed
+  rarity: number; // 0.1-1.0 probability of appearance
+  jitter: number; // 0-1.0 random movement intensity
+  opacityRange: [number, number]; // min/max opacity values
+  glitchActive: boolean;
+  animationDelay: number;
 }
 
 export interface EnhancedNarrativeQuote {
-  id: string
-  text: string
-  x: number
-  y: number
-  opacity: number
-  scale: number
-  currentChar: number
-  isActive: boolean
-  style: "matrix" | "typing" | "glitch"
-  corner: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center"
-  preDelay: number // ms before animation starts
-  hold: number // ms to hold at full visibility
-  out: number // ms for fade out animation
-  priority: number // 1-10 for display priority
-  cooldown: number // ms before can appear again
-  animationDelay: number
+  id: string;
+  text: string;
+  x: number;
+  y: number;
+  opacity: number;
+  scale: number;
+  currentChar: number;
+  isActive: boolean;
+  style: "matrix" | "typing" | "glitch";
+  corner: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center";
+  preDelay: number; // ms before animation starts
+  hold: number; // ms to hold at full visibility
+  out: number; // ms for fade out animation
+  priority: number; // 1-10 for display priority
+  cooldown: number; // ms before can appear again
+  animationDelay: number;
 }
 
 export interface EnhancedGeometricFigure {
-  id: string
-  shape: "point" | "line" | "bar" | "triangle" | "circle" | "square"
-  x: number
-  y: number
-  width?: number
-  height?: number
-  rotation: number
-  opacity: number
-  color: string
-  path: "linear" | "circular" | "figure8" | "spiral" | "random"
-  duration: number // ms for one complete path cycle
-  variance: number // 0-1.0 random deviation from path
-  z: number // z-index within layer
-  blend: "normal" | "multiply" | "screen" | "overlay"
-  animationDelay: number
+  id: string;
+  shape: "point" | "line" | "bar" | "triangle" | "circle" | "square";
+  x: number;
+  y: number;
+  width?: number;
+  height?: number;
+  rotation: number;
+  opacity: number;
+  color: string;
+  path: "linear" | "circular" | "figure8" | "spiral" | "random";
+  duration: number; // ms for one complete path cycle
+  variance: number; // 0-1.0 random deviation from path
+  z: number; // z-index within layer
+  blend: "normal" | "multiply" | "screen" | "overlay";
+  animationDelay: number;
 }
 
 // Enhanced AI/ML terms with metadata
@@ -56,48 +56,307 @@ export const ENHANCED_MATRIX_TOKENS: Omit<
   EnhancedMatrixToken,
   "id" | "x" | "y" | "opacity" | "scale" | "glitchActive" | "animationDelay"
 >[] = [
-  { text: "NEURAL", weight: 0.9, speed: 1.0, rarity: 0.8, jitter: 0.3, opacityRange: [0.6, 1.0] },
-  { text: "TENSOR", weight: 0.8, speed: 1.2, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.9] },
-  { text: "GRADIENT", weight: 0.7, speed: 0.9, rarity: 0.6, jitter: 0.4, opacityRange: [0.4, 0.8] },
-  { text: "TRANSFORMER", weight: 1.0, speed: 0.8, rarity: 0.9, jitter: 0.1, opacityRange: [0.7, 1.0] },
-  { text: "ATTENTION", weight: 0.9, speed: 1.1, rarity: 0.8, jitter: 0.2, opacityRange: [0.6, 0.9] },
-  { text: "EMBEDDING", weight: 0.6, speed: 1.3, rarity: 0.5, jitter: 0.5, opacityRange: [0.3, 0.7] },
-  { text: "PROMPT", weight: 1.0, speed: 0.7, rarity: 1.0, jitter: 0.1, opacityRange: [0.8, 1.0] },
-  { text: "INFERENCE", weight: 0.8, speed: 1.0, rarity: 0.7, jitter: 0.3, opacityRange: [0.5, 0.8] },
-  { text: "LATENT", weight: 0.7, speed: 1.4, rarity: 0.6, jitter: 0.4, opacityRange: [0.4, 0.7] },
-  { text: "VECTOR", weight: 0.8, speed: 1.1, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.8] },
-  { text: "SEMANTIC", weight: 0.9, speed: 0.9, rarity: 0.8, jitter: 0.2, opacityRange: [0.6, 0.9] },
-  { text: "COGNITIVE", weight: 1.0, speed: 0.8, rarity: 0.9, jitter: 0.1, opacityRange: [0.7, 1.0] },
-  { text: "PARAMETER", weight: 0.7, speed: 1.2, rarity: 0.6, jitter: 0.3, opacityRange: [0.4, 0.7] },
-  { text: "WEIGHT", weight: 0.6, speed: 1.3, rarity: 0.5, jitter: 0.4, opacityRange: [0.3, 0.6] },
-  { text: "BIAS", weight: 0.5, speed: 1.4, rarity: 0.4, jitter: 0.5, opacityRange: [0.2, 0.5] },
-  { text: "EPOCH", weight: 0.6, speed: 1.1, rarity: 0.5, jitter: 0.3, opacityRange: [0.3, 0.6] },
-  { text: "BATCH", weight: 0.5, speed: 1.3, rarity: 0.4, jitter: 0.4, opacityRange: [0.2, 0.5] },
-  { text: "OPTIMIZER", weight: 0.7, speed: 1.0, rarity: 0.6, jitter: 0.2, opacityRange: [0.4, 0.7] },
-  { text: "LOSS", weight: 0.6, speed: 1.2, rarity: 0.5, jitter: 0.3, opacityRange: [0.3, 0.6] },
-  { text: "ACCURACY", weight: 0.8, speed: 0.9, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.8] },
-  { text: "GPT", weight: 1.0, speed: 0.7, rarity: 1.0, jitter: 0.1, opacityRange: [0.8, 1.0] },
-  { text: "BERT", weight: 0.9, speed: 0.8, rarity: 0.8, jitter: 0.1, opacityRange: [0.6, 0.9] },
-  { text: "LLAMA", weight: 0.9, speed: 0.8, rarity: 0.8, jitter: 0.1, opacityRange: [0.6, 0.9] },
-  { text: "MULTIMODAL", weight: 0.8, speed: 1.0, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.8] },
-  { text: "VISION", weight: 0.7, speed: 1.1, rarity: 0.6, jitter: 0.3, opacityRange: [0.4, 0.7] },
-  { text: "NLP", weight: 0.8, speed: 1.0, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.8] },
-  { text: "PYTORCH", weight: 0.7, speed: 1.1, rarity: 0.6, jitter: 0.3, opacityRange: [0.4, 0.7] },
-  { text: "TENSORFLOW", weight: 0.7, speed: 1.1, rarity: 0.6, jitter: 0.3, opacityRange: [0.4, 0.7] },
-  { text: "HUGGINGFACE", weight: 0.8, speed: 1.0, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.8] },
-  { text: "CUDA", weight: 0.6, speed: 1.2, rarity: 0.5, jitter: 0.4, opacityRange: [0.3, 0.6] },
-  { text: "DISTRIBUTED", weight: 0.6, speed: 1.2, rarity: 0.5, jitter: 0.3, opacityRange: [0.3, 0.6] },
-  { text: "REINFORCEMENT", weight: 0.7, speed: 1.0, rarity: 0.6, jitter: 0.2, opacityRange: [0.4, 0.7] },
-  { text: "AGENT", weight: 0.8, speed: 0.9, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.8] },
-  { text: "REASONING", weight: 0.9, speed: 0.8, rarity: 0.8, jitter: 0.1, opacityRange: [0.6, 0.9] },
-  { text: "ALIGNMENT", weight: 0.8, speed: 0.9, rarity: 0.7, jitter: 0.2, opacityRange: [0.5, 0.8] },
-  { text: "RLHF", weight: 0.7, speed: 1.0, rarity: 0.6, jitter: 0.3, opacityRange: [0.4, 0.7] },
-]
+  {
+    text: "NEURAL",
+    weight: 0.9,
+    speed: 1.0,
+    rarity: 0.8,
+    jitter: 0.3,
+    opacityRange: [0.6, 1.0],
+  },
+  {
+    text: "TENSOR",
+    weight: 0.8,
+    speed: 1.2,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.9],
+  },
+  {
+    text: "GRADIENT",
+    weight: 0.7,
+    speed: 0.9,
+    rarity: 0.6,
+    jitter: 0.4,
+    opacityRange: [0.4, 0.8],
+  },
+  {
+    text: "TRANSFORMER",
+    weight: 1.0,
+    speed: 0.8,
+    rarity: 0.9,
+    jitter: 0.1,
+    opacityRange: [0.7, 1.0],
+  },
+  {
+    text: "ATTENTION",
+    weight: 0.9,
+    speed: 1.1,
+    rarity: 0.8,
+    jitter: 0.2,
+    opacityRange: [0.6, 0.9],
+  },
+  {
+    text: "EMBEDDING",
+    weight: 0.6,
+    speed: 1.3,
+    rarity: 0.5,
+    jitter: 0.5,
+    opacityRange: [0.3, 0.7],
+  },
+  {
+    text: "PROMPT",
+    weight: 1.0,
+    speed: 0.7,
+    rarity: 1.0,
+    jitter: 0.1,
+    opacityRange: [0.8, 1.0],
+  },
+  {
+    text: "INFERENCE",
+    weight: 0.8,
+    speed: 1.0,
+    rarity: 0.7,
+    jitter: 0.3,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "LATENT",
+    weight: 0.7,
+    speed: 1.4,
+    rarity: 0.6,
+    jitter: 0.4,
+    opacityRange: [0.4, 0.7],
+  },
+  {
+    text: "VECTOR",
+    weight: 0.8,
+    speed: 1.1,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "SEMANTIC",
+    weight: 0.9,
+    speed: 0.9,
+    rarity: 0.8,
+    jitter: 0.2,
+    opacityRange: [0.6, 0.9],
+  },
+  {
+    text: "COGNITIVE",
+    weight: 1.0,
+    speed: 0.8,
+    rarity: 0.9,
+    jitter: 0.1,
+    opacityRange: [0.7, 1.0],
+  },
+  {
+    text: "PARAMETER",
+    weight: 0.7,
+    speed: 1.2,
+    rarity: 0.6,
+    jitter: 0.3,
+    opacityRange: [0.4, 0.7],
+  },
+  {
+    text: "WEIGHT",
+    weight: 0.6,
+    speed: 1.3,
+    rarity: 0.5,
+    jitter: 0.4,
+    opacityRange: [0.3, 0.6],
+  },
+  {
+    text: "BIAS",
+    weight: 0.5,
+    speed: 1.4,
+    rarity: 0.4,
+    jitter: 0.5,
+    opacityRange: [0.2, 0.5],
+  },
+  {
+    text: "EPOCH",
+    weight: 0.6,
+    speed: 1.1,
+    rarity: 0.5,
+    jitter: 0.3,
+    opacityRange: [0.3, 0.6],
+  },
+  {
+    text: "BATCH",
+    weight: 0.5,
+    speed: 1.3,
+    rarity: 0.4,
+    jitter: 0.4,
+    opacityRange: [0.2, 0.5],
+  },
+  {
+    text: "OPTIMIZER",
+    weight: 0.7,
+    speed: 1.0,
+    rarity: 0.6,
+    jitter: 0.2,
+    opacityRange: [0.4, 0.7],
+  },
+  {
+    text: "LOSS",
+    weight: 0.6,
+    speed: 1.2,
+    rarity: 0.5,
+    jitter: 0.3,
+    opacityRange: [0.3, 0.6],
+  },
+  {
+    text: "ACCURACY",
+    weight: 0.8,
+    speed: 0.9,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "GPT",
+    weight: 1.0,
+    speed: 0.7,
+    rarity: 1.0,
+    jitter: 0.1,
+    opacityRange: [0.8, 1.0],
+  },
+  {
+    text: "BERT",
+    weight: 0.9,
+    speed: 0.8,
+    rarity: 0.8,
+    jitter: 0.1,
+    opacityRange: [0.6, 0.9],
+  },
+  {
+    text: "LLAMA",
+    weight: 0.9,
+    speed: 0.8,
+    rarity: 0.8,
+    jitter: 0.1,
+    opacityRange: [0.6, 0.9],
+  },
+  {
+    text: "MULTIMODAL",
+    weight: 0.8,
+    speed: 1.0,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "VISION",
+    weight: 0.7,
+    speed: 1.1,
+    rarity: 0.6,
+    jitter: 0.3,
+    opacityRange: [0.4, 0.7],
+  },
+  {
+    text: "NLP",
+    weight: 0.8,
+    speed: 1.0,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "PYTORCH",
+    weight: 0.7,
+    speed: 1.1,
+    rarity: 0.6,
+    jitter: 0.3,
+    opacityRange: [0.4, 0.7],
+  },
+  {
+    text: "TENSORFLOW",
+    weight: 0.7,
+    speed: 1.1,
+    rarity: 0.6,
+    jitter: 0.3,
+    opacityRange: [0.4, 0.7],
+  },
+  {
+    text: "HUGGINGFACE",
+    weight: 0.8,
+    speed: 1.0,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "CUDA",
+    weight: 0.6,
+    speed: 1.2,
+    rarity: 0.5,
+    jitter: 0.4,
+    opacityRange: [0.3, 0.6],
+  },
+  {
+    text: "DISTRIBUTED",
+    weight: 0.6,
+    speed: 1.2,
+    rarity: 0.5,
+    jitter: 0.3,
+    opacityRange: [0.3, 0.6],
+  },
+  {
+    text: "REINFORCEMENT",
+    weight: 0.7,
+    speed: 1.0,
+    rarity: 0.6,
+    jitter: 0.2,
+    opacityRange: [0.4, 0.7],
+  },
+  {
+    text: "AGENT",
+    weight: 0.8,
+    speed: 0.9,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "REASONING",
+    weight: 0.9,
+    speed: 0.8,
+    rarity: 0.8,
+    jitter: 0.1,
+    opacityRange: [0.6, 0.9],
+  },
+  {
+    text: "ALIGNMENT",
+    weight: 0.8,
+    speed: 0.9,
+    rarity: 0.7,
+    jitter: 0.2,
+    opacityRange: [0.5, 0.8],
+  },
+  {
+    text: "RLHF",
+    weight: 0.7,
+    speed: 1.0,
+    rarity: 0.6,
+    jitter: 0.3,
+    opacityRange: [0.4, 0.7],
+  },
+];
 
 // Romanian narrative quotes optimized for character-by-character animation
 export const ENHANCED_NARRATIVE_QUOTES: Omit<
   EnhancedNarrativeQuote,
-  "id" | "x" | "y" | "opacity" | "scale" | "currentChar" | "isActive" | "animationDelay"
+  | "id"
+  | "x"
+  | "y"
+  | "opacity"
+  | "scale"
+  | "currentChar"
+  | "isActive"
+  | "animationDelay"
 >[] = [
   {
     text: "Promptul e cheia tăcută care face AI-ul să deschidă ușa exact unde vrei să intri.",
@@ -299,7 +558,7 @@ export const ENHANCED_NARRATIVE_QUOTES: Omit<
     priority: 9,
     cooldown: 35000,
   },
-]
+];
 
 // Enhanced geometric figures with path definitions
 export const ENHANCED_GEOMETRIC_FIGURES: Omit<
@@ -394,4 +653,4 @@ export const ENHANCED_GEOMETRIC_FIGURES: Omit<
     z: 3,
     blend: "overlay",
   },
-]
+];

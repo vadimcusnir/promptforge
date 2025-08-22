@@ -1,8 +1,12 @@
-import type { PromptModule, SessionConfig, GeneratedPrompt } from "@/types/promptforge"
-import { MODULES } from "./modules"
+import type {
+  PromptModule,
+  SessionConfig,
+  GeneratedPrompt,
+} from "@/types/promptforge";
+import { MODULES } from "./modules";
 
 interface ContextVariants {
-  [key: string]: string
+  [key: string]: string;
 }
 
 const CONTEXT_VARIANTS: ContextVariants = {
@@ -12,55 +16,61 @@ const CONTEXT_VARIANTS: ContextVariants = {
   consulting: "a strategic consulting firm for tech companies",
   personal_brand: "a personal brand in development with tech audience",
   education: "an educational platform with digital courses",
-}
+};
 
 const URGENCY_MAP: ContextVariants = {
   pilot: "a pilot project with 2-week deadline",
   sprint: "a development sprint with 1-month delivery",
   enterprise: "an enterprise implementation with 3-month timeline",
   crisis: "a crisis situation requiring immediate response",
-}
+};
 
 const APPLICATION_CONTEXT: ContextVariants = {
   training: "for internal team training",
   audit: "for auditing existing systems",
   implementation: "for direct operational implementation",
   crisis_response: "for responding to an ongoing crisis",
-}
+};
 
 const COMPLEXITY_ADAPTATIONS: ContextVariants = {
   standard: "standard implementation with best practices",
   advanced: "advanced implementation with specific optimizations",
   expert: "expert implementation with complex customizations",
-}
+};
 
-export function generateSessionHash(config: SessionConfig, moduleId: number): string {
+export function generateSessionHash(
+  config: SessionConfig,
+  moduleId: number,
+): string {
   const hashData = {
     module: moduleId,
     ...config,
     timestamp: Date.now(),
-  }
+  };
 
-  const hashString = JSON.stringify(hashData)
-  let hash = 0
+  const hashString = JSON.stringify(hashData);
+  let hash = 0;
   for (let i = 0; i < hashString.length; i++) {
-    const char = hashString.charCodeAt(i)
-    hash = (hash << 5) - hash + char
-    hash = hash & hash
+    const char = hashString.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
   }
-  return Math.abs(hash).toString(16).substring(0, 8)
+  return Math.abs(hash).toString(16).substring(0, 8);
 }
 
-export function generatePrompt(moduleId: number, config: SessionConfig): GeneratedPrompt {
-  const module = MODULES[moduleId]
+export function generatePrompt(
+  moduleId: number,
+  config: SessionConfig,
+): GeneratedPrompt {
+  const module = MODULES[moduleId];
   if (!module) {
-    throw new Error(`Module ${moduleId} not found`)
+    throw new Error(`Module ${moduleId} not found`);
   }
 
-  const hash = generateSessionHash(config, moduleId)
-  const timestamp = new Date()
+  const hash = generateSessionHash(config, moduleId);
+  const timestamp = new Date();
 
-  const prompt = buildPromptContent(module, config, hash, timestamp)
+  const prompt = buildPromptContent(module, config, hash, timestamp);
 
   return {
     id: hash,
@@ -69,14 +79,21 @@ export function generatePrompt(moduleId: number, config: SessionConfig): Generat
     config,
     moduleId,
     prompt,
-  }
+  };
 }
 
-function buildPromptContent(module: PromptModule, config: SessionConfig, hash: string, timestamp: Date): string {
-  const contextDescription = CONTEXT_VARIANTS[config.domain] || config.domain
-  const urgencyDescription = URGENCY_MAP[config.urgency] || config.urgency
-  const applicationDescription = APPLICATION_CONTEXT[config.application] || config.application
-  const complexityDescription = COMPLEXITY_ADAPTATIONS[config.complexity] || config.complexity
+function buildPromptContent(
+  module: PromptModule,
+  config: SessionConfig,
+  hash: string,
+  timestamp: Date,
+): string {
+  const contextDescription = CONTEXT_VARIANTS[config.domain] || config.domain;
+  const urgencyDescription = URGENCY_MAP[config.urgency] || config.urgency;
+  const applicationDescription =
+    APPLICATION_CONTEXT[config.application] || config.application;
+  const complexityDescription =
+    COMPLEXITY_ADAPTATIONS[config.complexity] || config.complexity;
 
   const promptContent = [
     `# ${module.name} - Industrial Generated Prompt`,
@@ -151,32 +168,34 @@ function buildPromptContent(module: PromptModule, config: SessionConfig, hash: s
     ``,
     `---`,
     `**PROMPTFORGE™ v3.0** | Generated: ${timestamp.toLocaleString("en-US")} | Hash: ${hash}`,
-  ]
+  ];
 
-  return promptContent.join("\n")
+  return promptContent.join("\n");
 }
 
 export function rerollPrompt(existingPrompt: GeneratedPrompt): GeneratedPrompt {
   // Generate new prompt with same config but new timestamp/hash
-  return generatePrompt(existingPrompt.moduleId, existingPrompt.config)
+  return generatePrompt(existingPrompt.moduleId, existingPrompt.config);
 }
 
 export function validatePromptStructure(prompt: string): {
-  score: number
-  hasTitle: boolean
-  hasContext: boolean
-  hasKPI: boolean
-  hasOutput: boolean
-  hasGuardrails: boolean
+  score: number;
+  hasTitle: boolean;
+  hasContext: boolean;
+  hasKPI: boolean;
+  hasOutput: boolean;
+  hasGuardrails: boolean;
 } {
-  const hasTitle = prompt.includes("#")
-  const hasContext = prompt.toLowerCase().includes("context")
-  const hasKPI = prompt.toLowerCase().includes("kpi")
-  const hasOutput = prompt.toLowerCase().includes("output")
-  const hasGuardrails = prompt.toLowerCase().includes("guardrails")
+  const hasTitle = prompt.includes("#");
+  const hasContext = prompt.toLowerCase().includes("context");
+  const hasKPI = prompt.toLowerCase().includes("kpi");
+  const hasOutput = prompt.toLowerCase().includes("output");
+  const hasGuardrails = prompt.toLowerCase().includes("guardrails");
 
-  const components = [hasTitle, hasContext, hasKPI, hasOutput, hasGuardrails]
-  const score = Math.round((components.filter(Boolean).length / components.length) * 100)
+  const components = [hasTitle, hasContext, hasKPI, hasOutput, hasGuardrails];
+  const score = Math.round(
+    (components.filter(Boolean).length / components.length) * 100,
+  );
 
   return {
     score,
@@ -185,5 +204,5 @@ export function validatePromptStructure(prompt: string): {
     hasKPI,
     hasOutput,
     hasGuardrails,
-  }
+  };
 }

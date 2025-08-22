@@ -7,7 +7,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     await page.waitForLoadState("networkidle");
   });
 
-  test("should respect max 6 keywords per page limit", async ({ page }: { page: Page }) => {
+  test("should respect max 6 keywords per page limit", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     const glitchElements = page.locator("[data-glitch]");
     const count = await glitchElements.count();
 
@@ -15,7 +19,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     console.log(`Found ${count} glitch elements (max 6 allowed)`);
   });
 
-  test("should have correct contract markup structure", async ({ page }: { page: Page }) => {
+  test("should have correct contract markup structure", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     const glitchContainers = page.locator(".kw[data-glitch]");
     const count = await glitchContainers.count();
 
@@ -32,7 +40,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     }
   });
 
-  test("should have accessible overlay elements", async ({ page }: { page: Page }) => {
+  test("should have accessible overlay elements", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     const overlays = page.locator('.kw__glitch[aria-hidden="true"]');
     const count = await overlays.count();
 
@@ -40,7 +52,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     console.log(`Found ${count} accessible overlay elements`);
   });
 
-  test("should respect reduced motion preferences", async ({ page }: { page: Page }) => {
+  test("should respect reduced motion preferences", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     // Emulate reduced motion
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.reload();
@@ -66,7 +82,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     }
   });
 
-  test('should respect data-motion="off" attribute', async ({ page }: { page: Page }) => {
+  test('should respect data-motion="off" attribute', async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     // Set motion off via HTML attribute
     await page.addInitScript(() => {
       document.documentElement.setAttribute("data-motion", "off");
@@ -80,7 +100,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     expect(motionAttribute).toBe("off");
   });
 
-  test("should have deterministic output for same text", async ({ page }: { page: Page }) => {
+  test("should have deterministic output for same text", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     // Test that same text produces same glitch pattern
     const testText = "Cognitive OS";
 
@@ -100,7 +124,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     expect(firstRun).toBeTruthy();
   });
 
-  test("should enforce performance constraints", async ({ page }: { page: Page }) => {
+  test("should enforce performance constraints", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     // Start performance monitoring
     const startTime = Date.now();
 
@@ -163,7 +191,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     expect(title).toBeTruthy();
   });
 
-  test("should have anti-CLS measures in place", async ({ page }: { page: Page }) => {
+  test("should have anti-CLS measures in place", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     // Check that glitch overlays have fixed width
     const glitchOverlays = page.locator(".kw__glitch");
     const count = await glitchOverlays.count();
@@ -187,7 +219,9 @@ test.describe("Glitch Protocol v1 Compliance", () => {
 
   test("should have proper CSS containment for performance", async ({
     page,
-  }: { page: Page }) => {
+  }: {
+    page: Page;
+  }) => {
     const containers = page.locator(".kw[data-glitch]");
     const count = await containers.count();
 
@@ -204,7 +238,11 @@ test.describe("Glitch Protocol v1 Compliance", () => {
     }
   });
 
-  test("should validate H1/H2 targeting only", async ({ page }: { page: Page }) => {
+  test("should validate H1/H2 targeting only", async ({
+    page,
+  }: {
+    page: Page;
+  }) => {
     // Check that glitch elements are only in H1 and H2
     const glitchElements = await page.$$("[data-glitch]");
 

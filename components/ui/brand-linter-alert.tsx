@@ -1,45 +1,50 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { CheckCircle, XCircle, Zap, Shield } from "lucide-react"
-import type { BrandLinterResult } from "@/lib/brand-linter"
+import { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle, XCircle, Zap, Shield } from "lucide-react";
+import type { BrandLinterResult } from "@/lib/brand-linter";
 
 interface BrandLinterAlertProps {
-  result: BrandLinterResult
-  onApplyFixes?: () => void
-  onDismiss?: () => void
-  className?: string
+  result: BrandLinterResult;
+  onApplyFixes?: () => void;
+  onDismiss?: () => void;
+  className?: string;
 }
 
-export function BrandLinterAlert({ result, onApplyFixes, onDismiss, className = "" }: BrandLinterAlertProps) {
-  const [isApplyingFixes, setIsApplyingFixes] = useState(false)
+export function BrandLinterAlert({
+  result,
+  onApplyFixes,
+  onDismiss,
+  className = "",
+}: BrandLinterAlertProps) {
+  const [isApplyingFixes, setIsApplyingFixes] = useState(false);
 
   const handleApplyFixes = async () => {
-    if (!onApplyFixes) return
+    if (!onApplyFixes) return;
 
-    setIsApplyingFixes(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate processing
-    onApplyFixes()
-    setIsApplyingFixes(false)
-  }
+    setIsApplyingFixes(true);
+    await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate processing
+    onApplyFixes();
+    setIsApplyingFixes(false);
+  };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-400"
-    if (score >= 60) return "text-yellow-400"
-    return "text-red-400"
-  }
+    if (score >= 80) return "text-green-400";
+    if (score >= 60) return "text-yellow-400";
+    return "text-red-400";
+  };
 
   const getScoreBadgeVariant = (score: number) => {
-    if (score >= 80) return "default"
-    if (score >= 60) return "secondary"
-    return "destructive"
-  }
+    if (score >= 80) return "default";
+    if (score >= 60) return "secondary";
+    return "destructive";
+  };
 
-  const isBlocked = result.score < 80
+  const isBlocked = result.score < 80;
 
   return (
     <Alert
@@ -56,7 +61,9 @@ export function BrandLinterAlert({ result, onApplyFixes, onDismiss, className = 
         <div className="flex-1 space-y-3">
           <div className="flex items-center justify-between">
             <AlertTitle className="text-lg font-semibold">
-              {isBlocked ? "Prompt Blocked – Score Below Threshold" : "Prompt Approved – Ready for Export"}
+              {isBlocked
+                ? "Prompt Blocked – Score Below Threshold"
+                : "Prompt Approved – Ready for Export"}
             </AlertTitle>
 
             <div className="flex items-center gap-2">
@@ -75,24 +82,34 @@ export function BrandLinterAlert({ result, onApplyFixes, onDismiss, className = 
             className="h-2"
             // @ts-ignore
             style={{
-              "--progress-background": result.score >= 80 ? "#22c55e" : result.score >= 60 ? "#eab308" : "#ef4444",
+              "--progress-background":
+                result.score >= 80
+                  ? "#22c55e"
+                  : result.score >= 60
+                    ? "#eab308"
+                    : "#ef4444",
             }}
           />
 
           <AlertDescription className="space-y-3">
             {isBlocked && (
               <p className="text-sm text-muted-foreground">
-                Your prompt doesn't meet PROMPTFORGE™ brand standards. Issues detected:{" "}
-                {result.breaches.join(", ").replace(/_/g, " ")}.
+                Your prompt doesn't meet PROMPTFORGE™ brand standards. Issues
+                detected: {result.breaches.join(", ").replace(/_/g, " ")}.
               </p>
             )}
 
             {result.fixes.length > 0 && (
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-gold-industrial">Suggested Improvements:</h4>
+                <h4 className="text-sm font-semibold text-gold-industrial">
+                  Suggested Improvements:
+                </h4>
                 <ul className="space-y-1">
                   {result.fixes.map((fix, index) => (
-                    <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
+                    <li
+                      key={index}
+                      className="text-sm text-muted-foreground flex items-start gap-2"
+                    >
                       <span className="text-gold-industrial">•</span>
                       {fix}
                     </li>
@@ -103,7 +120,12 @@ export function BrandLinterAlert({ result, onApplyFixes, onDismiss, className = 
 
             <div className="flex items-center gap-2 pt-2">
               {isBlocked && onApplyFixes && (
-                <Button onClick={handleApplyFixes} disabled={isApplyingFixes} className="btn-primary" size="sm">
+                <Button
+                  onClick={handleApplyFixes}
+                  disabled={isApplyingFixes}
+                  className="btn-primary"
+                  size="sm"
+                >
                   {isApplyingFixes ? (
                     <>
                       <div className="animate-spin w-3 h-3 border border-black border-t-transparent rounded-full mr-2" />
@@ -119,7 +141,12 @@ export function BrandLinterAlert({ result, onApplyFixes, onDismiss, className = 
               )}
 
               {onDismiss && (
-                <Button onClick={onDismiss} variant="ghost" size="sm" className="text-muted-foreground">
+                <Button
+                  onClick={onDismiss}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground"
+                >
                   Dismiss
                 </Button>
               )}
@@ -128,5 +155,5 @@ export function BrandLinterAlert({ result, onApplyFixes, onDismiss, className = 
         </div>
       </div>
     </Alert>
-  )
+  );
 }

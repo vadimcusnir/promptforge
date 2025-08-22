@@ -12,8 +12,9 @@
 
 /* GUIDE INTENT - CTA micro feedback */
 .motion-guide {
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), 
-              box-shadow 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .motion-guide:hover {
@@ -26,7 +27,7 @@
 
 /* Primary CTA specific styling */
 .motion-guide.btn-primary:hover {
-  box-shadow: 0 0 0 2px #0891B2;
+  box-shadow: 0 0 0 2px #0891b2;
 }
 
 /* STATE INTENT - Status feedback */
@@ -36,9 +37,15 @@
 
 /* Success state animation */
 @keyframes pulse-ok {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
 }
 
 .motion-state.success {
@@ -47,9 +54,15 @@
 
 /* Loading state */
 @keyframes skeleton-pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 0.9; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.6;
+  }
 }
 
 .motion-state.loading {
@@ -63,8 +76,9 @@
 
 /* EXPLAIN INTENT - Step transitions */
 .motion-explain {
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), 
-              opacity 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Step transition states */
@@ -90,20 +104,25 @@
 
 /* Longer transitions for primary flow steps */
 .motion-explain.primary-flow {
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
-              opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Focus ring animation for accessibility */
 .motion-guide:focus-visible {
-  outline: 2px solid #0891B2;
+  outline: 2px solid #0891b2;
   outline-offset: 2px;
   animation: focus-ring 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @keyframes focus-ring {
-  0% { outline-color: transparent; }
-  100% { outline-color: #0891B2; }
+  0% {
+    outline-color: transparent;
+  }
+  100% {
+    outline-color: #0891b2;
+  }
 }
 
 /* Data attribute based control */
@@ -166,7 +185,7 @@ html[data-motion-primary="0"] .motion-explain {
 .motion-guide input:focus,
 .motion-guide textarea:focus {
   transform: none; /* Override translateY for form inputs */
-  box-shadow: 0 0 0 2px #0891B2;
+  box-shadow: 0 0 0 2px #0891b2;
 }
 
 /* Toast/notification states */

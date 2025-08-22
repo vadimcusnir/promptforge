@@ -1,22 +1,25 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 interface AnimatedHeroTextProps {
-  texts: string[]
-  className?: string
+  texts: string[];
+  className?: string;
 }
 
-export function AnimatedHeroText({ texts, className = "" }: AnimatedHeroTextProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+export function AnimatedHeroText({
+  texts,
+  className = "",
+}: AnimatedHeroTextProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % texts.length)
-    }, 3000)
+      setCurrentIndex((prev) => (prev + 1) % texts.length);
+    }, 3000);
 
-    return () => clearInterval(interval)
-  }, [texts.length])
+    return () => clearInterval(interval);
+  }, [texts.length]);
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -36,5 +39,5 @@ export function AnimatedHeroText({ texts, className = "" }: AnimatedHeroTextProp
         </div>
       </div>
     </div>
-  )
+  );
 }

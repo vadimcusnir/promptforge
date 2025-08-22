@@ -4,7 +4,7 @@ export async function getMotionMode() {
   // 1) hard override din UI (cookie "motion=off|on")
   const cookieStore = await cookies();
   const c = cookieStore.get("motion")?.value;
-  if (c === "off" || c === "on") return c as "off"|"on";
+  if (c === "off" || c === "on") return c as "off" | "on";
 
   // 2) ENV (fallback temporar) - default to off for ambient mode
   if (process.env.NEXT_PUBLIC_MOTION === "on") return "on";
@@ -20,14 +20,14 @@ export async function getMotionMode() {
 // Client-side hook for motion detection
 export function useMotionMode() {
   if (typeof window === "undefined") return "off";
-  
+
   // Check data-motion attribute on html element
   const attr = document.documentElement.getAttribute("data-motion");
-  if (attr === "off" || attr === "on") return attr as "off"|"on";
-  
+  if (attr === "off" || attr === "on") return attr as "off" | "on";
+
   // Check prefers-reduced-motion
-  const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   if (mediaQuery.matches) return "off";
-  
+
   return "off"; // Default to off for cleaner ambient experience
 }
