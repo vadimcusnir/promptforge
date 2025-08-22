@@ -30,7 +30,11 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
   return (
     <header 
       role="banner"
-      className="sticky top-0 left-0 right-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-md border-b border-[#ECFEFF]/15"
+      className="fixed inset-x-0 top-0 h-16 z-50 bg-black/70 backdrop-blur border-b border-amber-200/20 will-change-transform backface-visibility-hidden"
+      style={{ 
+        willChange: 'transform',
+        backfaceVisibility: 'hidden'
+      }}
     >
       <div className="container mx-auto max-w-[1240px] px-6">
         {/* Breadcrumbs */}
@@ -45,7 +49,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
           </div>
         )}
 
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 leading-16">
           {/* Logo */}
           <div className="flex items-center">
             <div className="text-h3 text-[#ECFEFF] font-bold">{COPY.brand}</div>

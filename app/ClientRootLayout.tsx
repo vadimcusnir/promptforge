@@ -11,7 +11,7 @@ import { QuoteFocusProvider } from "@/lib/quote-focus"
 import { OverlayController } from "@/components/OverlayController"
 import { MotionProvider } from "@/lib/motion/provider"
 import { useEffect } from "react"
-import BackgroundRoot from "@/components/background/BackgroundRoot"
+
 import { telemetry } from "@/lib/telemetry"
 import "./globals.css"
 import "./styles/variables.css"
@@ -56,6 +56,14 @@ function ReadySetter() {
   useEffect(() => {
     const html = document.documentElement
 
+    // Set --vh custom property for mobile viewport fix
+    const setVH = () => {
+      document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px')
+    }
+    
+    setVH()
+    window.addEventListener('resize', setVH, { passive: true })
+
     const markReady = () => {
       if (!html.classList.contains("matrix-animations-ready")) {
         html.classList.add("matrix-animations-ready")
@@ -86,6 +94,11 @@ function ReadySetter() {
       setTimeout(markReady, 100)
       setTimeout(markReady, 300)
     }
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', setVH)
+    }
   }, [fontsReady])
 
   return null
@@ -112,13 +125,13 @@ html {
         <script src="/glitch-keywords.js" defer />
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell`}>
-        <BackgroundRoot ambient />
         <div id="app" data-layer="ui">
           <MotionProvider>
             <QuoteFocusProvider>
               <OverlayController />
               <ClientReady />
               <Header />
+              <div className="h-16"></div>
               {children}
               <Footer />
             </QuoteFocusProvider>
