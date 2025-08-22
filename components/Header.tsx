@@ -1,37 +1,34 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { COPY } from "@/lib/copy"
-import { 
-  Home, 
-  ChevronRight,
-} from "lucide-react"
+import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { COPY } from "@/lib/copy";
+import { Home, ChevronRight } from "lucide-react";
 
 interface HeaderProps {
-  isAuthenticated?: boolean
-  showBreadcrumbs?: boolean
+  isAuthenticated?: boolean;
+  showBreadcrumbs?: boolean;
 }
 
-export function Header({ isAuthenticated = false, showBreadcrumbs = true }: HeaderProps) {
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
-  const pathname = usePathname()
+export function Header({
+  isAuthenticated = false,
+  showBreadcrumbs = true,
+}: HeaderProps) {
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const pathname = usePathname();
 
   const getBreadcrumbPage = () => {
-    if (pathname === '/') return 'Homepage'
-    if (pathname === '/generator') return 'Generator'
-    if (pathname === '/modules') return 'Modules'
-    if (pathname === '/pricing') return 'Pricing'
-    if (pathname === '/dashboard') return 'Dashboard'
-    return 'Page'
-  }
+    if (pathname === "/") return "Homepage";
+    if (pathname === "/generator") return "Generator";
+    if (pathname === "/modules") return "Modules";
+    if (pathname === "/pricing") return "Pricing";
+    if (pathname === "/dashboard") return "Dashboard";
+    return "Page";
+  };
 
   return (
-    <header 
-      role="banner"
-      className="site-header"
-    >
+    <header role="banner" className="site-header">
       <div className="container mx-auto max-w-[1240px] px-6">
         {/* Breadcrumbs */}
         {showBreadcrumbs && (
@@ -49,44 +46,65 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
           {/* Logo (Rună Digitală) */}
           <div className="flex items-center">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 border-2 border-[#FFD700] rotate-45 flex items-center justify-center">
-                <span className="text-[#FFD700] text-xs font-black rotate-[-45deg]">Ψ</span>
+              <div 
+                className="w-8 h-8 border-2 rotate-45 flex items-center justify-center"
+                style={{borderColor: "var(--pf-gold-600)"}}
+              >
+                <span 
+                  className="text-xs font-black rotate-[-45deg]"
+                  style={{color: "var(--pf-gold-600)"}}
+                >
+                  Ψ
+                </span>
               </div>
-              <div className="text-xl text-[#FFD700] font-black font-mono">{COPY.brand}</div>
+              <div 
+                className="text-xl font-black font-mono"
+                style={{color: "var(--pf-gold-600)"}}
+              >
+                {COPY.brand}
+              </div>
             </div>
           </div>
 
           <div className="flex items-center space-x-8">
             {/* Desktop Navigation */}
-            <nav 
+            <nav
               className="hidden md:flex items-center space-x-6 text-sm font-mono"
               aria-label="Primary navigation"
             >
               <a
                 href="/modules"
-                className="text-white hover:text-[#FFD700] transition-colors duration-150"
-                aria-current={pathname === '/modules' ? "page" : undefined}
+                className="text-white transition-colors duration-150 hover:text-[var(--pf-gold-600)]"
+                onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "white"}
+                aria-current={pathname === "/modules" ? "page" : undefined}
               >
                 Modules
               </a>
               <a
                 href="/pricing"
-                className="text-white hover:text-[#FFD700] transition-colors duration-150"
-                aria-current={pathname === '/pricing' ? "page" : undefined}
+                className="text-white transition-colors duration-150"
+                onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "white"}
+                aria-current={pathname === "/pricing" ? "page" : undefined}
               >
                 Pricing
               </a>
               <a
                 href="/docs"
-                className="text-white hover:text-[#FFD700] transition-colors duration-150"
-                aria-current={pathname === '/docs' ? "page" : undefined}
+                className="text-white transition-colors duration-150"
+                onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "white"}
+                aria-current={pathname === "/docs" ? "page" : undefined}
               >
                 Docs
               </a>
               <a
                 href="/login"
-                className="text-white hover:text-[#FFD700] transition-colors duration-150"
-                aria-current={pathname === '/login' ? "page" : undefined}
+                className="text-white transition-colors duration-150"
+                onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "white"}
+                aria-current={pathname === "/login" ? "page" : undefined}
               >
                 Login
               </a>
@@ -100,12 +118,12 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
               aria-controls="mobile-nav"
               aria-label={COPY.menu_toggle}
             >
-              <svg 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
                 strokeWidth="2"
                 aria-hidden="true"
               >
@@ -118,7 +136,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
 
       {/* Mobile Navigation */}
       {isMobileNavOpen && (
-        <div 
+        <div
           id="mobile-nav"
           className="md:hidden bg-black border-t border-gray-800"
           role="dialog"
@@ -128,7 +146,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
           <nav className="px-6 py-4">
             <ul className="space-y-4">
               <li>
-                <button 
+                <button
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
@@ -136,7 +154,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
@@ -144,7 +162,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
@@ -152,7 +170,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
@@ -160,7 +178,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
                 </button>
               </li>
             </ul>
-            
+
             <div className="mt-6 pt-6 border-t border-gray-800 space-y-3">
               {isAuthenticated ? (
                 <Button
@@ -192,5 +210,5 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
         </div>
       )}
     </header>
-  )
+  );
 }

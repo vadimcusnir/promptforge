@@ -1,18 +1,20 @@
+# UI Standards - PromptForge
+
 ---
 description: UI e2b-inspired × PromptForge — homepage strict
-globs:
-  - "app/**"
-  - "components/**"
+globs: ["app/**", "components/**"]
 alwaysApply: false
 ---
 
 ## Palette & tokens (globals)
+
 - Setează CSS vars în app/globals.css:
   --pf-bg:#0A0A0A; --pf-fg:#ECFEFF;
   --pf-gold-600:#C7A869; --pf-gold-500:#B5965C; --pf-gold-400:#A98652; --pf-gold-contrast:#0E0E0E;
   --pf-border:rgba(255,255,255,.12); --pf-card:rgba(255,255,255,.06);
 
 ## Hero (Above-the-Fold)
+
 - Full-bleed, fără container cu chenar.
 - H1 ≤7 cuvinte, font-weight 900, letter-spacing ușor; fără text glow.
 - Subhead = rezultat + mecanism (ex: 4h→30m + 50 Modules + 7D Engine).
@@ -22,23 +24,28 @@ alwaysApply: false
 - Proof-bar imediat sub CTA, 3 bullets (TTA<60s, Score≥80, Export .md/.pdf/.json), glass discret.
 
 ## Header/Scroll
+
 - Header fixed, height 64px, backdrop-blur 6px, fără resize la scroll (zero CLS).
-- Rezervă spațiu cu <div class="h-16"/> imediat sub header.
+- Rezervă spațiu cu element h-16 imediat sub header.
 
 ## Background
+
 - Un singur strat montat în layout (nu și în page). Fără grid vechi.
 - Implementă 4 layere: L0 solid (#0A0A0A), L1 linii H/V subtile (opacity 4–6%), L2 tokeni verzi low-density, L3 figuri analitice rare, L4 citat portocaliu 1/20s (nu se suprapun).
 - prefers-reduced-motion: oprește drift, păstrează doar solid + halo.
 
 ## Footer
+
 - Un singur footer: structură „Product | Docs | Pricing | Legal".
 - Badge-uri „Stripe Verified", „GDPR Compliant" minimal: text pe background var(--pf-gold-600) 12% opacitate, border var(--pf-gold-500) 1px.
 
 ## Forms
+
 - Input height 40–44px; font 14–16px; padding 8px 12px; border-radius 4px; border 1px var(--pf-border).
 - Placeholder sobru. Fără glow. Microcopy anti-spam 12–13px sub buton.
 
 ## Module Grid
+
 - Card: background var(--pf-card), border 1px var(--pf-border), radius 10px.
 - Titlu modul + meta pe 2 linii. Chip‑uri export (.md/.pdf/.json) aranjate cu:
   .actions{display:flex; flex-wrap:wrap; gap:8px}
@@ -46,16 +53,20 @@ alwaysApply: false
 - Accente aurii DOAR pe border/badge icon, nu pe body.
 
 ## Animații (doar transform/opacity)
+
 - Timings: enter 180–220ms; drift 12–18s ±2–3px; glitch 50–90ms sporadic.
 - Fără infinite intense; fără bounce; respectă reduced-motion.
 - Seed determinist pe hero‑glitch.
 
 ## Tipografie
+
 - Montserrat headings, Open Sans body. H1: 42–48px; H2: 28–32px; body: 16–18px.
 - Contrast WCAG ≥4.5:1 pe toate CTA/links.
 
 ## Copy
+
 - Persoana II, propoziții scurte, fără „magie/ușor"; linter voce ≥80 obligatoriu.
 
 ## Interdicții (FAIL build)
+
 - Text gradient, emoji, neon galben (#FFD700) pe body/CTA, glow saturat, două footere, background duplicat, chenar pe hero.

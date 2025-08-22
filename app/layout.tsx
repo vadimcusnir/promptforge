@@ -1,14 +1,14 @@
-import { Header } from "@/components/Header"
-import { Footer } from "@/components/Footer"
-import { StratifiedBackground } from "@/components/background/StratifiedBackground"
-import type React from "react"
-import type { Metadata } from "next"
-import ClientRootLayout from "./ClientRootLayout"
-import { getMotionMode } from "@/lib/motion"
-import "./globals.css"
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { StratifiedBackground } from "@/components/background/StratifiedBackground";
+import type React from "react";
+import type { Metadata } from "next";
+import ClientRootLayout from "./ClientRootLayout";
+import { getMotionMode } from "@/lib/motion";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chatgpt-prompting.com'),
+  metadataBase: new URL("https://chatgpt-prompting.com"),
   title: "PromptForge v3 — Cognitive OS for Prompts",
   description:
     "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Prompt-Forge™" }],
   creator: "Prompt-Forge™",
   publisher: "Prompt-Forge™",
-  alternates: { canonical: '/', languages: { en: '/' } },
+  alternates: { canonical: "/", languages: { en: "/" } },
   formatDetection: {
     email: false,
     address: false,
@@ -35,7 +35,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "PromptForge v3 — Cognitive OS for Prompts",
-    description: "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
+    description:
+      "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
     type: "website",
     url: "https://chatgpt-prompting.com",
     siteName: "Prompt-Forge™",
@@ -52,7 +53,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "PromptForge v3 — Cognitive OS for Prompts",
-    description: "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
+    description:
+      "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
     images: ["/og-image.png"],
     creator: "@ai_idei",
   },
@@ -63,12 +65,12 @@ export const metadata: Metadata = {
     "X-XSS-Protection": "1; mode=block",
     "Referrer-Policy": "strict-origin-when-cross-origin",
   },
-}
+};
 
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   const mode = await getMotionMode(); // "off" | "on"
   return (
@@ -84,5 +86,5 @@ export default async function RootLayout({
         <Footer />
       </body>
     </html>
-  )
+  );
 }
