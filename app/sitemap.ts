@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://ai-idei.com'
+  const baseUrl = 'https://chatgpt-prompting.com'
   
   return [
     {

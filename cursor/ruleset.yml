@@ -21,6 +21,17 @@ security:
     requests_per_min: 60
     cost_usd_max_run: 1.5
 
+validation:
+  enum_only: true
+  raise_on_invalid: true
+  require_replace_domains:
+    enabled: true
+    rules:
+      - from: "ai-idei.com"
+        to: "chatgpt-prompting.com"
+      - from: "ai-prompt-templates.com"
+        to: "chatgpt-prompting.com"
+
 prompts:
   enum_only: true
   guardrails_global:

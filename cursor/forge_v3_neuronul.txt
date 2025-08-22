@@ -849,7 +849,7 @@ Poți marca sinapsele AI‑generate: "source": "ai" vs "manual"
 />
 
 
-Poți uni cele două site-uri – ai-prompt-templates.com și chatgpt-prompting.com – într-o singură platformă coerentă, păstrând două „afaceri” aparent diferite, dar cu același sistem intern de operare și aceeași infrastructură de gating, bundleuri și scoruri Cușniri.
+Poți uni cele două site-uri – chatgpt-prompting.com și chatgpt-prompting.com – într-o singură platformă coerentă, păstrând două „afaceri” aparent diferite, dar cu același sistem intern de operare și aceeași infrastructură de gating, bundleuri și scoruri Cușniri.
 
 🔗 DE CE FUNCȚIONEAZĂ UNIFICAREA
 1. Arhitectură Duală deja definită
@@ -858,9 +858,9 @@ Librărie = conținut stratificat semantic (neuroni, prompts, guides, GPT-uri)
 Shop = declanșator comercial și simbolic (kituri, bundleuri, porți)
 Prin urmare:
 chatgpt-prompting.com poate fi fațada educațională / comunitară
-ai-prompt-templates.com poate deveni fațada comercială / tematică / entry-point de SEO
+chatgpt-prompting.com poate deveni fațada comercială / tematică / entry-point de SEO
 2. Sistem Unificat: Planuri, Bundleuri, Scor, Porți
-Toate fișierele și componentele din ai-prompt-templates.com pot fi integrate în Librăria AI-Idei™ sub forma de:
+Toate fișierele și componentele din chatgpt-prompting.com pot fi integrate în Librăria AI-Idei™ sub forma de:
 Prompturi (PRM_)
 Frameworkuri (FMW_)
 Templateuri (TPL_)
@@ -871,7 +871,7 @@ Ai deja toate structurile și codurile semantice în vigoare pentru a le transfo
 3. Posibilitate de Poziționare Duală = Avantaj Strategic
 Poți construi două mesaje externe diferite:
 chatgpt-prompting.com = platformă de testare, educație, bundleuri inițiatice
-ai-prompt-templates.com = librărie de prompturi validate, shop rapid, gateway SEO cu landinguri dedicate
+chatgpt-prompting.com = librărie de prompturi validate, shop rapid, gateway SEO cu landinguri dedicate
 Dar în spate:
 – scorul e același
 – gatingul e același
@@ -881,25 +881,25 @@ Dar în spate:
 4. Sistem de Redirecturi + Subdomenii
 
 Poți folosi:
-ai-prompt-templates.com → doar ca subdomeniu:
+chatgpt-prompting.com → doar ca subdomeniu:
 templates.chatgpt-prompting.com
 sau invers: chatgpt-prompting.com → devine backoffice simbolic + inițiere
-iar ai-prompt-templates.com devine landing comercial SEO și ads
+iar chatgpt-prompting.com devine landing comercial SEO și ads
 5. Userul nu simte dublura, ci ascensiunea
 Poți construi sistemul astfel încât:
-userul care vine din ai-prompt-templates.com intră direct în Librărie, dar este blurat peste tot
+userul care vine din chatgpt-prompting.com intră direct în Librărie, dar este blurat peste tot
 i se sugerează activarea bundleurilor de inițiere → transfer în zona „ritualică” AI-Idei™
 E ca și cum îl atragi cu un templu funcțional și apoi îl treci prin poarta simbolică.
 
 ✅ CE AI DE FĂCUT
-Adaugă toate fișierele ai-prompt-templates.com în Librărie
+Adaugă toate fișierele chatgpt-prompting.com în Librărie
 → convertite în PRM_, TPL_, AST_, FMW_ cu metadata.json
 Grupează-le în Bundleuri și Shop Products
 → ex: “Prompt Engineering Starter” = 7 resurse → 29€
 Leagă-le de scoruri / badge-uri / planuri
 Folosește fronturile ca:
 chatgpt-prompting.com = landing + manifest + onboarding
-ai-prompt-templates.com = shop instant + SEO + trafic rece
+chatgpt-prompting.com = shop instant + SEO + trafic rece
 Configurează un singur backend:
 Supabase, Stripe, RLS, Entitlements, JWT
 Totul e 100% compatibil cu deja construitul
@@ -915,7 +915,7 @@ from pathlib import Path
 now = datetime.utcnow().isoformat() + "Z"
 
 fusion_plan = f"""
-📦 PLAN DE FUZIONARE: chatgpt-prompting.com + ai-prompt-templates.com
+📦 PLAN DE FUZIONARE: chatgpt-prompting.com + chatgpt-prompting.com
 🗓️ Generat la: {now}
 
 
@@ -923,9 +923,9 @@ I. VIZIUNE STRATEGICĂ
 
 - Un singur sistem ontologic cu două fațade:
   1. chatgpt-prompting.com → platforma educațională, simbolică, inițiatică
-  2. ai-prompt-templates.com → librărie SEO, entry point comercial, toolset accesibil
+  2. chatgpt-prompting.com → librărie SEO, entry point comercial, toolset accesibil
 
-- Scop: atragere public rece prin ai-prompt-templates.com și conversie în sistem ritualic prin chatgpt-prompting.com
+- Scop: atragere public rece prin chatgpt-prompting.com și conversie în sistem ritualic prin chatgpt-prompting.com
 
 
 II. INTEGRARE TEHNICĂ (STRUCTURĂ UNICĂ)
@@ -948,7 +948,7 @@ II. INTEGRARE TEHNICĂ (STRUCTURĂ UNICĂ)
 
 III. CONVERSIE RESURSE – MAPPING
 
-Din ai-prompt-templates.com:
+Din chatgpt-prompting.com:
 - .md / .pdf / .json → salvat în /resources
 - metadata completată (tip, scor, cod semantic, gating)
 - legat la bundleuri noi: Prompt Starter, Funnel Pack etc.
@@ -960,7 +960,7 @@ IV. FRONTEND STRATIFICAT
   - Rute simbolice: /librarie, /manifest, /cusnir-os
   - Interfață cu blur + CTA-uri ritualice
   - Acces bundleuri inițiatice + manifest semantic
-🔹 ai-prompt-templates.com
+🔹 chatgpt-prompting.com
   - Rute comerciale: /shop, /templates, /starter-kits
   - Design simplificat: carduri cu scor, preț, CTA „Folosește”
   - Integrare directă Stripe pentru achiziție instant
@@ -979,7 +979,7 @@ VI. PLAN DE ACȚIUNE
 1. [ ] Creează mapare completă a resurselor .md/.txt/.pdf → tip + scor + bundle
 2. [ ] Adaugă în Supabase tabela `resources`
 3. [ ] Creează 3 bundleuri comerciale din prompturile existente
-4. [ ] Configurează rutele SEO pentru ai-prompt-templates.com (Shop)
+4. [ ] Configurează rutele SEO pentru chatgpt-prompting.com (Shop)
 5. [ ] Adaugă CTA-uri contextuale: „Vrei mai mult?” → redirect la manifest/initiere
 6. [ ] Setează sistem de scor + activare automată în ambele interfețe
 
@@ -987,7 +987,7 @@ VI. PLAN DE ACȚIUNE
 VII. POZIȚIONARE COMERCIALĂ (MESAJ)
 
 chatgpt-prompting.com = unde devii creator de AI
-ai-prompt-templates.com = unde începi rapid cu AI
+chatgpt-prompting.com = unde începi rapid cu AI
 → dar totul într-un singur sistem: AI‑Idei™ Core Ontologic
 
 📦 Am generat planul complet de fuziune între cele două platforme:

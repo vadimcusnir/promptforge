@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: "Prompt-Forge™ - Cyber-Poetic Terminal Aesthetic",
     description: "Advanced AI prompt generation system with immersive visual experience.",
     type: "website",
-    url: "https://ai-idei.com",
+    url: "https://chatgpt-prompting.com",
     siteName: "Prompt-Forge™",
     images: [
       {
