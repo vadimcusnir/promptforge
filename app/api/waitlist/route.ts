@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     // Upsert-like behavior with unique(email)
     const { error } = await supabase
       .from("waitlist_signups")
-      .insert([{ email: String(email).toLowerCase().trim(), name: name?.trim() || null, org_id: org_id || null }]);
+      .insert([{ email: String(email).toLowerCase().trim(), name: name?.trim() || null }]);
 
     // If duplicate, treat as success (idempotent UX)
     if (error && !String(error.message || "").includes("duplicate key")) {
