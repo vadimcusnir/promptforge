@@ -253,3 +253,6 @@ test-results.xml
 
 # Turbo
 .turbo
+
+# Next.js API routes (exclude from public ignore)
+!app/api/public/
