@@ -55,7 +55,7 @@ export function Footer() {
       </div>
       <div className="max-w-screen-xl mx-auto px-4 pb-8 flex items-center justify-between">
         <div className="text-xs text-white/60">
-          © 2025 PROMPTFORGE™. All rights reserved.
+          © 2025 PROMPTFORGE™. All rights reserved. — You don't write prompts. You invoke realities.
         </div>
         <div className="flex gap-2">
           <span
