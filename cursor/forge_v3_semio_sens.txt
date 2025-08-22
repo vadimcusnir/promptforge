@@ -857,13 +857,6 @@ Forjemind este instanța oficială a Protocolului Cușnir.
 Protocolul Cușnir este nivelul de control. De branding. De sistem.
 
 
-
-
-
-from datetime import date
-from pathlib import Path
-
-manifest_text = """
 # 📜 MANIFESTUL OFICIAL — PROTOCOL CUȘNIR™
 
 > Nu e un produs. Nu e un curs. Este un **Protocol Executabil de Identitate**.

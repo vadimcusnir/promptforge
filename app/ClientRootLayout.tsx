@@ -4,6 +4,7 @@ import type React from "react"
 import { Montserrat } from "next/font/google"
 import { Open_Sans } from "next/font/google"
 import { Footer } from "@/components/ui/footer"
+import { Header } from "@/components/Header"
 import { useFontsReady } from "@/hooks/use-fonts-ready"
 import { useRouteOverlay } from "@/hooks/use-route-overlay"
 import { QuoteFocusProvider } from "@/hooks/use-quote-focus"
@@ -108,6 +109,7 @@ html {
           <QuoteFocusProvider>
             <ClientReady />
             <MatrixTokens />
+            <Header />
             {children}
             <Footer />
           </QuoteFocusProvider>

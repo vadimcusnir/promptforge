@@ -137,7 +137,6 @@ Generate the optimized ${demoInput} strategy now.`
     <div className="min-h-screen bg-[#0a0a0a] text-white font-mono relative">
       <SkipLink />
       <CyberPoeticBackground />
-      <Header />
 
       <button
         onClick={() => setShowExitPopup(true)}
