@@ -1,107 +1,96 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { validateEnglishContent } from "@/lib/english";
-import { GPTEditorRequestSchema, normalize7D } from "@/lib/server/validation";
-import { optimizePrompt } from "@/lib/server/openai";
-import { checkRateLimit } from "@/lib/server/supabase";
-import { 
-  createErrorResponse, 
-  createValidationErrorResponse, 
-  createRateLimitResponse,
-  createSuccessResponse,
-  create7DErrorResponse,
-  withErrorHandler 
-} from "@/lib/server/errors";
+// PromptForge v3 - GPT Editor API
+// Optimizează prompturi în editor (fără gating Pro)
 
-/**
- * POST /api/gpt-editor - Optimize prompt (no gating required)
- * 
- * Tightens prompts with clarity improvements, guardrails, and domain context.
- * Available to all authenticated users without entitlement restrictions.
- */
-const _POST = async (request: NextRequest) => {
-  const startTime = Date.now();
+import { NextRequest, NextResponse } from 'next/server';
+import { chatPromptEditor } from '@/lib/openai';
+import { validateSevenDMiddleware } from '@/lib/ruleset';
 
-  // Parse and validate request
-  const body = await request.json();
-  const validation = GPTEditorRequestSchema.safeParse(body);
-  
-  if (!validation.success) {
-    return createValidationErrorResponse(validation.error);
-  }
-
-  const { prompt, sevenD } = validation.data;
-
-  // Validate English-only content
-  const englishValidation = validateEnglishContent({ prompt });
-  if (!englishValidation.isValid) {
-    return createErrorResponse('INVALID_CONTENT_LANGUAGE');
-  }
-
-  // Normalize 7D configuration (apply domain defaults)
-  let normalized7D;
+export async function POST(req: NextRequest) {
   try {
-    normalized7D = normalize7D(sevenD);
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('INVALID_7D_ENUM:')) {
-      const field = error.message.split(':')[1];
-      return create7DErrorResponse(field);
+    const body = await req.json();
+    const { orgId, userId, moduleId, promptDraft, sevenD } = body;
+
+    // Validări de bază
+    if (!orgId || !userId || !moduleId || !promptDraft || !sevenD) {
+      return NextResponse.json(
+        { error: 'Missing required fields: orgId, userId, moduleId, promptDraft, sevenD' },
+        { status: 400 }
+      );
     }
-    return createErrorResponse('INVALID_7D_ENUM');
-  }
 
-  // Basic rate limiting (60 requests per minute per IP)
-  const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-  const rateLimit = await checkRateLimit(`gpt-editor:${clientIP}`, 60);
-  
-  if (!rateLimit.allowed) {
-    return createRateLimitResponse(rateLimit.remaining, rateLimit.resetTime);
-  }
+    // Validează și normalizează 7D cu SSOT
+    let normalized7D;
+    try {
+      normalized7D = validateSevenDMiddleware(sevenD);
+    } catch (error) {
+      return NextResponse.json(
+        { 
+          error: 'INVALID_7D',
+          details: error instanceof Error ? error.message : 'Invalid 7D configuration'
+        },
+        { status: 400 }
+      );
+    }
 
-  // Optimize prompt using OpenAI
-  const result = await optimizePrompt(prompt, {
-    domain: normalized7D.domain,
-    focus: 'clarity',
-    tone: 'professional',
-    length: 'concise'
+    // Verifică lungimea promptului
+    if (promptDraft.length > 10000) {
+      return NextResponse.json(
+        { error: 'Prompt too long. Maximum 10,000 characters allowed.' },
+        { status: 400 }
+      );
+    }
+
+    // Rulează optimizarea cu GPT
+    const startTime = Date.now();
+    const response = await chatPromptEditor(promptDraft, normalized7D);
+    const totalDuration = Date.now() - startTime;
+
+    // Log pentru telemetrie (fără PII)
+    console.log({
+      type: 'gpt_editor',
+      org_id: orgId,
+      user_id: userId,
+      module_id: moduleId,
+      domain: normalized7D.domain,
+      duration_ms: totalDuration,
+      tokens_used: response.usage?.total_tokens || 0,
+      prompt_length: promptDraft.length,
+      output_length: response.text.length
+    });
+
+    return NextResponse.json({
+      promptEdited: response.text,
+      usage: {
+        ...response.usage,
+        duration_ms: totalDuration
+      },
+      meta: {
+        original_length: promptDraft.length,
+        edited_length: response.text.length,
+        domain: normalized7D.domain,
+        output_format: normalized7D.output_format
+      }
+    });
+
+  } catch (error) {
+    console.error('GPT Editor API error:', error);
+    
+    return NextResponse.json(
+      { 
+        error: 'INTERNAL_ERROR',
+        message: 'Failed to process prompt optimization'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// GET pentru health check
+export async function GET() {
+  return NextResponse.json({
+    service: 'gpt-editor',
+    status: 'operational',
+    version: '1.0.0',
+    description: 'Prompt optimization service'
   });
-
-  // Parse OpenAI response
-  let optimizedData;
-  try {
-    optimizedData = JSON.parse(result.content);
-  } catch {
-    // Fallback if JSON parsing fails
-    optimizedData = {
-      editedPrompt: result.content,
-      improvements: ["Enhanced clarity", "Applied domain context", "Improved structure"],
-      confidence: 85
-    };
-  }
-
-  // Validate optimized content is still English
-  const optimizedValidation = validateEnglishContent({ 
-    prompt: optimizedData.editedPrompt || result.content 
-  });
-  
-  if (!optimizedValidation.isValid) {
-    return createErrorResponse('OPENAI_API_ERROR', null, 'AI model generated non-English content');
-  }
-
-  // Return optimized prompt with telemetry
-  return createSuccessResponse({
-    editedPrompt: optimizedData.editedPrompt || result.content,
-    improvements: optimizedData.improvements || ["Optimized for clarity"],
-    confidence: Math.min(100, Math.max(0, optimizedData.confidence || 85)),
-    sevenD: normalized7D,
-    usage: {
-      tokens: result.usage.total_tokens,
-      cost_usd: result.usage.cost_usd,
-      duration_ms: result.duration_ms
-    },
-    processingTime: Date.now() - startTime,
-    model: result.model
-  });
-};
-
-// Export with error handler wrapper
-export const POST = withErrorHandler(_POST);
+}

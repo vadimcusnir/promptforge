@@ -1,232 +1,270 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { validateEnglishContent } from "@/lib/english";
-import { GPTTestRequestSchema, normalize7D, assertDoR, assertDoD } from "@/lib/server/validation";
-import { runGPTTest, tightenPrompt } from "@/lib/server/openai";
-import { 
-  verifyOrgMembership, 
-  hasEntitlement, 
-  createRun, 
-  updateRunStatus, 
-  savePromptScore,
-  checkRateLimit 
-} from "@/lib/server/supabase";
-import {
-  createErrorResponse,
-  createValidationErrorResponse,
-  createRateLimitResponse,
-  createSuccessResponse,
-  createEntitlementErrorResponse,
-  create7DErrorResponse,
-  withErrorHandler
-} from "@/lib/server/errors";
+// PromptForge v3 - GPT Test API  
+// Test prompt pe model real cu scoring și gating Pro
 
-/**
- * POST /api/gpt-test - Run GPT live test with scoring (Pro+ gating)
- * 
- * Executes prompt against GPT, evaluates quality, applies auto-tighten if needed.
- * Requires Pro+ entitlements and saves telemetry for compliance.
- */
-const _POST = async (request: NextRequest) => {
-  const startTime = Date.now();
+import { NextRequest, NextResponse } from 'next/server';
+import { chatPromptTest, evaluatePrompt, autoTightenPrompt, calculateCost } from '@/lib/openai';
+import { validateSevenDMiddleware, getScoringThresholds } from '@/lib/ruleset';
+import { createClient } from '@supabase/supabase-js';
 
-  // Parse and validate request
-  const body = await request.json();
-  const validation = GPTTestRequestSchema.safeParse(body);
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE!
+);
+
+// Verifică entitlements pentru org
+async function getEntitlements(orgId: string): Promise<Record<string, boolean>> {
+  const { data, error } = await supabase
+    .from('entitlements')
+    .select('flag, value')
+    .eq('org_id', orgId)
+    .eq('value', true);
+
+  if (error) throw error;
+
+  const flags = Object.fromEntries(
+    (data || []).map((r: any) => [r.flag, r.value])
+  );
   
-  if (!validation.success) {
-    return createValidationErrorResponse(validation.error);
-  }
+  return flags;
+}
 
-  const { prompt, sevenD, testCases = [] } = validation.data;
-
-  // Extract authentication context (in production, use proper auth)
-  const orgId = request.headers.get('x-org-id');
-  const userId = request.headers.get('x-user-id');
-  
-  if (!orgId || !userId) {
-    return createErrorResponse('UNAUTHENTICATED', null, 'Missing authentication headers');
-  }
-
-  // Verify organization membership
-  const isMember = await verifyOrgMembership(orgId, userId);
-  if (!isMember) {
-    return createEntitlementErrorResponse('organization_membership', undefined, 'Not a member of this organization');
-  }
-
-  // Check Pro+ entitlement for GPT testing
-  const canUseGptTest = await hasEntitlement(orgId, 'canUseGptTestReal', userId);
-  if (!canUseGptTest) {
-    return createEntitlementErrorResponse('canUseGptTestReal', undefined, 'Pro+ subscription required for GPT live testing');
-  }
-
-  // Rate limiting for GPT test (30 requests per minute per org)
-  const rateLimit = await checkRateLimit(`gpt-test:${orgId}`, 30);
-  if (!rateLimit.allowed) {
-    return createRateLimitResponse(rateLimit.remaining, rateLimit.resetTime, 'Rate limit exceeded for GPT testing');
-  }
-
-  // Validate English-only content
-  const englishValidation = validateEnglishContent({ prompt });
-  if (!englishValidation.isValid) {
-    return createErrorResponse('INVALID_CONTENT_LANGUAGE');
-  }
-
-  // Normalize 7D configuration (SSOT enforcement)
-  let normalized7D;
-  try {
-    normalized7D = normalize7D(sevenD);
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('INVALID_7D_ENUM:')) {
-      const field = error.message.split(':')[1];
-      return create7DErrorResponse(field);
-    }
-    return createErrorResponse('INVALID_7D_ENUM');
-  }
-
-    // Assert DoR (Definition of Ready)
-    try {
-      assertDoR({
-        sevenDValid: true,
-        entitlementsValid: canUseGptTest,
-        outputSpecLoaded: true, // Simplified for demo
-        testsDefined: testCases.length > 0 || true, // Allow empty test cases
-      });
-    } catch (error) {
-      if (error instanceof APIError) {
-        return NextResponse.json(
-          { error: error.apiCode, message: error.message },
-          { status: error.code }
-        );
-      }
-      throw error;
-    }
-
-    // Create run record
-    const run = await createRun({
-      org_id: orgId,
-      user_id: userId,
-      module_id: 'GPT_TEST', // Generic module for GPT testing
-      seven_d: normalized7D,
-      signature_7d: normalized7D.signature_7d,
+// Salvează run în telemetrie
+async function startRun(params: {
+  orgId: string;
+  userId: string;
+  moduleId: string;
+  parameterSet: any;
+}): Promise<string> {
+  const { data, error } = await supabase
+    .from('runs')
+    .insert([{
+      org_id: params.orgId,
+      user_id: params.userId,
+      module_id: params.moduleId,
+      parameter_set_id: null,
+      type: 'test',
       status: 'queued',
-      tokens_in: 0,
-      tokens_out: 0,
-      cost_usd: 0,
+      telemetry: { parameter_set: params.parameterSet },
+      started_at: new Date().toISOString()
+    }])
+    .select('id')
+    .single();
+
+  if (error) throw error;
+  return data.id;
+}
+
+// Finalizează run cu rezultate
+async function finishRun(runId: string, updates: any): Promise<void> {
+  const { error } = await supabase
+    .from('runs')
+    .update({
+      ...updates,
+      finished_at: new Date().toISOString()
+    })
+    .eq('id', runId);
+
+  if (error) throw error;
+}
+
+// Salvează scoruri în prompt_scores
+async function saveScores(runId: string, scores: any): Promise<void> {
+  const { error } = await supabase
+    .from('prompt_scores')
+    .insert([{
+      run_id: runId,
+      clarity: scores.clarity,
+      execution: scores.execution,
+      ambiguity: scores.ambiguity,
+      alignment: scores.business_fit, // mapping business_fit -> alignment
+      business_fit: scores.business_fit,
+      feedback: { 
+        verdict: scores.verdict,
+        composite: scores.composite,
+        feedback: scores.feedback 
+      }
+    }]);
+
+  if (error) throw error;
+}
+
+export async function POST(req: NextRequest) {
+  let runId: string | null = null;
+  
+  try {
+    const body = await req.json();
+    const { orgId, userId, moduleId, sevenD, prompt } = body;
+
+    // Validări de bază
+    if (!orgId || !userId || !moduleId || !sevenD || !prompt) {
+      return NextResponse.json(
+        { error: 'Missing required fields: orgId, userId, moduleId, sevenD, prompt' },
+        { status: 400 }
+      );
+    }
+
+    // Validează 7D cu SSOT
+    let normalized7D;
+    try {
+      normalized7D = validateSevenDMiddleware(sevenD);
+    } catch (error) {
+      return NextResponse.json(
+        { 
+          error: 'INVALID_7D',
+          details: error instanceof Error ? error.message : 'Invalid 7D configuration'
+        },
+        { status: 400 }
+      );
+    }
+
+    // Verifică entitlements - necesită canUseGptTestReal pentru Pro+
+    const flags = await getEntitlements(orgId);
+    if (!flags?.canUseGptTestReal) {
+      return NextResponse.json(
+        { 
+          error: 'ENTITLEMENT_REQUIRED',
+          upsell: 'pro_needed',
+          message: 'GPT Test Real requires Pro plan or higher'
+        },
+        { status: 403 }
+      );
+    }
+
+    // Verifică lungimea promptului
+    if (prompt.length > 20000) {
+      return NextResponse.json(
+        { error: 'Prompt too long. Maximum 20,000 characters allowed.' },
+        { status: 400 }
+      );
+    }
+
+    // Creează run pentru telemetrie
+    runId = await startRun({
+      orgId,
+      userId,
+      moduleId,
+      parameterSet: normalized7D
     });
 
-    try {
-      // Run GPT test with scoring
-      const testResult = await runGPTTest(prompt, normalized7D.domain, testCases);
-      
-      let finalPrompt = prompt;
-      let finalScores = testResult.scores;
-      let tightenAttempts = 0;
-      
-      // Auto-tighten if composite score < 80 (max 1 iteration as per spec)
-      if (testResult.scores.composite < 80 && tightenAttempts === 0) {
-        console.log(`[GPT Test] Score ${testResult.scores.composite} below threshold, attempting auto-tighten`);
-        
-        try {
-          const tightenResult = await tightenPrompt(prompt, normalized7D.domain, testResult.scores.composite);
-          if (tightenResult.content !== prompt) {
-            // Re-test with tightened prompt
-            const retestResult = await runGPTTest(tightenResult.content, normalized7D.domain, testCases);
-            
-            finalPrompt = tightenResult.content;
-            finalScores = retestResult.scores;
-            tightenAttempts = 1;
-            
-            // Update usage with tighten costs
-            testResult.response.usage.prompt_tokens += tightenResult.usage.prompt_tokens + retestResult.response.usage.prompt_tokens;
-            testResult.response.usage.completion_tokens += tightenResult.usage.completion_tokens + retestResult.response.usage.completion_tokens;
-            testResult.response.usage.total_tokens += tightenResult.usage.total_tokens + retestResult.response.usage.total_tokens;
-            testResult.response.usage.cost_usd += tightenResult.usage.cost_usd + retestResult.response.usage.cost_usd;
-          }
-        } catch (tightenError) {
-          console.warn('[GPT Test] Auto-tighten failed:', tightenError);
-          // Continue with original scores
-        }
-      }
+    const overallStartTime = Date.now();
 
-      // Save prompt scores
-      await savePromptScore({
-        run_id: run.id,
-        clarity: finalScores.clarity,
-        execution: finalScores.execution,
-        ambiguity: finalScores.ambiguity,
-        business_fit: finalScores.business_fit,
-        composite: finalScores.composite,
-        breakdown: {
-          tighten_attempts: tightenAttempts,
-          original_score: testResult.scores.composite,
-          final_score: finalScores.composite,
-        },
-        created_at: new Date().toISOString(),
-      });
+    // 1. Rulează promptul pe model real
+    const testResponse = await chatPromptTest(prompt, normalized7D);
+    
+    // 2. Evaluează promptul
+    let evaluation = await evaluatePrompt(prompt, normalized7D);
+    
+    // 3. Auto-tighten dacă nu trece threshold-ul (o singură dată)
+    let finalPrompt = prompt;
+    let wasOptimized = false;
+    
+    if (evaluation.verdict === 'fail') {
+      const tightenResponse = await autoTightenPrompt(prompt, normalized7D);
+      finalPrompt = tightenResponse.text;
+      evaluation = await evaluatePrompt(finalPrompt, normalized7D);
+      wasOptimized = true;
+    }
 
-      // Update run with success status and telemetry
-      await updateRunStatus(run.id, 'success', {
-        tokens_in: testResult.response.usage.prompt_tokens,
-        tokens_out: testResult.response.usage.completion_tokens,
-        cost_usd: testResult.response.usage.cost_usd,
-        score_total: finalScores.composite,
-      });
+    const totalDuration = Date.now() - overallStartTime;
+    const estimatedCost = testResponse.usage ? calculateCost('gpt-4o', testResponse.usage) : 0;
 
-      // Assert DoD (Definition of Done)
-      try {
-        assertDoD({
-          score: finalScores.composite,
-          manifestPresent: true, // Simplified for demo
-          checksumValid: true, // Simplified for demo
-          telemetryClean: true, // No PII in telemetry
-        });
-      } catch (error) {
-        if (error instanceof APIError) {
-          await updateRunStatus(run.id, 'error');
-          return NextResponse.json(
-            { error: error.apiCode, message: error.message },
-            { status: error.code }
-          );
-        }
-        throw error;
-      }
-
-    // Determine verdict
-    const verdict = finalScores.composite >= 80 ? 'pass' : 
-                   finalScores.composite >= 60 ? 'partial' : 'fail';
-
-    return createSuccessResponse({
-      runId: run.id,
-      verdict,
-      finalPrompt: finalPrompt !== prompt ? finalPrompt : undefined,
-      scores: {
-        clarity: finalScores.clarity,
-        execution: finalScores.execution,
-        ambiguity: finalScores.ambiguity,
-        business_fit: finalScores.business_fit,
-        composite: finalScores.composite,
-      },
-      breakdown: {
-        original_score: testResult.scores.composite,
-        tighten_applied: tightenAttempts > 0,
-        improvement: finalScores.composite - testResult.scores.composite,
-      },
-      sevenD: normalized7D,
+    // Actualizează run cu rezultatele
+    await finishRun(runId, {
+      status: evaluation.verdict === 'fail' ? 'error' : 'success',
+      model: 'gpt-4o',
+      tokens_used: testResponse.usage?.total_tokens || 0,
+      cost_usd: estimatedCost,
+      duration_ms: totalDuration,
       telemetry: {
-        tokens_used: testResult.response.usage.total_tokens,
-        cost_usd: testResult.response.usage.cost_usd,
-        duration_ms: testResult.response.duration_ms,
-        processing_time: Date.now() - startTime,
+        verdict: evaluation.verdict,
+        score_breakdown: evaluation,
+        was_optimized: wasOptimized,
+        policy_hits: [],
+        domain: normalized7D.domain,
+        output_format: normalized7D.output_format
+      }
+    });
+
+    // Salvează scorurile
+    await saveScores(runId, evaluation);
+
+    // Obține thresholds din SSOT
+    const thresholds = getScoringThresholds();
+
+    return NextResponse.json({
+      runId,
+      verdict: evaluation.verdict,
+      score: evaluation.composite,
+      passed: evaluation.verdict !== 'fail',
+      breakdown: {
+        clarity: evaluation.clarity,
+        execution: evaluation.execution,
+        ambiguity: evaluation.ambiguity,
+        business_fit: evaluation.business_fit,
+        composite: evaluation.composite
       },
-      model: testResult.response.model,
+      thresholds,
+      prompt: finalPrompt,
+      wasOptimized,
+      modelResponse: testResponse.text,
+      usage: {
+        ...testResponse.usage,
+        duration_ms: totalDuration,
+        estimated_cost_usd: estimatedCost
+      },
+      feedback: evaluation.feedback,
+      meta: {
+        domain: normalized7D.domain,
+        output_format: normalized7D.output_format,
+        signature: `${normalized7D.domain}|${normalized7D.scale}|${normalized7D.application}|${normalized7D.output_format}`
+      }
     });
 
   } catch (error) {
-    // Update run with error status
-    await updateRunStatus(run.id, 'error');
-    throw error;
-  }
-};
+    console.error('GPT Test API error:', error);
+    
+    // Marchează run-ul ca failed dacă există
+    if (runId) {
+      try {
+        await finishRun(runId, {
+          status: 'error',
+          telemetry: {
+            error: error instanceof Error ? error.message : 'Unknown error'
+          }
+        });
+      } catch (updateError) {
+        console.error('Failed to update run status:', updateError);
+      }
+    }
 
-// Export with error handler wrapper
-export const POST = withErrorHandler(_POST);
+    if (error instanceof Error && error.message.includes('ENTITLEMENT_REQUIRED')) {
+      return NextResponse.json(
+        { 
+          error: 'ENTITLEMENT_REQUIRED',
+          upsell: 'pro_needed',
+          message: error.message
+        },
+        { status: 403 }
+      );
+    }
+    
+    return NextResponse.json(
+      { 
+        error: 'INTERNAL_ERROR',
+        message: 'Failed to process GPT test'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// GET pentru health check
+export async function GET() {
+  return NextResponse.json({
+    service: 'gpt-test',
+    status: 'operational',
+    version: '1.0.0',
+    description: 'GPT test and scoring service (Pro+ required)',
+    requirements: ['canUseGptTestReal entitlement']
+  });
+}

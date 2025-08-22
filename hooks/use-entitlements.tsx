@@ -1,5 +1,18 @@
-import { useState, useEffect, useCallback } from 'react';
-import { UserEntitlements } from '@/app/api/entitlements/route';
+import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
+// Types for entitlements
+export interface UserEntitlements {
+  canUseAllModules: boolean;
+  canExportMD: boolean;
+  canExportPDF: boolean;
+  canExportJSON: boolean;
+  canUseGptTestReal: boolean;
+  hasCloudHistory: boolean;
+  hasEvaluatorAI: boolean;
+  hasAPI: boolean;
+  hasWhiteLabel: boolean;
+  canExportBundleZip: boolean;
+  hasSeatsGT1: boolean;
+}
 
 interface EntitlementsResponse {
   org_id: string;

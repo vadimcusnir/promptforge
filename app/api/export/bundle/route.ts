@@ -1,251 +1,363 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { ExportBundleRequestSchema, assertDoD } from "@/lib/server/validation";
-import { generateBundle, type BundleContent } from "@/lib/server/bundle";
-import { 
-  verifyOrgMembership, 
-  hasEntitlement, 
-  createBundle,
-  checkRateLimit,
-  supabaseAdmin 
-} from "@/lib/server/supabase";
-import {
-  createErrorResponse,
-  createValidationErrorResponse,
-  createRateLimitResponse,
-  createSuccessResponse,
-  createEntitlementErrorResponse,
-  withErrorHandler
-} from "@/lib/server/errors";
+// PromptForge v3 - Export Bundle API
+// Generează bundle complete cu gating pe plan și salvare în Supabase Storage
 
-/**
- * POST /api/export/bundle - Generate export artifacts (Pro+ / Enterprise gating)
- * 
- * Creates bundle with multiple formats, manifest, checksum, and license notice.
- * Enforces entitlement-based format restrictions and saves to storage.
- */
-const _POST = async (request: NextRequest) => {
-  const startTime = Date.now();
+import { NextRequest, NextResponse } from 'next/server';
+import { generateBundle, validateBundle, detectMimeType } from '@/lib/bundle';
+import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 
-  // Parse and validate request
-  const body = await request.json();
-  const validation = ExportBundleRequestSchema.safeParse(body);
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE!
+);
+
+// Verifică entitlements pentru org
+async function getEntitlements(orgId: string): Promise<Record<string, boolean>> {
+  const { data, error } = await supabase
+    .from('entitlements')
+    .select('flag, value')
+    .eq('org_id', orgId)
+    .eq('value', true);
+
+  if (error) throw error;
+
+  const flags = Object.fromEntries(
+    (data || []).map((r: any) => [r.flag, r.value])
+  );
   
-  if (!validation.success) {
-    return createValidationErrorResponse(validation.error);
+  return flags;
+}
+
+// Verifică dacă run-ul există și aparține org-ului
+async function validateRun(runId: string, orgId: string): Promise<any> {
+  const { data, error } = await supabase
+    .from('runs')
+    .select('*, prompt_scores(*)')
+    .eq('id', runId)
+    .eq('org_id', orgId)
+    .single();
+
+  if (error || !data) {
+    throw new Error('Run not found or access denied');
   }
 
-  const { runId, formats, whiteLabel = false } = validation.data;
+  return data;
+}
 
-  // Extract authentication context
-  const orgId = request.headers.get('x-org-id');
-  const userId = request.headers.get('x-user-id');
-  
-  if (!orgId || !userId) {
-    return createErrorResponse('UNAUTHENTICATED', null, 'Missing authentication headers');
+// Uploadează fișiere în Supabase Storage
+async function uploadToStorage(
+  outputDir: string,
+  orgId: string,
+  moduleId: string,
+  runId: string
+): Promise<Record<string, string>> {
+  const bucket = 'bundles';
+  const prefix = `${orgId}/${moduleId}/${runId}/`;
+  const uploads: Record<string, string> = {};
+
+  const files = fs.readdirSync(outputDir);
+
+  for (const fileName of files) {
+    const filePath = path.join(outputDir, fileName);
+    const fileContent = fs.readFileSync(filePath);
+    const mimeType = detectMimeType(fileName);
+
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(prefix + fileName, fileContent, {
+        upsert: true,
+        contentType: mimeType
+      });
+
+    if (error) {
+      throw new Error(`Storage upload failed for ${fileName}: ${error.message}`);
+    }
+
+    uploads[fileName] = `${bucket}/${prefix}${fileName}`;
   }
 
-    // Verify organization membership
-    const isMember = await verifyOrgMembership(orgId, userId);
-    if (!isMember) {
+  return uploads;
+}
+
+// Salvează bundle în DB
+async function saveBundleToDb(
+  runId: string,
+  manifest: any,
+  uploads: Record<string, string>
+): Promise<void> {
+  const formats = Object.keys(uploads)
+    .filter(f => f.match(/\.(txt|md|json|pdf|zip)$/))
+    .map(f => f.split('.').pop()!)
+    .filter(ext => ext && ext !== 'txt'); // Exclude .txt din formats pentru UI
+
+  const { error } = await supabase
+    .from('bundles')
+    .insert([{
+      run_id: runId,
+      formats,
+      paths: uploads,
+      checksum: manifest.bundle_checksum,
+      exported_at: manifest.exported_at,
+      version: manifest.version,
+      license_notice: manifest.license_notice
+    }]);
+
+  if (error) {
+    throw new Error(`Database insert failed: ${error.message}`);
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const {
+      orgId,
+      runId,
+      moduleId,
+      parameterSet7D,
+      promptText,
+      mdReport,
+      jsonPayload,
+      licenseNotice,
+      version = '1.0.0',
+      requestedFormats = ['txt', 'md'] // Default la format minim
+    } = body;
+
+    // Validări de bază
+    if (!orgId || !runId || !moduleId || !promptText || !mdReport || !jsonPayload) {
       return NextResponse.json(
-        { error: "ENTITLEMENT_REQUIRED", message: "Not a member of this organization" },
-        { status: 403 }
+        { error: 'Missing required fields' },
+        { status: 400 }
       );
     }
 
-    // Rate limiting for exports (30 requests per minute per org)
-    const rateLimit = await checkRateLimit(`export:${orgId}`, 30);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { 
-          error: "RATE_LIMITED",
-          message: "Rate limit exceeded for exports",
-          resetTime: rateLimit.resetTime
-        },
-        { status: 429 }
-      );
-    }
-
-    // Get run data and validate DoD requirements
-    const { data: runData, error: runError } = await supabaseAdmin
-      .from('runs')
-      .select(`
-        id, org_id, user_id, module_id, seven_d, signature_7d, score_total, 
-        started_at, finished_at, tokens_in, tokens_out, cost_usd,
-        prompt_scores (clarity, execution, ambiguity, business_fit, composite, breakdown)
-      `)
-      .eq('id', runId)
-      .eq('org_id', orgId)
-      .single();
-
-    if (runError || !runData) {
-      return NextResponse.json(
-        { error: "MODULE_NOT_FOUND", message: "Run not found or access denied" },
-        { status: 404 }
-      );
-    }
-
-    // Validate DoD requirements
-    const scores = runData.prompt_scores?.[0];
-    if (!scores || scores.composite < 80) {
-      return NextResponse.json(
-        {
-          error: "INTERNAL_RUN_ERROR",
-          message: "Cannot export: run score below minimum threshold (80)",
-          current_score: scores?.composite || 0
-        },
-        { status: 422 }
-      );
-    }
-
+    // Verifică că run-ul există și aparține org-ului
+    const runData = await validateRun(runId, orgId);
+    
+    // Verifică că run-ul a fost success și are scor ≥80
     if (runData.status !== 'success') {
       return NextResponse.json(
-        {
-          error: "INTERNAL_RUN_ERROR",
-          message: "Cannot export: run not completed successfully"
-        },
-        { status: 422 }
+        { error: 'Can only export successful runs' },
+        { status: 400 }
       );
     }
 
-    // Check format-specific entitlements
-    const entitlementChecks = await Promise.all([
-      hasEntitlement(orgId, 'canExportMD', userId),
-      hasEntitlement(orgId, 'canExportPDF', userId),
-      hasEntitlement(orgId, 'canExportJSON', userId),
-      hasEntitlement(orgId, 'canExportBundleZip', userId),
-      hasEntitlement(orgId, 'hasWhiteLabel', userId),
-    ]);
+    const score = runData.prompt_scores?.[0]?.overall_score || 0;
+    if (score < 80) {
+      return NextResponse.json(
+        { 
+          error: 'SCORE_TOO_LOW',
+          message: `Score ${score} is below minimum threshold of 80`,
+          score
+        },
+        { status: 400 }
+      );
+    }
 
-    const [canExportMD, canExportPDF, canExportJSON, canExportZip, hasWhiteLabelAccess] = entitlementChecks;
+    // Verifică entitlements și determină formatele permise
+    const flags = await getEntitlements(orgId);
+    const allowedFormats = ['txt', 'md']; // Base formats pentru toți
 
-    // Validate format permissions
-    const allowedFormats: string[] = ['txt']; // TXT is always allowed
-    if (canExportMD) allowedFormats.push('md');
-    if (canExportPDF) allowedFormats.push('pdf');
-    if (canExportJSON) allowedFormats.push('json');
-    if (canExportZip) allowedFormats.push('zip');
+    // Gating pe planuri
+    if (flags.canExportJSON) allowedFormats.push('json');
+    if (flags.canExportPDF) allowedFormats.push('pdf');
+    if (flags.canExportBundleZip) allowedFormats.push('zip');
 
-    const unauthorizedFormats = formats.filter(format => !allowedFormats.includes(format));
+    // Verifică că formatele cerute sunt permise
+    const unauthorizedFormats = requestedFormats.filter(
+      (format: string) => !allowedFormats.includes(format)
+    );
+
     if (unauthorizedFormats.length > 0) {
       return NextResponse.json(
         {
-          error: "ENTITLEMENT_REQUIRED",
-          message: `Insufficient permissions for formats: ${unauthorizedFormats.join(', ')}`,
-          allowed_formats: allowedFormats,
-          required_entitlements: {
-            md: 'canExportMD',
-            pdf: 'canExportPDF', 
-            json: 'canExportJSON',
-            zip: 'canExportBundleZip'
-          }
+          error: 'ENTITLEMENT_REQUIRED',
+          unauthorizedFormats,
+          allowedFormats,
+          upsell: unauthorizedFormats.includes('pdf') || unauthorizedFormats.includes('json') 
+            ? 'pro_needed' 
+            : 'enterprise_needed'
         },
         { status: 403 }
       );
     }
 
-    // Check white label permission
-    if (whiteLabel && !hasWhiteLabelAccess) {
-      return NextResponse.json(
-        {
-          error: "ENTITLEMENT_REQUIRED",
-          message: "White label exports require Enterprise subscription",
-          required_entitlement: "hasWhiteLabel"
-        },
-        { status: 403 }
-      );
+    // Determină watermark pentru trial
+    let watermark;
+    const subscription = await supabase
+      .from('subscriptions')
+      .select('status, trial_end')
+      .eq('org_id', orgId)
+      .single();
+
+    if (subscription.data?.status === 'trialing') {
+      watermark = 'TRIAL — Not for Redistribution';
     }
 
-    // Get prompt content (in production, this would come from prompt_history or runs)
-    const promptContent = "Sample prompt content"; // TODO: Get from actual storage
-
-    // Prepare bundle content
-    const bundleContent: BundleContent = {
-      prompt: promptContent,
-      sevenD: runData.seven_d,
-      scores: {
-        clarity: scores.clarity,
-        execution: scores.execution,
-        ambiguity: scores.ambiguity,
-        business_fit: scores.business_fit,
-        composite: scores.composite,
-      },
-      metadata: {
-        runId: runData.id,
-        moduleId: runData.module_id,
-        orgId: runData.org_id,
-        userId: runData.user_id,
-        createdAt: runData.started_at,
-        version: '1.0.0',
-      },
-      telemetry: {
-        tokens_used: runData.tokens_in + runData.tokens_out,
-        duration_ms: runData.finished_at ? 
-          new Date(runData.finished_at).getTime() - new Date(runData.started_at).getTime() : 0,
-        cost_usd: runData.cost_usd,
-      },
+    // Generează bundle-ul
+    const telemetry = {
+      run_id: runId,
+      model: runData.model,
+      tokens_used: runData.tokens_used,
+      cost_usd: runData.cost_usd,
+      duration_ms: runData.duration_ms,
+      score: score,
+      verdict: runData.telemetry?.verdict || 'unknown',
+      domain: parameterSet7D.domain,
+      export_formats: allowedFormats,
+      exported_by: orgId
     };
 
-    // Generate bundle
-    const bundle = await generateBundle(bundleContent, formats, whiteLabel);
+    const bundleResult = await generateBundle({
+      runId,
+      moduleId,
+      orgId,
+      parameterSet7D,
+      promptText,
+      mdReport,
+      jsonPayload,
+      telemetry,
+      licenseNotice: licenseNotice || `© PromptForge v3 — Generated ${new Date().toISOString()}`,
+      formats: allowedFormats,
+      version,
+      watermark
+    });
 
-    // Assert DoD compliance
-    try {
-      assertDoD({
-        score: scores.composite,
-        manifestPresent: true,
-        checksumValid: bundle.bundleChecksum.length === 64, // SHA256 length
-        telemetryClean: true, // No PII in telemetry
-      });
-    } catch (error) {
-      if (error instanceof APIError) {
-        return NextResponse.json(
-          { error: error.apiCode, message: error.message },
-          { status: error.code }
-        );
-      }
-      throw error;
+    // Validează bundle-ul
+    const validation = validateBundle(bundleResult.outputDir, allowedFormats);
+    if (!validation.isValid) {
+      throw new Error(`Bundle validation failed: ${validation.errors.join(', ')}`);
     }
 
-    // Save bundle record to database
-    const bundleRecord = await createBundle({
-      run_id: runId,
-      org_id: orgId,
-      formats: formats,
-      manifest: bundle.manifest,
-      checksum: bundle.bundleChecksum,
-      license_notice: bundle.manifest.metadata.license_notice,
-      storage_path: `bundles/${orgId}/${bundle.manifest.bundle_id}`,
+    // Upload în Supabase Storage
+    const uploads = await uploadToStorage(
+      bundleResult.outputDir,
+      orgId,
+      moduleId,
+      runId
+    );
+
+    // Salvează în DB
+    await saveBundleToDb(runId, bundleResult.manifest, uploads);
+
+    // Cleanup director temporar
+    fs.rmSync(bundleResult.outputDir, { recursive: true, force: true });
+
+    return NextResponse.json({
+      success: true,
+      bundle: {
+        id: bundleResult.manifest.bundle_id,
+        runId,
+        moduleId,
+        version: bundleResult.manifest.version,
+        formats: allowedFormats,
+        checksum: bundleResult.manifest.bundle_checksum,
+        artifacts: bundleResult.manifest.artifacts.length,
+        exportedAt: bundleResult.manifest.exported_at
+      },
+      paths: uploads,
+      manifest: bundleResult.manifest,
+      zipInfo: bundleResult.zipInfo,
+      metadata: {
+        score,
+        domain: parameterSet7D.domain,
+        totalFiles: validation.files.length,
+        hasWatermark: !!watermark
+      }
     });
 
-    // In production, upload files to storage (Supabase Storage, S3, etc.)
-    // For now, we'll return the bundle data directly
+  } catch (error) {
+    console.error('Export Bundle API error:', error);
 
-    // Convert files to base64 for JSON response
-    const filesData: Record<string, string> = {};
-    bundle.files.forEach((buffer, filename) => {
-      filesData[filename] = buffer.toString('base64');
+    if (error instanceof Error) {
+      if (error.message.includes('ENTITLEMENT_REQUIRED')) {
+        return NextResponse.json(
+          { 
+            error: 'ENTITLEMENT_REQUIRED',
+            message: error.message
+          },
+          { status: 403 }
+        );
+      }
+
+      if (error.message.includes('not found') || error.message.includes('access denied')) {
+        return NextResponse.json(
+          { error: 'RUN_NOT_FOUND', message: error.message },
+          { status: 404 }
+        );
+      }
+
+      if (error.message.includes('SCORE_TOO_LOW')) {
+        return NextResponse.json(
+          { error: 'SCORE_TOO_LOW', message: error.message },
+          { status: 400 }
+        );
+      }
+    }
+
+    return NextResponse.json(
+      { 
+        error: 'INTERNAL_ERROR',
+        message: 'Failed to generate export bundle'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// GET pentru informații despre export capabilities
+export async function GET(req: NextRequest) {
+  const orgId = new URL(req.url).searchParams.get('orgId');
+  
+  if (!orgId) {
+    return NextResponse.json(
+      { error: 'orgId parameter is required' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const flags = await getEntitlements(orgId);
+    
+    const capabilities = {
+      baseFormats: ['txt', 'md'],
+      availableFormats: ['txt', 'md'],
+      restrictions: []
+    };
+
+    if (flags.canExportJSON) {
+      capabilities.availableFormats.push('json');
+    } else {
+      capabilities.restrictions.push('JSON export requires Pro plan');
+    }
+
+    if (flags.canExportPDF) {
+      capabilities.availableFormats.push('pdf');
+    } else {
+      capabilities.restrictions.push('PDF export requires Pro plan');
+    }
+
+    if (flags.canExportBundleZip) {
+      capabilities.availableFormats.push('zip');
+    } else {
+      capabilities.restrictions.push('ZIP bundle requires Enterprise plan');
+    }
+
+    return NextResponse.json({
+      orgId,
+      capabilities,
+      requirements: {
+        minimumScore: 80,
+        runStatus: 'success'
+      }
     });
 
-  return createSuccessResponse({
-    bundleId: bundleRecord.id,
-    manifest: bundle.manifest,
-    checksum: bundle.bundleChecksum,
-    files: filesData,
-    metadata: {
-      formats: formats,
-      file_count: bundle.files.size,
-      total_size: Array.from(bundle.files.values()).reduce((sum, buf) => sum + buf.length, 0),
-      white_label: whiteLabel,
-      created_at: bundleRecord.created_at,
-    },
-    telemetry: {
-      processing_time: Date.now() - startTime,
-      run_id: runId,
-      score: scores.composite,
-    },
-  });
-};
-
-// Export with error handler wrapper
-export const POST = withErrorHandler(_POST);
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to check export capabilities' },
+      { status: 500 }
+    );
+  }
+}
