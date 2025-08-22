@@ -182,7 +182,7 @@ Generate the optimized ${demoInput} strategy now.`
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-mono relative">
+    <div className="min-h-screen bg-black text-white font-mono relative">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -194,8 +194,6 @@ Generate the optimized ${demoInput} strategy now.`
 
 
       <main id="main" tabIndex={-1}>
-        {/* Static Grid Background */}
-        <div className="grid-static"></div>
         
         <section className="w-full py-24 bg-black">
           <div className="container mx-auto max-w-[1240px] px-6 text-center">
@@ -391,6 +389,7 @@ Generate the optimized ${demoInput} strategy now.`
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </section>
 
