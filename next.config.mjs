@@ -18,11 +18,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  i18n: {
-    locales: ['en'],
-    defaultLocale: 'en',
-    localeDetection: false, // nu mai face auto-detect
-  },
+
   async headers() {
     return [
       {

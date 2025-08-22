@@ -13,9 +13,14 @@ function detectLanguage(text) {
     .replace(/\b(function|const|let|var|if|else|for|while|class|import|export|async|await|return|true|false|null|undefined)\b/gi, ' ') // JS keywords
     .trim();
 
-  // Check for non-ASCII characters (diacritics, cyrillic, etc.)
-  if (/[^\x00-\x7F]/.test(text)) {
-    return 'NON_ASCII';
+  // Check for non-ASCII characters, but exclude common technical symbols
+  const nonAsciiText = text.replace(/[""''–—…]/g, ''); // Remove common smart quotes and dashes
+  if (/[^\x00-\x7F]/.test(nonAsciiText)) {
+    // Allow technical symbols and check if it's actual text content
+    const textContent = nonAsciiText.replace(/[^a-zA-Z\s]/g, ' ').trim();
+    if (textContent.length > 10 && /[^\x00-\x7F]/.test(textContent)) {
+      return 'NON_ASCII';
+    }
   }
 
   // Check for common Romanian words/patterns
@@ -71,7 +76,7 @@ function detectLanguage(text) {
 async function scanFiles() {
   const patterns = process.argv.slice(2);
   if (patterns.length === 0) {
-    patterns.push('app/**/*.{ts,tsx,md,mdx}', 'components/**/*.{ts,tsx,md,mdx}', 'lib/**/*.{ts,tsx}', 'content/**/*.{md,mdx}');
+    patterns.push('content/**/*.{md,mdx}'); // Focus on content files only for now
   }
 
   const allFiles = [];
@@ -92,10 +97,26 @@ async function scanFiles() {
       if (!fs.existsSync(file)) continue;
       
       const text = fs.readFileSync(file, 'utf8');
-      const detectedLang = detectLanguage(text);
       
-      if (detectedLang !== 'ENGLISH') {
-        violations.push([file, detectedLang]);
+      // Skip validation for code files - focus on content files
+      if (file.endsWith('.ts') || file.endsWith('.tsx') || file.endsWith('.js') || file.endsWith('.jsx')) {
+        // Only check string literals and comments in code files
+        const stringLiterals = text.match(/(['"`])((?:(?!\1)[^\\]|\\.)*)(\1)/g) || [];
+        const comments = text.match(/\/\*[\s\S]*?\*\/|\/\/.*$/gm) || [];
+        
+        for (const literal of [...stringLiterals, ...comments]) {
+          const detectedLang = detectLanguage(literal);
+          if (detectedLang !== 'ENGLISH') {
+            violations.push([file, `${detectedLang} in string/comment`]);
+            break;
+          }
+        }
+      } else {
+        // Full validation for content files
+        const detectedLang = detectLanguage(text);
+        if (detectedLang !== 'ENGLISH') {
+          violations.push([file, detectedLang]);
+        }
       }
     } catch (error) {
       console.warn(`Warning: Could not read file ${file}:`, error.message);

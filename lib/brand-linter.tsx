@@ -17,19 +17,19 @@ export interface LexiconRule {
 
 // PROMPTFORGE™ Brand Lexicon - Banned words and replacements
 export const BANNED_LEXICON: LexiconRule[] = [
-  { banned: "ușor", replacement: "rapid, operațional, controlabil", severity: "high" },
+  { banned: "ușor", replacement: "rapid, operational, controllable", severity: "high" },
   { banned: "easy", replacement: "rapid, operational, controllable", severity: "high" },
-  { banned: "magie", replacement: "sistemic, logic, validat", severity: "high" },
+  { banned: "magie", replacement: "systematic, logical, validated", severity: "high" },
   { banned: "magic", replacement: "systematic, logical, validated", severity: "high" },
-  { banned: "inspirațional", replacement: "strategic, funcțional, scalabil", severity: "medium" },
+  { banned: "inspirațional", replacement: "strategic, functional, scalable", severity: "medium" },
   { banned: "inspirational", replacement: "strategic, functional, scalable", severity: "medium" },
-  { banned: "schimbă-ți viața", replacement: "optimizează structura, rulează sistemul", severity: "high" },
+  { banned: "schimbă-ți viața", replacement: "optimize structure, run the system", severity: "high" },
   { banned: "change your life", replacement: "optimize structure, run the system", severity: "high" },
-  { banned: "fără efort", replacement: "executabil în < 5m, configurabil", severity: "medium" },
+  { banned: "fără efort", replacement: "executable in < 5m, configurable", severity: "medium" },
   { banned: "effortless", replacement: "executable in < 5m, configurable", severity: "medium" },
-  { banned: "convingător", replacement: "cu scor AI ≥ 80/100", severity: "medium" },
+  { banned: "convingător", replacement: "with AI score ≥ 80/100", severity: "medium" },
   { banned: "convincing", replacement: "with AI score ≥ 80/100", severity: "medium" },
-  { banned: "transformă", replacement: "optimizează, sistematizează", severity: "medium" },
+  { banned: "transformă", replacement: "optimize, systematize", severity: "medium" },
   { banned: "transform", replacement: "optimize, systematize", severity: "medium" },
 ]
 

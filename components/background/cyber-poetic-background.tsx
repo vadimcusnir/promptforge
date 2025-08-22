@@ -561,7 +561,7 @@ export function CyberPoeticBackground() {
         </div>
         {/* Static quote display */}
         <div className="absolute top-10 left-10 text-sm text-orange-400 opacity-60 max-w-xs">
-          Promptul e cheia tăcută care face AI-ul să deschidă ușa exact unde vrei să intri.
+          The prompt is the silent key that makes AI open the door exactly where you want to enter.
         </div>
       </div>
     )

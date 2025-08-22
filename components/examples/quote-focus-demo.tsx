@@ -1,21 +1,25 @@
 "use client"
 
 import React, { useState } from "react"
-import { useQuoteFocus, useQuoteDisplay } from "@/hooks/use-quote-focus"
+import { useQuoteFocus } from "@/lib/quote-focus"
+import { QuoteBlock } from "@/components/ui/QuoteBlock"
 
 /**
- * Example component demonstrating how to use the quote focus system
+ * Example component demonstrating the UI Overlay Policy system
  * 
  * Usage patterns:
  * 1. Manual control with useQuoteFocus hook
- * 2. Automatic control with useQuoteDisplay hook
+ * 2. Automatic control with QuoteBlock component
+ * 
+ * Enforces SSOT from ruleset.yml with performance requirements:
+ * - Route transitions ≤50ms
+ * - Quote focus activation ≤20ms
+ * - GPU-accelerated animations
+ * - Reduced motion support
  */
 export function QuoteFocusDemo() {
-  const { isQuoteFocusActive, toggleQuoteFocus } = useQuoteFocus()
+  const { active, set } = useQuoteFocus()
   const [showAutoQuote, setShowAutoQuote] = useState(false)
-
-  // This automatically manages quote focus when showAutoQuote changes
-  useQuoteDisplay(showAutoQuote)
 
   return (
     <div className="space-y-6 p-6 glass-card max-w-2xl mx-auto">
@@ -29,17 +33,17 @@ export function QuoteFocusDemo() {
           This reduces overlay opacity and matrix token visibility by ~35%.
         </p>
         <button
-          onClick={toggleQuoteFocus}
+          onClick={() => set(!active)}
           className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            isQuoteFocusActive
+            active
               ? "bg-gold-industrial text-black"
               : "bg-gray-700 text-white hover:bg-gray-600"
           }`}
         >
-          {isQuoteFocusActive ? "Deactivate" : "Activate"} Quote Focus
+          {active ? "Deactivate" : "Activate"} Quote Focus
         </button>
         <div className="text-xs text-gray-400">
-          Status: {isQuoteFocusActive ? "🎯 Focus Active" : "⚪ Normal Mode"}
+          Status: {active ? "🎯 Focus Active" : "⚪ Normal Mode"}
         </div>
       </div>
 
@@ -58,12 +62,12 @@ export function QuoteFocusDemo() {
         </button>
         
         {showAutoQuote && (
-          <blockquote className="bg-black/40 border-l-4 border-gold-industrial pl-4 py-3 italic text-gray-200">
+          <QuoteBlock className="italic text-gray-200">
             "When this quote appears, the background automatically dims and matrix tokens 
             fade to improve readability and focus. This creates a cinematic effect 
             that draws attention to important content."
-            <footer className="text-gold-industrial text-sm mt-2">— Quote Focus System</footer>
-          </blockquote>
+            <footer className="text-gold-industrial text-sm mt-2">— UI Overlay Policy System</footer>
+          </QuoteBlock>
         )}
       </div>
 
@@ -72,8 +76,9 @@ export function QuoteFocusDemo() {
         <h4 className="font-semibold text-white mb-2">Implementation Guide</h4>
         <div className="text-sm text-gray-300 space-y-2">
           <p><strong>For manual control:</strong> Use <code className="bg-gray-800 px-1 rounded">useQuoteFocus()</code> hook</p>
-          <p><strong>For automatic control:</strong> Use <code className="bg-gray-800 px-1 rounded">useQuoteDisplay(isVisible)</code> hook</p>
-          <p><strong>Route-specific opacity:</strong> System automatically adjusts based on current route</p>
+          <p><strong>For automatic control:</strong> Use <code className="bg-gray-800 px-1 rounded">QuoteBlock</code> component</p>
+          <p><strong>UI Overlay Policy:</strong> SSOT enforcement with GPU acceleration and reduced motion support</p>
+          <p><strong>Performance:</strong> &lt;50ms route transitions, &lt;20ms quote focus activation</p>
         </div>
       </div>
     </div>

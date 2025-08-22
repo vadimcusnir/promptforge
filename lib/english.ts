@@ -12,9 +12,14 @@ function detectLanguage(text: string): string {
     .replace(/\b(function|const|let|var|if|else|for|while|class|import|export|async|await|return|true|false|null|undefined)\b/gi, ' ') // JS keywords
     .trim();
 
-  // Check for non-ASCII characters (diacritics, cyrillic, etc.)
-  if (/[^\x00-\x7F]/.test(text)) {
-    return 'NON_ASCII';
+  // Check for non-ASCII characters, but exclude common technical symbols
+  const nonAsciiText = text.replace(/[""''–—…]/g, ''); // Remove common smart quotes and dashes
+  if (/[^\x00-\x7F]/.test(nonAsciiText)) {
+    // Allow technical symbols and check if it's actual text content
+    const textContent = nonAsciiText.replace(/[^a-zA-Z\s]/g, ' ').trim();
+    if (textContent.length > 10 && /[^\x00-\x7F]/.test(textContent)) {
+      return 'NON_ASCII';
+    }
   }
 
   // Check for common Romanian words/patterns

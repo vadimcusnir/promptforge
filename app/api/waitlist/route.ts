@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const supabase = getSupabaseClient();
     
     if (!supabase) {
-      return NextResponse.json({ error: "Service temporarily unavailable." }, { status: 503 });
+      return NextResponse.json({ error: "Waitlist service temporarily unavailable." }, { status: 503 });
     }
 
     const { email, name, org_id } = await req.json();

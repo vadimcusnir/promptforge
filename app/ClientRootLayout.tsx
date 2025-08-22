@@ -7,7 +7,8 @@ import { Footer } from "@/components/ui/footer"
 import { Header } from "@/components/Header"
 import { useFontsReady } from "@/hooks/use-fonts-ready"
 import { useRouteOverlay } from "@/hooks/use-route-overlay"
-import { QuoteFocusProvider } from "@/hooks/use-quote-focus"
+import { QuoteFocusProvider } from "@/lib/quote-focus"
+import { OverlayController } from "@/components/OverlayController"
 import { useEffect } from "react"
 import MatrixTokens from "@/components/background/matrix-tokens"
 import "./globals.css"
@@ -107,6 +108,7 @@ html {
         <div id="bg-overlay" />
         <div id="app" data-layer="ui">
           <QuoteFocusProvider>
+            <OverlayController />
             <ClientReady />
             <MatrixTokens />
             <Header />

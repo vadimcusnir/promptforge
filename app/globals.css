@@ -146,39 +146,31 @@
   #bg-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+    pointer-events: none;
+    background: var(--overlay-gradient, transparent);
+    opacity: var(--overlay-opacity, 0.35);
     z-index: 1;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 220ms ease, transform 260ms ease; /* GPU-friendly transitions */
+    will-change: transform, opacity; /* Hardware acceleration hint */
   }
 
-  /* Route-specific overlay opacity control */
-  #bg-overlay.route-marketing {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+  /* Route-specific overlay gradients from ruleset.yml */
+  .route-generator { 
+    --overlay-gradient: radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.0), rgba(0,0,0,.6)); 
+  }
+  .route-marketing { 
+    --overlay-gradient: linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.7)); 
+  }
+  .route-dashboard  { 
+    --overlay-gradient: linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.65)); 
   }
 
-  #bg-overlay.route-generator {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.40), rgba(0,0,0,0.48));
+  /* Quote focus state classes from ruleset.yml */
+  .quote-active { 
+    --overlay-opacity: 0.55; 
   }
-
-  #bg-overlay.route-dashboard {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.28), rgba(0,0,0,0.35));
-  }
-
-  /* Quote focus mode - reduces background intensity */
-  #bg-overlay.quote-active {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.25));
-  }
-
-  #bg-overlay.route-marketing.quote-active {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.40));
-  }
-
-  #bg-overlay.route-generator.quote-active {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.35));
-  }
-
-  #bg-overlay.route-dashboard.quote-active {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.25));
+  .quote-focus  { 
+    --tokens-opacity: 0.28; 
   }
 
   /* Noise texture variant - can be enabled with additional class */
@@ -188,9 +180,30 @@
   }
 
   /* Matrix tokens opacity control for quote focus */
-  .matrix-tokens.quote-focus {
-    opacity: 0.65; /* ~35% reduction from normal opacity */
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  .matrix-tokens { 
+    opacity: var(--tokens-opacity, 1); 
+    transition: opacity 160ms ease; 
+  }
+
+  /* QuoteBlock component styling */
+  .pf-quote {
+    position: relative;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid rgba(209, 169, 84, 0.3);
+    background: rgba(26, 26, 26, 0.5);
+    backdrop-filter: blur(8px);
+    border-radius: 0.5rem;
+    transition: all 160ms ease;
+    cursor: pointer;
+  }
+
+  .pf-quote:hover,
+  .pf-quote[data-focus="on"] {
+    border-left-color: #d1a954;
+    background: rgba(26, 26, 26, 0.7);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(209, 169, 84, 0.1);
   }
 
   #app {
@@ -1572,8 +1585,15 @@
     backface-visibility: hidden;
   }
 
-  /* Reduced Motion Support - Complete Animation Disable */
+  /* UI Overlay Policy: Reduced Motion Support */
   @media (prefers-reduced-motion: reduce) {
+    #bg-overlay { 
+      transition: none !important; 
+    }
+    .matrix-tokens {
+      transition: none !important;
+    }
+    
     /* Disable all background layers completely */
     .cyber-bg-layer-2,
     .cyber-bg-layer-3,

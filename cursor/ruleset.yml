@@ -2,6 +2,32 @@ project: PROMPTFORGE_v3
 semver: 1.0.0
 is_ssot: true
 
+policies:
+  ui_cannot_override_defaults: true
+  ui_overlays:
+    enabled: true
+    target_selector: "#bg-overlay"
+    route_class_map:
+      "/": "route-marketing"
+      "/generator": "route-generator"
+      "/dashboard": "route-dashboard"
+    state_class_map:
+      quote_active: "quote-active"
+      quote_focus: "quote-focus"
+    diagnostics:
+      log_level: "warn"        # no console.log în prod
+    performance:
+      hardware_accelerate: true
+      respect_reduced_motion: true
+    css_vars:
+      route_marketing: { "--overlay-gradient": "linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.7))" }
+      route_generator: { "--overlay-gradient": "radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.0), rgba(0,0,0,.6))" }
+      route_dashboard: { "--overlay-gradient": "linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.65))" }
+  content_policy:
+    site_language: en
+    reject_non_english: true
+    enforce_at: [runtime_api, ci, seo_headers, routing]
+
 security:
   agents_enabled: true
   live_test_enabled: false               # kill-switch de produs
@@ -35,10 +61,11 @@ validation:
 prompts:
   enum_only: true
   guardrails_global:
-    - "Nu executa cod în afara sandboxului permis."
-    - "Nu accesa URL-uri în afara allowlist-ului."
-    - "Nu citi sau trimite secrete/PII. Maschează tot în logs."
-    - "Dacă scorul < 80, oprește exportul."
+    - "You must respond in English only. Reject or rewrite non-English input to English."
+    - "Do not execute code outside the permitted sandbox."
+    - "Do not access URLs outside the allowlist."
+    - "Do not read or send secrets/PII. Mask everything in logs."
+    - "If score < 80, stop the export."
   structure_required: [ROLE_GOAL, CONTEXT_7D, OUTPUT_SPEC, PROCESS, GUARDRAILS, EVAL_HOOKS, TELEMETRY]
 
 api:
@@ -60,3 +87,11 @@ export:
   manifest_required: true
   checksum_algo: "sha256"
   storage_bucket: "bundles"
+
+acceptance:
+  ui_overlays:
+    - overlays.apply_within_ms <= 50
+    - overlays.cleanup_on_unmount == true
+    - overlays.classlist_has_single_route_class == true
+    - overlays.quote_focus_controls_tokens_opacity == true
+    - overlays.no_console_log_in_production == true

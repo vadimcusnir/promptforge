@@ -35,11 +35,11 @@ export default function ComingSoonPage() {
       if (res.ok && data.ok) {
         setSubmitted(true);
       } else {
-        setError(data.error || "A apărut o eroare. Te rugăm să încerci din nou.");
+        setError(data.error || "An error occurred. Please try again.");
       }
     } catch (err) {
       console.error("Waitlist error:", err);
-      setError("A apărut o eroare. Te rugăm să încerci din nou.");
+      setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +74,7 @@ export default function ComingSoonPage() {
             >
               <input
                 type="text"
-                placeholder="Numele tău"
+                placeholder="Your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="flex-1 px-4 py-4 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
@@ -83,7 +83,7 @@ export default function ComingSoonPage() {
               />
               <input
                 type="email"
-                placeholder="Email-ul tău"
+                placeholder="Your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 px-4 py-4 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
@@ -99,7 +99,7 @@ export default function ComingSoonPage() {
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full"></div>
-                    Se procesează...
+                    Processing...
                   </div>
                 ) : (
                   "Join the Waitlist"
@@ -114,7 +114,7 @@ export default function ComingSoonPage() {
             )}
 
             <p className="mt-6 text-sm text-white/70 max-w-md">
-              Primești acces anticipat + bundle demo gratuit. Fără spam. Doar Forge.
+              Get early access + free demo bundle. No spam. Just Forge.
             </p>
 
             <a
@@ -131,12 +131,12 @@ export default function ComingSoonPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
-            <h2 className="text-2xl font-bold mb-4 text-white">Mulțumim că te-ai alăturat!</h2>
+            <h2 className="text-2xl font-bold mb-4 text-white">Thank you for joining!</h2>
             <p className="text-white/80 leading-relaxed">
-              Vei fi printre primii care vor accesa PromptForge și vei primi bundle-ul demo gratuit.
+              You'll be among the first to access PromptForge and receive the free demo bundle.
             </p>
             <p className="mt-4 text-sm text-white/60">
-              Verifică-ți email-ul pentru confirmarea înregistrării.
+              Check your email for registration confirmation.
             </p>
           </div>
         )}
