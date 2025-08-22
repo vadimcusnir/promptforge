@@ -8,6 +8,7 @@ const BLOCKED_LOCALES = ['ro','ru','fr','de','es','it','pt','uk','zh','ja','tr',
 // Routes we always allow (assets, api, coming-soon, auth etc.)
 const PUBLIC_ALLOW = [
   "/coming-soon",
+  "/demo-bundle",
   "/api",
   "/favicon",
   "/og",
@@ -145,7 +146,7 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // Run middleware on all app router pages, excluding static files
+    // Match all routes except Next.js internals and static files
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
