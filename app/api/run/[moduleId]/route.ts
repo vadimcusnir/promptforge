@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
-import { RunModuleRequestSchema, normalize7D, APIError, assertDoR, assertDoD } from "@/lib/server/validation";
+import { RunModuleRequestSchema, normalize7D, assertDoR, assertDoD } from "@/lib/server/validation";
 import { optimizePrompt, runGPTTest, tightenPrompt } from "@/lib/server/openai";
 import { generateBundle, type BundleContent } from "@/lib/server/bundle";
 import { 
@@ -13,6 +13,16 @@ import {
   createBundle,
   checkRateLimit 
 } from "@/lib/server/supabase";
+import {
+  createErrorResponse,
+  createValidationErrorResponse,
+  createRateLimitResponse,
+  createSuccessResponse,
+  createEntitlementErrorResponse,
+  create7DErrorResponse,
+  createCORSResponse,
+  withErrorHandler
+} from "@/lib/server/errors";
 
 /**
  * POST /api/run/[moduleId] - Enterprise API Orchestrator
@@ -20,41 +30,31 @@ import {
  * Public API endpoint for Enterprise customers with API access.
  * Requires valid API key, enforces rate limits, and provides full workflow.
  */
-export async function POST(
+const _POST = async (
   request: NextRequest,
   { params }: { params: { moduleId: string } }
-) {
+) => {
   const startTime = Date.now();
   const { moduleId } = params;
 
-  try {
-    // Parse and validate request
-    const body = await request.json();
-    const validation = RunModuleRequestSchema.safeParse({
-      ...body,
-      moduleId,
-    });
-    
-    if (!validation.success) {
-      return NextResponse.json(
-        { 
-          error: "INPUT_SCHEMA_MISMATCH",
-          details: validation.error.errors 
-        },
-        { status: 422 }
-      );
-    }
+  // Parse and validate request
+  const body = await request.json();
+  const validation = RunModuleRequestSchema.safeParse({
+    ...body,
+    moduleId,
+  });
+  
+  if (!validation.success) {
+    return createValidationErrorResponse(validation.error);
+  }
 
-    const { sevenD, prompt, testMode = false, exportFormats = [] } = validation.data;
+  const { sevenD, prompt, testMode = false, exportFormats = [] } = validation.data;
 
-    // Authenticate via API key
-    const apiKeyHeader = request.headers.get('x-pf-key');
-    if (!apiKeyHeader) {
-      return NextResponse.json(
-        { error: "UNAUTHENTICATED", message: "API key required in x-pf-key header" },
-        { status: 401 }
-      );
-    }
+  // Authenticate via API key
+  const apiKeyHeader = request.headers.get('x-pf-key');
+  if (!apiKeyHeader) {
+    return createErrorResponse('UNAUTHENTICATED', null, 'API key required in x-pf-key header');
+  }
 
     // Hash API key for lookup
     const keyHash = createHash('sha256').update(apiKeyHeader).digest('hex');
@@ -346,81 +346,40 @@ export async function POST(
         .digest('hex')
         .substring(0, 16);
 
-      return NextResponse.json({
-        hash: responseHash,
-        run_id: run.id,
-        module_id: moduleId,
-        seven_d: normalized7D,
-        prompt: finalPrompt,
-        status: 'success',
-        scores: scores || null,
-        artifacts: artifacts,
-        bundle: bundleData || null,
-        telemetry: {
-          tokens_used: totalUsage.tokens_in + totalUsage.tokens_out,
-          cost_usd: totalUsage.cost_usd,
-          duration_ms: Date.now() - startTime,
-          processing_steps: artifacts.length,
-        },
-        metadata: {
-          api_version: '1.0.0',
-          module_name: module.name,
-          created_at: new Date().toISOString(),
-        },
-      });
-
-    } catch (error) {
-      // Update run with error status
-      await updateRunStatus(run.id, 'error');
-      throw error;
-    }
+    return createSuccessResponse({
+      hash: responseHash,
+      run_id: run.id,
+      module_id: moduleId,
+      seven_d: normalized7D,
+      prompt: finalPrompt,
+      status: 'success',
+      scores: scores || null,
+      artifacts: artifacts,
+      bundle: bundleData || null,
+      telemetry: {
+        tokens_used: totalUsage.tokens_in + totalUsage.tokens_out,
+        cost_usd: totalUsage.cost_usd,
+        duration_ms: Date.now() - startTime,
+        processing_steps: artifacts.length,
+      },
+      metadata: {
+        api_version: '1.0.0',
+        module_name: module.name,
+        created_at: new Date().toISOString(),
+      },
+    });
 
   } catch (error) {
-    console.error("[API Run] Error:", error);
-
-    // Handle specific API errors
-    if (error instanceof APIError) {
-      return NextResponse.json(
-        {
-          error: error.apiCode,
-          message: error.message,
-          details: error.details
-        },
-        { status: error.code }
-      );
-    }
-
-    // Handle OpenAI API errors
-    if (error && typeof error === 'object' && 'status' in error) {
-      return NextResponse.json(
-        {
-          error: "OPENAI_API_ERROR",
-          message: "OpenAI service temporarily unavailable"
-        },
-        { status: 503 }
-      );
-    }
-
-    // Generic error fallback
-    return NextResponse.json(
-      { 
-        error: "INTERNAL_RUN_ERROR",
-        message: "Module execution failed" 
-      },
-      { status: 500 }
-    );
+    // Update run with error status
+    await updateRunStatus(run.id, 'error');
+    throw error;
   }
-}
+};
+
+// Export with error handler wrapper
+export const POST = withErrorHandler(_POST);
 
 // OPTIONS handler for CORS
 export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': 'https://chatgpt-prompting.com',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, x-pf-key, x-org-id',
-      'Access-Control-Max-Age': '86400',
-    },
-  });
+  return createCORSResponse();
 }

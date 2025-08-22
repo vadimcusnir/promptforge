@@ -176,38 +176,7 @@ export const RunModuleRequestSchema = z.object({
   exportFormats: z.array(z.enum(['txt', 'md', 'json', 'pdf', 'zip'])).optional(),
 });
 
-/**
- * Standard API error types
- */
-export const API_ERRORS = {
-  INVALID_7D_ENUM: { code: 400, message: 'Invalid 7D enum value' },
-  MISSING_OUTPUT_FORMAT: { code: 400, message: 'Missing required output_format' },
-  UNAUTHENTICATED: { code: 401, message: 'Authentication required' },
-  ENTITLEMENT_REQUIRED: { code: 403, message: 'Insufficient permissions' },
-  MODULE_NOT_FOUND: { code: 404, message: 'Module not found' },
-  RULESET_CONFLICT: { code: 409, message: 'Ruleset validation failed' },
-  INPUT_SCHEMA_MISMATCH: { code: 422, message: 'Input validation failed' },
-  SEVEND_SIGNATURE_MISMATCH: { code: 422, message: '7D signature mismatch' },
-  RATE_LIMITED: { code: 429, message: 'Rate limit exceeded' },
-  INTERNAL_RUN_ERROR: { code: 500, message: 'Internal execution error' },
-} as const;
-
-export type APIErrorCode = keyof typeof API_ERRORS;
-
-export class APIError extends Error {
-  public readonly code: number;
-  public readonly apiCode: APIErrorCode;
-  public readonly details?: any;
-
-  constructor(apiCode: APIErrorCode, details?: any) {
-    const error = API_ERRORS[apiCode];
-    super(error.message);
-    this.name = 'APIError';
-    this.code = error.code;
-    this.apiCode = apiCode;
-    this.details = details;
-  }
-}
+// Legacy API errors - use lib/server/errors.ts for new implementations
 
 /**
  * DoR/DoD validation helpers
