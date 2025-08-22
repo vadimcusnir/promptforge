@@ -91,11 +91,27 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="pt-8 border-t border-gray-800">
-          <p className="text-sm opacity-70 text-center md:text-left">
-            {COPY.copyright}
-          </p>
+        {/* Trust Line */}
+        <div className="pt-6 border-t border-gray-800">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4 text-sm opacity-80">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                GDPR‑ready
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                Stripe verified
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                Telemetry only (no raw prompts)
+              </span>
+            </div>
+            <p className="text-sm opacity-70">
+              {COPY.copyright}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -205,8 +205,8 @@ Generate the optimized ${demoInput} strategy now.`
             <span className="pf-corner br"></span>
             
             <h1 className="text-h1 text-[#ECFEFF]">
-              The 1st <span className="kw" data-glitch>
-                <span className="kw__text">Cognitive OS</span>
+              The <span className="kw" data-glitch>
+                <span className="kw__text">Cognitive‑OS</span>
                 <span className="kw__glitch" aria-hidden="true"></span>
               </span> for Prompts
             </h1>
@@ -214,40 +214,35 @@ Generate the optimized ${demoInput} strategy now.`
             <div className="pf-yard-line"></div>
             
             <h2 className="text-h2 text-[#ECFEFF]/80 mb-8">
-              50 <span className="kw" data-glitch>
-                <span className="kw__text">Modules</span>
-                <span className="kw__glitch" aria-hidden="true"></span>
-              </span> × <span className="kw" data-glitch>
-                <span className="kw__text">7D</span>
-                <span className="kw__glitch" aria-hidden="true"></span>
-              </span> Engine → <span className="kw" data-glitch>
-                <span className="kw__text">Export</span>
-                <span className="kw__glitch" aria-hidden="true"></span>
-              </span> scored ≥80
+              Turn 4h into 30m. 50 modules + 7D Engine → score ≥80, export‑ready.
             </h2>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
               <button
                 className="btn-notched text-lg px-8 py-4"
                 onClick={() => GTMEvents.heroCTA()}
+                aria-label="Start the Forge - Begin free trial"
               >
                 Start the Forge
               </button>
               <button
                 className="btn text-lg px-8 py-4"
                 onClick={() => GTMEvents.seeModules()}
+                aria-label="View all available modules"
               >
                 View Modules
               </button>
             </div>
             
-            <div className="flex items-center justify-center gap-2 mt-6">
+            <div className="text-micro text-[#ECFEFF]/70 text-center mt-4 mb-6">
+              Start free — no credit card. Upgrade to Pro (€29/mo) for PDF/JSON; Enterprise for .zip.
+            </div>
+            
+            <div className="flex items-center justify-center gap-2 flex-wrap">
               <span className="proof-chip">TTA &lt; 60s</span>
-              <span className="proof-chip"><span className="kw" data-glitch>
-                <span className="kw__text">Score</span>
-                <span className="kw__glitch" aria-hidden="true"></span>
-              </span> ≥ 80</span>
-              <span className="proof-chip">.md/.json/.pdf</span>
+              <span className="proof-chip">Score ≥ 80</span>
+              <span className="proof-chip">Export .md/.pdf/.json</span>
+              <span className="proof-chip text-xs bg-gradient-to-r from-purple-500/20 to-blue-500/20 border-purple-400/30">.zip on Enterprise</span>
             </div>
           </div>
         </section>
@@ -276,9 +271,11 @@ Generate the optimized ${demoInput} strategy now.`
                   <Input
                     value={demoInput}
                     onChange={(e) => setDemoInput(e.target.value)}
-                    placeholder="Enter your topic..."
+                    placeholder="fintech KYC, ecommerce CRO, healthcare intake..."
                     className="glass-effect text-[#ECFEFF] placeholder:text-[#ECFEFF]/50"
+                    aria-label="Enter topic for prompt generation"
                   />
+                  <p className="text-xs text-[#ECFEFF]/50 mt-1">No data stored.</p>
                   
                   <div className="flex gap-2 flex-wrap">
                     <select 
@@ -287,8 +284,9 @@ Generate the optimized ${demoInput} strategy now.`
                       defaultValue=""
                     >
                       <option value="" disabled>Choose preset...</option>
-                      <option value="B2B onboarding">B2B onboarding</option>
-                      <option value="FinTech KYC">FinTech KYC</option>
+                      <option value="fintech KYC">fintech KYC</option>
+                      <option value="ecommerce CRO">ecommerce CRO</option>
+                      <option value="healthcare intake">healthcare intake</option>
                     </select>
                   </div>
                   
@@ -303,13 +301,14 @@ Generate the optimized ${demoInput} strategy now.`
                 
                 <div className="space-y-4">
                   <label className="block text-micro text-[#ECFEFF]/80 mb-2">Generated Prompt</label>
-                  <div className="glass-effect p-4 h-48 overflow-y-auto">
+                  <div className="glass-effect p-4 h-48 overflow-y-auto" aria-live="polite">
                     {demoOutput ? (
                       <div className="relative">
                         <pre className="text-micro text-[#ECFEFF] whitespace-pre-wrap font-mono">{demoOutput}</pre>
                         <button
                           onClick={() => navigator.clipboard.writeText(demoOutput)}
                           className="absolute top-2 right-2 btn px-2 py-1 text-xs"
+                          aria-label="Copy generated prompt to clipboard"
                         >
                           Copy
                         </button>
@@ -388,12 +387,25 @@ Generate the optimized ${demoInput} strategy now.`
                 <p className="text-micro text-[#ECFEFF]/80 mb-4 line-clamp-2">{module.description}</p>
                 
                 <div className="flex items-center justify-between">
-                  <div className="flex gap-1">
-                    {module.outputs.map((output) => (
-                      <span key={output} className="text-xs px-2 py-1 bg-[#ECFEFF]/10 text-[#ECFEFF]/70 rounded">
-                        .{output}
-                      </span>
-                    ))}
+                  <div className="flex gap-1 flex-wrap">
+                    {module.outputs.map((output) => {
+                      const isPro = output === 'json' || output === 'pdf'
+                      const isEnterprise = output === 'zip'
+                      return (
+                        <span 
+                          key={output} 
+                          className={`text-xs px-2 py-1 rounded flex items-center gap-1 ${
+                            isPro ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
+                            isEnterprise ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' :
+                            'bg-[#ECFEFF]/10 text-[#ECFEFF]/70'
+                          }`}
+                        >
+                          .{output}
+                          {isPro && <span className="text-xs opacity-70">Pro</span>}
+                          {isEnterprise && <span className="text-xs opacity-70">Ent</span>}
+                        </span>
+                      )
+                    })}
                   </div>
                   <button className="btn text-xs px-3 py-1">
                     Specifications
@@ -438,16 +450,18 @@ Generate the optimized ${demoInput} strategy now.`
             <div className="space-y-6 text-lg text-lead-gray">
               <p>
                 Every prompt you tweak manually costs you <span className="text-red-400 font-bold">2-4 hours</span>.
-                Multiply that by a team, by a week, by a quarter.
-                <br />
                 That's <span className="text-red-400 font-bold">months of lost market share</span>.
               </p>
 
               <p className="text-xl text-white font-bold">
                 Your competitor isn't smarter. He's just faster.
-                <br />
-                He's shipping AI features while you're still debating synonyms.
               </p>
+              
+              <div className="mt-8">
+                <button className="btn-notched text-lg px-8 py-4" onClick={() => GTMEvents.heroCTA()}>
+                  Run a 30‑minute test
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -500,7 +514,17 @@ Generate the optimized ${demoInput} strategy now.`
                   <Download className="w-8 h-8 text-gold-industrial animated-bounce" />
                 </div>
                 <h3 className="font-bold text-white mb-2">Export Without Friction</h3>
-                <p className="text-sm text-lead-gray">.txt, .md, .json, .pdf, Enterprise .zip</p>
+                <div className="text-sm text-lead-gray space-y-1">
+                  <div>.txt, .md (Free)</div>
+                  <div className="flex items-center gap-2">
+                    <span>.json, .pdf</span>
+                    <span className="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded">Pro</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>.zip bundles</span>
+                    <span className="text-xs px-2 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-400/30 rounded">Enterprise</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -800,13 +824,18 @@ const prompt = await generatePrompt({
             </div>
           </div>
           
-          <div className="border-t border-[#ECFEFF]/15 mt-12 pt-8 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <span className="proof-chip">Stripe</span>
-              <span className="proof-chip">GDPR</span>
-              <span className="proof-chip">SOC 2</span>
+          <div className="border-t border-[#ECFEFF]/15 mt-12 pt-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+              <div className="flex items-center gap-4 text-micro">
+                <span className="proof-chip">GDPR‑ready</span>
+                <span className="proof-chip">Stripe verified</span>
+                <span className="proof-chip">Telemetry only (no raw prompts)</span>
+              </div>
+              <div className="text-micro text-[#ECFEFF]/80 font-semibold">
+                Start free • Pro €29/mo • Cancel anytime.
+              </div>
             </div>
-            <div className="text-micro text-[#ECFEFF]/60">
+            <div className="text-micro text-[#ECFEFF]/60 text-center">
               © 2024 PromptForge. All rights reserved.
             </div>
           </div>

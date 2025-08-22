@@ -7,9 +7,9 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chatgpt-prompting.com'),
-  title: "The 1st Cognitive OS for Prompts - PromptForge™",
+  title: "PromptForge v3 — Cognitive OS for Prompts",
   description:
-    "50 modules orchestrated by 7D Engine. Production-ready prompts scored ≥80, exportable in minutes. TTA < 60s.",
+    "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
   generator: "Prompt-Forge™",
   keywords:
     "AI prompts, prompt engineering, ChatGPT prompts, AI tools, prompt generator, cyber aesthetic, terminal interface",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     apple: "/favicon-48x48.png",
   },
   openGraph: {
-    title: "The 1st Cognitive OS for Prompts - PromptForge™",
-    description: "50 modules orchestrated by 7D Engine. Production-ready prompts scored ≥80, exportable in minutes.",
+    title: "PromptForge v3 — Cognitive OS for Prompts",
+    description: "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
     type: "website",
     url: "https://chatgpt-prompting.com",
     siteName: "Prompt-Forge™",
@@ -49,8 +49,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The 1st Cognitive OS for Prompts - PromptForge™",
-    description: "50 modules orchestrated by 7D Engine. Production-ready prompts scored ≥80, exportable in minutes.",
+    title: "PromptForge v3 — Cognitive OS for Prompts",
+    description: "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
     images: ["/og-image.png"],
     creator: "@ai_idei",
   },

@@ -57,8 +57,6 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
               className="hidden md:flex items-center space-x-4 text-micro"
               aria-label="Primary navigation"
             >
-              <span className="text-[#ECFEFF]/60">$29/mo</span>
-              <span className="text-[#ECFEFF]/30">|</span>
               <a
                 href="/generator"
                 className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
@@ -68,7 +66,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
               </a>
               <a
                 href="/pricing"
-                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
+                className="text-[#ECFEFF] font-bold bg-[#0891B2]/20 px-3 py-1 rounded hover:bg-[#0891B2]/30 transition-colors"
                 aria-current={pathname === '/pricing' ? "page" : undefined}
               >
                 {COPY.nav_pricing.toUpperCase()}
