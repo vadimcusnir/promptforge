@@ -1,4 +1,6 @@
 import { Header } from "@/components/Header"
+import { Footer } from "@/components/Footer"
+import { StratifiedBackground } from "@/components/background/StratifiedBackground"
 import type React from "react"
 import type { Metadata } from "next"
 import ClientRootLayout from "./ClientRootLayout"
@@ -76,7 +78,10 @@ export default async function RootLayout({
       </head>
       <body>
         <div className="pf-pitch" aria-hidden="true" />
+        <StratifiedBackground />
+        <Header />
         <ClientRootLayout>{children}</ClientRootLayout>
+        <Footer />
       </body>
     </html>
   )

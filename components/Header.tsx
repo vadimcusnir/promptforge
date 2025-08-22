@@ -30,11 +30,7 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
   return (
     <header 
       role="banner"
-      className="fixed inset-x-0 top-0 h-16 z-50 bg-black/70 backdrop-blur border-b border-amber-200/20 will-change-transform backface-visibility-hidden"
-      style={{ 
-        willChange: 'transform',
-        backfaceVisibility: 'hidden'
-      }}
+      className="site-header"
     >
       <div className="container mx-auto max-w-[1240px] px-6">
         {/* Breadcrumbs */}
@@ -49,76 +45,52 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
           </div>
         )}
 
-        <div className="flex items-center justify-between h-16 leading-16">
-          {/* Logo */}
+        <div className="flex items-center justify-between h-16">
+          {/* Logo (Rună Digitală) */}
           <div className="flex items-center">
-            <div className="text-h3 text-[#ECFEFF] font-bold">{COPY.brand}</div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 border-2 border-[#FFD700] rotate-45 flex items-center justify-center">
+                <span className="text-[#FFD700] text-xs font-black rotate-[-45deg]">Ψ</span>
+              </div>
+              <div className="text-xl text-[#FFD700] font-black font-mono">{COPY.brand}</div>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-8">
             {/* Desktop Navigation */}
             <nav 
-              className="hidden md:flex items-center space-x-4 text-micro"
+              className="hidden md:flex items-center space-x-6 text-sm font-mono"
               aria-label="Primary navigation"
             >
               <a
-                href="/generator"
-                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
-                aria-current={pathname === '/generator' ? "page" : undefined}
+                href="/modules"
+                className="text-white hover:text-[#FFD700] transition-colors duration-150"
+                aria-current={pathname === '/modules' ? "page" : undefined}
               >
-                {COPY.nav_generator.toUpperCase()}
+                Modules
               </a>
               <a
                 href="/pricing"
-                className="text-[#ECFEFF] font-bold bg-[#0891B2]/20 px-3 py-1 rounded hover:bg-[#0891B2]/30 transition-colors"
+                className="text-white hover:text-[#FFD700] transition-colors duration-150"
                 aria-current={pathname === '/pricing' ? "page" : undefined}
               >
-                {COPY.nav_pricing.toUpperCase()}
-              </a>
-              <a
-                href="/modules"
-                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
-                aria-current={pathname === '/modules' ? "page" : undefined}
-              >
-                {COPY.nav_modules.toUpperCase()}
+                Pricing
               </a>
               <a
                 href="/docs"
-                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
+                className="text-white hover:text-[#FFD700] transition-colors duration-150"
                 aria-current={pathname === '/docs' ? "page" : undefined}
               >
-                {COPY.nav_docs.toUpperCase()}
+                Docs
+              </a>
+              <a
+                href="/login"
+                className="text-white hover:text-[#FFD700] transition-colors duration-150"
+                aria-current={pathname === '/login' ? "page" : undefined}
+              >
+                Login
               </a>
             </nav>
-
-            {/* Desktop Auth Actions */}
-            <div className="hidden md:flex items-center space-x-2">
-              {isAuthenticated ? (
-                <Button
-                  className="btn-primary text-micro px-4 py-2"
-                  aria-label="Go to Dashboard"
-                  data-gate="pro"
-                >
-                  {COPY.nav_dashboard.toUpperCase()}
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    className="btn-secondary text-micro px-4 py-2"
-                    aria-label="Sign in to Prompt-Forge"
-                  >
-                    {COPY.nav_signin.toUpperCase()}
-                  </Button>
-                  <Button
-                    className="btn-primary text-micro px-4 py-2"
-                    aria-label="Start using Prompt-Forge"
-                    data-gate="pro"
-                  >
-                    {COPY.cta_start.toUpperCase()}
-                  </Button>
-                </>
-              )}
-            </div>
 
             {/* Mobile Menu Button */}
             <button

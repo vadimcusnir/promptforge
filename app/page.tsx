@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { AnimatedCodeBlock } from "@/components/ui/animated-code-block"
 import { BrandLinterAlert } from "@/components/ui/brand-linter-alert"
+import { GlitchText } from "@/components/ui/glitch-text"
 
 import { SkipLink } from "@/components/SkipLink"
 import { brandLinter, type BrandLinterResult } from "@/lib/brand-linter"
@@ -87,6 +88,12 @@ export default function HomePage() {
     "The key is in not spending time, but in investing it.",
     "Lost time is never found again.",
     "In the middle of difficulty lies opportunity.",
+  ]
+
+  const AI_ML_TERMS = [
+    "neural", "vector", "token", "layer", "weight", "bias", "epoch", "batch",
+    "gradient", "backprop", "attention", "transformer", "embedding", "logit",
+    "softmax", "relu", "lstm", "gru", "conv", "pool"
   ]
 
   const rotatingTitles = [
@@ -182,7 +189,11 @@ Generate the optimized ${demoInput} strategy now.`
   }, [])
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono relative">
+    <>
+      {/* Header Spacer */}
+      <div className="site-header-spacer"></div>
+      
+      <div className="min-h-screen bg-black text-white font-mono relative">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -195,79 +206,170 @@ Generate the optimized ${demoInput} strategy now.`
 
       <main id="main" tabIndex={-1}>
         
-        <section className="w-full py-24 bg-black">
-          <div className="container mx-auto max-w-[1240px] px-6 text-center">
-            <h1 className="console-typing text-h1 text-white font-mono mb-8">
-              The <span className="text-[#FFD700]" data-glitch>
-                Cognitive‑OS
-              </span> for Prompts
-            </h1>
-            
-            <h2 className="text-h2 text-gray-300 mb-12 font-mono">
-              Turn 4h into 30m. 50 modules + 7D Engine → score ≥80, export‑ready.
-            </h2>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-12">
-              <button
-                className="btn-notched text-base px-8 py-3"
-                onClick={() => GTMEvents.heroCTA()}
-                aria-label="Start the Forge - Begin free trial"
-              >
-                Start the Forge
-              </button>
-              <button
-                className="bg-transparent border-2 border-gray-600 text-gray-300 hover:border-[#FFD700] hover:text-[#FFD700] font-mono text-base px-8 py-3 transition-all"
-                onClick={() => GTMEvents.seeModules()}
-                aria-label="View all available modules"
-              >
-                View Modules
-              </button>
+        {/* HERO SECTION - Wireframe ASCII Implementation */}
+        <section className="w-full py-20 bg-black relative overflow-hidden min-h-[90vh] flex items-center">
+          <div className="container-1440 px-6 relative z-10">
+            <div className="grid-12 items-center">
+              {/* Hero Content - 10 columns centered */}
+              <div className="col-span-12 lg:col-span-10 lg:col-start-2 text-center">
+                
+                {/* ANIMAȚIE CENTRALĂ / SIMBOL RITUALIC */}
+                <div className="mb-12 relative">
+                  <div className="w-32 h-32 mx-auto mb-8 relative">
+                    {/* Rună Digitală Glitch */}
+                    <div className="absolute inset-0 border-4 border-[#FFD700] rotate-45 animate-pulse"></div>
+                    <div className="absolute inset-2 border-2 border-[#00FF7F] animate-spin" style={{animationDuration: '8s'}}></div>
+                    <div className="absolute inset-4 bg-[#FFD700] opacity-20 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-black text-[#FFD700]">
+                      <GlitchText text="Ψ" glitchRate={0.05} />
+                    </div>
+                  </div>
+                  
+                  {/* Clepsidra de Cuvinte */}
+                  <div className="text-[#FF8C42] text-xs font-mono opacity-70 animate-pulse">
+                    {legendaryQuotes[currentQuoteIndex]}
+                  </div>
+                </div>
+
+                {/* H1: Max 7 cuvinte */}
+                <h1 className="text-[clamp(2.625rem,7vw,4.5rem)] text-white font-black mb-6 leading-[0.9] tracking-tight">
+                  The <GlitchText 
+                    text="Cognitive-OS" 
+                    className="text-[#FFD700]"
+                    glitchRate={0.03}
+                  /> for Prompts
+                </h1>
+                
+                {/* Subhead: Rezultat + Mecanism */}
+                <h2 className="text-[clamp(1.125rem,2.5vw,1.75rem)] text-gray-300 mb-12 font-medium leading-[1.3] max-w-4xl mx-auto">
+                  Turn <span className="text-[#FF4444] font-bold">4h of tweaking</span> into <span className="text-[#00FF7F] font-bold">30m of execution</span>.<br/>
+                  <span className="text-white">50 Modules + 7D Engine → Scored ≥80 & Export-ready.</span>
+                </h2>
+                
+                {/* CTA System */}
+                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-12 mb-6">
+                  <button
+                    className="btn-power-cta relative group"
+                    onClick={() => GTMEvents.heroCTA()}
+                    aria-label="Start the Forge - Begin transformation"
+                  >
+                    <span className="relative z-10">START THE FORGE</span>
+                  </button>
+                  
+                  <button
+                    className="bg-transparent border-2 border-gray-600 text-gray-300 hover:border-[#FFD700] hover:text-[#FFD700] font-mono text-lg px-12 py-4 transition-all duration-200 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)]"
+                    onClick={() => GTMEvents.demoBundlePreview()}
+                    aria-label="Preview Demo - See sample output"
+                  >
+                    Preview Demo
+                  </button>
+                </div>
+                
+                {/* Microcopy sub butoane */}
+                <div className="text-sm text-gray-500 text-center mb-12 font-mono">
+                  no credit card · upgrade anytime
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Background: Rună + Tokens + Citat */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {/* Tokens verzi */}
+            <div className="absolute top-20 left-20 text-[#00FF7F] text-xs font-mono opacity-30 animate-pulse">
+              {AI_ML_TERMS.slice(0, 5).map((term, i) => (
+                <div key={i} className="mb-2" style={{animationDelay: `${i * 0.5}s`}}>{term}</div>
+              ))}
+            </div>
+            <div className="absolute bottom-20 right-20 text-[#00FF7F] text-xs font-mono opacity-30 animate-pulse">
+              {AI_ML_TERMS.slice(5, 10).map((term, i) => (
+                <div key={i} className="mb-2" style={{animationDelay: `${i * 0.7}s`}}>{term}</div>
+              ))}
             </div>
             
-            <div className="text-sm text-gray-400 text-center mt-6 mb-8 font-mono">
-              Start free — no credit card. Upgrade to Pro (€29/mo) for PDF/JSON; Enterprise for .zip.
+            {/* Citat portocaliu */}
+            <div className="absolute top-1/3 right-10 text-[#FF8C42] text-sm font-mono opacity-40 max-w-xs transform rotate-12 animate-pulse">
+              "The key is in not spending time, but in investing it."
             </div>
-            
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono">TTA &lt; 60s</span>
-              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono">Score ≥ 80</span>
-              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono">Export .md/.pdf/.json</span>
-              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono opacity-75">.zip on Enterprise</span>
+          </div>
+        </section>
+        
+        {/* PROOF BAR */}
+        <section className="w-full py-6 bg-black border-t border-[#FFD700]/20">
+          <div className="container-1440 px-6">
+            <div className="flex items-center justify-center gap-8 flex-wrap">
+              <div className="flex items-center gap-2 text-[#00FF7F] font-mono text-sm">
+                <span className="w-2 h-2 bg-[#00FF7F] rounded-full animate-pulse"></span>
+                TTA &lt; 60s
+              </div>
+              <div className="flex items-center gap-2 text-[#FFD700] font-mono text-sm">
+                <span className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse"></span>
+                Score ≥80
+              </div>
+              <div className="flex items-center gap-2 text-[#FF8C42] font-mono text-sm">
+                <span className="w-2 h-2 bg-[#FF8C42] rounded-full animate-pulse"></span>
+                Export .md/.pdf/.json
+              </div>
+              <div className="flex items-center gap-2 text-purple-400 font-mono text-sm opacity-75">
+                <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                .zip Enterprise
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* SOCIAL PROOF ROW */}
+        <section className="w-full py-8 bg-black border-t border-gray-800">
+          <div className="container-1440 px-6">
+            <div className="flex items-center justify-center gap-8 flex-wrap">
+              {/* Badge-uri de încredere */}
+              <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                Stripe Verified
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                GDPR Ready
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                <span className="w-2 h-2 bg-[#FFD700] rounded-full"></span>
+                Early Users
+              </div>
             </div>
           </div>
         </section>
 
-        {/* See it in action - Micro Demo */}
+        {/* Invocation Protocol - Micro Demo */}
         <section className="w-full py-24 bg-black">
           <div className="container mx-auto max-w-[1240px] px-6">
-            <h2 className="text-h2 text-[#FFD700] text-center mb-4 font-mono">See it in action</h2>
+            <h2 className="text-h2 text-[#FFD700] text-center mb-4 font-mono">Witness the Invocation</h2>
             <p className="text-body text-gray-300 text-center mb-12 font-mono">
-              Enter any topic and watch the <span className="text-[#FFD700]">7D Engine</span> generate a professional prompt
+              Speak your intent and watch the <span className="text-[#FFD700]">7D Engine</span> manifest reality through structured cognition
             </p>
             
             <div className="max-w-4xl mx-auto">
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <label className="block text-sm text-[#FFD700] mb-2 font-mono">Topic</label>
+                  <label className="block text-sm text-[#FFD700] mb-2 font-mono">Intent Vector</label>
                   <Input
                     value={demoInput}
                     onChange={(e) => setDemoInput(e.target.value)}
-                    placeholder="fintech KYC, ecommerce CRO, healthcare intake..."
-                    className="console-theme text-[#FFD700] placeholder:text-gray-500 font-mono"
-                    aria-label="Enter topic for prompt generation"
+                    placeholder="fintech protocols, cognitive architectures, reality frameworks..."
+                    className="h-11 bg-black border-2 border-gray-700 text-[#FFD700] placeholder:text-gray-500 font-mono text-base px-4 focus:border-[#FFD700] focus:outline-none transition-colors"
+                    aria-label="Enter your intent for reality manifestation"
                   />
-                  <p className="text-xs text-gray-500 mt-1 font-mono">No data stored.</p>
+                  <p className="text-xs text-gray-500 mt-1 font-mono">Your intentions remain encrypted.</p>
                   
                   <div className="flex gap-2 flex-wrap">
                     <select 
-                      className="console-theme text-[#FFD700] text-sm px-3 py-2 font-mono"
+                      className="h-10 bg-black border-2 border-gray-700 text-[#FFD700] text-sm px-3 font-mono focus:border-[#FFD700] focus:outline-none transition-colors"
                       onChange={(e) => setDemoInput(e.target.value)}
                       defaultValue=""
                     >
-                      <option value="" disabled>Choose preset...</option>
-                      <option value="fintech KYC">fintech KYC</option>
-                      <option value="ecommerce CRO">ecommerce CRO</option>
-                      <option value="healthcare intake">healthcare intake</option>
+                      <option value="" disabled>Select Protocol...</option>
+                      <option value="fintech protocols">fintech protocols</option>
+                      <option value="cognitive architectures">cognitive architectures</option>
+                      <option value="reality frameworks">reality frameworks</option>
                     </select>
                   </div>
                   
@@ -276,12 +378,12 @@ Generate the optimized ${demoInput} strategy now.`
                     disabled={isGenerating || !demoInput.trim()}
                     className="btn-notched w-full"
                   >
-                    {isGenerating ? "Generating..." : "Generate"}
+{isGenerating ? "Invoking..." : "Invoke Reality"}
                   </button>
                 </div>
                 
                 <div className="space-y-4">
-                  <label className="block text-sm text-[#FFD700] mb-2 font-mono">Generated Prompt</label>
+                  <label className="block text-sm text-[#FFD700] mb-2 font-mono">Manifested Reality</label>
                   <div className="console-theme p-4 h-48 overflow-y-auto" aria-live="polite">
                     {demoOutput ? (
                       <div className="relative">
@@ -289,13 +391,13 @@ Generate the optimized ${demoInput} strategy now.`
                         <button
                           onClick={() => navigator.clipboard.writeText(demoOutput)}
                           className="absolute top-2 right-2 bg-[#FFD700] text-black px-2 py-1 text-xs font-mono hover:bg-yellow-400 transition-colors"
-                          aria-label="Copy generated prompt to clipboard"
+                          aria-label="Copy manifested reality to clipboard"
                         >
-                          Copy
+                          Extract
                         </button>
                       </div>
                     ) : (
-                      <p className="text-gray-500 italic font-mono">Your prompt will appear here...</p>
+                      <p className="text-gray-500 italic font-mono">Your reality manifestation will appear here...</p>
                     )}
                   </div>
                   
@@ -303,7 +405,7 @@ Generate the optimized ${demoInput} strategy now.`
                     className="bg-transparent border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black w-full text-sm font-mono py-2 transition-all"
                     onClick={() => GTMEvents.demoBundlePreview()}
                   >
-                    Preview a Bundle
+Witness the Protocol
                   </button>
                 </div>
               </div>
@@ -311,85 +413,117 @@ Generate the optimized ${demoInput} strategy now.`
           </div>
         </section>
 
-        {/* Module Grid */}
+        {/* Module Grid - 12 Column System */}
         <section className="w-full py-24 bg-black">
-          <div className="container mx-auto max-w-[1240px] px-6">
-            <h2 className="text-h2 text-[#FFD700] text-center mb-4 font-mono">
-              Module Grid
-            </h2>
-            <p className="text-body text-gray-300 text-center mb-12 font-mono">
-              50 semantic modules orchestrated by the <span className="text-[#FFD700]">7D</span> Parameter Engine
-            </p>
-          
-            <div className="flex flex-wrap gap-4 justify-center mb-8">
-              <select className="console-theme text-[#FFD700] text-sm px-3 py-2 font-mono">
-                <option>Vector (All)</option>
-                <option>V1 - Strategy</option>
-                <option>V2 - Content</option>
-                <option>V3 - Analysis</option>
-              </select>
-              <input 
-                type="text" 
-                placeholder="Search modules..." 
-                className="console-theme text-[#FFD700] placeholder:text-gray-500 text-sm px-3 py-2 font-mono"
-              />
-              <select className="console-theme text-[#FFD700] text-sm px-3 py-2 font-mono">
-                <option>Output (All)</option>
-                <option>Spec</option>
-                <option>Playbook</option>
-                <option>JSON</option>
-                <option>PDF</option>
-              </select>
-            </div>
-          
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {[
-              { id: "M01", vector: "V1", title: "Strategic Planning", description: "Generate comprehensive strategic plans", outputs: ["md", "json", "pdf"] },
-              { id: "M02", vector: "V1", title: "Market Analysis", description: "Deep market research and insights", outputs: ["md", "json"] },
-              { id: "M03", vector: "V2", title: "Content Strategy", description: "Content planning and execution", outputs: ["md", "pdf"] },
-              { id: "M04", vector: "V2", title: "Brand Messaging", description: "Consistent brand communication", outputs: ["md", "json", "pdf"] },
-              { id: "M05", vector: "V3", title: "Data Analysis", description: "Statistical analysis and reporting", outputs: ["json", "pdf"] },
-              { id: "M06", vector: "V3", title: "Performance Metrics", description: "KPI tracking and optimization", outputs: ["json", "pdf"] },
-              { id: "M07", vector: "V1", title: "Risk Assessment", description: "Comprehensive risk evaluation", outputs: ["md", "pdf"] },
-              { id: "M08", vector: "V2", title: "User Research", description: "User behavior and preferences", outputs: ["md", "json"] },
-            ].map((module) => (
-              <div key={module.id} className="bg-black border-2 border-[#FFD700] p-4 hover:bg-[#FFD700]/5 transition-all">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="bg-black border border-[#FFD700] text-[#FFD700] px-2 py-1 text-xs font-mono">{module.id}</span>
-                  <span className="text-xs text-[#FFD700] font-mono">{module.vector}</span>
-                </div>
-                
-                <h3 className="text-lg text-white mb-2 font-mono">{module.title}</h3>
-                <p className="text-sm text-gray-400 mb-4 font-mono">{module.description}</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-1 flex-wrap">
-                    {module.outputs.map((output) => {
-                      const isPro = output === 'json' || output === 'pdf'
-                      const isEnterprise = output === 'zip'
-                      return (
-                        <span 
-                          key={output} 
-                          className={`text-xs px-2 py-1 font-mono flex items-center gap-1 min-w-[60px] justify-center ${
-                            isPro ? 'bg-blue-900/30 text-blue-300 border border-blue-500' :
-                            isEnterprise ? 'bg-purple-900/30 text-purple-300 border border-purple-500' :
-                            'bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]'
-                          }`}
-                        >
-                          .{output}
-                          {isPro && <span className="text-xs opacity-70">Pro</span>}
-                          {isEnterprise && <span className="text-xs opacity-70">Ent</span>}
-                        </span>
-                      )
-                    })}
-                  </div>
-                  <button className="bg-transparent border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black text-xs px-3 py-1 font-mono transition-all">
-                    Specs
-                  </button>
+          <div className="container-1440 px-6">
+            <div className="grid-12">
+              {/* Header - Full Width */}
+              <div className="col-span-12 text-center mb-12">
+                <h2 className="text-[clamp(1.75rem,4vw,2.25rem)] text-[#FFD700] mb-4 font-black font-mono">
+                  Module Grid
+                </h2>
+                <p className="text-[clamp(1rem,2vw,1.125rem)] text-gray-300 font-mono max-w-3xl mx-auto">
+                  50 semantic modules orchestrated by the <span className="text-[#FFD700] font-bold">7D Parameter Engine</span>
+                </p>
+              </div>
+
+              {/* Filters - Centered */}
+              <div className="col-span-12 flex flex-wrap gap-4 justify-center mb-12">
+                <select className="h-11 bg-black border-2 border-[#FFD700]/30 text-[#FFD700] text-sm px-4 font-mono focus:border-[#FFD700] focus:outline-none transition-all hover:border-[#FFD700]/70">
+                  <option>Vector (All)</option>
+                  <option>V1 - Strategy</option>
+                  <option>V2 - Content</option>
+                  <option>V3 - Analysis</option>
+                </select>
+                <input 
+                  type="text" 
+                  placeholder="Search modules..." 
+                  className="h-11 bg-black border-2 border-[#FFD700]/30 text-[#FFD700] placeholder:text-gray-500 text-sm px-4 font-mono focus:border-[#FFD700] focus:outline-none transition-all hover:border-[#FFD700]/70 min-w-[200px]"
+                />
+                <select className="h-11 bg-black border-2 border-[#FFD700]/30 text-[#FFD700] text-sm px-4 font-mono focus:border-[#FFD700] focus:outline-none transition-all hover:border-[#FFD700]/70">
+                  <option>Output (All)</option>
+                  <option>Spec</option>
+                  <option>Playbook</option>
+                  <option>JSON</option>
+                  <option>PDF</option>
+                </select>
+              </div>
+
+              {/* Module Cards - Responsive Grid */}
+              <div className="col-span-12">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {[
+                    { id: "M01", vector: "V1", title: "Strategic Planning", description: "Generate comprehensive strategic plans", outputs: ["md", "json", "pdf"] },
+                    { id: "M02", vector: "V1", title: "Market Analysis", description: "Deep market research and insights", outputs: ["md", "json"] },
+                    { id: "M03", vector: "V2", title: "Content Strategy", description: "Content planning and execution", outputs: ["md", "pdf"] },
+                    { id: "M04", vector: "V2", title: "Brand Messaging", description: "Consistent brand communication", outputs: ["md", "json", "pdf"] },
+                    { id: "M05", vector: "V3", title: "Data Analysis", description: "Statistical analysis and reporting", outputs: ["json", "pdf"] },
+                    { id: "M06", vector: "V3", title: "Performance Metrics", description: "KPI tracking and optimization", outputs: ["json", "pdf"] },
+                    { id: "M07", vector: "V1", title: "Risk Assessment", description: "Comprehensive risk evaluation", outputs: ["md", "pdf"] },
+                    { id: "M08", vector: "V2", title: "User Research", description: "User behavior and preferences", outputs: ["md", "json"] },
+                    { id: "M09", vector: "V1", title: "Competitive Analysis", description: "Market positioning insights", outputs: ["md", "json", "pdf"] },
+                    { id: "M10", vector: "V2", title: "SEO Strategy", description: "Search optimization framework", outputs: ["md", "pdf"] },
+                    { id: "M11", vector: "V3", title: "A/B Testing", description: "Statistical testing protocols", outputs: ["json", "pdf"] },
+                    { id: "M12", vector: "V1", title: "Product Roadmap", description: "Strategic development planning", outputs: ["md", "json", "pdf"] },
+                  ].map((module) => (
+                    <div 
+                      key={module.id} 
+                      className="military-module group hover:border-[#FFD700] transition-all duration-300 h-full flex flex-col"
+                    >
+                      {/* Module Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="military-badge-small">
+                          {module.id}
+                        </div>
+                        <div className="text-xs text-[#FFD700] font-mono font-bold bg-[#FFD700]/10 px-2 py-1 border border-[#FFD700]/30">
+                          {module.vector}
+                        </div>
+                      </div>
+                      
+                      {/* Module Content */}
+                      <div className="flex-1 flex flex-col">
+                        <h3 className="text-lg text-white mb-3 font-mono font-bold group-hover:text-[#FFD700] transition-colors">
+                          {module.title}
+                        </h3>
+                        <p className="text-sm text-gray-400 mb-6 font-mono leading-relaxed flex-1">
+                          {module.description}
+                        </p>
+                        
+                        {/* Module Footer */}
+                        <div className="space-y-4">
+                          {/* Output Formats */}
+                          <div className="flex gap-2 flex-wrap">
+                            {module.outputs.map((output) => {
+                              const isPro = output === 'json' || output === 'pdf'
+                              const isEnterprise = output === 'zip'
+                              return (
+                                <span 
+                                  key={output} 
+                                  className={`text-xs px-2 py-1 font-mono font-bold border ${
+                                    isPro ? 'bg-blue-900/20 text-blue-300 border-blue-500/50' :
+                                    isEnterprise ? 'bg-purple-900/20 text-purple-300 border-purple-500/50' :
+                                    'bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/50'
+                                  }`}
+                                >
+                                  .{output}
+                                  {isPro && <span className="ml-1 text-[10px] opacity-70">Pro</span>}
+                                  {isEnterprise && <span className="ml-1 text-[10px] opacity-70">Ent</span>}
+                                </span>
+                              )
+                            })}
+                          </div>
+                          
+                          {/* Action Button */}
+                          <button className="w-full bg-transparent border-2 border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700] hover:text-black text-sm px-4 py-2 font-mono font-bold transition-all duration-200 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)]">
+                            View Specs
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
           </div>
         </section>
 
@@ -577,7 +711,7 @@ const prompt = await generatePrompt({
                     value={demoInput}
                     onChange={(e) => setDemoInput(e.target.value)}
                     placeholder="e.g., marketing strategy, code review, content creation..."
-                    className="military-input mb-3"
+                    className="h-11 bg-black border-2 border-gray-700 text-white placeholder:text-gray-500 text-base px-4 focus:border-[#FFD700] focus:outline-none transition-colors mb-3"
                   />
                   <div className="flex flex-wrap gap-2 mb-4">
                     {demoExamples.map((example) => (
@@ -758,66 +892,9 @@ const prompt = await generatePrompt({
       {/* Glitch Protocol v1 Script */}
       <script defer src="/glitch-keywords.js"></script>
       
-      {/* Footer */}
-      <footer className="border-t border-[#FFD700] py-16 bg-black">
-        <div className="container mx-auto max-w-[1240px] px-6">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Product</h3>
-              <ul className="space-y-2 text-sm text-gray-300 font-mono">
-                <li><a href="/generator" className="hover:text-[#FFD700] transition-colors">Generator</a></li>
-                <li><a href="/modules" className="hover:text-[#FFD700] transition-colors">Modules</a></li>
-                <li><a href="/pricing" className="hover:text-[#FFD700] transition-colors">Pricing</a></li>
-                <li><a href="/demo-bundle" className="hover:text-[#FFD700] transition-colors">Demo Bundle</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Docs</h3>
-              <ul className="space-y-2 text-sm text-gray-300 font-mono">
-                <li><a href="/docs" className="hover:text-[#FFD700] transition-colors">Documentation</a></li>
-                <li><a href="/docs/api" className="hover:text-[#FFD700] transition-colors">API Reference</a></li>
-                <li><a href="/docs/guides" className="hover:text-[#FFD700] transition-colors">Guides</a></li>
-                <li><a href="/docs/examples" className="hover:text-[#FFD700] transition-colors">Examples</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Pricing</h3>
-              <ul className="space-y-2 text-sm text-gray-300 font-mono">
-                <li><a href="/pricing" className="hover:text-[#FFD700] transition-colors">Plans</a></li>
-                <li><a href="/enterprise" className="hover:text-[#FFD700] transition-colors">Enterprise</a></li>
-                <li><a href="/contact" className="hover:text-[#FFD700] transition-colors">Contact Sales</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Legal</h3>
-              <ul className="space-y-2 text-sm text-gray-300 font-mono">
-                <li><a href="/privacy" className="hover:text-[#FFD700] transition-colors">Privacy Policy</a></li>
-                <li><a href="/terms" className="hover:text-[#FFD700] transition-colors">Terms of Service</a></li>
-                <li><a href="/security" className="hover:text-[#FFD700] transition-colors">Security</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-[#FFD700] mt-12 pt-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-4 text-sm">
-                <span className="bg-[#FFD700] text-black px-3 py-1 font-mono text-xs">STRIPE VERIFIED</span>
-                <span className="bg-[#FFD700] text-black px-3 py-1 font-mono text-xs">GDPR COMPLIANT</span>
-              </div>
-              <div className="text-sm text-[#FFD700] font-mono font-semibold">
-                Start free • Pro €29/mo • Cancel anytime.
-              </div>
-            </div>
-            <div className="text-sm text-gray-400 text-center font-mono">
-              © 2024 PromptForge. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
+
       </main>
     </div>
+    </>
   )
 }
