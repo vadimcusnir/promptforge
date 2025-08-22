@@ -27,11 +27,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/forge_v3_logo/forge_v3_logo_transparent.png", sizes: "32x32", type: "image/png" },
+      { url: "/forge_v3_logo/forge_v3_logo_transparent.png", sizes: "48x48", type: "image/png" },
     ],
-    shortcut: "/favicon-32x32.png",
-    apple: "/favicon-48x48.png",
+    shortcut: "/forge_v3_logo/forge_v3_logo_transparent.png",
+    apple: "/forge_v3_logo/forge_v3_logo_transparent.png",
   },
   openGraph: {
     title: "PromptForge v3 — Cognitive OS for Prompts",

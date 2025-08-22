@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { ExportBundleRequestSchema, APIError, assertDoD } from "@/lib/server/validation";
+import { ExportBundleRequestSchema, assertDoD } from "@/lib/server/validation";
 import { generateBundle, type BundleContent } from "@/lib/server/bundle";
 import { 
   verifyOrgMembership, 
@@ -8,6 +8,14 @@ import {
   checkRateLimit,
   supabaseAdmin 
 } from "@/lib/server/supabase";
+import {
+  createErrorResponse,
+  createValidationErrorResponse,
+  createRateLimitResponse,
+  createSuccessResponse,
+  createEntitlementErrorResponse,
+  withErrorHandler
+} from "@/lib/server/errors";
 
 /**
  * POST /api/export/bundle - Generate export artifacts (Pro+ / Enterprise gating)
@@ -15,36 +23,26 @@ import {
  * Creates bundle with multiple formats, manifest, checksum, and license notice.
  * Enforces entitlement-based format restrictions and saves to storage.
  */
-export async function POST(request: NextRequest) {
+const _POST = async (request: NextRequest) => {
   const startTime = Date.now();
 
-  try {
-    // Parse and validate request
-    const body = await request.json();
-    const validation = ExportBundleRequestSchema.safeParse(body);
-    
-    if (!validation.success) {
-      return NextResponse.json(
-        { 
-          error: "INPUT_SCHEMA_MISMATCH",
-          details: validation.error.errors 
-        },
-        { status: 422 }
-      );
-    }
+  // Parse and validate request
+  const body = await request.json();
+  const validation = ExportBundleRequestSchema.safeParse(body);
+  
+  if (!validation.success) {
+    return createValidationErrorResponse(validation.error);
+  }
 
-    const { runId, formats, whiteLabel = false } = validation.data;
+  const { runId, formats, whiteLabel = false } = validation.data;
 
-    // Extract authentication context
-    const orgId = request.headers.get('x-org-id');
-    const userId = request.headers.get('x-user-id');
-    
-    if (!orgId || !userId) {
-      return NextResponse.json(
-        { error: "UNAUTHENTICATED", message: "Missing authentication headers" },
-        { status: 401 }
-      );
-    }
+  // Extract authentication context
+  const orgId = request.headers.get('x-org-id');
+  const userId = request.headers.get('x-user-id');
+  
+  if (!orgId || !userId) {
+    return createErrorResponse('UNAUTHENTICATED', null, 'Missing authentication headers');
+  }
 
     // Verify organization membership
     const isMember = await verifyOrgMembership(orgId, userId);
@@ -229,47 +227,25 @@ export async function POST(request: NextRequest) {
       filesData[filename] = buffer.toString('base64');
     });
 
-    return NextResponse.json({
-      bundleId: bundleRecord.id,
-      manifest: bundle.manifest,
-      checksum: bundle.bundleChecksum,
-      files: filesData,
-      metadata: {
-        formats: formats,
-        file_count: bundle.files.size,
-        total_size: Array.from(bundle.files.values()).reduce((sum, buf) => sum + buf.length, 0),
-        white_label: whiteLabel,
-        created_at: bundleRecord.created_at,
-      },
-      telemetry: {
-        processing_time: Date.now() - startTime,
-        run_id: runId,
-        score: scores.composite,
-      },
-    });
+  return createSuccessResponse({
+    bundleId: bundleRecord.id,
+    manifest: bundle.manifest,
+    checksum: bundle.bundleChecksum,
+    files: filesData,
+    metadata: {
+      formats: formats,
+      file_count: bundle.files.size,
+      total_size: Array.from(bundle.files.values()).reduce((sum, buf) => sum + buf.length, 0),
+      white_label: whiteLabel,
+      created_at: bundleRecord.created_at,
+    },
+    telemetry: {
+      processing_time: Date.now() - startTime,
+      run_id: runId,
+      score: scores.composite,
+    },
+  });
+};
 
-  } catch (error) {
-    console.error("[Export Bundle API] Error:", error);
-
-    // Handle specific API errors
-    if (error instanceof APIError) {
-      return NextResponse.json(
-        {
-          error: error.apiCode,
-          message: error.message,
-          details: error.details
-        },
-        { status: error.code }
-      );
-    }
-
-    // Generic error fallback
-    return NextResponse.json(
-      { 
-        error: "INTERNAL_RUN_ERROR",
-        message: "Failed to generate export bundle" 
-      },
-      { status: 500 }
-    );
-  }
-}
+// Export with error handler wrapper
+export const POST = withErrorHandler(_POST);

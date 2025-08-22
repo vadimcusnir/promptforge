@@ -1810,6 +1810,35 @@
     animation: progressFill 3s ease-out forwards;
   }
 
+  /* PromptForge Logo Animations */
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      filter: drop-shadow(0 0 8px rgba(199, 168, 105, 0.3));
+    }
+    50% {
+      opacity: 0.8;
+      filter: drop-shadow(0 0 16px rgba(199, 168, 105, 0.6));
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
   /* Cyber-Poetic Terminal Aesthetic - Button System (Layer 8) */
   .btn-base {
     position: relative;

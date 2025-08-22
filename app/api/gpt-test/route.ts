@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { validateEnglishContent } from "@/lib/english";
-import { GPTTestRequestSchema, normalize7D, APIError, assertDoR, assertDoD } from "@/lib/server/validation";
+import { GPTTestRequestSchema, normalize7D, assertDoR, assertDoD } from "@/lib/server/validation";
 import { runGPTTest, tightenPrompt } from "@/lib/server/openai";
 import { 
   verifyOrgMembership, 
@@ -10,6 +10,15 @@ import {
   savePromptScore,
   checkRateLimit 
 } from "@/lib/server/supabase";
+import {
+  createErrorResponse,
+  createValidationErrorResponse,
+  createRateLimitResponse,
+  createSuccessResponse,
+  createEntitlementErrorResponse,
+  create7DErrorResponse,
+  withErrorHandler
+} from "@/lib/server/errors";
 
 /**
  * POST /api/gpt-test - Run GPT live test with scoring (Pro+ gating)
@@ -17,97 +26,62 @@ import {
  * Executes prompt against GPT, evaluates quality, applies auto-tighten if needed.
  * Requires Pro+ entitlements and saves telemetry for compliance.
  */
-export async function POST(request: NextRequest) {
+const _POST = async (request: NextRequest) => {
   const startTime = Date.now();
 
+  // Parse and validate request
+  const body = await request.json();
+  const validation = GPTTestRequestSchema.safeParse(body);
+  
+  if (!validation.success) {
+    return createValidationErrorResponse(validation.error);
+  }
+
+  const { prompt, sevenD, testCases = [] } = validation.data;
+
+  // Extract authentication context (in production, use proper auth)
+  const orgId = request.headers.get('x-org-id');
+  const userId = request.headers.get('x-user-id');
+  
+  if (!orgId || !userId) {
+    return createErrorResponse('UNAUTHENTICATED', null, 'Missing authentication headers');
+  }
+
+  // Verify organization membership
+  const isMember = await verifyOrgMembership(orgId, userId);
+  if (!isMember) {
+    return createEntitlementErrorResponse('organization_membership', undefined, 'Not a member of this organization');
+  }
+
+  // Check Pro+ entitlement for GPT testing
+  const canUseGptTest = await hasEntitlement(orgId, 'canUseGptTestReal', userId);
+  if (!canUseGptTest) {
+    return createEntitlementErrorResponse('canUseGptTestReal', undefined, 'Pro+ subscription required for GPT live testing');
+  }
+
+  // Rate limiting for GPT test (30 requests per minute per org)
+  const rateLimit = await checkRateLimit(`gpt-test:${orgId}`, 30);
+  if (!rateLimit.allowed) {
+    return createRateLimitResponse(rateLimit.remaining, rateLimit.resetTime, 'Rate limit exceeded for GPT testing');
+  }
+
+  // Validate English-only content
+  const englishValidation = validateEnglishContent({ prompt });
+  if (!englishValidation.isValid) {
+    return createErrorResponse('INVALID_CONTENT_LANGUAGE');
+  }
+
+  // Normalize 7D configuration (SSOT enforcement)
+  let normalized7D;
   try {
-    // Parse and validate request
-    const body = await request.json();
-    const validation = GPTTestRequestSchema.safeParse(body);
-    
-    if (!validation.success) {
-      return NextResponse.json(
-        { 
-          error: "INPUT_SCHEMA_MISMATCH",
-          details: validation.error.errors 
-        },
-        { status: 422 }
-      );
+    normalized7D = normalize7D(sevenD);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('INVALID_7D_ENUM:')) {
+      const field = error.message.split(':')[1];
+      return create7DErrorResponse(field);
     }
-
-    const { prompt, sevenD, testCases = [] } = validation.data;
-
-    // Extract authentication context (in production, use proper auth)
-    const orgId = request.headers.get('x-org-id');
-    const userId = request.headers.get('x-user-id');
-    
-    if (!orgId || !userId) {
-      return NextResponse.json(
-        { error: "UNAUTHENTICATED", message: "Missing authentication headers" },
-        { status: 401 }
-      );
-    }
-
-    // Verify organization membership
-    const isMember = await verifyOrgMembership(orgId, userId);
-    if (!isMember) {
-      return NextResponse.json(
-        { error: "ENTITLEMENT_REQUIRED", message: "Not a member of this organization" },
-        { status: 403 }
-      );
-    }
-
-    // Check Pro+ entitlement for GPT testing
-    const canUseGptTest = await hasEntitlement(orgId, 'canUseGptTestReal', userId);
-    if (!canUseGptTest) {
-      return NextResponse.json(
-        {
-          error: "ENTITLEMENT_REQUIRED",
-          message: "Pro+ subscription required for GPT live testing",
-          required_entitlement: "canUseGptTestReal"
-        },
-        { status: 403 }
-      );
-    }
-
-    // Rate limiting for GPT test (30 requests per minute per org)
-    const rateLimit = await checkRateLimit(`gpt-test:${orgId}`, 30);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { 
-          error: "RATE_LIMITED",
-          message: "Rate limit exceeded for GPT testing",
-          resetTime: rateLimit.resetTime
-        },
-        { status: 429 }
-      );
-    }
-
-    // Validate English-only content
-    const englishValidation = validateEnglishContent({ prompt });
-    if (!englishValidation.isValid) {
-      return NextResponse.json(
-        {
-          error: "INVALID_CONTENT_LANGUAGE",
-          message: "Content must be in English only"
-        },
-        { status: 422 }
-      );
-    }
-
-    // Normalize 7D configuration (SSOT enforcement)
-    let normalized7D;
-    try {
-      normalized7D = normalize7D(sevenD);
-    } catch (error) {
-      return NextResponse.json(
-        {
-          error: "INVALID_7D_ENUM",
-          message: error instanceof Error ? error.message : "7D validation failed"
-        },
-        { status: 400 }
-      );
-    }
+    return createErrorResponse('INVALID_7D_ENUM');
+  }
 
     // Assert DoR (Definition of Ready)
     try {
@@ -217,75 +191,42 @@ export async function POST(request: NextRequest) {
         throw error;
       }
 
-      // Determine verdict
-      const verdict = finalScores.composite >= 80 ? 'pass' : 
-                     finalScores.composite >= 60 ? 'partial' : 'fail';
+    // Determine verdict
+    const verdict = finalScores.composite >= 80 ? 'pass' : 
+                   finalScores.composite >= 60 ? 'partial' : 'fail';
 
-      return NextResponse.json({
-        runId: run.id,
-        verdict,
-        finalPrompt: finalPrompt !== prompt ? finalPrompt : undefined,
-        scores: {
-          clarity: finalScores.clarity,
-          execution: finalScores.execution,
-          ambiguity: finalScores.ambiguity,
-          business_fit: finalScores.business_fit,
-          composite: finalScores.composite,
-        },
-        breakdown: {
-          original_score: testResult.scores.composite,
-          tighten_applied: tightenAttempts > 0,
-          improvement: finalScores.composite - testResult.scores.composite,
-        },
-        sevenD: normalized7D,
-        telemetry: {
-          tokens_used: testResult.response.usage.total_tokens,
-          cost_usd: testResult.response.usage.cost_usd,
-          duration_ms: testResult.response.duration_ms,
-          processing_time: Date.now() - startTime,
-        },
-        model: testResult.response.model,
-      });
-
-    } catch (error) {
-      // Update run with error status
-      await updateRunStatus(run.id, 'error');
-      throw error;
-    }
+    return createSuccessResponse({
+      runId: run.id,
+      verdict,
+      finalPrompt: finalPrompt !== prompt ? finalPrompt : undefined,
+      scores: {
+        clarity: finalScores.clarity,
+        execution: finalScores.execution,
+        ambiguity: finalScores.ambiguity,
+        business_fit: finalScores.business_fit,
+        composite: finalScores.composite,
+      },
+      breakdown: {
+        original_score: testResult.scores.composite,
+        tighten_applied: tightenAttempts > 0,
+        improvement: finalScores.composite - testResult.scores.composite,
+      },
+      sevenD: normalized7D,
+      telemetry: {
+        tokens_used: testResult.response.usage.total_tokens,
+        cost_usd: testResult.response.usage.cost_usd,
+        duration_ms: testResult.response.duration_ms,
+        processing_time: Date.now() - startTime,
+      },
+      model: testResult.response.model,
+    });
 
   } catch (error) {
-    console.error("[GPT Test API] Error:", error);
-
-    // Handle specific API errors
-    if (error instanceof APIError) {
-      return NextResponse.json(
-        {
-          error: error.apiCode,
-          message: error.message,
-          details: error.details
-        },
-        { status: error.code }
-      );
-    }
-
-    // Handle OpenAI API errors
-    if (error && typeof error === 'object' && 'status' in error) {
-      return NextResponse.json(
-        {
-          error: "OPENAI_API_ERROR",
-          message: "OpenAI service temporarily unavailable"
-        },
-        { status: 503 }
-      );
-    }
-
-    // Generic error fallback
-    return NextResponse.json(
-      { 
-        error: "INTERNAL_RUN_ERROR",
-        message: "Failed to run GPT test" 
-      },
-      { status: 500 }
-    );
+    // Update run with error status
+    await updateRunStatus(run.id, 'error');
+    throw error;
   }
-}
+};
+
+// Export with error handler wrapper
+export const POST = withErrorHandler(_POST);
