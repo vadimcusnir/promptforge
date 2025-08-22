@@ -26,16 +26,13 @@ export default function ComingSoonPage() {
         body: JSON.stringify({ 
           email: email.toLowerCase().trim(), 
           name: name.trim(),
-          source: "coming-soon",
-          utm_source: typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("utm_source") : null,
-          utm_medium: typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("utm_medium") : null,
-          utm_campaign: typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("utm_campaign") : null,
+          org_id: null // For future multi-tenant support
         }),
       });
       
       const data = await res.json();
       
-      if (res.ok) {
+      if (res.ok && data.ok) {
         setSubmitted(true);
       } else {
         setError(data.error || "A apărut o eroare. Te rugăm să încerci din nou.");

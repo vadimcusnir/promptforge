@@ -5,52 +5,49 @@
 Add these to your `.env.local`:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_SERVICE_ROLE=YOUR_SERVICE_ROLE_KEY
 ```
 
 ## Database Setup
 
-1. Run the SQL in `supabase/waitlist_signups.sql` in your Supabase SQL editor
+1. Run the SQL in `supabase/schema.sql` in your Supabase SQL editor
 2. This will create:
-   - `waitlist_signups` table with proper indexes
+   - `waitlist_signups` table with proper constraints
    - Row Level Security (RLS) policies
-   - Analytics view for reporting
-   - Automatic timestamp updates
+   - Public insert policy for anon users
+   - Admin read policy for authenticated users
 
 ## Table Structure
 
 ```sql
 waitlist_signups (
     id UUID PRIMARY KEY,
+    org_id UUID REFERENCES orgs(id), -- for future multi-tenant support
     email TEXT NOT NULL UNIQUE,
-    name TEXT NOT NULL,
-    source TEXT DEFAULT 'coming-soon',
-    utm_source TEXT,
-    utm_medium TEXT,
-    utm_campaign TEXT,
-    created_at TIMESTAMP WITH TIME ZONE,
-    updated_at TIMESTAMP WITH TIME ZONE
+    name TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 )
 ```
 
 ## Security
 
-- RLS is enabled
-- Anonymous users can only INSERT (for signups)
-- Service role has full access for admin operations
+- RLS is enabled with proper policies
+- Anonymous users can INSERT (for public signups)
+- Authenticated users can SELECT (for admin access)
 - Email uniqueness is enforced at database level
+- Duplicate emails are handled gracefully (idempotent UX)
 
 ## API Endpoints
 
 - `POST /api/waitlist` - Add new signup
-- `GET /api/waitlist` - Get total signup count
+  - Body: `{ email: string, name?: string, org_id?: uuid }`
+  - Response: `{ ok: true }` on success
+  - Handles duplicates gracefully
 
-## Analytics
+## Features
 
-Use the `waitlist_analytics` view for reporting:
-- Total signups
-- Signups in last 24h/week/month
-- Breakdown by source/UTM parameters
-- Daily signup trends
+- **Idempotent signups**: Duplicate emails are treated as success
+- **Input validation**: Email format validation
+- **Multi-tenant ready**: Optional org_id for future use
+- **Production ready**: Uses service role for secure server-side operations

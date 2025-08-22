@@ -1,5 +1,7 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { AgentWatchWorker } from "@/lib/observability/agent-watch"
+
+const BLOCKED_LOCALES = ['ro','ru','fr','de','es','it','pt','uk','zh','ja','tr','pl'];
 
 const gatedRoutes: Record<string,string> = {
   "/api/gpt-test": "canUseGptTestReal",
@@ -7,10 +9,31 @@ const gatedRoutes: Record<string,string> = {
   "/api/run": "hasAPI"
 };
 
-export function middleware(req: Request) {
-  const url = new URL(req.url);
+export function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
+
+  // English-only routing logic
+  // /ro/..., /fr/... -> redirecționează fără segmentul de limbă
+  const [, maybeLocale, ...rest] = url.pathname.split('/');
+  if (BLOCKED_LOCALES.includes(maybeLocale)) {
+    url.pathname = '/' + rest.join('/');
+    return NextResponse.redirect(url);
+  }
+
+  // ?lang=ro -> forțează en
+  const qLang = url.searchParams.get('lang');
+  if (qLang && qLang !== 'en') {
+    url.searchParams.set('lang', 'en');
+    return NextResponse.redirect(url);
+  }
+
+  // Existing gated routes logic
   const entry = Object.entries(gatedRoutes).find(([path]) => url.pathname.startsWith(path));
-  if (!entry) return NextResponse.next();
+  if (!entry) {
+    const res = NextResponse.next();
+    res.headers.set('Content-Language', 'en');
+    return res;
+  }
 
   // Enhanced kill switch - check both ENV and SSOT configuration
   if (!AgentWatchWorker.areAgentsEnabled()) {
@@ -59,5 +82,11 @@ export function middleware(req: Request) {
     return new NextResponse(JSON.stringify({ error: "MISSING_RUN_ID" }), { status: 400 });
   }
 
-  return NextResponse.next();
+  const res = NextResponse.next();
+  res.headers.set('Content-Language', 'en');
+  return res;
 }
+
+export const config = {
+  matcher: ['/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|assets|public).*)'],
+};

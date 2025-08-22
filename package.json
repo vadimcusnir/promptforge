@@ -14,6 +14,7 @@
     "sbom:xml": "cdxgen -t xml -o sbom.xml .",
     "prepare": "husky install",
     "commit": "git-cz",
+    "english:scan": "node scripts/english-scan.js \"app/**/*.{ts,tsx,md,mdx}\" \"components/**/*.{ts,tsx,md,mdx}\" \"lib/**/*.{ts,tsx}\" \"content/**/*.{md,mdx}\"",
     "security:setup": "./scripts/setup-security.sh",
     "security:validate": "./scripts/validate-security.sh",
     "security:full": "pnpm run audit && pnpm run lint:security && pnpm run sbom"
@@ -83,11 +84,16 @@
     "eslint": "9.17.0",
     "eslint-config-next": "15.2.4",
     "eslint-plugin-security": "3.0.1",
+    "glob": "^11.0.0",
     "husky": "9.1.7",
     "lint-staged": "15.2.11",
+    "next-sitemap": "^4.2.3",
     "postcss": "8.5.1",
     "tailwindcss": "4.1.9",
     "tw-animate-css": "1.3.3",
     "typescript": "5.7.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,md,mdx,json}": ["node scripts/english-scan.js"]
   }
 }

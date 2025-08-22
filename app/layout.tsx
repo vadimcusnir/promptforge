@@ -5,6 +5,7 @@ import ClientRootLayout from "./ClientRootLayout"
 import "./globals.css"
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://chatgpt-prompting.com'),
   title: "Prompt-Forge™ - Cyber-Poetic Terminal Aesthetic",
   description:
     "Advanced AI prompt generation system with immersive visual experience. Professional prompts in 10 seconds.",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Prompt-Forge™" }],
   creator: "Prompt-Forge™",
   publisher: "Prompt-Forge™",
+  alternates: { canonical: '/', languages: { en: '/' } },
   formatDetection: {
     email: false,
     address: false,
@@ -42,7 +44,7 @@ export const metadata: Metadata = {
         alt: "Prompt-Forge™ - Cyber-Poetic Terminal Interface",
       },
     ],
-    locale: "ro_RO",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
@@ -65,5 +67,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <ClientRootLayout>{children}</ClientRootLayout>
+  return (
+    <html lang="en">
+      <head>
+        <meta httpEquiv="Content-Language" content="en" />
+      </head>
+      <body>
+        <ClientRootLayout>{children}</ClientRootLayout>
+      </body>
+    </html>
+  )
 }

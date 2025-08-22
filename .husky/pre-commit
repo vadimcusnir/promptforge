@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# Run English-only validation
+pnpm english:scan
+
 # Run lint-staged for code quality
 npx lint-staged
 
