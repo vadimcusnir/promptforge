@@ -74,7 +74,13 @@ export default function PricingPage() {
       
       {/* Pricing Section */}
       <section className="container mx-auto max-w-[1240px] px-6 py-24">
-        <h1 className="text-h1 text-[#ECFEFF] text-center mb-4">Pricing</h1>
+        <h1 className="text-h1 text-[#ECFEFF] text-center mb-4">
+          <span className="kw" data-glitch>
+            <span className="kw__text">Pricing</span>
+            <span className="kw__glitch" aria-hidden="true"></span>
+          </span>
+        </h1>
+        <div className="pf-yard-line mx-auto max-w-md"></div>
         <p className="text-body text-[#ECFEFF]/80 text-center mb-16">
           Choose your plan and start engineering better prompts today
         </p>
@@ -83,8 +89,13 @@ export default function PricingPage() {
           {pricingPlans.map((plan) => (
             <div 
               key={plan.name} 
-              className={`glass-effect p-8 relative ${plan.popular ? 'ring-2 ring-[#164E63]' : ''}`}
+              className={`pf-block p-8 relative ${plan.popular ? 'ring-2 ring-[#164E63]' : ''}`}
             >
+              <span className="pf-corner tl"></span>
+              <span className="pf-corner tr"></span>
+              <span className="pf-corner bl"></span>
+              <span className="pf-corner br"></span>
+              
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-[#164E63] text-[#ECFEFF] px-4 py-1 text-micro font-semibold rounded-full">
@@ -102,6 +113,8 @@ export default function PricingPage() {
                 <p className="text-micro text-[#ECFEFF]/80">{plan.description}</p>
               </div>
               
+              <div className="pf-yard-line mb-6"></div>
+              
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-center text-micro text-[#ECFEFF]/90">
@@ -112,10 +125,10 @@ export default function PricingPage() {
               </ul>
               
               <button 
-                className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
+                className={`w-full py-3 px-6 font-semibold transition-all ${
                   plan.popular 
-                    ? 'bg-[#164E63] hover:bg-[#0891B2] text-[#ECFEFF]' 
-                    : 'bg-[#ECFEFF]/10 hover:bg-[#ECFEFF]/20 text-[#ECFEFF] border border-[#ECFEFF]/20'
+                    ? 'btn-notched' 
+                    : 'btn'
                 }`}
               >
                 {plan.cta}
@@ -167,6 +180,9 @@ export default function PricingPage() {
           </div>
         </div>
       )}
+      
+      {/* Glitch Protocol v1 Script */}
+      <script defer src="/glitch-keywords.js"></script>
     </div>
   )
 }

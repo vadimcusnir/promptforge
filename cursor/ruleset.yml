@@ -89,6 +89,33 @@ export:
   checksum_algo: "sha256"
   storage_bucket: "bundles"
 
+  motion:
+    enabled: true
+    intents: ["guide","state","explain"]
+    placement_allow:
+      hero: false
+      header_nav_export: false
+      background_ambient_only: true
+      how_it_works: true
+      generator_steps: true
+      success_empty_states: true
+      gallery_routes: ["/test-ambient","/brand/motion"]
+    budget:
+      primary_per_page: 1
+      micro_max: 4
+      infinite_visible: 0
+      cpu_pct_max: 1
+      frame_budget_ms: 16
+    params:
+      durations_ms: { micro: [180,220], transition: [300,400] }
+      easing: "cubic-bezier(.2,.8,.2,1)"
+      translate_px_max: 12
+      scale_range: [0.98, 1.02]
+      opacity_range: [0.85, 1]
+      loop_visible_secs_max: 2
+    flags: { motion_primary: true, motion_micro: true, brand_scenes: false }
+    respect_reduced_motion: true
+
 acceptance:
   ui_overlays:
     - overlays.apply_within_ms <= 50
@@ -96,3 +123,11 @@ acceptance:
     - overlays.classlist_has_single_route_class == true
     - overlays.quote_focus_controls_tokens_opacity == true
     - overlays.no_console_log_in_production == true
+  motion:
+    - page.primary_motion_count <= 1
+    - page.micro_motion_count <= 4
+    - page.infinite_visible == 0
+    - perf.cpu_pct <= 1
+    - perf.frame_time_ms_p95 <= 16
+    - a11y.respects_reduced_motion == true
+    - every_animation.intent in ["guide","state","explain"]

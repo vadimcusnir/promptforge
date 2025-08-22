@@ -1,0 +1,191 @@
+/* Motion Discipline CSS - Conversion-First Animation System */
+
+/* Base motion reset for reduced motion users */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Intent-based motion classes */
+
+/* GUIDE INTENT - CTA micro feedback */
+.motion-guide {
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), 
+              box-shadow 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.motion-guide:hover {
+  transform: translateY(-1px);
+}
+
+.motion-guide:active {
+  transform: translateY(0);
+}
+
+/* Primary CTA specific styling */
+.motion-guide.btn-primary:hover {
+  box-shadow: 0 0 0 2px #0891B2;
+}
+
+/* STATE INTENT - Status feedback */
+.motion-state {
+  transition: opacity 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Success state animation */
+@keyframes pulse-ok {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.motion-state.success {
+  animation: pulse-ok 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 1;
+}
+
+/* Loading state */
+@keyframes skeleton-pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.6; }
+}
+
+.motion-state.loading {
+  animation: skeleton-pulse 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+/* Badge copied state */
+.motion-state.copied {
+  animation: pulse-ok 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 1;
+}
+
+/* EXPLAIN INTENT - Step transitions */
+.motion-explain {
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), 
+              opacity 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Step transition states */
+.motion-explain.step-enter {
+  transform: translateX(8px);
+  opacity: 0.85;
+}
+
+.motion-explain.step-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.motion-explain.step-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.motion-explain.step-exit-active {
+  transform: translateX(-8px);
+  opacity: 0.85;
+}
+
+/* Longer transitions for primary flow steps */
+.motion-explain.primary-flow {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Focus ring animation for accessibility */
+.motion-guide:focus-visible {
+  outline: 2px solid #0891B2;
+  outline-offset: 2px;
+  animation: focus-ring 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes focus-ring {
+  0% { outline-color: transparent; }
+  100% { outline-color: #0891B2; }
+}
+
+/* Data attribute based control */
+html[data-prm="1"] .motion-guide,
+html[data-prm="1"] .motion-state,
+html[data-prm="1"] .motion-explain {
+  animation: none !important;
+  transition: none !important;
+}
+
+html[data-motion-micro="0"] .motion-guide,
+html[data-motion-micro="0"] .motion-state {
+  animation: none !important;
+  transition: none !important;
+}
+
+html[data-motion-primary="0"] .motion-explain {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Performance optimizations */
+.motion-guide,
+.motion-state,
+.motion-explain {
+  will-change: auto; /* Only set will-change on interaction */
+}
+
+.motion-guide:hover,
+.motion-state.animating,
+.motion-explain.transitioning {
+  will-change: transform, opacity;
+}
+
+/* Button system integration */
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--accent, #00ff7f);
+  color: #0a0a0a;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #e5e5e5;
+}
+
+/* Micro-interactions for form elements */
+.motion-guide input:focus,
+.motion-guide textarea:focus {
+  transform: none; /* Override translateY for form inputs */
+  box-shadow: 0 0 0 2px #0891B2;
+}
+
+/* Toast/notification states */
+.motion-state.toast-enter {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+.motion-state.toast-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.motion-state.toast-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.motion-state.toast-exit-active {
+  transform: translateY(-10px);
+  opacity: 0;
+}

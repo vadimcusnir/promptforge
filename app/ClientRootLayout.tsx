@@ -9,6 +9,7 @@ import { useFontsReady } from "@/hooks/use-fonts-ready"
 import { useRouteOverlay } from "@/hooks/use-route-overlay"
 import { QuoteFocusProvider } from "@/lib/quote-focus"
 import { OverlayController } from "@/components/OverlayController"
+import { MotionProvider } from "@/lib/motion/provider"
 import { useEffect } from "react"
 import BackgroundRoot from "@/components/background/BackgroundRoot"
 import "./globals.css"
@@ -106,13 +107,15 @@ html {
       <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell`}>
         <BackgroundRoot ambient />
         <div id="app" data-layer="ui">
-          <QuoteFocusProvider>
-            <OverlayController />
-            <ClientReady />
-            <Header />
-            {children}
-            <Footer />
-          </QuoteFocusProvider>
+          <MotionProvider>
+            <QuoteFocusProvider>
+              <OverlayController />
+              <ClientReady />
+              <Header />
+              {children}
+              <Footer />
+            </QuoteFocusProvider>
+          </MotionProvider>
         </div>
       </body>
     </html>

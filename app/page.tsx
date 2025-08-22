@@ -197,100 +197,135 @@ Generate the optimized ${demoInput} strategy now.`
         {/* Static Grid Background */}
         <div className="grid-static"></div>
         
-        <section className="container mx-auto max-w-[1240px] px-6 py-24 grid gap-6 text-center">
-          <h1 className="text-h1 text-[#ECFEFF]">
-            The 1st Cognitive OS for Prompts
-          </h1>
-          
-          <p className="text-body text-[#ECFEFF]/80 max-w-3xl mx-auto">
-            50 modules × 7D Engine → export scored ≥80 in minutes.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-            <Button
-              className="btn-primary text-lg px-8 py-4 font-semibold"
-              onClick={() => GTMEvents.heroCTA()}
-            >
-              Start the Forge
-            </Button>
-            <Button
-              className="btn-secondary text-lg px-8 py-4 font-semibold"
-              onClick={() => GTMEvents.seeModules()}
-            >
-              View Modules
-            </Button>
-          </div>
-          
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <span className="proof-chip">TTA &lt; 60s</span>
-            <span className="proof-chip">Score ≥ 80</span>
-            <span className="proof-chip">.md/.json/.pdf</span>
+        <section className="container mx-auto max-w-[1240px] px-6 py-24">
+          <div className="pf-block sweep p-8 text-center">
+            <span className="pf-corner tl"></span>
+            <span className="pf-corner tr"></span>
+            <span className="pf-corner bl"></span>
+            <span className="pf-corner br"></span>
+            
+            <h1 className="text-h1 text-[#ECFEFF]">
+              The 1st <span className="kw" data-glitch>
+                <span className="kw__text">Cognitive OS</span>
+                <span className="kw__glitch" aria-hidden="true"></span>
+              </span> for Prompts
+            </h1>
+            
+            <div className="pf-yard-line"></div>
+            
+            <h2 className="text-h2 text-[#ECFEFF]/80 mb-8">
+              50 <span className="kw" data-glitch>
+                <span className="kw__text">Modules</span>
+                <span className="kw__glitch" aria-hidden="true"></span>
+              </span> × <span className="kw" data-glitch>
+                <span className="kw__text">7D</span>
+                <span className="kw__glitch" aria-hidden="true"></span>
+              </span> Engine → <span className="kw" data-glitch>
+                <span className="kw__text">Export</span>
+                <span className="kw__glitch" aria-hidden="true"></span>
+              </span> scored ≥80
+            </h2>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+              <button
+                className="btn-notched text-lg px-8 py-4"
+                onClick={() => GTMEvents.heroCTA()}
+              >
+                Start the Forge
+              </button>
+              <button
+                className="btn text-lg px-8 py-4"
+                onClick={() => GTMEvents.seeModules()}
+              >
+                View Modules
+              </button>
+            </div>
+            
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <span className="proof-chip">TTA &lt; 60s</span>
+              <span className="proof-chip"><span className="kw" data-glitch>
+                <span className="kw__text">Score</span>
+                <span className="kw__glitch" aria-hidden="true"></span>
+              </span> ≥ 80</span>
+              <span className="proof-chip">.md/.json/.pdf</span>
+            </div>
           </div>
         </section>
 
         {/* See it in action - Micro Demo */}
         <section className="container mx-auto max-w-[1240px] px-6 py-24">
-          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">See it in action</h2>
-          <p className="text-body text-[#ECFEFF]/80 text-center mb-12">
-            Enter any topic and watch the 7D Engine generate a professional prompt
-          </p>
-          
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <label className="block text-micro text-[#ECFEFF]/80 mb-2">Topic</label>
-                <Input
-                  value={demoInput}
-                  onChange={(e) => setDemoInput(e.target.value)}
-                  placeholder="Enter your topic..."
-                  className="glass-effect text-[#ECFEFF] placeholder:text-[#ECFEFF]/50"
-                />
-                
-                <div className="flex gap-2 flex-wrap">
-                  <select 
-                    className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0"
+          <div className="pf-block p-8">
+            <span className="pf-corner tl"></span>
+            <span className="pf-corner tr"></span>
+            <span className="pf-corner bl"></span>
+            <span className="pf-corner br"></span>
+            
+            <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">See it in action</h2>
+            <div className="pf-yard-line"></div>
+            <p className="text-body text-[#ECFEFF]/80 text-center mb-12">
+              Enter any topic and watch the <span className="kw" data-glitch>
+                <span className="kw__text">7D Engine</span>
+                <span className="kw__glitch" aria-hidden="true"></span>
+              </span> generate a professional prompt
+            </p>
+            
+            <div className="max-w-4xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <label className="block text-micro text-[#ECFEFF]/80 mb-2">Topic</label>
+                  <Input
+                    value={demoInput}
                     onChange={(e) => setDemoInput(e.target.value)}
-                    defaultValue=""
+                    placeholder="Enter your topic..."
+                    className="glass-effect text-[#ECFEFF] placeholder:text-[#ECFEFF]/50"
+                  />
+                  
+                  <div className="flex gap-2 flex-wrap">
+                    <select 
+                      className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0"
+                      onChange={(e) => setDemoInput(e.target.value)}
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Choose preset...</option>
+                      <option value="B2B onboarding">B2B onboarding</option>
+                      <option value="FinTech KYC">FinTech KYC</option>
+                    </select>
+                  </div>
+                  
+                  <button
+                    onClick={generateDemo}
+                    disabled={isGenerating || !demoInput.trim()}
+                    className="btn-notched w-full"
                   >
-                    <option value="" disabled>Choose preset...</option>
-                    <option value="B2B onboarding">B2B onboarding</option>
-                    <option value="FinTech KYC">FinTech KYC</option>
-                  </select>
+                    {isGenerating ? "Generating..." : "Generate"}
+                  </button>
                 </div>
                 
-                <Button
-                  onClick={generateDemo}
-                  disabled={isGenerating || !demoInput.trim()}
-                  className="btn-primary w-full"
-                >
-                  {isGenerating ? "Generating..." : "Generate"}
-                </Button>
-              </div>
-              
-              <div className="space-y-4">
-                <label className="block text-micro text-[#ECFEFF]/80 mb-2">Generated Prompt</label>
-                <div className="glass-effect p-4 h-48 overflow-y-auto">
-                  {demoOutput ? (
-                    <div className="relative">
-                      <pre className="text-micro text-[#ECFEFF] whitespace-pre-wrap font-mono">{demoOutput}</pre>
-                      <Button
-                        onClick={() => navigator.clipboard.writeText(demoOutput)}
-                        className="absolute top-2 right-2 btn-secondary px-2 py-1 text-xs"
-                      >
-                        Copy
-                      </Button>
-                    </div>
-                  ) : (
-                    <p className="text-[#ECFEFF]/50 italic">Your prompt will appear here...</p>
-                  )}
+                <div className="space-y-4">
+                  <label className="block text-micro text-[#ECFEFF]/80 mb-2">Generated Prompt</label>
+                  <div className="glass-effect p-4 h-48 overflow-y-auto">
+                    {demoOutput ? (
+                      <div className="relative">
+                        <pre className="text-micro text-[#ECFEFF] whitespace-pre-wrap font-mono">{demoOutput}</pre>
+                        <button
+                          onClick={() => navigator.clipboard.writeText(demoOutput)}
+                          className="absolute top-2 right-2 btn px-2 py-1 text-xs"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-[#ECFEFF]/50 italic">Your prompt will appear here...</p>
+                    )}
+                  </div>
+                  
+                  <button 
+                    className="btn w-full text-micro"
+                    onClick={() => GTMEvents.demoBundlePreview()}
+                  >
+                    Preview a <span className="keyword" data-keyword>Bundle</span>
+                  </button>
                 </div>
-                
-                <Button 
-                  className="btn-secondary w-full text-micro"
-                  onClick={() => GTMEvents.demoBundlePreview()}
-                >
-                  Preview a Demo Bundle
-                </Button>
               </div>
             </div>
           </div>
@@ -298,9 +333,12 @@ Generate the optimized ${demoInput} strategy now.`
 
         {/* Module Grid */}
         <section className="container mx-auto max-w-[1240px] px-6 py-24">
-          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">Module Grid</h2>
+          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">
+            <span className="keyword" data-keyword>Module</span> Grid
+          </h2>
+          <div className="pf-yard-line mx-auto max-w-md"></div>
           <p className="text-body text-[#ECFEFF]/80 text-center mb-12">
-            50 semantic modules orchestrated by the 7D Parameter Engine
+            50 semantic modules orchestrated by the <span className="keyword" data-keyword>7D</span> Parameter Engine
           </p>
           
           <div className="flex flex-wrap gap-4 justify-center mb-8">
@@ -335,7 +373,12 @@ Generate the optimized ${demoInput} strategy now.`
               { id: "M07", vector: "V1", title: "Risk Assessment", description: "Comprehensive risk evaluation", outputs: ["md", "pdf"] },
               { id: "M08", vector: "V2", title: "User Research", description: "User behavior and preferences", outputs: ["md", "json"] },
             ].map((module) => (
-              <div key={module.id} className="glass-effect p-4 hover:shadow-lg transition-all">
+              <div key={module.id} className="pf-block p-4 hover:shadow-lg transition-all">
+                <span className="pf-corner tl"></span>
+                <span className="pf-corner tr"></span>
+                <span className="pf-corner bl"></span>
+                <span className="pf-corner br"></span>
+                
                 <div className="flex items-center justify-between mb-3">
                   <span className="proof-chip text-xs">{module.id}</span>
                   <span className="text-xs text-blue-400">{module.vector}</span>
@@ -352,9 +395,9 @@ Generate the optimized ${demoInput} strategy now.`
                       </span>
                     ))}
                   </div>
-                  <Button className="btn-secondary text-xs px-3 py-1">
+                  <button className="btn text-xs px-3 py-1">
                     Specifications
-                  </Button>
+                  </button>
                 </div>
               </div>
             ))}
@@ -710,6 +753,9 @@ const prompt = await generatePrompt({
           </Card>
         </div>
       )}
+      
+      {/* Glitch Protocol v1 Script */}
+      <script defer src="/glitch-keywords.js"></script>
       
       {/* Footer */}
       <footer className="border-t border-[#ECFEFF]/15 py-16">

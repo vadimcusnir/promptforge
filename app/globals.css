@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./styles/motion-discipline.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -1788,6 +1789,15 @@
       animation: none !important; 
       transition: none !important; 
     }
+    
+    /* Disable tactical animations specifically */
+    .sweep::after {
+      display: none !important;
+    }
+    
+    .kw__glitch {
+      display: none !important;
+    }
   }
 
   /* Soft mode explicit din UI: setezi pe <html data-motion="off"> */
@@ -1795,7 +1805,249 @@
     animation: none !important;
     transition: none !important;
   }
+  
+  html[data-motion="off"] .sweep::after {
+    display: none !important;
+  }
+  
+  html[data-motion="off"] .kw__glitch {
+    display: none !important;
+  }
 
+  /* TACTICAL "TEREN" DESIGN SYSTEM */
+  
+  /* 1. Global Pitch Grid Background */
+  .pf-pitch {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      /* linii orizontale */
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      /* linii verticale */
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 64px 64px, 64px 64px;
+    background-color: #0A0A0A;
+  }
+  
+  /* 2. Block System cu "marcaje de teren" */
+  .pf-block {
+    position: relative;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.05);
+    border-radius: 8px;
+  }
+  
+  .pf-block::before,
+  .pf-block::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.12),
+      rgba(255,255,255,.12) 1px,
+      transparent 1px,
+      transparent 8px
+    );
+    height: 1px;
+    width: 100%;
+  }
+  
+  .pf-block::before {
+    top: 12px;
+    opacity: .3;
+  }
+  
+  .pf-block::after {
+    bottom: 12px;
+    opacity: .15;
+  }
+  
+  /* Corner markers */
+  .pf-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-color: rgba(255,255,255,.25);
+  }
+  
+  .pf-corner.tl {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+  
+  .pf-corner.tr {
+    top: -1px;
+    right: -1px;
+    border-top: 1px solid;
+    border-right: 1px solid;
+  }
+  
+  .pf-corner.bl {
+    bottom: -1px;
+    left: -1px;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+  }
+  
+  .pf-corner.br {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+  }
+  
+  /* 3. Yard Line (linie de măsură) */
+  .pf-yard-line {
+    height: 1px;
+    width: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.18),
+      rgba(255,255,255,.18) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+    margin: 12px 0 20px;
+  }
+  
+  /* 4. Sharp Button System */
+  .btn {
+    --fg: #ECFEFF;
+    --bg: #164E63;
+    --bgH: #0891B2;
+    border: 1px solid rgba(255,255,255,.15);
+    color: var(--fg);
+    background: var(--bg);
+    padding: 12px 16px;
+    line-height: 1;
+    border-radius: 0; /* Sharp edges */
+    transition: transform .18s ease-out, box-shadow .18s ease-out, background .18s ease-out;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .btn:hover {
+    background: var(--bgH);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 2px rgba(8,145,178,.4);
+  }
+  
+  .btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Notched Buttons (colțuri tăiate) */
+  .btn-notched {
+    --cut: 6px;
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%,
+      0 var(--cut)
+    );
+    border: 1px solid rgba(255,255,255,.2);
+    background: linear-gradient(180deg, #164E63, #0f2f3a);
+    color: #ECFEFF;
+    padding: 12px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all .18s ease-out;
+  }
+  
+  .btn-notched:hover {
+    background: linear-gradient(180deg, #0891B2, #0f2f3a);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(8,145,178,.3);
+  }
+  
+  /* 5. Sweep Animation (signature) */
+  @media (prefers-reduced-motion: no-preference) {
+    .sweep {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .sweep::after {
+      content: "";
+      position: absolute;
+      left: -30%;
+      top: 0;
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.14),
+        transparent
+      );
+      filter: blur(2px);
+      animation: sweep 1200ms ease-out 120ms 1 both;
+    }
+    
+    @keyframes sweep {
+      0% {
+        transform: translateX(0);
+        opacity: 0;
+      }
+      30% {
+        opacity: .9;
+      }
+      100% {
+        transform: translateX(380%);
+        opacity: 0;
+      }
+    }
+  }
+  
+  /* 6. Glitch Protocol v1 - Keyword System */
+  .kw {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .kw__text {
+    /* Real text for screen readers */
+  }
+  
+  .kw__glitch {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    color: #ECFEFF;
+    mix-blend-mode: normal;
+    font-variant-ligatures: none;
+    will-change: contents;
+    display: inline-block;
+  }
+  
+  /* Accent subliniat animabil (compat cu highlight-ul) */
+  .keyword {
+    position: relative;
+    background-size: 0% 40%;
+    background-position: 0 95%;
+    background-repeat: no-repeat;
+    transition: background-size .38s ease-out;
+  }
+  
+  .keyword.is-in {
+    background-image: linear-gradient(
+      to right,
+      rgba(8,145,178,.0),
+      rgba(8,145,178,.35) 55%,
+      rgba(8,145,178,.0)
+    );
+    background-size: 100% 40%;
+  }
+  
   /* Static grid pentru ambient mode */
   .pf-grid-fixed {
     position: fixed; 

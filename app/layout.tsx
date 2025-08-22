@@ -75,6 +75,7 @@ export default async function RootLayout({
         <meta httpEquiv="Content-Language" content="en" />
       </head>
       <body>
+        <div className="pf-pitch" aria-hidden="true" />
         <ClientRootLayout>{children}</ClientRootLayout>
       </body>
     </html>
