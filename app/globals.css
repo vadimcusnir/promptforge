@@ -5,29 +5,29 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Industrial Dark Design Tokens */
-  --background: #0A0A0A;
-  --foreground: #ECFEFF;
-  --card: rgba(255,255,255,0.08);
-  --card-foreground: #ECFEFF;
-  --card-border: rgba(255,255,255,0.15);
-  --popover: rgba(255,255,255,0.08);
-  --popover-foreground: #ECFEFF;
-  --primary: #164E63;
-  --primary-foreground: #ECFEFF;
-  --primary-hover: #0891B2;
-  --secondary: rgba(255,255,255,0.08);
-  --secondary-foreground: #ECFEFF;
-  --accent: #BE123C;
-  --accent-foreground: #ECFEFF;
+  /* Brutalist Golden Design Tokens */
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #222222;
+  --card-foreground: #FFFFFF;
+  --card-border: #FFD700;
+  --popover: #222222;
+  --popover-foreground: #FFFFFF;
+  --primary: #FFD700;
+  --primary-foreground: #000000;
+  --primary-hover: #FFF700;
+  --secondary: #222222;
+  --secondary-foreground: #FFFFFF;
+  --accent: #FFD700;
+  --accent-foreground: #000000;
   --destructive: #DC2626;
   --destructive-foreground: #ECFEFF;
   --success: #16A34A;
   --warning: #F59E0B;
   --danger: #DC2626;
-  --border: rgba(255,255,255,0.15);
-  --input: rgba(255,255,255,0.08);
-  --ring: #0891B2;
+  --border: #FFD700;
+  --input: #222222;
+  --ring: #FFD700;
   --radius-sm: 4px;
   --radius: 8px;
   --radius-lg: 12px;
@@ -36,14 +36,14 @@
   --font-heading: 'Montserrat', system-ui, sans-serif;
   --font-body: 'Open Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --text-h1: clamp(2.5rem, 8vw, 3.75rem);
-  --text-h2: clamp(1.75rem, 4vw, 2rem);
-  --text-h3: clamp(1.375rem, 3vw, 1.5rem);
-  --text-body: 1rem;
-  --text-micro: 0.8125rem;
-  --line-h1: 1.1;
-  --line-h2: 1.2;
-  --line-h3: 1.3;
+  --text-h1: clamp(2.125rem, 7vw, 3.2rem);
+  --text-h2: clamp(1.5rem, 3.5vw, 1.75rem);
+  --text-h3: clamp(1.2rem, 2.5vw, 1.3rem);
+  --text-body: 0.9rem;
+  --text-micro: 0.75rem;
+  --line-h1: 1.2;
+  --line-h2: 1.3;
+  --line-h3: 1.4;
   --line-body: 1.5;
   --line-micro: 1.4;
   
@@ -1944,29 +1944,67 @@
   
   /* Notched Buttons (colțuri tăiate) */
   .btn-notched {
-    --cut: 6px;
-    clip-path: polygon(
-      var(--cut) 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%,
-      0 var(--cut)
-    );
-    border: 1px solid rgba(255,255,255,.2);
-    background: linear-gradient(180deg, #164E63, #0f2f3a);
-    color: #ECFEFF;
-    padding: 12px 20px;
+    background: #000000;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+    padding: 12px 24px;
     font-weight: 600;
+    font-family: var(--font-mono);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: all .18s ease-out;
+    letter-spacing: 0.5px;
+    transition: all 0.15s ease;
+    position: relative;
+    overflow: hidden;
   }
   
   .btn-notched:hover {
-    background: linear-gradient(180deg, #0891B2, #0f2f3a);
+    background: #FFD700;
+    color: #000000;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(8,145,178,.3);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3);
+    animation: flash 0.15s ease-in-out;
+  }
+
+  @keyframes flash {
+    0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+    50% { box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 215, 0, 0.5); }
+    100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3); }
+  }
+
+  /* Console Typing Animation */
+  .console-typing {
+    font-family: var(--font-mono);
+    overflow: hidden;
+    border-right: 3px solid #FFD700;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: #FFD700; }
+  }
+
+  /* Golden Console Theme */
+  .console-theme {
+    background: #000000;
+    color: #FFD700;
+    font-family: var(--font-mono);
+    border: 2px solid #FFD700;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .console-theme::before {
+    content: '> ';
+    color: #FFD700;
+    font-weight: bold;
   }
   
   /* 5. Sweep Animation (signature) */

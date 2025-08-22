@@ -197,36 +197,28 @@ Generate the optimized ${demoInput} strategy now.`
         {/* Static Grid Background */}
         <div className="grid-static"></div>
         
-        <section className="container mx-auto max-w-[1240px] px-6 py-24">
-          <div className="pf-block sweep p-8 text-center">
-            <span className="pf-corner tl"></span>
-            <span className="pf-corner tr"></span>
-            <span className="pf-corner bl"></span>
-            <span className="pf-corner br"></span>
-            
-            <h1 className="text-h1 text-[#ECFEFF]">
-              The <span className="kw" data-glitch>
-                <span className="kw__text">Cognitive‑OS</span>
-                <span className="kw__glitch" aria-hidden="true"></span>
+        <section className="w-full py-24 bg-black">
+          <div className="container mx-auto max-w-[1240px] px-6 text-center">
+            <h1 className="console-typing text-h1 text-white font-mono mb-8">
+              The <span className="text-[#FFD700]" data-glitch>
+                Cognitive‑OS
               </span> for Prompts
             </h1>
             
-            <div className="pf-yard-line"></div>
-            
-            <h2 className="text-h2 text-[#ECFEFF]/80 mb-8">
+            <h2 className="text-h2 text-gray-300 mb-12 font-mono">
               Turn 4h into 30m. 50 modules + 7D Engine → score ≥80, export‑ready.
             </h2>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-12">
               <button
-                className="btn-notched text-lg px-8 py-4"
+                className="btn-notched text-base px-8 py-3"
                 onClick={() => GTMEvents.heroCTA()}
                 aria-label="Start the Forge - Begin free trial"
               >
                 Start the Forge
               </button>
               <button
-                className="btn text-lg px-8 py-4"
+                className="bg-transparent border-2 border-gray-600 text-gray-300 hover:border-[#FFD700] hover:text-[#FFD700] font-mono text-base px-8 py-3 transition-all"
                 onClick={() => GTMEvents.seeModules()}
                 aria-label="View all available modules"
               >
@@ -234,52 +226,43 @@ Generate the optimized ${demoInput} strategy now.`
               </button>
             </div>
             
-            <div className="text-micro text-[#ECFEFF]/70 text-center mt-4 mb-6">
+            <div className="text-sm text-gray-400 text-center mt-6 mb-8 font-mono">
               Start free — no credit card. Upgrade to Pro (€29/mo) for PDF/JSON; Enterprise for .zip.
             </div>
             
-            <div className="flex items-center justify-center gap-2 flex-wrap">
-              <span className="proof-chip">TTA &lt; 60s</span>
-              <span className="proof-chip">Score ≥ 80</span>
-              <span className="proof-chip">Export .md/.pdf/.json</span>
-              <span className="proof-chip text-xs bg-gradient-to-r from-purple-500/20 to-blue-500/20 border-purple-400/30">.zip on Enterprise</span>
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono">TTA &lt; 60s</span>
+              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono">Score ≥ 80</span>
+              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono">Export .md/.pdf/.json</span>
+              <span className="bg-black border border-[#FFD700] text-[#FFD700] px-3 py-1 text-xs font-mono opacity-75">.zip on Enterprise</span>
             </div>
           </div>
         </section>
 
         {/* See it in action - Micro Demo */}
-        <section className="container mx-auto max-w-[1240px] px-6 py-24">
-          <div className="pf-block p-8">
-            <span className="pf-corner tl"></span>
-            <span className="pf-corner tr"></span>
-            <span className="pf-corner bl"></span>
-            <span className="pf-corner br"></span>
-            
-            <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">See it in action</h2>
-            <div className="pf-yard-line"></div>
-            <p className="text-body text-[#ECFEFF]/80 text-center mb-12">
-              Enter any topic and watch the <span className="kw" data-glitch>
-                <span className="kw__text">7D Engine</span>
-                <span className="kw__glitch" aria-hidden="true"></span>
-              </span> generate a professional prompt
+        <section className="w-full py-24 bg-black">
+          <div className="container mx-auto max-w-[1240px] px-6">
+            <h2 className="text-h2 text-[#FFD700] text-center mb-4 font-mono">See it in action</h2>
+            <p className="text-body text-gray-300 text-center mb-12 font-mono">
+              Enter any topic and watch the <span className="text-[#FFD700]">7D Engine</span> generate a professional prompt
             </p>
             
             <div className="max-w-4xl mx-auto">
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <label className="block text-micro text-[#ECFEFF]/80 mb-2">Topic</label>
+                  <label className="block text-sm text-[#FFD700] mb-2 font-mono">Topic</label>
                   <Input
                     value={demoInput}
                     onChange={(e) => setDemoInput(e.target.value)}
                     placeholder="fintech KYC, ecommerce CRO, healthcare intake..."
-                    className="glass-effect text-[#ECFEFF] placeholder:text-[#ECFEFF]/50"
+                    className="console-theme text-[#FFD700] placeholder:text-gray-500 font-mono"
                     aria-label="Enter topic for prompt generation"
                   />
-                  <p className="text-xs text-[#ECFEFF]/50 mt-1">No data stored.</p>
+                  <p className="text-xs text-gray-500 mt-1 font-mono">No data stored.</p>
                   
                   <div className="flex gap-2 flex-wrap">
                     <select 
-                      className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0"
+                      className="console-theme text-[#FFD700] text-sm px-3 py-2 font-mono"
                       onChange={(e) => setDemoInput(e.target.value)}
                       defaultValue=""
                     >
@@ -300,29 +283,29 @@ Generate the optimized ${demoInput} strategy now.`
                 </div>
                 
                 <div className="space-y-4">
-                  <label className="block text-micro text-[#ECFEFF]/80 mb-2">Generated Prompt</label>
-                  <div className="glass-effect p-4 h-48 overflow-y-auto" aria-live="polite">
+                  <label className="block text-sm text-[#FFD700] mb-2 font-mono">Generated Prompt</label>
+                  <div className="console-theme p-4 h-48 overflow-y-auto" aria-live="polite">
                     {demoOutput ? (
                       <div className="relative">
-                        <pre className="text-micro text-[#ECFEFF] whitespace-pre-wrap font-mono">{demoOutput}</pre>
+                        <pre className="text-sm text-[#FFD700] whitespace-pre-wrap font-mono">{demoOutput}</pre>
                         <button
                           onClick={() => navigator.clipboard.writeText(demoOutput)}
-                          className="absolute top-2 right-2 btn px-2 py-1 text-xs"
+                          className="absolute top-2 right-2 bg-[#FFD700] text-black px-2 py-1 text-xs font-mono hover:bg-yellow-400 transition-colors"
                           aria-label="Copy generated prompt to clipboard"
                         >
                           Copy
                         </button>
                       </div>
                     ) : (
-                      <p className="text-[#ECFEFF]/50 italic">Your prompt will appear here...</p>
+                      <p className="text-gray-500 italic font-mono">Your prompt will appear here...</p>
                     )}
                   </div>
                   
                   <button 
-                    className="btn w-full text-micro"
+                    className="bg-transparent border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black w-full text-sm font-mono py-2 transition-all"
                     onClick={() => GTMEvents.demoBundlePreview()}
                   >
-                    Preview a <span className="keyword" data-keyword>Bundle</span>
+                    Preview a Bundle
                   </button>
                 </div>
               </div>
@@ -331,35 +314,35 @@ Generate the optimized ${demoInput} strategy now.`
         </section>
 
         {/* Module Grid */}
-        <section className="container mx-auto max-w-[1240px] px-6 py-24">
-          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">
-            <span className="keyword" data-keyword>Module</span> Grid
-          </h2>
-          <div className="pf-yard-line mx-auto max-w-md"></div>
-          <p className="text-body text-[#ECFEFF]/80 text-center mb-12">
-            50 semantic modules orchestrated by the <span className="keyword" data-keyword>7D</span> Parameter Engine
-          </p>
+        <section className="w-full py-24 bg-black">
+          <div className="container mx-auto max-w-[1240px] px-6">
+            <h2 className="text-h2 text-[#FFD700] text-center mb-4 font-mono">
+              Module Grid
+            </h2>
+            <p className="text-body text-gray-300 text-center mb-12 font-mono">
+              50 semantic modules orchestrated by the <span className="text-[#FFD700]">7D</span> Parameter Engine
+            </p>
           
-          <div className="flex flex-wrap gap-4 justify-center mb-8">
-            <select className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0">
-              <option>Vector (All)</option>
-              <option>V1 - Strategy</option>
-              <option>V2 - Content</option>
-              <option>V3 - Analysis</option>
-            </select>
-            <input 
-              type="text" 
-              placeholder="Search modules..." 
-              className="glass-effect text-[#ECFEFF] placeholder:text-[#ECFEFF]/50 text-micro px-3 py-2 border-0"
-            />
-            <select className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0">
-              <option>Output (All)</option>
-              <option>Spec</option>
-              <option>Playbook</option>
-              <option>JSON</option>
-              <option>PDF</option>
-            </select>
-          </div>
+            <div className="flex flex-wrap gap-4 justify-center mb-8">
+              <select className="console-theme text-[#FFD700] text-sm px-3 py-2 font-mono">
+                <option>Vector (All)</option>
+                <option>V1 - Strategy</option>
+                <option>V2 - Content</option>
+                <option>V3 - Analysis</option>
+              </select>
+              <input 
+                type="text" 
+                placeholder="Search modules..." 
+                className="console-theme text-[#FFD700] placeholder:text-gray-500 text-sm px-3 py-2 font-mono"
+              />
+              <select className="console-theme text-[#FFD700] text-sm px-3 py-2 font-mono">
+                <option>Output (All)</option>
+                <option>Spec</option>
+                <option>Playbook</option>
+                <option>JSON</option>
+                <option>PDF</option>
+              </select>
+            </div>
           
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {[
@@ -372,19 +355,14 @@ Generate the optimized ${demoInput} strategy now.`
               { id: "M07", vector: "V1", title: "Risk Assessment", description: "Comprehensive risk evaluation", outputs: ["md", "pdf"] },
               { id: "M08", vector: "V2", title: "User Research", description: "User behavior and preferences", outputs: ["md", "json"] },
             ].map((module) => (
-              <div key={module.id} className="pf-block p-4 hover:shadow-lg transition-all">
-                <span className="pf-corner tl"></span>
-                <span className="pf-corner tr"></span>
-                <span className="pf-corner bl"></span>
-                <span className="pf-corner br"></span>
-                
+              <div key={module.id} className="bg-black border-2 border-[#FFD700] p-4 hover:bg-[#FFD700]/5 transition-all">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="proof-chip text-xs">{module.id}</span>
-                  <span className="text-xs text-blue-400">{module.vector}</span>
+                  <span className="bg-black border border-[#FFD700] text-[#FFD700] px-2 py-1 text-xs font-mono">{module.id}</span>
+                  <span className="text-xs text-[#FFD700] font-mono">{module.vector}</span>
                 </div>
                 
-                <h3 className="text-h3 text-[#ECFEFF] mb-2">{module.title}</h3>
-                <p className="text-micro text-[#ECFEFF]/80 mb-4 line-clamp-2">{module.description}</p>
+                <h3 className="text-lg text-white mb-2 font-mono">{module.title}</h3>
+                <p className="text-sm text-gray-400 mb-4 font-mono">{module.description}</p>
                 
                 <div className="flex items-center justify-between">
                   <div className="flex gap-1 flex-wrap">
@@ -394,10 +372,10 @@ Generate the optimized ${demoInput} strategy now.`
                       return (
                         <span 
                           key={output} 
-                          className={`text-xs px-2 py-1 rounded flex items-center gap-1 ${
-                            isPro ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
-                            isEnterprise ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' :
-                            'bg-[#ECFEFF]/10 text-[#ECFEFF]/70'
+                          className={`text-xs px-2 py-1 font-mono flex items-center gap-1 min-w-[60px] justify-center ${
+                            isPro ? 'bg-blue-900/30 text-blue-300 border border-blue-500' :
+                            isEnterprise ? 'bg-purple-900/30 text-purple-300 border border-purple-500' :
+                            'bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]'
                           }`}
                         >
                           .{output}
@@ -407,8 +385,8 @@ Generate the optimized ${demoInput} strategy now.`
                       )
                     })}
                   </div>
-                  <button className="btn text-xs px-3 py-1">
-                    Specifications
+                  <button className="bg-transparent border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black text-xs px-3 py-1 font-mono transition-all">
+                    Specs
                   </button>
                 </div>
               </div>
@@ -782,60 +760,59 @@ const prompt = await generatePrompt({
       <script defer src="/glitch-keywords.js"></script>
       
       {/* Footer */}
-      <footer className="border-t border-[#ECFEFF]/15 py-16">
+      <footer className="border-t border-[#FFD700] py-16 bg-black">
         <div className="container mx-auto max-w-[1240px] px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-h3 text-[#ECFEFF] mb-4">Product</h3>
-              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
-                <li><a href="/generator" className="hover:text-[#0891B2] transition-colors">Generator</a></li>
-                <li><a href="/modules" className="hover:text-[#0891B2] transition-colors">Modules</a></li>
-                <li><a href="/pricing" className="hover:text-[#0891B2] transition-colors">Pricing</a></li>
-                <li><a href="/demo-bundle" className="hover:text-[#0891B2] transition-colors">Demo Bundle</a></li>
+              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Product</h3>
+              <ul className="space-y-2 text-sm text-gray-300 font-mono">
+                <li><a href="/generator" className="hover:text-[#FFD700] transition-colors">Generator</a></li>
+                <li><a href="/modules" className="hover:text-[#FFD700] transition-colors">Modules</a></li>
+                <li><a href="/pricing" className="hover:text-[#FFD700] transition-colors">Pricing</a></li>
+                <li><a href="/demo-bundle" className="hover:text-[#FFD700] transition-colors">Demo Bundle</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="text-h3 text-[#ECFEFF] mb-4">Docs</h3>
-              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
-                <li><a href="/docs" className="hover:text-[#0891B2] transition-colors">Documentation</a></li>
-                <li><a href="/docs/api" className="hover:text-[#0891B2] transition-colors">API Reference</a></li>
-                <li><a href="/docs/guides" className="hover:text-[#0891B2] transition-colors">Guides</a></li>
-                <li><a href="/docs/examples" className="hover:text-[#0891B2] transition-colors">Examples</a></li>
+              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Docs</h3>
+              <ul className="space-y-2 text-sm text-gray-300 font-mono">
+                <li><a href="/docs" className="hover:text-[#FFD700] transition-colors">Documentation</a></li>
+                <li><a href="/docs/api" className="hover:text-[#FFD700] transition-colors">API Reference</a></li>
+                <li><a href="/docs/guides" className="hover:text-[#FFD700] transition-colors">Guides</a></li>
+                <li><a href="/docs/examples" className="hover:text-[#FFD700] transition-colors">Examples</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="text-h3 text-[#ECFEFF] mb-4">Pricing</h3>
-              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
-                <li><a href="/pricing" className="hover:text-[#0891B2] transition-colors">Plans</a></li>
-                <li><a href="/enterprise" className="hover:text-[#0891B2] transition-colors">Enterprise</a></li>
-                <li><a href="/contact" className="hover:text-[#0891B2] transition-colors">Contact Sales</a></li>
+              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Pricing</h3>
+              <ul className="space-y-2 text-sm text-gray-300 font-mono">
+                <li><a href="/pricing" className="hover:text-[#FFD700] transition-colors">Plans</a></li>
+                <li><a href="/enterprise" className="hover:text-[#FFD700] transition-colors">Enterprise</a></li>
+                <li><a href="/contact" className="hover:text-[#FFD700] transition-colors">Contact Sales</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="text-h3 text-[#ECFEFF] mb-4">Legal</h3>
-              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
-                <li><a href="/privacy" className="hover:text-[#0891B2] transition-colors">Privacy Policy</a></li>
-                <li><a href="/terms" className="hover:text-[#0891B2] transition-colors">Terms of Service</a></li>
-                <li><a href="/security" className="hover:text-[#0891B2] transition-colors">Security</a></li>
+              <h3 className="text-lg text-[#FFD700] mb-4 font-mono">Legal</h3>
+              <ul className="space-y-2 text-sm text-gray-300 font-mono">
+                <li><a href="/privacy" className="hover:text-[#FFD700] transition-colors">Privacy Policy</a></li>
+                <li><a href="/terms" className="hover:text-[#FFD700] transition-colors">Terms of Service</a></li>
+                <li><a href="/security" className="hover:text-[#FFD700] transition-colors">Security</a></li>
               </ul>
             </div>
           </div>
           
-          <div className="border-t border-[#ECFEFF]/15 mt-12 pt-8">
+          <div className="border-t border-[#FFD700] mt-12 pt-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-4 text-micro">
-                <span className="proof-chip">GDPR‑ready</span>
-                <span className="proof-chip">Stripe verified</span>
-                <span className="proof-chip">Telemetry only (no raw prompts)</span>
+              <div className="flex items-center gap-4 text-sm">
+                <span className="bg-[#FFD700] text-black px-3 py-1 font-mono text-xs">STRIPE VERIFIED</span>
+                <span className="bg-[#FFD700] text-black px-3 py-1 font-mono text-xs">GDPR COMPLIANT</span>
               </div>
-              <div className="text-micro text-[#ECFEFF]/80 font-semibold">
+              <div className="text-sm text-[#FFD700] font-mono font-semibold">
                 Start free • Pro €29/mo • Cancel anytime.
               </div>
             </div>
-            <div className="text-micro text-[#ECFEFF]/60 text-center">
+            <div className="text-sm text-gray-400 text-center font-mono">
               © 2024 PromptForge. All rights reserved.
             </div>
           </div>
