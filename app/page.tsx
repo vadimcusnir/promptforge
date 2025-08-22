@@ -8,7 +8,7 @@ import { AnimatedCodeBlock } from "@/components/ui/animated-code-block"
 import { BrandLinterAlert } from "@/components/ui/brand-linter-alert"
 import { CyberPoeticBackground } from "@/components/background/cyber-poetic-background"
 import { SkipLink } from "@/components/SkipLink"
-import { brandLinter } from "@/lib/brand-linter"
+import { brandLinter, type BrandLinterResult } from "@/lib/brand-linter"
 import { COPY } from "@/lib/copy"
 import {
   Zap,
@@ -32,7 +32,7 @@ export default function HomePage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [showExitPopup, setShowExitPopup] = useState(false)
   const [timeLeft, setTimeLeft] = useState({ hours: 47, minutes: 32, seconds: 15 })
-  const [linterResult, setLinterResult] = useState(null)
+  const [linterResult, setLinterResult] = useState<BrandLinterResult | null>(null)
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0)
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0)
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(0)
@@ -409,9 +409,9 @@ const prompt = await generatePrompt({
   output: "pdf"
 })
 
-// AI Score: ${linterResult?.score || "calculating..."}
+// AI Score: ${linterResult?.score ?? "calculating..."}
 // TTA: ${Math.floor(Math.random() * 45 + 15)}s
-// Status: ${linterResult?.score >= 80 ? "APPROVED" : "OPTIMIZING"}`}
+// Status: ${linterResult?.score ? (linterResult.score >= 80 ? "APPROVED" : "OPTIMIZING") : "CALCULATING"}`}
                 showRun={true}
                 onRun={() => {}}
               />
