@@ -56,8 +56,17 @@ export function Footer() {
         </div>
       </div>
       <div className="max-w-screen-xl mx-auto px-4 pb-8 flex items-center justify-between">
-        <div className="text-xs text-white/60">
-          © 2025 PROMPTFORGE™. All rights reserved. — You don't write prompts. You invoke realities.
+        <div className="flex items-center gap-3">
+          <Image
+            src="/forge_v3_logo/nav_static_03_loading.webp"
+            alt="PromptForge™ Logo"
+            width={24}
+            height={24}
+            className="w-6 h-6 object-contain opacity-60"
+          />
+          <div className="text-xs text-white/60">
+            © 2025 PROMPTFORGE™. All rights reserved. — You don't write prompts. You invoke realities.
+          </div>
         </div>
         <div className="flex gap-2">
           <span

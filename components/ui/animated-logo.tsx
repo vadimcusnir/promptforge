@@ -25,16 +25,15 @@ export function AnimatedLogo({
   };
 
   const staticLogos = {
-    gold: "/assets/logo-gold-outline.png",
-    black: "/assets/logo-black-1080.png",
-    white: "/assets/logo-white-1080.png",
+    gold: "/forge_v3_logo/nav_static_03_loading.webp",
+    black: "/forge_v3_logo/nav_static_03_loading.webp",
+    white: "/forge_v3_logo/nav_static_03_loading.webp",
   };
 
   const animatedLogos = {
-    gold: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_auriu_animat-7zCgND7OU3n9S7yNj0RgxjMPSxEoZ0.webm",
-    black:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_animat_negru-johB9Z8bQprMKRVQfPvRogOv3SZVSS.mp4",
-    white: "/assets/logo-white-1080.png", // fallback to static for white
+    gold: "/forge_v3_logo/logo_animation.mp4",
+    black: "/forge_v3_logo/logo_animation.mp4",
+    white: "/forge_v3_logo/nav_static_03_loading.webp", // fallback to static for white
   };
 
   useEffect(() => {
