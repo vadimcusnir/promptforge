@@ -5,6 +5,51 @@ X-PF-Ruleset-Version: 1.0.0
 
 policies:
   ui_cannot_override_defaults: true
+  glitch_protocol:
+    enabled: true
+    version: 1.0.0
+    scope:
+      targets: ["h1","h2"]                  # doar H1/H2
+      max_keywords_per_page: 6              # ≤6 cuvinte-cheie / pagină
+    timing:
+      total_ms: [280, 420]                  # 280–420ms
+      once_per_viewport_entry: true         # o singură execuție la intrare
+      hover_replay:
+        enabled: true
+        cooldown_ms: 6000
+    determinism:
+      seed_source: "text_hash"              # seed din text (hash)
+      prng: "mulberry32"
+    accessibility:
+      overlay: true                         # overlay vizual peste text real
+      aria_hidden_overlay: true
+      sr_reads_real_text: true
+    performance:
+      driver: "requestAnimationFrame"
+      infinite_loops: false
+      avoid_style_thrashing: true           # fără reflow agresiv
+      fixed_overlay_width_ch: true          # setezi width Nch ⇒ anti-CLS
+    ambient:
+      respect_reduced_motion: true          # oprește la prefers-reduced-motion
+      html_data_motion_off_disables: true   # oprește la data-motion="off"
+    selectors:
+      container: ".kw[data-glitch]"
+      real_text: ".kw__text"
+      overlay: ".kw__glitch"
+    whitelist_symbols: [">","<","|","/","\\","{","}","[","]","~","_","-","#","$","%","*","+","=","^",";",":"]
+    acceptance:
+      - page.h1_h2_glitch_count <= 6
+      - every_kw_has_children == [".kw__text",".kw__glitch"]
+      - overlay_has_aria_hidden_true == true
+      - animation_total_duration_ms in [280,420]
+      - animation_runs_once_on_viewport_entry == true
+      - hover_replay_cooldown_ms >= 6000
+      - deterministic_output_for_same_text == true
+      - overlay_width_equals_text_length_ch == true
+      - reduced_motion_disables == true
+      - no_infinite_loops == true
+      - perf.cpu_pct <= 1
+      - perf.frame_time_ms_p95 <= 16
   ui_overlays:
     enabled: true
     target_selector: "#bg-overlay"

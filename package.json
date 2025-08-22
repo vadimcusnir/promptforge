@@ -19,7 +19,10 @@
     "security:setup": "./scripts/setup-security.sh",
     "security:validate": "./scripts/validate-security.sh",
     "security:full": "pnpm run audit && pnpm run lint:security && pnpm run sbom",
-    "test:overlay-policy": "node scripts/test-overlay-policy.js"
+    "test:overlay-policy": "node scripts/test-overlay-policy.js",
+    "test:e2e": "playwright test",
+    "test:e2e:glitch": "playwright test tests/e2e/glitch-protocol.spec.ts",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@hookform/resolvers": "3.10.0",

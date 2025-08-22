@@ -143,7 +143,7 @@ export default function GlitchDemoPage() {
             </div>
             <div>
               <h4 className="font-bold text-[#0891B2] mb-2">Symbols</h4>
-              <p>> < | / \\ { } [ ] ~ _ - # $ % * + = ^ ; :</p>
+              <p>&gt; &lt; | / \\ &#123; &#125; [ ] ~ _ - # $ % * + = ^ ; :</p>
             </div>
             <div>
               <h4 className="font-bold text-[#0891B2] mb-2">Accessibility</h4>

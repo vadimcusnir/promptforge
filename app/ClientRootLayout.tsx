@@ -12,6 +12,7 @@ import { OverlayController } from "@/components/OverlayController"
 import { MotionProvider } from "@/lib/motion/provider"
 import { useEffect } from "react"
 import BackgroundRoot from "@/components/background/BackgroundRoot"
+import { telemetry } from "@/lib/telemetry"
 import "./globals.css"
 import "./styles/variables.css"
 import "./styles/animations.css"
@@ -68,6 +69,11 @@ function ReadySetter() {
     if (fontsReady) {
       console.log("[v0] Fonts ready, initiating matrix ready sequence")
 
+      // Expose telemetry engine globally for glitch protocol
+      if (typeof window !== 'undefined') {
+        (window as any).telemetryEngine = telemetry
+      }
+
       // Immediate attempt
       if (document.readyState === "complete" || document.readyState === "interactive") {
         readyNow()
@@ -103,6 +109,7 @@ html {
   --font-heading: ${montserrat.variable};
 }
         `}</style>
+        <script src="/glitch-keywords.js" defer />
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell`}>
         <BackgroundRoot ambient />

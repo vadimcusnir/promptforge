@@ -63,6 +63,20 @@ export interface BusinessMetrics {
   }
 }
 
+export interface GlitchProtocolMetrics {
+  count: number // Number of glitch elements per page
+  run_times: number[] // Animation durations in ms
+  hover_replays: number // Number of hover-triggered replays
+  disabled_by_reduced_motion: boolean // Whether disabled by accessibility
+  page_url: string // Current page URL
+  h1_h2_count: number // Number of H1/H2 elements with glitch
+  performance: {
+    cpu_usage_percent: number // Estimated CPU usage
+    frame_time_p95: number // 95th percentile frame time
+    cls_prevented: boolean // Whether CLS prevention is active
+  }
+}
+
 export class TelemetryEngine {
   private static instance: TelemetryEngine
   private events: TelemetryEvent[] = []
@@ -341,6 +355,26 @@ export class TelemetryEngine {
 
   trackTierUpgrade(fromTier: string, toTier: string): void {
     this.trackEvent("tier_upgrade", "business", { fromTier, toTier })
+  }
+
+  trackGlitchProtocol(metrics: GlitchProtocolMetrics): void {
+    this.trackEvent("glitch_protocol", "performance", {
+      glitch_count: metrics.count,
+      run_times_p95: metrics.run_times.length > 0 ? 
+        metrics.run_times.sort((a, b) => a - b)[Math.floor(metrics.run_times.length * 0.95)] : 0,
+      hover_replays: metrics.hover_replays,
+      disabled_by_reduced_motion: metrics.disabled_by_reduced_motion,
+      page_url: metrics.page_url,
+      h1_h2_count: metrics.h1_h2_count,
+      cpu_usage_percent: metrics.performance.cpu_usage_percent,
+      frame_time_p95: metrics.performance.frame_time_p95,
+      cls_prevented: metrics.performance.cls_prevented,
+      protocol_version: "1.0.0",
+      compliant: metrics.count <= 6 && 
+                 metrics.run_times.every(t => t >= 280 && t <= 420) &&
+                 metrics.performance.cpu_usage_percent <= 1 &&
+                 metrics.performance.frame_time_p95 <= 16
+    })
   }
 
   // Analytics export

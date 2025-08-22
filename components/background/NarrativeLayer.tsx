@@ -117,7 +117,7 @@ export function NarrativeLayer({
     const timeSincePhaseStart = currentTime - activeQuote.phaseStartTime
     const timeSinceLastChar = currentTime - activeQuote.lastCharTime
 
-    let updatedQuote = { ...activeQuote }
+    const updatedQuote = { ...activeQuote }
 
     switch (activeQuote.phase) {
       case 'pre':
