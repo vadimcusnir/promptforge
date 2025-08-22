@@ -165,105 +165,182 @@ requirements: ${module.requirements}`
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF]">
+      {/* Static Grid Background */}
+      <div className="grid-static"></div>
+      
       <SkipLink />
       <Header showBreadcrumbs={true} />
       
       <main id="main" tabIndex={-1}>
-        <section className="border-b border-lead-gray/20 bg-black/90 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-white font-montserrat">Generezi. Testezi. Exporți.</h1>
-                <p className="text-lead-gray mt-1">7-D controlează tot. Scor ≥80 sau îl strângem.</p>
+        <div className="container mx-auto max-w-[1240px] px-6 py-8">
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Left: 7D Configurator */}
+            <div className="space-y-6">
+              <div className="glass-effect p-6">
+                <h2 className="text-h3 text-[#ECFEFF] mb-4">7D Configurator</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {Object.entries(sevenDConfig).map(([key, value]) => (
+                    <div key={key}>
+                      <label className="block text-micro text-[#ECFEFF]/80 mb-2 capitalize">
+                        {key}
+                      </label>
+                      <select
+                        value={value}
+                        onChange={(e) => setSevenDConfig(prev => ({...prev, [key]: e.target.value}))}
+                        className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0 w-full"
+                      >
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="enterprise">Enterprise</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={handleGeneratePrompt}
+                  disabled={isGenerating}
+                  className="btn-primary w-full mt-6"
+                >
+                  {isGenerating ? "Generating..." : "Generate Prompt"}
+                </button>
               </div>
-              <div className="text-right">
-                <div className="text-sm text-lead-gray">Plan: {currentTier.name}</div>
-                <div className="text-xs text-gold-industrial">
-                  {premiumGate.getUsageStats().runs.used}/
-                  {currentTier.limits.monthlyRuns === -1 ? "∞" : currentTier.limits.monthlyRuns} runs
+            </div>
+
+            {/* Right: Prompt Preview */}
+            <div className="space-y-6">
+              <div className="glass-effect p-6">
+                <h2 className="text-h3 text-[#ECFEFF] mb-4">Prompt Preview</h2>
+                <div className="bg-[#0A0A0A]/50 p-4 rounded border border-[#ECFEFF]/10 min-h-[300px]">
+                  {generatedPrompt ? (
+                    <pre className="text-micro text-[#ECFEFF] whitespace-pre-wrap font-mono">
+                      {generatedPrompt.content}
+                    </pre>
+                  ) : (
+                    <p className="text-[#ECFEFF]/50 italic">
+                      Configure 7D parameters and generate your prompt...
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        </section>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <SevenDPanel
-              selectedModule={selectedModule}
-              onModuleChange={setSelectedModule}
-              sevenDConfig={sevenDConfig}
-              onConfigChange={setSevenDConfig}
-            />
-          </div>
-
-          <div className="space-y-6">
-            <div className="glass-effect rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold font-montserrat">Prompt Editor</h2>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleGeneratePrompt}
-                    disabled={isGenerating}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                      isGenerating
-                        ? "bg-lead-gray/20 text-lead-gray cursor-not-allowed"
-                        : "bg-gold-industrial text-black hover:bg-gold-industrial/90 hover:shadow-lg hover:shadow-gold-industrial/20"
-                    }`}
-                  >
-                    {isGenerating ? (
-                      <span className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
-                        Generating...
-                      </span>
-                    ) : (
-                      "Generate Prompt"
-                    )}
-                  </button>
+          {/* Test Engine */}
+          {generatedPrompt && (
+            <div className="mt-8 glass-effect p-6">
+              <h2 className="text-h3 text-[#ECFEFF] mb-4">Test Engine</h2>
+              <div className="grid md:grid-cols-4 gap-4 mb-6">
+                <div className="text-center">
+                  <div className="text-h2 text-[#ECFEFF] mb-1">
+                    {testResult?.scores.clarity || '--'}
+                  </div>
+                  <div className="text-micro text-[#ECFEFF]/80">Clarity</div>
+                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-[#16A34A] h-2 rounded-full transition-all"
+                      style={{width: `${testResult?.scores.clarity || 0}%`}}
+                    ></div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-h2 text-[#ECFEFF] mb-1">
+                    {testResult?.scores.execution || '--'}
+                  </div>
+                  <div className="text-micro text-[#ECFEFF]/80">Execution</div>
+                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-[#16A34A] h-2 rounded-full transition-all"
+                      style={{width: `${testResult?.scores.execution || 0}%`}}
+                    ></div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-h2 text-[#ECFEFF] mb-1">
+                    {testResult?.scores.ambiguity || '--'}
+                  </div>
+                  <div className="text-micro text-[#ECFEFF]/80">Ambiguity</div>
+                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-[#F59E0B] h-2 rounded-full transition-all"
+                      style={{width: `${testResult?.scores.ambiguity || 0}%`}}
+                    ></div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-h2 text-[#ECFEFF] mb-1">
+                    {testResult?.scores.business_fit || '--'}
+                  </div>
+                  <div className="text-micro text-[#ECFEFF]/80">Business-fit</div>
+                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-[#16A34A] h-2 rounded-full transition-all"
+                      style={{width: `${testResult?.scores.business_fit || 0}%`}}
+                    ></div>
+                  </div>
                 </div>
               </div>
-
-              <PromptEditor prompt={generatedPrompt} onPromptChange={setGeneratedPrompt} />
+              
+              <div className="flex items-center justify-between">
+                <div className="text-body text-[#ECFEFF]">
+                  Verdict: <span className={`font-semibold ${
+                    testResult?.verdict === 'PASS' ? 'text-[#16A34A]' : 
+                    testResult?.verdict === 'PARTIAL' ? 'text-[#F59E0B]' : 'text-[#DC2626]'
+                  }`}>
+                    {testResult?.verdict || 'Not tested'}
+                  </span>
+                </div>
+                <button
+                  onClick={handleRunTest}
+                  disabled={isTesting || !canUseGptTest}
+                  className="btn-primary"
+                >
+                  {isTesting ? "Testing..." : "Run Test"}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
+        {/* Export Bar - Fixed Bottom */}
         {generatedPrompt && (
-          <div className="mt-8">
-            <TestEngine
-              prompt={generatedPrompt}
-              testResult={testResult}
-              onRunTest={handleRunTest}
-              isTesting={isTesting}
-              canUseGptTest={canUseGptTest}
-            />
+          <div className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A]/95 backdrop-blur-sm border-t border-[#ECFEFF]/15 p-4">
+            <div className="container mx-auto max-w-[1240px] flex items-center justify-between">
+              <div className="text-micro text-[#ECFEFF]/80">
+                Export options based on your plan
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => handleExport('txt')} 
+                  className="btn-secondary text-micro px-3 py-2"
+                >
+                  .txt (Free)
+                </button>
+                <button 
+                  onClick={() => handleExport('md')} 
+                  className="btn-secondary text-micro px-3 py-2"
+                >
+                  .md (Creator+)
+                </button>
+                <button 
+                  onClick={() => handleExport('json')} 
+                  className="btn-secondary text-micro px-3 py-2"
+                >
+                  .json/.pdf (Pro+)
+                </button>
+                <button 
+                  onClick={() => handleExport('zip')} 
+                  className="btn-secondary text-micro px-3 py-2"
+                >
+                  .zip (Ent)
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
-        <div className="mt-8">
-          <HistoryPanel
-            onRestoreConfig={(config) => {
-              setSevenDConfig(config.sevenDConfig)
-              setSelectedModule(modules.find((m) => m.id === config.moduleId) || modules[0])
-            }}
-          />
-        </div>
-      </div>
-
-      {generatedPrompt && <ExportBar prompt={generatedPrompt} testResult={testResult} onExport={handleExport} />}
-
-      {testResult && (
-        <TelemetryBadge
-          runId={generatedPrompt?.id || ""}
-          tta={generatedPrompt?.tta || 0}
-          tokens={generatedPrompt?.tokens || 0}
-          score={testResult}
-        />
-      )}
-
-      <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} trigger={paywallTrigger} />
+        <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} trigger={paywallTrigger} />
       </main>
     </div>
   )

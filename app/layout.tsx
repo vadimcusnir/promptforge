@@ -7,9 +7,9 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chatgpt-prompting.com'),
-  title: "Prompt-Forge™ - Cyber-Poetic Terminal Aesthetic",
+  title: "The 1st Cognitive OS for Prompts - PromptForge™",
   description:
-    "Advanced AI prompt generation system with immersive visual experience. Professional prompts in 10 seconds.",
+    "50 modules orchestrated by 7D Engine. Production-ready prompts scored ≥80, exportable in minutes. TTA < 60s.",
   generator: "Prompt-Forge™",
   keywords:
     "AI prompts, prompt engineering, ChatGPT prompts, AI tools, prompt generator, cyber aesthetic, terminal interface",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     apple: "/favicon-48x48.png",
   },
   openGraph: {
-    title: "Prompt-Forge™ - Cyber-Poetic Terminal Aesthetic",
-    description: "Advanced AI prompt generation system with immersive visual experience.",
+    title: "The 1st Cognitive OS for Prompts - PromptForge™",
+    description: "50 modules orchestrated by 7D Engine. Production-ready prompts scored ≥80, exportable in minutes.",
     type: "website",
     url: "https://chatgpt-prompting.com",
     siteName: "Prompt-Forge™",
@@ -49,8 +49,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prompt-Forge™ - Cyber-Poetic Terminal Aesthetic",
-    description: "Advanced AI prompt generation system with immersive visual experience.",
+    title: "The 1st Cognitive OS for Prompts - PromptForge™",
+    description: "50 modules orchestrated by 7D Engine. Production-ready prompts scored ≥80, exportable in minutes.",
     images: ["/og-image.png"],
     creator: "@ai_idei",
   },

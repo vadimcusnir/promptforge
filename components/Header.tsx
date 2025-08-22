@@ -30,16 +30,16 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
   return (
     <header 
       role="banner"
-      className="sticky top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-gray-800/50 transition-all duration-300 ease-out"
+      className="sticky top-0 left-0 right-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-md border-b border-[#ECFEFF]/15"
     >
-      <div className="max-w-[1440px] mx-auto px-6">
+      <div className="container mx-auto max-w-[1240px] px-6">
         {/* Breadcrumbs */}
         {showBreadcrumbs && (
-          <div className="flex items-center py-2 text-xs text-gray-400 border-b border-gray-800/30">
+          <div className="flex items-center py-2 text-xs text-[#ECFEFF]/60 border-b border-[#ECFEFF]/10">
             <Home className="w-3 h-3 mr-1" />
             <span>{COPY.brand}</span>
             <ChevronRight className="w-3 h-3 mx-1" />
-            <span className="text-[#d1a954]">Cognitive OS</span>
+            <span className="text-[#0891B2]">Cognitive OS</span>
             <ChevronRight className="w-3 h-3 mx-1" />
             <span>{getBreadcrumbPage()}</span>
           </div>
@@ -48,57 +48,52 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="flex items-center space-x-3">
-              <div className="text-[#d1a954] font-black text-xl tracking-wider font-mono">{COPY.brand}</div>
-              <div className="px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-xs font-mono text-green-400">
-                FREE
-              </div>
-            </div>
+            <div className="text-h3 text-[#ECFEFF] font-bold">{COPY.brand}</div>
           </div>
 
           <div className="flex items-center space-x-6">
             {/* Desktop Navigation */}
             <nav 
-              className="hidden md:flex items-center space-x-4 text-sm font-mono"
+              className="hidden md:flex items-center space-x-4 text-micro"
               aria-label="Primary navigation"
             >
-              <span className="text-gray-400">€29/mo</span>
-              <span className="text-gray-600">|</span>
-              <button
-                className="text-white font-bold tracking-wider underline cursor-pointer font-mono hover:text-[#d1a954] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                aria-label="Navigate to Generator"
+              <span className="text-[#ECFEFF]/60">$29/mo</span>
+              <span className="text-[#ECFEFF]/30">|</span>
+              <a
+                href="/generator"
+                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
                 aria-current={pathname === '/generator' ? "page" : undefined}
               >
                 {COPY.nav_generator.toUpperCase()}
-              </button>
-              <button
-                className="text-white font-bold tracking-wider underline cursor-pointer font-mono hover:text-[#d1a954] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                aria-label="View Pricing"
+              </a>
+              <a
+                href="/pricing"
+                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
                 aria-current={pathname === '/pricing' ? "page" : undefined}
               >
                 {COPY.nav_pricing.toUpperCase()}
-              </button>
-              <button
-                className="text-white font-bold tracking-wider underline cursor-pointer font-mono hover:text-[#d1a954] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                aria-label="View Modules"
+              </a>
+              <a
+                href="/modules"
+                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
                 aria-current={pathname === '/modules' ? "page" : undefined}
               >
                 {COPY.nav_modules.toUpperCase()}
-              </button>
-              <button
-                className="text-white font-bold tracking-wider underline cursor-pointer font-mono hover:text-[#d1a954] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                aria-label="View Documentation"
+              </a>
+              <a
+                href="/docs"
+                className="text-[#ECFEFF] font-semibold hover:text-[#0891B2] transition-colors"
                 aria-current={pathname === '/docs' ? "page" : undefined}
               >
                 {COPY.nav_docs.toUpperCase()}
-              </button>
+              </a>
             </nav>
 
             {/* Desktop Auth Actions */}
             <div className="hidden md:flex items-center space-x-2">
               {isAuthenticated ? (
                 <Button
-                  className="btn-primary px-6 py-3 font-bold text-sm font-mono transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
+                  className="btn-primary text-micro px-4 py-2"
                   aria-label="Go to Dashboard"
                   data-gate="pro"
                 >
@@ -107,13 +102,13 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
               ) : (
                 <>
                   <Button
-                    className="btn-secondary px-6 py-3 font-bold text-sm font-mono transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
+                    className="btn-secondary text-micro px-4 py-2"
                     aria-label="Sign in to Prompt-Forge"
                   >
                     {COPY.nav_signin.toUpperCase()}
                   </Button>
                   <Button
-                    className="btn-primary px-6 py-3 font-bold text-sm font-mono transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
+                    className="btn-primary text-micro px-4 py-2"
                     aria-label="Start using Prompt-Forge"
                     data-gate="pro"
                   >

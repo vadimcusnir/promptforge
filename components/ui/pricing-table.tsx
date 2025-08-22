@@ -1,66 +1,67 @@
 "use client"
 
 import { Check, X } from "lucide-react"
+import { GTMEvents } from "@/lib/gtm-events"
 
 const plans = [
   {
     id: "basic",
     name: "Basic",
-    subtitle: "Notebook with Drafts",
+    subtitle: "Get Started with Prompt Engineering",
     price: "$0",
     period: "forever",
-    description: "Try it, but you'll want more",
-    cta: "Start with Limitations",
+    description: "Try the 7D engine with limits",
+    cta: "Start Free",
     popular: false,
     features: [
-      { name: "10 prompts/month", included: true },
-      { name: "Basic templates", included: true },
-      { name: "Premium library", included: false },
-      { name: "GPT optimization", included: false },
-      { name: "Export formats", included: false },
+      { name: "10 runs/month", included: true },
+      { name: "5 basic modules (M01-M05)", included: true },
+      { name: "Demo test engine", included: true },
+      { name: "Export .txt only", included: true },
+      { name: "Basic analytics", included: true },
       { name: "API access", included: false },
-      { name: "Priority support", included: false },
+      { name: "Community support", included: true },
     ],
   },
   {
     id: "pro",
     name: "Pro",
-    subtitle: "The Printing Press That Writes For You",
+    subtitle: "Production-Ready Prompt Engineering",
     price: "$29",
     period: "month",
     originalPrice: "$36",
-    description: "Activate Complete Prompt Engine",
+    description: "Complete 7D Parameter Engine + 50 Modules",
     cta: "Upgrade to Pro",
     popular: true,
     socialProof: "78% choose this plan",
     features: [
-      { name: "Unlimited prompts", included: true },
-      { name: "Premium library (50 modules)", included: true },
-      { name: "GPT-4 optimization", included: true },
-      { name: "PDF/JSON/CSV export", included: true },
-      { name: "Advanced analytics", included: true },
-      { name: "API access", included: false },
-      { name: "Priority support", included: true },
+      { name: "1,000 runs/month", included: true },
+      { name: "50 semantic modules (M01-M50)", included: true },
+      { name: "GPT-4 test engine (≥80 score)", included: true },
+      { name: "Export .txt/.md/.json/.pdf", included: true },
+      { name: "Audit & telemetry dashboard", included: true },
+      { name: "API access (500 calls/mo)", included: false },
+      { name: "Priority support (<24h)", included: true },
     ],
   },
   {
     id: "team",
     name: "Team",
-    subtitle: "Idea Factory on Autopilot",
+    subtitle: "Enterprise Prompt Operations",
     price: "$99",
     period: "month",
-    description: "Talk to us - prepare your team",
+    description: "Scale prompt engineering across teams",
     cta: "Contact Sales",
     popular: false,
     socialProof: "+1,200 active teams",
     features: [
-      { name: "Everything in Pro", included: true },
-      { name: "Unlimited team seats", included: true },
-      { name: "White-label options", included: true },
-      { name: "Full API access", included: true },
-      { name: "Custom integrations", included: true },
-      { name: "Dedicated support", included: true },
-      { name: "SLA guarantee", included: true },
+      { name: "10,000 runs/month", included: true },
+      { name: "Unlimited seats (5+ users)", included: true },
+      { name: "White-label deployment", included: true },
+      { name: "Full API access (unlimited)", included: true },
+      { name: "Custom module development", included: true },
+      { name: "Dedicated success manager", included: true },
+      { name: "99.9% SLA guarantee", included: true },
     ],
   },
 ]
@@ -103,6 +104,10 @@ export function PricingTable() {
                     ? "border border-[#5a5a5a] text-[#5a5a5a] hover:border-white hover:text-white"
                     : "bg-white text-black hover:bg-[#5a5a5a] hover:text-white"
               }`}
+              onClick={() => {
+                const price = plan.id === "basic" ? 0 : plan.id === "pro" ? 29 : 99
+                GTMEvents.pricingUpgrade(plan.name, price)
+              }}
             >
               {plan.cta}
             </button>

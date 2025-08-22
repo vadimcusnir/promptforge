@@ -6,20 +6,20 @@ export async function getMotionMode() {
   const c = cookieStore.get("motion")?.value;
   if (c === "off" || c === "on") return c as "off"|"on";
 
-  // 2) ENV (fallback temporar)
-  if (process.env.NEXT_PUBLIC_MOTION === "off") return "off";
+  // 2) ENV (fallback temporar) - default to off for ambient mode
+  if (process.env.NEXT_PUBLIC_MOTION === "on") return "on";
 
   // 3) respectă preferința userului (Reduce Motion)
   const headerStore = await headers();
   const hdr = headerStore.get("Sec-CH-Prefers-Reduced-Motion") || "";
   if (/\breduce\b/i.test(hdr)) return "off";
 
-  return "on";
+  return "off"; // Default to off for cleaner ambient experience
 }
 
 // Client-side hook for motion detection
 export function useMotionMode() {
-  if (typeof window === "undefined") return "on";
+  if (typeof window === "undefined") return "off";
   
   // Check data-motion attribute on html element
   const attr = document.documentElement.getAttribute("data-motion");
@@ -29,5 +29,5 @@ export function useMotionMode() {
   const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (mediaQuery.matches) return "off";
   
-  return "on";
+  return "off"; // Default to off for cleaner ambient experience
 }

@@ -19,61 +19,122 @@ export default function PricingPage() {
     return () => document.removeEventListener("mouseleave", handleMouseLeave)
   }, [])
 
+  const pricingPlans = [
+    {
+      name: "Free",
+      price: "$0",
+      period: "/month",
+      description: "For individuals getting started",
+      features: [
+        "5 prompts/month",
+        "Basic modules (M01-M10)",
+        ".txt export only",
+        "Community support"
+      ],
+      cta: "Start Free",
+      popular: false
+    },
+    {
+      name: "Pro",
+      price: "$29",
+      period: "/month",
+      description: "For professional prompt engineers",
+      features: [
+        "500 prompts/month",
+        "All 50 modules (M01-M50)",
+        ".md/.json/.pdf exports",
+        "7D Parameter Engine",
+        "Priority support"
+      ],
+      cta: "Start Pro",
+      popular: true
+    },
+    {
+      name: "Enterprise",
+      price: "$299",
+      period: "/month",
+      description: "For teams and organizations",
+      features: [
+        "Unlimited prompts",
+        "All modules + custom",
+        "All exports + .zip bundles",
+        "API access",
+        "10 team seats",
+        "Dedicated support"
+      ],
+      cta: "Contact Sales",
+      popular: false
+    }
+  ]
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Promotional Banner */}
-      <div className="bg-gradient-to-r from-[#d1a954]/20 to-[#d1a954]/10 border-b border-[#5a5a5a]/30">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-center gap-4">
-            <span className="text-[#d1a954] font-medium">🔥 Limited Time Offer</span>
-            <Countdown />
-            <span className="text-sm text-[#5a5a5a]">-20% off Pro Plan</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Hero Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-[#5a5a5a] bg-clip-text text-transparent">
-            How Much Time Do You Want to Waste Without Good Prompts?
-          </h1>
-          <p className="text-xl text-[#5a5a5a] mb-8 max-w-3xl mx-auto">
-            Activate PromptForge and escape the creative blocks. Stop improvising. Start engineering.
-          </p>
-          <div className="flex items-center justify-center gap-6 text-sm text-[#5a5a5a]">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Cancel anytime</span>
+    <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF]">
+      {/* Static Grid Background */}
+      <div className="grid-static"></div>
+      
+      {/* Pricing Section */}
+      <section className="container mx-auto max-w-[1240px] px-6 py-24">
+        <h1 className="text-h1 text-[#ECFEFF] text-center mb-4">Pricing</h1>
+        <p className="text-body text-[#ECFEFF]/80 text-center mb-16">
+          Choose your plan and start engineering better prompts today
+        </p>
+        
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {pricingPlans.map((plan) => (
+            <div 
+              key={plan.name} 
+              className={`glass-effect p-8 relative ${plan.popular ? 'ring-2 ring-[#164E63]' : ''}`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-[#164E63] text-[#ECFEFF] px-4 py-1 text-micro font-semibold rounded-full">
+                    Most Popular
+                  </span>
+                </div>
+              )}
+              
+              <div className="text-center mb-6">
+                <h3 className="text-h3 text-[#ECFEFF] mb-2">{plan.name}</h3>
+                <div className="flex items-baseline justify-center mb-2">
+                  <span className="text-4xl font-bold text-[#ECFEFF]">{plan.price}</span>
+                  <span className="text-[#ECFEFF]/60 ml-1">{plan.period}</span>
+                </div>
+                <p className="text-micro text-[#ECFEFF]/80">{plan.description}</p>
+              </div>
+              
+              <ul className="space-y-3 mb-8">
+                {plan.features.map((feature, index) => (
+                  <li key={index} className="flex items-center text-micro text-[#ECFEFF]/90">
+                    <div className="w-2 h-2 bg-[#16A34A] rounded-full mr-3 flex-shrink-0"></div>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              
+              <button 
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
+                  plan.popular 
+                    ? 'bg-[#164E63] hover:bg-[#0891B2] text-[#ECFEFF]' 
+                    : 'bg-[#ECFEFF]/10 hover:bg-[#ECFEFF]/20 text-[#ECFEFF] border border-[#ECFEFF]/20'
+                }`}
+              >
+                {plan.cta}
+              </button>
+              
+              {plan.name !== "Enterprise" && (
+                <p className="text-center text-xs text-[#ECFEFF]/60 mt-4">
+                  7-day refund • cancel anytime
+                </p>
+              )}
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>7-day money-back guarantee</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Instant activation</span>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
-
-      {/* Pricing Table */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <PricingTable />
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-12 border-t border-[#5a5a5a]/30">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-8 opacity-60">
-            <div className="text-[#5a5a5a] text-sm">Secured by Stripe</div>
-            <div className="text-[#5a5a5a] text-sm">PayPal Accepted</div>
-            <div className="text-[#5a5a5a] text-sm">GDPR Compliant</div>
-            <div className="text-[#5a5a5a] text-sm">SOC 2 Certified</div>
-          </div>
+        
+        {/* Trust Indicators */}
+        <div className="flex items-center justify-center gap-6 mt-16">
+          <span className="proof-chip">Stripe/GDPR</span>
+          <span className="proof-chip">SOC 2</span>
+          <span className="proof-chip">Enterprise Ready</span>
         </div>
       </section>
 

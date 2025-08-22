@@ -10,6 +10,7 @@ import { BrandLinterAlert } from "@/components/ui/brand-linter-alert"
 import { SkipLink } from "@/components/SkipLink"
 import { brandLinter, type BrandLinterResult } from "@/lib/brand-linter"
 import { COPY } from "@/lib/copy"
+import { GTMEvents } from "@/lib/gtm-events"
 import {
   Zap,
   Crown,
@@ -27,9 +28,53 @@ import {
 } from "lucide-react"
 
 export default function HomePage() {
-  const [demoInput, setDemoInput] = useState("")
+  const [demoInput, setDemoInput] = useState("marketing strategy")
   const [demoOutput, setDemoOutput] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
+  
+  const demoExamples = [
+    "marketing strategy",
+    "code review",
+    "content creation",
+    "data analysis",
+    "customer support",
+  ]
+  
+  const faqData = [
+    {
+      question: "What do I get after subscribing?",
+      answer: "Unlimited access to 50 AI modules, GPT optimization, all export formats, priority support, and regular updates with new features."
+    },
+    {
+      question: "Can I cancel anytime?",
+      answer: "Yes, absolutely. Cancel with one click from your dashboard. No questions asked, no hidden fees."
+    },
+    {
+      question: "How does this compare to ChatGPT alone?",
+      answer: "PROMPTFORGE provides structured, professional prompts with built-in optimization, testing, and export capabilities. ChatGPT gives you raw responses - we give you a complete prompt engineering system."
+    },
+    {
+      question: "Do you offer refunds?",
+      answer: "Yes, we offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your payment in full."
+    },
+    {
+      question: "Is my data secure?",
+      answer: "Absolutely. We use enterprise-grade encryption and never store your prompts on our servers. Everything is processed securely and deleted after use."
+    }
+  ]
+  
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqData.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  }
   const [showExitPopup, setShowExitPopup] = useState(false)
   const [timeLeft, setTimeLeft] = useState({ hours: 47, minutes: 32, seconds: 15 })
   const [linterResult, setLinterResult] = useState<BrandLinterResult | null>(null)
@@ -46,15 +91,18 @@ export default function HomePage() {
 
   const rotatingTitles = [
     {
-      line1: "Prompt-Forge™ v3",
-      line2: "1st Cognitive-OS for Prompts with 50 semantic Modules and 7D Parameter Engine",
+      line1: "The 1st Cognitive OS for Prompts",
+      line2: "50 modules orchestrated by the 7D Engine → production-ready prompts scored ≥80 and exportable in minutes.",
     },
   ]
 
-  const rotatingSubtitles = ["Just Try, it is Free Today!"]
+  const rotatingSubtitles = ["TTA < 60s • Score ≥ 80 • Export .md/.json/.pdf • Audit & Telemetry"]
 
   const generateDemo = async () => {
     if (!demoInput.trim()) return
+
+    // Track the generation event
+    GTMEvents.topicGenerate(demoInput.trim())
 
     setIsGenerating(true)
     await new Promise((resolve) => setTimeout(resolve, 1500))
@@ -135,145 +183,183 @@ Generate the optimized ${demoInput} strategy now.`
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-mono relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
       <SkipLink />
 
-      <button
-        onClick={() => setShowExitPopup(true)}
-        className="fixed right-6 top-1/2 -translate-y-1/2 z-40 bg-[#d1a954] text-black px-3 py-6 rounded-l-lg font-bold text-sm tracking-wider hover:bg-[#d1a954]/90 transition-all duration-300 shadow-lg font-mono focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-        style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
-        aria-label="Start free trial"
-      >
-        FREE TRIAL
-      </button>
+
 
       <main id="main" tabIndex={-1}>
-        <section className="relative overflow-hidden pt-24 min-h-screen flex items-center cyber-bg-layer-7">
-        <div className="max-w-[1440px] mx-auto px-6 w-full">
-          <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-12 text-center">
-              <div className="space-y-16">
-                <div className="flex justify-center">
-                  <div className="bg-[#d1a954]/10 border border-[#d1a954]/30 rounded-none px-6 py-2 backdrop-blur-sm">
-                    <span className="font-bold tracking-widest text-xs font-mono text-[#d1a954]">
-                      Prompt-Forge™ v3.0
-                    </span>
-                    <div className="inline-block w-2 h-2 bg-[#00FF7F] rounded-full ml-2 animate-pulse"></div>
-                  </div>
-                </div>
+        {/* Static Grid Background */}
+        <div className="grid-static"></div>
+        
+        <section className="container mx-auto max-w-[1240px] px-6 py-24 grid gap-6 text-center">
+          <h1 className="text-h1 text-[#ECFEFF]">
+            The 1st Cognitive OS for Prompts
+          </h1>
+          
+          <p className="text-body text-[#ECFEFF]/80 max-w-3xl mx-auto">
+            50 modules × 7D Engine → export scored ≥80 in minutes.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+            <Button
+              className="btn-primary text-lg px-8 py-4 font-semibold"
+              onClick={() => GTMEvents.heroCTA()}
+            >
+              Start the Forge
+            </Button>
+            <Button
+              className="btn-secondary text-lg px-8 py-4 font-semibold"
+              onClick={() => GTMEvents.seeModules()}
+            >
+              View Modules
+            </Button>
+          </div>
+          
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <span className="proof-chip">TTA &lt; 60s</span>
+            <span className="proof-chip">Score ≥ 80</span>
+            <span className="proof-chip">.md/.json/.pdf</span>
+          </div>
+        </section>
 
-                <div className="max-w-5xl mx-auto">
-                  <h1
-                    className="text-h1 mb-8 text-center font-sans"
-                    style={{ color: "#ffffff", textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+        {/* See it in action - Micro Demo */}
+        <section className="container mx-auto max-w-[1240px] px-6 py-24">
+          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">See it in action</h2>
+          <p className="text-body text-[#ECFEFF]/80 text-center mb-12">
+            Enter any topic and watch the 7D Engine generate a professional prompt
+          </p>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <label className="block text-micro text-[#ECFEFF]/80 mb-2">Topic</label>
+                <Input
+                  value={demoInput}
+                  onChange={(e) => setDemoInput(e.target.value)}
+                  placeholder="Enter your topic..."
+                  className="glass-effect text-[#ECFEFF] placeholder:text-[#ECFEFF]/50"
+                />
+                
+                <div className="flex gap-2 flex-wrap">
+                  <select 
+                    className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0"
+                    onChange={(e) => setDemoInput(e.target.value)}
+                    defaultValue=""
                   >
-                    <div className="transition-all duration-500 ease-out my-0 py-0 mb-3 text-center tracking-tight">
-                      {rotatingTitles[currentTitleIndex].line1}
+                    <option value="" disabled>Choose preset...</option>
+                    <option value="B2B onboarding">B2B onboarding</option>
+                    <option value="FinTech KYC">FinTech KYC</option>
+                  </select>
+                </div>
+                
+                <Button
+                  onClick={generateDemo}
+                  disabled={isGenerating || !demoInput.trim()}
+                  className="btn-primary w-full"
+                >
+                  {isGenerating ? "Generating..." : "Generate"}
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <label className="block text-micro text-[#ECFEFF]/80 mb-2">Generated Prompt</label>
+                <div className="glass-effect p-4 h-48 overflow-y-auto">
+                  {demoOutput ? (
+                    <div className="relative">
+                      <pre className="text-micro text-[#ECFEFF] whitespace-pre-wrap font-mono">{demoOutput}</pre>
+                      <Button
+                        onClick={() => navigator.clipboard.writeText(demoOutput)}
+                        className="absolute top-2 right-2 btn-secondary px-2 py-1 text-xs"
+                      >
+                        Copy
+                      </Button>
                     </div>
-                    {rotatingTitles[currentTitleIndex].line2 && (
-                      <div className="text-3xl md:text-4xl lg:text-5xl text-[#d1a954] transition-all duration-500 ease-out text-center tracking-tight font-mono">
-                        {rotatingTitles[currentTitleIndex].line2}
-                      </div>
-                    )}
-                  </h1>
-
-                  <div
-                    className="text-subtitle transition-all duration-500 ease-out mt-6 text-center font-sans"
-                    style={{ color: "rgba(255,255,255,0.9)" }}
-                  >
-                    {rotatingSubtitles[currentSubtitleIndex]}
-                  </div>
+                  ) : (
+                    <p className="text-[#ECFEFF]/50 italic">Your prompt will appear here...</p>
+                  )}
                 </div>
-
-                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-12 cyber-bg-layer-8">
-                  <Button
-                    className="btn-primary text-xl px-20 py-8 font-black tracking-wider font-mono transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
-                    aria-label="Start the Prompt-Forge Forge system"
-                  >
-                    <Crosshair className="w-6 h-6 mr-4" />
-                    START THE FORGE
-                  </Button>
-                  <Button
-                    className="btn-secondary text-xl px-20 py-8 font-black tracking-wider font-mono transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
-                    aria-label="View Prompt-Forge modules"
-                  >
-                    <Shield className="w-6 h-6 mr-4" />
-                    VIEW MODULES
-                  </Button>
-                </div>
+                
+                <Button 
+                  className="btn-secondary w-full text-micro"
+                  onClick={() => GTMEvents.demoBundlePreview()}
+                >
+                  Preview a Demo Bundle
+                </Button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="relative overflow-hidden pt-16 min-h-screen flex items-center">
-        <div className="absolute inset-0 bg-black"></div>
-        <div className="absolute inset-0 military-grid opacity-5"></div>
-        <div className="absolute top-20 right-20 crosshair-overlay opacity-10"></div>
-
-        <div className="relative container mx-auto px-6 text-center">
-          <div className="max-w-7xl mx-auto space-y-16">
-            <div className="seven-d-engine mt-20">
-              <h3 className="text-xl font-bold text-gold-industrial mb-8 tracking-widest">7D PARAMETER ENGINE</h3>
-              <div className="flex justify-center items-center gap-4 flex-wrap">
-                {[
-                  { name: "DOMAIN", icon: "🎯" },
-                  { name: "SCALE", icon: "📊" },
-                  { name: "URGENCY", icon: "⚡" },
-                  { name: "COMPLEXITY", icon: "🧠" },
-                  { name: "RESOURCES", icon: "💎" },
-                  { name: "APPLICATION", icon: "🚀" },
-                  { name: "OUTPUT", icon: "📋" },
-                ].map((param, i) => (
-                  <div key={param.name} className="seven-d-circle" style={{ animationDelay: `${i * 0.2}s` }}>
-                    <div className="circle-icon">{param.icon}</div>
-                    <div className="circle-label">{param.name}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="before-after-metrics mt-20">
-              <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-                <div className="metrics-column before">
-                  <h4 className="text-red-400 font-black text-xl mb-6">BEFORE</h4>
-                  <div className="metric-item">
-                    <span className="metric-value flip-animation">4h</span>
-                    <span className="metric-label">Per Prompt</span>
-                  </div>
-                  <div className="metric-item">
-                    <span className="metric-value flip-animation">30%</span>
-                    <span className="metric-label">Success Rate</span>
-                  </div>
-                  <div className="metric-item">
-                    <span className="metric-value flip-animation">∞</span>
-                    <span className="metric-label">Iterations</span>
-                  </div>
-                </div>
-
-                <div className="metrics-column after">
-                  <h4 className="text-gold-industrial font-black text-xl mb-6">AFTER</h4>
-                  <div className="metric-item">
-                    <span className="metric-value flip-animation">30m</span>
-                    <span className="metric-label">Per Prompt</span>
-                  </div>
-                  <div className="metric-item">
-                    <span className="metric-value flip-animation">98%</span>
-                    <span className="metric-label">Success Rate</span>
-                  </div>
-                  <div className="metric-item">
-                    <span className="metric-value flip-animation">1</span>
-                    <span className="metric-label">Iteration</span>
-                  </div>
-                </div>
-              </div>
-              <div className="progress-bar-container mt-8">
-                <div className="progress-bar-fill"></div>
-              </div>
-            </div>
+        {/* Module Grid */}
+        <section className="container mx-auto max-w-[1240px] px-6 py-24">
+          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">Module Grid</h2>
+          <p className="text-body text-[#ECFEFF]/80 text-center mb-12">
+            50 semantic modules orchestrated by the 7D Parameter Engine
+          </p>
+          
+          <div className="flex flex-wrap gap-4 justify-center mb-8">
+            <select className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0">
+              <option>Vector (All)</option>
+              <option>V1 - Strategy</option>
+              <option>V2 - Content</option>
+              <option>V3 - Analysis</option>
+            </select>
+            <input 
+              type="text" 
+              placeholder="Search modules..." 
+              className="glass-effect text-[#ECFEFF] placeholder:text-[#ECFEFF]/50 text-micro px-3 py-2 border-0"
+            />
+            <select className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0">
+              <option>Output (All)</option>
+              <option>Spec</option>
+              <option>Playbook</option>
+              <option>JSON</option>
+              <option>PDF</option>
+            </select>
           </div>
-        </div>
-      </section>
+          
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {[
+              { id: "M01", vector: "V1", title: "Strategic Planning", description: "Generate comprehensive strategic plans", outputs: ["md", "json", "pdf"] },
+              { id: "M02", vector: "V1", title: "Market Analysis", description: "Deep market research and insights", outputs: ["md", "json"] },
+              { id: "M03", vector: "V2", title: "Content Strategy", description: "Content planning and execution", outputs: ["md", "pdf"] },
+              { id: "M04", vector: "V2", title: "Brand Messaging", description: "Consistent brand communication", outputs: ["md", "json", "pdf"] },
+              { id: "M05", vector: "V3", title: "Data Analysis", description: "Statistical analysis and reporting", outputs: ["json", "pdf"] },
+              { id: "M06", vector: "V3", title: "Performance Metrics", description: "KPI tracking and optimization", outputs: ["json", "pdf"] },
+              { id: "M07", vector: "V1", title: "Risk Assessment", description: "Comprehensive risk evaluation", outputs: ["md", "pdf"] },
+              { id: "M08", vector: "V2", title: "User Research", description: "User behavior and preferences", outputs: ["md", "json"] },
+            ].map((module) => (
+              <div key={module.id} className="glass-effect p-4 hover:shadow-lg transition-all">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="proof-chip text-xs">{module.id}</span>
+                  <span className="text-xs text-blue-400">{module.vector}</span>
+                </div>
+                
+                <h3 className="text-h3 text-[#ECFEFF] mb-2">{module.title}</h3>
+                <p className="text-micro text-[#ECFEFF]/80 mb-4 line-clamp-2">{module.description}</p>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1">
+                    {module.outputs.map((output) => (
+                      <span key={output} className="text-xs px-2 py-1 bg-[#ECFEFF]/10 text-[#ECFEFF]/70 rounded">
+                        .{output}
+                      </span>
+                    ))}
+                  </div>
+                  <Button className="btn-secondary text-xs px-3 py-1">
+                    Specifications
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
       <section className="py-20 border-t border-lead-gray/30">
         <div className="container mx-auto px-6">
@@ -447,8 +533,19 @@ const prompt = await generatePrompt({
                     value={demoInput}
                     onChange={(e) => setDemoInput(e.target.value)}
                     placeholder="e.g., marketing strategy, code review, content creation..."
-                    className="military-input mb-4"
+                    className="military-input mb-3"
                   />
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {demoExamples.map((example) => (
+                      <button
+                        key={example}
+                        onClick={() => setDemoInput(example)}
+                        className="px-3 py-1 text-xs bg-gold-industrial/20 text-gold-industrial border border-gold-industrial/30 rounded-full hover:bg-gold-industrial/30 transition-colors"
+                      >
+                        {example}
+                      </button>
+                    ))}
+                  </div>
                   <Button
                     onClick={generateDemo}
                     disabled={isGenerating || !demoInput.trim()}
@@ -480,10 +577,19 @@ const prompt = await generatePrompt({
                     )}
                   </div>
                   {demoOutput && (
-                    <Button className="military-btn-primary w-full mt-4">
-                      <Crown className="w-4 h-4 mr-2" />
-                      Upgrade to Save & Export
-                    </Button>
+                    <div className="space-y-3 mt-4">
+                      <Button className="military-btn-primary w-full">
+                        <Crown className="w-4 h-4 mr-2" />
+                        Upgrade to Save & Export
+                      </Button>
+                      <Button 
+                        className="btn-secondary w-full text-sm"
+                        onClick={() => GTMEvents.demoBundlePreview()}
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Preview Demo Bundle
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -552,32 +658,11 @@ const prompt = await generatePrompt({
             <h2 className="text-4xl font-black text-center mb-16">Frequently Asked Questions</h2>
 
             <div className="space-y-6">
-              {[
-                {
-                  q: "What do I get after subscribing?",
-                  a: "Unlimited access to 50 AI modules, GPT optimization, all export formats, priority support, and regular updates with new features.",
-                },
-                {
-                  q: "Can I cancel anytime?",
-                  a: "Yes, absolutely. Cancel with one click from your dashboard. No questions asked, no hidden fees.",
-                },
-                {
-                  q: "How does this compare to ChatGPT alone?",
-                  a: "PROMPTFORGE provides structured, professional prompts with built-in optimization, testing, and export capabilities. ChatGPT gives you raw responses - we give you a complete prompt engineering system.",
-                },
-                {
-                  q: "Do you offer refunds?",
-                  a: "Yes, we offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your payment in full.",
-                },
-                {
-                  q: "Is my data secure?",
-                  a: "Absolutely. We use enterprise-grade encryption and never store your prompts on our servers. Everything is processed securely and deleted after use.",
-                },
-              ].map((faq, i) => (
+              {faqData.map((faq, i) => (
                 <Card key={i} className="glass-effect">
                   <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold text-white mb-3">{faq.q}</h3>
-                    <p className="text-lead-gray">{faq.a}</p>
+                    <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
+                    <p className="text-lead-gray">{faq.answer}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -625,6 +710,62 @@ const prompt = await generatePrompt({
           </Card>
         </div>
       )}
+      
+      {/* Footer */}
+      <footer className="border-t border-[#ECFEFF]/15 py-16">
+        <div className="container mx-auto max-w-[1240px] px-6">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-h3 text-[#ECFEFF] mb-4">Product</h3>
+              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
+                <li><a href="/generator" className="hover:text-[#0891B2] transition-colors">Generator</a></li>
+                <li><a href="/modules" className="hover:text-[#0891B2] transition-colors">Modules</a></li>
+                <li><a href="/pricing" className="hover:text-[#0891B2] transition-colors">Pricing</a></li>
+                <li><a href="/demo-bundle" className="hover:text-[#0891B2] transition-colors">Demo Bundle</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-h3 text-[#ECFEFF] mb-4">Docs</h3>
+              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
+                <li><a href="/docs" className="hover:text-[#0891B2] transition-colors">Documentation</a></li>
+                <li><a href="/docs/api" className="hover:text-[#0891B2] transition-colors">API Reference</a></li>
+                <li><a href="/docs/guides" className="hover:text-[#0891B2] transition-colors">Guides</a></li>
+                <li><a href="/docs/examples" className="hover:text-[#0891B2] transition-colors">Examples</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-h3 text-[#ECFEFF] mb-4">Pricing</h3>
+              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
+                <li><a href="/pricing" className="hover:text-[#0891B2] transition-colors">Plans</a></li>
+                <li><a href="/enterprise" className="hover:text-[#0891B2] transition-colors">Enterprise</a></li>
+                <li><a href="/contact" className="hover:text-[#0891B2] transition-colors">Contact Sales</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-h3 text-[#ECFEFF] mb-4">Legal</h3>
+              <ul className="space-y-2 text-micro text-[#ECFEFF]/80">
+                <li><a href="/privacy" className="hover:text-[#0891B2] transition-colors">Privacy Policy</a></li>
+                <li><a href="/terms" className="hover:text-[#0891B2] transition-colors">Terms of Service</a></li>
+                <li><a href="/security" className="hover:text-[#0891B2] transition-colors">Security</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-[#ECFEFF]/15 mt-12 pt-8 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="proof-chip">Stripe</span>
+              <span className="proof-chip">GDPR</span>
+              <span className="proof-chip">SOC 2</span>
+            </div>
+            <div className="text-micro text-[#ECFEFF]/60">
+              © 2024 PromptForge. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
       </main>
     </div>
   )
