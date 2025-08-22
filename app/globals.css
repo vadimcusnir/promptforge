@@ -199,10 +199,14 @@
     min-height: 100vh;
   }
   
+  html {
+    background-color: #0a0a0a !important;
+  }
+
   body {
     @apply bg-background text-foreground;
     /* SKRE Protocol pure black background */
-    background: #000000;
+    background-color: #0a0a0a !important;
     min-height: 100vh;
     font-family: var(--font-open-sans), system-ui, sans-serif;
   }
@@ -1568,24 +1572,40 @@
     backface-visibility: hidden;
   }
 
-  /* Reduced Motion Support */
+  /* Reduced Motion Support - Complete Animation Disable */
   @media (prefers-reduced-motion: reduce) {
+    /* Disable all background layers completely */
     .cyber-bg-layer-2,
     .cyber-bg-layer-3,
     .cyber-bg-layer-4,
     .cyber-bg-layer-5 {
+      display: none !important;
+    }
+
+    /* Disable all animations and transitions */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Disable matrix tokens and geometric figures */
+    .matrix-tokens,
+    .geometric-figures,
+    .narrative-quotes {
+      display: none !important;
+    }
+
+    /* Keep only static grid for structure */
+    .cyber-bg-layer-2 {
+      display: block !important;
+      opacity: 0.02 !important;
       animation: none !important;
       transform: none !important;
-    }
-
-    .cyber-bg-layer-2 {
-      opacity: 0.05 !important;
-    }
-
-    .cyber-bg-layer-3,
-    .cyber-bg-layer-4,
-    .cyber-bg-layer-5 {
-      display: none !important;
     }
   }
 
@@ -1709,12 +1729,32 @@
   /* Enhanced contrast ratios for WCAG AA+ compliance */
   .text-high-contrast {
     color: #ffffff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
   }
 
   .text-medium-contrast {
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    color: #ffffff; /* Changed from rgba to ensure ≥4.5:1 contrast */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Accessibility: Minimum button height and contrast */
+  .btn-accessible {
+    min-height: 44px;
+    color: #000000; /* Ensures high contrast on gold background */
+    background-color: #d1a954;
+    border: 2px solid #d1a954;
+    font-weight: 700;
+  }
+
+  .btn-accessible:hover {
+    background-color: #b8954a;
+    border-color: #b8954a;
+    color: #000000;
+  }
+
+  .btn-accessible:focus {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
   }
 }
 

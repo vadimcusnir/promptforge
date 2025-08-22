@@ -215,9 +215,9 @@ export function CyberPoeticBackground() {
 
     return {
       gridLines: Math.floor((isMobile ? 20 : 30) * performanceMultiplier),
-      matrixTokens: Math.floor((isMobile ? 60 : 100) * performanceMultiplier),
-      geometricFigures: Math.floor((isMobile ? 14 : 24) * performanceMultiplier),
-      narrativeQuotes: isMobile ? 12 : 20,
+      matrixTokens: Math.floor((isMobile ? 60 : 100) * performanceMultiplier), // Exact specs: ~100 desktop, ~60 mobile
+      geometricFigures: Math.floor((isMobile ? 8 : 15) * performanceMultiplier), // Reduced for "medium" analytical figures
+      narrativeQuotes: isMobile ? 8 : 15, // Reduced for rarer quotes
     }
   }
 
@@ -423,7 +423,7 @@ export function CyberPoeticBackground() {
         scale: 1,
         currentChar: 0,
         isActive: false,
-        animationDelay: i * template.preDelay + Math.random() * 5000,
+        animationDelay: i * template.preDelay + Math.random() * 20000, // Rare quotes: 1/20s timing
       })
     }
 
@@ -528,12 +528,13 @@ export function CyberPoeticBackground() {
               currentChar: charProgress,
             }
           } else if (quote.isActive && timeSinceStart >= 8000) {
-            const fadeProgress = Math.min(1, (timeSinceStart - 8000) / 1200)
+            const fadeProgress = Math.min(1, (timeSinceStart - 8000) / 2000) // Smoother, longer fade
+            const easedFade = fadeProgress * fadeProgress * (3 - 2 * fadeProgress) // Smooth ease-in-out
             return {
               ...quote,
-              opacity: Math.max(0, 1 - fadeProgress),
-              scale: 1 + fadeProgress * 0.1,
-              isActive: timeSinceStart < 9200,
+              opacity: Math.max(0, 1 - easedFade),
+              scale: 1 + easedFade * 0.05, // Gentler scale change
+              isActive: timeSinceStart < 10000, // Longer fade duration
             }
           }
 
