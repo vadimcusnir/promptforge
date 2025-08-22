@@ -1,7 +1,7 @@
 # UI Standards - PromptForge
 
 ---
-description: UI e2b-inspired × PromptForge — homepage strict
+description: "UI e2b-inspired × PromptForge — homepage strict"
 globs: ["app/**", "components/**"]
 alwaysApply: false
 ---

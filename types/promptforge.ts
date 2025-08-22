@@ -1,81 +1,81 @@
 export interface PromptModule {
-  id: number
-  name: string
-  description: string
-  requirements: string
-  spec: string
-  output: string
-  kpi: string
-  guardrails: string
-  vectors: number[]
+  id: number;
+  name: string;
+  description: string;
+  requirements: string;
+  spec: string;
+  output: string;
+  kpi: string;
+  guardrails: string;
+  vectors: number[];
 }
 
 export interface SessionConfig {
-  vector: string
-  domain: string
-  scale: string
-  urgency: string
-  resources: string
-  complexity: string
-  application: string
-  outputFormat: string
+  vector: string;
+  domain: string;
+  scale: string;
+  urgency: string;
+  resources: string;
+  complexity: string;
+  application: string;
+  outputFormat: string;
 }
 
 export interface SevenDConfig {
-  domain: string
-  scale: string
-  urgency: string
-  complexity: string
-  resources: string
-  application: string
-  output: string
+  domain: string;
+  scale: string;
+  urgency: string;
+  complexity: string;
+  resources: string;
+  application: string;
+  output: string;
 }
 
 export interface GeneratedPrompt {
-  id: string
-  moduleId: number
-  sevenDConfig: SevenDConfig
-  content: string
-  timestamp: Date
-  hash: string
-  tokens: number
-  tta: number
+  id: string;
+  moduleId: number;
+  sevenDConfig: SevenDConfig;
+  content: string;
+  timestamp: Date;
+  hash: string;
+  tokens: number;
+  tta: number;
 }
 
 export interface TestResults {
-  structureScore: number
-  kpiScore: number
-  clarityScore: number
-  output: string
-  validated: boolean
+  structureScore: number;
+  kpiScore: number;
+  clarityScore: number;
+  output: string;
+  validated: boolean;
 }
 
 export interface TestResult {
-  id: string
-  promptId: string
+  id: string;
+  promptId: string;
   scores: {
-    clarity: number
-    execution: number
-    ambiguity: number
-    business_fit: number
-  }
-  verdict: "PASS" | "PARTIAL" | "FAIL"
-  recommendations: string[]
-  timestamp: Date
+    clarity: number;
+    execution: number;
+    ambiguity: number;
+    business_fit: number;
+  };
+  verdict: "PASS" | "PARTIAL" | "FAIL";
+  recommendations: string[];
+  timestamp: Date;
 }
 
 export interface PromptHistory {
-  prompts: GeneratedPrompt[]
-  maxEntries: number
+  prompts: GeneratedPrompt[];
+  maxEntries: number;
 }
 
 export interface HistoryEntry {
-  id: string
-  moduleId: number
-  sevenDConfig: SevenDConfig
-  timestamp: Date
-  score?: number
-  verdict?: string
+  id: string;
+  moduleId: number;
+  sevenDConfig: SevenDConfig;
+  timestamp: Date;
+  score?: number;
+  verdict?: string;
 }
 
 export const VECTORS = {
@@ -86,4 +86,19 @@ export const VECTORS = {
   5: { name: "V5: Semiotic Branding", color: "text-purple-400" },
   6: { name: "V6: Data & Analytics", color: "text-cyan-400" },
   7: { name: "V7: Crisis & PR", color: "text-orange-400" },
-} as const
+} as const;
+
+// Glitch Protocol Types
+export interface GlitchTelemetry {
+  count: number;
+  run_times: number[];
+  hover_replays: number;
+  disabled_by_reduced_motion: boolean;
+}
+
+// Global window type extension
+declare global {
+  interface Window {
+    glitchTelemetry?: GlitchTelemetry;
+  }
+}
