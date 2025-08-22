@@ -82,39 +82,38 @@ export function ComingSoonContent({
 
             <form
               onSubmit={handleSubmit}
-              className="mt-12 flex flex-col sm:flex-row gap-4 w-full max-w-lg"
+              className="mt-12 flex flex-col gap-3 w-full max-w-sm mx-auto"
             >
               <input
                 type="text"
                 placeholder="Your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="flex-1 px-4 py-4 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
               />
               <input
                 type="email"
-                placeholder="Your email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-4 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
               />
               <button
                 type="submit"
                 disabled={isLoading}
-                className="px-8 py-4 rounded-lg bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-bold text-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black min-h-[56px]"
-                style={{ minHeight: "56px" }} // Ensures ≥44px height for accessibility
+                className="w-full h-11 px-4 rounded bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
               >
                 {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full"></div>
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full"></div>
                     Processing...
                   </div>
                 ) : (
-                  "Join the Waitlist"
+                  "Join Waitlist"
                 )}
               </button>
             </form>
@@ -125,8 +124,8 @@ export function ComingSoonContent({
               </p>
             )}
 
-            <p className="mt-6 text-sm text-white/70 max-w-md">
-              Get early access + free demo bundle. No spam. Just Forge.
+            <p className="mt-4 text-xs text-white/60 max-w-sm">
+              No spam. Just launch updates.
             </p>
 
             <a
