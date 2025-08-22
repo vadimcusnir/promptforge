@@ -7,6 +7,7 @@
     "dev": "next dev",
     "lint": "next lint",
     "lint:security": "eslint . --ext .js,.jsx,.ts,.tsx --config .eslintrc.security.js",
+    "lint:overlay-policy": "eslint . -c .eslintrc.overlay-policy.js",
     "start": "next start",
     "audit": "npm audit --audit-level=moderate",
     "audit:fix": "npm audit fix",
@@ -17,7 +18,8 @@
     "english:scan": "node scripts/english-scan.js \"content/**/*.{md,mdx}\"",
     "security:setup": "./scripts/setup-security.sh",
     "security:validate": "./scripts/validate-security.sh",
-    "security:full": "pnpm run audit && pnpm run lint:security && pnpm run sbom"
+    "security:full": "pnpm run audit && pnpm run lint:security && pnpm run sbom",
+    "test:overlay-policy": "node scripts/test-overlay-policy.js"
   },
   "dependencies": {
     "@hookform/resolvers": "3.10.0",

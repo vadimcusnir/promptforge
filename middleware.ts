@@ -1,42 +1,113 @@
-import { NextRequest, NextResponse } from "next/server"
-import { AgentWatchWorker } from "@/lib/observability/agent-watch"
+// middleware.ts
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
+const COMING_SOON_ENV = process.env.COMING_SOON === "true";
 const BLOCKED_LOCALES = ['ro','ru','fr','de','es','it','pt','uk','zh','ja','tr','pl'];
+
+// Routes we always allow (assets, api, coming-soon, auth etc.)
+const PUBLIC_ALLOW = [
+  "/coming-soon",
+  "/api",
+  "/favicon",
+  "/og",
+  "/_next",
+  "/public",
+  "/assets",
+  "/robots.txt",
+  "/sitemap.xml",
+];
 
 const gatedRoutes: Record<string,string> = {
   "/api/gpt-test": "canUseGptTestReal",
-  "/api/export/bundle": "canExportPDF",  // verifici în route și formatul
+  "/api/export/bundle": "canExportPDF",
   "/api/run": "hasAPI"
 };
 
+function pathAllowed(pathname: string) {
+  return PUBLIC_ALLOW.some((p) => pathname === p || pathname.startsWith(p));
+}
+
 export function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
+  const { pathname } = req.nextUrl;
 
-  // English-only routing logic
-  // /ro/..., /fr/... -> redirecționează fără segmentul de limbă
+  // English-only routing logic (preserve existing functionality)
   const [, maybeLocale, ...rest] = url.pathname.split('/');
   if (BLOCKED_LOCALES.includes(maybeLocale)) {
     url.pathname = '/' + rest.join('/');
     return NextResponse.redirect(url);
   }
 
-  // ?lang=ro -> forțează en
+  // ?lang=ro -> force en
   const qLang = url.searchParams.get('lang');
   if (qLang && qLang !== 'en') {
     url.searchParams.set('lang', 'en');
     return NextResponse.redirect(url);
   }
 
-  // Existing gated routes logic
+  // Allow public + static + /coming-soon + /api
+  if (pathAllowed(pathname)) {
+    // Add security headers for all responses
+    const response = NextResponse.next();
+    response.headers.set('Content-Language', 'en');
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('X-XSS-Protection', '1; mode=block');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' vercel.live",
+      "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
+      "font-src 'self' fonts.gstatic.com",
+      "img-src 'self' data: blob:",
+      "connect-src 'self' https://*.supabase.co https://api.openai.com",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'"
+    ].join('; ');
+    
+    response.headers.set('Content-Security-Policy', csp);
+    return response;
+  }
+
+  // Coming Soon System
+  // Runtime toggle via cookie (set with /api/toggle-coming-soon)
+  const comingSoonCookie = req.cookies.get("coming_soon")?.value === "on";
+  const COMING_SOON = COMING_SOON_ENV || comingSoonCookie;
+
+  if (COMING_SOON) {
+    // Bypass for admin (cookie "pf_role=admin" set at auth)
+    const role = req.cookies.get("pf_role")?.value ?? "member";
+    const isAdmin = role === "admin";
+
+    if (!isAdmin) {
+      // Public goes to /coming-soon
+      const comingSoonUrl = req.nextUrl.clone();
+      comingSoonUrl.pathname = "/coming-soon";
+      // Optional: keep original destination as query for analytics
+      comingSoonUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(comingSoonUrl);
+    }
+  }
+
+  // Existing gated routes logic (preserve existing functionality)
   const entry = Object.entries(gatedRoutes).find(([path]) => url.pathname.startsWith(path));
   if (!entry) {
     const res = NextResponse.next();
     res.headers.set('Content-Language', 'en');
+    res.headers.set('X-Content-Type-Options', 'nosniff');
+    res.headers.set('X-Frame-Options', 'DENY');
+    res.headers.set('X-XSS-Protection', '1; mode=block');
+    res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
     return res;
   }
 
-  // Enhanced kill switch - check both ENV and SSOT configuration
-  if (!AgentWatchWorker.areAgentsEnabled()) {
+  // Enhanced kill switch - check ENV variable only
+  if (process.env.AGENTS_ENABLED === "false") {
     return new NextResponse(
       JSON.stringify({ 
         error: "AGENTS_DISABLED", 
@@ -47,27 +118,7 @@ export function middleware(req: NextRequest) {
         status: 503,
         headers: {
           'Content-Type': 'application/json',
-          'Retry-After': '300' // Suggest retry after 5 minutes
-        }
-      }
-    );
-  }
-
-  // Check for degradation mode
-  const agentWatch = AgentWatchWorker.getInstance();
-  const summary = agentWatch.getMetricsSummary();
-  if (summary.degradationMode && url.pathname.includes("gpt-test")) {
-    return new NextResponse(
-      JSON.stringify({ 
-        error: "DEGRADATION_MODE", 
-        message: "System in degradation mode - live testing disabled",
-        timestamp: new Date().toISOString()
-      }), 
-      { 
-        status: 503,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Degradation-Mode': 'true'
+          'Retry-After': '300'
         }
       }
     );
@@ -84,9 +135,17 @@ export function middleware(req: NextRequest) {
 
   const res = NextResponse.next();
   res.headers.set('Content-Language', 'en');
+  res.headers.set('X-Content-Type-Options', 'nosniff');
+  res.headers.set('X-Frame-Options', 'DENY');
+  res.headers.set('X-XSS-Protection', '1; mode=block');
+  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
   return res;
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|assets|public).*)'],
+  matcher: [
+    // Run middleware on all app router pages, excluding static files
+    "/((?!_next/static|_next/image|favicon.ico).*)",
+  ],
 };

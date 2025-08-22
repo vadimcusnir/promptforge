@@ -1,6 +1,7 @@
 project: PROMPTFORGE_v3
 semver: 1.0.0
 is_ssot: true
+X-PF-Ruleset-Version: 1.0.0
 
 policies:
   ui_cannot_override_defaults: true
