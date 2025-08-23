@@ -9,6 +9,8 @@ import { useRouteOverlay } from '@/hooks/use-route-overlay';
 import { QuoteFocusProvider } from '@/lib/quote-focus';
 import { OverlayController } from '@/components/OverlayController';
 import { MotionProvider } from '@/lib/motion/provider';
+import { AuthProvider } from '@/lib/contexts/auth-context';
+import { RunsLocalProvider } from '@/lib/contexts/runs-local-context';
 import { useEffect } from 'react';
 
 import { telemetry } from '@/lib/telemetry-client';
@@ -126,11 +128,15 @@ html {
       <body className={`${montserrat.variable} ${openSans.variable} antialiased app-shell`}>
         <div id="app" data-layer="ui">
           <MotionProvider>
-            <QuoteFocusProvider>
-              <OverlayController />
-              <ClientReady />
-              {children}
-            </QuoteFocusProvider>
+            <AuthProvider>
+              <RunsLocalProvider>
+                <QuoteFocusProvider>
+                  <OverlayController />
+                  <ClientReady />
+                  {children}
+                </QuoteFocusProvider>
+              </RunsLocalProvider>
+            </AuthProvider>
           </MotionProvider>
         </div>
       </body>

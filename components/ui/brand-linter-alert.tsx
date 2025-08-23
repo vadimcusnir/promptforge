@@ -23,6 +23,11 @@ export function BrandLinterAlert({
 }: BrandLinterAlertProps) {
   const [isApplyingFixes, setIsApplyingFixes] = useState(false);
 
+  // Add null checking for result
+  if (!result) {
+    return null;
+  }
+
   const handleApplyFixes = async () => {
     if (!onApplyFixes) return;
 

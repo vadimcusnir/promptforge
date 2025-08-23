@@ -29,136 +29,138 @@ import { GPTLiveEditor } from '@/components/gpt-live-editor';
 import { PromptEditor } from '@/components/generator/PromptEditor';
 import { ExportIntegration } from '@/components/generator/ExportIntegration';
 import { BrandLinter } from '@/lib/brand-linter';
-import { GPTEditor as GPTEditorLib } from '@/lib/gpt-editor';
-import { TestEngine as TestEngineLib } from '@/lib/test-engine';
 import { ExportBundleEngine } from '@/lib/export-bundle';
-import { PremiumFeatures } from '@/lib/premium-features';
-import { CloudHistory } from '@/lib/cloud-history';
 import { HistoryManager } from '@/lib/history-manager';
-import { IndustryPacks } from '@/lib/industry-packs';
-import { IndustryPresets } from '@/lib/industry-presets';
-import { ModuleVersioning } from '@/lib/module-versioning';
-import { Observability } from '@/lib/observability';
-import { Telemetry } from '@/lib/telemetry';
-import { GTM } from '@/lib/gtm-events';
-import { SelfHostLicensing } from '@/lib/self-host-licensing';
-import { WhiteLabel } from '@/lib/white-label';
-import { APIKeys } from '@/lib/api-keys';
-import { Billing } from '@/lib/billing';
-import { Entitlements } from '@/lib/entitlements';
-import { Security } from '@/lib/security';
-import { Background } from '@/lib/background';
-import { Motion } from '@/lib/motion';
-import { Ruleset } from '@/lib/ruleset';
-import { QuoteFocus } from '@/lib/quote-focus';
-import { English } from '@/lib/english';
-import { Agent } from '@/lib/agent';
-import { OpenAI } from '@/lib/openai';
-import { Supabase } from '@/lib/supabase';
-import { Stripe } from '@/lib/stripe';
-import { Webhooks } from '@/lib/webhooks';
-import { Errors } from '@/lib/server/errors';
-import { Middleware } from '@/lib/server/middleware';
-import { ServerOpenAI } from '@/lib/server/openai';
-import { ServerSupabase } from '@/lib/server/supabase';
-import { ServerBundle } from '@/lib/server/bundle';
-import { ServerErrors } from '@/lib/server/errors';
-import { ServerMiddleware } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib2 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib2 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib2 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib2 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib2 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib3 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib3 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib3 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib3 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib3 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib4 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib4 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib4 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib4 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib4 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib5 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib5 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib5 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib5 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib5 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib6 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib6 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib6 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib6 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib6 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib7 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib7 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib7 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib7 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib7 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib8 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib8 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib8 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib8 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib8 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib9 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib9 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib9 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib9 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib9 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib10 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib10 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib10 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib10 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib10 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib11 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib11 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib11 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib11 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib11 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib12 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib12 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib12 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib12 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib12 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib13 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib13 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib13 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib13 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib13 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib14 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib14 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib14 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib14 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib14 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib15 } from '@/lib/server/openai';
-import { ServerSupabase as ServerSupabaseLib15 } from '@/lib/server/supabase';
-import { ServerBundle as ServerBundleLib15 } from '@/lib/server/bundle';
-import { ServerErrors as ServerErrorsLib15 } from '@/lib/server/errors';
-import { ServerMiddleware as ServerMiddlewareLib15 } from '@/lib/server/middleware';
-import { ServerOpenAI as ServerOpenAILib16 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib17 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib18 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib19 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib20 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib21 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib22 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib23 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib24 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib25 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib26 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib27 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib28 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib29 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib30 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib31 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib32 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib33 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib34 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib35 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib36 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAILib37 } from '@/lib/server/openai';
-import { ServerOpenAI as ServerOpenAI
+import { GTMEvents } from '@/lib/gtm-events';
+
+export default function GeneratorPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('generator');
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedModule, setSelectedModule] = useState<number | null>(null);
+  const [generatedPrompt, setGeneratedPrompt] = useState<any>(null);
+  const [currentStep, setCurrentStep] = useState<'configure' | 'generate' | 'test' | 'export'>('configure');
+  
+  // Mock config for demo purposes
+  const mockConfig = {
+    vector: 'V1',
+    domain: 'business',
+    scale: 'medium',
+    urgency: 'normal',
+    complexity: 'moderate',
+    resources: 'standard',
+    application: 'general',
+    outputFormat: 'markdown'
+  };
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <div className="container mx-auto max-w-7xl px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gold-industrial mb-4">
+            PROMPTFORGE™ Generator
+          </h1>
+          <p className="text-lead-gray text-lg">
+            Create, test, and optimize professional prompts with our 7D Parameter Engine
+          </p>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4 bg-lead-gray/20 border border-lead-gray/30">
+            <TabsTrigger value="generator" className="text-white data-[state=active]:bg-gold-industrial data-[state=active]:text-black">
+              Generator
+            </TabsTrigger>
+            <TabsTrigger value="editor" className="text-white data-[state=active]:bg-gold-industrial data-[state=active]:text-black">
+              Editor
+            </TabsTrigger>
+            <TabsTrigger value="test" className="text-white data-[state=active]:bg-gold-industrial data-[state=active]:text-black">
+              Test Engine
+            </TabsTrigger>
+            <TabsTrigger value="export" className="text-white data-[state=active]:bg-gold-industrial data-[state=active]:text-black">
+              Export
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="generator" className="mt-6">
+            <Card className="bg-lead-gray/10 border border-lead-gray/30">
+              <CardHeader>
+                <CardTitle className="text-white">Prompt Generator</CardTitle>
+                <CardDescription className="text-lead-gray">
+                  Generate professional prompts using our 50+ semantic modules
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PromptGenerator 
+                  selectedModule={selectedModule}
+                  config={mockConfig}
+                  onPromptGenerated={setGeneratedPrompt}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="editor" className="mt-6">
+            <Card className="bg-lead-gray/10 border border-lead-gray/30">
+              <CardHeader>
+                <CardTitle className="text-white">GPT Editor</CardTitle>
+                <CardDescription className="text-lead-gray">
+                  Live editing and testing with GPT integration
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <GPTEditor 
+                  generatedPrompt={generatedPrompt}
+                  onEditComplete={(result) => {
+                    console.log('Edit complete:', result);
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="test" className="mt-6">
+            <Card className="bg-lead-gray/10 border border-lead-gray/30">
+              <CardHeader>
+                <CardTitle className="text-white">Test Engine</CardTitle>
+                <CardDescription className="text-lead-gray">
+                  Test and validate your prompts with scoring and optimization
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TestEngine 
+                  generatedPrompt={generatedPrompt}
+                  onTestComplete={(result) => {
+                    console.log('Test complete:', result);
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="export" className="mt-6">
+            <Card className="bg-lead-gray/10 border border-lead-gray/30">
+              <CardHeader>
+                <CardTitle className="text-white">Export Manager</CardTitle>
+                <CardDescription className="text-lead-gray">
+                  Export your prompts in multiple formats (.md, .json, .pdf, .zip)
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ExportManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-8">
+          <WorkflowSteps 
+            currentStep={currentStep}
+            isGenerating={isLoading}
+            isTesting={false}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

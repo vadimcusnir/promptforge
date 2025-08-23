@@ -5,17 +5,18 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { COPY } from '@/lib/copy';
-import { Home, ChevronRight } from 'lucide-react';
+import { Home, ChevronRight, User, LogOut } from 'lucide-react';
 import Image from 'next/image';
+import { useAuth } from '@/lib/contexts/auth-context';
 
 interface HeaderProps {
-  isAuthenticated?: boolean;
   showBreadcrumbs?: boolean;
 }
 
-export function Header({ isAuthenticated = false, showBreadcrumbs = true }: HeaderProps) {
+export function Header({ showBreadcrumbs = true }: HeaderProps) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const pathname = usePathname();
+  const { user, signOut } = useAuth();
 
   const getBreadcrumbPage = () => {
     if (pathname === '/') return 'Homepage';
@@ -23,7 +24,12 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
     if (pathname === '/modules') return 'Modules';
     if (pathname === '/pricing') return 'Pricing';
     if (pathname === '/dashboard') return 'Dashboard';
+    if (pathname === '/login') return 'Login';
     return 'Page';
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
   };
 
   return (
@@ -97,15 +103,41 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
               >
                 Docs
               </a>
-              <a
-                href="/login"
-                className="text-white transition-colors duration-150"
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--pf-gold-600)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'white')}
-                aria-current={pathname === '/login' ? 'page' : undefined}
-              >
-                Login
-              </a>
+              
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <Link
+                    href="/dashboard"
+                    className="text-white transition-colors duration-150 hover:text-[var(--pf-gold-600)]"
+                    aria-current={pathname === '/dashboard' ? 'page' : undefined}
+                  >
+                    Dashboard
+                  </Link>
+                  <div className="flex items-center gap-2 text-[#ECFEFF]/80">
+                    <User className="w-4 h-4" />
+                    <span className="text-sm">{user.email}</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSignOut}
+                    className="border-[rgba(255,255,255,0.12)] text-[#ECFEFF] hover:bg-[rgba(255,255,255,0.06)]"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="text-white transition-colors duration-150"
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--pf-gold-600)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'white')}
+                  aria-current={pathname === '/login' ? 'page' : undefined}
+                >
+                  Login
+                </Link>
+              )}
             </nav>
 
             {/* Mobile Menu Button */}
@@ -178,30 +210,39 @@ export function Header({ isAuthenticated = false, showBreadcrumbs = true }: Head
             </ul>
 
             <div className="mt-6 pt-6 border-t border-gray-800 space-y-3">
-              {isAuthenticated ? (
-                <Button
-                  className="block w-full text-center px-4 py-3 bg-[#d1a954] text-black font-medium rounded hover:bg-[#b8954a] transition-colors duration-150"
-                  data-gate="pro"
-                  onClick={() => setIsMobileNavOpen(false)}
-                >
-                  {COPY.nav_dashboard}
-                </Button>
-              ) : (
+              {user ? (
                 <>
-                  <Button
-                    className="block w-full text-center px-4 py-3 bg-transparent border border-white/20 text-white font-medium rounded hover:bg-white/10 transition-colors duration-150"
-                    onClick={() => setIsMobileNavOpen(false)}
-                  >
-                    {COPY.nav_signin}
-                  </Button>
-                  <Button
+                  <Link
+                    href="/dashboard"
                     className="block w-full text-center px-4 py-3 bg-[#d1a954] text-black font-medium rounded hover:bg-[#b8954a] transition-colors duration-150"
-                    data-gate="pro"
                     onClick={() => setIsMobileNavOpen(false)}
                   >
-                    {COPY.cta_start}
+                    Dashboard
+                  </Link>
+                  <div className="text-center text-[#ECFEFF]/80 text-sm py-2">
+                    <User className="w-4 h-4 inline mr-2" />
+                    {user.email}
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="block w-full text-center px-4 py-3 border-[rgba(255,255,255,0.12)] text-[#ECFEFF] hover:bg-[rgba(255,255,255,0.06)]"
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMobileNavOpen(false);
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
                   </Button>
                 </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="block w-full text-center px-4 py-3 bg-[#d1a954] text-black font-medium rounded hover:bg-[#b8954a] transition-colors duration-150"
+                  onClick={() => setIsMobileNavOpen(false)}
+                >
+                  {COPY.nav_signin}
+                </Link>
               )}
             </div>
           </nav>

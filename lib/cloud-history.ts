@@ -6,9 +6,9 @@ import { type Domain, type SevenD } from './ruleset';
 import { stripSecrets } from './agent/hygiene';
 
 // SACF - Development mode fallback
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dev-placeholder.supabase.co';
 const SUPABASE_SERVICE_ROLE =
-  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+  process.env.NEXT_SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 

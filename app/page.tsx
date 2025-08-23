@@ -12,7 +12,7 @@ import { SkipLink } from '@/components/SkipLink';
 import { brandLinter, type BrandLinterResult } from '@/lib/brand-linter';
 import { COPY } from '@/lib/copy';
 import { GTMEvents } from '@/lib/gtm-events';
-import { Zap, Crown, Brain, TrendingUp, Award, X, Cpu, Activity } from 'lucide-react';
+import { Zap, Crown, Brain, TrendingUp, Award, X, Cpu, Activity, Rocket, Shield, Target } from 'lucide-react';
 
 export default function HomePage() {
   const [demoInput, setDemoInput] = useState('marketing strategy');
@@ -70,23 +70,6 @@ export default function HomePage() {
   const [showExitPopup, setShowExitPopup] = useState(false);
   const [linterResult, setLinterResult] = useState<BrandLinterResult | null>(null);
 
-  const legendaryQuotes = [
-    'They always say time changes things, but you actually have to change them yourself.',
-    'The key is in not spending time, but in investing it.',
-    'Lost time is never found again.',
-    'In the middle of difficulty lies opportunity.',
-  ];
-
-  const rotatingTitles = [
-    {
-      line1: 'The 1st Cognitive OS for Prompts',
-      line2:
-        '50 modules orchestrated by the 7D Engine → production-ready prompts scored ≥80 and exportable in minutes.',
-    },
-  ];
-
-  const rotatingSubtitles = ['TTA < 60s • Score ≥ 80 • Export .md/.json/.pdf • Audit & Telemetry'];
-
   const generateDemo = async () => {
     if (!demoInput.trim()) return;
 
@@ -133,42 +116,9 @@ Generate the optimized ${demoInput} strategy now.`;
     }
   };
 
-  useEffect(() => {
-    const quoteTimer = setInterval(() => {
-      // Rotate quotes
-    }, 4000);
 
-    const titleTimer = setInterval(() => {
-      // Rotate titles
-    }, 7000);
 
-    const subtitleTimer = setInterval(() => {
-      // Rotate subtitles
-    }, 12500);
 
-    return () => {
-      clearInterval(quoteTimer);
-      clearInterval(titleTimer);
-      clearInterval(subtitleTimer);
-    };
-  }, [legendaryQuotes.length, rotatingTitles.length, rotatingSubtitles.length]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        } else if (prev.minutes > 0) {
-          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        } else if (prev.hours > 0) {
-          return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        }
-        return prev;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <>
@@ -185,23 +135,23 @@ Generate the optimized ${demoInput} strategy now.`;
         <SkipLink />
 
         <main id="main" tabIndex={-1}>
-          {/* HERO SECTION - Refined Implementation */}
+          {/* HERO SECTION */}
           <Hero />
 
           {/* PROOF BAR */}
-          <section className="w-full py-6 bg-black border-t border-[#FFD700]/20">
-            <div className="container-1440 px-6">
+          <section className="w-full py-6 bg-black border-t border-lead-gray/20">
+            <div className="container mx-auto max-w-[1240px] px-6">
               <div className="flex items-center justify-center gap-8 flex-wrap">
-                <div className="flex items-center gap-2 text-[#00FF7F] font-mono text-sm">
-                  <span className="w-2 h-2 bg-[#00FF7F] rounded-full animate-pulse"></span>
+                <div className="flex items-center gap-2 text-green-400 font-mono text-sm">
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   TTA &lt; 60s
                 </div>
-                <div className="flex items-center gap-2 text-[#FFD700] font-mono text-sm">
-                  <span className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse"></span>
+                <div className="flex items-center gap-2 text-gold-industrial font-mono text-sm">
+                  <span className="w-2 h-2 bg-gold-industrial rounded-full animate-pulse"></span>
                   Score ≥80
                 </div>
-                <div className="flex items-center gap-2 text-[#FF8C42] font-mono text-sm">
-                  <span className="w-2 h-2 bg-[#FF8C42] rounded-full animate-pulse"></span>
+                <div className="flex items-center gap-2 text-orange-400 font-mono text-sm">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
                   Export .md/.pdf/.json
                 </div>
                 <div className="flex items-center gap-2 text-purple-400 font-mono text-sm opacity-75">
@@ -212,311 +162,269 @@ Generate the optimized ${demoInput} strategy now.`;
             </div>
           </section>
 
+          {/* FREE DEMO MODULES SECTION */}
+          <section className="w-full py-24 bg-black">
+            <div className="container mx-auto max-w-[1240px] px-6">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-black mb-6 text-white">
+                  Start with 3 Free Demo Modules
+                </h2>
+                <p className="text-xl text-lead-gray max-w-3xl mx-auto">
+                  Experience the power of PROMPTFORGE™ with these professional-grade modules. 
+                  No registration required, instant access to production-ready prompts.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8 mb-12">
+                {/* Free Module 1 */}
+                <Card className="bg-lead-gray/10 border-lead-gray/30 hover:border-gold-industrial/50 transition-all duration-300 group">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-gold-industrial/30 transition-colors">
+                      <Rocket className="w-8 h-8 text-gold-industrial" />
+                    </div>
+                    <CardTitle className="text-xl text-white group-hover:text-gold-industrial transition-colors">
+                      Strategic Planning
+                    </CardTitle>
+                    <CardDescription className="text-lead-gray">
+                      Generate comprehensive strategic plans with measurable outcomes
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <div className="flex justify-center gap-2 mb-4">
+                      <span className="px-2 py-1 text-xs bg-gold-industrial/20 text-gold-industrial border border-gold-industrial/30 rounded">
+                        .md
+                      </span>
+                      <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded">
+                        .json
+                      </span>
+                    </div>
+                    <Button 
+                      className="w-full bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors"
+                      onClick={() => GTMEvents.demoBundlePreview()}
+                    >
+                      Try Free Module
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Free Module 2 */}
+                <Card className="bg-lead-gray/10 border-lead-gray/30 hover:border-gold-industrial/50 transition-all duration-300 group">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-gold-industrial/30 transition-colors">
+                      <Target className="w-8 h-8 text-gold-industrial" />
+                    </div>
+                    <CardTitle className="text-xl text-white group-hover:text-gold-industrial transition-colors">
+                      Market Analysis
+                    </CardTitle>
+                    <CardDescription className="text-lead-gray">
+                      Deep market research with actionable insights and competitive positioning
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <div className="flex justify-center gap-2 mb-4">
+                      <span className="px-2 py-1 text-xs bg-gold-industrial/20 text-gold-industrial border border-gold-industrial/30 rounded">
+                        .md
+                      </span>
+                      <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded">
+                        .json
+                      </span>
+                    </div>
+                    <Button 
+                      className="w-full bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors"
+                      onClick={() => GTMEvents.demoBundlePreview()}
+                    >
+                      Try Free Module
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Free Module 3 */}
+                <Card className="bg-lead-gray/10 border-lead-gray/30 hover:border-gold-industrial/50 transition-all duration-300 group">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-gold-industrial/30 transition-colors">
+                      <Shield className="w-8 h-8 text-gold-industrial" />
+                    </div>
+                    <CardTitle className="text-xl text-white group-hover:text-gold-industrial transition-colors">
+                      Content Strategy
+                    </CardTitle>
+                    <CardDescription className="text-lead-gray">
+                      Content planning and execution frameworks for maximum engagement
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <div className="flex justify-center gap-2 mb-4">
+                      <span className="px-2 py-1 text-xs bg-gold-industrial/20 text-gold-industrial border border-gold-industrial/30 rounded">
+                        .md
+                      </span>
+                      <span className="px-2 py-1 text-xs bg-green-500/20 text-green-300 border border-green-400/30 rounded">
+                        .pdf
+                      </span>
+                    </div>
+                    <Button 
+                      className="w-full bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors"
+                      onClick={() => GTMEvents.demoBundlePreview()}
+                    >
+                      Try Free Module
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="text-center">
+                <p className="text-lead-gray mb-6">
+                  Ready to unlock all 50 modules and advanced features?
+                </p>
+                <Button 
+                  className="bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors px-8 py-3 text-lg"
+                  onClick={() => GTMEvents.heroCTA()}
+                >
+                  <Crown className="w-5 h-5 mr-2" />
+                  Upgrade to Pro
+                </Button>
+              </div>
+            </div>
+          </section>
+
           {/* SOCIAL PROOF ROW */}
-          <section className="w-full py-8 bg-black border-t border-gray-800">
-            <div className="container-1440 px-6">
+          <section className="w-full py-8 bg-black border-t border-lead-gray/20">
+            <div className="container mx-auto max-w-[1240px] px-6">
               <div className="flex items-center justify-center gap-8 flex-wrap">
                 {/* Badge-uri de încredere */}
-                <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                <div className="flex items-center gap-2 text-xs text-lead-gray font-mono">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                   Stripe Verified
                 </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                <div className="flex items-center gap-2 text-xs text-lead-gray font-mono">
                   <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                   GDPR Ready
                 </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
-                  <span className="w-2 h-2 bg-[#FFD700] rounded-full"></span>
+                <div className="flex items-center gap-2 text-xs text-lead-gray font-mono">
+                  <span className="w-2 h-2 bg-gold-industrial rounded-full"></span>
+                  SOC 2 Compliant
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Invocation Protocol - Micro Demo */}
+          {/* LIVE DEMO SECTION */}
           <section className="w-full py-24 bg-black">
             <div className="container mx-auto max-w-[1240px] px-6">
-              <h2 className="text-h2 text-[#FFD700] text-center mb-4 font-mono">
-                Witness the Invocation
-              </h2>
-              <p className="text-body text-gray-300 text-center mb-12 font-mono">
-                Speak your intent and watch the <span className="text-[#FFD700]">7D Engine</span>{' '}
-                manifest reality through structured cognition
-              </p>
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-black mb-6 text-white">
+                  See PROMPTFORGE™ in Action
+                </h2>
+                <p className="text-xl text-lead-gray max-w-3xl mx-auto">
+                  Enter any topic and watch our 7D Engine create a professional prompt in seconds. 
+                  Experience the difference between raw AI and structured prompt engineering.
+                </p>
+              </div>
 
-              <div className="max-w-4xl mx-auto">
+              <div className="max-w-6xl mx-auto">
                 <div className="grid md:grid-cols-2 gap-8">
                   <div className="space-y-4">
-                    <label className="block text-sm text-[#FFD700] mb-2 font-mono">
-                      Intent Vector
+                    <label className="block text-sm text-gold-industrial mb-2 font-mono font-semibold">
+                      What would you like to create?
                     </label>
                     <Input
                       value={demoInput}
                       onChange={e => setDemoInput(e.target.value)}
-                      placeholder="fintech protocols, cognitive architectures, reality frameworks..."
-                      className="h-11 bg-black border-2 border-gray-700 text-[#FFD700] placeholder:text-gray-500 font-mono text-base px-4 focus:border-[#FFD700] focus:outline-none transition-colors"
-                      aria-label="Enter your intent for reality manifestation"
+                      placeholder="e.g., marketing strategy, code review, content creation..."
+                      className="h-11 bg-black border-2 border-lead-gray/50 text-white placeholder:text-lead-gray/50 font-mono text-base px-4 focus:border-gold-industrial focus:outline-none transition-colors"
+                      aria-label="Enter your topic for prompt generation"
                     />
-                    <p className="text-xs text-gray-500 mt-1 font-mono">
-                      Your intentions remain encrypted.
-                    </p>
-
+                    
                     <div className="flex gap-2 flex-wrap">
-                      <select
-                        className="h-10 bg-black border-2 border-gray-700 text-[#FFD700] text-sm px-3 font-mono focus:border-[#FFD700] focus:outline-none transition-colors"
-                        onChange={e => setDemoInput(e.target.value)}
-                        defaultValue=""
-                      >
-                        <option value="" disabled>
-                          Select Protocol...
-                        </option>
-                        <option value="fintech protocols">fintech protocols</option>
-                        <option value="cognitive architectures">cognitive architectures</option>
-                        <option value="reality frameworks">reality frameworks</option>
-                      </select>
+                      {demoExamples.map(example => (
+                        <button
+                          key={example}
+                          onClick={() => setDemoInput(example)}
+                          className="px-3 py-1 text-xs bg-gold-industrial/20 text-gold-industrial border border-gold-industrial/30 rounded-full hover:bg-gold-industrial/30 transition-colors"
+                        >
+                          {example}
+                        </button>
+                      ))}
                     </div>
 
-                    <button
+                    <Button
                       onClick={generateDemo}
                       disabled={isGenerating || !demoInput.trim()}
-                      className="btn-notched w-full"
+                      className="w-full bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors h-11"
                     >
-                      {isGenerating ? 'Invoking...' : 'Invoke Reality'}
-                    </button>
+                      {isGenerating ? (
+                        <>
+                          <div className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full mr-2"></div>
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-4 h-4 mr-2" />
+                          Generate Professional Prompt
+                        </>
+                      )}
+                    </Button>
                   </div>
 
                   <div className="space-y-4">
-                    <label className="block text-sm text-[#FFD700] mb-2 font-mono">
-                      Manifested Reality
+                    <label className="block text-sm text-gold-industrial mb-2 font-mono font-semibold">
+                      Generated Professional Prompt
                     </label>
-                    <div className="console-theme p-4 h-48 overflow-y-auto" aria-live="polite">
+                    <div className="bg-lead-gray/10 border border-lead-gray/30 rounded-lg p-4 h-48 overflow-y-auto">
                       {demoOutput ? (
                         <div className="relative">
-                          <pre className="text-sm text-[#FFD700] whitespace-pre-wrap font-mono">
+                          <pre className="text-sm text-white whitespace-pre-wrap font-mono">
                             {demoOutput}
                           </pre>
                           <button
                             onClick={() => navigator.clipboard.writeText(demoOutput)}
-                            className="absolute top-2 right-2 bg-[#FFD700] text-black px-2 py-1 text-xs font-mono hover:bg-yellow-400 transition-colors"
-                            aria-label="Copy manifested reality to clipboard"
+                            className="absolute top-2 right-2 bg-gold-industrial text-black px-2 py-1 text-xs font-mono hover:bg-gold-industrial/90 transition-colors rounded"
+                            aria-label="Copy generated prompt to clipboard"
                           >
-                            Extract
+                            Copy
                           </button>
                         </div>
                       ) : (
-                        <p className="text-gray-500 italic font-mono">
-                          Your reality manifestation will appear here...
+                        <p className="text-lead-gray/70 italic font-mono">
+                          Your professional prompt will appear here...
                         </p>
                       )}
                     </div>
 
-                    <button
-                      className="bg-transparent border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black w-full text-sm font-mono py-2 transition-all"
-                      onClick={() => GTMEvents.demoBundlePreview()}
-                    >
-                      Witness the Protocol
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Module Grid - 12 Column System */}
-          <section className="w-full py-24 bg-black">
-            <div className="container-1440 px-6">
-              <div className="grid-12">
-                {/* Header - Full Width */}
-                <div className="col-span-12 text-center mb-12">
-                  <h2 className="text-[clamp(1.75rem,4vw,2.25rem)] text-[#FFD700] mb-4 font-black font-mono">
-                    Module Grid
-                  </h2>
-                  <p className="text-[clamp(1rem,2vw,1.125rem)] text-gray-300 font-mono max-w-3xl mx-auto">
-                    50 semantic modules orchestrated by the{' '}
-                    <span className="text-[#FFD700] font-bold">7D Parameter Engine</span>
-                  </p>
-                </div>
-
-                {/* Filters - Centered */}
-                <div className="col-span-12 flex flex-wrap gap-4 justify-center mb-12">
-                  <select className="h-11 bg-black border-2 border-[#FFD700]/30 text-[#FFD700] text-sm px-4 font-mono focus:border-[#FFD700] focus:outline-none transition-all hover:border-[#FFD700]/70">
-                    <option>Vector (All)</option>
-                    <option>V1 - Strategy</option>
-                    <option>V2 - Content</option>
-                    <option>V3 - Analysis</option>
-                  </select>
-                  <input
-                    type="text"
-                    placeholder="Search modules..."
-                    className="h-11 bg-black border-2 border-[#FFD700]/30 text-[#FFD700] placeholder:text-gray-500 text-sm px-4 font-mono focus:border-[#FFD700] focus:outline-none transition-all hover:border-[#FFD700]/70 min-w-[200px]"
-                  />
-                  <select className="h-11 bg-black border-2 border-[#FFD700]/30 text-[#FFD700] text-sm px-4 font-mono focus:border-[#FFD700] focus:outline-none transition-all hover:border-[#FFD700]/70">
-                    <option>Output (All)</option>
-                    <option>Spec</option>
-                    <option>Playbook</option>
-                    <option>JSON</option>
-                    <option>PDF</option>
-                  </select>
-                </div>
-
-                {/* Module Cards - Responsive Grid */}
-                <div className="col-span-12">
-                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {[
-                      {
-                        id: 'M01',
-                        vector: 'V1',
-                        title: 'Strategic Planning',
-                        description: 'Generate comprehensive strategic plans',
-                        outputs: ['md', 'json', 'pdf'],
-                      },
-                      {
-                        id: 'M02',
-                        vector: 'V1',
-                        title: 'Market Analysis',
-                        description: 'Deep market research and insights',
-                        outputs: ['md', 'json'],
-                      },
-                      {
-                        id: 'M03',
-                        vector: 'V2',
-                        title: 'Content Strategy',
-                        description: 'Content planning and execution',
-                        outputs: ['md', 'pdf'],
-                      },
-                      {
-                        id: 'M04',
-                        vector: 'V2',
-                        title: 'Brand Messaging',
-                        description: 'Consistent brand communication',
-                        outputs: ['md', 'json', 'pdf'],
-                      },
-                      {
-                        id: 'M05',
-                        vector: 'V3',
-                        title: 'Data Analysis',
-                        description: 'Statistical analysis and reporting',
-                        outputs: ['json', 'pdf'],
-                      },
-                      {
-                        id: 'M06',
-                        vector: 'V3',
-                        title: 'Performance Metrics',
-                        description: 'KPI tracking and optimization',
-                        outputs: ['json', 'pdf'],
-                      },
-                      {
-                        id: 'M07',
-                        vector: 'V1',
-                        title: 'Risk Assessment',
-                        description: 'Comprehensive risk evaluation',
-                        outputs: ['md', 'pdf'],
-                      },
-                      {
-                        id: 'M08',
-                        vector: 'V2',
-                        title: 'User Research',
-                        description: 'User behavior and preferences',
-                        outputs: ['md', 'json'],
-                      },
-                      {
-                        id: 'M09',
-                        vector: 'V1',
-                        title: 'Competitive Analysis',
-                        description: 'Market positioning insights',
-                        outputs: ['md', 'json', 'pdf'],
-                      },
-                      {
-                        id: 'M10',
-                        vector: 'V2',
-                        title: 'SEO Strategy',
-                        description: 'Search optimization framework',
-                        outputs: ['md', 'pdf'],
-                      },
-                      {
-                        id: 'M11',
-                        vector: 'V3',
-                        title: 'A/B Testing',
-                        description: 'Statistical testing protocols',
-                        outputs: ['json', 'pdf'],
-                      },
-                      {
-                        id: 'M12',
-                        vector: 'V1',
-                        title: 'Product Roadmap',
-                        description: 'Strategic development planning',
-                        outputs: ['md', 'json', 'pdf'],
-                      },
-                    ].map(module => (
-                      <div
-                        key={module.id}
-                        className="military-module group hover:border-[#FFD700] transition-all duration-300 h-full flex flex-col"
-                      >
-                        {/* Module Header */}
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="military-badge-small">{module.id}</div>
-                          <div className="text-xs text-[#FFD700] font-mono font-bold bg-[#FFD700]/10 px-2 py-1 border border-[#FFD700]/30">
-                            {module.vector}
-                          </div>
-                        </div>
-
-                        {/* Module Content */}
-                        <div className="flex-1 flex flex-col">
-                          <h3 className="text-lg text-white mb-3 font-mono font-bold group-hover:text-[#FFD700] transition-colors">
-                            {module.title}
-                          </h3>
-                          <p className="text-sm text-gray-400 mb-6 font-mono leading-relaxed flex-1">
-                            {module.description}
-                          </p>
-
-                          {/* Module Footer */}
-                          <div className="space-y-4">
-                            {/* Output Formats */}
-                            <div className="flex gap-2 flex-wrap">
-                              {module.outputs.map(output => {
-                                const isPro = output === 'json' || output === 'pdf';
-                                const isEnterprise = output === 'zip';
-                                return (
-                                  <span
-                                    key={output}
-                                    className={`text-xs px-2 py-1 font-mono font-bold border ${
-                                      isPro
-                                        ? 'bg-blue-900/20 text-blue-300 border-blue-500/50'
-                                        : isEnterprise
-                                          ? 'bg-purple-900/20 text-purple-300 border-purple-500/50'
-                                          : 'bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/50'
-                                    }`}
-                                  >
-                                    .{output}
-                                    {isPro && (
-                                      <span className="ml-1 text-[10px] opacity-70">Pro</span>
-                                    )}
-                                    {isEnterprise && (
-                                      <span className="ml-1 text-[10px] opacity-70">Ent</span>
-                                    )}
-                                  </span>
-                                );
-                              })}
-                            </div>
-
-                            {/* Action Button */}
-                            <button className="w-full bg-transparent border-2 border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700] hover:text-black text-sm px-4 py-2 font-mono font-bold transition-all duration-200 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)]">
-                              View Specs
-                            </button>
-                          </div>
-                        </div>
+                    {demoOutput && (
+                      <div className="space-y-3">
+                        <Button className="w-full bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors">
+                          <Crown className="w-4 h-4 mr-2" />
+                          Save & Export (Pro)
+                        </Button>
+                        <Button
+                          className="w-full bg-transparent border border-lead-gray/50 text-lead-gray hover:bg-lead-gray/20 transition-colors"
+                          onClick={() => GTMEvents.demoBundlePreview()}
+                        >
+                          Preview Demo Bundle
+                        </Button>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
+
+                {linterResult && (
+                  <div className="mt-8">
+                    <BrandLinterAlert
+                      result={linterResult}
+                      onApplyFixes={handleApplyFixes}
+                      onDismiss={() => setLinterResult(null)}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </section>
 
+          {/* VALUE PROPOSITION SECTION */}
           <section className="py-20 border-t border-lead-gray/30">
             <div className="container mx-auto px-6">
               <div className="max-w-4xl mx-auto">
-                <div className="military-frame p-8">
-                  <h2 className="text-4xl font-black mb-8 military-font">
+                <div className="bg-lead-gray/10 border border-lead-gray/30 rounded-lg p-8">
+                  <h2 className="text-4xl font-black mb-8 text-white">
                     The Future of Prompt Engineering Is Industrial
                   </h2>
 
@@ -542,46 +450,18 @@ Generate the optimized ${demoInput} strategy now.`;
             </div>
           </section>
 
-          <section className="py-20 bg-gradient-to-b from-black to-gray-900/20">
-            <div className="container mx-auto px-6">
-              <div className="max-w-4xl mx-auto text-center">
-                <h2 className="text-4xl font-black mb-8">You're Bleeding Hours.</h2>
-
-                <div className="space-y-6 text-lg text-lead-gray">
-                  <p>
-                    Every prompt you tweak manually costs you{' '}
-                    <span className="text-red-400 font-bold">2-4 hours</span>. That's{' '}
-                    <span className="text-red-400 font-bold">months of lost market share</span>.
-                  </p>
-
-                  <p className="text-xl text-white font-bold">
-                    Your competitor isn't smarter. He's just faster.
-                  </p>
-
-                  <div className="mt-8">
-                    <button
-                      className="btn-notched text-lg px-8 py-4"
-                      onClick={() => GTMEvents.heroCTA()}
-                    >
-                      Run a 30‑minute test
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="py-20">
+          {/* ENGINE FEATURES SECTION */}
+          <section className="py-20 bg-gradient-to-b from-black to-lead-gray/10">
             <div className="container mx-auto px-6">
               <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl font-black text-center mb-16 military-font">
+                <h2 className="text-4xl font-black text-center mb-16 text-white">
                   The Engine Behind the Revolution
                 </h2>
 
                 <div className="grid md:grid-cols-5 gap-8">
-                  <div className="military-module">
-                    <div className="animated-icon-container">
-                      <Brain className="w-8 h-8 text-gold-industrial animated-pulse" />
+                  <div className="bg-lead-gray/10 border border-lead-gray/30 rounded-lg p-6 text-center">
+                    <div className="w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Brain className="w-8 h-8 text-gold-industrial" />
                     </div>
                     <h3 className="font-bold text-white mb-2">50 Pre-Built Modules</h3>
                     <p className="text-sm text-lead-gray">
@@ -589,9 +469,9 @@ Generate the optimized ${demoInput} strategy now.`;
                     </p>
                   </div>
 
-                  <div className="military-module">
-                    <div className="animated-icon-container">
-                      <Cpu className="w-8 h-8 text-gold-industrial animated-rotate" />
+                  <div className="bg-lead-gray/10 border border-lead-gray/30 rounded-lg p-6 text-center">
+                    <div className="w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Cpu className="w-8 h-8 text-gold-industrial" />
                     </div>
                     <h3 className="font-bold text-white mb-2">Parameter Engine 7D</h3>
                     <p className="text-sm text-lead-gray">
@@ -599,9 +479,9 @@ Generate the optimized ${demoInput} strategy now.`;
                     </p>
                   </div>
 
-                  <div className="military-module">
-                    <div className="animated-icon-container">
-                      <Zap className="w-8 h-8 text-gold-industrial animated-spark" />
+                  <div className="bg-lead-gray/10 border border-lead-gray/30 rounded-lg p-6 text-center">
+                    <div className="w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Zap className="w-8 h-8 text-gold-industrial" />
                     </div>
                     <h3 className="font-bold text-white mb-2">Live GPT Integration</h3>
                     <p className="text-sm text-lead-gray">
@@ -609,26 +489,28 @@ Generate the optimized ${demoInput} strategy now.`;
                     </p>
                   </div>
 
-                  <div className="military-module">
-                    <div className="animated-icon-container">
-                      <Activity className="w-8 h-8 text-gold-industrial animated-heartbeat" />
+                  <div className="bg-lead-gray/10 border border-lead-gray/30 rounded-lg p-6 text-center">
+                    <div className="w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Activity className="w-8 h-8 text-gold-industrial" />
                     </div>
                     <h3 className="font-bold text-white mb-2">Audit & Telemetry</h3>
                     <p className="text-sm text-lead-gray">Every run scored, logged, checkpointed</p>
                   </div>
 
-                  <div className="military-module">
-                    <div className="animated-icon-container"></div>
+                  <div className="bg-lead-gray/10 border border-lead-gray/30 rounded-lg p-6 text-center">
+                    <div className="w-16 h-16 bg-gold-industrial/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Shield className="w-8 h-8 text-gold-industrial" />
+                    </div>
                     <h3 className="font-bold text-white mb-2">Export Without Friction</h3>
                     <div className="text-sm text-lead-gray space-y-1">
                       <div>.txt, .md (Free)</div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 justify-center">
                         <span>.json, .pdf</span>
                         <span className="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded">
                           Pro
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 justify-center">
                         <span>.zip bundles</span>
                         <span className="text-xs px-2 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-400/30 rounded">
                           Enterprise
@@ -651,194 +533,17 @@ Generate the optimized ${demoInput} strategy now.`;
             </div>
           </section>
 
-          <section className="py-20 bg-gradient-to-b from-black to-gray-900/20">
-            <div className="container mx-auto px-6">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-black mb-4">See It In Action</h2>
-                <p className="text-xl text-lead-gray">
-                  Enter any topic and watch PROMPTFORGE create a professional prompt instantly
-                </p>
-              </div>
-
-              <div className="max-w-6xl mx-auto space-y-8">
-                <div className="grid md:grid-cols-2 gap-8">
-                  title="PROMPTFORGE Engine" language="typescript" code=
-                  {`// PROMPTFORGE Live Generation
-const prompt = await generatePrompt({
-  module: "M03-Codul-7-1",
-  domain: "${demoInput || 'marketing'}",
-  urgency: "sprint",
-  output: "pdf"
-})
-
-// AI Score: ${linterResult?.score ?? 'calculating...'}
-// TTA: ${Math.floor(Math.random() * 45 + 15)}s
-// Status: ${linterResult?.score ? (linterResult.score >= 80 ? 'APPROVED' : 'OPTIMIZING') : 'CALCULATING'}`}
-                  <BrandLinterAlert showRun={true} onRun={() => {}} />
-                  <div className="space-y-4">
-                    <div className="military-frame p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Cpu className="w-4 h-4 text-gold-industrial" />
-                        <span className="text-sm font-medium">System Status</span>
-                      </div>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-lead-gray">Active Modules</span>
-                          <span className="text-green-400">50/50</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-lead-gray">Avg Response Time</span>
-                          <span className="text-blue-400">&lt; 60s</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-lead-gray">Success Rate</span>
-                          <span className="text-green-400">98.7%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <Card className="military-frame p-8">
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div>
-                      <label className="block text-sm font-semibold text-gold-industrial mb-3">
-                        Enter Your Topic
-                      </label>
-                      <Input
-                        value={demoInput}
-                        onChange={e => setDemoInput(e.target.value)}
-                        placeholder="e.g., marketing strategy, code review, content creation..."
-                        className="h-11 bg-black border-2 border-gray-700 text-white placeholder:text-gray-500 text-base px-4 focus:border-[#FFD700] focus:outline-none transition-colors mb-3"
-                      />
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {demoExamples.map(example => (
-                          <button
-                            key={example}
-                            onClick={() => setDemoInput(example)}
-                            className="px-3 py-1 text-xs bg-gold-industrial/20 text-gold-industrial border border-gold-industrial/30 rounded-full hover:bg-gold-industrial/30 transition-colors"
-                          >
-                            {example}
-                          </button>
-                        ))}
-                      </div>
-                      <Button
-                        onClick={generateDemo}
-                        disabled={isGenerating || !demoInput.trim()}
-                        className="military-btn-primary w-full"
-                      >
-                        {isGenerating ? (
-                          <>
-                            <div className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full mr-2"></div>
-                            Generating...
-                          </>
-                        ) : (
-                          <>
-                            <Zap className="w-4 h-4 mr-2" />
-                            Generate Prompt
-                          </>
-                        )}
-                      </Button>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gold-industrial mb-3">
-                        Generated Professional Prompt
-                      </label>
-                      <div className="military-frame p-4 h-48 overflow-y-auto">
-                        {demoOutput ? (
-                          <pre className="text-sm text-white whitespace-pre-wrap font-mono">
-                            {demoOutput}
-                          </pre>
-                        ) : (
-                          <p className="text-lead-gray italic">
-                            Your professional prompt will appear here...
-                          </p>
-                        )}
-                      </div>
-                      {demoOutput && (
-                        <div className="space-y-3 mt-4">
-                          <Button className="military-btn-primary w-full">
-                            <Crown className="w-4 h-4 mr-2" />
-                            Upgrade to Save & Export
-                          </Button>
-                          <Button
-                            className="btn-secondary w-full text-sm"
-                            onClick={() => GTMEvents.demoBundlePreview()}
-                          >
-                            Preview Demo Bundle
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {linterResult && (
-                    <div className="mt-6">
-                      <BrandLinterAlert
-                        result={linterResult}
-                        onApplyFixes={handleApplyFixes}
-                        onDismiss={() => setLinterResult(null)}
-                      />
-                    </div>
-                  )}
-                </Card>
-              </div>
-            </div>
-          </section>
-
-          <section className="py-16">
-            <div className="container mx-auto px-6">
-              <div className="max-w-4xl mx-auto text-center">
-                <h2 className="text-4xl font-black mb-8">
-                  Built by AI & Prompt Engineering Experts
-                </h2>
-                <p className="text-xl text-lead-gray mb-12">
-                  Our team has trained AI models at leading tech companies and created prompts that
-                  power millions of interactions daily.
-                </p>
-
-                <div className="grid md:grid-cols-3 gap-8 mb-12">
-                  <div className="text-center">
-                    <Award className="w-12 h-12 text-gold-industrial mx-auto mb-4" />
-                    <div className="text-2xl font-bold text-white">10+ Years</div>
-                    <p className="text-lead-gray">AI Research Experience</p>
-                  </div>
-                  <div className="text-center">
-                    <TrendingUp className="w-12 h-12 text-gold-industrial mx-auto mb-4" />
-                    <div className="text-2xl font-bold text-white">1M+</div>
-                    <p className="text-lead-gray">Prompts Analyzed</p>
-                  </div>
-                  <div className="text-center">
-                    <Brain className="w-12 h-12 text-gold-industrial mx-auto mb-4" />
-                    <div className="text-2xl font-bold text-white">50+</div>
-                    <p className="text-lead-gray">AI Models Trained</p>
-                  </div>
-                </div>
-
-                <Card className="glass-effect p-8">
-                  <CardContent>
-                    <h3 className="text-2xl font-bold mb-4">Free Prompt Engineering Guide</h3>
-                    <p className="text-lead-gray mb-6">
-                      prompt engineering techniques used by Fortune 500 companies.
-                    </p>
-                    <Button className="btn-primary"></Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </section>
-
-          <section className="py-20 bg-gradient-to-b from-black to-gray-900/20">
+          {/* FAQ SECTION */}
+          <section className="py-20 bg-gradient-to-b from-lead-gray/10 to-black">
             <div className="container mx-auto px-6">
               <div className="max-w-3xl mx-auto">
-                <h2 className="text-4xl font-black text-center mb-16">
+                <h2 className="text-4xl font-black text-center mb-16 text-white">
                   Frequently Asked Questions
                 </h2>
 
                 <div className="space-y-6">
                   {faqData.map((faq, i) => (
-                    <Card key={i} className="glass-effect">
+                    <Card key={i} className="bg-lead-gray/10 border border-lead-gray/30">
                       <CardContent className="p-6">
                         <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
                         <p className="text-lead-gray">{faq.answer}</p>
@@ -850,13 +555,49 @@ const prompt = await generatePrompt({
             </div>
           </section>
 
+          {/* FINAL CTA SECTION */}
+          <section className="py-20 bg-black">
+            <div className="container mx-auto px-6">
+              <div className="max-w-4xl mx-auto text-center">
+                <h2 className="text-4xl font-black mb-8 text-white">
+                  Ready to Transform Your Prompt Engineering?
+                </h2>
+                <p className="text-xl text-lead-gray mb-12">
+                  Join thousands of professionals who've already upgraded their AI workflow. 
+                  Start with 3 free modules, then unlock the full power of PROMPTFORGE™.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button 
+                    className="bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors px-8 py-4 text-lg"
+                    onClick={() => GTMEvents.heroCTA()}
+                  >
+                    <Rocket className="w-5 h-5 mr-2" />
+                    Start Free Trial
+                  </Button>
+                  <Button 
+                    className="bg-transparent border border-lead-gray/50 text-lead-gray hover:bg-lead-gray/20 transition-colors px-8 py-4 text-lg"
+                    onClick={() => GTMEvents.demoBundlePreview()}
+                  >
+                    <Shield className="w-5 h-5 mr-2" />
+                    View Demo Bundle
+                  </Button>
+                </div>
+
+                <p className="text-sm text-lead-gray/70 mt-6">
+                  No credit card required • 7-day free trial • Cancel anytime
+                </p>
+              </div>
+            </div>
+          </section>
+
           {showExitPopup && (
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-              <Card className="military-frame max-w-md w-full animate-in slide-in-from-bottom-4 duration-300">
+              <Card className="bg-lead-gray/10 border border-lead-gray/30 max-w-md w-full animate-in slide-in-from-bottom-4 duration-300">
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-xl text-gold-industrial military-font">
+                      <CardTitle className="text-xl text-gold-industrial">
                         Start Your Free Trial
                       </CardTitle>
                       <CardDescription className="text-lead-gray">
@@ -876,14 +617,14 @@ const prompt = await generatePrompt({
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center">
-                    <div className="text-2xl font-black text-white mb-2 military-font">
+                    <div className="text-2xl font-black text-white mb-2">
                       7-Day Free Trial
                     </div>
                     <p className="text-lead-gray">Full access to all Pro features</p>
                   </div>
 
                   <Button
-                    className="military-btn-primary w-full focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
+                    className="w-full bg-gold-industrial text-black hover:bg-gold-industrial/90 transition-colors"
                     aria-label="Start free trial and get 50 bonus prompts"
                   >
                     <Crown className="w-4 h-4 mr-2" />

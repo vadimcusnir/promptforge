@@ -6,11 +6,11 @@ import { APIError } from './validation';
  * Uses service role key for admin operations
  */
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.NEXT_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables');
+  throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_SUPABASE_SERVICE_ROLE_KEY environment variables');
 }
 
 // Service role client for admin operations
@@ -23,7 +23,7 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 
 // User client factory for RLS operations
 export function createUserClient(userToken: string) {
-  return createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY!, {
+  return createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
     global: {
       headers: {
         Authorization: `Bearer ${userToken}`,
