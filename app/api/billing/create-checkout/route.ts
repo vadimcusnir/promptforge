@@ -4,23 +4,41 @@ import { getServerSession } from 'next-auth';
 import { createClient } from '@supabase/supabase-js';
 import { getProductByPlanCode, validateStripeEnvironment } from '@/lib/billing/stripe-config';
 
-// Validate environment
-validateStripeEnvironment();
+// Initialize clients only when needed
+let stripeInstance: Stripe | null = null;
+let supabaseInstance: any = null;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET!, {
-  apiVersion: '2023-10-16',
-});
-
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    const STRIPE_SECRET = process.env.STRIPE_SECRET;
+    if (!STRIPE_SECRET) {
+      throw new Error('STRIPE_SECRET environment variable is required');
+    }
+    stripeInstance = new Stripe(STRIPE_SECRET, {
+      apiVersion: '2023-10-16',
+    });
   }
-);
+  return stripeInstance;
+}
+
+function getSupabase() {
+  if (!supabaseInstance) {
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE;
+    
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
+      throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE environment variables are required');
+    }
+    
+    supabaseInstance = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
+  }
+  return supabaseInstance;
+}
 
 interface CreateCheckoutRequest {
   orgId: string;
@@ -61,7 +79,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify user is admin of the organization
-    const { data: membership, error: memberError } = await supabase
+    const { data: membership, error: memberError } = await getSupabase()
       .from('org_members')
       .select('role')
       .eq('org_id', orgId)
@@ -90,7 +108,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check for existing subscription
-    const { data: existingSubscription } = await supabase
+    const { data: existingSubscription } = await getSupabase()
       .from('subscriptions')
       .select('stripe_customer_id, stripe_subscription_id, plan_code, status')
       .eq('org_id', orgId)
@@ -100,7 +118,7 @@ export async function POST(req: NextRequest) {
 
     // Create or retrieve Stripe customer
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email: session.user.email!,
         metadata: {
           org_id: orgId,
@@ -119,7 +137,7 @@ export async function POST(req: NextRequest) {
       // For upgrades, we'll create a new subscription and cancel the old one
       // This is simpler than prorating, but you could implement prorating here
       
-      const checkoutSession = await stripe.checkout.sessions.create({
+      const checkoutSession = await getStripe().checkout.sessions.create({
         customer: customerId,
         mode: 'subscription',
         line_items: [
@@ -155,7 +173,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ url: checkoutSession.url });
     } else {
       // New subscription
-      const checkoutSession = await stripe.checkout.sessions.create({
+      const checkoutSession = await getStripe().checkout.sessions.create({
         customer: customerId,
         mode: 'subscription',
         line_items: [
@@ -226,7 +244,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Verify user is member of the organization
-    const { data: membership, error: memberError } = await supabase
+    const { data: membership, error: memberError } = await getSupabase()
       .from('org_members')
       .select('role')
       .eq('org_id', orgId)
@@ -240,7 +258,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Get subscription info
-    const { data: subscription, error: subError } = await supabase
+    const { data: subscription, error: subError } = await getSupabase()
       .from('subscriptions')
       .select('*')
       .eq('org_id', orgId)
