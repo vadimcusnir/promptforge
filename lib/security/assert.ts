@@ -1,4 +1,4 @@
-// PromptForge v3 - SACF Security Assertions
+// PROMPTFORGE™ v3 - SACF Security Assertions
 // Assert membership, entitlements și validări de securitate
 
 import { createClient } from '@supabase/supabase-js';
@@ -10,7 +10,8 @@ let supabase: any = null;
 function getSupabase() {
   if (!supabase) {
     const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-    const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+    const SUPABASE_SERVICE_ROLE =
+      process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
     supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
   }
   return supabase;
@@ -19,11 +20,11 @@ function getSupabase() {
 // Verifică dacă utilizatorul este membru al organizației
 export async function assertMembership(orgId?: string, userId?: string) {
   const h = await headers();
-  
+
   // Folosește parametrii dacă sunt furnizați, altfel încearcă din headers
   const finalOrgId = orgId || h.get('x-org-id');
   const finalUserId = userId || h.get('x-user-id');
-  
+
   if (!finalOrgId || !finalUserId) {
     const error = new Error('UNAUTHENTICATED: Missing orgId or userId');
     (error as any).code = 'UNAUTHENTICATED';
@@ -49,7 +50,7 @@ export async function assertMembership(orgId?: string, userId?: string) {
     if (error instanceof Error && (error as any).code) {
       throw error;
     }
-    
+
     const dbError = new Error('DATABASE_ERROR: Failed to verify membership');
     (dbError as any).code = 'DATABASE_ERROR';
     throw dbError;
@@ -78,7 +79,7 @@ export async function assertEntitlement(orgId: string, flag: string) {
     if (error instanceof Error && (error as any).code === 'ENTITLEMENT_REQUIRED') {
       throw error;
     }
-    
+
     const dbError = new Error(`DATABASE_ERROR: Failed to verify entitlement '${flag}'`);
     (dbError as any).code = 'DATABASE_ERROR';
     throw dbError;
@@ -86,9 +87,13 @@ export async function assertEntitlement(orgId: string, flag: string) {
 }
 
 // Verifică rol minim necesar (owner > admin > member)
-export async function assertRole(orgId: string, userId: string, minRole: 'owner' | 'admin' | 'member') {
+export async function assertRole(
+  orgId: string,
+  userId: string,
+  minRole: 'owner' | 'admin' | 'member'
+) {
   const roleHierarchy = { owner: 3, admin: 2, member: 1 };
-  
+
   try {
     const userRole = await assertMembership(orgId, userId);
     const userLevel = roleHierarchy[userRole as keyof typeof roleHierarchy];
@@ -134,7 +139,7 @@ export async function assertRunOwnership(runId: string, orgId: string) {
     if (error instanceof Error && (error as any).code) {
       throw error;
     }
-    
+
     const dbError = new Error('DATABASE_ERROR: Failed to verify run ownership');
     (dbError as any).code = 'DATABASE_ERROR';
     throw dbError;
@@ -157,7 +162,9 @@ export async function assertExportEligible(runId: string, minScore: number = 80)
     }
 
     if (data.overall_score < minScore) {
-      const lowScoreError = new Error(`SCORE_TOO_LOW: Score ${data.overall_score} is below minimum ${minScore}`);
+      const lowScoreError = new Error(
+        `SCORE_TOO_LOW: Score ${data.overall_score} is below minimum ${minScore}`
+      );
       (lowScoreError as any).code = 'SCORE_TOO_LOW';
       (lowScoreError as any).score = data.overall_score;
       (lowScoreError as any).minimum = minScore;
@@ -169,7 +176,7 @@ export async function assertExportEligible(runId: string, minScore: number = 80)
     if (error instanceof Error && (error as any).code) {
       throw error;
     }
-    
+
     const dbError = new Error('DATABASE_ERROR: Failed to verify export eligibility');
     (dbError as any).code = 'DATABASE_ERROR';
     throw dbError;
@@ -180,72 +187,67 @@ export async function assertExportEligible(runId: string, minScore: number = 80)
 export function handleSecurityError(error: unknown): Response {
   if (error instanceof Error) {
     const code = (error as any).code;
-    
+
     switch (code) {
       case 'UNAUTHENTICATED':
         return Response.json(
           { error: 'UNAUTHENTICATED', message: 'Authentication required' },
           { status: 401 }
         );
-        
+
       case 'FORBIDDEN':
       case 'ACCESS_DENIED':
       case 'INSUFFICIENT_ROLE':
         return Response.json(
-          { 
-            error: code, 
+          {
+            error: code,
             message: error.message,
             ...(code === 'INSUFFICIENT_ROLE' && {
               required: (error as any).required,
-              actual: (error as any).actual
-            })
+              actual: (error as any).actual,
+            }),
           },
           { status: 403 }
         );
-        
+
       case 'ENTITLEMENT_REQUIRED':
         return Response.json(
-          { 
-            error: 'ENTITLEMENT_REQUIRED', 
+          {
+            error: 'ENTITLEMENT_REQUIRED',
             message: error.message,
             flag: (error as any).flag,
-            upsell: (error as any).flag?.includes('API') || (error as any).flag?.includes('Zip') 
-              ? 'enterprise_needed' 
-              : 'pro_needed'
+            upsell:
+              (error as any).flag?.includes('API') || (error as any).flag?.includes('Zip')
+                ? 'enterprise_needed'
+                : 'pro_needed',
           },
           { status: 403 }
         );
-        
+
       case 'RUN_NOT_FOUND':
-        return Response.json(
-          { error: 'NOT_FOUND', message: error.message },
-          { status: 404 }
-        );
-        
+        return Response.json({ error: 'NOT_FOUND', message: error.message }, { status: 404 });
+
       case 'SCORE_TOO_LOW':
         return Response.json(
-          { 
-            error: 'SCORE_TOO_LOW', 
+          {
+            error: 'SCORE_TOO_LOW',
             message: error.message,
             score: (error as any).score,
-            minimum: (error as any).minimum
+            minimum: (error as any).minimum,
           },
           { status: 400 }
         );
-        
+
       case 'NO_SCORE':
-        return Response.json(
-          { error: 'NO_SCORE', message: error.message },
-          { status: 400 }
-        );
-        
+        return Response.json({ error: 'NO_SCORE', message: error.message }, { status: 400 });
+
       case 'DATABASE_ERROR':
         console.error('Database error:', error);
         return Response.json(
           { error: 'INTERNAL_ERROR', message: 'Database operation failed' },
           { status: 500 }
         );
-        
+
       default:
         console.error('Unknown security error:', error);
         return Response.json(
@@ -254,7 +256,7 @@ export function handleSecurityError(error: unknown): Response {
         );
     }
   }
-  
+
   console.error('Unknown error type:', error);
   return Response.json(
     { error: 'INTERNAL_ERROR', message: 'Unknown error occurred' },
@@ -267,12 +269,12 @@ export async function validateSACFHeaders(): Promise<{ orgId: string; runId?: st
   const h = await headers();
   const orgId = h.get('x-org-id');
   const runId = h.get('x-run-id');
-  
+
   if (!orgId) {
     const error = new Error('MISSING_HEADERS: x-org-id header is required');
     (error as any).code = 'MISSING_HEADERS';
     throw error;
   }
-  
+
   return { orgId, runId: runId || undefined };
 }

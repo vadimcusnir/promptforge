@@ -1,4 +1,4 @@
-// PromptForge v3 - Public API System pentru Enterprise
+// PROMPTFORGE™ v3 - Public API System pentru Enterprise
 // API programatic cu API keys și rate limiting
 
 import { createClient } from '@supabase/supabase-js';
@@ -8,7 +8,8 @@ import { validate7D, type SevenD } from './ruleset';
 
 // SACF - Development mode fallback
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+const SUPABASE_SERVICE_ROLE =
+  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
@@ -29,16 +30,16 @@ export interface APIKey {
   created_at: string;
 }
 
-export type APIScope = 
-  | 'prompts:generate'    // Generate prompts
-  | 'prompts:test'        // Test prompts on models
-  | 'prompts:score'       // Score prompt quality
-  | 'exports:bundle'      // Export bundles
-  | 'history:read'        // Read cloud history
-  | 'history:write'       // Write to cloud history
-  | 'analytics:read'      // Read analytics data
-  | 'presets:read'        // Read industry presets
-  | 'admin:manage';       // Admin operations
+export type APIScope =
+  | 'prompts:generate' // Generate prompts
+  | 'prompts:test' // Test prompts on models
+  | 'prompts:score' // Score prompt quality
+  | 'exports:bundle' // Export bundles
+  | 'history:read' // Read cloud history
+  | 'history:write' // Write to cloud history
+  | 'analytics:read' // Read analytics data
+  | 'presets:read' // Read industry presets
+  | 'admin:manage'; // Admin operations
 
 export interface APIUsage {
   org_id: string;
@@ -119,8 +120,8 @@ class PublicAPIManager {
             requests_used_this_month: 0,
             created_by: 'dev-user',
             is_active: true,
-            created_at: new Date().toISOString()
-          } as APIKey
+            created_at: new Date().toISOString(),
+          } as APIKey,
         };
       }
       return { valid: false, error: 'Invalid API key format' };
@@ -129,7 +130,7 @@ class PublicAPIManager {
     try {
       // Extract prefix (first 8 chars)
       const keyPrefix = apiKey.slice(0, 8);
-      
+
       // Hash the key pentru comparison
       const keyHash = await this.hashAPIKey(apiKey);
 
@@ -165,13 +166,12 @@ class PublicAPIManager {
       return {
         valid: true,
         orgId: keyData.org_id,
-        keyData
+        keyData,
       };
-
     } catch (error) {
-      return { 
-        valid: false, 
-        error: error instanceof Error ? error.message : 'Key validation failed' 
+      return {
+        valid: false,
+        error: error instanceof Error ? error.message : 'Key validation failed',
       };
     }
   }
@@ -183,14 +183,14 @@ class PublicAPIManager {
     resetTime: number;
   }> {
     const keyId = keyData.id;
-    
+
     // Obține sau creează budget guard pentru această cheie
     if (!this.budgetGuards.has(keyId)) {
       const budget = {
         tokensMax: 50000, // Per session
         requestsPerMin: keyData.rate_limit_rpm,
         costUsdMax: 10.0, // Per session
-        timeoutMs: 30000
+        timeoutMs: 30000,
       };
       this.budgetGuards.set(keyId, new BudgetGuard(budget));
     }
@@ -202,32 +202,36 @@ class PublicAPIManager {
       return {
         allowed: false,
         remaining: 0,
-        resetTime: Date.now() + 60000 // 1 minute from now
+        resetTime: Date.now() + 60000, // 1 minute from now
       };
     }
 
     const utilization = guard.getUtilization();
-    const remaining = Math.max(0, keyData.rate_limit_rpm - (keyData.rate_limit_rpm * utilization.requests / 100));
+    const remaining = Math.max(
+      0,
+      keyData.rate_limit_rpm - (keyData.rate_limit_rpm * utilization.requests) / 100
+    );
 
     return {
       allowed: true,
       remaining: Math.floor(remaining),
-      resetTime: Date.now() + 60000
+      resetTime: Date.now() + 60000,
     };
   }
 
   // Verifică scope-uri
-  checkScopes(keyData: APIKey, requiredScopes: APIScope[]): {
+  checkScopes(
+    keyData: APIKey,
+    requiredScopes: APIScope[]
+  ): {
     allowed: boolean;
     missingScopes: APIScope[];
   } {
-    const missingScopes = requiredScopes.filter(
-      scope => !keyData.scopes.includes(scope)
-    );
+    const missingScopes = requiredScopes.filter(scope => !keyData.scopes.includes(scope));
 
     return {
       allowed: missingScopes.length === 0,
-      missingScopes
+      missingScopes,
     };
   }
 
@@ -259,22 +263,22 @@ class PublicAPIManager {
       cost_usd: params.costUsd,
       duration_ms: params.durationMs,
       user_agent: params.userAgent,
-      ip_address: params.ipAddress
+      ip_address: params.ipAddress,
     };
 
     // Salvează usage în DB
-    await supabase
-      .from('api_usage')
-      .insert([{
+    await supabase.from('api_usage').insert([
+      {
         ...usage,
-        timestamp: new Date().toISOString()
-      }]);
+        timestamp: new Date().toISOString(),
+      },
+    ]);
 
     // Update monthly usage counter
     await supabase
       .from('api_keys')
       .update({
-        requests_used_this_month: supabase.raw('requests_used_this_month + 1')
+        requests_used_this_month: supabase.raw('requests_used_this_month + 1'),
       })
       .eq('id', params.apiKeyId);
 
@@ -306,9 +310,9 @@ class PublicAPIManager {
         cost_usd: params.costUsd,
         duration_ms: params.durationMs,
         rate_limit_remaining: params.rateLimitRemaining,
-        monthly_usage_remaining: params.monthlyUsageRemaining
+        monthly_usage_remaining: params.monthlyUsageRemaining,
       },
-      request_id: params.requestId
+      request_id: params.requestId,
     };
   }
 
@@ -339,8 +343,8 @@ class PublicAPIManager {
           created_by: params.createdBy,
           is_active: true,
           expires_at: params.expiresAt,
-          created_at: new Date().toISOString()
-        } as APIKey
+          created_at: new Date().toISOString(),
+        } as APIKey,
       };
     }
 
@@ -349,7 +353,7 @@ class PublicAPIManager {
     const randomPart = Array.from(crypto.getRandomValues(new Uint8Array(32)))
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
-    
+
     const apiKey = `pk_live_${randomPart}`;
     const keyPrefix = apiKey.slice(0, 8);
     const keyHash = await this.hashAPIKey(apiKey);
@@ -365,14 +369,10 @@ class PublicAPIManager {
       requests_used_this_month: 0,
       created_by: params.createdBy,
       is_active: true,
-      expires_at: params.expiresAt
+      expires_at: params.expiresAt,
     };
 
-    const { data, error } = await supabase
-      .from('api_keys')
-      .insert([keyData])
-      .select()
-      .single();
+    const { data, error } = await supabase.from('api_keys').insert([keyData]).select().single();
 
     if (error) {
       throw new Error(`Failed to create API key: ${error.message}`);

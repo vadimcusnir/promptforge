@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { APIError } from "./validation";
+import { NextRequest, NextResponse } from 'next/server';
+import { APIError } from './validation';
 
 /**
  * API Middleware utilities for rate limiting, security headers, and error handling
@@ -20,20 +20,22 @@ const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
  * Rate limiting middleware
  */
 export function rateLimit(config: RateLimitConfig) {
-  return async (req: NextRequest): Promise<{ allowed: boolean; remaining: number; resetTime: number }> => {
+  return async (
+    req: NextRequest
+  ): Promise<{ allowed: boolean; remaining: number; resetTime: number }> => {
     const key = config.keyGenerator(req);
     const now = Date.now();
     const windowStart = now - config.windowMs;
-    
+
     // Clean up expired entries
     for (const [k, v] of rateLimitStore.entries()) {
       if (v.resetTime < now) {
         rateLimitStore.delete(k);
       }
     }
-    
+
     const current = rateLimitStore.get(key);
-    
+
     if (!current || current.resetTime < now) {
       // New window
       const resetTime = now + config.windowMs;
@@ -44,7 +46,7 @@ export function rateLimit(config: RateLimitConfig) {
         resetTime,
       };
     }
-    
+
     if (current.count >= config.maxRequests) {
       return {
         allowed: false,
@@ -52,7 +54,7 @@ export function rateLimit(config: RateLimitConfig) {
         resetTime: current.resetTime,
       };
     }
-    
+
     current.count++;
     return {
       allowed: true,
@@ -69,29 +71,29 @@ export const rateLimiters = {
   gptEditor: rateLimit({
     windowMs: 60 * 1000, // 1 minute
     maxRequests: 60,
-    keyGenerator: (req) => req.headers.get('x-forwarded-for') || 'unknown',
+    keyGenerator: req => req.headers.get('x-forwarded-for') || 'unknown',
   }),
-  
+
   gptTest: rateLimit({
     windowMs: 60 * 1000, // 1 minute
     maxRequests: 30,
-    keyGenerator: (req) => req.headers.get('x-org-id') || 'unknown',
+    keyGenerator: req => req.headers.get('x-org-id') || 'unknown',
   }),
-  
+
   export: rateLimit({
     windowMs: 60 * 1000, // 1 minute
     maxRequests: 30,
-    keyGenerator: (req) => req.headers.get('x-org-id') || 'unknown',
+    keyGenerator: req => req.headers.get('x-org-id') || 'unknown',
   }),
-  
+
   apiRun: rateLimit({
     windowMs: 60 * 1000, // 1 minute
     maxRequests: 30,
-    keyGenerator: (req) => {
+    keyGenerator: req => {
       // Rate limit by API key hash
       const apiKey = req.headers.get('x-pf-key');
       if (!apiKey) return 'no-key';
-      
+
       const crypto = require('crypto');
       return crypto.createHash('sha256').update(apiKey).digest('hex').substring(0, 16);
     },
@@ -108,18 +110,21 @@ export function addSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set('X-XSS-Protection', '1; mode=block');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-  
+
   // CORS headers for API routes
   response.headers.set('Access-Control-Allow-Origin', 'https://chatgpt-prompting.com');
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-org-id, x-user-id, x-pf-key');
+  response.headers.set(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-org-id, x-user-id, x-pf-key'
+  );
   response.headers.set('Access-Control-Max-Age', '86400');
-  
+
   // Prevent caching of API responses
   response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
   response.headers.set('Pragma', 'no-cache');
   response.headers.set('Expires', '0');
-  
+
   return response;
 }
 
@@ -129,7 +134,7 @@ export function addSecurityHeaders(response: NextResponse): NextResponse {
 export function errorResponse(error: APIError | Error | string, status?: number): NextResponse {
   let errorData: any;
   let statusCode = status || 500;
-  
+
   if (error instanceof APIError) {
     errorData = {
       error: error.apiCode,
@@ -148,7 +153,7 @@ export function errorResponse(error: APIError | Error | string, status?: number)
       message: error,
     };
   }
-  
+
   const response = NextResponse.json(errorData, { status: statusCode });
   return addSecurityHeaders(response);
 }
@@ -166,13 +171,13 @@ export function successResponse(data: any, status: number = 200): NextResponse {
  */
 export function validateHeaders(req: NextRequest, required: string[]): string[] {
   const missing: string[] = [];
-  
+
   for (const header of required) {
     if (!req.headers.get(header)) {
       missing.push(header);
     }
   }
-  
+
   return missing;
 }
 
@@ -205,13 +210,16 @@ export async function validateJsonBody(req: NextRequest): Promise<any> {
 /**
  * Request logger middleware
  */
-export function logRequest(req: NextRequest, context: { method: string; path: string; startTime: number }): void {
+export function logRequest(
+  req: NextRequest,
+  context: { method: string; path: string; startTime: number }
+): void {
   const { method, path, startTime } = context;
   const duration = Date.now() - startTime;
   const ip = req.headers.get('x-forwarded-for') || 'unknown';
   const userAgent = req.headers.get('user-agent') || 'unknown';
   const orgId = req.headers.get('x-org-id') || 'anonymous';
-  
+
   console.log(`[API] ${method} ${path} - ${duration}ms - ${ip} - ${orgId} - ${userAgent}`);
 }
 
@@ -221,7 +229,9 @@ export function logRequest(req: NextRequest, context: { method: string; path: st
 export function withMiddleware<T extends any[]>(
   handler: (req: NextRequest, ...args: T) => Promise<NextResponse>,
   options: {
-    rateLimit?: (req: NextRequest) => Promise<{ allowed: boolean; remaining: number; resetTime: number }>;
+    rateLimit?: (
+      req: NextRequest
+    ) => Promise<{ allowed: boolean; remaining: number; resetTime: number }>;
     requireAuth?: boolean;
     requiredHeaders?: string[];
     logRequests?: boolean;
@@ -229,7 +239,7 @@ export function withMiddleware<T extends any[]>(
 ) {
   return async (req: NextRequest, ...args: T): Promise<NextResponse> => {
     const startTime = Date.now();
-    
+
     try {
       // Rate limiting
       if (options.rateLimit) {
@@ -241,45 +251,43 @@ export function withMiddleware<T extends any[]>(
               message: 'Rate limit exceeded',
               resetTime: rateCheck.resetTime,
             },
-            { 
+            {
               status: 429,
               headers: {
                 'X-RateLimit-Limit': '30',
                 'X-RateLimit-Remaining': rateCheck.remaining.toString(),
                 'X-RateLimit-Reset': Math.ceil(rateCheck.resetTime / 1000).toString(),
-              }
+              },
             }
           );
           return addSecurityHeaders(response);
         }
       }
-      
+
       // Header validation
       if (options.requiredHeaders) {
         const missing = validateHeaders(req, options.requiredHeaders);
         if (missing.length > 0) {
           return errorResponse(
-            new APIError('UNAUTHENTICATED', `Missing required headers: ${missing.join(', ')}`),
+            new APIError('UNAUTHENTICATED', `Missing required headers: ${missing.join(', ')}`)
           );
         }
       }
-      
+
       // Authentication check
       if (options.requireAuth) {
         const { orgId, userId, apiKey } = getAuthContext(req);
         if (!orgId && !apiKey) {
-          return errorResponse(
-            new APIError('UNAUTHENTICATED', 'Authentication required'),
-          );
+          return errorResponse(new APIError('UNAUTHENTICATED', 'Authentication required'));
         }
       }
-      
+
       // Execute handler
       const response = await handler(req, ...args);
-      
+
       // Add security headers
       const secureResponse = addSecurityHeaders(response);
-      
+
       // Log request
       if (options.logRequests !== false) {
         logRequest(req, {
@@ -288,12 +296,11 @@ export function withMiddleware<T extends any[]>(
           startTime,
         });
       }
-      
+
       return secureResponse;
-      
     } catch (error) {
       console.error(`[API] Error in ${req.method} ${req.nextUrl.pathname}:`, error);
-      
+
       // Log error request
       if (options.logRequests !== false) {
         logRequest(req, {
@@ -302,7 +309,7 @@ export function withMiddleware<T extends any[]>(
           startTime,
         });
       }
-      
+
       return errorResponse(error instanceof Error ? error : new Error(String(error)));
     }
   };
@@ -313,11 +320,14 @@ export function withMiddleware<T extends any[]>(
  */
 export function corsHandler(req: NextRequest): NextResponse {
   const response = new NextResponse(null, { status: 200 });
-  
+
   response.headers.set('Access-Control-Allow-Origin', 'https://chatgpt-prompting.com');
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-org-id, x-user-id, x-pf-key');
+  response.headers.set(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-org-id, x-user-id, x-pf-key'
+  );
   response.headers.set('Access-Control-Max-Age', '86400');
-  
+
   return response;
 }

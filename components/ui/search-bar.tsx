@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Search } from "lucide-react";
+import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -15,7 +15,7 @@ export function SearchBar({ searchQuery, onSearchChange }: SearchBarProps) {
         type="text"
         placeholder="Search modules by name or description..."
         value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={e => onSearchChange(e.target.value)}
         className="w-full pl-10 pr-4 py-3 bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-lg text-white placeholder-[#5a5a5a] focus:border-[#d1a954] focus:outline-none transition-colors"
       />
     </div>

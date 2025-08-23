@@ -1,13 +1,12 @@
-// PromptForge v3 - Industry Presets API
+// PROMPTFORGE™ v3 - Industry Presets API
 // Access la presete predefinite per domeniu cu gating
 
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getPresetsForDomain, 
-  getPresetById, 
-  getPresetsForUser, 
+import {
+  getPresetsForDomain,
+  getPresetById,
+  getPresetsForUser,
   getPresetStats,
-  type IndustryPreset 
 } from '@/lib/industry-presets';
 import { type Domain } from '@/lib/ruleset';
 import { validateSACFHeaders, assertMembership, handleSecurityError } from '@/lib/security/assert';
@@ -15,7 +14,8 @@ import { createClient } from '@supabase/supabase-js';
 
 // SACF - Development mode fallback
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+const SUPABASE_SERVICE_ROLE =
+  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
@@ -26,7 +26,7 @@ async function getEntitlements(orgId: string): Promise<Record<string, boolean>> 
       canExportPDF: true,
       canExportJSON: true,
       hasAPI: false,
-      canExportBundleZip: false
+      canExportBundleZip: false,
     };
   }
 
@@ -38,7 +38,9 @@ async function getEntitlements(orgId: string): Promise<Record<string, boolean>> 
       .eq('value', true);
 
     if (error) throw error;
-    return Object.fromEntries((data || []).map((r: any) => [r.flag, r.value]));
+    return Object.fromEntries(
+      (data || []).map((r: { flag: string; value: boolean }) => [r.flag, r.value])
+    );
   } catch (error) {
     console.error('Failed to fetch entitlements:', error);
     return {};
@@ -52,7 +54,6 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const domain = url.searchParams.get('domain') as Domain;
     const presetId = url.searchParams.get('presetId');
-    const category = url.searchParams.get('category');
 
     // Verifică membership în development mode
     if (!SUPABASE_URL.includes('dev-placeholder')) {
@@ -87,7 +88,7 @@ export async function GET(req: NextRequest) {
             preset: presetId,
             missing_entitlements: missingEntitlements,
             upgrade_required: missingEntitlements.includes('hasAPI') ? 'enterprise' : 'pro',
-            upsell: missingEntitlements.includes('hasAPI') ? 'enterprise_needed' : 'pro_needed'
+            upsell: missingEntitlements.includes('hasAPI') ? 'enterprise_needed' : 'pro_needed',
           },
           { status: 403 }
         );
@@ -97,10 +98,9 @@ export async function GET(req: NextRequest) {
         preset,
         access: {
           available: true,
-          entitlements_met: preset.required_entitlements
-        }
+          entitlements_met: preset.required_entitlements,
+        },
       });
-
     } else if (domain) {
       // Request pentru un domeniu specific
       const domainPresets = getPresetsForDomain(domain);
@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
         summary: {
           total: domainPresets.length,
           available: availableForDomain.length,
-          restricted: restrictedForDomain.length
+          restricted: restrictedForDomain.length,
         },
         presets: {
           available: availableForDomain.map(preset => ({
@@ -130,7 +130,7 @@ export async function GET(req: NextRequest) {
             difficulty: preset.difficulty,
             time_to_complete_minutes: preset.time_to_complete_minutes,
             use_cases: preset.use_cases,
-            success_metrics: preset.success_metrics
+            success_metrics: preset.success_metrics,
           })),
           restricted: restrictedForDomain.map(preset => ({
             id: preset.id,
@@ -139,13 +139,12 @@ export async function GET(req: NextRequest) {
             category: preset.category,
             difficulty: preset.difficulty,
             required_entitlements: preset.required_entitlements,
-            upgrade_hint: preset.required_entitlements.includes('hasAPI') 
-              ? 'Available with Enterprise plan' 
-              : 'Available with Pro plan'
-          }))
-        }
+            upgrade_hint: preset.required_entitlements.includes('hasAPI')
+              ? 'Available with Enterprise plan'
+              : 'Available with Pro plan',
+          })),
+        },
       });
-
     } else {
       // Request pentru toate presetele
       const userAccess = getPresetsForUser(entitlements);
@@ -157,12 +156,12 @@ export async function GET(req: NextRequest) {
         summary: {
           total_presets: stats.total,
           available: userAccess.available.length,
-          restricted: userAccess.restricted.length
+          restricted: userAccess.restricted.length,
         },
         presets_by_domain: Object.keys(stats.by_domain).map(domain => ({
           domain,
           count: stats.by_domain[domain as Domain],
-          available_count: userAccess.available.filter(p => p.domain === domain).length
+          available_count: userAccess.available.filter(p => p.domain === domain).length,
         })),
         featured_presets: userAccess.available
           .filter(preset => preset.category === 'professional')
@@ -172,12 +171,11 @@ export async function GET(req: NextRequest) {
             name: preset.name,
             description: preset.description,
             domain: preset.domain,
-            time_to_complete_minutes: preset.time_to_complete_minutes
+            time_to_complete_minutes: preset.time_to_complete_minutes,
           })),
-        entitlements
+        entitlements,
       });
     }
-
   } catch (error) {
     console.error('Industry Presets API error:', error);
     return handleSecurityError(error);
@@ -214,9 +212,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verifică entitlements
-    const hasAccess = preset.required_entitlements.every(
-      entitlement => entitlements[entitlement]
-    );
+    const hasAccess = preset.required_entitlements.every(entitlement => entitlements[entitlement]);
 
     if (!hasAccess) {
       const missingEntitlements = preset.required_entitlements.filter(
@@ -228,7 +224,7 @@ export async function POST(req: NextRequest) {
           error: 'ENTITLEMENT_REQUIRED',
           preset: presetId,
           missing_entitlements: missingEntitlements,
-          upgrade_required: missingEntitlements.includes('hasAPI') ? 'enterprise' : 'pro'
+          upgrade_required: missingEntitlements.includes('hasAPI') ? 'enterprise' : 'pro',
         },
         { status: 403 }
       );
@@ -240,10 +236,7 @@ export async function POST(req: NextRequest) {
     // Înlocuiește placeholder-urile cu input-urile utilizatorului
     if (userInputs) {
       for (const [key, value] of Object.entries(userInputs)) {
-        finalPrompt = finalPrompt.replace(
-          new RegExp(`{{${key}}}`, 'g'),
-          value as string
-        );
+        finalPrompt = finalPrompt.replace(new RegExp(`{{${key}}}`, 'g'), value as string);
       }
     }
 
@@ -268,24 +261,23 @@ export async function POST(req: NextRequest) {
         name: preset.name,
         domain: preset.domain,
         category: preset.category,
-        time_to_complete_minutes: preset.time_to_complete_minutes
+        time_to_complete_minutes: preset.time_to_complete_minutes,
       },
       configuration: {
         seven_d: preset.seven_d_config,
         expected_output_format: preset.expected_outputs.format,
-        success_metrics: preset.success_metrics
+        success_metrics: preset.success_metrics,
       },
       prompt: finalPrompt,
       next_steps: [
         'Review the generated prompt for completeness',
         'Test the prompt using /api/gpt-test',
         'Refine based on results',
-        'Export final version using /api/export/bundle'
+        'Export final version using /api/export/bundle',
       ],
       compliance_notes: preset.compliance_notes,
-      industry_best_practices: preset.industry_best_practices
+      industry_best_practices: preset.industry_best_practices,
     });
-
   } catch (error) {
     console.error('Industry Preset generation error:', error);
     return handleSecurityError(error);

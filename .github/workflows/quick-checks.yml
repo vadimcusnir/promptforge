@@ -1,0 +1,75 @@
+name: Quick Checks
+
+on:
+  push:
+    branches: [main, develop, staging]
+  pull_request:
+    branches: [main, develop, staging]
+
+env:
+  NODE_VERSION: '20.18.0'
+  PNPM_VERSION: '9.15.0'
+
+jobs:
+  quick-validation:
+    name: Quick Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Quick lint check
+        run: pnpm run lint
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Quick build test
+        run: pnpm run build
+
+      - name: Brand enforcement check
+        run: |
+          echo "🔍 Quick brand enforcement check..."
+          if grep -r --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=tmp -E 'AI[- _]?IDEI|Ai[- _]?Idei|ai[- _]?idei|AI[- _]?Prompt[- _]?Templates|Ai[- _]?Prompt[- _]?Templates|ai[- _]?prompt[- _]?templates'; then
+            echo "❌ Vechea denumire detectată. Folosește «PromptForge / PROMPTFORGE™»."
+            exit 1
+          else
+            echo "✅ Brand enforcement passed"
+          fi
+
+      - name: Comment PR status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `✅ **Quick Checks Passed**\n\n` +
+              `- ✅ Linting passed\n` +
+              `- ✅ TypeScript check passed\n` +
+              `- ✅ Build successful\n` +
+              `- ✅ Brand enforcement passed\n\n` +
+              `**Commit:** ${{ github.sha }}\n` +
+              `**Actor:** ${{ github.actor }}\n` +
+              `**Timestamp:** ${new Date().toISOString()}`;
+              
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export function useFontsReady() {
   const [ready, setReady] = useState(false);
@@ -14,7 +14,7 @@ export function useFontsReady() {
         if (document?.fonts?.ready) await (document as any).fonts.ready;
       } catch {}
 
-      await new Promise((r) => requestAnimationFrame(() => r(null)));
+      await new Promise(r => requestAnimationFrame(() => r(null)));
       await Promise.resolve(); // microtask
 
       if (!cancelled) setReady(true);

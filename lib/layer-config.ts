@@ -1,12 +1,12 @@
 export const LAYER_ORDER = [
-  "BaseCanvas",
-  "GridLines",
-  "MatrixTokens",
-  "BackgroundFigures",
-  "MatrixQuotes",
-  "NoiseLayer",
-  "HeroContent",
-  "MicroUI",
+  'BaseCanvas',
+  'GridLines',
+  'MatrixTokens',
+  'BackgroundFigures',
+  'MatrixQuotes',
+  'NoiseLayer',
+  'HeroContent',
+  'MicroUI',
 ] as const;
 
 export type LayerId = (typeof LAYER_ORDER)[number];
@@ -22,5 +22,5 @@ export const LAYER_CSS_VARS = LAYER_ORDER.reduce(
     acc[`--layer-${layer.toLowerCase()}`] = (index + 1).toString();
     return acc;
   },
-  {} as Record<string, string>,
+  {} as Record<string, string>
 );

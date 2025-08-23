@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { ClientOnly } from "@/components/ClientOnly";
-import { DigitalRune } from "@/components/background/DigitalRune";
+import { useState } from 'react';
+import { ClientOnly } from '@/components/ClientOnly';
+import { DigitalRune } from '@/components/background/DigitalRune';
 
 export default function ComingSoonPage() {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (isLoading) return;
 
     setIsLoading(true);
-    setError("");
+    setError('');
 
     try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: email.toLowerCase().trim(),
           name: name.trim(),
@@ -34,11 +34,11 @@ export default function ComingSoonPage() {
       if (res.ok && data.ok) {
         setSubmitted(true);
       } else {
-        setError(data.error || "An error occurred. Please try again.");
+        setError(data.error || 'An error occurred. Please try again.');
       }
     } catch (err) {
-      console.error("Waitlist error:", err);
-      setError("An error occurred. Please try again.");
+      console.error('Waitlist error:', err);
+      setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -59,16 +59,15 @@ export default function ComingSoonPage() {
           <>
             <h1
               className="text-4xl md:text-6xl font-bold mb-6 text-white"
-              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+              style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}
             >
               The 1st Cognitive OS for Prompts
             </h1>
             <p
               className="mt-4 text-lg md:text-xl text-white/90 max-w-3xl leading-relaxed"
-              style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.6)" }}
+              style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}
             >
-              50 Semantic Modules × 7D Parameter Engine → From Chaos to
-              Execution in 30 Minutes.
+              50 Semantic Modules × 7D Parameter Engine → From Chaos to Execution in 30 Minutes.
             </p>
 
             <form
@@ -79,7 +78,7 @@ export default function ComingSoonPage() {
                 type="text"
                 placeholder="Your name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
@@ -88,7 +87,7 @@ export default function ComingSoonPage() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
@@ -104,7 +103,7 @@ export default function ComingSoonPage() {
                     Processing...
                   </div>
                 ) : (
-                  "Join Waitlist"
+                  'Join Waitlist'
                 )}
               </button>
             </form>
@@ -115,9 +114,7 @@ export default function ComingSoonPage() {
               </p>
             )}
 
-            <p className="mt-4 text-xs text-white/60 max-w-sm">
-              No spam. Just launch updates.
-            </p>
+            <p className="mt-4 text-xs text-white/60 max-w-sm">No spam. Just launch updates.</p>
 
             <a
               href="/demo-bundle"
@@ -143,12 +140,9 @@ export default function ComingSoonPage() {
                 ></path>
               </svg>
             </div>
-            <h2 className="text-2xl font-bold mb-4 text-white">
-              Thank you for joining!
-            </h2>
+            <h2 className="text-2xl font-bold mb-4 text-white">Thank you for joining!</h2>
             <p className="text-white/80 leading-relaxed">
-              You'll be among the first to access PromptForge and receive the
-              free demo bundle.
+              You'll be among the first to access PROMPTFORGE™ and receive the free demo bundle.
             </p>
             <p className="mt-4 text-sm text-white/60">
               Check your email for registration confirmation.

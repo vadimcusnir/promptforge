@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Target, Settings, BarChart3, Shield, Zap } from "lucide-react";
-import type { PromptModule } from "@/types/promptforge";
+import type { PromptModule } from '@/types/promptforge';
+import { Settings, Zap, Target, BarChart3 } from 'lucide-react';
 
 interface ModuleSpecProps {
   module: PromptModule;
@@ -23,9 +23,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
               Input Requirements
             </h3>
           </div>
-          <p className="text-[#5a5a5a] font-open-sans leading-relaxed">
-            {module.requirements}
-          </p>
+          <p className="text-[#5a5a5a] font-open-sans leading-relaxed">{module.requirements}</p>
         </div>
 
         {/* Specifications */}
@@ -36,9 +34,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
               Technical Specs
             </h3>
           </div>
-          <p className="text-[#5a5a5a] font-open-sans leading-relaxed">
-            {module.spec}
-          </p>
+          <p className="text-[#5a5a5a] font-open-sans leading-relaxed">{module.spec}</p>
         </div>
 
         {/* Output */}
@@ -49,9 +45,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
               Expected Output
             </h3>
           </div>
-          <p className="text-[#5a5a5a] font-open-sans leading-relaxed">
-            {module.output}
-          </p>
+          <p className="text-[#5a5a5a] font-open-sans leading-relaxed">{module.output}</p>
         </div>
 
         {/* KPI */}
@@ -63,9 +57,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
             </h3>
           </div>
           <div className="bg-green-400/10 border border-green-400/30 rounded-lg p-4">
-            <p className="text-green-400 font-semibold font-open-sans">
-              {module.kpi}
-            </p>
+            <p className="text-green-400 font-semibold font-open-sans">{module.kpi}</p>
           </div>
         </div>
       </div>
@@ -73,14 +65,11 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
       {/* Guardrails - Full Width */}
       <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6 mt-6">
         <div className="flex items-center gap-3 mb-4">
-          <Shield className="w-6 h-6 text-[#d1a954]" />
           <h3 className="text-xl font-semibold text-[#d1a954] font-montserrat">
             Guardrails & Constraints
           </h3>
         </div>
-        <p className="text-[#5a5a5a] font-open-sans leading-relaxed">
-          {module.guardrails}
-        </p>
+        <p className="text-[#5a5a5a] font-open-sans leading-relaxed">{module.guardrails}</p>
       </div>
     </div>
   );

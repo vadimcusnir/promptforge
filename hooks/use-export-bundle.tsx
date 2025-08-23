@@ -1,4 +1,4 @@
-// PromptForge v3 - Export Bundle Hook cu SACF Security
+// PROMPTFORGE™ v3 - Export Bundle Hook cu SACF Security
 // Hook pentru export bundle cu gating pe plan și validare completă
 
 import { useState, useCallback } from 'react';
@@ -51,16 +51,16 @@ interface UseExportBundleReturn {
     licenseNotice?: string;
     version?: string;
   }) => Promise<ExportBundleResponse>;
-  
+
   // Capabilities check
   checkCapabilities: () => Promise<ExportCapabilities>;
-  
+
   // State
   exporting: boolean;
   exportError: string | null;
   lastExport: ExportBundleResponse | null;
   capabilities: ExportCapabilities | null;
-  
+
   // Gating info
   canExportTxt: boolean;
   canExportMd: boolean;
@@ -72,7 +72,7 @@ interface UseExportBundleReturn {
 
 export function useExportBundle(orgId: string): UseExportBundleReturn {
   const { entitlements, loading: entitlementsLoading } = useEntitlementsContext();
-  
+
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [lastExport, setLastExport] = useState<ExportBundleResponse | null>(null);
@@ -117,7 +117,6 @@ export function useExportBundle(orgId: string): UseExportBundleReturn {
       const caps: ExportCapabilities = data.capabilities;
       setCapabilities(caps);
       return caps;
-
     } catch (error) {
       console.error('Failed to check capabilities:', error);
       throw error;
@@ -125,138 +124,142 @@ export function useExportBundle(orgId: string): UseExportBundleReturn {
   }, [orgId]);
 
   // Export bundle function
-  const exportBundle = useCallback(async (params: {
-    runId: string;
-    moduleId: string;
-    parameterSet7D: any;
-    promptText: string;
-    mdReport: string;
-    jsonPayload: any;
-    requestedFormats?: ExportFormat[];
-    licenseNotice?: string;
-    version?: string;
-  }): Promise<ExportBundleResponse> => {
-    if (!orgId) {
-      throw new Error('Organization ID is required');
-    }
-
-    const {
-      runId,
-      moduleId,
-      parameterSet7D,
-      promptText,
-      mdReport,
-      jsonPayload,
-      requestedFormats = ['txt', 'md'],
-      licenseNotice,
-      version = '1.0.0'
-    } = params;
-
-    // Validări de bază
-    if (!runId || !moduleId || !promptText || !mdReport || !jsonPayload) {
-      throw new Error('Missing required export parameters');
-    }
-
-    // Verifică dacă formatele cerute sunt permise
-    const unauthorizedFormats = requestedFormats.filter(format => {
-      switch (format) {
-        case 'txt':
-        case 'md':
-          return false; // Întotdeauna permise
-        case 'json':
-          return !canExportJson;
-        case 'pdf':
-          return !canExportPdf;
-        case 'zip':
-          return !canExportZip;
-        default:
-          return true; // Format necunoscut
+  const exportBundle = useCallback(
+    async (params: {
+      runId: string;
+      moduleId: string;
+      parameterSet7D: any;
+      promptText: string;
+      mdReport: string;
+      jsonPayload: any;
+      requestedFormats?: ExportFormat[];
+      licenseNotice?: string;
+      version?: string;
+    }): Promise<ExportBundleResponse> => {
+      if (!orgId) {
+        throw new Error('Organization ID is required');
       }
-    });
 
-    if (unauthorizedFormats.length > 0) {
-      const needsPro = unauthorizedFormats.some(f => f === 'json' || f === 'pdf');
-      const needsEnterprise = unauthorizedFormats.includes('zip');
-      
-      const upgradeType = needsEnterprise ? 'Enterprise' : needsPro ? 'Pro' : 'higher';
-      throw new Error(`Formats ${unauthorizedFormats.join(', ')} require ${upgradeType} plan`);
-    }
+      const {
+        runId,
+        moduleId,
+        parameterSet7D,
+        promptText,
+        mdReport,
+        jsonPayload,
+        requestedFormats = ['txt', 'md'],
+        licenseNotice,
+        version = '1.0.0',
+      } = params;
 
-    setExporting(true);
-    setExportError(null);
+      // Validări de bază
+      if (!runId || !moduleId || !promptText || !mdReport || !jsonPayload) {
+        throw new Error('Missing required export parameters');
+      }
 
-    try {
-      const response = await fetch('/api/export/bundle', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-org-id': orgId, // SACF required header
-          'x-run-id': runId, // SACF required header
-        },
-        body: JSON.stringify({
-          orgId,
-          runId,
-          moduleId,
-          parameterSet7D,
-          promptText,
-          mdReport,
-          jsonPayload,
-          requestedFormats,
-          licenseNotice,
-          version
-        }),
+      // Verifică dacă formatele cerute sunt permise
+      const unauthorizedFormats = requestedFormats.filter(format => {
+        switch (format) {
+          case 'txt':
+          case 'md':
+            return false; // Întotdeauna permise
+          case 'json':
+            return !canExportJson;
+          case 'pdf':
+            return !canExportPdf;
+          case 'zip':
+            return !canExportZip;
+          default:
+            return true; // Format necunoscut
+        }
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        
-        if (error.error === 'ENTITLEMENT_REQUIRED') {
-          const { unauthorizedFormats, upsell } = error;
-          const upgradeType = upsell === 'enterprise_needed' ? 'Enterprise' : 'Pro';
-          throw new Error(`Formats ${unauthorizedFormats?.join(', ') || 'requested'} require ${upgradeType} plan`);
-        }
-        
-        if (error.error === 'SCORE_TOO_LOW') {
-          throw new Error(`Export requires score ≥80. Current score: ${error.score}`);
-        }
-        
-        if (error.error === 'RUN_NOT_FOUND') {
-          throw new Error('Run not found or access denied');
-        }
-        
-        throw new Error(error.message || error.error || 'Export failed');
+      if (unauthorizedFormats.length > 0) {
+        const needsPro = unauthorizedFormats.some(f => f === 'json' || f === 'pdf');
+        const needsEnterprise = unauthorizedFormats.includes('zip');
+
+        const upgradeType = needsEnterprise ? 'Enterprise' : needsPro ? 'Pro' : 'higher';
+        throw new Error(`Formats ${unauthorizedFormats.join(', ')} require ${upgradeType} plan`);
       }
 
-      const result: ExportBundleResponse = await response.json();
-      setLastExport(result);
-      return result;
+      setExporting(true);
+      setExportError(null);
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown export error';
-      setExportError(errorMessage);
-      throw error;
-    } finally {
-      setExporting(false);
-    }
-  }, [orgId, canExportJson, canExportPdf, canExportZip]);
+      try {
+        const response = await fetch('/api/export/bundle', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-org-id': orgId, // SACF required header
+            'x-run-id': runId, // SACF required header
+          },
+          body: JSON.stringify({
+            orgId,
+            runId,
+            moduleId,
+            parameterSet7D,
+            promptText,
+            mdReport,
+            jsonPayload,
+            requestedFormats,
+            licenseNotice,
+            version,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+
+          if (error.error === 'ENTITLEMENT_REQUIRED') {
+            const { unauthorizedFormats, upsell } = error;
+            const upgradeType = upsell === 'enterprise_needed' ? 'Enterprise' : 'Pro';
+            throw new Error(
+              `Formats ${unauthorizedFormats?.join(', ') || 'requested'} require ${upgradeType} plan`
+            );
+          }
+
+          if (error.error === 'SCORE_TOO_LOW') {
+            throw new Error(`Export requires score ≥80. Current score: ${error.score}`);
+          }
+
+          if (error.error === 'RUN_NOT_FOUND') {
+            throw new Error('Run not found or access denied');
+          }
+
+          throw new Error(error.message || error.error || 'Export failed');
+        }
+
+        const result: ExportBundleResponse = await response.json();
+        setLastExport(result);
+        return result;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown export error';
+        setExportError(errorMessage);
+        throw error;
+      } finally {
+        setExporting(false);
+      }
+    },
+    [orgId, canExportJson, canExportPdf, canExportZip]
+  );
 
   return {
     // Export function
     exportBundle,
     checkCapabilities,
-    
+
     // State
     exporting,
     exportError,
     lastExport,
     capabilities,
-    
+
     // Gating info
     canExportTxt,
     canExportMd,
     canExportJson,
     canExportPdf,
     canExportZip,
-    upgradeMessage
+    upgradeMessage,
   };
 }

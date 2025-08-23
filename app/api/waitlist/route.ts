@@ -1,6 +1,6 @@
 // app/api/waitlist/route.ts
-import { NextResponse, NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { NextResponse, NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 // Create supabase client only if environment variables are available
 function getSupabaseClient() {
@@ -24,40 +24,36 @@ export async function POST(req: NextRequest) {
 
     if (!supabase) {
       return NextResponse.json(
-        { error: "Waitlist service temporarily unavailable." },
-        { status: 503 },
+        { error: 'Waitlist service temporarily unavailable.' },
+        { status: 503 }
       );
     }
 
-    const { email, name, org_id } = await req.json();
+    const { email, name } = await req.json();
 
     if (!email || !isValidEmail(email)) {
-      return NextResponse.json({ error: "Invalid email." }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid email.' }, { status: 400 });
     }
 
     // Upsert-like behavior with unique(email)
-    const { error } = await supabase
-      .from("waitlist_signups")
-      .insert([
-        {
-          email: String(email).toLowerCase().trim(),
-          name: name?.trim() || null,
-        },
-      ]);
+    const { error } = await supabase.from('waitlist_signups').insert([
+      {
+        email: String(email).toLowerCase().trim(),
+        name: name?.trim() || null,
+      },
+    ]);
 
     // If duplicate, treat as success (idempotent UX)
-    if (error && !String(error.message || "").includes("duplicate key")) {
+    if (error && !String(error.message || '').includes('duplicate key')) {
       return NextResponse.json(
-        { error: "Database error.", detail: error.message },
-        { status: 500 },
+        { error: 'Database error.', detail: error.message },
+        { status: 500 }
       );
     }
 
     return NextResponse.json({ ok: true });
-  } catch (e: any) {
-    return NextResponse.json(
-      { error: "Bad request.", detail: e?.message },
-      { status: 400 },
-    );
+  } catch (e: unknown) {
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+    return NextResponse.json({ error: 'Bad request.', detail: errorMessage }, { status: 400 });
   }
 }

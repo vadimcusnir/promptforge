@@ -78,3 +78,10 @@ alwaysApply: false
 
 - Text gradient, emoji, neon galben (#FFD700) pe body/CTA, glow saturat,
   două footere, background duplicat, chenar pe hero.
+
+## Brand Enforcement (SSOT)
+
+- **STRICT**: Orice apariție "AI-IDEI", "AI IDEI", "Ai Idei", "ai-idei", "AI Prompt Templates", "AI-Prompt-Templates" = FAIL build
+- **REPLACE**: Toate variantele cu "PromptForge" (cod) / "PROMPTFORGE™" (UI/copy)
+- **ENFORCEMENT**: Cursor Agent + CI nu pot override - orice abatere = FAIL
+- **TEMPLATE**: @template brand-fix "Replace with PromptForge/PROMPTFORGE™"

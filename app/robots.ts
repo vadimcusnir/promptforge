@@ -1,18 +1,18 @@
-import { MetadataRoute } from "next";
+import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://chatgpt-prompting.com";
+  const baseUrl = 'https://chatgpt-prompting.com';
 
   return {
     rules: [
       {
-        userAgent: "*",
-        allow: "/",
+        userAgent: '*',
+        allow: '/',
         disallow: [
-          "/api/*",
-          "/dashboard/*",
-          "/coming-soon", // Conform documentației - Disallow: /coming-soon
-          "/tmp/*",
+          '/api/*',
+          '/dashboard/*',
+          '/coming-soon', // Conform documentației - Disallow: /coming-soon
+          '/tmp/*',
         ],
       },
     ],

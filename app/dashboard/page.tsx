@@ -1,30 +1,29 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { RunTable } from "@/components/dashboard/RunTable";
-import { RunDetails } from "@/components/dashboard/RunDetails";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { usePremiumFeatures } from "@/lib/premium-features";
-import { Search, Filter, Calendar, Hash } from "lucide-react";
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { RunTable } from '@/components/dashboard/RunTable';
+import { RunDetails } from '@/components/dashboard/RunDetails';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { usePremiumFeatures } from '@/lib/premium-features';
+import { Search, Filter, Calendar, Hash } from 'lucide-react';
 
 interface RunRecord {
   id: string;
   hash: string;
   module: string;
-  moduleCode: string;
   score: number;
-  status: "PASS" | "PARTIAL" | "FAIL";
+  status: 'PASS' | 'PARTIAL' | 'FAIL';
   date: Date;
   exportType: string[];
   config7D: any;
@@ -37,10 +36,10 @@ export default function DashboardPage() {
   const [runs, setRuns] = useState<RunRecord[]>([]);
   const [selectedRun, setSelectedRun] = useState<RunRecord | null>(null);
   const [filters, setFilters] = useState({
-    module: "all",
-    score: "all",
-    dateRange: "all",
-    search: "",
+    module: 'all',
+    score: 'all',
+    dateRange: 'all',
+    search: '',
   });
   const [loading, setLoading] = useState(true);
 
@@ -53,14 +52,14 @@ export default function DashboardPage() {
     try {
       // Simulate loading run history based on tier
       const mockRuns: RunRecord[] =
-        tier === "Basic"
+        tier === 'Basic'
           ? generateMockRuns(3)
           : // Basic: limited local history
             generateMockRuns(25); // Pro/Enterprise: full cloud history
 
       setRuns(mockRuns);
     } catch (error) {
-      console.error("Failed to load run history:", error);
+      console.error('Failed to load run history:', error);
     } finally {
       setLoading(false);
     }
@@ -69,42 +68,37 @@ export default function DashboardPage() {
   const generateMockRuns = (count: number): RunRecord[] => {
     return Array.from({ length: count }, (_, i) => ({
       id: `run_${i + 1}`,
-      hash: `pf_m${String(Math.floor(Math.random() * 50) + 1).padStart(2, "0")}_${Math.random().toString(36).substring(2, 8)}`,
-      module: `M${String(Math.floor(Math.random() * 50) + 1).padStart(2, "0")} – ${["SaaS Funnel", "Content Strategy", "Brand Voice", "Sales Copy", "Email Sequence"][Math.floor(Math.random() * 5)]}`,
-      moduleCode: `V${Math.floor(Math.random() * 7) + 1}`,
+      hash: `pf_m${String(Math.floor(Math.random() * 50) + 1).padStart(2, '0')}_${Math.random().toString(36).substring(2, 8)}`,
+      module: `M${String(Math.floor(Math.random() * 50) + 1).padStart(2, '0')} – ${['SaaS Funnel', 'Content Strategy', 'Brand Voice', 'Sales Copy', 'Email Sequence'][Math.floor(Math.random() * 5)]}`,
       score: Math.floor(Math.random() * 40) + 60,
-      status:
-        Math.random() > 0.7 ? "FAIL" : Math.random() > 0.3 ? "PASS" : "PARTIAL",
+      status: Math.random() > 0.7 ? 'FAIL' : Math.random() > 0.3 ? 'PASS' : 'PARTIAL',
       date: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
-      exportType: ["txt", "md", "json", "pdf"].slice(
-        0,
-        Math.floor(Math.random() * 3) + 1,
-      ),
+      exportType: ['txt', 'md', 'json', 'pdf'].slice(0, Math.floor(Math.random() * 3) + 1),
       config7D: {
-        domain: "SaaS",
-        scale: "Startup",
-        urgency: "High",
-        complexity: "Medium",
+        domain: 'SaaS',
+        scale: 'Startup',
+        urgency: 'High',
+        complexity: 'Medium',
       },
       telemetry: {
         tta: Math.floor(Math.random() * 120) + 30,
         iterations: Math.floor(Math.random() * 5) + 1,
       },
-      actions: ["Generate", "Test", "Export"],
+      actions: ['Generate', 'Test', 'Export'],
     }));
   };
 
-  const filteredRuns = runs.filter((run) => {
+  const filteredRuns = runs.filter(run => {
     if (
-      filters.module !== "all" &&
-      !run.module.toLowerCase().includes(filters.module.toLowerCase())
+      filters.module !== 'all' &&
+      !run.moduleData.toLowerCase().includes(filters.moduleData.toLowerCase())
     )
       return false;
-    if (filters.score !== "all" && run.status !== filters.score) return false;
+    if (filters.score !== 'all' && run.status !== filters.score) return false;
     if (
       filters.search &&
       !run.hash.toLowerCase().includes(filters.search.toLowerCase()) &&
-      !run.module.toLowerCase().includes(filters.search.toLowerCase())
+      !run.moduleData.toLowerCase().includes(filters.search.toLowerCase())
     )
       return false;
     return true;
@@ -142,19 +136,12 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl font-bold font-heading text-white">
-              Run History
-            </h1>
-            <Badge
-              variant="outline"
-              className="text-gold-industrial border-gold-industrial"
-            >
+            <h1 className="text-3xl font-bold font-heading text-white">Run History</h1>
+            <Badge variant="outline" className="text-gold-industrial border-gold-industrial">
               {tier} Plan
             </Badge>
           </div>
-          <p className="text-lead-gray text-lg">
-            Scores. Exports. Reloadable prompts.
-          </p>
+          <p className="text-lead-gray text-lg">Scores. Exports. Reloadable prompts.</p>
         </div>
 
         {/* Filters */}
@@ -163,20 +150,16 @@ export default function DashboardPage() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-lead-gray" />
               <Input
-                placeholder="Search by hash or module..."
+                placeholder="Search by hash or moduleData..."
                 value={filters.search}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, search: e.target.value }))
-                }
+                onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
                 className="pl-10 bg-black/50 border-lead-gray/30 text-white placeholder:text-lead-gray"
               />
             </div>
 
             <Select
               value={filters.module}
-              onValueChange={(value) =>
-                setFilters((prev) => ({ ...prev, module: value }))
-              }
+              onValueChange={value => setFilters(prev => ({ ...prev, module: value }))}
             >
               <SelectTrigger className="bg-black/50 border-lead-gray/30 text-white">
                 <Filter className="w-4 h-4 mr-2" />
@@ -192,9 +175,7 @@ export default function DashboardPage() {
 
             <Select
               value={filters.score}
-              onValueChange={(value) =>
-                setFilters((prev) => ({ ...prev, score: value }))
-              }
+              onValueChange={value => setFilters(prev => ({ ...prev, score: value }))}
             >
               <SelectTrigger className="bg-black/50 border-lead-gray/30 text-white">
                 <SelectValue placeholder="Filter by score" />
@@ -209,9 +190,7 @@ export default function DashboardPage() {
 
             <Select
               value={filters.dateRange}
-              onValueChange={(value) =>
-                setFilters((prev) => ({ ...prev, dateRange: value }))
-              }
+              onValueChange={value => setFilters(prev => ({ ...prev, dateRange: value }))}
             >
               <SelectTrigger className="bg-black/50 border-lead-gray/30 text-white">
                 <Calendar className="w-4 h-4 mr-2" />
@@ -255,13 +234,12 @@ export default function DashboardPage() {
         </div>
 
         {/* Tier Limitation Notice */}
-        {tier === "Basic" && (
+        {tier === 'Basic' && (
           <Card className="glass-effect p-4 mt-6 border-gold-industrial/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gold-industrial">
-                  Showing last 10 runs (local storage). Upgrade to Pro for full
-                  cloud history.
+                  Showing last 10 runs (local storage). Upgrade to Pro for full cloud history.
                 </p>
               </div>
               <Button

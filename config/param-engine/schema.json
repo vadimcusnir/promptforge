@@ -2,83 +2,114 @@
   "schema_version": "1.0.0",
   "title": "PROMPTFORGE™ v3 - 7D Parameter Engine Schema",
   "description": "Schema canonical pentru parametrizarea 7D: Domain, Scale, Urgency, Complexity, Resources, Application, Output",
-  
+
   "parameters": {
     "domain": {
       "type": "enum",
       "required": true,
       "description": "Industria/sectorul de aplicare (CORE 25)",
       "values": [
-        "saas", "fintech", "ecommerce", "consulting", "education", 
-        "healthcare", "legal", "marketing", "media", "real_estate",
-        "hr", "ngo", "government", "web3", "aiml", "cybersecurity",
-        "manufacturing", "logistics", "travel", "gaming", 
-        "fashion", "beauty", "spiritual", "architecture", "agriculture"
+        "saas",
+        "fintech",
+        "ecommerce",
+        "consulting",
+        "education",
+        "healthcare",
+        "legal",
+        "marketing",
+        "media",
+        "real_estate",
+        "hr",
+        "ngo",
+        "government",
+        "web3",
+        "aiml",
+        "cybersecurity",
+        "manufacturing",
+        "logistics",
+        "travel",
+        "gaming",
+        "fashion",
+        "beauty",
+        "spiritual",
+        "architecture",
+        "agriculture"
       ],
       "default": "consulting"
     },
-    
+
     "scale": {
-      "type": "enum", 
+      "type": "enum",
       "required": true,
       "description": "Mărime/maturitate organizațională",
       "values": [
-        "personal_brand", "solo", "startup", "boutique_agency", 
-        "smb", "corporate", "enterprise"
+        "personal_brand",
+        "solo",
+        "startup",
+        "boutique_agency",
+        "smb",
+        "corporate",
+        "enterprise"
       ],
       "default": "startup"
     },
-    
+
     "urgency": {
       "type": "enum",
-      "required": true, 
+      "required": true,
       "description": "Nivel presiune execuțională",
       "values": ["low", "planned", "sprint", "pilot", "crisis"],
       "default": "planned"
     },
-    
+
     "complexity": {
       "type": "enum",
       "required": true,
-      "description": "Adâncime execuțională necesară", 
+      "description": "Adâncime execuțională necesară",
       "values": ["foundational", "standard", "advanced", "expert"],
       "default": "standard"
     },
-    
+
     "resources": {
       "type": "enum",
       "required": true,
       "description": "Capacitate operațională disponibilă",
       "values": [
-        "minimal", "solo", "lean_team", "agency_stack", 
-        "full_stack_org", "enterprise_budget"
+        "minimal",
+        "solo",
+        "lean_team",
+        "agency_stack",
+        "full_stack_org",
+        "enterprise_budget"
       ],
       "default": "lean_team"
     },
-    
+
     "application": {
-      "type": "enum", 
+      "type": "enum",
       "required": true,
       "description": "Caz de utilizare/scop",
       "values": [
-        "training", "audit", "implementation", "strategy_design",
-        "crisis_response", "experimentation", "documentation" 
+        "training",
+        "audit",
+        "implementation",
+        "strategy_design",
+        "crisis_response",
+        "experimentation",
+        "documentation"
       ],
       "default": "implementation"
     },
-    
+
     "output_format": {
       "type": "enum",
       "required": true,
       "description": "Format artefact livrabil",
-      "values": [
-        "txt", "md", "checklist", "spec", "playbook", 
-        "json", "yaml", "diagram", "bundle"
-      ],
+      "values": ["txt", "md", "checklist", "spec", "playbook", "json", "yaml", "diagram", "bundle"],
       "default": "spec"
     }
   },
-  
+
   "validation_rules": {
     "domain_dependent_defaults": {
       "description": "Defaults se adaptează pe baza domeniului selectat",
@@ -93,19 +124,19 @@
           "message": "Crisis mode necesită complexity >= standard"
         },
         {
-          "condition": "scale=enterprise AND resources=minimal", 
+          "condition": "scale=enterprise AND resources=minimal",
           "action": "error",
           "message": "Enterprise scale incompatibil cu minimal resources"
         },
         {
           "condition": "domain=healthcare AND urgency=low",
-          "action": "warning", 
+          "action": "warning",
           "message": "Healthcare recomandă urgency >= planned pentru compliance"
         }
       ]
     }
   },
-  
+
   "derivation_logic": {
     "style_bias": "domain.style_bias + scale.tone_modifier + urgency.directness",
     "guardrails": "domain.compliance_notes + domain.guardrails + urgency.safety_level",

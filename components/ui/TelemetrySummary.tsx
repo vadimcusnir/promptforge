@@ -1,6 +1,6 @@
-"use client";
-import { Badge } from "@/components/ui/badge";
-import { Clock, Zap, Target } from "lucide-react";
+'use client';
+import { Badge } from '@/components/ui/badge';
+import { Clock, Zap, Target } from 'lucide-react';
 
 interface TelemetryData {
   tta: number; // Time to Action in seconds
@@ -46,17 +46,14 @@ export function TelemetrySummary({ telemetry }: TelemetrySummaryProps) {
             <Target className="w-3 h-3" />
             <span>Iterations:</span>
           </div>
-          <Badge
-            variant="outline"
-            className="text-xs text-blue-400 border-blue-400/30"
-          >
+          <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/30">
             {telemetry.iterations}
           </Badge>
         </div>
 
         <div className="pt-2 border-t border-lead-gray/20">
           <div className="text-xs text-lead-gray">
-            Checksum:{" "}
+            Checksum:{' '}
             <code className="text-white font-mono">
               {Math.random().toString(36).substring(2, 10)}
             </code>

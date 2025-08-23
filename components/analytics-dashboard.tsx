@@ -1,25 +1,20 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  IndustrialCard,
-  IndustrialBadge,
-  IndustrialProgress,
-} from "@/components/industrial-ui";
+import { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { IndustrialCard, IndustrialBadge, IndustrialProgress } from '@/components/industrial-ui';
 import {
   telemetry,
   type PerformanceMetrics,
   type UserBehaviorMetrics,
   type SystemHealthMetrics,
-} from "@/lib/telemetry";
+} from '@/lib/telemetry';
 import {
   Activity,
   BarChart3,
   Clock,
-  Users,
   Zap,
   TrendingUp,
   AlertTriangle,
@@ -28,15 +23,12 @@ import {
   Database,
   Cpu,
   HardDrive,
-} from "lucide-react";
+} from 'lucide-react';
 
 export function AnalyticsDashboard() {
-  const [performanceMetrics, setPerformanceMetrics] =
-    useState<PerformanceMetrics | null>(null);
-  const [userBehaviorMetrics, setUserBehaviorMetrics] =
-    useState<UserBehaviorMetrics | null>(null);
-  const [systemHealthMetrics, setSystemHealthMetrics] =
-    useState<SystemHealthMetrics | null>(null);
+  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetrics | null>(null);
+  const [userBehaviorMetrics, setUserBehaviorMetrics] = useState<UserBehaviorMetrics | null>(null);
+  const [systemHealthMetrics, setSystemHealthMetrics] = useState<SystemHealthMetrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -60,38 +52,38 @@ export function AnalyticsDashboard() {
   };
 
   const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 B";
+    if (bytes === 0) return '0 B';
     const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
+    const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
 
   const getHealthStatus = (
     value: number,
-    thresholds: { good: number; warning: number },
+    thresholds: { good: number; warning: number }
   ): {
-    status: "good" | "warning" | "critical";
+    status: 'good' | 'warning' | 'critical';
     color: string;
     icon: React.ReactNode;
   } => {
     if (value <= thresholds.good) {
       return {
-        status: "good",
-        color: "text-green-400",
+        status: 'good',
+        color: 'text-green-400',
         icon: <CheckCircle className="w-4 h-4" />,
       };
     }
     if (value <= thresholds.warning) {
       return {
-        status: "warning",
-        color: "text-yellow-400",
+        status: 'warning',
+        color: 'text-yellow-400',
         icon: <AlertTriangle className="w-4 h-4" />,
       };
     }
     return {
-      status: "critical",
-      color: "text-red-400",
+      status: 'critical',
+      color: 'text-red-400',
       icon: <AlertTriangle className="w-4 h-4" />,
     };
   };
@@ -134,7 +126,6 @@ export function AnalyticsDashboard() {
               Performance
             </TabsTrigger>
             <TabsTrigger value="behavior" className="industrial-tab">
-              <Users className="w-4 h-4 mr-2" />
               User Behavior
             </TabsTrigger>
             <TabsTrigger value="system" className="industrial-tab">
@@ -196,9 +187,7 @@ export function AnalyticsDashboard() {
                   <div className="flex justify-between items-center">
                     <span className="text-slate-300">Session Duration</span>
                     <span className="text-white font-semibold">
-                      {formatDuration(
-                        userBehaviorMetrics?.sessionDuration || 0,
-                      )}
+                      {formatDuration(userBehaviorMetrics?.sessionDuration || 0)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -283,36 +272,27 @@ export function AnalyticsDashboard() {
                   <IndustrialCard className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <Zap className="w-5 h-5 text-blue-400" />
-                      <h3 className="text-lg font-semibold text-white">
-                        Generation Performance
-                      </h3>
+                      <h3 className="text-lg font-semibold text-white">Generation Performance</h3>
                     </div>
                     <div className="space-y-3">
                       <div>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-slate-300">
-                            Prompt Generation
-                          </span>
+                          <span className="text-slate-300">Prompt Generation</span>
                           <span className="text-white">
-                            {Math.round(
-                              performanceMetrics.promptGenerationTime,
-                            )}
+                            {Math.round(performanceMetrics.promptGenerationTime)}
                             ms
                           </span>
                         </div>
                         <IndustrialProgress
                           value={Math.min(
-                            (performanceMetrics.promptGenerationTime / 2000) *
-                              100,
-                            100,
+                            (performanceMetrics.promptGenerationTime / 2000) * 100,
+                            100
                           )}
                         />
                       </div>
                       <div>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-slate-300">
-                            GPT Optimization
-                          </span>
+                          <span className="text-slate-300">GPT Optimization</span>
                           <span className="text-white">
                             {Math.round(performanceMetrics.gptOptimizationTime)}
                             ms
@@ -320,9 +300,8 @@ export function AnalyticsDashboard() {
                         </div>
                         <IndustrialProgress
                           value={Math.min(
-                            (performanceMetrics.gptOptimizationTime / 5000) *
-                              100,
-                            100,
+                            (performanceMetrics.gptOptimizationTime / 5000) * 100,
+                            100
                           )}
                         />
                       </div>
@@ -334,10 +313,7 @@ export function AnalyticsDashboard() {
                           </span>
                         </div>
                         <IndustrialProgress
-                          value={Math.min(
-                            (performanceMetrics.testExecutionTime / 3000) * 100,
-                            100,
-                          )}
+                          value={Math.min((performanceMetrics.testExecutionTime / 3000) * 100, 100)}
                         />
                       </div>
                     </div>
@@ -346,18 +322,14 @@ export function AnalyticsDashboard() {
                   <IndustrialCard className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <Cpu className="w-5 h-5 text-purple-400" />
-                      <h3 className="text-lg font-semibold text-white">
-                        System Resources
-                      </h3>
+                      <h3 className="text-lg font-semibold text-white">System Resources</h3>
                     </div>
                     <div className="space-y-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-purple-400 mb-1">
                           {formatBytes(performanceMetrics.memoryUsage)}
                         </div>
-                        <div className="text-sm text-slate-400">
-                          Memory Usage
-                        </div>
+                        <div className="text-sm text-slate-400">Memory Usage</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-cyan-400 mb-1">
@@ -371,26 +343,20 @@ export function AnalyticsDashboard() {
                   <IndustrialCard className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <TrendingUp className="w-5 h-5 text-green-400" />
-                      <h3 className="text-lg font-semibold text-white">
-                        Export Performance
-                      </h3>
+                      <h3 className="text-lg font-semibold text-white">Export Performance</h3>
                     </div>
                     <div className="space-y-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-green-400 mb-1">
                           {Math.round(performanceMetrics.exportTime)}ms
                         </div>
-                        <div className="text-sm text-slate-400">
-                          Average Export Time
-                        </div>
+                        <div className="text-sm text-slate-400">Average Export Time</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-amber-400 mb-1">
                           {Math.round(performanceMetrics.pageLoadTime)}ms
                         </div>
-                        <div className="text-sm text-slate-400">
-                          Page Load Time
-                        </div>
+                        <div className="text-sm text-slate-400">Page Load Time</div>
                       </div>
                     </div>
                   </IndustrialCard>
@@ -403,25 +369,19 @@ export function AnalyticsDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <IndustrialCard className="p-6">
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-blue-400" />
                   Feature Usage
                 </h3>
                 <div className="space-y-3">
-                  {userBehaviorMetrics?.featuresUsed
-                    .slice(0, 8)
-                    .map((feature, index) => (
-                      <div
-                        key={feature}
-                        className="flex items-center justify-between"
-                      >
-                        <span className="text-slate-300 capitalize">
-                          {feature.replace(/_/g, " ")}
-                        </span>
-                        <IndustrialBadge variant="info" size="sm">
-                          {index + 1}x
-                        </IndustrialBadge>
-                      </div>
-                    ))}
+                  {userBehaviorMetrics?.featuresUsed.slice(0, 8).map((feature, index) => (
+                    <div key={feature} className="flex items-center justify-between">
+                      <span className="text-slate-300 capitalize">
+                        {feature.replace(/_/g, ' ')}
+                      </span>
+                      <IndustrialBadge variant="info" size="sm">
+                        {index + 1}x
+                      </IndustrialBadge>
+                    </div>
+                  ))}
                 </div>
               </IndustrialCard>
 
@@ -431,11 +391,8 @@ export function AnalyticsDashboard() {
                   Vector Distribution
                 </h3>
                 <div className="space-y-3">
-                  {userBehaviorMetrics?.vectorsUsed.map((vector) => (
-                    <div
-                      key={vector}
-                      className="flex items-center justify-between"
-                    >
+                  {userBehaviorMetrics?.vectorsUsed.map(vector => (
+                    <div key={vector} className="flex items-center justify-between">
                       <span className="text-slate-300">{vector}</span>
                       <IndustrialBadge variant="success" size="sm">
                         Active

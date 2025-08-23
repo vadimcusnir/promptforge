@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Activity, Clock, Hash, Target } from "lucide-react";
-import type { TestResult } from "@/types/promptforge";
+import { Activity, Clock, Hash, Target } from 'lucide-react';
+import type { TestResult } from '@/types/promptforge';
 
 interface TelemetryBadgeProps {
   runId: string;
@@ -10,24 +10,18 @@ interface TelemetryBadgeProps {
   score: TestResult;
 }
 
-export function TelemetryBadge({
-  runId,
-  tta,
-  tokens,
-  score,
-}: TelemetryBadgeProps) {
-  const averageScore =
-    Object.values(score.scores).reduce((a, b) => a + b, 0) / 4;
+export function TelemetryBadge({ runId, tta, tokens, score }: TelemetryBadgeProps) {
+  const averageScore = Object.values(score.scores).reduce((a, b) => a + b, 0) / 4;
   const getScoreColor = (verdict: string) => {
     switch (verdict) {
-      case "PASS":
-        return "text-gold-industrial";
-      case "PARTIAL":
-        return "text-lead-gray";
-      case "FAIL":
-        return "text-red-500";
+      case 'PASS':
+        return 'text-gold-industrial';
+      case 'PARTIAL':
+        return 'text-lead-gray';
+      case 'FAIL':
+        return 'text-red-500';
       default:
-        return "text-lead-gray";
+        return 'text-lead-gray';
     }
   };
 

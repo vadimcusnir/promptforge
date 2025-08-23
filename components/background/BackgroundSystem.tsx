@@ -1,42 +1,42 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-import { MatrixTokenLayer } from "./MatrixTokenLayer";
-import { NarrativeLayer } from "./NarrativeLayer";
-import { GeometricLayer } from "./GeometricLayer";
+import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { MatrixTokenLayer } from './MatrixTokenLayer';
+import { NarrativeLayer } from './NarrativeLayer';
+import { GeometricLayer } from './GeometricLayer';
 
 interface BackgroundSystemProps {
   className?: string;
 }
 
-export function BackgroundSystem({ className = "" }: BackgroundSystemProps) {
+export function BackgroundSystem({ className = '' }: BackgroundSystemProps) {
   const pathname = usePathname();
-  const isDashboard = pathname?.startsWith("/dashboard");
+  const isDashboard = pathname?.startsWith('/dashboard');
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Detect reduced motion preference
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mediaQuery.matches);
 
     const handleChange = () => setReducedMotion(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
+    mediaQuery.addEventListener('change', handleChange);
 
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   // Detect mobile viewport
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
     setIsMobile(mediaQuery.matches);
 
     const handleChange = () => setIsMobile(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
+    mediaQuery.addEventListener('change', handleChange);
 
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   // Performance settings based on context and capabilities
@@ -76,8 +76,8 @@ export function BackgroundSystem({ className = "" }: BackgroundSystemProps) {
       className={`fixed inset-0 pointer-events-none overflow-hidden ${className}`}
       style={{
         zIndex: 0,
-        transform: "none", // Critical: no transforms on background root
-        willChange: "auto",
+        transform: 'none', // Critical: no transforms on background root
+        willChange: 'auto',
       }}
       aria-hidden="true"
     >
@@ -121,8 +121,8 @@ export function BackgroundSystem({ className = "" }: BackgroundSystemProps) {
         className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/30"
         style={{
           zIndex: 1,
-          transform: "none",
-          willChange: "auto",
+          transform: 'none',
+          willChange: 'auto',
         }}
       />
     </div>

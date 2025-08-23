@@ -1,4 +1,4 @@
-import { PromptForgeLoading } from "@/components/loading-states";
+import { PromptForgeLoading } from '@/components/loading-states';
 
 export default function Loading() {
   return (

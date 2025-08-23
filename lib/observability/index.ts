@@ -3,25 +3,21 @@
  * Centralized exports and initialization for the observability infrastructure
  */
 
-export { agentWatch, AgentWatchWorker } from "./agent-watch";
-export { auditLogger, AuditLogger } from "./audit-logger";
-export { alertSystem, AlertSystem } from "./alert-system";
+export { agentWatch, AgentWatchWorker } from './agent-watch';
+export { auditLogger, AuditLogger } from './audit-logger';
+export { alertSystem, AlertSystem } from './alert-system';
 
-export type {
-  AgentMetrics,
-  AnomalyThresholds,
-  AnomalyAlert,
-} from "./agent-watch";
+export type { AgentMetrics, AnomalyThresholds, AnomalyAlert } from './agent-watch';
 
-export type { AuditLogEntry, AuditLogFilter } from "./audit-logger";
+export type { AuditLogEntry, AuditLogFilter } from './audit-logger';
 
-export type { AlertChannel, AlertRule, IncidentReport } from "./alert-system";
+export type { AlertChannel, AlertRule, IncidentReport } from './alert-system';
 
 /**
  * Initialize the complete observability system
  */
 export function initializeObservability(): void {
-  console.log("[Observability] Initializing system...");
+  console.log('[Observability] Initializing system...');
 
   // Start AgentWatch monitoring
   agentWatch.startMonitoring(30000); // 30 second intervals
@@ -29,19 +25,19 @@ export function initializeObservability(): void {
   // Initialize alert system
   alertSystem.initialize();
 
-  console.log("[Observability] System initialized successfully");
+  console.log('[Observability] System initialized successfully');
 }
 
 /**
  * Shutdown the observability system
  */
 export function shutdownObservability(): void {
-  console.log("[Observability] Shutting down system...");
+  console.log('[Observability] Shutting down system...');
 
   // Stop monitoring
   agentWatch.stopMonitoring();
 
-  console.log("[Observability] System shutdown complete");
+  console.log('[Observability] System shutdown complete');
 }
 
 /**

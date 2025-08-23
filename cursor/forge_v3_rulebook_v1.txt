@@ -1633,7 +1633,7 @@ Fonturi embed (licențe permisive); fără metadate volatile (normalizezi Produc
 5) manifest.json (schema minimă)
 {
   "version": "1.0.0",
-  "project": "ai-idei",
+  "project": "promptforge",
   "domain": "fintech",
   "module": "M07",
   "run_id": "2d6a1f7e-5a2a-4c7a-9c01-7c7d4b7f1e2a",

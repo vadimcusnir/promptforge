@@ -2,9 +2,9 @@ name: Security & SAST
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   schedule:
     - cron: '0 6 * * 1' # Weekly security scan
 
@@ -17,30 +17,30 @@ jobs:
   security-audit:
     name: Security Audit
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.18.0'
           cache: 'pnpm'
-          
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: '9.15.0'
-          
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        
+
       - name: Run npm audit
         run: |
           pnpm audit --audit-level=moderate --json > audit-report.json || true
           cat audit-report.json
-          
+
       - name: Upload audit report
         uses: actions/upload-artifact@v4
         with:
@@ -51,35 +51,56 @@ jobs:
   eslint-security:
     name: ESLint Security Scan
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.18.0'
           cache: 'pnpm'
-          
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: '9.15.0'
-          
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        
+
       - name: Run ESLint Security
         run: |
           pnpm run lint:security --format=sarif --output-file=eslint-security.sarif || true
-          
+
       - name: Upload ESLint Security results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: eslint-security.sarif
           category: eslint-security
+
+  brand-enforcement:
+    name: Brand Enforcement
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Brand enforcement check
+        run: |
+          echo "🔍 Checking for forbidden brand references..."
+          if grep -r --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=tmp -E 'AI[- _]?IDEI|Ai[- _]?Idei|ai[- _]?idei|AI[- _]?Prompt[- _]?Templates|Ai[- _]?Prompt[- _]?Templates|ai[- _]?prompt[- _]?templates'; then
+            echo "❌ Vechea denumire detectată. Folosește «PromptForge / PROMPTFORGE™»."
+            echo "🔍 Căutare în fișiere..."
+            grep -r --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=tmp -E 'AI[- _]?IDEI|Ai[- _]?Idei|ai[- _]?idei|AI[- _]?Prompt[- _]?Templates|Ai[- _]?Prompt[- _]?Templates|ai[- _]?prompt[- _]?templates' || true
+            exit 1
+          else
+            echo "✅ Brand enforcement passed - no forbidden references found"
+          fi
 
   codeql:
     name: CodeQL Analysis
@@ -93,7 +114,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript-typescript' ]
+        language: ['javascript-typescript']
 
     steps:
       - name: Checkout repository
@@ -111,18 +132,18 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
+          category: '/language:${{matrix.language}}'
 
   secret-scanning:
     name: Secret Scanning
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - name: Run TruffleHog OSS
         uses: trufflesecurity/trufflehog@main
         with:
@@ -134,30 +155,30 @@ jobs:
   sbom-generation:
     name: Generate SBOM
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.18.0'
           cache: 'pnpm'
-          
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: '9.15.0'
-          
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        
+
       - name: Generate SBOM
         run: |
           pnpm run sbom
           pnpm run sbom:xml
-          
+
       - name: Upload SBOM artifacts
         uses: actions/upload-artifact@v4
         with:

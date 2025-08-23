@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useEffect, useState } from 'react';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 interface RuneSymbol {
   symbol: string;
@@ -14,35 +14,35 @@ interface RuneSymbol {
 }
 
 const RUNE_SYMBOLS = [
-  ">",
-  "|",
-  "{",
-  "}",
-  "~",
-  "[",
-  "]",
-  "(",
-  ")",
-  "<",
-  "/",
-  "\\",
-  "^",
-  "&",
-  "*",
-  "#",
+  '>',
+  '|',
+  '{',
+  '}',
+  '~',
+  '[',
+  ']',
+  '(',
+  ')',
+  '<',
+  '/',
+  '\\',
+  '^',
+  '&',
+  '*',
+  '#',
 ];
 
 export function DigitalRune() {
   const prefersReducedMotion = useReducedMotion();
   const [symbols, setSymbols] = useState<RuneSymbol[]>([]);
-  const [centerSymbol, setCenterSymbol] = useState(">");
+  const [centerSymbol, setCenterSymbol] = useState('>');
 
   useEffect(() => {
     if (prefersReducedMotion) {
       // Static version for reduced motion
       setSymbols([
         {
-          symbol: ">",
+          symbol: '>',
           x: 50,
           y: 50,
           opacity: 0.8,
@@ -51,7 +51,7 @@ export function DigitalRune() {
           glitch: false,
         },
         {
-          symbol: "|",
+          symbol: '|',
           x: 45,
           y: 50,
           opacity: 0.4,
@@ -60,7 +60,7 @@ export function DigitalRune() {
           glitch: false,
         },
         {
-          symbol: "{",
+          symbol: '{',
           x: 55,
           y: 50,
           opacity: 0.4,
@@ -69,7 +69,7 @@ export function DigitalRune() {
           glitch: false,
         },
         {
-          symbol: "~",
+          symbol: '~',
           x: 50,
           y: 45,
           opacity: 0.3,
@@ -109,14 +109,12 @@ export function DigitalRune() {
     const interval = setInterval(() => {
       // Rotate center symbol occasionally
       if (Math.random() < 0.1) {
-        setCenterSymbol(
-          RUNE_SYMBOLS[Math.floor(Math.random() * RUNE_SYMBOLS.length)],
-        );
+        setCenterSymbol(RUNE_SYMBOLS[Math.floor(Math.random() * RUNE_SYMBOLS.length)]);
       }
 
       // Update orbital symbols
-      setSymbols((prev) =>
-        prev.map((symbol) => ({
+      setSymbols(prev =>
+        prev.map(symbol => ({
           ...symbol,
           rotation: symbol.rotation + 0.5,
           opacity: Math.max(0.1, symbol.opacity + (Math.random() - 0.5) * 0.1),
@@ -125,7 +123,7 @@ export function DigitalRune() {
             symbol.glitch && Math.random() < 0.3
               ? RUNE_SYMBOLS[Math.floor(Math.random() * RUNE_SYMBOLS.length)]
               : symbol.symbol,
-        })),
+        }))
       );
     }, 100);
 
@@ -138,14 +136,10 @@ export function DigitalRune() {
       <div
         className="absolute text-6xl md:text-8xl font-mono font-bold text-[#d1a954] opacity-20"
         style={{
-          textShadow: "0 0 30px rgba(209, 169, 84, 0.3)",
-          filter: prefersReducedMotion
-            ? "none"
-            : "drop-shadow(0 0 20px rgba(209, 169, 84, 0.2))",
-          transform: prefersReducedMotion ? "none" : "translateZ(0)",
-          animation: prefersReducedMotion
-            ? "none"
-            : "pulse 4s ease-in-out infinite",
+          textShadow: '0 0 30px rgba(209, 169, 84, 0.3)',
+          filter: prefersReducedMotion ? 'none' : 'drop-shadow(0 0 20px rgba(209, 169, 84, 0.2))',
+          transform: prefersReducedMotion ? 'none' : 'translateZ(0)',
+          animation: prefersReducedMotion ? 'none' : 'pulse 4s ease-in-out infinite',
         }}
       >
         {centerSymbol}
@@ -162,11 +156,11 @@ export function DigitalRune() {
             opacity: symbol.opacity,
             transform: `translate(-50%, -50%) scale(${symbol.scale}) rotate(${symbol.rotation}deg) translateZ(0)`,
             textShadow: symbol.glitch
-              ? "0 0 15px rgba(209, 169, 84, 0.8)"
-              : "0 0 10px rgba(209, 169, 84, 0.4)",
-            filter: symbol.glitch ? "hue-rotate(45deg)" : "none",
-            transition: prefersReducedMotion ? "none" : "all 0.1s ease-out",
-            willChange: prefersReducedMotion ? "auto" : "transform, opacity",
+              ? '0 0 15px rgba(209, 169, 84, 0.8)'
+              : '0 0 10px rgba(209, 169, 84, 0.4)',
+            filter: symbol.glitch ? 'hue-rotate(45deg)' : 'none',
+            transition: prefersReducedMotion ? 'none' : 'all 0.1s ease-out',
+            willChange: prefersReducedMotion ? 'auto' : 'transform, opacity',
           }}
         >
           {symbol.symbol}
@@ -175,10 +169,7 @@ export function DigitalRune() {
 
       {/* Connecting Lines (subtle) */}
       {!prefersReducedMotion && (
-        <svg
-          className="absolute inset-0 w-full h-full"
-          style={{ opacity: 0.1 }}
-        >
+        <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.1 }}>
           {symbols.slice(0, 6).map((_, index) => {
             const nextIndex = (index + 1) % 6;
             const symbol1 = symbols[index];

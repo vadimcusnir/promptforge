@@ -145,12 +145,12 @@ const _POST = async (request: NextRequest) => {
 
   // Authentication
   if (!authenticated) {
-    return createErrorResponse("UNAUTHENTICATED");
+    return createErrorResponse('UNAUTHENTICATED');
   }
 
   // Entitlements
   if (!hasPermission) {
-    return createEntitlementErrorResponse(["required_flag"]);
+    return createEntitlementErrorResponse(['required_flag']);
   }
 
   // Rate limiting

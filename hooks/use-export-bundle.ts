@@ -62,7 +62,6 @@ export function useExportBundle(): UseExportBundleReturn {
       const result: ExportResponse = await response.json();
       setLastExport(result);
       return result;
-
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Export failed';
       setError(errorMessage);
@@ -92,14 +91,14 @@ export async function downloadFile(url: string, filename: string): Promise<void>
 
     const blob = await response.blob();
     const downloadUrl = window.URL.createObjectURL(blob);
-    
+
     const link = document.createElement('a');
     link.href = downloadUrl;
     link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     window.URL.revokeObjectURL(downloadUrl);
   } catch (error) {
     console.error('Download failed:', error);
@@ -112,14 +111,14 @@ export async function downloadFile(url: string, filename: string): Promise<void>
  */
 export function getFileExtension(format: string): string {
   const extensions: Record<string, string> = {
-    'md': 'md',
-    'txt': 'txt',
-    'json': 'json',
-    'pdf': 'pdf',
-    'zip': 'zip',
-    'xml': 'xml'
+    md: 'md',
+    txt: 'txt',
+    json: 'json',
+    pdf: 'pdf',
+    zip: 'zip',
+    xml: 'xml',
   };
-  
+
   return extensions[format] || format;
 }
 
@@ -128,10 +127,10 @@ export function getFileExtension(format: string): string {
  */
 export function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
+
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }

@@ -44,7 +44,7 @@ interface UseEntitlementsReturn {
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
-  
+
   // Convenience methods for common checks
   canUseFeature: (feature: keyof UserEntitlements) => boolean;
   isPlan: (plan: 'pilot' | 'pro' | 'enterprise') => boolean;
@@ -83,7 +83,7 @@ export function useEntitlements(orgId: string): UseEntitlementsReturn {
 
       const entitlementsData: EntitlementsResponse = await response.json();
       setData(entitlementsData);
-      
+
       // Cache in localStorage for offline access
       localStorage.setItem(
         `promptforge_entitlements_${orgId}`,
@@ -92,11 +92,10 @@ export function useEntitlements(orgId: string): UseEntitlementsReturn {
           timestamp: Date.now(),
         })
       );
-
     } catch (err) {
       console.error('[useEntitlements] Error fetching entitlements:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch entitlements');
-      
+
       // Try to load from cache as fallback
       try {
         const cached = localStorage.getItem(`promptforge_entitlements_${orgId}`);
@@ -122,15 +121,21 @@ export function useEntitlements(orgId: string): UseEntitlementsReturn {
   }, [fetchEntitlements]);
 
   // Convenience methods
-  const canUseFeature = useCallback((feature: keyof UserEntitlements): boolean => {
-    if (!data?.entitlements) return false;
-    const value = data.entitlements[feature];
-    return typeof value === 'boolean' ? value : false;
-  }, [data]);
+  const canUseFeature = useCallback(
+    (feature: keyof UserEntitlements): boolean => {
+      if (!data?.entitlements) return false;
+      const value = data.entitlements[feature];
+      return typeof value === 'boolean' ? value : false;
+    },
+    [data]
+  );
 
-  const isPlan = useCallback((plan: 'pilot' | 'pro' | 'enterprise'): boolean => {
-    return data?.subscription?.plan_code === plan;
-  }, [data]);
+  const isPlan = useCallback(
+    (plan: 'pilot' | 'pro' | 'enterprise'): boolean => {
+      return data?.subscription?.plan_code === plan;
+    },
+    [data]
+  );
 
   const isTrialing = useCallback((): boolean => {
     const subscription = data?.subscription;
@@ -141,12 +146,12 @@ export function useEntitlements(orgId: string): UseEntitlementsReturn {
   const daysUntilExpiry = useCallback((): number | null => {
     const subscription = data?.subscription;
     if (!subscription?.current_period_end) return null;
-    
+
     const expiryDate = new Date(subscription.current_period_end);
     const now = new Date();
     const diffTime = expiryDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     return diffDays > 0 ? diffDays : 0;
   }, [data]);
 
@@ -217,7 +222,7 @@ interface EntitlementsProviderProps {
 
 export function EntitlementsProvider({ children, orgId }: EntitlementsProviderProps) {
   const entitlementsData = useEntitlements(orgId);
-  
+
   const value: EntitlementsContextValue = {
     entitlements: entitlementsData.entitlements,
     loading: entitlementsData.loading,

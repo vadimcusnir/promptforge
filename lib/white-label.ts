@@ -1,11 +1,12 @@
-// PromptForge v3 - White-Label System
+// PROMPTFORGE™ v3 - White-Label System
 // Branding custom și personalizare completă pentru Enterprise
 
 import { createClient } from '@supabase/supabase-js';
 
 // SACF - Development mode fallback
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+const SUPABASE_SERVICE_ROLE =
+  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
@@ -13,7 +14,7 @@ export interface WhiteLabelConfig {
   id: string;
   org_id: string;
   is_active: boolean;
-  
+
   // Branding
   brand_name: string;
   brand_logo_url?: string;
@@ -31,37 +32,37 @@ export interface WhiteLabelConfig {
     text_primary: string;
     text_secondary: string;
   };
-  
+
   // Customization
   custom_domain?: string;
   custom_email_domain?: string;
   custom_support_email?: string;
   custom_terms_url?: string;
   custom_privacy_url?: string;
-  
+
   // Content
   hero_title?: string;
   hero_subtitle?: string;
   hero_cta_text?: string;
   hero_cta_url?: string;
-  
+
   // Features
   hide_promptforge_branding: boolean;
   custom_footer_text?: string;
   custom_meta_description?: string;
   custom_meta_keywords?: string;
-  
+
   // Advanced
   custom_css?: string;
   custom_js?: string;
   custom_analytics_id?: string;
   custom_gtm_id?: string;
-  
+
   // Compliance
   gdpr_compliant: boolean;
   ccpa_compliant: boolean;
   custom_compliance_text?: string;
-  
+
   created_at: string;
   updated_at: string;
 }
@@ -134,13 +135,13 @@ class WhiteLabelManager {
           background: '#FFFFFF',
           surface: '#F8FAFC',
           text_primary: '#1E293B',
-          text_secondary: '#64748B'
+          text_secondary: '#64748B',
         },
         hide_promptforge_branding: false,
         gdpr_compliant: true,
         ccpa_compliant: true,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
 
       this.cache.set(orgId, { config: mockConfig, timestamp: Date.now() });
@@ -163,7 +164,6 @@ class WhiteLabelManager {
       }
 
       return null;
-
     } catch (error) {
       console.error('Failed to fetch white-label config:', error);
       return null;
@@ -173,7 +173,7 @@ class WhiteLabelManager {
   // Generează CSS custom pentru white-label
   generateCustomCSS(config: WhiteLabelConfig): string {
     const { brand_colors } = config;
-    
+
     return `
       :root {
         /* Brand Colors */
@@ -247,13 +247,17 @@ class WhiteLabelManager {
       }
       
       /* Hide PromptForge branding if requested */
-      ${config.hide_promptforge_branding ? `
+      ${
+        config.hide_promptforge_branding
+          ? `
         .promptforge-branding,
         .promptforge-logo,
         .promptforge-footer {
           display: none !important;
         }
-      ` : ''}
+      `
+          : ''
+      }
       
       /* Custom Hero Section */
       .hero-section {
@@ -298,22 +302,30 @@ class WhiteLabelManager {
         'use strict';
         
         // Custom Analytics
-        ${config.custom_analytics_id ? `
+        ${
+          config.custom_analytics_id
+            ? `
           // Google Analytics
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', '${config.custom_analytics_id}');
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${config.custom_gtm_id ? `
+        ${
+          config.custom_gtm_id
+            ? `
           // Google Tag Manager
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','${config.custom_gtm_id}');
-        ` : ''}
+        `
+            : ''
+        }
         
         // Custom Branding
         document.addEventListener('DOMContentLoaded', function() {
@@ -323,44 +335,64 @@ class WhiteLabelManager {
           }
           
           // Update meta description
-          ${config.custom_meta_description ? `
+          ${
+            config.custom_meta_description
+              ? `
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) {
               metaDesc.setAttribute('content', '${config.custom_meta_description}');
             }
-          ` : ''}
+          `
+              : ''
+          }
           
           // Update meta keywords
-          ${config.custom_meta_keywords ? `
+          ${
+            config.custom_meta_keywords
+              ? `
             const metaKeywords = document.querySelector('meta[name="keywords"]');
             if (metaKeywords) {
               metaKeywords.setAttribute('content', '${config.custom_meta_keywords}');
             }
-          ` : ''}
+          `
+              : ''
+          }
           
           // Custom footer text
-          ${config.custom_footer_text ? `
+          ${
+            config.custom_footer_text
+              ? `
             const footerText = document.querySelector('.footer-text');
             if (footerText) {
               footerText.innerHTML = '${config.custom_footer_text}';
             }
-          ` : ''}
+          `
+              : ''
+          }
           
           // Custom support email
-          ${config.custom_support_email ? `
+          ${
+            config.custom_support_email
+              ? `
             const supportLinks = document.querySelectorAll('a[href*="support"]');
             supportLinks.forEach(link => {
               link.href = link.href.replace(/support@[^\\s]+/, '${config.custom_support_email}');
             });
-          ` : ''}
+          `
+              : ''
+          }
         });
         
         // Custom CSS Injection
-        ${config.custom_css ? `
+        ${
+          config.custom_css
+            ? `
           const style = document.createElement('style');
           style.textContent = \`${config.custom_css}\`;
           document.head.appendChild(style);
-        ` : ''}
+        `
+            : ''
+        }
         
         ${config.custom_js || ''}
       })();
@@ -374,27 +406,27 @@ class WhiteLabelManager {
       fonts: {
         heading: 'Inter, system-ui, sans-serif',
         body: 'Inter, system-ui, sans-serif',
-        mono: 'JetBrains Mono, monospace'
+        mono: 'JetBrains Mono, monospace',
       },
       spacing: {
         xs: '0.25rem',
         sm: '0.5rem',
         md: '1rem',
         lg: '1.5rem',
-        xl: '2rem'
+        xl: '2rem',
       },
       borderRadius: {
         sm: '0.25rem',
         md: '0.5rem',
         lg: '0.75rem',
-        xl: '1rem'
+        xl: '1rem',
       },
       shadows: {
         sm: this.generateShadow(config.brand_colors.primary, 0.05),
         md: this.generateShadow(config.brand_colors.primary, 0.1),
         lg: this.generateShadow(config.brand_colors.primary, 0.15),
-        xl: this.generateShadow(config.brand_colors.primary, 0.2)
-      }
+        xl: this.generateShadow(config.brand_colors.primary, 0.2),
+      },
     };
   }
 
@@ -404,13 +436,15 @@ class WhiteLabelManager {
     const hex = color.replace('#', '');
     const num = parseInt(hex, 16);
     const r = Math.max(0, Math.min(255, (num >> 16) + amount));
-    const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
-    const b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+    const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00ff) + amount));
+    const b = Math.max(0, Math.min(255, (num & 0x0000ff) + amount));
     return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
   }
 
   private generateShadow(color: string, opacity: number): string {
-    return `0 4px 6px -1px ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+    return `0 4px 6px -1px ${color}${Math.round(opacity * 255)
+      .toString(16)
+      .padStart(2, '0')}`;
   }
 
   // Validează configurația white-label
@@ -446,7 +480,7 @@ class WhiteLabelManager {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 

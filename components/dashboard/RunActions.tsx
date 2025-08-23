@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Download, RotateCcw, GitCompare } from "lucide-react";
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, RotateCcw, GitCompare, Download } from 'lucide-react';
 
 interface RunRecord {
   id: string;
   hash: string;
   module: string;
   score: number;
-  status: "PASS" | "PARTIAL" | "FAIL";
+  status: 'PASS' | 'PARTIAL' | 'FAIL';
   exportType: string[];
 }
 
@@ -24,22 +24,22 @@ interface RunActionsProps {
 }
 
 export function RunActions({ run, tier }: RunActionsProps) {
-  const canRestore = run.score >= 80 || tier !== "Basic";
-  const canExportBundle = tier === "Enterprise";
+  const canRestore = run.score >= 80 || tier !== 'Basic';
+  const canExportBundle = tier === 'Enterprise';
 
   const handleRestore = () => {
     // Implement restore functionality
-    console.log("Restoring run:", run.hash);
+    // Analytics tracking would go here in production
   };
 
-  const handleDiff = () => {
-    // Implement diff functionality
-    console.log("Comparing run:", run.hash);
+  const handleCompare = () => {
+    // Implement compare functionality
+    // Analytics tracking would go here in production
   };
 
-  const handleDownload = (format: string) => {
-    // Implement download functionality
-    console.log("Downloading:", run.hash, format);
+  const handleExport = () => {
+    // Implement export functionality
+    // Analytics tracking would go here in production
   };
 
   return (
@@ -60,7 +60,7 @@ export function RunActions({ run, tier }: RunActionsProps) {
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          onClick={handleDiff}
+          onClick={handleCompare}
           disabled={run.score < 80}
           className="text-white hover:bg-white/10"
         >
@@ -68,24 +68,23 @@ export function RunActions({ run, tier }: RunActionsProps) {
           Diff vs Current
         </DropdownMenuItem>
 
-        {run.exportType.map((format) => (
+        {run.exportType.map(format => (
           <DropdownMenuItem
             key={format}
-            onClick={() => handleDownload(format)}
+            onClick={handleExport}
             className="text-white hover:bg-white/10"
           >
-            <Download className="mr-2 h-4 w-4" />
-            Download .{format}
+            Export as {format.toUpperCase()}
           </DropdownMenuItem>
         ))}
 
         {canExportBundle && (
           <DropdownMenuItem
-            onClick={() => handleDownload("bundle")}
+            onClick={handleExport}
             className="text-white hover:bg-white/10"
           >
             <Download className="mr-2 h-4 w-4" />
-            Download Bundle
+            Export Bundle
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

@@ -15,13 +15,13 @@ policies:
     agents_enabled: true
     live_test_enabled: true
     tool_allowlist:
-      http: ["api.openai.com", "api.anthropic.com", "api.groq.com"]
-      storage: ["supabase.storage"]
-      internal_apis: ["/api/gpt-editor", "/api/gpt-test", "/api/export", "/api/run"]
+      http: ['api.openai.com', 'api.anthropic.com', 'api.groq.com']
+      storage: ['supabase.storage']
+      internal_apis: ['/api/gpt-editor', '/api/gpt-test', '/api/export', '/api/run']
     sandbox:
       enabled: true
-      network: "allowlist"
-      fs_scope: "/tmp/agents"
+      network: 'allowlist'
+      fs_scope: '/tmp/agents'
       cpu_ms_limit: 120000
       mem_mb_limit: 512
       timeout_ms: 20000
@@ -35,19 +35,55 @@ policies:
 sevenD:
   required: [domain, output_format]
   enums:
-    domain: [saas, fintech, ecommerce, consulting, education, healthcare, legal, marketing, media, real_estate, hr, ngo, government, web3, aiml, cybersecurity, manufacturing, logistics, travel, gaming, fashion, beauty, spiritual, architecture, agriculture]
+    domain:
+      [
+        saas,
+        fintech,
+        ecommerce,
+        consulting,
+        education,
+        healthcare,
+        legal,
+        marketing,
+        media,
+        real_estate,
+        hr,
+        ngo,
+        government,
+        web3,
+        aiml,
+        cybersecurity,
+        manufacturing,
+        logistics,
+        travel,
+        gaming,
+        fashion,
+        beauty,
+        spiritual,
+        architecture,
+        agriculture,
+      ]
     scale: [personal_brand, solo, startup, boutique_agency, smb, corporate, enterprise]
     urgency: [low, planned, sprint, pilot, crisis]
     complexity: [foundational, standard, advanced, expert]
     resources: [minimal, solo, lean_team, agency_stack, full_stack_org, enterprise_budget]
-    application: [training, audit, implementation, strategy_design, crisis_response, experimentation, documentation]
+    application:
+      [
+        training,
+        audit,
+        implementation,
+        strategy_design,
+        crisis_response,
+        experimentation,
+        documentation,
+      ]
     output_format: [txt, md, checklist, spec, playbook, json, yaml, diagram, bundle]
   aliases:
     scale: { program: corporate, department: corporate }
     output_format: { document: txt, pack: bundle }
   validation:
-    enum_only: true          # blochează valori în afara enumerărilor
-    raise_on_invalid: true   # eroare hard la prima abatere
+    enum_only: true # blochează valori în afara enumerărilor
+    raise_on_invalid: true # eroare hard la prima abatere
   fallback:
     by_domain_defaults: true
   variability:
@@ -57,31 +93,231 @@ sevenD:
       range: { min: 0.0, max: 1.0 }
       default: 0.2
   domain_defaults:
-    saas:        { scale: startup,       urgency: planned, complexity: advanced, resources: lean_team,      application: implementation, output_format: spec }
-    fintech:     { scale: enterprise,    urgency: sprint,  complexity: advanced, resources: full_stack_org, application: implementation, output_format: spec }
-    ecommerce:   { scale: smb,           urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation, output_format: playbook }
-    consulting:  { scale: boutique_agency, urgency: sprint, complexity: advanced, resources: agency_stack, application: strategy_design, output_format: spec }
-    education:   { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: training,       output_format: playbook }
-    healthcare:  { scale: corporate,     urgency: crisis,  complexity: expert,   resources: full_stack_org, application: implementation, output_format: spec }
-    legal:       { scale: corporate,     urgency: planned, complexity: expert,   resources: full_stack_org, application: documentation,  output_format: spec }
-    marketing:   { scale: boutique_agency, urgency: sprint, complexity: standard, resources: agency_stack, application: implementation, output_format: playbook }
-    media:       { scale: smb,           urgency: sprint,  complexity: standard, resources: agency_stack,   application: documentation,  output_format: playbook }
-    real_estate: { scale: smb,           urgency: planned, complexity: advanced, resources: full_stack_org, application: strategy_design, output_format: spec }
-    hr:          { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: implementation, output_format: playbook }
-    ngo:         { scale: solo,          urgency: crisis,  complexity: foundational, resources: minimal,    application: strategy_design, output_format: playbook }
-    government:  { scale: enterprise,    urgency: planned, complexity: advanced, resources: enterprise_budget, application: documentation, output_format: spec }
-    web3:        { scale: startup,       urgency: pilot,   complexity: advanced, resources: lean_team,      application: experimentation, output_format: spec }
-    aiml:        { scale: corporate,     urgency: pilot,   complexity: expert,   resources: full_stack_org, application: experimentation, output_format: spec }
-    cybersecurity: { scale: corporate,    urgency: sprint,  complexity: advanced, resources: full_stack_org, application: crisis_response, output_format: spec }
-    manufacturing: { scale: corporate,    urgency: planned, complexity: advanced, resources: full_stack_org, application: implementation,  output_format: spec }
-    logistics:   { scale: smb,           urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation,  output_format: playbook }
-    travel:      { scale: smb,           urgency: planned, complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
-    gaming:      { scale: smb,           urgency: sprint,  complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
-    fashion:     { scale: smb,           urgency: sprint,  complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
-    beauty:      { scale: smb,           urgency: sprint,  complexity: standard, resources: agency_stack,   application: implementation,  output_format: playbook }
-    spiritual:   { scale: solo,          urgency: planned, complexity: foundational, resources: minimal,    application: training,        output_format: playbook }
-    architecture: { scale: corporate,     urgency: planned, complexity: advanced, resources: full_stack_org, application: strategy_design, output_format: spec }
-    agriculture: { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: implementation,  output_format: spec }
+    saas:
+      {
+        scale: startup,
+        urgency: planned,
+        complexity: advanced,
+        resources: lean_team,
+        application: implementation,
+        output_format: spec,
+      }
+    fintech:
+      {
+        scale: enterprise,
+        urgency: sprint,
+        complexity: advanced,
+        resources: full_stack_org,
+        application: implementation,
+        output_format: spec,
+      }
+    ecommerce:
+      {
+        scale: smb,
+        urgency: sprint,
+        complexity: standard,
+        resources: lean_team,
+        application: implementation,
+        output_format: playbook,
+      }
+    consulting:
+      {
+        scale: boutique_agency,
+        urgency: sprint,
+        complexity: advanced,
+        resources: agency_stack,
+        application: strategy_design,
+        output_format: spec,
+      }
+    education:
+      {
+        scale: smb,
+        urgency: planned,
+        complexity: standard,
+        resources: lean_team,
+        application: training,
+        output_format: playbook,
+      }
+    healthcare:
+      {
+        scale: corporate,
+        urgency: crisis,
+        complexity: expert,
+        resources: full_stack_org,
+        application: implementation,
+        output_format: spec,
+      }
+    legal:
+      {
+        scale: corporate,
+        urgency: planned,
+        complexity: expert,
+        resources: full_stack_org,
+        application: documentation,
+        output_format: spec,
+      }
+    marketing:
+      {
+        scale: boutique_agency,
+        urgency: sprint,
+        complexity: standard,
+        resources: agency_stack,
+        application: implementation,
+        output_format: playbook,
+      }
+    media:
+      {
+        scale: smb,
+        urgency: sprint,
+        complexity: standard,
+        resources: agency_stack,
+        application: documentation,
+        output_format: playbook,
+      }
+    real_estate:
+      {
+        scale: smb,
+        urgency: planned,
+        complexity: advanced,
+        resources: full_stack_org,
+        application: strategy_design,
+        output_format: spec,
+      }
+    hr:
+      {
+        scale: smb,
+        urgency: planned,
+        complexity: standard,
+        resources: lean_team,
+        application: implementation,
+        output_format: playbook,
+      }
+    ngo:
+      {
+        scale: solo,
+        urgency: crisis,
+        complexity: foundational,
+        resources: minimal,
+        application: strategy_design,
+        output_format: playbook,
+      }
+    government:
+      {
+        scale: enterprise,
+        urgency: planned,
+        complexity: advanced,
+        resources: enterprise_budget,
+        application: documentation,
+        output_format: spec,
+      }
+    web3:
+      {
+        scale: startup,
+        urgency: pilot,
+        complexity: advanced,
+        resources: lean_team,
+        application: experimentation,
+        output_format: spec,
+      }
+    aiml:
+      {
+        scale: corporate,
+        urgency: pilot,
+        complexity: expert,
+        resources: full_stack_org,
+        application: experimentation,
+        output_format: spec,
+      }
+    cybersecurity:
+      {
+        scale: corporate,
+        urgency: sprint,
+        complexity: advanced,
+        resources: full_stack_org,
+        application: crisis_response,
+        output_format: spec,
+      }
+    manufacturing:
+      {
+        scale: corporate,
+        urgency: planned,
+        complexity: advanced,
+        resources: full_stack_org,
+        application: implementation,
+        output_format: spec,
+      }
+    logistics:
+      {
+        scale: smb,
+        urgency: sprint,
+        complexity: standard,
+        resources: lean_team,
+        application: implementation,
+        output_format: playbook,
+      }
+    travel:
+      {
+        scale: smb,
+        urgency: planned,
+        complexity: standard,
+        resources: agency_stack,
+        application: implementation,
+        output_format: playbook,
+      }
+    gaming:
+      {
+        scale: smb,
+        urgency: sprint,
+        complexity: standard,
+        resources: agency_stack,
+        application: implementation,
+        output_format: playbook,
+      }
+    fashion:
+      {
+        scale: smb,
+        urgency: sprint,
+        complexity: standard,
+        resources: agency_stack,
+        application: implementation,
+        output_format: playbook,
+      }
+    beauty:
+      {
+        scale: smb,
+        urgency: sprint,
+        complexity: standard,
+        resources: agency_stack,
+        application: implementation,
+        output_format: playbook,
+      }
+    spiritual:
+      {
+        scale: solo,
+        urgency: planned,
+        complexity: foundational,
+        resources: minimal,
+        application: training,
+        output_format: playbook,
+      }
+    architecture:
+      {
+        scale: corporate,
+        urgency: planned,
+        complexity: advanced,
+        resources: full_stack_org,
+        application: strategy_design,
+        output_format: spec,
+      }
+    agriculture:
+      {
+        scale: smb,
+        urgency: planned,
+        complexity: standard,
+        resources: lean_team,
+        application: implementation,
+        output_format: spec,
+      }
 
 api:
   rate_limit:
@@ -89,22 +325,24 @@ api:
     test: { rpm: 30, per_org: true }
     export: { rpm: 20, per_org: true }
   required_headers:
-    - "x-org-id"
-    - "x-run-id"
+    - 'x-org-id'
+    - 'x-run-id'
   cors:
-    origins: ["https://chatgpt-prompting.com", "https://promptforge.app"]
-    methods: ["GET", "POST", "OPTIONS"]
-    headers: ["content-type", "authorization", "x-org-id", "x-run-id"]
+    origins: ['https://chatgpt-prompting.com', 'https://promptforge.app']
+    methods: ['GET', 'POST', 'OPTIONS']
+    headers: ['content-type', 'authorization', 'x-org-id', 'x-run-id']
 
 prompt_standard:
-  sections: [ROLE_GOAL, CONTEXT_7D, OUTPUT_SPEC, PROCESS, GUARDRAILS, EVALUATION_HOOKS, TELEMETRY_KEYS]
+  sections:
+    [ROLE_GOAL, CONTEXT_7D, OUTPUT_SPEC, PROCESS, GUARDRAILS, EVALUATION_HOOKS, TELEMETRY_KEYS]
   non_deletable_in_ui: true
   guardrails_global:
-    - "Nu executa cod în afara sandboxului permis."
-    - "Nu accesa URL-uri în afara allowlist-ului."
-    - "Nu citi sau trimite secrete/PII. Maschează tot în logs."
-    - "Dacă scorul < 80, oprește exportul."
-  structure_required: [ROLE_GOAL, CONTEXT_7D, OUTPUT_SPEC, PROCESS, GUARDRAILS, EVAL_HOOKS, TELEMETRY]
+    - 'Nu executa cod în afara sandboxului permis.'
+    - 'Nu accesa URL-uri în afara allowlist-ului.'
+    - 'Nu citi sau trimite secrete/PII. Maschează tot în logs.'
+    - 'Dacă scorul < 80, oprește exportul.'
+  structure_required:
+    [ROLE_GOAL, CONTEXT_7D, OUTPUT_SPEC, PROCESS, GUARDRAILS, EVAL_HOOKS, TELEMETRY]
   output_spec_contract:
     must_define_fields: [format, fields, example]
     example_minimal:
@@ -138,57 +376,67 @@ definition_of_ready:
   conditions:
     - id: 7d_valid
       required: true
-      desc: "7D complet, valori ∈ enum, signature_7d calculată"
+      desc: '7D complet, valori ∈ enum, signature_7d calculată'
     - id: entitlement_valid
       required: true
-      desc: "Plan & feature flags valide pentru modul/export/test"
+      desc: 'Plan & feature flags valide pentru modul/export/test'
     - id: output_spec_loaded
       required: true
-      desc: "module.spec.outputs.fields disponibil & complet"
+      desc: 'module.spec.outputs.fields disponibil & complet'
     - id: tests_defined
       required: true
-      desc: "Cel puțin un testcase definit"
+      desc: 'Cel puțin un testcase definit'
     - id: input_minimum
       required: true
-      desc: "inputs.custom are toate câmpurile required"
+      desc: 'inputs.custom are toate câmpurile required'
 
 definition_of_done:
   conditions:
     - id: score_threshold
       required: true
-      desc: "Score total ≥ 80 (după 1 tighten dacă e cazul)"
+      desc: 'Score total ≥ 80 (după 1 tighten dacă e cazul)'
     - id: output_complete
       required: true
-      desc: "Toate fields required populate; format conform OUTPUT_SPEC"
+      desc: 'Toate fields required populate; format conform OUTPUT_SPEC'
     - id: checksum_valid
       required: true
-      desc: "sha256 per fișier + bundle checksum canonic valide"
+      desc: 'sha256 per fișier + bundle checksum canonic valide'
     - id: manifest_written
       required: true
-      desc: "manifest.json complet (incl. license_notice)"
+      desc: 'manifest.json complet (incl. license_notice)'
     - id: telemetry_saved
       required: true
-      desc: "runs.telemetry salvată (fără PII în clar)"
+      desc: 'runs.telemetry salvată (fără PII în clar)'
 
 export:
   structure: standard_bundle
-  artifacts: ["prompt.txt","prompt.md","prompt.json","prompt.pdf","telemetry.json","manifest.json","checksum.txt"]
+  artifacts:
+    [
+      'prompt.txt',
+      'prompt.md',
+      'prompt.json',
+      'prompt.pdf',
+      'telemetry.json',
+      'manifest.json',
+      'checksum.txt',
+    ]
   checksum:
     algo: sha256
-    canonical_order: ["prompt.txt","prompt.json","prompt.md","prompt.pdf","manifest.json","telemetry.json"]
+    canonical_order:
+      ['prompt.txt', 'prompt.json', 'prompt.md', 'prompt.pdf', 'manifest.json', 'telemetry.json']
   storage:
-    path_template: "/bundles/{org}/{date}/{domain}/{module}/{run}/"
+    path_template: '/bundles/{org}/{date}/{domain}/{module}/{run}/'
   pdf:
     paper: A4
     margin_mm: 16
-    header: "{project} · {domain} · {module}"
-    footer: "page {n}"
-    watermark_trial: "TRIAL — Not for Redistribution"
+    header: '{project} · {domain} · {module}'
+    footer: 'page {n}'
+    watermark_trial: 'TRIAL — Not for Redistribution'
 
 entitlements:
   plans:
     pilot:
-      modules: "M01-M10"
+      modules: 'M01-M10'
       features: [txt, md]
       flags:
         canUseAllModules: false
@@ -203,7 +451,7 @@ entitlements:
         canExportBundleZip: false
       retention_days: 30
     pro:
-      modules: "M01-M30"
+      modules: 'M01-M30'
       features: [txt, md, pdf, json, cloud_history, evaluator]
       flags:
         canUseAllModules: true
@@ -218,7 +466,7 @@ entitlements:
         canExportBundleZip: false
       retention_days: 90
     enterprise:
-      modules: "M01-M50"
+      modules: 'M01-M50'
       features: [txt, md, pdf, json, api, whitelabel, bundle_zip, cloud_history, evaluator]
       flags:
         canUseAllModules: true
@@ -238,7 +486,19 @@ entitlements:
     block_endpoints_without_entitlement: true
 
 telemetry:
-  keys: [run_id, model, tokens_in, tokens_out, cost_usd, tta_seconds, score_total, scores, policy_hits, ruleset_version]
+  keys:
+    [
+      run_id,
+      model,
+      tokens_in,
+      tokens_out,
+      cost_usd,
+      tta_seconds,
+      score_total,
+      scores,
+      policy_hits,
+      ruleset_version,
+    ]
   slo:
     tta_text_seconds_p95: 60
     tta_sop_seconds_p95: 300
@@ -255,6 +515,6 @@ versioning:
 license:
   manifest_required_field: license_notice
   default_notice:
-    pilot: "© PROMPTFORGE v3 — Pilot License"
-    pro: "© PROMPTFORGE v3 — Pro License"
-    enterprise: "© PROMPTFORGE v3 — Enterprise License"
+    pilot: '© PROMPTFORGE v3 — Pilot License'
+    pro: '© PROMPTFORGE v3 — Pro License'
+    enterprise: '© PROMPTFORGE v3 — Enterprise License'

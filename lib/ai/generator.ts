@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Types for prompt generation
 export interface GenerationRequest {
@@ -20,7 +20,7 @@ export interface PromptTemplate {
   id: string;
   content: string;
   variables: string[];
-  complexity: "foundational" | "standard" | "advanced" | "expert";
+  complexity: 'foundational' | 'standard' | 'advanced' | 'expert';
 }
 
 /**
@@ -28,23 +28,23 @@ export interface PromptTemplate {
  */
 export async function generatePrompt(request: GenerationRequest): Promise<GenerationResult> {
   const { moduleId, parameters, context, requirements } = request;
-  
+
   // TODO: Implement actual AI generation logic
   // For now, return a template-based prompt
-  
+
   const template = await getPromptTemplate(moduleId, parameters.complexity);
   const content = await renderTemplate(template, {
     ...parameters,
-    context: context || "",
-    requirements: requirements || ""
+    context: context || '',
+    requirements: requirements || '',
   });
-  
+
   return {
     content,
     usage: {
       total_tokens: content.length / 4, // Rough estimate
-      estimated_cost: (content.length / 4) * 0.000002 // Rough cost estimate
-    }
+      estimated_cost: (content.length / 4) * 0.000002, // Rough cost estimate
+    },
   };
 }
 
@@ -70,21 +70,34 @@ Generate a comprehensive prompt that addresses:
 - Output Format: {output_format}
 
 Please provide a detailed, actionable prompt that follows best practices for prompt engineering.`,
-    variables: ["context", "requirements", "domain", "scale", "urgency", "complexity", "resources", "application", "output_format"],
-    complexity: complexity as any
+    variables: [
+      'context',
+      'requirements',
+      'domain',
+      'scale',
+      'urgency',
+      'complexity',
+      'resources',
+      'application',
+      'output_format',
+    ],
+    complexity: complexity as any,
   };
 }
 
 /**
  * Render template with variables
  */
-async function renderTemplate(template: PromptTemplate, variables: Record<string, any>): Promise<string> {
+async function renderTemplate(
+  template: PromptTemplate,
+  variables: Record<string, any>
+): Promise<string> {
   let content = template.content;
-  
+
   for (const variable of template.variables) {
-    const value = variables[variable] || "";
-    content = content.replace(new RegExp(`{${variable}}`, "g"), value);
+    const value = variables[variable] || '';
+    content = content.replace(new RegExp(`{${variable}}`, 'g'), value);
   }
-  
+
   return content;
 }

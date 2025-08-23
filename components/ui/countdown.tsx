@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function Countdown() {
   const [timeLeft, setTimeLeft] = useState({
@@ -11,7 +11,7 @@ export function Countdown() {
   });
 
   useEffect(() => {
-    const targetDate = new Date("2025-09-01T12:00:00.000Z"); // September 1, 2025, 12:00 UTC
+    const targetDate = new Date('2025-09-01T12:00:00.000Z'); // September 1, 2025, 12:00 UTC
 
     const timer = setInterval(() => {
       const now = new Date();
@@ -19,12 +19,8 @@ export function Countdown() {
 
       if (difference > 0) {
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        );
-        const minutes = Math.floor(
-          (difference % (1000 * 60 * 60)) / (1000 * 60),
-        );
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
         setTimeLeft({ days, hours, minutes, seconds });
@@ -43,21 +39,21 @@ export function Countdown() {
         {timeLeft.days > 0 && (
           <>
             <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
-              {String(timeLeft.days).padStart(2, "0")}d
+              {String(timeLeft.days).padStart(2, '0')}d
             </div>
             <span className="text-[#d1a954]">:</span>
           </>
         )}
         <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
-          {String(timeLeft.hours).padStart(2, "0")}
+          {String(timeLeft.hours).padStart(2, '0')}
         </div>
         <span className="text-[#d1a954]">:</span>
         <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
-          {String(timeLeft.minutes).padStart(2, "0")}
+          {String(timeLeft.minutes).padStart(2, '0')}
         </div>
         <span className="text-[#d1a954]">:</span>
         <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
-          {String(timeLeft.seconds).padStart(2, "0")}
+          {String(timeLeft.seconds).padStart(2, '0')}
         </div>
       </div>
     </div>

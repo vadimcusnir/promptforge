@@ -15,7 +15,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 # Optional customization
 EXPORT_WATERMARK_TRIAL="TRIAL — Not for Redistribution"
-NEXT_PUBLIC_SITE_NAME="PromptForge v3"
+NEXT_PUBLIC_SITE_NAME="PROMPTFORGE™ v3"
 ```
 
 ## Database Setup
@@ -41,7 +41,7 @@ Or via SQL:
 
 ```sql
 INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-VALUES ('bundles', 'bundles', false, 104857600, 
+VALUES ('bundles', 'bundles', false, 104857600,
   ARRAY['text/plain', 'text/markdown', 'application/json', 'application/pdf', 'application/zip'])
 ON CONFLICT (id) DO NOTHING;
 
@@ -60,22 +60,24 @@ FOR SELECT TO authenticated USING (bucket_id = 'bundles');
 Export a validated run as a bundle.
 
 **Request:**
+
 ```json
 {
   "runId": "uuid",
   "formats": ["md", "json", "pdf"],
-  "orgId": "uuid", 
+  "orgId": "uuid",
   "userId": "uuid"
 }
 ```
 
 **Response:**
+
 ```json
 {
   "bundleId": "uuid",
   "paths": {
     "prompt.md": "signed_url",
-    "prompt.json": "signed_url", 
+    "prompt.json": "signed_url",
     "prompt.pdf": "signed_url",
     "manifest.json": "signed_url",
     "checksum.txt": "signed_url"
@@ -87,24 +89,26 @@ Export a validated run as a bundle.
 ```
 
 **Errors:**
+
 - `403 ENTITLEMENT_REQUIRED` - Format not allowed for plan
 - `422 DOD_NOT_MET` - Score < 80 or incomplete run
 - `500 EXPORT_FAILED` - Internal error
 
 ## Format Gating
 
-| Format | Plan Required | Entitlement Key |
-|--------|---------------|-----------------|
-| MD     | Pilot+        | -               |
-| JSON   | Pro+          | `canExportJSON` |
-| PDF    | Pro+          | `canExportPDF`  |
+| Format | Plan Required | Entitlement Key      |
+| ------ | ------------- | -------------------- |
+| MD     | Pilot+        | -                    |
+| JSON   | Pro+          | `canExportJSON`      |
+| PDF    | Pro+          | `canExportPDF`       |
 | ZIP    | Enterprise    | `canExportBundleZip` |
 
 ## Bundle Structure
 
 Generated files (canonical order):
+
 1. `prompt.txt` - Industrial format prompt
-2. `prompt.json` - 7D parameters + metadata  
+2. `prompt.json` - 7D parameters + metadata
 3. `prompt.md` - Human-readable documentation
 4. `prompt.pdf` - Branded export (with watermark if trial)
 5. `manifest.json` - Bundle metadata
@@ -134,21 +138,21 @@ import { useExportBundle } from '@/hooks/use-export-bundle';
 
 function ExportButton({ runId, orgId, userId }) {
   const { exportBundle, loading, error } = useExportBundle();
-  
+
   const handleExport = async () => {
     try {
       const result = await exportBundle({
         runId,
         formats: ['md', 'pdf'],
         orgId,
-        userId
+        userId,
       });
       console.log('Export complete:', result.bundleId);
     } catch (err) {
       console.error('Export failed:', err);
     }
   };
-  
+
   return (
     <button onClick={handleExport} disabled={loading}>
       {loading ? 'Exporting...' : 'Export Bundle'}
@@ -172,7 +176,7 @@ function RunDetails({ run }) {
         userId={run.user_id}
         moduleId={run.module_id}
         score={run.score}
-        onExportComplete={(bundleId) => {
+        onExportComplete={bundleId => {
           console.log('Bundle created:', bundleId);
         }}
       />
@@ -195,7 +199,7 @@ function RunDetails({ run }) {
 Export events are tracked in `export_telemetry`:
 
 - `export.started` - Export initiated
-- `export.finished` - Export completed successfully  
+- `export.finished` - Export completed successfully
 - `export.failed` - Export failed with error
 
 Query export stats:
@@ -218,9 +222,9 @@ SELECT * FROM get_org_export_stats('org-uuid', 30);
 Check export telemetry:
 
 ```sql
-SELECT * FROM export_telemetry 
-WHERE org_id = 'your-org-id' 
-ORDER BY created_at DESC 
+SELECT * FROM export_telemetry
+WHERE org_id = 'your-org-id'
+ORDER BY created_at DESC
 LIMIT 10;
 ```
 

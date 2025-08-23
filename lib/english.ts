@@ -6,22 +6,22 @@
 function detectLanguage(text: string): string {
   // Remove code blocks, HTML tags, and technical content
   const cleanText = text
-    .replace(/```[\s\S]*?```/g, " ") // code blocks
-    .replace(/<[^>]+>/g, " ") // HTML tags
-    .replace(/[`~!@#$%^&*()_+={}|[\]\\:";'<>?,./0-9-]/g, " ") // punctuation and numbers
+    .replace(/```[\s\S]*?```/g, ' ') // code blocks
+    .replace(/<[^>]+>/g, ' ') // HTML tags
+    .replace(/[`~!@#$%^&*()_+={}|[\]\\:";'<>?,./0-9-]/g, ' ') // punctuation and numbers
     .replace(
       /\b(function|const|let|var|if|else|for|while|class|import|export|async|await|return|true|false|null|undefined)\b/gi,
-      " ",
+      ' '
     ) // JS keywords
     .trim();
 
   // Check for non-ASCII characters, but exclude common technical symbols
-  const nonAsciiText = text.replace(/[""''–—…]/g, ""); // Remove common smart quotes and dashes
+  const nonAsciiText = text.replace(/[""''–—…]/g, ''); // Remove common smart quotes and dashes
   if (/[^\x00-\x7F]/.test(nonAsciiText)) {
     // Allow technical symbols and check if it's actual text content
-    const textContent = nonAsciiText.replace(/[^a-zA-Z\s]/g, " ").trim();
+    const textContent = nonAsciiText.replace(/[^a-zA-Z\s]/g, ' ').trim();
     if (textContent.length > 10 && /[^\x00-\x7F]/.test(textContent)) {
-      return "NON_ASCII";
+      return 'NON_ASCII';
     }
   }
 
@@ -57,22 +57,22 @@ function detectLanguage(text: string): string {
 
   // Check patterns
   for (const pattern of romanianPatterns) {
-    if (pattern.test(cleanText)) return "ROMANIAN";
+    if (pattern.test(cleanText)) return 'ROMANIAN';
   }
   for (const pattern of cyrillicPatterns) {
-    if (pattern.test(text)) return "CYRILLIC";
+    if (pattern.test(text)) return 'CYRILLIC';
   }
   for (const pattern of frenchPatterns) {
-    if (pattern.test(cleanText)) return "FRENCH";
+    if (pattern.test(cleanText)) return 'FRENCH';
   }
   for (const pattern of germanPatterns) {
-    if (pattern.test(cleanText)) return "GERMAN";
+    if (pattern.test(cleanText)) return 'GERMAN';
   }
   for (const pattern of spanishPatterns) {
-    if (pattern.test(cleanText)) return "SPANISH";
+    if (pattern.test(cleanText)) return 'SPANISH';
   }
 
-  return "ENGLISH";
+  return 'ENGLISH';
 }
 
 /**
@@ -87,7 +87,7 @@ export function assertEnglish(text: string): boolean {
   if (text.trim().split(/\s+/).length < 3) return true;
 
   const detectedLang = detectLanguage(text);
-  return detectedLang === "ENGLISH";
+  return detectedLang === 'ENGLISH';
 }
 
 /**
@@ -96,8 +96,8 @@ export function assertEnglish(text: string): boolean {
  */
 export function createNonEnglishError(detectedLanguage?: string) {
   return {
-    error: "NON_ENGLISH_CONTENT",
-    message: "Content must be in English only. Non-English text detected.",
+    error: 'NON_ENGLISH_CONTENT',
+    message: 'Content must be in English only. Non-English text detected.',
     code: 422,
     timestamp: new Date().toISOString(),
     ...(detectedLanguage && { detectedLanguage }),
@@ -112,17 +112,10 @@ export function validateEnglishContent(data: any): {
   isValid: boolean;
   error?: any;
 } {
-  const textFields = [
-    "prompt",
-    "content",
-    "description",
-    "title",
-    "text",
-    "message",
-  ];
+  const textFields = ['prompt', 'content', 'description', 'title', 'text', 'message'];
 
   for (const field of textFields) {
-    if (data[field] && typeof data[field] === "string") {
+    if (data[field] && typeof data[field] === 'string') {
       if (!assertEnglish(data[field])) {
         return {
           isValid: false,

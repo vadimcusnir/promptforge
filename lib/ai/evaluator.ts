@@ -1,13 +1,13 @@
-// PromptForge v3 - AI Prompt Evaluator System
-import OpenAI from "openai";
+// PROMPTFORGE™ v3 - AI Prompt Evaluator System
+import OpenAI from 'openai';
 
 export interface EvaluationCriteria {
-  clarity: number;      // 0-100: How clear and understandable the prompt is
-  execution: number;    // 0-100: How actionable and executable the prompt is
-  ambiguity: number;    // 0-100: How ambiguous or unclear the prompt is (lower is better)
-  businessFit: number;  // 0-100: How well the prompt fits business requirements
-  safety: number;       // 0-100: How safe and compliant the prompt is
-  compliance: number;   // 0-100: How compliant with regulations the prompt is
+  clarity: number; // 0-100: How clear and understandable the prompt is
+  execution: number; // 0-100: How actionable and executable the prompt is
+  ambiguity: number; // 0-100: How ambiguous or unclear the prompt is (lower is better)
+  businessFit: number; // 0-100: How well the prompt fits business requirements
+  safety: number; // 0-100: How safe and compliant the prompt is
+  compliance: number; // 0-100: How compliant with regulations the prompt is
 }
 
 export interface EvaluationResult {
@@ -18,7 +18,7 @@ export interface EvaluationResult {
   overallScore: number;
   feedback: string[];
   recommendations: string[];
-  riskLevel: "low" | "medium" | "high";
+  riskLevel: 'low' | 'medium' | 'high';
   metadata: {
     model: string;
     evaluationTime: number;
@@ -50,7 +50,7 @@ export async function evaluatePrompt(
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    const model = options.model || "gpt-4o-mini";
+    const model = options.model || 'gpt-4o-mini';
     const temperature = options.temperature ?? 0.3;
 
     // Create evaluation prompt
@@ -61,11 +61,12 @@ export async function evaluatePrompt(
       model,
       messages: [
         {
-          role: "system",
-          content: "You are an expert prompt evaluator. Analyze prompts based on clarity, execution, ambiguity, business fit, safety, and compliance. Provide scores from 0-100 and constructive feedback."
+          role: 'system',
+          content:
+            'You are an expert prompt evaluator. Analyze prompts based on clarity, execution, ambiguity, business fit, safety, and compliance. Provide scores from 0-100 and constructive feedback.',
         },
         {
-          role: "user",
+          role: 'user',
           content: evaluationPrompt,
         },
       ],
@@ -74,11 +75,11 @@ export async function evaluatePrompt(
     });
 
     const evaluationTime = Date.now() - startTime;
-    const response = completion.choices[0]?.message?.content || "";
+    const response = completion.choices[0]?.message?.content || '';
 
     // Parse AI response
     const parsedResult = parseEvaluationResponse(response);
-    
+
     // Calculate overall score
     const overallScore = calculateOverallScore(parsedResult.scores);
 
@@ -97,10 +98,9 @@ export async function evaluatePrompt(
       metadata: {
         model,
         evaluationTime,
-        evaluator: "ai-evaluator",
+        evaluator: 'ai-evaluator',
       },
     };
-
   } catch (error) {
     // Return default evaluation on error
     return {
@@ -116,13 +116,13 @@ export async function evaluatePrompt(
         compliance: 50,
       },
       overallScore: 50,
-      feedback: ["Evaluation failed due to technical error"],
-      recommendations: ["Please try again or contact support"],
-      riskLevel: "medium",
+      feedback: ['Evaluation failed due to technical error'],
+      recommendations: ['Please try again or contact support'],
+      riskLevel: 'medium',
       metadata: {
-        model: options.model || "unknown",
+        model: options.model || 'unknown',
         evaluationTime: Date.now() - startTime,
-        evaluator: "ai-evaluator",
+        evaluator: 'ai-evaluator',
       },
     };
   }
@@ -136,8 +136,15 @@ function createEvaluationPrompt(
   domain: string,
   options: EvaluationOptions
 ): string {
-  const focusAreas = options.focusAreas || ["clarity", "execution", "ambiguity", "businessFit", "safety", "compliance"];
-  
+  const focusAreas = options.focusAreas || [
+    'clarity',
+    'execution',
+    'ambiguity',
+    'businessFit',
+    'safety',
+    'compliance',
+  ];
+
   return `
 Please evaluate the following prompt for a ${domain} domain application.
 
@@ -179,7 +186,7 @@ function parseEvaluationResponse(response: string): {
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
-      
+
       return {
         scores: {
           clarity: parsed.scores?.clarity || 50,
@@ -189,12 +196,12 @@ function parseEvaluationResponse(response: string): {
           safety: parsed.scores?.safety || 50,
           compliance: parsed.scores?.compliance || 50,
         },
-        feedback: parsed.feedback || ["No specific feedback provided"],
-        recommendations: parsed.recommendations || ["No specific recommendations provided"],
+        feedback: parsed.feedback || ['No specific feedback provided'],
+        recommendations: parsed.recommendations || ['No specific recommendations provided'],
       };
     }
   } catch (error) {
-    console.error("Failed to parse AI evaluation response:", error);
+    console.error('Failed to parse AI evaluation response:', error);
   }
 
   // Fallback parsing
@@ -207,8 +214,8 @@ function parseEvaluationResponse(response: string): {
       safety: 50,
       compliance: 50,
     },
-    feedback: ["Could not parse AI evaluation response"],
-    recommendations: ["Please review the prompt manually"],
+    feedback: ['Could not parse AI evaluation response'],
+    recommendations: ['Please review the prompt manually'],
   };
 }
 
@@ -220,12 +227,12 @@ function calculateOverallScore(scores: EvaluationCriteria): number {
     clarity: 0.25,
     execution: 0.25,
     ambiguity: 0.15, // Lower is better, so invert
-    businessFit: 0.20,
-    safety: 0.10,
+    businessFit: 0.2,
+    safety: 0.1,
     compliance: 0.05,
   };
 
-  const weightedSum = 
+  const weightedSum =
     scores.clarity * weights.clarity +
     scores.execution * weights.execution +
     (100 - scores.ambiguity) * weights.ambiguity + // Invert ambiguity
@@ -239,24 +246,25 @@ function calculateOverallScore(scores: EvaluationCriteria): number {
 /**
  * Determine risk level based on scores
  */
-function determineRiskLevel(scores: EvaluationCriteria): "low" | "medium" | "high" {
+function determineRiskLevel(scores: EvaluationCriteria): 'low' | 'medium' | 'high' {
   const lowThreshold = 70;
   const highThreshold = 40;
 
   // Check for high-risk indicators
   if (scores.safety < highThreshold || scores.compliance < highThreshold) {
-    return "high";
+    return 'high';
   }
 
   if (scores.clarity < highThreshold || scores.execution < highThreshold) {
-    return "medium";
+    return 'medium';
   }
 
-  if (scores.ambiguity > (100 - lowThreshold)) { // High ambiguity = low score
-    return "medium";
+  if (scores.ambiguity > 100 - lowThreshold) {
+    // High ambiguity = low score
+    return 'medium';
   }
 
-  return "low";
+  return 'low';
 }
 
 /**
@@ -293,17 +301,23 @@ export function generateEvaluationReport(evaluations: EvaluationResult[]): {
   const averageScore = evaluations.reduce((sum, e) => sum + e.overallScore, 0) / totalPrompts;
 
   // Count risk levels
-  const riskDistribution = evaluations.reduce((acc, e) => {
-    acc[e.riskLevel] = (acc[e.riskLevel] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const riskDistribution = evaluations.reduce(
+    (acc, e) => {
+      acc[e.riskLevel] = (acc[e.riskLevel] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   // Collect common issues
   const allFeedback = evaluations.flatMap(e => e.feedback);
-  const feedbackCounts = allFeedback.reduce((acc, feedback) => {
-    acc[feedback] = (acc[feedback] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const feedbackCounts = allFeedback.reduce(
+    (acc, feedback) => {
+      acc[feedback] = (acc[feedback] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   const topIssues = Object.entries(feedbackCounts)
     .sort(([, a], [, b]) => b - a)
@@ -313,13 +327,17 @@ export function generateEvaluationReport(evaluations: EvaluationResult[]): {
   // Generate recommendations
   const recommendations = [];
   if (averageScore < 70) {
-    recommendations.push("Overall prompt quality needs improvement. Focus on clarity and execution.");
+    recommendations.push(
+      'Overall prompt quality needs improvement. Focus on clarity and execution.'
+    );
   }
   if (riskDistribution.high > 0) {
-    recommendations.push("Address high-risk prompts immediately, especially safety and compliance issues.");
+    recommendations.push(
+      'Address high-risk prompts immediately, especially safety and compliance issues.'
+    );
   }
   if (riskDistribution.medium > totalPrompts * 0.3) {
-    recommendations.push("Many prompts have medium risk. Review ambiguity and business fit.");
+    recommendations.push('Many prompts have medium risk. Review ambiguity and business fit.');
   }
 
   return {

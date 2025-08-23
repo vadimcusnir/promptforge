@@ -1,17 +1,17 @@
-import { NextResponse } from "next/server";
-import JSZip from "jszip";
-import path from "node:path";
-import { promises as fs } from "node:fs";
+import { NextResponse } from 'next/server';
+import JSZip from 'jszip';
+import path from 'node:path';
+import { promises as fs } from 'node:fs';
 
-const BASE = path.join(process.cwd(), "public", "demo-bundle", "pf_demo_v1");
+const BASE = path.join(process.cwd(), 'public', 'demo-bundle', 'pf_demo_v1');
 const NAMES = [
-  "prompt.txt",
-  "prompt.md",
-  "prompt.json",
-  "prompt.pdf",
-  "telemetry.json",
-  "manifest.json",
-  "checksum.txt",
+  'prompt.txt',
+  'prompt.md',
+  'prompt.json',
+  'prompt.pdf',
+  'telemetry.json',
+  'manifest.json',
+  'checksum.txt',
 ];
 
 export async function GET() {
@@ -32,8 +32,8 @@ export async function GET() {
 
     // Generate the ZIP
     const zipBuffer = await zip.generateAsync({
-      type: "nodebuffer",
-      compression: "DEFLATE",
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
       compressionOptions: {
         level: 6,
       },
@@ -42,28 +42,28 @@ export async function GET() {
     return new NextResponse(zipBuffer, {
       status: 200,
       headers: {
-        "Content-Type": "application/zip",
-        "Content-Disposition": 'attachment; filename="pf_demo_v1.zip"',
-        "Content-Length": zipBuffer.length.toString(),
-        "Cache-Control": "public, max-age=3600, immutable",
-        "X-Bundle-ID": "pf-demo-v1",
-        "X-Bundle-Version": "1.0.0",
+        'Content-Type': 'application/zip',
+        'Content-Disposition': 'attachment; filename="pf_demo_v1.zip"',
+        'Content-Length': zipBuffer.length.toString(),
+        'Cache-Control': 'public, max-age=3600, immutable',
+        'X-Bundle-ID': 'pf-demo-v1',
+        'X-Bundle-Version': '1.0.0',
       },
     });
   } catch (error) {
-    console.error("Error generating demo bundle ZIP:", error);
+    console.error('Error generating demo bundle ZIP:', error);
 
     return new NextResponse(
       JSON.stringify({
-        error: "Failed to generate demo bundle",
-        message: "Unable to create ZIP file",
+        error: 'Failed to generate demo bundle',
+        message: 'Unable to create ZIP file',
       }),
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      },
+      }
     );
   }
 }

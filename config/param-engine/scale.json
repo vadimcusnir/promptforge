@@ -1,7 +1,7 @@
 {
   "parameter": "scale",
   "description": "Mărime și maturitate organizațională - determină tonul, resursele disponibile și procesele",
-  
+
   "values": {
     "personal_brand": {
       "label": "Personal Brand",
@@ -12,27 +12,27 @@
       "decision_speed": "rapid (ore/zile)",
       "examples": ["solopreneur", "content creator", "freelancer consultant"]
     },
-    
+
     "solo": {
-      "label": "Solo Operator", 
+      "label": "Solo Operator",
       "description": "Business cu un singur operator, poate cu contractori ocazionali",
-      "tone_modifier": "pragmatic, eficient, orientat pe acțiune", 
+      "tone_modifier": "pragmatic, eficient, orientat pe acțiune",
       "resource_assumptions": "low-code/no-code tools, buget limitat",
       "process_complexity": "lean processes, minimal overhead",
       "decision_speed": "rapid (zile)",
       "examples": ["single-person agency", "indie developer", "solo consultant"]
     },
-    
+
     "startup": {
       "label": "Startup",
       "description": "Echipă mică (2-20 oameni), în căutarea product-market fit",
       "tone_modifier": "agil, experimental, growth-focused",
       "resource_assumptions": "limited budget, focus pe MVP și iterare",
-      "process_complexity": "lightweight processes, rapid iteration", 
+      "process_complexity": "lightweight processes, rapid iteration",
       "decision_speed": "rapid (zile/săptămâni)",
       "examples": ["seed stage startup", "early-stage SaaS", "tech startup pre-Series A"]
     },
-    
+
     "boutique_agency": {
       "label": "Boutique Agency",
       "description": "Agenție specializată 5-50 oameni, focus pe calitate și expertiză",
@@ -42,9 +42,9 @@
       "decision_speed": "moderat (săptămâni)",
       "examples": ["digital marketing agency", "design studio", "specialized consultancy"]
     },
-    
+
     "smb": {
-      "label": "Small-Medium Business", 
+      "label": "Small-Medium Business",
       "description": "Business stabilizat 20-200 angajați, procese mai mature",
       "tone_modifier": "business-focused, ROI-driven, scalable",
       "resource_assumptions": "established tech stack, budget pentru tools",
@@ -52,17 +52,17 @@
       "decision_speed": "moderat (săptămâni/luni)",
       "examples": ["regional retail chain", "mid-size manufacturing", "established service company"]
     },
-    
+
     "corporate": {
       "label": "Corporate",
       "description": "Organizație mare 200+ angajați, multiple departamente",
       "tone_modifier": "formal, policy-aware, stakeholder management",
       "resource_assumptions": "enterprise tools, significant budgets",
       "process_complexity": "formal processes, compliance requirements",
-      "decision_speed": "lent (luni/trimestre)", 
+      "decision_speed": "lent (luni/trimestre)",
       "examples": ["public company division", "large nonprofit", "government agency"]
     },
-    
+
     "enterprise": {
       "label": "Enterprise",
       "description": "Organizație foarte mare 1000+ angajați, multiple geografii",
@@ -73,21 +73,21 @@
       "examples": ["Fortune 500 company", "multinational corporation", "large government entity"]
     }
   },
-  
+
   "adaptation_rules": {
     "language_complexity": {
       "personal_brand": "conversational, metafore simple",
       "solo": "direct, actionable",
-      "startup": "lean methodology, growth hacking terms", 
+      "startup": "lean methodology, growth hacking terms",
       "boutique_agency": "industry expertise, premium positioning",
       "smb": "business case focused, ROI justification",
       "corporate": "stakeholder analysis, risk mitigation",
       "enterprise": "governance framework, strategic alignment"
     },
-    
+
     "output_expectations": {
       "personal_brand": "quick wins, immediate implementation",
-      "solo": "DIY approach, minimal dependencies", 
+      "solo": "DIY approach, minimal dependencies",
       "startup": "MVP approach, rapid validation",
       "boutique_agency": "client delivery focus, premium quality",
       "smb": "scalable processes, documented workflows",

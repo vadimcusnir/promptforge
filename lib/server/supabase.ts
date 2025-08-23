@@ -117,7 +117,10 @@ export async function verifyOrgMembership(orgId: string, userId: string): Promis
 /**
  * Get effective entitlements for user/org
  */
-export async function getEffectiveEntitlements(orgId: string, userId?: string): Promise<Record<string, boolean>> {
+export async function getEffectiveEntitlements(
+  orgId: string,
+  userId?: string
+): Promise<Record<string, boolean>> {
   let query = supabaseAdmin
     .from('entitlements')
     .select('flag, value')
@@ -147,7 +150,11 @@ export async function getEffectiveEntitlements(orgId: string, userId?: string): 
 /**
  * Check specific entitlement
  */
-export async function hasEntitlement(orgId: string, flag: string, userId?: string): Promise<boolean> {
+export async function hasEntitlement(
+  orgId: string,
+  flag: string,
+  userId?: string
+): Promise<boolean> {
   const entitlements = await getEffectiveEntitlements(orgId, userId);
   return entitlements[flag] === true;
 }
@@ -155,7 +162,9 @@ export async function hasEntitlement(orgId: string, flag: string, userId?: strin
 /**
  * Create new run record
  */
-export async function createRun(run: Omit<RunRecord, 'id' | 'started_at' | 'version'>): Promise<RunRecord> {
+export async function createRun(
+  run: Omit<RunRecord, 'id' | 'started_at' | 'version'>
+): Promise<RunRecord> {
   const { data, error } = await supabaseAdmin
     .from('runs')
     .insert({
@@ -177,8 +186,8 @@ export async function createRun(run: Omit<RunRecord, 'id' | 'started_at' | 'vers
  * Update run status
  */
 export async function updateRunStatus(
-  runId: string, 
-  status: RunRecord['status'], 
+  runId: string,
+  status: RunRecord['status'],
   updates: Partial<Pick<RunRecord, 'tokens_in' | 'tokens_out' | 'cost_usd' | 'score_total'>> = {}
 ): Promise<void> {
   const { error } = await supabaseAdmin
@@ -199,12 +208,10 @@ export async function updateRunStatus(
  * Save prompt scores
  */
 export async function savePromptScore(score: PromptScore): Promise<void> {
-  const { error } = await supabaseAdmin
-    .from('prompt_scores')
-    .insert({
-      ...score,
-      created_at: new Date().toISOString(),
-    });
+  const { error } = await supabaseAdmin.from('prompt_scores').insert({
+    ...score,
+    created_at: new Date().toISOString(),
+  });
 
   if (error) {
     throw new APIError('INTERNAL_RUN_ERROR', `Failed to save prompt score: ${error.message}`);
@@ -214,7 +221,9 @@ export async function savePromptScore(score: PromptScore): Promise<void> {
 /**
  * Create bundle record
  */
-export async function createBundle(bundle: Omit<BundleRecord, 'id' | 'created_at'>): Promise<BundleRecord> {
+export async function createBundle(
+  bundle: Omit<BundleRecord, 'id' | 'created_at'>
+): Promise<BundleRecord> {
   const { data, error } = await supabaseAdmin
     .from('bundles')
     .insert({
@@ -234,7 +243,9 @@ export async function createBundle(bundle: Omit<BundleRecord, 'id' | 'created_at
 /**
  * Verify API key and get organization
  */
-export async function verifyAPIKey(keyHash: string): Promise<{ orgId: string; keyId: string } | null> {
+export async function verifyAPIKey(
+  keyHash: string
+): Promise<{ orgId: string; keyId: string } | null> {
   const { data, error } = await supabaseAdmin
     .from('api_keys')
     .select('id, org_id, enabled')
@@ -262,17 +273,17 @@ export async function verifyAPIKey(keyHash: string): Promise<{ orgId: string; ke
  * Rate limiting helpers
  */
 export async function checkRateLimit(
-  key: string, 
-  limit: number, 
+  key: string,
+  limit: number,
   windowMs: number = 60000
 ): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
   const now = Date.now();
   const windowStart = now - windowMs;
-  
+
   // This is a simple in-memory rate limiter for demo
   // In production, use Redis or a proper rate limiting service
   const rateLimitKey = `rate_limit:${key}`;
-  
+
   // For now, return allowed=true (implement proper rate limiting with Redis)
   return {
     allowed: true,
@@ -284,7 +295,9 @@ export async function checkRateLimit(
 /**
  * Get module information
  */
-export async function getModule(moduleId: string): Promise<{ id: string; name: string; enabled: boolean } | null> {
+export async function getModule(
+  moduleId: string
+): Promise<{ id: string; name: string; enabled: boolean } | null> {
   const { data, error } = await supabaseAdmin
     .from('modules')
     .select('module_id, name, enabled')

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { CheckCircle, XCircle, Zap, Shield } from "lucide-react";
-import type { BrandLinterResult } from "@/lib/brand-linter";
+import { useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import type { BrandLinterResult } from '@/lib/brand-linter';
+import { XCircle, CheckCircle, Zap } from 'lucide-react';
 
 interface BrandLinterAlertProps {
   result: BrandLinterResult;
@@ -19,7 +19,7 @@ export function BrandLinterAlert({
   result,
   onApplyFixes,
   onDismiss,
-  className = "",
+  className = '',
 }: BrandLinterAlertProps) {
   const [isApplyingFixes, setIsApplyingFixes] = useState(false);
 
@@ -27,29 +27,29 @@ export function BrandLinterAlert({
     if (!onApplyFixes) return;
 
     setIsApplyingFixes(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate processing
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing
     onApplyFixes();
     setIsApplyingFixes(false);
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-400";
-    if (score >= 60) return "text-yellow-400";
-    return "text-red-400";
+    if (score >= 80) return 'text-green-400';
+    if (score >= 60) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   const getScoreBadgeVariant = (score: number) => {
-    if (score >= 80) return "default";
-    if (score >= 60) return "secondary";
-    return "destructive";
+    if (score >= 80) return 'default';
+    if (score >= 60) return 'secondary';
+    return 'destructive';
   };
 
   const isBlocked = result.score < 80;
 
   return (
     <Alert
-      variant={isBlocked ? "destructive" : "default"}
-      className={`glass-effect border-2 ${isBlocked ? "border-red-500/50" : "border-green-500/50"} ${className}`}
+      variant={isBlocked ? 'destructive' : 'default'}
+      className={`glass-effect border-2 ${isBlocked ? 'border-red-500/50' : 'border-green-500/50'} ${className}`}
     >
       <div className="flex items-start gap-3">
         {isBlocked ? (
@@ -62,8 +62,8 @@ export function BrandLinterAlert({
           <div className="flex items-center justify-between">
             <AlertTitle className="text-lg font-semibold">
               {isBlocked
-                ? "Prompt Blocked – Score Below Threshold"
-                : "Prompt Approved – Ready for Export"}
+                ? 'Prompt Blocked – Score Below Threshold'
+                : 'Prompt Approved – Ready for Export'}
             </AlertTitle>
 
             <div className="flex items-center gap-2">
@@ -71,7 +71,6 @@ export function BrandLinterAlert({
                 variant={getScoreBadgeVariant(result.score)}
                 className={`${getScoreColor(result.score)} font-bold`}
               >
-                <Shield className="w-3 h-3 mr-1" />
                 Score: {result.score}/100
               </Badge>
             </div>
@@ -82,20 +81,16 @@ export function BrandLinterAlert({
             className="h-2"
             // @ts-ignore
             style={{
-              "--progress-background":
-                result.score >= 80
-                  ? "#22c55e"
-                  : result.score >= 60
-                    ? "#eab308"
-                    : "#ef4444",
+              '--progress-background':
+                result.score >= 80 ? '#22c55e' : result.score >= 60 ? '#eab308' : '#ef4444',
             }}
           />
 
           <AlertDescription className="space-y-3">
             {isBlocked && (
               <p className="text-sm text-muted-foreground">
-                Your prompt doesn't meet PROMPTFORGE™ brand standards. Issues
-                detected: {result.breaches.join(", ").replace(/_/g, " ")}.
+                Your prompt doesn't meet PROMPTFORGE™ brand standards. Issues detected:{' '}
+                {result.breaches.join(', ').replace(/_/g, ' ')}.
               </p>
             )}
 

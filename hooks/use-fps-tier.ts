@@ -1,8 +1,8 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
+'use client';
+import { useEffect, useRef, useState } from 'react';
 
 export function useFpsTier(windowMs = 700) {
-  const [tier, setTier] = useState<"hi" | "mid" | "low">("hi");
+  const [tier, setTier] = useState<'hi' | 'mid' | 'low'>('hi');
   const start = useRef<number | null>(null);
   const frames = useRef(0);
 
@@ -13,7 +13,7 @@ export function useFpsTier(windowMs = 700) {
       frames.current++;
       if (t - start.current >= windowMs) {
         const fps = (frames.current / (t - start.current)) * 1000;
-        setTier(fps >= 50 ? "hi" : fps >= 30 ? "mid" : "low");
+        setTier(fps >= 50 ? 'hi' : fps >= 30 ? 'mid' : 'low');
         cancelAnimationFrame(raf);
         return;
       }

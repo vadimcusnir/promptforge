@@ -240,7 +240,7 @@ promptforge/
 /pricing                         # Planuri + ancore: #pro, #enterprise
 /docs/api                        # API docs (indexabil)
 /modules                         # Hub M01–M50
-/modules/m01-ai-idei-sopforge    # Pagină modul (una per modul)
+/modules/m01-promptforge-sopforge    # Pagină modul (una per modul)
 /packs                           # Hub vertical packs
 /packs/fintech                   # Pack page (FinTech)
 /packs/education                 # Pack page (Edu)

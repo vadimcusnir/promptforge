@@ -1,14 +1,14 @@
-import type { GPTEditOptions, GPTEditResult } from "./gpt-edit"; // Assuming GPTEditOptions and GPTEditResult are declared in another file
+import type { GPTEditOptions, GPTEditResult } from './gpt-edit'; // Assuming GPTEditOptions and GPTEditResult are declared in another file
 
 export interface GPTLiveOptions extends GPTEditOptions {
   streaming: boolean;
-  model: "gpt-4" | "gpt-4-turbo" | "gpt-4o";
+  model: 'gpt-4' | 'gpt-4-turbo' | 'gpt-4o';
   temperature: number;
   maxTokens: number;
 }
 
 export interface GPTStreamChunk {
-  type: "start" | "content" | "improvement" | "metrics" | "complete" | "error";
+  type: 'start' | 'content' | 'improvement' | 'metrics' | 'complete' | 'error';
   content?: string;
   improvement?: string;
   metrics?: {
@@ -45,7 +45,7 @@ export class GPTLiveEngine {
   async optimizeWithStreaming(
     prompt: string,
     options: GPTLiveOptions,
-    onChunk: (chunk: GPTStreamChunk) => void,
+    onChunk: (chunk: GPTStreamChunk) => void
   ): Promise<GPTLiveResult> {
     const sessionId = `gpt_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     const controller = new AbortController();
@@ -56,8 +56,8 @@ export class GPTLiveEngine {
     try {
       // Send start chunk
       onChunk({
-        type: "start",
-        content: "Initializing GPT-4 optimization engine...",
+        type: 'start',
+        content: 'Initializing GPT-4 optimization engine...',
         timestamp: Date.now(),
       });
 
@@ -66,12 +66,12 @@ export class GPTLiveEngine {
         prompt,
         options,
         onChunk,
-        controller.signal,
+        controller.signal
       );
 
       // Send completion chunk
       onChunk({
-        type: "complete",
+        type: 'complete',
         timestamp: Date.now(),
       });
 
@@ -84,9 +84,8 @@ export class GPTLiveEngine {
       };
     } catch (error) {
       onChunk({
-        type: "error",
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        type: 'error',
+        error: error instanceof Error ? error.message : 'Unknown error occurred',
         timestamp: Date.now(),
       });
       this.activeStreams.delete(sessionId);
@@ -98,68 +97,62 @@ export class GPTLiveEngine {
     prompt: string,
     options: GPTLiveOptions,
     onChunk: (chunk: GPTStreamChunk) => void,
-    signal: AbortSignal,
+    signal: AbortSignal
   ): Promise<GPTLiveResult> {
     const improvements: string[] = [];
-    let optimizedPrompt = "";
+    let optimizedPrompt = '';
 
     // Phase 1: Analysis
     await this.delay(300);
-    if (signal.aborted) throw new Error("Operation cancelled");
+    if (signal.aborted) throw new Error('Operation cancelled');
 
     onChunk({
-      type: "content",
-      content:
-        "Analyzing prompt structure and identifying optimization opportunities...",
+      type: 'content',
+      content: 'Analyzing prompt structure and identifying optimization opportunities...',
       timestamp: Date.now(),
     });
 
     // Phase 2: Structure improvements
     await this.delay(500);
-    if (signal.aborted) throw new Error("Operation cancelled");
+    if (signal.aborted) throw new Error('Operation cancelled');
 
-    const structureImprovement =
-      "Enhanced prompt structure with clear sections and logical flow";
+    const structureImprovement = 'Enhanced prompt structure with clear sections and logical flow';
     improvements.push(structureImprovement);
     onChunk({
-      type: "improvement",
+      type: 'improvement',
       improvement: structureImprovement,
       timestamp: Date.now(),
     });
 
     // Phase 3: Clarity optimization
     await this.delay(400);
-    if (signal.aborted) throw new Error("Operation cancelled");
+    if (signal.aborted) throw new Error('Operation cancelled');
 
     const clarityImprovement =
-      "Improved clarity with specific instructions and measurable outcomes";
+      'Improved clarity with specific instructions and measurable outcomes';
     improvements.push(clarityImprovement);
     onChunk({
-      type: "improvement",
+      type: 'improvement',
       improvement: clarityImprovement,
       timestamp: Date.now(),
     });
 
     // Phase 4: Content generation
     await this.delay(800);
-    if (signal.aborted) throw new Error("Operation cancelled");
+    if (signal.aborted) throw new Error('Operation cancelled');
 
     onChunk({
-      type: "content",
-      content: "Generating optimized prompt with GPT-4 enhancements...",
+      type: 'content',
+      content: 'Generating optimized prompt with GPT-4 enhancements...',
       timestamp: Date.now(),
     });
 
     // Generate optimized content
-    optimizedPrompt = this.generateOptimizedPrompt(
-      prompt,
-      options,
-      improvements,
-    );
+    optimizedPrompt = this.generateOptimizedPrompt(prompt, options, improvements);
 
     // Phase 5: Validation metrics
     await this.delay(300);
-    if (signal.aborted) throw new Error("Operation cancelled");
+    if (signal.aborted) throw new Error('Operation cancelled');
 
     const metrics = {
       clarity: 85 + Math.floor(Math.random() * 15),
@@ -169,21 +162,17 @@ export class GPTLiveEngine {
     };
 
     onChunk({
-      type: "metrics",
+      type: 'metrics',
       metrics,
       timestamp: Date.now(),
     });
 
     // Add final improvements
-    improvements.push("Validated against GPT-4 best practices");
-    improvements.push("Optimized token efficiency and response quality");
+    improvements.push('Validated against GPT-4 best practices');
+    improvements.push('Optimized token efficiency and response quality');
 
     const confidence = Math.floor(
-      (metrics.clarity +
-        metrics.structure +
-        metrics.specificity +
-        metrics.executability) /
-        4,
+      (metrics.clarity + metrics.structure + metrics.specificity + metrics.executability) / 4
     );
 
     return {
@@ -203,50 +192,50 @@ export class GPTLiveEngine {
   private generateOptimizedPrompt(
     prompt: string,
     options: GPTLiveOptions,
-    improvements: string[],
+    improvements: string[]
   ): string {
-    const timestamp = new Date().toLocaleString("en-US");
+    const timestamp = new Date().toLocaleString('en-US');
 
     const optimizedSections = [
-      "# 🚀 GPT-4 LIVE OPTIMIZED PROMPT",
-      "",
-      "> **🤖 Optimized by:** PROMPTFORGE™ GPT Live Engine",
+      '# 🚀 GPT-4 LIVE OPTIMIZED PROMPT',
+      '',
+      '> **🤖 Optimized by:** PROMPTFORGE™ GPT Live Engine',
       `> **⚡ Model:** ${options.model.toUpperCase()} | **🎯 Temperature:** ${options.temperature}`,
       `> **📅 Timestamp:** ${timestamp}`,
       `> **🔧 Focus:** ${options.focus} | **🎨 Tone:** ${options.tone} | **📏 Length:** ${options.length}`,
-      "",
-      "---",
-      "",
+      '',
+      '---',
+      '',
       prompt,
-      "",
-      "## 🎯 LIVE OPTIMIZATIONS APPLIED",
-      "",
+      '',
+      '## 🎯 LIVE OPTIMIZATIONS APPLIED',
+      '',
       ...improvements.map((imp, index) => `${index + 1}. ✅ ${imp}`),
-      "",
-      "## 📊 REAL-TIME QUALITY METRICS",
-      "",
-      "| Metric | Score | Status |",
-      "|--------|-------|--------|",
-      "| Clarity | 92% | ✅ Excellent |",
-      "| Structure | 95% | ✅ Excellent |",
-      "| Specificity | 89% | ✅ Very Good |",
-      "| Executability | 96% | ✅ Excellent |",
-      "",
-      "## 🔄 CONTINUOUS IMPROVEMENT",
-      "",
-      "This prompt has been optimized using GPT-4 Live Engine with real-time analysis.",
-      "For further optimization, consider running additional passes with different focus areas.",
-      "",
-      "---",
-      "",
-      "**⚡ PROMPTFORGE™ GPT Live Engine** | Real-time AI Optimization",
+      '',
+      '## 📊 REAL-TIME QUALITY METRICS',
+      '',
+      '| Metric | Score | Status |',
+      '|--------|-------|--------|',
+      '| Clarity | 92% | ✅ Excellent |',
+      '| Structure | 95% | ✅ Excellent |',
+      '| Specificity | 89% | ✅ Very Good |',
+      '| Executability | 96% | ✅ Excellent |',
+      '',
+      '## 🔄 CONTINUOUS IMPROVEMENT',
+      '',
+      'This prompt has been optimized using GPT-4 Live Engine with real-time analysis.',
+      'For further optimization, consider running additional passes with different focus areas.',
+      '',
+      '---',
+      '',
+      '**⚡ PROMPTFORGE™ GPT Live Engine** | Real-time AI Optimization',
     ];
 
-    return optimizedSections.join("\n");
+    return optimizedSections.join('\n');
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   cancelOptimization(sessionId: string): void {
@@ -263,14 +252,11 @@ export class GPTLiveEngine {
 }
 
 // Real GPT API integration
-export async function callGPTLiveAPI(
-  prompt: string,
-  options: GPTLiveOptions,
-): Promise<Response> {
-  return fetch("/api/gpt-live", {
-    method: "POST",
+export async function callGPTLiveAPI(prompt: string, options: GPTLiveOptions): Promise<Response> {
+  return fetch('/api/gpt-live', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       prompt,

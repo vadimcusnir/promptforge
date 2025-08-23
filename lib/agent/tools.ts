@@ -1,11 +1,11 @@
-// PromptForge v3 - SACF Agent Tools
+// PROMPTFORGE™ v3 - SACF Agent Tools
 // Controlul capabilităților și uneltelor agentului cu sandbox
 
 import { getExportConfig } from '@/lib/ruleset';
 
-export type Capability = 
+export type Capability =
   | 'HTTP_FETCH'
-  | 'STORAGE_WRITE' 
+  | 'STORAGE_WRITE'
   | 'RUN_TEST'
   | 'EXPORT_BUNDLE'
   | 'GENERATE_PROMPT'
@@ -14,9 +14,9 @@ export type Capability =
 export interface ToolContext {
   orgId: string;
   runId: string;
-  caps: Capability[];     // Runtime capabilities din entitlements + ruleset
-  allowHttp: string[];    // Allowlist domenii pentru HTTP
-  sandboxPath: string;    // FS scope pentru sandbox
+  caps: Capability[]; // Runtime capabilities din entitlements + ruleset
+  allowHttp: string[]; // Allowlist domenii pentru HTTP
+  sandboxPath: string; // FS scope pentru sandbox
   budget: {
     tokensMax: number;
     requestsPerMin: number;
@@ -27,8 +27,8 @@ export interface ToolContext {
 
 // HTTP Fetch cu allowlist strict
 export async function httpFetch(
-  ctx: ToolContext, 
-  url: string, 
+  ctx: ToolContext,
+  url: string,
   init?: RequestInit
 ): Promise<Response> {
   if (!ctx.caps.includes('HTTP_FETCH')) {
@@ -58,7 +58,7 @@ export async function httpFetch(
     const response = await fetch(url, {
       ...init,
       redirect: 'error', // Blochează redirects funky
-      signal: AbortSignal.timeout(ctx.budget.timeoutMs)
+      signal: AbortSignal.timeout(ctx.budget.timeoutMs),
     });
 
     return response;
@@ -92,7 +92,7 @@ export async function storageWrite(
   // Verifică extensiile permise
   const allowedExtensions = ['.txt', '.md', '.json', '.pdf', '.zip'];
   const hasAllowedExt = allowedExtensions.some(ext => fileName.endsWith(ext));
-  
+
   if (!hasAllowedExt) {
     throw new Error(`INVALID_EXTENSION: ${fileName} extension not allowed`);
   }
@@ -100,7 +100,7 @@ export async function storageWrite(
   // Verifică mărimea fișierului
   const maxSize = 50 * 1024 * 1024; // 50MB
   const size = Buffer.isBuffer(content) ? content.length : Buffer.byteLength(content);
-  
+
   if (size > maxSize) {
     throw new Error(`FILE_TOO_LARGE: ${size} bytes exceeds ${maxSize} limit`);
   }
@@ -108,7 +108,7 @@ export async function storageWrite(
   // TODO: Implementează upload în Supabase Storage
   // Pentru acum returnează path simulat
   const storagePath = `${ctx.sandboxPath}/${fileName}`;
-  
+
   return storagePath;
 }
 
@@ -125,7 +125,7 @@ export async function exportBundle(
   // Verifică formatele conform ruleset
   const config = getExportConfig();
   const invalidFormats = formats.filter(f => !config.artifacts.includes(`prompt.${f}`));
-  
+
   if (invalidFormats.length > 0) {
     throw new Error(`INVALID_FORMATS: ${invalidFormats.join(', ')} not supported`);
   }
@@ -139,7 +139,7 @@ export async function exportBundle(
   // Pentru acum returnează rezultat simulat
   const bundleId = crypto.randomUUID();
   const checksum = `sha256:${Array.from(crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, '0')).join('')}`;
-  
+
   const paths: Record<string, string> = {};
   formats.forEach(format => {
     paths[`prompt.${format}`] = `${ctx.sandboxPath}/prompt.${format}`;
@@ -156,7 +156,7 @@ export function validateCapabilities(
   const missing = requested.filter(cap => !available.includes(cap));
   return {
     valid: missing.length === 0,
-    missing
+    missing,
   };
 }
 
@@ -168,12 +168,12 @@ export function createToolContext(
 ): ToolContext {
   // Mapează entitlements la capabilities
   const caps: Capability[] = [];
-  
+
   if (entitlements.hasAPI) caps.push('HTTP_FETCH');
   if (entitlements.canExportBundleZip || entitlements.canExportPDF) caps.push('STORAGE_WRITE');
   if (entitlements.canUseGptTestReal) caps.push('RUN_TEST');
   if (entitlements.canExportMD || entitlements.canExportPDF) caps.push('EXPORT_BUNDLE');
-  
+
   // Întotdeauna permite generate și score pentru membri
   caps.push('GENERATE_PROMPT', 'SCORE_PROMPT');
 
@@ -181,18 +181,14 @@ export function createToolContext(
     orgId,
     runId,
     caps,
-    allowHttp: [
-      'api.openai.com',
-      'api.anthropic.com', 
-      'api.groq.com'
-    ],
+    allowHttp: ['api.openai.com', 'api.anthropic.com', 'api.groq.com'],
     sandboxPath: `/tmp/agents/${runId}`,
     budget: {
       tokensMax: 12000,
       requestsPerMin: 60,
       costUsdMax: 1.5,
-      timeoutMs: 20000
-    }
+      timeoutMs: 20000,
+    },
   };
 }
 
@@ -212,14 +208,14 @@ export function checkBudget(
   if (tokens > ctx.budget.tokensMax) {
     return {
       allowed: false,
-      reason: `Token limit exceeded: ${tokens} > ${ctx.budget.tokensMax}`
+      reason: `Token limit exceeded: ${tokens} > ${ctx.budget.tokensMax}`,
     };
   }
 
   if (costUsd > ctx.budget.costUsdMax) {
     return {
       allowed: false,
-      reason: `Cost limit exceeded: $${costUsd} > $${ctx.budget.costUsdMax}`
+      reason: `Cost limit exceeded: $${costUsd} > $${ctx.budget.costUsdMax}`,
     };
   }
 

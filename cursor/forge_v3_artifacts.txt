@@ -2674,8 +2674,8 @@ promptforge_v3_bundle/
 │   ├── recommendations.json
 │   └── priority_matrix.pdf
 ├── modules/
-│   ├── m01_ai_idei_sopforge.json
-│   ├── m02_ai_idei_latentmap.json
+│   ├── m01_PromptForge_sopforge.json
+│   ├── m02_PromptForge_latentmap.json
 │   └── ... (50 modules total)
 ├── playbooks/
 │   ├── implementation_guide.md

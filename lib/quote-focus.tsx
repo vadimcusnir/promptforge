@@ -1,12 +1,6 @@
-"use client";
+'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface QuoteFocusContextType {
   active: boolean;
@@ -17,10 +11,8 @@ interface QuoteFocusContextType {
 const QuoteFocusContext = createContext<QuoteFocusContextType>({
   active: false,
   set: () => {
-    if (process.env.NODE_ENV === "development") {
-      console.warn(
-        "[QuoteFocus] Context not properly initialized. Wrap with QuoteFocusProvider.",
-      );
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[QuoteFocus] Context not properly initialized. Wrap with QuoteFocusProvider.');
     }
   },
 });
@@ -43,46 +35,45 @@ export function QuoteFocusProvider({ children }: QuoteFocusProviderProps) {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    const overlayElement = document.querySelector<HTMLElement>("#bg-overlay");
-    const matrixTokens =
-      document.querySelectorAll<HTMLElement>(".matrix-tokens");
+    const overlayElement = document.querySelector<HTMLElement>('#bg-overlay');
+    const matrixTokens = document.querySelectorAll<HTMLElement>('.matrix-tokens');
 
     if (!overlayElement) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn("[QuoteFocusProvider] #bg-overlay element not found");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[QuoteFocusProvider] #bg-overlay element not found');
       }
       return;
     }
 
     // Apply/remove state classes based on active state
-    overlayElement.classList.toggle("quote-active", active);
-    overlayElement.classList.toggle("quote-focus", active);
+    overlayElement.classList.toggle('quote-active', active);
+    overlayElement.classList.toggle('quote-focus', active);
 
     // Control matrix tokens opacity (acceptance criteria: quote_focus_controls_tokens_opacity)
-    matrixTokens.forEach((token) => {
+    matrixTokens.forEach(token => {
       if (active) {
-        token.style.setProperty("--tokens-opacity", "0.28");
+        token.style.setProperty('--tokens-opacity', '0.28');
       } else {
-        token.style.removeProperty("--tokens-opacity");
+        token.style.removeProperty('--tokens-opacity');
       }
     });
 
     // Cleanup function - enforce state cleanup on unmount
     return () => {
       if (overlayElement) {
-        overlayElement.classList.remove("quote-active", "quote-focus");
+        overlayElement.classList.remove('quote-active', 'quote-focus');
       }
-      matrixTokens.forEach((token) => {
-        token.style.removeProperty("--tokens-opacity");
+      matrixTokens.forEach(token => {
+        token.style.removeProperty('--tokens-opacity');
       });
     };
   }, [active]);
 
   // Wrapper for setActive with validation
   const setActiveWrapper = (value: boolean) => {
-    if (typeof value !== "boolean") {
-      if (process.env.NODE_ENV === "development") {
-        console.warn("[QuoteFocusProvider] setActive expects boolean value");
+    if (typeof value !== 'boolean') {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[QuoteFocusProvider] setActive expects boolean value');
       }
       return;
     }
@@ -111,7 +102,7 @@ export function useQuoteFocus(): QuoteFocusContextType {
   const context = useContext(QuoteFocusContext);
 
   if (!context) {
-    throw new Error("useQuoteFocus must be used within a QuoteFocusProvider");
+    throw new Error('useQuoteFocus must be used within a QuoteFocusProvider');
   }
 
   return context;

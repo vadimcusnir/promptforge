@@ -1,13 +1,7 @@
-"use client";
-import {
-  Play,
-  CheckCircle,
-  AlertCircle,
-  XCircle,
-  TrendingUp,
-} from "lucide-react";
-import { EntitlementGate } from "@/components/billing/EntitlementGate";
-import type { GeneratedPrompt, TestResult } from "@/types/promptforge";
+'use client';
+import { Play, CheckCircle, AlertCircle, XCircle, TrendingUp } from 'lucide-react';
+import { EntitlementGate } from '@/components/billing/EntitlementGate';
+import type { GeneratedPrompt, TestResult } from '@/types/promptforge';
 
 interface TestEngineProps {
   prompt: GeneratedPrompt;
@@ -17,39 +11,33 @@ interface TestEngineProps {
   orgId: string; // Added for entitlements
 }
 
-export function TestEngine({
-  prompt,
-  testResult,
-  onRunTest,
-  isTesting,
-  orgId,
-}: TestEngineProps) {
+export function TestEngine({ prompt, testResult, onRunTest, isTesting, orgId }: TestEngineProps) {
   const getScoreColor = (score: number, isInverted = false) => {
     const threshold = isInverted ? 20 : 80;
     if (isInverted) {
       return score <= threshold
-        ? "text-gold-industrial"
+        ? 'text-gold-industrial'
         : score <= 40
-          ? "text-lead-gray"
-          : "text-red-500";
+          ? 'text-lead-gray'
+          : 'text-red-500';
     }
     return score >= threshold
-      ? "text-gold-industrial"
+      ? 'text-gold-industrial'
       : score >= 60
-        ? "text-lead-gray"
-        : "text-red-500";
+        ? 'text-lead-gray'
+        : 'text-red-500';
   };
 
   const getVerdictColor = (verdict: string) => {
     switch (verdict) {
-      case "PASS":
-        return "text-gold-industrial";
-      case "PARTIAL":
-        return "text-lead-gray";
-      case "FAIL":
-        return "text-red-500";
+      case 'PASS':
+        return 'text-gold-industrial';
+      case 'PARTIAL':
+        return 'text-lead-gray';
+      case 'FAIL':
+        return 'text-red-500';
       default:
-        return "text-lead-gray";
+        return 'text-lead-gray';
     }
   };
 
@@ -71,8 +59,8 @@ export function TestEngine({
             disabled={isTesting}
             className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
               isTesting
-                ? "bg-gold-industrial/20 text-gold-industrial cursor-not-allowed"
-                : "bg-gold-industrial text-black hover:bg-gold-industrial/90 hover:shadow-lg hover:shadow-gold-industrial/20"
+                ? 'bg-gold-industrial/20 text-gold-industrial cursor-not-allowed'
+                : 'bg-gold-industrial text-black hover:bg-gold-industrial/90 hover:shadow-lg hover:shadow-gold-industrial/20'
             }`}
           >
             {isTesting ? (
@@ -89,8 +77,6 @@ export function TestEngine({
           </button>
         </EntitlementGate>
       </div>
-
-
 
       {testResult && (
         <div className="space-y-6">
@@ -117,9 +103,7 @@ export function TestEngine({
 
             <div className="text-center p-4 bg-black/30 rounded-lg">
               <div className="text-2xl font-bold mb-1">
-                <span
-                  className={getScoreColor(testResult.scores.ambiguity, true)}
-                >
+                <span className={getScoreColor(testResult.scores.ambiguity, true)}>
                   {testResult.scores.ambiguity}
                 </span>
               </div>
@@ -143,23 +127,19 @@ export function TestEngine({
             className="text-center p-6 bg-black/50 rounded-lg border border-lead-gray/20"
           >
             <div className="flex items-center justify-center gap-3 mb-4">
-              {testResult.verdict === "PASS" && (
+              {testResult.verdict === 'PASS' && (
                 <CheckCircle className="w-8 h-8 text-gold-industrial" />
               )}
-              {testResult.verdict === "PARTIAL" && (
+              {testResult.verdict === 'PARTIAL' && (
                 <AlertCircle className="w-8 h-8 text-lead-gray" />
               )}
-              {testResult.verdict === "FAIL" && (
-                <XCircle className="w-8 h-8 text-red-500" />
-              )}
-              <div
-                className={`text-3xl font-bold ${getVerdictColor(testResult.verdict)}`}
-              >
+              {testResult.verdict === 'FAIL' && <XCircle className="w-8 h-8 text-red-500" />}
+              <div className={`text-3xl font-bold ${getVerdictColor(testResult.verdict)}`}>
                 {testResult.verdict}
               </div>
             </div>
 
-            {testResult.verdict === "FAIL" && (
+            {testResult.verdict === 'FAIL' && (
               <div className="mt-4">
                 <button className="px-6 py-3 bg-gold-industrial text-black rounded-lg font-medium hover:bg-gold-industrial/90 transition-colors">
                   Optimize for Enterprise
@@ -185,9 +165,7 @@ export function TestEngine({
         <div className="text-center py-12 text-lead-gray">
           <Play className="w-12 h-12 mx-auto mb-4 opacity-50" />
           <p className="text-lg font-medium">Ready to test your prompt</p>
-          <p className="text-sm">
-            Click "Run Test" to evaluate on 4 scoring axes
-          </p>
+          <p className="text-sm">Click "Run Test" to evaluate on 4 scoring axes</p>
         </div>
       )}
     </div>

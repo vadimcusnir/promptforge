@@ -1,6 +1,6 @@
-// PromptForge v3 - Entitlements Gating System
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+// PROMPTFORGE™ v3 - Entitlements Gating System
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export interface EntitlementGate {
   orgId: string;
@@ -24,11 +24,11 @@ export async function withEntitlementGate(
   callback?: () => Promise<void>
 ): Promise<void> {
   const check = await checkEntitlements(orgId, requiredFlags);
-  
+
   if (!check.hasAccess) {
     throw new Error(
-      `Access denied. Missing entitlements: ${check.missingFlags.join(", ")}. ` +
-      `Required plan: ${check.plan}`
+      `Access denied. Missing entitlements: ${check.missingFlags.join(', ')}. ` +
+        `Required plan: ${check.plan}`
     );
   }
 
@@ -46,11 +46,12 @@ export async function checkEntitlements(
 ): Promise<EntitlementCheck> {
   try {
     const supabase = createRouteHandlerClient({ cookies });
-    
+
     // Get organization's plan and entitlements
     const { data: org, error: orgError } = await supabase
-      .from("orgs")
-      .select(`
+      .from('orgs')
+      .select(
+        `
         id,
         plan,
         plan_expires_at,
@@ -59,8 +60,9 @@ export async function checkEntitlements(
           is_enabled,
           expires_at
         )
-      `)
-      .eq("id", orgId)
+      `
+      )
+      .eq('id', orgId)
       .single();
 
     if (orgError || !org) {
@@ -73,15 +75,13 @@ export async function checkEntitlements(
         hasAccess: false,
         missingFlags: requiredFlags,
         plan: org.plan,
-        expiresAt: new Date(org.plan_expires_at)
+        expiresAt: new Date(org.plan_expires_at),
       };
     }
 
     // Check feature flags
     const enabledFlags = new Set(
-      org.entitlements
-        ?.filter((e: any) => e.is_enabled)
-        ?.map((e: any) => e.feature_flag) || []
+      org.entitlements?.filter((e: any) => e.is_enabled)?.map((e: any) => e.feature_flag) || []
     );
 
     const missingFlags = requiredFlags.filter(flag => !enabledFlags.has(flag));
@@ -90,15 +90,14 @@ export async function checkEntitlements(
       hasAccess: missingFlags.length === 0,
       missingFlags,
       plan: org.plan,
-      expiresAt: org.plan_expires_at ? new Date(org.plan_expires_at) : undefined
+      expiresAt: org.plan_expires_at ? new Date(org.plan_expires_at) : undefined,
     };
-
   } catch (error) {
-    console.error("Entitlement check failed:", error);
+    console.error('Entitlement check failed:', error);
     return {
       hasAccess: false,
       missingFlags: requiredFlags,
-      plan: "unknown"
+      plan: 'unknown',
     };
   }
 }
@@ -106,19 +105,16 @@ export async function checkEntitlements(
 /**
  * Check if user has access to a specific module
  */
-export async function checkModuleAccess(
-  orgId: string,
-  moduleId: string
-): Promise<boolean> {
+export async function checkModuleAccess(orgId: string, moduleId: string): Promise<boolean> {
   try {
     const supabase = createRouteHandlerClient({ cookies });
-    
+
     // Check if module is available for the org's plan
     const { data: moduleAccess, error } = await supabase
-      .from("module_access")
-      .select("is_enabled")
-      .eq("org_id", orgId)
-      .eq("module_id", moduleId)
+      .from('module_access')
+      .select('is_enabled')
+      .eq('org_id', orgId)
+      .eq('module_id', moduleId)
       .single();
 
     if (error || !moduleAccess) {
@@ -127,7 +123,7 @@ export async function checkModuleAccess(
 
     return moduleAccess.is_enabled;
   } catch (error) {
-    console.error("Module access check failed:", error);
+    console.error('Module access check failed:', error);
     return false;
   }
 }
@@ -138,12 +134,12 @@ export async function checkModuleAccess(
 export async function getAvailableFeatures(orgId: string): Promise<string[]> {
   try {
     const supabase = createRouteHandlerClient({ cookies });
-    
+
     const { data: entitlements, error } = await supabase
-      .from("org_entitlements")
-      .select("feature_flag")
-      .eq("org_id", orgId)
-      .eq("is_enabled", true);
+      .from('org_entitlements')
+      .select('feature_flag')
+      .eq('org_id', orgId)
+      .eq('is_enabled', true);
 
     if (error) {
       return [];
@@ -151,7 +147,7 @@ export async function getAvailableFeatures(orgId: string): Promise<string[]> {
 
     return entitlements.map((e: any) => e.feature_flag);
   } catch (error) {
-    console.error("Failed to get available features:", error);
+    console.error('Failed to get available features:', error);
     return [];
   }
 }

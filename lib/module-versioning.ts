@@ -1,4 +1,4 @@
-// PromptForge v3 - Module Versioning System
+// PROMPTFORGE™ v3 - Module Versioning System
 // Management versiuni active în UI cu rollback și A/B testing
 
 import { createClient } from '@supabase/supabase-js';
@@ -6,7 +6,8 @@ import { type Domain, type SevenD } from './ruleset';
 
 // SACF - Development mode fallback
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+const SUPABASE_SERVICE_ROLE =
+  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
@@ -16,7 +17,7 @@ export interface ModuleVersion {
   version: string; // Semantic versioning: 1.0.0, 1.1.0, 2.0.0
   version_type: 'major' | 'minor' | 'patch' | 'preview' | 'beta' | 'alpha';
   status: 'draft' | 'review' | 'active' | 'deprecated' | 'archived';
-  
+
   // Content
   name: string;
   description: string;
@@ -28,14 +29,14 @@ export interface ModuleVersion {
     output: string;
     notes?: string;
   }>;
-  
+
   // Metadata
   changelog: string;
   breaking_changes: string[];
   new_features: string[];
   bug_fixes: string[];
   performance_improvements: string[];
-  
+
   // Configuration
   seven_d_defaults: Partial<SevenD>;
   domain_specific: Record<Domain, Partial<SevenD>>;
@@ -45,7 +46,7 @@ export interface ModuleVersion {
     weight: number;
     description: string;
   }>;
-  
+
   // Testing
   test_results: {
     automated_tests_passed: boolean;
@@ -54,12 +55,12 @@ export interface ModuleVersion {
     quality_score: number;
     security_score: number;
   };
-  
+
   // Deployment
   deployment_strategy: 'immediate' | 'gradual' | 'canary' | 'blue_green';
   rollout_percentage: number; // Pentru gradual/canary
   target_audience?: string; // Pentru A/B testing
-  
+
   // Tracking
   created_by: string;
   reviewed_by?: string;
@@ -68,7 +69,7 @@ export interface ModuleVersion {
   updated_at: string;
   activated_at?: string;
   deprecated_at?: string;
-  
+
   // Usage metrics
   usage_stats: {
     total_runs: number;
@@ -100,28 +101,28 @@ export interface VersionComparison {
 
 export interface VersioningPolicy {
   org_id: string;
-  
+
   // Versioning rules
   auto_versioning: boolean;
   require_review: boolean;
   require_approval: boolean;
   allow_preview_versions: boolean;
-  
+
   // Deployment rules
   deployment_approval_required: boolean;
   canary_deployment_enabled: boolean;
   rollback_threshold: number; // % failed runs pentru auto-rollback
-  
+
   // Quality gates
   minimum_quality_score: number;
   minimum_performance_score: number;
   minimum_security_score: number;
-  
+
   // Rollout strategy
   default_rollout_strategy: 'immediate' | 'gradual' | 'canary';
   gradual_rollout_steps: number[];
   canary_duration_hours: number;
-  
+
   // Monitoring
   monitoring_enabled: boolean;
   alert_thresholds: {
@@ -129,7 +130,7 @@ export interface VersioningPolicy {
     performance_degradation: number;
     user_satisfaction_drop: number;
   };
-  
+
   created_at: string;
   updated_at: string;
 }
@@ -152,7 +153,7 @@ class ModuleVersioningManager {
   async getModuleVersions(moduleId: string, orgId?: string): Promise<ModuleVersion[]> {
     const cacheKey = `${moduleId}-${orgId || 'global'}`;
     const cached = this.cache.get(cacheKey);
-    
+
     if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
       return cached.versions;
     }
@@ -174,8 +175,8 @@ class ModuleVersioningManager {
             {
               title: 'Basic Usage',
               input: 'Sample input for v1.0.0',
-              output: 'Expected output for v1.0.0'
-            }
+              output: 'Expected output for v1.0.0',
+            },
           ],
           changelog: 'Initial release with core functionality',
           breaking_changes: [],
@@ -187,14 +188,14 @@ class ModuleVersioningManager {
           guardrails: ['Content safety', 'Input validation'],
           evaluation_criteria: [
             { metric: 'Clarity', weight: 0.4, description: 'How clear is the output' },
-            { metric: 'Relevance', weight: 0.6, description: 'How relevant is the response' }
+            { metric: 'Relevance', weight: 0.6, description: 'How relevant is the response' },
           ],
           test_results: {
             automated_tests_passed: true,
             manual_review_passed: true,
             performance_score: 85,
             quality_score: 90,
-            security_score: 95
+            security_score: 95,
           },
           deployment_strategy: 'immediate',
           rollout_percentage: 100,
@@ -208,8 +209,8 @@ class ModuleVersioningManager {
             failed_runs: 50,
             average_score: 87.5,
             user_satisfaction: 4.2,
-            performance_metrics: { response_time: 2.1, accuracy: 0.89 }
-          }
+            performance_metrics: { response_time: 2.1, accuracy: 0.89 },
+          },
         },
         {
           id: 'v1-1-0',
@@ -225,13 +226,13 @@ class ModuleVersioningManager {
             {
               title: 'Basic Usage',
               input: 'Sample input for v1.1.0',
-              output: 'Expected output for v1.1.0'
+              output: 'Expected output for v1.1.0',
             },
             {
               title: 'New Feature Usage',
               input: 'Input using new param3',
-              output: 'Output with enhanced features'
-            }
+              output: 'Output with enhanced features',
+            },
           ],
           changelog: 'Added new parameter and improved examples',
           breaking_changes: [],
@@ -244,14 +245,14 @@ class ModuleVersioningManager {
           evaluation_criteria: [
             { metric: 'Clarity', weight: 0.4, description: 'How clear is the output' },
             { metric: 'Relevance', weight: 0.5, description: 'How relevant is the response' },
-            { metric: 'Innovation', weight: 0.1, description: 'How innovative is the approach' }
+            { metric: 'Innovation', weight: 0.1, description: 'How innovative is the approach' },
           ],
           test_results: {
             automated_tests_passed: true,
             manual_review_passed: false,
             performance_score: 88,
             quality_score: 92,
-            security_score: 96
+            security_score: 96,
           },
           deployment_strategy: 'canary',
           rollout_percentage: 25,
@@ -264,9 +265,9 @@ class ModuleVersioningManager {
             failed_runs: 0,
             average_score: 0,
             user_satisfaction: 0,
-            performance_metrics: {}
-          }
-        }
+            performance_metrics: {},
+          },
+        },
       ];
 
       this.cache.set(cacheKey, { versions: mockVersions, timestamp: Date.now() });
@@ -285,7 +286,6 @@ class ModuleVersioningManager {
       const versions = data || [];
       this.cache.set(cacheKey, { versions, timestamp: Date.now() });
       return versions;
-
     } catch (error) {
       console.error('Failed to fetch module versions:', error);
       return [];
@@ -351,11 +351,11 @@ class ModuleVersioningManager {
         manual_review_passed: false,
         performance_score: 0,
         quality_score: 0,
-        security_score: 0
+        security_score: 0,
       },
       deployment_strategy: params.deploymentStrategy || 'immediate',
       rollout_percentage: params.rolloutPercentage || 100,
-      created_by: params.createdBy
+      created_by: params.createdBy,
     };
 
     const { data, error } = await supabase
@@ -390,9 +390,9 @@ class ModuleVersioningManager {
     // Deactivează versiunea curentă activă
     await supabase
       .from('module_versions')
-      .update({ 
+      .update({
         status: 'deprecated',
-        deprecated_at: new Date().toISOString()
+        deprecated_at: new Date().toISOString(),
       })
       .eq('module_id', moduleId)
       .eq('status', 'active');
@@ -400,9 +400,9 @@ class ModuleVersioningManager {
     // Activează noua versiune
     const { error } = await supabase
       .from('module_versions')
-      .update({ 
+      .update({
         status: 'active',
-        activated_at: new Date().toISOString()
+        activated_at: new Date().toISOString(),
       })
       .eq('id', versionId);
 
@@ -415,7 +415,11 @@ class ModuleVersioningManager {
   }
 
   // Compară două versiuni
-  async compareVersions(moduleId: string, version1: string, version2: string): Promise<VersionComparison> {
+  async compareVersions(
+    moduleId: string,
+    version1: string,
+    version2: string
+  ): Promise<VersionComparison> {
     const versions = await this.getModuleVersions(moduleId);
     const v1 = versions.find(v => v.version === version1);
     const v2 = versions.find(v => v.version === version2);
@@ -427,7 +431,9 @@ class ModuleVersioningManager {
     // Analizează diferențele
     const breaking = v2.breaking_changes;
     const newFeatures = v2.new_features.filter(f => !v1.new_features.includes(f));
-    const improvements = v2.performance_improvements.filter(i => !v1.performance_improvements.includes(i));
+    const improvements = v2.performance_improvements.filter(
+      i => !v1.performance_improvements.includes(i)
+    );
     const bugFixes = v2.bug_fixes.filter(b => !v1.bug_fixes.includes(b));
 
     // Calculează riscul
@@ -442,15 +448,15 @@ class ModuleVersioningManager {
         breaking,
         new_features: newFeatures,
         improvements,
-        bug_fixes: bugFixes
+        bug_fixes: bugFixes,
       },
       risk_assessment: {
         risk_level: riskLevel,
         risk_factors: riskFactors,
-        mitigation_strategies: mitigationStrategies
+        mitigation_strategies: mitigationStrategies,
       },
       migration_guide: this.generateMigrationGuide(breaking, newFeatures),
-      rollback_plan: this.generateRollbackPlan(v1, v2)
+      rollback_plan: this.generateRollbackPlan(v1, v2),
     };
   }
 
@@ -494,7 +500,8 @@ class ModuleVersioningManager {
         guide += `- ${change}\n`;
       });
       guide += '\n## Required Actions\n\n';
-      guide += 'Review and update any custom implementations that depend on changed functionality.\n\n';
+      guide +=
+        'Review and update any custom implementations that depend on changed functionality.\n\n';
     }
 
     if (newFeatures.length > 0) {

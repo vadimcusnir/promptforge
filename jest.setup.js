@@ -10,10 +10,10 @@ process.env.SUPABASE_ANON_KEY = 'test-anon-key';
 // Mock Next.js headers and cookies
 jest.mock('next/headers', () => ({
   headers: jest.fn(() => ({
-    get: jest.fn((header) => {
+    get: jest.fn(header => {
       const mockHeaders = {
         'x-org-id': 'test-org-id',
-        'x-user-id': 'test-user-id', 
+        'x-user-id': 'test-user-id',
         'x-pf-key': 'test-api-key',
         'x-forwarded-for': '127.0.0.1',
       };
@@ -21,11 +21,11 @@ jest.mock('next/headers', () => ({
     }),
   })),
   cookies: jest.fn(() => ({
-    get: jest.fn((name) => {
+    get: jest.fn(name => {
       const mockCookies = {
-        'pf_role': { value: 'admin' },
-        'pf_uid': { value: 'test-user-id' },
-        'pf_email': { value: 'test@example.com' },
+        pf_role: { value: 'admin' },
+        pf_uid: { value: 'test-user-id' },
+        pf_email: { value: 'test@example.com' },
       };
       return mockCookies[name] || null;
     }),
@@ -50,24 +50,28 @@ jest.mock('openai', () => {
   return jest.fn().mockImplementation(() => ({
     chat: {
       completions: {
-        create: jest.fn(() => Promise.resolve({
-          choices: [{
-            message: {
-              content: JSON.stringify({
-                editedPrompt: 'Optimized prompt',
-                improvements: ['Improved clarity'],
-                confidence: 85
-              })
-            }
-          }],
-          usage: {
-            prompt_tokens: 100,
-            completion_tokens: 50,
-            total_tokens: 150
-          }
-        }))
-      }
-    }
+        create: jest.fn(() =>
+          Promise.resolve({
+            choices: [
+              {
+                message: {
+                  content: JSON.stringify({
+                    editedPrompt: 'Optimized prompt',
+                    improvements: ['Improved clarity'],
+                    confidence: 85,
+                  }),
+                },
+              },
+            ],
+            usage: {
+              prompt_tokens: 100,
+              completion_tokens: 50,
+              total_tokens: 150,
+            },
+          })
+        ),
+      },
+    },
   }));
 });
 

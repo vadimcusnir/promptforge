@@ -1,9 +1,9 @@
-// PromptForge v3 - API Keys Management
+// PROMPTFORGE™ v3 - API Keys Management
 // Creare, listare și management API keys pentru Enterprise
 
 import { NextRequest, NextResponse } from 'next/server';
 import { publicAPIManager, type APIScope } from '@/lib/api-public';
-import { validateSACFHeaders, assertMembership, assertRole, handleSecurityError } from '@/lib/security/assert';
+import { validateSACFHeaders, assertRole, handleSecurityError } from '@/lib/security/assert';
 
 // GET - Listează API keys pentru organizație
 export async function GET(req: NextRequest) {
@@ -30,19 +30,25 @@ export async function GET(req: NextRequest) {
             last_used_at: new Date(Date.now() - 86400000).toISOString(),
             is_active: true,
             created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
-            created_by: 'dev-user'
-          }
+            created_by: 'dev-user',
+          },
         ],
         summary: {
           total_keys: 1,
           active_keys: 1,
           total_requests_this_month: 150,
           available_scopes: [
-            'prompts:generate', 'prompts:test', 'prompts:score', 
-            'exports:bundle', 'history:read', 'history:write',
-            'analytics:read', 'presets:read', 'admin:manage'
-          ]
-        }
+            'prompts:generate',
+            'prompts:test',
+            'prompts:score',
+            'exports:bundle',
+            'history:read',
+            'history:write',
+            'analytics:read',
+            'presets:read',
+            'admin:manage',
+          ],
+        },
       });
     }
 
@@ -55,13 +61,18 @@ export async function GET(req: NextRequest) {
         active_keys: 0,
         total_requests_this_month: 0,
         available_scopes: [
-          'prompts:generate', 'prompts:test', 'prompts:score', 
-          'exports:bundle', 'history:read', 'history:write',
-          'analytics:read', 'presets:read', 'admin:manage'
-        ]
-      }
+          'prompts:generate',
+          'prompts:test',
+          'prompts:score',
+          'exports:bundle',
+          'history:read',
+          'history:write',
+          'analytics:read',
+          'presets:read',
+          'admin:manage',
+        ],
+      },
     });
-
   } catch (error) {
     console.error('API Keys GET error:', error);
     return handleSecurityError(error);
@@ -97,18 +108,26 @@ export async function POST(req: NextRequest) {
 
     // Verifică scopes valide
     const validScopes: APIScope[] = [
-      'prompts:generate', 'prompts:test', 'prompts:score', 
-      'exports:bundle', 'history:read', 'history:write',
-      'analytics:read', 'presets:read', 'admin:manage'
+      'prompts:generate',
+      'prompts:test',
+      'prompts:score',
+      'exports:bundle',
+      'history:read',
+      'history:write',
+      'analytics:read',
+      'presets:read',
+      'admin:manage',
     ];
 
-    const invalidScopes = scopes.filter((scope: string) => !validScopes.includes(scope as APIScope));
+    const invalidScopes = scopes.filter(
+      (scope: string) => !validScopes.includes(scope as APIScope)
+    );
     if (invalidScopes.length > 0) {
       return NextResponse.json(
-        { 
-          error: 'INVALID_SCOPES', 
+        {
+          error: 'INVALID_SCOPES',
           message: 'Invalid scopes provided',
-          details: { invalid: invalidScopes, valid: validScopes }
+          details: { invalid: invalidScopes, valid: validScopes },
         },
         { status: 400 }
       );
@@ -130,7 +149,7 @@ export async function POST(req: NextRequest) {
         rateLimitRpm: rate_limit_rpm || 60,
         monthlyLimit: monthly_limit || 10000,
         expiresAt: expires_at,
-        createdBy: userId
+        createdBy: userId,
       });
 
       // Return response cu key-ul (doar o dată!)
@@ -146,21 +165,19 @@ export async function POST(req: NextRequest) {
           rate_limit_rpm: keyData.rate_limit_rpm,
           monthly_request_limit: keyData.monthly_request_limit,
           expires_at: keyData.expires_at,
-          created_at: keyData.created_at
+          created_at: keyData.created_at,
         },
-        warning: 'Save this API key securely. It will not be shown again.'
+        warning: 'Save this API key securely. It will not be shown again.',
       });
-
     } catch (error) {
       return NextResponse.json(
-        { 
-          error: 'CREATION_FAILED', 
-          message: error instanceof Error ? error.message : 'Failed to create API key'
+        {
+          error: 'CREATION_FAILED',
+          message: error instanceof Error ? error.message : 'Failed to create API key',
         },
         { status: 500 }
       );
     }
-
   } catch (error) {
     console.error('API Keys POST error:', error);
     return handleSecurityError(error);
@@ -191,19 +208,17 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({
         success: true,
         message: 'API key revoked successfully',
-        key_id: keyId
+        key_id: keyId,
       });
-
     } catch (error) {
       return NextResponse.json(
-        { 
-          error: 'REVOCATION_FAILED', 
-          message: error instanceof Error ? error.message : 'Failed to revoke API key'
+        {
+          error: 'REVOCATION_FAILED',
+          message: error instanceof Error ? error.message : 'Failed to revoke API key',
         },
         { status: 500 }
       );
     }
-
   } catch (error) {
     console.error('API Keys DELETE error:', error);
     return handleSecurityError(error);

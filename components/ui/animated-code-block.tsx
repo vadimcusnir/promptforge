@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Copy, Check, Play, Terminal } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Copy, Check, Play, Terminal } from 'lucide-react';
 
 interface AnimatedCodeBlockProps {
   code: string;
@@ -16,14 +16,13 @@ interface AnimatedCodeBlockProps {
 
 export function AnimatedCodeBlock({
   code,
-  language = "text",
+  language = 'text',
   title,
   showCopy = true,
   showRun = false,
   onRun,
-  className = "",
+  className = '',
 }: AnimatedCodeBlockProps) {
-  const [displayedCode, setDisplayedCode] = useState("");
   const [isTyping, setIsTyping] = useState(true);
   const [copied, setCopied] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -32,7 +31,6 @@ export function AnimatedCodeBlock({
     let index = 0;
     const timer = setInterval(() => {
       if (index < code.length) {
-        setDisplayedCode(code.slice(0, index + 1));
         index++;
       } else {
         setIsTyping(false);
@@ -52,7 +50,7 @@ export function AnimatedCodeBlock({
   const handleRun = async () => {
     if (!onRun) return;
     setIsRunning(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1500));
     onRun();
     setIsRunning(false);
   };
@@ -108,12 +106,7 @@ export function AnimatedCodeBlock({
 
       <div className="relative">
         <pre className="p-4 text-sm text-white font-mono overflow-x-auto bg-black/30">
-          <code>
-            {displayedCode}
-            {isTyping && (
-              <span className="animate-pulse text-gold-industrial">|</span>
-            )}
-          </code>
+          <code>{isTyping && <span className="animate-pulse text-gold-industrial">|</span>}</code>
         </pre>
 
         {isRunning && (

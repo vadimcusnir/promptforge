@@ -2,12 +2,25 @@
   "industry": "E-Commerce",
   "slug": "ecommerce",
   "jargon": [
-    "conversion rate", "AOV", "ROAS", "retargeting", "checkout funnel",
-    "cart abandonment", "SKU", "last-mile delivery", "CX", "RFM segmentation"
+    "conversion rate",
+    "AOV",
+    "ROAS",
+    "retargeting",
+    "checkout funnel",
+    "cart abandonment",
+    "SKU",
+    "last-mile delivery",
+    "CX",
+    "RFM segmentation"
   ],
   "kpis": [
-    "conversion_rate", "AOV", "cart_abandonment_rate", "LTV", 
-    "ROAS", "return_rate", "D2C repeat purchase rate"
+    "conversion_rate",
+    "AOV",
+    "cart_abandonment_rate",
+    "LTV",
+    "ROAS",
+    "return_rate",
+    "D2C repeat purchase rate"
   ],
   "compliance_notes": "GDPR (data privacy), PSD2 SCA (Strong Customer Authentication), Consumer Protection Directives, Sales Tax / VAT rules",
   "style_bias": "pragmatic, optimizat pe vânzări și UX, cu accent pe funnel și date comerciale",
@@ -17,7 +30,7 @@
     "scale": "smb",
     "urgency": "sprint",
     "complexity": "standard",
-    "resources": "agency_stack", 
+    "resources": "agency_stack",
     "application": "implementation",
     "output": ["playbook", "checklist"]
   },
@@ -30,9 +43,9 @@
   ],
   "evaluation_weights": {
     "clarity": 0.35,
-    "execution": 0.30,
+    "execution": 0.3,
     "ambiguity_inv": 0.15,
-    "business_fit": 0.20
+    "business_fit": 0.2
   },
   "thresholds": {
     "clarity_min": 78,

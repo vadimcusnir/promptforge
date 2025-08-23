@@ -1,5 +1,5 @@
 export type BackgroundConfig = {
-  motionLevel: "auto" | "medium" | "low";
+  motionLevel: 'auto' | 'medium' | 'low';
   reducedFallback: boolean;
   maxQuotes: number;
   maxTokens: number;
@@ -9,7 +9,7 @@ export type BackgroundConfig = {
 };
 
 export const backgroundConfig: BackgroundConfig = {
-  motionLevel: "auto",
+  motionLevel: 'auto',
   reducedFallback: true,
   maxQuotes: 3,
   maxTokens: 48, // pool ~48, nu 100+

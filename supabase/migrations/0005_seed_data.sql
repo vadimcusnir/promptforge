@@ -94,7 +94,7 @@ begin
     insert into modules (id, title, description, vectors, requirements, spec, kpi, guardrails) values
       (
         'M01',
-        'AI-IDEI.SOPFORGE™',
+        'PROMPTFORGE.SOPFORGE™',
         'Pipeline research→validare→SOP',
         array[1,6,5],
         'Subiect/domeniu, nivel detaliu, context business',
@@ -203,7 +203,7 @@ begin
 
     -- Seed module versions for the core modules
     insert into module_versions (module_id, semver, changelog, spec_json) values
-      ('M01', '1.0.0', 'Initial release', '{"name":"AI-IDEI.SOPFORGE™","type":"pipeline"}'::jsonb),
+      ('M01', '1.0.0', 'Initial release', '{"name":"PROMPTFORGE.SOPFORGE™","type":"pipeline"}'::jsonb),
       ('M07', '1.0.0', 'Initial release', '{"name":"Risk & Trust Reversal","type":"conversion"}'::jsonb),
       ('M10', '1.0.0', 'Initial release', '{"name":"Zero-Party Data OS","type":"data"}'::jsonb),
       ('M12', '1.0.0', 'Initial release', '{"name":"Diagnostic de Vizibilitate","type":"assessment"}'::jsonb),

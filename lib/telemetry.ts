@@ -1,5 +1,5 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export interface TelemetryEvent {
   event: string;
@@ -12,36 +12,40 @@ export interface TelemetryEvent {
 export async function logEvent(event: TelemetryEvent): Promise<void> {
   try {
     const supabase = createRouteHandlerClient({ cookies });
-    
-    await supabase.from("telemetry_events").insert({
+
+    await supabase.from('telemetry_events').insert({
       event: event.event,
       org_id: event.orgId,
       user_id: event.userId,
       payload: event.payload,
-      timestamp: event.timestamp || new Date().toISOString()
+      timestamp: event.timestamp || new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Failed to log telemetry event:", error);
+    console.error('Failed to log telemetry event:', error);
     // Don't throw - telemetry failures shouldn't break main functionality
   }
 }
 
-export async function checkRateLimit(key: string, maxRequests: number, windowSeconds: number): Promise<number> {
+export async function checkRateLimit(
+  key: string,
+  maxRequests: number,
+  windowSeconds: number
+): Promise<number> {
   try {
     const supabase = createRouteHandlerClient({ cookies });
-    
+
     const now = new Date();
     const windowStart = new Date(now.getTime() - windowSeconds * 1000);
-    
+
     const { count } = await supabase
-      .from("rate_limits")
-      .select("*", { count: "exact", head: true })
-      .eq("key", key)
-      .gte("timestamp", windowStart.toISOString());
-    
+      .from('rate_limits')
+      .select('*', { count: 'exact', head: true })
+      .eq('key', key)
+      .gte('timestamp', windowStart.toISOString());
+
     return count || 0;
   } catch (error) {
-    console.error("Rate limit check failed:", error);
+    console.error('Rate limit check failed:', error);
     return 0; // Allow request if rate limiting fails
   }
 }
@@ -66,7 +70,7 @@ export async function logRunTelemetry(data: {
   evaluation?: any;
 }): Promise<void> {
   await logEvent({
-    event: "module_run_completed",
+    event: 'module_run_completed',
     orgId: data.orgId,
     userId: data.userId,
     payload: {
@@ -74,11 +78,13 @@ export async function logRunTelemetry(data: {
       moduleId: data.moduleId,
       parameters: data.parameters,
       telemetry: data.telemetry,
-      evaluation: data.evaluation ? {
-        scores: data.evaluation.scores,
-        feedback: data.evaluation.feedback
-      } : null
-    }
+      evaluation: data.evaluation
+        ? {
+            scores: data.evaluation.scores,
+            feedback: data.evaluation.feedback,
+          }
+        : null,
+    },
   });
 }
 
@@ -87,10 +93,10 @@ export const telemetry = {
   trackEvent: logEvent,
   trackGlitchProtocol: async (metrics: any) => {
     await logEvent({
-      event: "glitch_protocol",
-      orgId: "system",
-      userId: "system",
-      payload: metrics
+      event: 'glitch_protocol',
+      orgId: 'system',
+      userId: 'system',
+      payload: metrics,
     });
-  }
+  },
 };

@@ -10,11 +10,11 @@ export interface TelemetryEvent {
 // Mock telemetry engine for client-side
 export const telemetry = {
   trackEvent: (event: string, category: string, data: Record<string, any> = {}) => {
-    console.log("[Telemetry]", event, category, data);
+    console.log('[Telemetry]', event, category, data);
   },
   trackGlitchProtocol: (metrics: any) => {
-    console.log("[Glitch Protocol]", metrics);
-  }
+    console.log('[Glitch Protocol]', metrics);
+  },
 };
 
 export async function logEventClient(event: TelemetryEvent): Promise<void> {
@@ -23,21 +23,27 @@ export async function logEventClient(event: TelemetryEvent): Promise<void> {
     await fetch('/api/telemetry', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(event)
+      body: JSON.stringify(event),
     });
   } catch (error) {
-    console.error("Failed to log telemetry event:", error);
+    console.error('Failed to log telemetry event:', error);
     // Don't throw - telemetry failures shouldn't break main functionality
   }
 }
 
-export async function checkRateLimitClient(key: string, maxRequests: number, windowSeconds: number): Promise<number> {
+export async function checkRateLimitClient(
+  key: string,
+  maxRequests: number,
+  windowSeconds: number
+): Promise<number> {
   try {
-    const response = await fetch(`/api/rate-limit?key=${key}&max=${maxRequests}&window=${windowSeconds}`);
+    const response = await fetch(
+      `/api/rate-limit?key=${key}&max=${maxRequests}&window=${windowSeconds}`
+    );
     const data = await response.json();
     return data.count || 0;
   } catch (error) {
-    console.error("Rate limit check failed:", error);
+    console.error('Rate limit check failed:', error);
     return 0; // Allow request if rate limiting fails
   }
 }

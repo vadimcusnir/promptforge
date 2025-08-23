@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { useQuoteFocus } from "@/lib/quote-focus";
+import { ReactNode } from 'react';
+import { useQuoteFocus } from '@/lib/quote-focus';
 
 interface QuoteBlockProps {
   children: ReactNode;
@@ -18,7 +18,7 @@ interface QuoteBlockProps {
  * - Semantic blockquote structure
  * - CSS class integration for custom styling
  */
-export function QuoteBlock({ children, className = "" }: QuoteBlockProps) {
+export function QuoteBlock({ children, className = '' }: QuoteBlockProps) {
   const { active, set } = useQuoteFocus();
 
   const handleMouseEnter = () => {
@@ -36,7 +36,7 @@ export function QuoteBlock({ children, className = "" }: QuoteBlockProps) {
     <blockquote
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      data-focus={active ? "on" : "off"}
+      data-focus={active ? 'on' : 'off'}
       className={combinedClassName}
     >
       {children}
@@ -57,6 +57,6 @@ export function useQuoteProps() {
   return {
     onMouseEnter: () => set(true),
     onMouseLeave: () => set(false),
-    "data-focus": active ? "on" : "off",
+    'data-focus': active ? 'on' : 'off',
   };
 }

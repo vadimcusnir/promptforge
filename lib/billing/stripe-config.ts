@@ -34,7 +34,7 @@ export const STRIPE_PRODUCTS: StripeProduct[] = [
     name: 'Pilot',
     prices: {
       monthly: 'price_pilot_monthly', // Replace with actual price ID
-      annual: 'price_pilot_annual',   // Replace with actual price ID
+      annual: 'price_pilot_annual', // Replace with actual price ID
     },
   },
   {
@@ -43,7 +43,7 @@ export const STRIPE_PRODUCTS: StripeProduct[] = [
     name: 'Pro',
     prices: {
       monthly: 'price_pro_monthly', // Replace with actual price ID
-      annual: 'price_pro_annual',   // Replace with actual price ID
+      annual: 'price_pro_annual', // Replace with actual price ID
     },
   },
   {
@@ -52,7 +52,7 @@ export const STRIPE_PRODUCTS: StripeProduct[] = [
     name: 'Enterprise',
     prices: {
       monthly: 'price_enterprise_monthly', // Replace with actual price ID
-      annual: 'price_enterprise_annual',   // Replace with actual price ID
+      annual: 'price_enterprise_annual', // Replace with actual price ID
     },
   },
 ];
@@ -103,7 +103,7 @@ export const PRICE_TO_PLAN_MAP = new Map<string, 'pilot' | 'pro' | 'enterprise'>
 export const PRICE_TO_ADDON_MAP = new Map<string, string>();
 
 // Populate plan mappings
-STRIPE_PRODUCTS.forEach((product) => {
+STRIPE_PRODUCTS.forEach(product => {
   if (product.prices.monthly) {
     PRICE_TO_PLAN_MAP.set(product.prices.monthly, product.planCode);
   }
@@ -113,7 +113,7 @@ STRIPE_PRODUCTS.forEach((product) => {
 });
 
 // Populate addon mappings
-STRIPE_ADDONS.forEach((addon) => {
+STRIPE_ADDONS.forEach(addon => {
   if (addon.prices.monthly) {
     PRICE_TO_ADDON_MAP.set(addon.prices.monthly, addon.addonCode);
   }
@@ -133,7 +133,9 @@ export function mapPriceToAddonCode(priceId: string): string | null {
   return PRICE_TO_ADDON_MAP.get(priceId) || null;
 }
 
-export function getProductByPlanCode(planCode: 'pilot' | 'pro' | 'enterprise'): StripeProduct | null {
+export function getProductByPlanCode(
+  planCode: 'pilot' | 'pro' | 'enterprise'
+): StripeProduct | null {
   return STRIPE_PRODUCTS.find(p => p.planCode === planCode) || null;
 }
 
@@ -153,7 +155,7 @@ export function validateStripeEnvironment(): void {
   ];
 
   const missing = required.filter(key => !process.env[key]);
-  
+
   if (missing.length > 0) {
     throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
   }

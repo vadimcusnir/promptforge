@@ -1,4 +1,4 @@
-// PromptForge v3 - Industry Packs System
+// PROMPTFORGE™ v3 - Industry Packs System
 // Packs specializate pentru domenii cu template-uri, compliance și best practices
 
 import { readFileSync } from 'fs';
@@ -112,8 +112,16 @@ class IndustryPacksManager {
     try {
       const configDir = join(process.cwd(), 'config', 'domains');
       const domains: Domain[] = [
-        'healthcare', 'fintech', 'legal', 'cybersecurity', 'aiml', 
-        'web3', 'ecommerce', 'saas', 'consulting', 'education'
+        'healthcare',
+        'fintech',
+        'legal',
+        'cybersecurity',
+        'aiml',
+        'web3',
+        'ecommerce',
+        'saas',
+        'consulting',
+        'education',
       ];
 
       for (const domain of domains) {
@@ -128,7 +136,7 @@ class IndustryPacksManager {
             templates: this.generateTemplatesForDomain(domain, domainConfig),
             compliance: this.generateComplianceForDomain(domain, domainConfig),
             best_practices: this.generateBestPracticesForDomain(domain, domainConfig),
-            premium_features: this.generatePremiumFeaturesForDomain(domain)
+            premium_features: this.generatePremiumFeaturesForDomain(domain),
           };
 
           this.packs.set(domain, industryPack);
@@ -140,7 +148,6 @@ class IndustryPacksManager {
 
       this.initialized = true;
       console.log(`Initialized ${this.packs.size} industry packs`);
-
     } catch (error) {
       console.error('Failed to initialize industry packs:', error);
       throw error;
@@ -164,7 +171,10 @@ class IndustryPacksManager {
   }
 
   // Verifică dacă un pack este disponibil pentru utilizator
-  public isPackAvailableForUser(domain: Domain, userEntitlements: Record<string, boolean>): {
+  public isPackAvailableForUser(
+    domain: Domain,
+    userEntitlements: Record<string, boolean>
+  ): {
     available: boolean;
     missing_entitlements: string[];
     upgrade_required: 'pro' | 'enterprise' | null;
@@ -190,7 +200,7 @@ class IndustryPacksManager {
     return {
       available: missingEntitlements.length === 0,
       missing_entitlements: missingEntitlements,
-      upgrade_required: upgradeRequired
+      upgrade_required: upgradeRequired,
     };
   }
 
@@ -202,29 +212,29 @@ class IndustryPacksManager {
         name: `${config.industry} Strategic Assessment`,
         description: `Comprehensive strategic analysis for ${config.industry} organizations`,
         difficulty: 'intermediate',
-        estimated_time_hours: 2
+        estimated_time_hours: 2,
       },
       {
         category: 'implementation',
         name: `${config.industry} Implementation Playbook`,
         description: `Step-by-step implementation guide for ${config.industry} initiatives`,
         difficulty: 'advanced',
-        estimated_time_hours: 4
+        estimated_time_hours: 4,
       },
       {
         category: 'compliance',
         name: `${config.industry} Compliance Checklist`,
         description: `Regulatory compliance verification for ${config.industry}`,
         difficulty: 'expert',
-        estimated_time_hours: 3
+        estimated_time_hours: 3,
       },
       {
         category: 'analysis',
         name: `${config.industry} Performance Analysis`,
         description: `KPI analysis and optimization recommendations for ${config.industry}`,
         difficulty: 'intermediate',
-        estimated_time_hours: 1.5
-      }
+        estimated_time_hours: 1.5,
+      },
     ];
 
     return baseTemplates.map((template, index) => ({
@@ -238,38 +248,45 @@ class IndustryPacksManager {
       template_7d: {
         domain,
         ...config.defaults_7d,
-        output_format: config.default_output_format as any
+        output_format: config.default_output_format as any,
       },
       prompt_template: this.generatePromptTemplate(domain, config, template.category!),
       example_outputs: this.generateExampleOutputs(config.default_output_format),
-      success_metrics: config.kpis.slice(0, 3)
+      success_metrics: config.kpis.slice(0, 3),
     }));
   }
 
   // Generează compliance requirements
-  private generateComplianceForDomain(domain: Domain, config: DomainConfig): ComplianceRequirements {
+  private generateComplianceForDomain(
+    domain: Domain,
+    config: DomainConfig
+  ): ComplianceRequirements {
     const baseCompliance: ComplianceRequirements = {
       regulations: config.compliance_notes.split(', '),
       mandatory_disclaimers: [
         `This content is for informational purposes only and does not constitute professional ${config.industry.toLowerCase()} advice.`,
         'Consult with qualified professionals before making business decisions.',
-        'Compliance requirements may vary by jurisdiction.'
+        'Compliance requirements may vary by jurisdiction.',
       ],
-      data_retention_days: config.risk_level === 'high' ? 2555 : config.risk_level === 'medium' ? 1095 : 365, // 7 years, 3 years, 1 year
-      audit_requirements: config.risk_level === 'high' ? [
-        'All prompt inputs and outputs must be logged',
-        'PII must be anonymized in audit logs', 
-        'Compliance officer approval required for sensitive content',
-        'Regular compliance audits required'
-      ] : [
-        'Standard audit logging enabled',
-        'PII anonymization applied'
-      ],
+      data_retention_days:
+        config.risk_level === 'high' ? 2555 : config.risk_level === 'medium' ? 1095 : 365, // 7 years, 3 years, 1 year
+      audit_requirements:
+        config.risk_level === 'high'
+          ? [
+              'All prompt inputs and outputs must be logged',
+              'PII must be anonymized in audit logs',
+              'Compliance officer approval required for sensitive content',
+              'Regular compliance audits required',
+            ]
+          : ['Standard audit logging enabled', 'PII anonymization applied'],
       restricted_content: this.getRestrictedContentForDomain(domain),
-      required_approvals: config.risk_level === 'high' ? [
-        'Legal team review for compliance-sensitive content',
-        'Domain expert validation for technical accuracy'
-      ] : []
+      required_approvals:
+        config.risk_level === 'high'
+          ? [
+              'Legal team review for compliance-sensitive content',
+              'Domain expert validation for technical accuracy',
+            ]
+          : [],
     };
 
     return baseCompliance;
@@ -285,19 +302,19 @@ class IndustryPacksManager {
         implementation_steps: [
           `Review industry-specific terminology: ${config.jargon.slice(0, 5).join(', ')}`,
           'Validate technical accuracy with domain experts',
-          'Use standardized definitions from industry bodies'
+          'Use standardized definitions from industry bodies',
         ],
         common_pitfalls: [
           'Using outdated or deprecated terminology',
           'Mixing terminology from different domains',
-          'Oversimplifying complex industry concepts'
+          'Oversimplifying complex industry concepts',
         ],
         success_indicators: [
           'Industry experts validate terminology usage',
           'Consistent use of domain-specific language',
-          'High clarity scores in expert reviews'
+          'High clarity scores in expert reviews',
         ],
-        related_kpis: config.kpis.slice(0, 2)
+        related_kpis: config.kpis.slice(0, 2),
       },
       {
         id: `${domain}_bp_2`,
@@ -306,20 +323,20 @@ class IndustryPacksManager {
         implementation_steps: [
           'Identify applicable regulations and standards',
           'Include compliance checkpoints in processes',
-          'Document compliance rationale for decisions'
+          'Document compliance rationale for decisions',
         ],
         common_pitfalls: [
           'Treating compliance as an afterthought',
           'Ignoring jurisdiction-specific requirements',
-          'Insufficient documentation for audit purposes'
+          'Insufficient documentation for audit purposes',
         ],
         success_indicators: [
           'All deliverables pass compliance review',
           'Audit trail is complete and accessible',
-          'Regulatory requirements are addressed proactively'
+          'Regulatory requirements are addressed proactively',
         ],
-        related_kpis: config.kpis.slice(1, 3)
-      }
+        related_kpis: config.kpis.slice(1, 3),
+      },
     ];
   }
 
@@ -332,8 +349,8 @@ class IndustryPacksManager {
         description: `Access to expert-level templates and workflows for ${domain}`,
         required_plan: 'pro',
         entitlement_flag: 'canUseAllModules',
-        value_proposition: `Unlock specialized templates designed by ${domain} experts`
-      }
+        value_proposition: `Unlock specialized templates designed by ${domain} experts`,
+      },
     ];
 
     // Domain-specific premium features
@@ -344,7 +361,7 @@ class IndustryPacksManager {
         description: `Automated compliance checking and documentation for ${domain}`,
         required_plan: 'enterprise',
         entitlement_flag: 'hasAPI',
-        value_proposition: `Reduce compliance overhead with automated checks and reporting`
+        value_proposition: `Reduce compliance overhead with automated checks and reporting`,
       });
     }
 
@@ -354,15 +371,15 @@ class IndustryPacksManager {
   // Helper methods
   private getRequiredEntitlementsForTemplate(domain: Domain, category: string): string[] {
     const baseEntitlements = ['canUseAllModules'];
-    
+
     if (category === 'compliance' || ['healthcare', 'legal', 'fintech'].includes(domain)) {
       baseEntitlements.push('canExportPDF');
     }
-    
+
     if (category === 'strategy' && ['enterprise', 'corporate'].includes(domain)) {
       baseEntitlements.push('hasAPI');
     }
-    
+
     return baseEntitlements;
   }
 
@@ -395,8 +412,8 @@ Focus on practical, actionable guidance that can be immediately implemented by $
     return [
       {
         format: outputFormat,
-        sample: `# Example ${outputFormat} Output\n\nThis is a sample output showing the expected structure and quality...`
-      }
+        sample: `# Example ${outputFormat} Output\n\nThis is a sample output showing the expected structure and quality...`,
+      },
     ];
   }
 
@@ -404,30 +421,30 @@ Focus on practical, actionable guidance that can be immediately implemented by $
     const baseRestrictions = [
       'Personal identifiable information (PII)',
       'Confidential business information',
-      'Unverified claims or advice'
+      'Unverified claims or advice',
     ];
 
     const domainSpecificRestrictions: Record<string, string[]> = {
       healthcare: [
         'Medical diagnosis or treatment advice',
         'Unverified health claims',
-        'Protected health information (PHI)'
+        'Protected health information (PHI)',
       ],
       legal: [
         'Specific legal advice',
         'Attorney-client privileged information',
-        'Case-specific recommendations'
+        'Case-specific recommendations',
       ],
       fintech: [
         'Investment advice',
         'Specific financial recommendations',
-        'Credit or lending decisions'
+        'Credit or lending decisions',
       ],
       cybersecurity: [
         'Specific vulnerability details',
         'Security system configurations',
-        'Threat actor methodologies'
-      ]
+        'Threat actor methodologies',
+      ],
     };
 
     return [...baseRestrictions, ...(domainSpecificRestrictions[domain] || [])];
@@ -445,13 +462,21 @@ export async function getIndustryPack(domain: Domain): Promise<IndustryPack | nu
 
 export async function getAvailablePacksForUser(entitlements: Record<string, boolean>): Promise<{
   available: IndustryPack[];
-  restricted: { pack: IndustryPack; missing_entitlements: string[]; upgrade_required: string | null }[];
+  restricted: {
+    pack: IndustryPack;
+    missing_entitlements: string[];
+    upgrade_required: string | null;
+  }[];
 }> {
   await industryPacks.initialize();
   const allPacks = industryPacks.getAllPacks();
-  
+
   const available: IndustryPack[] = [];
-  const restricted: { pack: IndustryPack; missing_entitlements: string[]; upgrade_required: string | null }[] = [];
+  const restricted: {
+    pack: IndustryPack;
+    missing_entitlements: string[];
+    upgrade_required: string | null;
+  }[] = [];
 
   for (const pack of allPacks) {
     const access = industryPacks.isPackAvailableForUser(pack.domain, entitlements);
@@ -461,7 +486,7 @@ export async function getAvailablePacksForUser(entitlements: Record<string, bool
       restricted.push({
         pack,
         missing_entitlements: access.missing_entitlements,
-        upgrade_required: access.upgrade_required
+        upgrade_required: access.upgrade_required,
       });
     }
   }
@@ -469,7 +494,10 @@ export async function getAvailablePacksForUser(entitlements: Record<string, bool
   return { available, restricted };
 }
 
-export async function getTemplatesForDomain(domain: Domain, userEntitlements: Record<string, boolean>): Promise<{
+export async function getTemplatesForDomain(
+  domain: Domain,
+  userEntitlements: Record<string, boolean>
+): Promise<{
   available: ModuleTemplate[];
   restricted: ModuleTemplate[];
 }> {

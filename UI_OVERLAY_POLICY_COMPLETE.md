@@ -79,7 +79,7 @@ npm run test:overlay-policy
 ### Simple Quote (Recommended)
 
 ```tsx
-import { QuoteBlock } from "@/components/ui/QuoteBlock";
+import { QuoteBlock } from '@/components/ui/QuoteBlock';
 
 <QuoteBlock>"Your quote content here"</QuoteBlock>;
 ```
@@ -87,7 +87,7 @@ import { QuoteBlock } from "@/components/ui/QuoteBlock";
 ### Manual Control
 
 ```tsx
-import { useQuoteFocus } from "@/lib/quote-focus";
+import { useQuoteFocus } from '@/lib/quote-focus';
 
 const { active, set } = useQuoteFocus();
 // set(true) to activate, set(false) to deactivate

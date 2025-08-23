@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getServerSession } from 'next-auth';
 import { createClient } from '@supabase/supabase-js';
-import { getProductByPlanCode, validateStripeEnvironment } from '@/lib/billing/stripe-config';
+import { getProductByPlanCode } from '@/lib/billing/stripe-config';
 
 // Initialize clients only when needed
 let stripeInstance: Stripe | null = null;
-let supabaseInstance: any = null;
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
 function getStripe(): Stripe {
   if (!stripeInstance) {
@@ -25,11 +25,11 @@ function getSupabase() {
   if (!supabaseInstance) {
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE;
-    
+
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
       throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE environment variables are required');
     }
-    
+
     supabaseInstance = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
       auth: {
         autoRefreshToken: false,
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   try {
     // Get current session
     const session = await getServerSession();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -67,15 +67,21 @@ export async function POST(req: NextRequest) {
 
     // Validate request
     if (!orgId || !planCode || !billingCycle) {
-      return NextResponse.json({ 
-        error: 'Missing required fields: orgId, planCode, billingCycle' 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Missing required fields: orgId, planCode, billingCycle',
+        },
+        { status: 400 }
+      );
     }
 
     if (planCode === 'pilot') {
-      return NextResponse.json({ 
-        error: 'Cannot create checkout for pilot plan' 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Cannot create checkout for pilot plan',
+        },
+        { status: 400 }
+      );
     }
 
     // Verify user is admin of the organization
@@ -87,24 +93,33 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (memberError || !membership || !['owner', 'admin'].includes(membership.role)) {
-      return NextResponse.json({ 
-        error: 'Not authorized to manage billing for this organization' 
-      }, { status: 403 });
+      return NextResponse.json(
+        {
+          error: 'Not authorized to manage billing for this organization',
+        },
+        { status: 403 }
+      );
     }
 
     // Get Stripe product configuration
     const product = getProductByPlanCode(planCode);
     if (!product) {
-      return NextResponse.json({ 
-        error: `Unknown plan: ${planCode}` 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: `Unknown plan: ${planCode}`,
+        },
+        { status: 400 }
+      );
     }
 
     const priceId = billingCycle === 'annual' ? product.prices.annual : product.prices.monthly;
     if (!priceId) {
-      return NextResponse.json({ 
-        error: `No ${billingCycle} price configured for ${planCode}` 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: `No ${billingCycle} price configured for ${planCode}`,
+        },
+        { status: 400 }
+      );
     }
 
     // Check for existing subscription
@@ -129,14 +144,15 @@ export async function POST(req: NextRequest) {
     }
 
     // Determine checkout mode
-    const isUpgrade = existingSubscription && 
-      existingSubscription.status === 'active' && 
+    const isUpgrade =
+      existingSubscription &&
+      existingSubscription.status === 'active' &&
       existingSubscription.stripe_subscription_id;
 
     if (isUpgrade) {
       // For upgrades, we'll create a new subscription and cancel the old one
       // This is simpler than prorating, but you could implement prorating here
-      
+
       const checkoutSession = await getStripe().checkout.sessions.create({
         customer: customerId,
         mode: 'subscription',
@@ -207,21 +223,14 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ url: checkoutSession.url });
     }
-
   } catch (error) {
     console.error('[Billing Checkout] Error:', error);
-    
+
     if (error instanceof Stripe.errors.StripeError) {
-      return NextResponse.json(
-        { error: `Stripe error: ${error.message}` },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: `Stripe error: ${error.message}` }, { status: 400 });
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -231,7 +240,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -252,9 +261,12 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (memberError || !membership) {
-      return NextResponse.json({ 
-        error: 'Not a member of this organization' 
-      }, { status: 403 });
+      return NextResponse.json(
+        {
+          error: 'Not a member of this organization',
+        },
+        { status: 403 }
+      );
     }
 
     // Get subscription info
@@ -264,23 +276,23 @@ export async function GET(req: NextRequest) {
       .eq('org_id', orgId)
       .single();
 
-    if (subError && subError.code !== 'PGRST116') { // Not found is OK
+    if (subError && subError.code !== 'PGRST116') {
+      // Not found is OK
       console.error('[Billing Info] Error fetching subscription:', subError);
-      return NextResponse.json({ 
-        error: 'Failed to fetch subscription' 
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          error: 'Failed to fetch subscription',
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
       subscription: subscription || null,
       canManageBilling: ['owner', 'admin'].includes(membership.role),
     });
-
   } catch (error) {
     console.error('[Billing Info] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

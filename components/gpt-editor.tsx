@@ -1,34 +1,22 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import {
-  simulateGPTEditing,
-  type GPTEditResult,
-  type GPTEditOptions,
-} from "@/lib/gpt-editor";
-import type { GeneratedPrompt } from "@/types/promptforge";
-import {
-  Bot,
-  Zap,
-  CheckCircle,
-  Clock,
-  TrendingUp,
-  Copy,
-  Download,
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+} from '@/components/ui/select';
+import { simulateGPTEditing, type GPTEditResult, type GPTEditOptions } from '@/lib/gpt-editor';
+import type { GeneratedPrompt } from '@/types/promptforge';
+import { Bot, Zap, CheckCircle, Clock, TrendingUp, Copy } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface GPTEditorProps {
   generatedPrompt: GeneratedPrompt | null;
@@ -38,19 +26,22 @@ interface GPTEditorProps {
 export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
   const [editResult, setEditResult] = useState<GPTEditResult | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [options, setOptions] = useState<GPTEditOptions>({
-    focus: "comprehensive",
-    tone: "professional",
-    length: "detailed",
+  const [options, setOptions] = useState({
+    focus: 'comprehensive' as const,
+    tone: 'professional' as const,
+    length: 'detailed' as const,
+    model: 'gpt-4o' as const,
+    temperature: 0.7,
+    maxTokens: 4000,
   });
   const { toast } = useToast();
 
   const handleOptimizePrompt = async () => {
     if (!generatedPrompt) {
       toast({
-        title: "Error",
-        description: "No prompt to optimize!",
-        variant: "destructive",
+        title: 'Error',
+        description: 'No prompt to optimize!',
+        variant: 'destructive',
       });
       return;
     }
@@ -63,14 +54,14 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
       onEditComplete?.(result);
 
       toast({
-        title: "Prompt optimized successfully!",
+        title: 'Prompt optimized successfully!',
         description: `Confidence: ${result.confidence}% | Time: ${result.processingTime}ms`,
       });
     } catch (error) {
       toast({
-        title: "Optimization error",
-        description: "Could not optimize prompt. Please try again.",
-        variant: "destructive",
+        title: 'Optimization error',
+        description: 'Could not optimize prompt. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsEditing(false);
@@ -83,24 +74,24 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
     try {
       await navigator.clipboard.writeText(editResult.editedPrompt);
       toast({
-        title: "Copied to clipboard!",
-        description: "Optimized prompt was copied successfully.",
+        title: 'Copied to clipboard!',
+        description: 'Optimized prompt was copied successfully.',
       });
     } catch (error) {
       toast({
-        title: "Copy error",
-        description: "Could not copy prompt.",
-        variant: "destructive",
+        title: 'Copy error',
+        description: 'Could not copy prompt.',
+        variant: 'destructive',
       });
     }
   };
 
-  const handleDownloadEdited = () => {
+  const handleDownload = () => {
     if (!editResult) return;
 
-    const blob = new Blob([editResult.editedPrompt], { type: "text/plain" });
+    const blob = new Blob([editResult.editedPrompt], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = `prompt_optimized_${Date.now()}.txt`;
     document.body.appendChild(a);
@@ -109,8 +100,8 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
     URL.revokeObjectURL(url);
 
     toast({
-      title: "Prompt downloaded!",
-      description: "Optimized prompt was downloaded successfully.",
+      title: 'Prompt downloaded!',
+      description: 'Optimized prompt was downloaded successfully.',
     });
   };
 
@@ -131,70 +122,61 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
 
       {/* Options Panel */}
       <div className="mb-6 p-4 glass-strong rounded-lg">
-        <h4 className="font-semibold text-foreground mb-3">
-          Optimization Options
-        </h4>
+        <h4 className="font-semibold text-foreground mb-3">Optimization Options</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Focus
-            </label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Focus</label>
             <Select
               value={options.focus}
-              onValueChange={(value: any) =>
+              onValueChange={(value: 'comprehensive' | 'focused' | 'minimal') =>
                 setOptions({ ...options, focus: value })
               }
             >
-              <SelectTrigger className="glass-effect">
+              <SelectTrigger className="industrial-input">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="clarity">Clarity</SelectItem>
-                <SelectItem value="structure">Structure</SelectItem>
-                <SelectItem value="specificity">Specificity</SelectItem>
                 <SelectItem value="comprehensive">Comprehensive</SelectItem>
+                <SelectItem value="focused">Focused</SelectItem>
+                <SelectItem value="minimal">Minimal</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Tone
-            </label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Tone</label>
             <Select
               value={options.tone}
-              onValueChange={(value: any) =>
+              onValueChange={(value: 'professional' | 'casual' | 'creative') =>
                 setOptions({ ...options, tone: value })
               }
             >
-              <SelectTrigger className="glass-effect">
+              <SelectTrigger className="industrial-input">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="professional">Professional</SelectItem>
-                <SelectItem value="technical">Technical</SelectItem>
-                <SelectItem value="conversational">Conversational</SelectItem>
+                <SelectItem value="casual">Casual</SelectItem>
+                <SelectItem value="creative">Creative</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Length
-            </label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Length</label>
             <Select
               value={options.length}
-              onValueChange={(value: any) =>
+              onValueChange={(value: 'detailed' | 'concise' | 'expanded') =>
                 setOptions({ ...options, length: value })
               }
             >
-              <SelectTrigger className="glass-effect">
+              <SelectTrigger className="industrial-input">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="concise">Concise</SelectItem>
                 <SelectItem value="detailed">Detailed</SelectItem>
-                <SelectItem value="comprehensive">Comprehensive</SelectItem>
+                <SelectItem value="concise">Concise</SelectItem>
+                <SelectItem value="expanded">Expanded</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -232,14 +214,7 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
               Copy Optimized
             </Button>
 
-            <Button
-              variant="outline"
-              onClick={handleDownloadEdited}
-              className="glass-effect bg-transparent"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Download Optimized
-            </Button>
+            <Button variant="outline" className="glass-effect bg-transparent"></Button>
           </>
         )}
       </div>
@@ -249,13 +224,10 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
         <div className="mb-6 p-4 glass-strong rounded-lg border-l-4 border-primary">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-4 h-4 animate-spin text-primary" />
-            <span className="font-semibold text-foreground">
-              Processing with GPT-4o...
-            </span>
+            <span className="font-semibold text-foreground">Processing with GPT-4o...</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            Analyzing structure, optimizing clarity and improving prompt
-            executability...
+            Analyzing structure, optimizing clarity and improving prompt executability...
           </p>
         </div>
       )}
@@ -265,16 +237,12 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
         <div className="mb-6 p-4 glass-strong rounded-lg">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle className="w-4 h-4 text-green-400" />
-            <h4 className="font-semibold text-foreground">
-              Optimization Complete
-            </h4>
+            <h4 className="font-semibold text-foreground">Optimization Complete</h4>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-400">
-                {editResult.confidence}%
-              </div>
+              <div className="text-2xl font-bold text-green-400">{editResult.confidence}%</div>
               <div className="text-xs text-muted-foreground">Confidence</div>
             </div>
             <div className="text-center">
@@ -287,16 +255,12 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
               <div className="text-2xl font-bold text-purple-400">
                 {editResult.processingTime}ms
               </div>
-              <div className="text-xs text-muted-foreground">
-                Processing Time
-              </div>
+              <div className="text-xs text-muted-foreground">Processing Time</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-amber-400">
                 {Math.round(
-                  (editResult.editedPrompt.length /
-                    editResult.originalPrompt.length) *
-                    100,
+                  (editResult.editedPrompt.length / editResult.originalPrompt.length) * 100
                 )}
                 %
               </div>
@@ -305,9 +269,7 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
           </div>
 
           <div className="mb-4">
-            <h5 className="font-semibold text-foreground mb-2">
-              Applied Improvements:
-            </h5>
+            <h5 className="font-semibold text-foreground mb-2">Applied Improvements:</h5>
             <div className="space-y-1">
               {editResult.improvements.map((improvement, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
@@ -334,7 +296,7 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
             )}
           </h4>
           <Textarea
-            value={generatedPrompt?.prompt || ""}
+            value={generatedPrompt?.prompt || ''}
             placeholder="Original prompt will appear here..."
             className="min-h-[400px] font-mono text-sm glass-effect"
             readOnly
@@ -351,7 +313,7 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
             )}
           </h4>
           <Textarea
-            value={editResult?.editedPrompt || ""}
+            value={editResult?.editedPrompt || ''}
             placeholder="Optimized prompt will appear here after processing..."
             className="min-h-[400px] font-mono text-sm glass-effect border-primary/50"
             readOnly

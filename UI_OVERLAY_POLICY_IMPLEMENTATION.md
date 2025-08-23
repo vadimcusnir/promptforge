@@ -10,32 +10,28 @@ Complete implementation of the UI Overlay Policy as a Single Source of Truth (SS
 policies:
   ui_overlays:
     enabled: true
-    target_selector: "#bg-overlay"
+    target_selector: '#bg-overlay'
     route_class_map:
-      "/": "route-marketing"
-      "/generator": "route-generator"
-      "/dashboard": "route-dashboard"
+      '/': 'route-marketing'
+      '/generator': 'route-generator'
+      '/dashboard': 'route-dashboard'
     state_class_map:
-      quote_active: "quote-active"
-      quote_focus: "quote-focus"
+      quote_active: 'quote-active'
+      quote_focus: 'quote-focus'
     diagnostics:
-      log_level: "warn" # no console.log in prod
+      log_level: 'warn' # no console.log in prod
     performance:
       hardware_accelerate: true
       respect_reduced_motion: true
     css_vars:
       route_marketing:
-        {
-          "--overlay-gradient": "linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.7))",
-        }
+        { '--overlay-gradient': 'linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.7))' }
       route_generator:
         {
-          "--overlay-gradient": "radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.0), rgba(0,0,0,.6))",
+          '--overlay-gradient': 'radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.0), rgba(0,0,0,.6))',
         }
       route_dashboard:
-        {
-          "--overlay-gradient": "linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.65))",
-        }
+        { '--overlay-gradient': 'linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.65))' }
 
 acceptance:
   ui_overlays:
@@ -119,25 +115,13 @@ Key features:
 
 ```css
 .route-generator {
-  --overlay-gradient: radial-gradient(
-    60% 60% at 50% 40%,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.6)
-  );
+  --overlay-gradient: radial-gradient(60% 60% at 50% 40%, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
 }
 .route-marketing {
-  --overlay-gradient: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.7)
-  );
+  --overlay-gradient: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
 }
 .route-dashboard {
-  --overlay-gradient: linear-gradient(
-    160deg,
-    rgba(0, 0, 0, 0.05),
-    rgba(0, 0, 0, 0.65)
-  );
+  --overlay-gradient: linear-gradient(160deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.65));
 }
 ```
 
@@ -172,8 +156,8 @@ Key features:
 ## 4. Integration (`app/ClientRootLayout.tsx`)
 
 ```tsx
-import { QuoteFocusProvider } from "@/lib/quote-focus";
-import { OverlayController } from "@/components/OverlayController";
+import { QuoteFocusProvider } from '@/lib/quote-focus';
+import { OverlayController } from '@/components/OverlayController';
 
 export default function ClientRootLayout({ children }) {
   return (
@@ -230,37 +214,29 @@ Comprehensive test suite covering all acceptance criteria:
 ### Basic Quote Usage
 
 ```tsx
-import { QuoteBlock } from "@/components/ui/QuoteBlock";
+import { QuoteBlock } from '@/components/ui/QuoteBlock';
 
 function MyComponent() {
-  return (
-    <QuoteBlock>
-      "This quote automatically triggers overlay focus on hover"
-    </QuoteBlock>
-  );
+  return <QuoteBlock>"This quote automatically triggers overlay focus on hover"</QuoteBlock>;
 }
 ```
 
 ### Manual Control
 
 ```tsx
-import { useQuoteFocus } from "@/lib/quote-focus";
+import { useQuoteFocus } from '@/lib/quote-focus';
 
 function MyComponent() {
   const { active, set } = useQuoteFocus();
 
-  return (
-    <button onClick={() => set(!active)}>
-      {active ? "Deactivate" : "Activate"} Focus
-    </button>
-  );
+  return <button onClick={() => set(!active)}>{active ? 'Deactivate' : 'Activate'} Focus</button>;
 }
 ```
 
 ### Custom Quote Implementation
 
 ```tsx
-import { useQuoteProps } from "@/components/ui/QuoteBlock";
+import { useQuoteProps } from '@/components/ui/QuoteBlock';
 
 function CustomQuote() {
   const quoteProps = useQuoteProps();

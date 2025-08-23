@@ -2,12 +2,22 @@
   "industry": "Education",
   "slug": "education",
   "jargon": [
-    "LMS", "blended learning", "cohort-based", "microlearning", 
-    "gamification", "learning outcomes", "adaptive learning", "student retention"
+    "LMS",
+    "blended learning",
+    "cohort-based",
+    "microlearning",
+    "gamification",
+    "learning outcomes",
+    "adaptive learning",
+    "student retention"
   ],
   "kpis": [
-    "engagement_rate", "completion_rate", "knowledge_retention", 
-    "student_satisfaction", "dropout_rate", "learning_outcome_improvement"
+    "engagement_rate",
+    "completion_rate",
+    "knowledge_retention",
+    "student_satisfaction",
+    "dropout_rate",
+    "learning_outcome_improvement"
   ],
   "compliance_notes": "FERPA (US), GDPR (EU students), Accessibility (WCAG, ADA), SCORM/xAPI standards",
   "style_bias": "narativ, gamified, empatic, rațional",
@@ -18,7 +28,7 @@
     "urgency": "planned",
     "complexity": "standard",
     "resources": "lean_team",
-    "application": "training", 
+    "application": "training",
     "output": ["playbook", "spec"]
   },
   "guardrails": [
@@ -31,9 +41,9 @@
   ],
   "evaluation_weights": {
     "clarity": 0.35,
-    "execution": 0.30,
+    "execution": 0.3,
     "ambiguity_inv": 0.15,
-    "business_fit": 0.20
+    "business_fit": 0.2
   },
   "thresholds": {
     "clarity_min": 78,

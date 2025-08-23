@@ -1627,7 +1627,7 @@ LAYERUL DE AUTODEFINIȚIE (XXIII)
 
 1. SELF-DESCRIPTION MODULE
 
-export const AI_IDEI_SELF = {
+export const PromptForge_SELF = {
   name: "PromptForge™",
   type: "semantic cognition engine",
   identity: {

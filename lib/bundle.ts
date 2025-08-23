@@ -1,4 +1,4 @@
-// PromptForge v3 - Bundle Export System
+// PROMPTFORGE™ v3 - Bundle Export System
 // Generează bundle complete cu toate formatele (.txt/.md/.json/.pdf/.zip)
 
 import fs from 'fs';
@@ -53,14 +53,14 @@ export function writeFileSyncEnsure(dir: string, name: string, content: Buffer |
 
 // Generează PDF din Markdown cu branding PromptForge
 export async function makePdfFromMarkdown(
-  md: string, 
-  title: string = 'PromptForge v3',
+  md: string,
+  title: string = 'PROMPTFORGE™ v3',
   watermark?: string
 ): Promise<Buffer> {
   const doc = await PDFDocument.create();
   const font = await doc.embedFont(StandardFonts.Helvetica);
   const boldFont = await doc.embedFont(StandardFonts.HelveticaBold);
-  
+
   let page = doc.addPage();
   const fontSize = 11;
   const titleFontSize = 16;
@@ -74,7 +74,7 @@ export async function makePdfFromMarkdown(
     y,
     size: titleFontSize,
     font: boldFont,
-    color: rgb(0.2, 0.2, 0.8)
+    color: rgb(0.2, 0.2, 0.8),
   });
   y -= titleFontSize + 20;
 
@@ -86,14 +86,14 @@ export async function makePdfFromMarkdown(
       y: page.getHeight() - margin - titleFontSize - 10,
       size: watermarkFontSize,
       font: boldFont,
-      color: rgb(0.8, 0.2, 0.2)
+      color: rgb(0.8, 0.2, 0.2),
     });
     y -= watermarkFontSize + 10;
   }
 
   // Content din Markdown
   const lines = md.split('\n');
-  
+
   for (const line of lines) {
     // Handle headers
     if (line.startsWith('# ')) {
@@ -132,7 +132,7 @@ export async function makePdfFromMarkdown(
     else {
       y -= fontSize + 4;
     }
-    
+
     // Check page break
     if (y < margin) {
       page = doc.addPage();
@@ -148,7 +148,7 @@ export async function makePdfFromMarkdown(
       y: margin - 20,
       size: 9,
       font,
-      color: rgb(0.5, 0.5, 0.5)
+      color: rgb(0.5, 0.5, 0.5),
     });
   });
 
@@ -164,7 +164,7 @@ function splitTextByWidth(text: string, font: any, size: number, width: number):
   for (const word of words) {
     const testLine = currentLine ? currentLine + ' ' + word : word;
     const testWidth = font.widthOfTextAtSize(testLine, size);
-    
+
     if (testWidth <= width) {
       currentLine = testLine;
     } else {
@@ -174,11 +174,11 @@ function splitTextByWidth(text: string, font: any, size: number, width: number):
       currentLine = word;
     }
   }
-  
+
   if (currentLine) {
     lines.push(currentLine);
   }
-  
+
   return lines.length > 0 ? lines : [''];
 }
 
@@ -213,20 +213,20 @@ export function makeManifest(opts: {
   // Calculează artifacts pentru fișierele existente
   for (const fileName of existingFiles) {
     if (!config.artifacts.includes(fileName)) continue;
-    
+
     const filePath = path.join(opts.outDir, fileName);
     const buffer = fs.readFileSync(filePath);
     artifacts.push({
       file: fileName,
       bytes: buffer.length,
-      checksum: sha256(buffer)
+      checksum: sha256(buffer),
     });
   }
 
   // Calculează checksum canonic de bundle
   const canonicalOrder = config.checksum.canonical_order;
   const checksumParts: string[] = [];
-  
+
   for (const fileName of canonicalOrder) {
     const filePath = path.join(opts.outDir, fileName);
     if (fs.existsSync(filePath)) {
@@ -234,10 +234,9 @@ export function makeManifest(opts: {
       checksumParts.push(sha256(buffer).replace('sha256:', ''));
     }
   }
-  
-  const bundleChecksum = 'sha256:' + crypto.createHash('sha256')
-    .update(checksumParts.join(''))
-    .digest('hex');
+
+  const bundleChecksum =
+    'sha256:' + crypto.createHash('sha256').update(checksumParts.join('')).digest('hex');
 
   const manifest: BundleManifest = {
     bundle_id: opts.bundle_id,
@@ -250,14 +249,11 @@ export function makeManifest(opts: {
     parameter_set_7d: opts.parameter_set_7d,
     telemetry: opts.telemetry,
     license_notice: opts.license_notice,
-    bundle_checksum: bundleChecksum
+    bundle_checksum: bundleChecksum,
   };
 
   // Scrie manifest.json
-  fs.writeFileSync(
-    path.join(opts.outDir, 'manifest.json'),
-    JSON.stringify(manifest, null, 2)
-  );
+  fs.writeFileSync(path.join(opts.outDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
 
   return manifest;
 }
@@ -270,17 +266,13 @@ export function writeChecksums(outDir: string): void {
   for (const fileName of config.artifacts) {
     const filePath = path.join(outDir, fileName);
     if (!fs.existsSync(filePath)) continue;
-    
+
     const buffer = fs.readFileSync(filePath);
     const hash = sha256(buffer).replace('sha256:', '');
     lines.push(`${hash}  ${fileName}`);
   }
 
-  fs.writeFileSync(
-    path.join(outDir, 'checksum.txt'),
-    lines.join('\n'),
-    'utf-8'
-  );
+  fs.writeFileSync(path.join(outDir, 'checksum.txt'), lines.join('\n'), 'utf-8');
 }
 
 // Creează ZIP bundle pentru Enterprise
@@ -299,7 +291,7 @@ export async function zipBundle(
 
   const content = await zip.generateAsync({ type: 'nodebuffer' });
   const zipName = `${bundleName}.zip`;
-  
+
   // Salvează ZIP în directorul de output
   fs.writeFileSync(path.join(outDir, zipName), content);
 
@@ -325,14 +317,24 @@ export async function generateBundle(params: {
   outputDir: string;
   zipInfo?: { zipName: string; content: Buffer };
 }> {
-  const { 
-    runId, moduleId, orgId, parameterSet7D, promptText, mdReport, 
-    jsonPayload, telemetry, licenseNotice, formats, version = '1.0.0', watermark 
+  const {
+    runId,
+    moduleId,
+    orgId,
+    parameterSet7D,
+    promptText,
+    mdReport,
+    jsonPayload,
+    telemetry,
+    licenseNotice,
+    formats,
+    version = '1.0.0',
+    watermark,
   } = params;
 
   // Creează director temporar pentru bundle
   const outputDir = path.join('/tmp', `bundle-${runId}`);
-  
+
   // Curăță directorul dacă există
   if (fs.existsSync(outputDir)) {
     fs.rmSync(outputDir, { recursive: true, force: true });
@@ -343,7 +345,7 @@ export async function generateBundle(params: {
 
   // Generează PDF dacă este în formats
   if (formats.includes('pdf')) {
-    const pdfBuffer = await makePdfFromMarkdown(mdReport, 'PromptForge v3', watermark);
+    const pdfBuffer = await makePdfFromMarkdown(mdReport, 'PROMPTFORGE™ v3', watermark);
     writeFileSyncEnsure(outputDir, 'prompt.pdf', pdfBuffer);
   }
 
@@ -352,7 +354,7 @@ export async function generateBundle(params: {
     ...telemetry,
     // Elimină orice conținut brut
     raw_content: undefined,
-    prompt_content: undefined
+    prompt_content: undefined,
   };
   writeFileSyncEnsure(outputDir, 'telemetry.json', JSON.stringify(safeTelemetry, null, 2));
 
@@ -367,7 +369,7 @@ export async function generateBundle(params: {
     formats,
     parameter_set_7d: parameterSet7D,
     telemetry: safeTelemetry,
-    license_notice: licenseNotice
+    license_notice: licenseNotice,
   });
 
   // Scrie checksum.txt
@@ -383,7 +385,7 @@ export async function generateBundle(params: {
   return {
     manifest,
     outputDir,
-    zipInfo
+    zipInfo,
   };
 }
 
@@ -398,7 +400,10 @@ export function detectMimeType(fileName: string): string {
 }
 
 // Validează că bundle-ul este complet și valid
-export function validateBundle(outputDir: string, expectedFormats: string[]): {
+export function validateBundle(
+  outputDir: string,
+  expectedFormats: string[]
+): {
   isValid: boolean;
   errors: string[];
   files: string[];
@@ -407,8 +412,14 @@ export function validateBundle(outputDir: string, expectedFormats: string[]): {
   const files = fs.readdirSync(outputDir);
 
   // Verifică fișierele obligatorii
-  const requiredFiles = ['prompt.txt', 'prompt.md', 'manifest.json', 'telemetry.json', 'checksum.txt'];
-  
+  const requiredFiles = [
+    'prompt.txt',
+    'prompt.md',
+    'manifest.json',
+    'telemetry.json',
+    'checksum.txt',
+  ];
+
   for (const required of requiredFiles) {
     if (!files.includes(required)) {
       errors.push(`Missing required file: ${required}`);
@@ -437,6 +448,6 @@ export function validateBundle(outputDir: string, expectedFormats: string[]): {
   return {
     isValid: errors.length === 0,
     errors,
-    files
+    files,
   };
 }

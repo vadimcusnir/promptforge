@@ -1,10 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import {
-  ENHANCED_MATRIX_TOKENS,
-  type EnhancedMatrixToken,
-} from "@/lib/data/background-data";
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { ENHANCED_MATRIX_TOKENS, type EnhancedMatrixToken } from '@/lib/data/background-data';
 
 interface MatrixTokenLayerProps {
   className?: string;
@@ -31,7 +28,7 @@ interface ActiveToken extends EnhancedMatrixToken {
 }
 
 export function MatrixTokenLayer({
-  className = "",
+  className = '',
   style,
   tokenCount,
   driftSpeed,
@@ -53,16 +50,14 @@ export function MatrixTokenLayer({
     const { width, height } = rect;
 
     return Array.from({ length: tokenCount }, (_, index) => {
-      const template =
-        ENHANCED_MATRIX_TOKENS[index % ENHANCED_MATRIX_TOKENS.length];
+      const template = ENHANCED_MATRIX_TOKENS[index % ENHANCED_MATRIX_TOKENS.length];
       const token: ActiveToken = {
         id: `token-${index}`,
         ...template,
         x: Math.random() * width,
         y: Math.random() * height,
         opacity:
-          Math.random() *
-            (template.opacityRange[1] - template.opacityRange[0]) +
+          Math.random() * (template.opacityRange[1] - template.opacityRange[0]) +
           template.opacityRange[0],
         scale: 0.8 + Math.random() * 0.4,
         glitchActive: false,
@@ -92,37 +87,27 @@ export function MatrixTokenLayer({
 
       lastFrameTime.current = currentTime;
 
-      setTokens((prevTokens) =>
-        prevTokens.map((token) => {
+      setTokens(prevTokens =>
+        prevTokens.map(token => {
           const timeSinceUpdate = currentTime - token.lastUpdate;
-          const driftMultiplier =
-            driftSpeed * token.speed * (timeSinceUpdate / 1000);
+          const driftMultiplier = driftSpeed * token.speed * (timeSinceUpdate / 1000);
 
           // Drift movement (12-18s cycle)
-          const driftCycle =
-            (currentTime / (15000 + Math.random() * 3000)) % (Math.PI * 2);
+          const driftCycle = (currentTime / (15000 + Math.random() * 3000)) % (Math.PI * 2);
           const newX =
-            token.x +
-            Math.sin(driftCycle + token.animationDelay) *
-              token.jitter *
-              driftMultiplier;
+            token.x + Math.sin(driftCycle + token.animationDelay) * token.jitter * driftMultiplier;
           const newY =
-            token.y +
-            Math.cos(driftCycle + token.animationDelay) *
-              token.jitter *
-              driftMultiplier;
+            token.y + Math.cos(driftCycle + token.animationDelay) * token.jitter * driftMultiplier;
 
           // Opacity oscillation
-          const opacityCycle =
-            (currentTime / (8000 + Math.random() * 4000)) % (Math.PI * 2);
+          const opacityCycle = (currentTime / (8000 + Math.random() * 4000)) % (Math.PI * 2);
           const baseOpacity = Math.sin(opacityCycle) * 0.3 + 0.7;
           const newOpacity = Math.max(
             0.1,
             Math.min(
               1.0,
-              baseOpacity * (token.opacityRange[1] - token.opacityRange[0]) +
-                token.opacityRange[0],
-            ),
+              baseOpacity * (token.opacityRange[1] - token.opacityRange[0]) + token.opacityRange[0]
+            )
           );
 
           // Random glitch effect (50-100ms duration)
@@ -131,13 +116,11 @@ export function MatrixTokenLayer({
             glitchActive = true;
             setTimeout(
               () => {
-                setTokens((prev) =>
-                  prev.map((t) =>
-                    t.id === token.id ? { ...t, glitchActive: false } : t,
-                  ),
+                setTokens(prev =>
+                  prev.map(t => (t.id === token.id ? { ...t, glitchActive: false } : t))
                 );
               },
-              50 + Math.random() * 50,
+              50 + Math.random() * 50
             );
           }
 
@@ -149,12 +132,12 @@ export function MatrixTokenLayer({
             glitchActive,
             lastUpdate: currentTime,
           };
-        }),
+        })
       );
 
       animationRef.current = requestAnimationFrame(animate);
     },
-    [driftSpeed, glitchEnabled, reducedMotion],
+    [driftSpeed, glitchEnabled, reducedMotion]
   );
 
   // Initialize and start animation
@@ -180,8 +163,8 @@ export function MatrixTokenLayer({
       setTokens(newTokens);
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [initializeTokens]);
 
   return (
@@ -190,11 +173,11 @@ export function MatrixTokenLayer({
       className={className}
       style={{
         ...style,
-        transform: "none", // Critical: no transforms
-        willChange: "auto",
+        transform: 'none', // Critical: no transforms
+        willChange: 'auto',
       }}
     >
-      {tokens.map((token) => (
+      {tokens.map(token => (
         <div
           key={token.id}
           className="absolute font-mono text-white/60 select-none pointer-events-none"
@@ -203,15 +186,15 @@ export function MatrixTokenLayer({
             top: `${token.y}px`,
             opacity: token.opacity,
             transform: `scale(${token.scale})`,
-            fontSize: isMobile ? "10px" : "12px",
+            fontSize: isMobile ? '10px' : '12px',
             fontWeight: Math.floor(token.weight * 900),
             textShadow: token.glitchActive
               ? `0 0 5px rgba(0, 255, 127, 0.8), 0 0 10px rgba(255, 90, 36, 0.6)`
-              : "0 0 2px rgba(255, 255, 255, 0.3)",
+              : '0 0 2px rgba(255, 255, 255, 0.3)',
             color: token.glitchActive
               ? `hsl(${Math.random() * 360}, 70%, 60%)`
-              : "rgba(255, 255, 255, 0.6)",
-            willChange: reducedMotion ? "auto" : "transform, opacity",
+              : 'rgba(255, 255, 255, 0.6)',
+            willChange: reducedMotion ? 'auto' : 'transform, opacity',
           }}
         >
           {token.text}

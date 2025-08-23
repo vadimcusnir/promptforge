@@ -7,28 +7,33 @@ Sistemul de billing Stripe → Supabase este complet implementat și gata pentru
 ## 📦 Ce a fost implementat
 
 ### 1. **Database Schema & Migrations**
+
 - ✅ `supabase/migrations/003_billing_entitlements.sql` (schema core)
 - ✅ `supabase/migrations/006_seed_plans.sql` (planuri și feature flags)
 - ✅ Indexuri optimizate pentru performanță
 - ✅ RLS policies pentru securitate
 
 ### 2. **API Endpoints**
+
 - ✅ `/api/webhooks/stripe` - Stripe webhook handler
 - ✅ `/api/entitlements` - Frontend entitlements API
 - ✅ `/api/billing/create-checkout` - Stripe checkout creation
 
 ### 3. **Frontend Components**
+
 - ✅ `EntitlementGate` - Component pentru feature gating
 - ✅ `PaywallModal` - Modal modern pentru upgrade
 - ✅ `PaywallInline` - Paywall compact pentru spații mici
 - ✅ `useEntitlements` - React hook pentru entitlements
 
 ### 4. **Updated Components**
+
 - ✅ `TestEngine` - Actualizat cu EntitlementGate
 - ✅ `ExportBar` - Actualizat cu EntitlementGate
 - ✅ Eliminat dependențele de PremiumGate vechi
 
 ### 5. **Tests & Documentation**
+
 - ✅ Unit tests pentru webhook-uri
 - ✅ Tests pentru entitlements API
 - ✅ E2E tests pentru flow-ul complet
@@ -61,6 +66,7 @@ psql -f supabase/migrations/006_seed_plans.sql
    - Enterprise: $99/lună, $990/an
 
 2. **Actualizează IDs în `lib/billing/stripe-config.ts`:**
+
    ```typescript
    {
      productId: 'prod_REAL_ID', // Înlocuiește cu ID-urile reale
@@ -99,38 +105,42 @@ psql -f supabase/migrations/006_seed_plans.sql
 
 ## 🎯 Feature Matrix Implementat
 
-| Feature | Pilot | Pro | Enterprise |
-|---------|-------|-----|------------|
-| All Modules | ❌ | ✅ | ✅ |
-| GPT Test Real | ❌ | ✅ | ✅ |
-| PDF Export | ❌ | ✅ | ✅ |
-| JSON Export | ❌ | ✅ | ✅ |
-| Bundle ZIP | ❌ | ❌ | ✅ |
-| API Access | ❌ | ❌ | ✅ |
-| Cloud History | ❌ | ✅ | ✅ |
-| Evaluator AI | ❌ | ✅ | ✅ |
-| White Label | ❌ | ❌ | ✅ |
-| Multi-seat | ❌ | ❌ | ✅ |
+| Feature       | Pilot | Pro | Enterprise |
+| ------------- | ----- | --- | ---------- |
+| All Modules   | ❌    | ✅  | ✅         |
+| GPT Test Real | ❌    | ✅  | ✅         |
+| PDF Export    | ❌    | ✅  | ✅         |
+| JSON Export   | ❌    | ✅  | ✅         |
+| Bundle ZIP    | ❌    | ❌  | ✅         |
+| API Access    | ❌    | ❌  | ✅         |
+| Cloud History | ❌    | ✅  | ✅         |
+| Evaluator AI  | ❌    | ✅  | ✅         |
+| White Label   | ❌    | ❌  | ✅         |
+| Multi-seat    | ❌    | ❌  | ✅         |
 
 ## 🔍 Verification Checklist
 
 ### Database
+
 - [ ] Migrările au rulat cu succes
 - [ ] Planurile sunt seeded în tabela `plans`
 - [ ] RLS policies sunt active
 
 ### Stripe
+
 - [ ] Products și prices create
 - [ ] Webhook endpoint configurat
 - [ ] Test events delivery
 
 ### Frontend
+
 - [ ] Entitlements se încarcă corect
 - [ ] Paywalls se afișează pentru features gated
 - [ ] Upgrade flow funcționează
 - [ ] Componente actualizate folosesc EntitlementGate
 
 ### API
+
 - [ ] `/api/entitlements` returnează date corecte
 - [ ] `/api/webhooks/stripe` procesează events
 - [ ] `/api/billing/create-checkout` creează sessions
@@ -138,6 +148,7 @@ psql -f supabase/migrations/006_seed_plans.sql
 ## 🚨 Common Issues & Solutions
 
 ### 1. Webhook Signature Errors
+
 ```bash
 # Verifică STRIPE_WEBHOOK_SECRET în environment
 curl -X POST https://your-domain.com/api/webhooks/stripe \
@@ -145,6 +156,7 @@ curl -X POST https://your-domain.com/api/webhooks/stripe \
 ```
 
 ### 2. Entitlements Nu Se Încarcă
+
 ```typescript
 // Verifică orgId în useEntitlements
 const { entitlements, error } = useEntitlements(currentOrgId);
@@ -152,6 +164,7 @@ console.log('Entitlements error:', error);
 ```
 
 ### 3. Database Connection Issues
+
 ```sql
 -- Verifică conexiunea și permissions
 SELECT * FROM plans;
@@ -161,16 +174,19 @@ SELECT * FROM entitlements_effective_org WHERE org_id = 'test';
 ## 📊 Monitoring
 
 ### Stripe Dashboard
+
 - Webhook delivery success rate
 - Subscription creation/updates
 - Payment success/failures
 
 ### Supabase Dashboard
+
 - API usage și performance
 - Database connections
 - Error logs
 
 ### Application Logs
+
 - Entitlements cache hit rate
 - Paywall conversion rates
 - Feature usage analytics
@@ -187,6 +203,7 @@ După deployment, poți implementa:
 ## 📞 Support
 
 Pentru probleme sau întrebări:
+
 1. Verifică logs în Stripe și Supabase
 2. Rulează tests pentru debugging
 3. Folosește browser dev tools pentru frontend issues

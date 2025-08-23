@@ -3,8 +3,8 @@
  * Logs run summaries without storing raw prompts/inputs
  */
 
-import { createHash } from "crypto";
-import { telemetry } from "@/lib/telemetry";
+import { createHash } from 'crypto';
+import { telemetry } from '@/lib/telemetry';
 
 export interface AuditLogEntry {
   run_id: string;
@@ -14,7 +14,7 @@ export interface AuditLogEntry {
   model: string;
   tokens: number;
   cost: number;
-  verdict: "pass" | "partial_pass" | "fail";
+  verdict: 'pass' | 'partial_pass' | 'fail';
   export_formats: string[];
   content_hash: string;
   timestamp: Date;
@@ -28,7 +28,7 @@ export interface AuditLogFilter {
   module_id?: string;
   date_from?: Date;
   date_to?: Date;
-  verdict?: "pass" | "partial_pass" | "fail";
+  verdict?: 'pass' | 'partial_pass' | 'fail';
   limit?: number;
 }
 
@@ -72,10 +72,10 @@ export class AuditLogger {
     metadata?: Record<string, any>;
   }): void {
     // Determine verdict based on score
-    let verdict: "pass" | "partial_pass" | "fail" = "fail";
+    let verdict: 'pass' | 'partial_pass' | 'fail' = 'fail';
     if (params.score !== undefined) {
-      if (params.score >= 80) verdict = "pass";
-      else if (params.score >= 60) verdict = "partial_pass";
+      if (params.score >= 80) verdict = 'pass';
+      else if (params.score >= 60) verdict = 'partial_pass';
     }
 
     // Hash content without storing raw data
@@ -114,7 +114,7 @@ export class AuditLogger {
     this.persistLog(logEntry);
 
     // Track in telemetry
-    telemetry.trackEvent("audit_log_created", "system", {
+    telemetry.trackEvent('audit_log_created', 'system', {
       run_id: params.run_id,
       org_id: params.org_id,
       module_id: params.module_id,
@@ -125,62 +125,52 @@ export class AuditLogger {
     });
 
     console.log(
-      `[AuditLogger] Logged run ${params.run_id}: ${verdict} (${params.tokens} tokens, $${params.cost.toFixed(4)})`,
+      `[AuditLogger] Logged run ${params.run_id}: ${verdict} (${params.tokens} tokens, $${params.cost.toFixed(4)})`
     );
   }
 
   /**
    * Hash content without storing raw data
    */
-  private hashContent(content: {
-    prompt?: string;
-    input?: string;
-    output?: string;
-  }): string {
-    const combined = [
-      content.prompt || "",
-      content.input || "",
-      content.output || "",
-    ].join("|");
+  private hashContent(content: { prompt?: string; input?: string; output?: string }): string {
+    const combined = [content.prompt || '', content.input || '', content.output || ''].join('|');
 
-    return createHash("sha256").update(combined, "utf8").digest("hex");
+    return createHash('sha256').update(combined, 'utf8').digest('hex');
   }
 
   /**
    * Sanitize metadata to remove PII
    */
-  private sanitizeMetadata(
-    metadata?: Record<string, any>,
-  ): Record<string, any> | undefined {
+  private sanitizeMetadata(metadata?: Record<string, any>): Record<string, any> | undefined {
     if (!metadata) return undefined;
 
     const sanitized: Record<string, any> = {};
 
     // Allow only safe metadata fields
     const allowedFields = [
-      "version",
-      "tier",
-      "feature_flags",
-      "experiment_id",
-      "ab_test_variant",
-      "browser",
-      "os",
-      "device_type",
-      "screen_resolution",
-      "timezone",
-      "request_id",
-      "trace_id",
-      "parent_span_id",
-      "sampling_rate",
+      'version',
+      'tier',
+      'feature_flags',
+      'experiment_id',
+      'ab_test_variant',
+      'browser',
+      'os',
+      'device_type',
+      'screen_resolution',
+      'timezone',
+      'request_id',
+      'trace_id',
+      'parent_span_id',
+      'sampling_rate',
     ];
 
     for (const [key, value] of Object.entries(metadata)) {
       if (allowedFields.includes(key)) {
         // Still sanitize the value to ensure no PII
-        if (typeof value === "string" && value.length > 200) {
+        if (typeof value === 'string' && value.length > 200) {
           sanitized[key] = `${value.substring(0, 200)}...`; // Truncate long strings
-        } else if (typeof value === "object") {
-          sanitized[key] = "[object]"; // Don't store complex objects
+        } else if (typeof value === 'object') {
+          sanitized[key] = '[object]'; // Don't store complex objects
         } else {
           sanitized[key] = value;
         }
@@ -204,10 +194,10 @@ export class AuditLogger {
       // Could also send to external logging service
       // await this.sendToExternalLogger(entry)
     } catch (error) {
-      console.error("[AuditLogger] Failed to persist log entry:", error);
+      console.error('[AuditLogger] Failed to persist log entry:', error);
 
       // Track the failure
-      telemetry.trackError(error as Error, "audit_log_persistence");
+      telemetry.trackError(error as Error, 'audit_log_persistence');
     }
   }
 
@@ -218,23 +208,23 @@ export class AuditLogger {
     let filtered = [...this.logs];
 
     if (filter.org_id) {
-      filtered = filtered.filter((log) => log.org_id === filter.org_id);
+      filtered = filtered.filter(log => log.org_id === filter.org_id);
     }
 
     if (filter.module_id) {
-      filtered = filtered.filter((log) => log.module_id === filter.module_id);
+      filtered = filtered.filter(log => log.module_id === filter.module_id);
     }
 
     if (filter.verdict) {
-      filtered = filtered.filter((log) => log.verdict === filter.verdict);
+      filtered = filtered.filter(log => log.verdict === filter.verdict);
     }
 
     if (filter.date_from) {
-      filtered = filtered.filter((log) => log.timestamp >= filter.date_from!);
+      filtered = filtered.filter(log => log.timestamp >= filter.date_from!);
     }
 
     if (filter.date_to) {
-      filtered = filtered.filter((log) => log.timestamp <= filter.date_to!);
+      filtered = filtered.filter(log => log.timestamp <= filter.date_to!);
     }
 
     // Sort by timestamp (newest first)
@@ -284,21 +274,19 @@ export class AuditLogger {
 
     // Calculate basic stats
     const total_runs = logs.length;
-    const pass_count = logs.filter((log) => log.verdict === "pass").length;
+    const pass_count = logs.filter(log => log.verdict === 'pass').length;
     const pass_rate = (pass_count / total_runs) * 100;
 
-    const avg_tokens =
-      logs.reduce((sum, log) => sum + log.tokens, 0) / total_runs;
+    const avg_tokens = logs.reduce((sum, log) => sum + log.tokens, 0) / total_runs;
     const avg_cost = logs.reduce((sum, log) => sum + log.cost, 0) / total_runs;
-    const avg_duration_ms =
-      logs.reduce((sum, log) => sum + log.duration_ms, 0) / total_runs;
+    const avg_duration_ms = logs.reduce((sum, log) => sum + log.duration_ms, 0) / total_runs;
 
-    const error_count = logs.filter((log) => log.error_code).length;
+    const error_count = logs.filter(log => log.error_code).length;
     const error_rate = (error_count / total_runs) * 100;
 
     // Top modules
     const moduleCount = new Map<string, number>();
-    logs.forEach((log) => {
+    logs.forEach(log => {
       moduleCount.set(log.module_id, (moduleCount.get(log.module_id) || 0) + 1);
     });
     const top_modules = Array.from(moduleCount.entries())
@@ -308,13 +296,12 @@ export class AuditLogger {
 
     // Verdict distribution
     const verdict_distribution: Record<string, number> = {};
-    logs.forEach((log) => {
-      verdict_distribution[log.verdict] =
-        (verdict_distribution[log.verdict] || 0) + 1;
+    logs.forEach(log => {
+      verdict_distribution[log.verdict] = (verdict_distribution[log.verdict] || 0) + 1;
     });
 
     // Cost distribution percentiles
-    const costs = logs.map((log) => log.cost).sort((a, b) => a - b);
+    const costs = logs.map(log => log.cost).sort((a, b) => a - b);
     const cost_distribution = {
       p50: this.calculatePercentile(costs, 50),
       p95: this.calculatePercentile(costs, 95),
@@ -337,10 +324,7 @@ export class AuditLogger {
   /**
    * Calculate percentile from sorted array
    */
-  private calculatePercentile(
-    sortedArray: number[],
-    percentile: number,
-  ): number {
+  private calculatePercentile(sortedArray: number[], percentile: number): number {
     if (sortedArray.length === 0) return 0;
 
     const index = (percentile / 100) * (sortedArray.length - 1);
@@ -362,7 +346,7 @@ export class AuditLogger {
     const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
     const beforeCount = this.logs.length;
 
-    this.logs = this.logs.filter((log) => log.timestamp >= cutoffTime);
+    this.logs = this.logs.filter(log => log.timestamp >= cutoffTime);
 
     const removedCount = beforeCount - this.logs.length;
     if (removedCount > 0) {
@@ -379,7 +363,7 @@ export class AuditLogger {
       total_entries: number;
       filter_applied: AuditLogFilter;
     };
-    entries: Array<Omit<AuditLogEntry, "metadata">>;
+    entries: Array<Omit<AuditLogEntry, 'metadata'>>;
   } {
     const logs = this.queryLogs(filter);
 
@@ -389,7 +373,7 @@ export class AuditLogger {
         total_entries: logs.length,
         filter_applied: filter,
       },
-      entries: logs.map((log) => {
+      entries: logs.map(log => {
         // Remove metadata to ensure no PII leakage
         const { metadata, ...sanitizedLog } = log;
         return sanitizedLog;
@@ -404,9 +388,9 @@ export class AuditLogger {
     run_id: string,
     prompt_content?: string,
     input_content?: string,
-    output_content?: string,
+    output_content?: string
   ): boolean {
-    const log = this.logs.find((l) => l.run_id === run_id);
+    const log = this.logs.find(l => l.run_id === run_id);
     if (!log) return false;
 
     const expectedHash = this.hashContent({
@@ -421,9 +405,7 @@ export class AuditLogger {
   /**
    * Get logs count by time period
    */
-  getLogsTrend(
-    hours = 24,
-  ): Array<{ hour: string; count: number; pass_rate: number }> {
+  getLogsTrend(hours = 24): Array<{ hour: string; count: number; pass_rate: number }> {
     const now = new Date();
     const trend: Array<{ hour: string; count: number; pass_rate: number }> = [];
 
@@ -432,15 +414,14 @@ export class AuditLogger {
       const hourEnd = new Date(hourStart.getTime() + 60 * 60 * 1000);
 
       const hourLogs = this.logs.filter(
-        (log) => log.timestamp >= hourStart && log.timestamp < hourEnd,
+        log => log.timestamp >= hourStart && log.timestamp < hourEnd
       );
 
-      const passCount = hourLogs.filter((log) => log.verdict === "pass").length;
-      const pass_rate =
-        hourLogs.length > 0 ? (passCount / hourLogs.length) * 100 : 0;
+      const passCount = hourLogs.filter(log => log.verdict === 'pass').length;
+      const pass_rate = hourLogs.length > 0 ? (passCount / hourLogs.length) * 100 : 0;
 
       trend.push({
-        hour: hourStart.toISOString().substring(0, 13) + ":00",
+        hour: hourStart.toISOString().substring(0, 13) + ':00',
         count: hourLogs.length,
         pass_rate,
       });

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Types for export bundles
 export interface BundleRequest {
@@ -26,25 +26,27 @@ export interface ExportBundle {
  */
 export async function createBundle(request: BundleRequest): Promise<ExportBundle> {
   const { runId, moduleId, content, parameters, evaluation, outputFormat, orgId } = request;
-  
+
   // Generate bundle ID
   const bundleId = crypto.randomUUID();
-  
+
   // Create metadata
   const metadata = {
     moduleId,
     parameters,
-    evaluation: evaluation ? {
-      scores: evaluation.scores,
-      feedback: evaluation.feedback
-    } : null,
+    evaluation: evaluation
+      ? {
+          scores: evaluation.scores,
+          feedback: evaluation.feedback,
+        }
+      : null,
     orgId,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
-  
+
   // Generate checksum
   const checksum = await generateChecksum(content + JSON.stringify(metadata));
-  
+
   // TODO: Store in database
   // For now, return the bundle object
   return {
@@ -54,7 +56,7 @@ export async function createBundle(request: BundleRequest): Promise<ExportBundle
     format: outputFormat,
     metadata,
     checksum,
-    createdAt: new Date()
+    createdAt: new Date(),
   };
 }
 
@@ -64,9 +66,9 @@ export async function createBundle(request: BundleRequest): Promise<ExportBundle
 async function generateChecksum(content: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(content);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 /**
@@ -74,17 +76,21 @@ async function generateChecksum(content: string): Promise<string> {
  */
 export async function exportBundle(bundle: ExportBundle, format: string): Promise<string> {
   switch (format) {
-    case "txt":
+    case 'txt':
       return bundle.content;
-    case "md":
+    case 'md':
       return `# Module Output\n\n${bundle.content}\n\n---\nGenerated: ${bundle.createdAt.toISOString()}`;
-    case "json":
-      return JSON.stringify({
-        content: bundle.content,
-        metadata: bundle.metadata,
-        checksum: bundle.checksum
-      }, null, 2);
-    case "yaml":
+    case 'json':
+      return JSON.stringify(
+        {
+          content: bundle.content,
+          metadata: bundle.metadata,
+          checksum: bundle.checksum,
+        },
+        null,
+        2
+      );
+    case 'yaml':
       // TODO: Implement YAML export
       return `content: ${bundle.content}\nmetadata: ${JSON.stringify(bundle.metadata)}`;
     default:

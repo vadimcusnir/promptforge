@@ -1,7 +1,7 @@
 {
   "parameter": "output_format",
   "description": "Format final al artefactului - determină structura, presentation și delivery method",
-  
+
   "values": {
     "txt": {
       "label": "Plain Text",
@@ -13,18 +13,18 @@
       "max_length": "2000 characters",
       "structure": "linear narrative, bullet points, minimal formatting"
     },
-    
+
     "md": {
       "label": "Markdown",
       "description": "Markdown cu structure, headers, links, tables",
       "characteristics": "structured, readable, version control friendly",
       "use_cases": ["documentation", "reports", "structured guides"],
-      "entitlement_level": "creator", 
+      "entitlement_level": "creator",
       "file_extension": ".md",
       "max_length": "10000 characters",
       "structure": "headers, sections, tables, code blocks, links"
     },
-    
+
     "checklist": {
       "label": "Actionable Checklist",
       "description": "Listă actionable cu checkboxes, priorități, dependencies",
@@ -32,10 +32,10 @@
       "use_cases": ["task management", "implementation guidance", "quality assurance"],
       "entitlement_level": "creator",
       "file_extension": ".md",
-      "max_length": "5000 characters", 
+      "max_length": "5000 characters",
       "structure": "- [ ] checkbox items, priorities, sub-tasks, notes"
     },
-    
+
     "spec": {
       "label": "Technical Specification",
       "description": "Specificație tehnică detaliată cu secțiuni standard",
@@ -46,9 +46,9 @@
       "max_length": "15000 characters",
       "structure": "Overview, Requirements, Architecture, Implementation, Testing, Deployment"
     },
-    
+
     "playbook": {
-      "label": "Operational Playbook", 
+      "label": "Operational Playbook",
       "description": "Ghid operațional cu procese, tools, best practices",
       "characteristics": "operational, process-oriented, team-ready",
       "use_cases": ["team procedures", "operational guides", "standard operating procedures"],
@@ -57,7 +57,7 @@
       "max_length": "12000 characters",
       "structure": "Process Overview, Step-by-Step Procedures, Tools & Resources, Troubleshooting"
     },
-    
+
     "json": {
       "label": "Structured JSON",
       "description": "Date structurate în JSON pentru integrare/automatizare",
@@ -68,7 +68,7 @@
       "max_length": "20000 characters",
       "structure": "hierarchical data structure, standardized schema"
     },
-    
+
     "yaml": {
       "label": "YAML Configuration",
       "description": "Configurație YAML pentru DevOps și automatizare",
@@ -79,7 +79,7 @@
       "max_length": "15000 characters",
       "structure": "nested configuration, comments, environment variables"
     },
-    
+
     "diagram": {
       "label": "Visual Diagram",
       "description": "Diagramă vizuală (Mermaid/ASCII) pentru arhitectură",
@@ -90,7 +90,7 @@
       "max_length": "8000 characters",
       "structure": "Mermaid diagrams, ASCII art, visual representations"
     },
-    
+
     "bundle": {
       "label": "Complete Bundle",
       "description": "Bundle complet cu multiple formate + manifest",
@@ -102,14 +102,24 @@
       "structure": "multiple files, manifest.json, checksums, signatures"
     }
   },
-  
+
   "entitlement_gating": {
     "free": ["txt"],
     "creator": ["txt", "md", "checklist", "spec", "playbook"],
     "pro": ["txt", "md", "checklist", "spec", "playbook", "json", "yaml", "diagram"],
-    "enterprise": ["txt", "md", "checklist", "spec", "playbook", "json", "yaml", "diagram", "bundle"]
+    "enterprise": [
+      "txt",
+      "md",
+      "checklist",
+      "spec",
+      "playbook",
+      "json",
+      "yaml",
+      "diagram",
+      "bundle"
+    ]
   },
-  
+
   "adaptation_rules": {
     "format_selection_logic": {
       "domain_preferences": {
@@ -124,7 +134,7 @@
         "web3": ["spec", "json", "yaml"],
         "cybersecurity": ["spec", "checklist", "bundle"]
       },
-      
+
       "application_preferences": {
         "training": ["playbook", "checklist", "md"],
         "audit": ["spec", "md", "bundle"],
@@ -134,7 +144,7 @@
         "experimentation": ["json", "spec", "md"],
         "documentation": ["md", "spec", "bundle"]
       },
-      
+
       "urgency_preferences": {
         "low": ["spec", "bundle", "md"],
         "planned": ["spec", "playbook", "md"],
@@ -142,7 +152,7 @@
         "pilot": ["json", "spec", "md"],
         "crisis": ["checklist", "txt"]
       },
-      
+
       "complexity_preferences": {
         "foundational": ["playbook", "checklist", "md"],
         "standard": ["spec", "playbook", "md"],
@@ -150,7 +160,7 @@
         "expert": ["spec", "json", "bundle"]
       }
     },
-    
+
     "format_characteristics": {
       "structure_complexity": {
         "txt": "linear, minimal structure",
@@ -163,7 +173,7 @@
         "diagram": "visual, relationship structure",
         "bundle": "multi-format, comprehensive structure"
       },
-      
+
       "target_audience": {
         "txt": "general audience, simple consumption",
         "md": "technical audience, documentation consumers",
@@ -177,7 +187,7 @@
       }
     }
   },
-  
+
   "quality_requirements": {
     "txt": {
       "clarity": "high priority - must be immediately understandable",

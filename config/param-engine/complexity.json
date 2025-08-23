@@ -1,7 +1,7 @@
 {
   "parameter": "complexity",
   "description": "Adâncime execuțională necesară - determină detaliile tehnice, profunzimea analizei și expertise requirements",
-  
+
   "values": {
     "foundational": {
       "label": "Foundational",
@@ -11,35 +11,43 @@
       "output_characteristics": "simple frameworks, basic checklists, introductory guides",
       "examples": ["business basics", "intro to digital marketing", "basic project management"]
     },
-    
+
     "standard": {
       "label": "Standard",
-      "description": "Practici standard de industrie, metodologii dovedite", 
+      "description": "Practici standard de industrie, metodologii dovedite",
       "detail_level": "detailed implementation, step-by-step processes",
       "expertise_required": "domain knowledge, practical experience",
       "output_characteristics": "detailed playbooks, standard operating procedures, best practices",
       "examples": ["SEO optimization", "sales funnel design", "standard compliance procedures"]
     },
-    
+
     "advanced": {
       "label": "Advanced",
       "description": "Strategii sofisticate, optimizări complexe, integrări multiple",
       "detail_level": "deep analysis, advanced techniques, multi-system integration",
       "expertise_required": "specialized expertise, advanced domain knowledge",
       "output_characteristics": "sophisticated strategies, technical specifications, advanced frameworks",
-      "examples": ["multi-channel attribution modeling", "advanced automation workflows", "enterprise architecture design"]
+      "examples": [
+        "multi-channel attribution modeling",
+        "advanced automation workflows",
+        "enterprise architecture design"
+      ]
     },
-    
+
     "expert": {
       "label": "Expert",
       "description": "Cutting-edge approaches, research-level depth, innovation required",
       "detail_level": "exhaustive analysis, research methodology, innovation frameworks",
       "expertise_required": "expert-level knowledge, research background, innovation capability",
       "output_characteristics": "research-grade analysis, novel methodologies, expert-level technical specs",
-      "examples": ["AI model fine-tuning", "novel algorithm development", "breakthrough strategy innovation"]
+      "examples": [
+        "AI model fine-tuning",
+        "novel algorithm development",
+        "breakthrough strategy innovation"
+      ]
     }
   },
-  
+
   "adaptation_rules": {
     "language_sophistication": {
       "foundational": "simple terminology, avoid jargon, explain concepts clearly",
@@ -47,29 +55,29 @@
       "advanced": "sophisticated vocabulary, technical precision, domain expertise assumed",
       "expert": "cutting-edge terminology, research-level language, innovation focus"
     },
-    
+
     "analysis_depth": {
       "foundational": "broad overview, key concepts, basic relationships",
       "standard": "detailed analysis, standard methodologies, proven approaches",
       "advanced": "multi-dimensional analysis, complex relationships, optimization focus",
       "expert": "exhaustive analysis, research methodology, novel approaches"
     },
-    
+
     "technical_detail": {
       "foundational": "high-level concepts, minimal technical detail",
       "standard": "sufficient technical detail for implementation",
       "advanced": "detailed technical specifications, integration considerations",
       "expert": "comprehensive technical analysis, innovation requirements"
     },
-    
+
     "prerequisite_knowledge": {
       "foundational": "general business knowledge",
-      "standard": "domain familiarity, basic tools knowledge", 
+      "standard": "domain familiarity, basic tools knowledge",
       "advanced": "specialized expertise, advanced tools proficiency",
       "expert": "expert-level knowledge, research background, innovation capability"
     }
   },
-  
+
   "domain_interactions": {
     "high_risk_domains": {
       "description": "Pentru fintech, healthcare, legal - complexity minimă = standard",
@@ -77,7 +85,7 @@
       "minimum_complexity": "standard",
       "rationale": "Compliance și safety requirements"
     },
-    
+
     "innovation_domains": {
       "description": "Pentru AI/ML, Web3 - complexity poate fi expert pentru breakthrough",
       "domains": ["aiml", "web3"],
@@ -85,7 +93,7 @@
       "rationale": "Rapid innovation, cutting-edge approaches needed"
     }
   },
-  
+
   "output_adaptation": {
     "foundational": {
       "format_preference": ["playbook", "checklist"],

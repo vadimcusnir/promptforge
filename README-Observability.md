@@ -33,13 +33,13 @@ This system provides comprehensive monitoring, anomaly detection, and incident r
 Monitors agent performance and detects anomalies:
 
 ```typescript
-import { agentWatch } from "@/lib/observability";
+import { agentWatch } from '@/lib/observability';
 
 // Record metrics for a run
 agentWatch.recordMetrics({
-  runId: "run_123",
-  orgId: "org_456",
-  moduleId: "AI-IDEI.SOPFORGE",
+  runId: 'run_123',
+  orgId: 'org_456',
+  moduleId: 'PROMPTFORGE.SOPFORGE',
   tokens: 8500,
   cost: 1.25,
   duration: 45000,
@@ -68,26 +68,26 @@ console.log(`Degradation mode: ${summary.degradationMode}`);
 PII-free logging with content hashing:
 
 ```typescript
-import { auditLogger } from "@/lib/observability";
+import { auditLogger } from '@/lib/observability';
 
 // Log a run (content is hashed, not stored)
 auditLogger.logRun({
-  run_id: "run_123",
-  org_id: "org_456",
-  module_id: "AI-IDEI.SOPFORGE",
-  signature_7d: "fintech_enterprise_urgent_complex_full_saas_json",
-  model: "gpt-4o",
+  run_id: 'run_123',
+  org_id: 'org_456',
+  module_id: 'PROMPTFORGE.SOPFORGE',
+  signature_7d: 'fintech_enterprise_urgent_complex_full_saas_json',
+  model: 'gpt-4o',
   tokens: 8500,
   cost: 1.25,
   score: 85,
-  export_formats: ["txt", "json", "pdf"],
-  prompt_content: "...", // Hashed, not stored
+  export_formats: ['txt', 'json', 'pdf'],
+  prompt_content: '...', // Hashed, not stored
   duration_ms: 45000,
 });
 
 // Query logs
 const recentLogs = auditLogger.queryLogs({
-  org_id: "org_456",
+  org_id: 'org_456',
   limit: 10,
 });
 
@@ -101,7 +101,7 @@ console.log(`Pass rate: ${stats.pass_rate}%`);
 Incident management with notifications:
 
 ```typescript
-import { alertSystem } from "@/lib/observability";
+import { alertSystem } from '@/lib/observability';
 
 // Initialize with channels
 alertSystem.initialize();
@@ -110,14 +110,10 @@ alertSystem.initialize();
 const activeIncidents = alertSystem.getActiveIncidents();
 
 // Acknowledge incident
-alertSystem.acknowledgeIncident("incident_123", "admin_user");
+alertSystem.acknowledgeIncident('incident_123', 'admin_user');
 
 // Resolve incident
-alertSystem.resolveIncident(
-  "incident_123",
-  "admin_user",
-  "Fixed configuration",
-);
+alertSystem.resolveIncident('incident_123', 'admin_user', 'Fixed configuration');
 ```
 
 **Alert Channels:**
@@ -132,16 +128,16 @@ alertSystem.resolveIncident(
 Multi-layer kill-switch via environment and SSOT:
 
 ```typescript
-import { AgentWatchWorker } from "@/lib/observability";
+import { AgentWatchWorker } from '@/lib/observability';
 
 // Check if agents are enabled
 const enabled = AgentWatchWorker.areAgentsEnabled();
 
 // Manual kill-switch activation
-agentWatch.triggerKillSwitch("Emergency maintenance required");
+agentWatch.triggerKillSwitch('Emergency maintenance required');
 
 // Environment variable kill-switch
-process.env.AGENTS_ENABLED = "false"; // Disables all agents
+process.env.AGENTS_ENABLED = 'false'; // Disables all agents
 ```
 
 **Kill-switch triggers:**
@@ -189,7 +185,7 @@ POST /api/observability/audit
 {
   "run_id": "run_123",
   "org_id": "org_456",
-  "module_id": "AI-IDEI.SOPFORGE",
+  "module_id": "PROMPTFORGE.SOPFORGE",
   "signature_7d": "...",
   "model": "gpt-4o",
   "tokens": 8500,
@@ -239,11 +235,7 @@ function AdminPage() {
 ## Integration Example
 
 ```typescript
-import {
-  initializeObservability,
-  agentWatch,
-  auditLogger,
-} from "@/lib/observability";
+import { initializeObservability, agentWatch, auditLogger } from '@/lib/observability';
 
 // Initialize on app startup
 initializeObservability();
@@ -293,7 +285,7 @@ async function runAgent(params) {
       tokens: result?.tokens || 0,
       cost: result?.cost || 0,
       score: result?.score,
-      export_formats: ["txt", "json"],
+      export_formats: ['txt', 'json'],
       prompt_content: params.prompt, // Hashed, not stored
       duration_ms: Date.now() - startTime,
       error_code: error?.message,

@@ -1,17 +1,14 @@
-// PromptForge v3 - Export Bundle API
+// PROMPTFORGE™ v3 - Export Bundle API
 // Generează bundle complete cu gating pe plan și salvare în Supabase Storage
 
 import { NextRequest, NextResponse } from 'next/server';
 import { generateBundle, validateBundle, detectMimeType } from '@/lib/bundle';
 import { createClient } from '@supabase/supabase-js';
-import crypto from 'crypto';
+
 import fs from 'fs';
 import path from 'path';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!
-);
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE!);
 
 // Verifică entitlements pentru org
 async function getEntitlements(orgId: string): Promise<Record<string, boolean>> {
@@ -24,14 +21,17 @@ async function getEntitlements(orgId: string): Promise<Record<string, boolean>> 
   if (error) throw error;
 
   const flags = Object.fromEntries(
-    (data || []).map((r: any) => [r.flag, r.value])
+    (data || []).map((r: { flag: string; value: boolean }) => [r.flag, r.value])
   );
-  
+
   return flags;
 }
 
 // Verifică dacă run-ul există și aparține org-ului
-async function validateRun(runId: string, orgId: string): Promise<any> {
+async function validateRun(
+  runId: string,
+  orgId: string
+): Promise<{ id: string; org_id: string; [key: string]: unknown }> {
   const { data, error } = await supabase
     .from('runs')
     .select('*, prompt_scores(*)')
@@ -64,12 +64,10 @@ async function uploadToStorage(
     const fileContent = fs.readFileSync(filePath);
     const mimeType = detectMimeType(fileName);
 
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(prefix + fileName, fileContent, {
-        upsert: true,
-        contentType: mimeType
-      });
+    const { error } = await supabase.storage.from(bucket).upload(prefix + fileName, fileContent, {
+      upsert: true,
+      contentType: mimeType,
+    });
 
     if (error) {
       throw new Error(`Storage upload failed for ${fileName}: ${error.message}`);
@@ -84,7 +82,12 @@ async function uploadToStorage(
 // Salvează bundle în DB
 async function saveBundleToDb(
   runId: string,
-  manifest: any,
+  manifest: {
+    bundle_checksum: string;
+    exported_at: string;
+    version: string;
+    license_notice: string;
+  },
   uploads: Record<string, string>
 ): Promise<void> {
   const formats = Object.keys(uploads)
@@ -92,17 +95,17 @@ async function saveBundleToDb(
     .map(f => f.split('.').pop()!)
     .filter(ext => ext && ext !== 'txt'); // Exclude .txt din formats pentru UI
 
-  const { error } = await supabase
-    .from('bundles')
-    .insert([{
+  const { error } = await supabase.from('bundles').insert([
+    {
       run_id: runId,
       formats,
       paths: uploads,
       checksum: manifest.bundle_checksum,
       exported_at: manifest.exported_at,
       version: manifest.version,
-      license_notice: manifest.license_notice
-    }]);
+      license_notice: manifest.license_notice,
+    },
+  ]);
 
   if (error) {
     throw new Error(`Database insert failed: ${error.message}`);
@@ -122,35 +125,29 @@ export async function POST(req: NextRequest) {
       jsonPayload,
       licenseNotice,
       version = '1.0.0',
-      requestedFormats = ['txt', 'md'] // Default la format minim
+      requestedFormats = ['txt', 'md'], // Default la format minim
     } = body;
 
     // Validări de bază
     if (!orgId || !runId || !moduleId || !promptText || !mdReport || !jsonPayload) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Verifică că run-ul există și aparține org-ului
     const runData = await validateRun(runId, orgId);
-    
+
     // Verifică că run-ul a fost success și are scor ≥80
     if (runData.status !== 'success') {
-      return NextResponse.json(
-        { error: 'Can only export successful runs' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Can only export successful runs' }, { status: 400 });
     }
 
     const score = runData.prompt_scores?.[0]?.overall_score || 0;
     if (score < 80) {
       return NextResponse.json(
-        { 
+        {
           error: 'SCORE_TOO_LOW',
           message: `Score ${score} is below minimum threshold of 80`,
-          score
+          score,
         },
         { status: 400 }
       );
@@ -176,9 +173,10 @@ export async function POST(req: NextRequest) {
           error: 'ENTITLEMENT_REQUIRED',
           unauthorizedFormats,
           allowedFormats,
-          upsell: unauthorizedFormats.includes('pdf') || unauthorizedFormats.includes('json') 
-            ? 'pro_needed' 
-            : 'enterprise_needed'
+          upsell:
+            unauthorizedFormats.includes('pdf') || unauthorizedFormats.includes('json')
+              ? 'pro_needed'
+              : 'enterprise_needed',
         },
         { status: 403 }
       );
@@ -207,7 +205,7 @@ export async function POST(req: NextRequest) {
       verdict: runData.telemetry?.verdict || 'unknown',
       domain: parameterSet7D.domain,
       export_formats: allowedFormats,
-      exported_by: orgId
+      exported_by: orgId,
     };
 
     const bundleResult = await generateBundle({
@@ -219,10 +217,10 @@ export async function POST(req: NextRequest) {
       mdReport,
       jsonPayload,
       telemetry,
-      licenseNotice: licenseNotice || `© PromptForge v3 — Generated ${new Date().toISOString()}`,
+      licenseNotice: licenseNotice || `© PROMPTFORGE™ v3 — Generated ${new Date().toISOString()}`,
       formats: allowedFormats,
       version,
-      watermark
+      watermark,
     });
 
     // Validează bundle-ul
@@ -232,12 +230,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Upload în Supabase Storage
-    const uploads = await uploadToStorage(
-      bundleResult.outputDir,
-      orgId,
-      moduleId,
-      runId
-    );
+    const uploads = await uploadToStorage(bundleResult.outputDir, orgId, moduleId, runId);
 
     // Salvează în DB
     await saveBundleToDb(runId, bundleResult.manifest, uploads);
@@ -255,7 +248,7 @@ export async function POST(req: NextRequest) {
         formats: allowedFormats,
         checksum: bundleResult.manifest.bundle_checksum,
         artifacts: bundleResult.manifest.artifacts.length,
-        exportedAt: bundleResult.manifest.exported_at
+        exportedAt: bundleResult.manifest.exported_at,
       },
       paths: uploads,
       manifest: bundleResult.manifest,
@@ -264,19 +257,18 @@ export async function POST(req: NextRequest) {
         score,
         domain: parameterSet7D.domain,
         totalFiles: validation.files.length,
-        hasWatermark: !!watermark
-      }
+        hasWatermark: !!watermark,
+      },
     });
-
   } catch (error) {
     console.error('Export Bundle API error:', error);
 
     if (error instanceof Error) {
       if (error.message.includes('ENTITLEMENT_REQUIRED')) {
         return NextResponse.json(
-          { 
+          {
             error: 'ENTITLEMENT_REQUIRED',
-            message: error.message
+            message: error.message,
           },
           { status: 403 }
         );
@@ -298,9 +290,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { 
+      {
         error: 'INTERNAL_ERROR',
-        message: 'Failed to generate export bundle'
+        message: 'Failed to generate export bundle',
       },
       { status: 500 }
     );
@@ -310,21 +302,18 @@ export async function POST(req: NextRequest) {
 // GET pentru informații despre export capabilities
 export async function GET(req: NextRequest) {
   const orgId = new URL(req.url).searchParams.get('orgId');
-  
+
   if (!orgId) {
-    return NextResponse.json(
-      { error: 'orgId parameter is required' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'orgId parameter is required' }, { status: 400 });
   }
 
   try {
     const flags = await getEntitlements(orgId);
-    
+
     const capabilities = {
       baseFormats: ['txt', 'md'],
       availableFormats: ['txt', 'md'],
-      restrictions: []
+      restrictions: [],
     };
 
     if (flags.canExportJSON) {
@@ -350,14 +339,10 @@ export async function GET(req: NextRequest) {
       capabilities,
       requirements: {
         minimumScore: 80,
-        runStatus: 'success'
-      }
+        runStatus: 'success',
+      },
     });
-
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to check export capabilities' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to check export capabilities' }, { status: 500 });
   }
 }

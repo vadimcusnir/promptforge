@@ -28,7 +28,7 @@ Asigură contrast 4.5:1+, aria-label, focus states vizibile, reduced-motion comp
 Generează 100 termeni tehnici (max 2 cuvinte), din domeniile: Prompt Engineering, NLP, Deep Learning, Reinforcement Learning, AI Symbolism, în format array JSON. Fără explicații.
 
 --- Prompt 8 – Prompt pentru BackgroundNarrative ---
-Scrie 20 de citate originale (max 140 caractere), filozofice, despre arta promptingului și importanța comunicării în era AI. Ton profund, stil AI-Idei™.
+Scrie 20 de citate originale (max 140 caractere), filozofice, despre arta promptingului și importanța comunicării în era AI. Ton profund, stil PromptForge™.
 
 
 --- tokens.json ---

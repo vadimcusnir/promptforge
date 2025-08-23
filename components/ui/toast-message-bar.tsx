@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ToastMessage {
   id: string;
-  type: "case-study" | "announcement" | "update";
+  type: 'case-study' | 'announcement' | 'update';
   title: string;
   description: string;
   url?: string;
@@ -24,32 +24,30 @@ export function ToastMessageBar({
   messages,
   autoPlay = true,
   duration = 4000,
-  className = "",
+  className = '',
 }: ToastMessageBarProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(autoPlay);
 
   useEffect(() => {
     if (!isPlaying || messages.length <= 1) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % messages.length);
+      setCurrentIndex(prev => (prev + 1) % messages.length);
     }, duration);
 
     return () => clearInterval(interval);
   }, [isPlaying, messages.length, duration]);
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + messages.length) % messages.length);
+    setCurrentIndex(prev => (prev - 1 + messages.length) % messages.length);
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % messages.length);
+    setCurrentIndex(prev => (prev + 1) % messages.length);
   };
 
   if (messages.length === 0) return null;
-
-  const currentMessage = messages[currentIndex];
 
   return (
     <div className={`toast-msg-bar-slider ${className}`}>
@@ -60,11 +58,11 @@ export function ToastMessageBar({
               className="slide-container"
               style={{
                 transform: `translateX(-${currentIndex * 100}%)`,
-                transition: "transform 500ms ease-in-out",
+                transition: 'transform 500ms ease-in-out',
               }}
             >
-              {messages.map((message, index) => (
-                <div key={message.id} className="slide">
+              {messages.map((message, idx) => (
+                <div key={idx} className="slide">
                   <a
                     href={message.url}
                     target="_blank"
@@ -72,9 +70,7 @@ export function ToastMessageBar({
                     className="toast-msg"
                   >
                     {message.badge && (
-                      <Badge className="bg-gold-industrial text-black mr-3">
-                        {message.badge}
-                      </Badge>
+                      <Badge className="bg-gold-industrial text-black mr-3">{message.badge}</Badge>
                     )}
                     <div className="label center">{message.description}</div>
                     <div className="toast-msg-divider"></div>
@@ -95,11 +91,7 @@ export function ToastMessageBar({
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <button
-                className="toast-slider-right"
-                onClick={goToNext}
-                aria-label="Next message"
-              >
+              <button className="toast-slider-right" onClick={goToNext} aria-label="Next message">
                 <ChevronRight className="w-4 h-4" />
               </button>
 
@@ -107,7 +99,7 @@ export function ToastMessageBar({
                 {messages.map((_, index) => (
                   <button
                     key={index}
-                    className={`slide-dot ${index === currentIndex ? "active" : ""}`}
+                    className={`slide-dot ${index === currentIndex ? 'active' : ''}`}
                     onClick={() => setCurrentIndex(index)}
                     aria-label={`Go to message ${index + 1}`}
                   />

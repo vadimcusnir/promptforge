@@ -3,16 +3,16 @@
  * Handles alert routing, escalation, and external notifications
  */
 
-import { agentWatch, type AnomalyAlert } from "./agent-watch";
-import { auditLogger } from "./audit-logger";
-import { telemetry } from "@/lib/telemetry";
+import { agentWatch, type AnomalyAlert } from './agent-watch';
+import { auditLogger } from './audit-logger';
+import { telemetry } from '@/lib/telemetry';
 
 export interface AlertChannel {
   id: string;
-  type: "slack" | "email" | "webhook" | "console";
+  type: 'slack' | 'email' | 'webhook' | 'console';
   config: Record<string, any>;
   enabled: boolean;
-  severity_filter: ("warning" | "critical")[];
+  severity_filter: ('warning' | 'critical')[];
 }
 
 export interface AlertRule {
@@ -20,7 +20,7 @@ export interface AlertRule {
   name: string;
   condition: string;
   threshold: number;
-  severity: "warning" | "critical";
+  severity: 'warning' | 'critical';
   channels: string[];
   cooldown_minutes: number;
   enabled: boolean;
@@ -29,12 +29,12 @@ export interface AlertRule {
 export interface IncidentReport {
   id: string;
   alert_type: string;
-  severity: "warning" | "critical";
+  severity: 'warning' | 'critical';
   title: string;
   description: string;
   started_at: Date;
   resolved_at?: Date;
-  status: "active" | "acknowledged" | "resolved";
+  status: 'active' | 'acknowledged' | 'resolved';
   affected_runs: string[];
   metrics: Record<string, number>;
   actions_taken: string[];
@@ -68,7 +68,7 @@ export class AlertSystem {
     if (this.isInitialized) return;
 
     // Register with AgentWatch for alerts
-    agentWatch.onAlert((alert) => {
+    agentWatch.onAlert(alert => {
       this.processAlert(alert);
     });
 
@@ -77,11 +77,11 @@ export class AlertSystem {
 
     this.isInitialized = true;
     console.log(
-      "[AlertSystem] Initialized with",
+      '[AlertSystem] Initialized with',
       this.channels.length,
-      "channels and",
+      'channels and',
       this.rules.length,
-      "rules",
+      'rules'
     );
   }
 
@@ -91,36 +91,36 @@ export class AlertSystem {
   private initializeDefaultChannels(): void {
     this.channels = [
       {
-        id: "console",
-        type: "console",
+        id: 'console',
+        type: 'console',
         config: {},
         enabled: true,
-        severity_filter: ["warning", "critical"],
+        severity_filter: ['warning', 'critical'],
       },
       {
-        id: "slack-ops",
-        type: "slack",
+        id: 'slack-ops',
+        type: 'slack',
         config: {
-          webhook_url: process.env.SLACK_WEBHOOK_URL || "",
-          channel: "#ops-alerts",
+          webhook_url: process.env.SLACK_WEBHOOK_URL || '',
+          channel: '#ops-alerts',
         },
         enabled: !!process.env.SLACK_WEBHOOK_URL,
-        severity_filter: ["critical"],
+        severity_filter: ['critical'],
       },
       {
-        id: "email-admin",
-        type: "email",
+        id: 'email-admin',
+        type: 'email',
         config: {
-          recipients: ["admin@promptforge.app"],
+          recipients: ['admin@promptforge.app'],
           smtp_config: {
-            host: process.env.SMTP_HOST || "",
+            host: process.env.SMTP_HOST || '',
             port: process.env.SMTP_PORT || 587,
-            user: process.env.SMTP_USER || "",
-            password: process.env.SMTP_PASSWORD || "",
+            user: process.env.SMTP_USER || '',
+            password: process.env.SMTP_PASSWORD || '',
           },
         },
         enabled: !!process.env.SMTP_HOST,
-        severity_filter: ["critical"],
+        severity_filter: ['critical'],
       },
     ];
   }
@@ -131,42 +131,42 @@ export class AlertSystem {
   private initializeDefaultRules(): void {
     this.rules = [
       {
-        id: "high-error-rate",
-        name: "High Error Rate",
-        condition: "error_rate > threshold",
+        id: 'high-error-rate',
+        name: 'High Error Rate',
+        condition: 'error_rate > threshold',
         threshold: 0.1, // 10%
-        severity: "critical",
-        channels: ["console", "slack-ops", "email-admin"],
+        severity: 'critical',
+        channels: ['console', 'slack-ops', 'email-admin'],
         cooldown_minutes: 15,
         enabled: true,
       },
       {
-        id: "budget-exceeded",
-        name: "Budget Exceeded",
-        condition: "cost > threshold OR tokens > threshold",
+        id: 'budget-exceeded',
+        name: 'Budget Exceeded',
+        condition: 'cost > threshold OR tokens > threshold',
         threshold: 1.0, // $1 or token limit
-        severity: "critical",
-        channels: ["console", "slack-ops"],
+        severity: 'critical',
+        channels: ['console', 'slack-ops'],
         cooldown_minutes: 5,
         enabled: true,
       },
       {
-        id: "low-score-trend",
-        name: "Low Score Trend",
-        condition: "avg_score < threshold",
+        id: 'low-score-trend',
+        name: 'Low Score Trend',
+        condition: 'avg_score < threshold',
         threshold: 75,
-        severity: "warning",
-        channels: ["console", "slack-ops"],
+        severity: 'warning',
+        channels: ['console', 'slack-ops'],
         cooldown_minutes: 30,
         enabled: true,
       },
       {
-        id: "timeout-spike",
-        name: "Timeout Spike",
-        condition: "timeouts > threshold",
+        id: 'timeout-spike',
+        name: 'Timeout Spike',
+        condition: 'timeouts > threshold',
         threshold: 3,
-        severity: "critical",
-        channels: ["console", "slack-ops"],
+        severity: 'critical',
+        channels: ['console', 'slack-ops'],
         cooldown_minutes: 10,
         enabled: true,
       },
@@ -181,16 +181,12 @@ export class AlertSystem {
       // Check cooldown
       const cooldownKey = `${alert.type}_${alert.metrics.orgId}`;
       const lastAlert = this.alertCooldowns.get(cooldownKey);
-      const rule = this.rules.find(
-        (r) => r.id === alert.type.replace("_", "-"),
-      );
+      const rule = this.rules.find(r => r.id === alert.type.replace('_', '-'));
 
       if (rule && lastAlert) {
         const cooldownMs = rule.cooldown_minutes * 60 * 1000;
         if (Date.now() - lastAlert.getTime() < cooldownMs) {
-          console.log(
-            `[AlertSystem] Alert ${alert.type} in cooldown, skipping`,
-          );
+          console.log(`[AlertSystem] Alert ${alert.type} in cooldown, skipping`);
           return;
         }
       }
@@ -205,39 +201,35 @@ export class AlertSystem {
       await this.sendNotifications(alert, incident);
 
       // Track in telemetry
-      telemetry.trackEvent("alert_processed", "system", {
+      telemetry.trackEvent('alert_processed', 'system', {
         alert_type: alert.type,
         severity: alert.severity,
         incident_id: incident.id,
         channels_notified: this.getChannelsForAlert(alert).length,
       });
     } catch (error) {
-      console.error("[AlertSystem] Failed to process alert:", error);
-      telemetry.trackError(error as Error, "alert_processing");
+      console.error('[AlertSystem] Failed to process alert:', error);
+      telemetry.trackError(error as Error, 'alert_processing');
     }
   }
 
   /**
    * Create or update incident report
    */
-  private async createOrUpdateIncident(
-    alert: AnomalyAlert,
-  ): Promise<IncidentReport> {
+  private async createOrUpdateIncident(alert: AnomalyAlert): Promise<IncidentReport> {
     // Check for existing active incident of same type
     let incident = this.incidents.find(
-      (i) =>
+      i =>
         i.alert_type === alert.type &&
-        i.status === "active" &&
-        i.started_at.getTime() > Date.now() - 3600000, // Within last hour
+        i.status === 'active' &&
+        i.started_at.getTime() > Date.now() - 3600000 // Within last hour
     );
 
     if (incident) {
       // Update existing incident
       incident.affected_runs.push(alert.metrics.runId);
       incident.metrics[alert.type] = alert.actual;
-      incident.actions_taken.push(
-        `Alert triggered at ${alert.timestamp.toISOString()}`,
-      );
+      incident.actions_taken.push(`Alert triggered at ${alert.timestamp.toISOString()}`);
     } else {
       // Create new incident
       incident = {
@@ -247,7 +239,7 @@ export class AlertSystem {
         title: this.generateIncidentTitle(alert),
         description: this.generateIncidentDescription(alert),
         started_at: alert.timestamp,
-        status: "active",
+        status: 'active',
         affected_runs: [alert.metrics.runId],
         metrics: { [alert.type]: alert.actual },
         actions_taken: [`Incident created due to ${alert.type} alert`],
@@ -264,10 +256,10 @@ export class AlertSystem {
    */
   private generateIncidentTitle(alert: AnomalyAlert): string {
     const titles = {
-      budget_exceeded: "Budget Limit Exceeded",
-      score_low: "Low Performance Scores Detected",
-      error_spike: "High Error Rate Detected",
-      timeout_spike: "Multiple Timeouts Detected",
+      budget_exceeded: 'Budget Limit Exceeded',
+      score_low: 'Low Performance Scores Detected',
+      error_spike: 'High Error Rate Detected',
+      timeout_spike: 'Multiple Timeouts Detected',
     };
 
     return titles[alert.type] || `System Alert: ${alert.type}`;
@@ -291,21 +283,18 @@ export class AlertSystem {
 - Tokens: ${alert.metrics.tokens}
 - Cost: $${alert.metrics.cost.toFixed(4)}
 - Duration: ${alert.metrics.duration}ms
-${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
+${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ''}
 - Error Rate: ${(alert.metrics.errorRate * 100).toFixed(2)}%`;
   }
 
   /**
    * Send notifications through configured channels
    */
-  private async sendNotifications(
-    alert: AnomalyAlert,
-    incident: IncidentReport,
-  ): Promise<void> {
+  private async sendNotifications(alert: AnomalyAlert, incident: IncidentReport): Promise<void> {
     const channels = this.getChannelsForAlert(alert);
 
-    const notificationPromises = channels.map((channel) =>
-      this.sendNotificationToChannel(channel, alert, incident),
+    const notificationPromises = channels.map(channel =>
+      this.sendNotificationToChannel(channel, alert, incident)
     );
 
     await Promise.allSettled(notificationPromises);
@@ -316,8 +305,7 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
    */
   private getChannelsForAlert(alert: AnomalyAlert): AlertChannel[] {
     return this.channels.filter(
-      (channel) =>
-        channel.enabled && channel.severity_filter.includes(alert.severity),
+      channel => channel.enabled && channel.severity_filter.includes(alert.severity)
     );
   }
 
@@ -327,41 +315,35 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
   private async sendNotificationToChannel(
     channel: AlertChannel,
     alert: AnomalyAlert,
-    incident: IncidentReport,
+    incident: IncidentReport
   ): Promise<void> {
     try {
       switch (channel.type) {
-        case "console":
+        case 'console':
           this.sendConsoleNotification(alert, incident);
           break;
-        case "slack":
+        case 'slack':
           await this.sendSlackNotification(channel, alert, incident);
           break;
-        case "email":
+        case 'email':
           await this.sendEmailNotification(channel, alert, incident);
           break;
-        case "webhook":
+        case 'webhook':
           await this.sendWebhookNotification(channel, alert, incident);
           break;
         default:
           console.warn(`[AlertSystem] Unknown channel type: ${channel.type}`);
       }
     } catch (error) {
-      console.error(
-        `[AlertSystem] Failed to send notification to ${channel.id}:`,
-        error,
-      );
+      console.error(`[AlertSystem] Failed to send notification to ${channel.id}:`, error);
     }
   }
 
   /**
    * Send console notification
    */
-  private sendConsoleNotification(
-    alert: AnomalyAlert,
-    incident: IncidentReport,
-  ): void {
-    const emoji = alert.severity === "critical" ? "🚨" : "⚠️";
+  private sendConsoleNotification(alert: AnomalyAlert, incident: IncidentReport): void {
+    const emoji = alert.severity === 'critical' ? '🚨' : '⚠️';
     console.log(`${emoji} [ALERT] ${incident.title}`);
     console.log(`   Type: ${alert.type}`);
     console.log(`   Severity: ${alert.severity}`);
@@ -376,21 +358,20 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
   private async sendSlackNotification(
     channel: AlertChannel,
     alert: AnomalyAlert,
-    incident: IncidentReport,
+    incident: IncidentReport
   ): Promise<void> {
     if (!channel.config.webhook_url) {
-      console.warn("[AlertSystem] Slack webhook URL not configured");
+      console.warn('[AlertSystem] Slack webhook URL not configured');
       return;
     }
 
-    const color = alert.severity === "critical" ? "#ff0000" : "#ffaa00";
-    const emoji =
-      alert.severity === "critical" ? ":rotating_light:" : ":warning:";
+    const color = alert.severity === 'critical' ? '#ff0000' : '#ffaa00';
+    const emoji = alert.severity === 'critical' ? ':rotating_light:' : ':warning:';
 
     const payload = {
       channel: channel.config.channel,
-      username: "PromptForge Monitor",
-      icon_emoji: ":robot_face:",
+      username: 'PromptForge Monitor',
+      icon_emoji: ':robot_face:',
       attachments: [
         {
           color,
@@ -398,45 +379,45 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
           text: alert.message,
           fields: [
             {
-              title: "Severity",
+              title: 'Severity',
               value: alert.severity.toUpperCase(),
               short: true,
             },
             {
-              title: "Type",
+              title: 'Type',
               value: alert.type,
               short: true,
             },
             {
-              title: "Run ID",
-              value: alert.metrics.runId.substring(0, 8) + "...",
+              title: 'Run ID',
+              value: alert.metrics.runId.substring(0, 8) + '...',
               short: true,
             },
             {
-              title: "Module",
+              title: 'Module',
               value: alert.metrics.moduleId,
               short: true,
             },
             {
-              title: "Threshold",
+              title: 'Threshold',
               value: alert.threshold.toString(),
               short: true,
             },
             {
-              title: "Actual",
+              title: 'Actual',
               value: alert.actual.toString(),
               short: true,
             },
           ],
-          footer: "PromptForge Monitoring",
+          footer: 'PromptForge Monitoring',
           ts: Math.floor(alert.timestamp.getTime() / 1000),
         },
       ],
     };
 
     const response = await fetch(channel.config.webhook_url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
@@ -451,13 +432,10 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
   private async sendEmailNotification(
     channel: AlertChannel,
     alert: AnomalyAlert,
-    incident: IncidentReport,
+    incident: IncidentReport
   ): Promise<void> {
     // In production, this would use a proper email service
-    console.log(
-      `[AlertSystem] Email notification would be sent to:`,
-      channel.config.recipients,
-    );
+    console.log(`[AlertSystem] Email notification would be sent to:`, channel.config.recipients);
     console.log(`Subject: [${alert.severity.toUpperCase()}] ${incident.title}`);
     console.log(`Body: ${incident.description}`);
   }
@@ -468,7 +446,7 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
   private async sendWebhookNotification(
     channel: AlertChannel,
     alert: AnomalyAlert,
-    incident: IncidentReport,
+    incident: IncidentReport
   ): Promise<void> {
     const payload = {
       alert,
@@ -477,9 +455,9 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
     };
 
     const response = await fetch(channel.config.url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...channel.config.headers,
       },
       body: JSON.stringify(payload),
@@ -498,7 +476,7 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
       this.checkSystemHealth();
     }, 300000); // Check every 5 minutes
 
-    console.log("[AlertSystem] Background monitoring started");
+    console.log('[AlertSystem] Background monitoring started');
   }
 
   /**
@@ -512,13 +490,13 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
       // Check for system-wide issues
       if (auditStats.error_rate > 20) {
         await this.processAlert({
-          type: "error_spike",
-          severity: "critical",
+          type: 'error_spike',
+          severity: 'critical',
           message: `System-wide error rate: ${auditStats.error_rate.toFixed(1)}%`,
           metrics: {
-            runId: "system_check",
-            orgId: "system",
-            moduleId: "system_health",
+            runId: 'system_check',
+            orgId: 'system',
+            moduleId: 'system_health',
             tokens: 0,
             cost: 0,
             duration: 0,
@@ -534,13 +512,13 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
 
       if (auditStats.pass_rate < 70) {
         await this.processAlert({
-          type: "score_low",
-          severity: "warning",
+          type: 'score_low',
+          severity: 'warning',
           message: `System-wide pass rate: ${auditStats.pass_rate.toFixed(1)}%`,
           metrics: {
-            runId: "system_check",
-            orgId: "system",
-            moduleId: "system_health",
+            runId: 'system_check',
+            orgId: 'system',
+            moduleId: 'system_health',
             tokens: 0,
             cost: 0,
             duration: 0,
@@ -555,7 +533,7 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
         });
       }
     } catch (error) {
-      console.error("[AlertSystem] System health check failed:", error);
+      console.error('[AlertSystem] System health check failed:', error);
     }
   }
 
@@ -563,15 +541,13 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
    * Acknowledge an incident
    */
   acknowledgeIncident(incidentId: string, acknowledgedBy: string): boolean {
-    const incident = this.incidents.find((i) => i.id === incidentId);
-    if (!incident || incident.status !== "active") return false;
+    const incident = this.incidents.find(i => i.id === incidentId);
+    if (!incident || incident.status !== 'active') return false;
 
-    incident.status = "acknowledged";
-    incident.actions_taken.push(
-      `Acknowledged by ${acknowledgedBy} at ${new Date().toISOString()}`,
-    );
+    incident.status = 'acknowledged';
+    incident.actions_taken.push(`Acknowledged by ${acknowledgedBy} at ${new Date().toISOString()}`);
 
-    telemetry.trackEvent("incident_acknowledged", "system", {
+    telemetry.trackEvent('incident_acknowledged', 'system', {
       incident_id: incidentId,
       acknowledged_by: acknowledgedBy,
     });
@@ -582,26 +558,19 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
   /**
    * Resolve an incident
    */
-  resolveIncident(
-    incidentId: string,
-    resolvedBy: string,
-    notes?: string,
-  ): boolean {
-    const incident = this.incidents.find((i) => i.id === incidentId);
-    if (!incident || incident.status === "resolved") return false;
+  resolveIncident(incidentId: string, resolvedBy: string, notes?: string): boolean {
+    const incident = this.incidents.find(i => i.id === incidentId);
+    if (!incident || incident.status === 'resolved') return false;
 
-    incident.status = "resolved";
+    incident.status = 'resolved';
     incident.resolved_at = new Date();
     incident.resolution_notes = notes;
-    incident.actions_taken.push(
-      `Resolved by ${resolvedBy} at ${new Date().toISOString()}`,
-    );
+    incident.actions_taken.push(`Resolved by ${resolvedBy} at ${new Date().toISOString()}`);
 
-    telemetry.trackEvent("incident_resolved", "system", {
+    telemetry.trackEvent('incident_resolved', 'system', {
       incident_id: incidentId,
       resolved_by: resolvedBy,
-      duration_minutes:
-        incident.resolved_at.getTime() - incident.started_at.getTime() / 60000,
+      duration_minutes: incident.resolved_at.getTime() - incident.started_at.getTime() / 60000,
     });
 
     return true;
@@ -611,14 +580,14 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
    * Get active incidents
    */
   getActiveIncidents(): IncidentReport[] {
-    return this.incidents.filter((i) => i.status === "active");
+    return this.incidents.filter(i => i.status === 'active');
   }
 
   /**
    * Get incident by ID
    */
   getIncident(incidentId: string): IncidentReport | undefined {
-    return this.incidents.find((i) => i.id === incidentId);
+    return this.incidents.find(i => i.id === incidentId);
   }
 
   /**
@@ -632,15 +601,12 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
     incidents_by_type: Record<string, number>;
     incidents_by_severity: Record<string, number>;
   } {
-    const resolved = this.incidents.filter(
-      (i) => i.status === "resolved" && i.resolved_at,
-    );
+    const resolved = this.incidents.filter(i => i.status === 'resolved' && i.resolved_at);
     const avgResolutionTime =
       resolved.length > 0
         ? resolved.reduce(
-            (sum, i) =>
-              sum + (i.resolved_at!.getTime() - i.started_at.getTime()),
-            0,
+            (sum, i) => sum + (i.resolved_at!.getTime() - i.started_at.getTime()),
+            0
           ) /
           resolved.length /
           60000
@@ -649,17 +615,15 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
     const byType: Record<string, number> = {};
     const bySeverity: Record<string, number> = {};
 
-    this.incidents.forEach((incident) => {
+    this.incidents.forEach(incident => {
       byType[incident.alert_type] = (byType[incident.alert_type] || 0) + 1;
       bySeverity[incident.severity] = (bySeverity[incident.severity] || 0) + 1;
     });
 
     return {
       total_incidents: this.incidents.length,
-      active_incidents: this.incidents.filter((i) => i.status === "active")
-        .length,
-      resolved_incidents: this.incidents.filter((i) => i.status === "resolved")
-        .length,
+      active_incidents: this.incidents.filter(i => i.status === 'active').length,
+      resolved_incidents: this.incidents.filter(i => i.status === 'resolved').length,
       avg_resolution_time_minutes: avgResolutionTime,
       incidents_by_type: byType,
       incidents_by_severity: bySeverity,

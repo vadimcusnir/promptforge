@@ -1,4 +1,4 @@
-// PromptForge v3 - OpenAI Integration
+// PROMPTFORGE™ v3 - OpenAI Integration
 // GPT Live integration pentru editor și testing
 
 import OpenAI from 'openai';
@@ -24,9 +24,9 @@ export const openai = {
       create: async (options: any) => {
         const client = getOpenAI();
         return client.chat.completions.create(options);
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 export interface ChatOptions {
@@ -53,19 +53,19 @@ export async function chatOnce({
   user,
   model = 'gpt-4o-mini',
   temperature = 0.2,
-  maxTokens = 1200
+  maxTokens = 1200,
 }: ChatOptions): Promise<ChatResponse> {
   const startTime = Date.now();
-  
+
   try {
     const response = await openai.chat.completions.create({
       model,
       temperature,
       messages: [
         { role: 'system', content: system },
-        { role: 'user', content: user }
+        { role: 'user', content: user },
       ],
-      max_tokens: maxTokens
+      max_tokens: maxTokens,
     });
 
     const duration_ms = Date.now() - startTime;
@@ -74,20 +74,22 @@ export async function chatOnce({
 
     return {
       text,
-      usage: usage ? {
-        prompt_tokens: usage.prompt_tokens,
-        completion_tokens: usage.completion_tokens,
-        total_tokens: usage.total_tokens
-      } : null,
-      duration_ms
+      usage: usage
+        ? {
+            prompt_tokens: usage.prompt_tokens,
+            completion_tokens: usage.completion_tokens,
+            total_tokens: usage.total_tokens,
+          }
+        : null,
+      duration_ms,
     };
   } catch (error) {
     const duration_ms = Date.now() - startTime;
-    
+
     if (error instanceof Error) {
       throw new Error(`OpenAI API error: ${error.message}`);
     }
-    
+
     throw new Error('Unknown OpenAI API error');
   }
 }
@@ -119,7 +121,7 @@ Return only the optimized prompt, no explanations.`;
     user,
     model: 'gpt-4o-mini',
     temperature: 0.2,
-    maxTokens: 1000
+    maxTokens: 1000,
   });
 }
 
@@ -137,12 +139,15 @@ Follow the prompt instructions exactly and produce professional, actionable resu
     user,
     model: 'gpt-4o',
     temperature: 0.4,
-    maxTokens: 1600
+    maxTokens: 1600,
   });
 }
 
 // Evaluator pentru scoring prompturi
-export async function evaluatePrompt(prompt: string, sevenD: any): Promise<{
+export async function evaluatePrompt(
+  prompt: string,
+  sevenD: any
+): Promise<{
   clarity: number;
   execution: number;
   ambiguity: number;
@@ -184,28 +189,28 @@ Return JSON format:
     user,
     model: 'gpt-4o-mini',
     temperature: 0.0,
-    maxTokens: 700
+    maxTokens: 700,
   });
 
   try {
     const evaluation = JSON.parse(response.text);
-    
+
     // Calculate composite score
     const composite = Math.round(
-      evaluation.clarity * 0.30 +
-      evaluation.execution * 0.35 +
-      (100 - evaluation.ambiguity) * 0.15 +
-      evaluation.business_fit * 0.20
+      evaluation.clarity * 0.3 +
+        evaluation.execution * 0.35 +
+        (100 - evaluation.ambiguity) * 0.15 +
+        evaluation.business_fit * 0.2
     );
 
     // Determine verdict based on thresholds
-    const passThresholds = 
+    const passThresholds =
       evaluation.clarity >= 80 &&
       evaluation.execution >= 80 &&
       evaluation.ambiguity <= 20 &&
       evaluation.business_fit >= 75;
 
-    const verdict = passThresholds ? 'pass' : (composite >= 80 ? 'partial_pass' : 'fail');
+    const verdict = passThresholds ? 'pass' : composite >= 80 ? 'partial_pass' : 'fail';
 
     return {
       clarity: evaluation.clarity || 80,
@@ -214,7 +219,7 @@ Return JSON format:
       business_fit: evaluation.business_fit || 75,
       composite,
       verdict,
-      feedback: evaluation.feedback || 'Evaluation completed'
+      feedback: evaluation.feedback || 'Evaluation completed',
     };
   } catch (error) {
     // Fallback robust dacă JSON parse fail
@@ -225,7 +230,7 @@ Return JSON format:
       business_fit: 75,
       composite: 80,
       verdict: 'partial_pass',
-      feedback: 'Evaluation completed with fallback scoring'
+      feedback: 'Evaluation completed with fallback scoring',
     };
   }
 }
@@ -254,24 +259,27 @@ ${prompt}`;
     user,
     model: 'gpt-4o-mini',
     temperature: 0.2,
-    maxTokens: 900
+    maxTokens: 900,
   });
 }
 
 // Calculate estimated cost pentru OpenAI usage
-export function calculateCost(model: string, usage: { prompt_tokens: number; completion_tokens: number }): number {
+export function calculateCost(
+  model: string,
+  usage: { prompt_tokens: number; completion_tokens: number }
+): number {
   // Pricing per 1K tokens (as of 2024)
   const pricing: Record<string, { input: number; output: number }> = {
     'gpt-4o': { input: 0.005, output: 0.015 },
-    'gpt-4o-mini': { input: 0.000150, output: 0.000600 },
+    'gpt-4o-mini': { input: 0.00015, output: 0.0006 },
     'gpt-4': { input: 0.03, output: 0.06 },
-    'gpt-3.5-turbo': { input: 0.001, output: 0.002 }
+    'gpt-3.5-turbo': { input: 0.001, output: 0.002 },
   };
 
   const modelPricing = pricing[model] || pricing['gpt-4o-mini'];
-  
+
   const inputCost = (usage.prompt_tokens / 1000) * modelPricing.input;
   const outputCost = (usage.completion_tokens / 1000) * modelPricing.output;
-  
+
   return inputCost + outputCost;
 }

@@ -3,35 +3,28 @@
  * This shows how to integrate AgentWatch, AuditLogger, and AlertSystem in your application
  */
 
-import {
-  agentWatch,
-  auditLogger,
-  alertSystem,
-  initializeObservability,
-} from "@/lib/observability";
+import { agentWatch, auditLogger, alertSystem, initializeObservability } from '@/lib/observability';
 
 // Initialize the observability system on app startup
 export function setupObservability() {
-  console.log("Setting up observability system...");
+  console.log('Setting up observability system...');
 
   // Initialize all components
   initializeObservability();
 
   // Set up custom alert handlers
-  agentWatch.onAlert((alert) => {
+  agentWatch.onAlert(alert => {
     console.log(`Custom alert handler: ${alert.type} - ${alert.message}`);
 
     // Custom business logic for specific alerts
-    if (alert.type === "budget_exceeded" && alert.actual > 2.0) {
+    if (alert.type === 'budget_exceeded' && alert.actual > 2.0) {
       // Emergency action for very high costs
-      console.error(
-        "EMERGENCY: Cost exceeded $2.00, triggering immediate review",
-      );
+      console.error('EMERGENCY: Cost exceeded $2.00, triggering immediate review');
       // Could send emergency notifications, pause all operations, etc.
     }
   });
 
-  console.log("Observability system setup complete");
+  console.log('Observability system setup complete');
 }
 
 // Example: Monitoring an agent run
@@ -49,7 +42,7 @@ export async function monitoredAgentRun(params: {
   let cost = 0;
   let score: number | undefined;
   let errorCode: string | undefined;
-  let outputContent = "";
+  let outputContent = '';
 
   try {
     console.log(`[Monitor] Starting run ${params.runId}`);
@@ -106,7 +99,7 @@ export async function monitoredAgentRun(params: {
       tokens,
       cost,
       score,
-      export_formats: ["txt", "json"],
+      export_formats: ['txt', 'json'],
       prompt_content: params.promptContent,
       input_content: params.inputContent,
       output_content: outputContent,
@@ -135,12 +128,10 @@ async function simulateAgentExecution(params: {
   inputContent: string;
 }) {
   // Simulate processing time
-  await new Promise((resolve) =>
-    setTimeout(resolve, Math.random() * 2000 + 500),
-  );
+  await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500));
 
   // Simulate different outcomes based on module
-  const isHighCostModule = params.moduleId.includes("ENTERPRISE");
+  const isHighCostModule = params.moduleId.includes('ENTERPRISE');
   const baseTokens = Math.floor(Math.random() * 8000) + 2000;
   const tokens = isHighCostModule ? baseTokens * 1.5 : baseTokens;
 
@@ -149,9 +140,7 @@ async function simulateAgentExecution(params: {
 
   // Simulate score (higher for certain modules)
   const baseScore = Math.random() * 40 + 60; // 60-100 range
-  const score = params.moduleId.includes("PREMIUM")
-    ? Math.min(baseScore + 10, 100)
-    : baseScore;
+  const score = params.moduleId.includes('PREMIUM') ? Math.min(baseScore + 10, 100) : baseScore;
 
   // Simulate occasional failures
   if (Math.random() < 0.05) {
@@ -192,7 +181,7 @@ export function getHealthStatus() {
     alertStats.active_incidents === 0; // No active incidents
 
   return {
-    status: isHealthy ? "healthy" : "degraded",
+    status: isHealthy ? 'healthy' : 'degraded',
     agents_enabled: AgentWatchWorker.areAgentsEnabled(),
     degradation_mode: agentSummary.degradationMode,
     metrics: {
@@ -213,12 +202,12 @@ export function scheduleMonitoringJobs() {
       const health = getHealthStatus();
       console.log(`[Monitor] System health check: ${health.status}`);
 
-      if (health.status === "degraded") {
-        console.warn("[Monitor] System degraded, investigating...");
+      if (health.status === 'degraded') {
+        console.warn('[Monitor] System degraded, investigating...');
         // Could trigger additional diagnostics
       }
     },
-    5 * 60 * 1000,
+    5 * 60 * 1000
   );
 
   // Generate daily reports
@@ -226,43 +215,43 @@ export function scheduleMonitoringJobs() {
     () => {
       const stats = auditLogger.getStatistics();
       console.log(
-        `[Monitor] Daily report: ${stats.total_runs} runs, ${stats.pass_rate.toFixed(1)}% pass rate`,
+        `[Monitor] Daily report: ${stats.total_runs} runs, ${stats.pass_rate.toFixed(1)}% pass rate`
       );
     },
-    24 * 60 * 60 * 1000,
+    24 * 60 * 60 * 1000
   );
 
-  console.log("[Monitor] Scheduled jobs started");
+  console.log('[Monitor] Scheduled jobs started');
 }
 
 // Example: API middleware integration
 export function createObservabilityMiddleware() {
   return async (req: any, res: any, next: any) => {
     const startTime = Date.now();
-    const runId = req.headers["x-run-id"];
-    const orgId = req.headers["x-org-id"];
+    const runId = req.headers['x-run-id'];
+    const orgId = req.headers['x-org-id'];
 
     // Check kill-switch
     if (!AgentWatchWorker.areAgentsEnabled()) {
       return res.status(503).json({
-        error: "AGENTS_DISABLED",
-        message: "Agent execution disabled by kill-switch",
+        error: 'AGENTS_DISABLED',
+        message: 'Agent execution disabled by kill-switch',
       });
     }
 
     // Check degradation mode for live testing
-    if (req.path.includes("/gpt-test")) {
+    if (req.path.includes('/gpt-test')) {
       const summary = agentWatch.getMetricsSummary();
       if (summary.degradationMode) {
         return res.status(503).json({
-          error: "DEGRADATION_MODE",
-          message: "Live testing disabled in degradation mode",
+          error: 'DEGRADATION_MODE',
+          message: 'Live testing disabled in degradation mode',
         });
       }
     }
 
     // Continue with request
-    res.on("finish", () => {
+    res.on('finish', () => {
       const duration = Date.now() - startTime;
       const hasError = res.statusCode >= 400;
 

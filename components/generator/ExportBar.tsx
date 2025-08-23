@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Download, FileText, Code, Package, Lock } from "lucide-react";
-import { EntitlementGate, useFeatureAccess } from "@/components/billing/EntitlementGate";
-import type { GeneratedPrompt, TestResult } from "@/types/promptforge";
+import { useState } from 'react';
+import { EntitlementGate, useFeatureAccess } from '@/components/billing/EntitlementGate';
+import type { GeneratedPrompt, TestResult } from '@/types/promptforge';
 
 interface ExportBarProps {
   prompt: GeneratedPrompt;
@@ -17,39 +16,35 @@ export function ExportBar({ prompt, testResult, onExport, orgId }: ExportBarProp
 
   const exportFormats = [
     {
-      format: "txt",
-      label: ".txt",
-      icon: FileText,
+      format: 'txt',
+      label: '.txt',
       free: true,
-      description: "Plain text format",
+      description: 'Plain text format',
     },
     {
-      format: "md",
-      label: ".md",
-      icon: FileText,
-      entitlement: "canExportMD" as const,
-      description: "Markdown format",
+      format: 'md',
+      label: '.md',
+      entitlement: 'canExportMD' as const,
+      description: 'Markdown format',
     },
     {
-      format: "json",
-      label: ".json",
-      icon: Code,
-      entitlement: "canExportJSON" as const,
-      description: "Structured JSON with metadata",
+      format: 'json',
+      label: '.json',
+      entitlement: 'canExportJSON' as const,
+      description: 'Structured JSON with metadata',
     },
     {
-      format: "pdf",
-      label: ".pdf",
-      icon: FileText,
-      entitlement: "canExportPDF" as const,
-      description: "Professional PDF report",
+      format: 'pdf',
+      label: '.pdf',
+      entitlement: 'canExportPDF' as const,
+      description: 'Professional PDF report',
     },
     {
-      format: "zip",
-      label: ".zip",
+      format: 'zip',
+      label: '.zip',
       icon: Package,
-      entitlement: "canExportBundleZip" as const,
-      description: "Complete bundle with assets",
+      entitlement: 'canExportBundleZip' as const,
+      description: 'Complete bundle with assets',
     },
   ];
 
@@ -66,8 +61,8 @@ export function ExportBar({ prompt, testResult, onExport, orgId }: ExportBarProp
       test_score: testResult
         ? Object.values(testResult.scores).reduce((a, b) => a + b, 0) / 4
         : null,
-      verdict: testResult?.verdict || "UNTESTED",
-      license: "PROMPTFORGE™ Enterprise License",
+      verdict: testResult?.verdict || 'UNTESTED',
+      license: 'PROMPTFORGE™ Enterprise License',
       signature_7d: JSON.stringify(prompt.sevenDConfig),
     };
   };
@@ -78,7 +73,6 @@ export function ExportBar({ prompt, testResult, onExport, orgId }: ExportBarProp
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Download className="w-5 h-5 text-gold-industrial" />
               <span className="font-medium">Export</span>
             </div>
 
@@ -86,7 +80,7 @@ export function ExportBar({ prompt, testResult, onExport, orgId }: ExportBarProp
               {exportFormats.map(
                 ({ format, label, icon: Icon, free, entitlement, description }) => {
                   if (free) {
-                    // Free formats don't need entitlement checks
+                    // Free formats dondon'tapos;t need entitlement checks
                     return (
                       <button
                         key={format}
@@ -119,7 +113,7 @@ export function ExportBar({ prompt, testResult, onExport, orgId }: ExportBarProp
                       </button>
                     </EntitlementGate>
                   );
-                },
+                }
               )}
             </div>
           </div>
@@ -129,13 +123,11 @@ export function ExportBar({ prompt, testResult, onExport, orgId }: ExportBarProp
               onClick={() => setShowManifest(!showManifest)}
               className="text-lead-gray hover:text-white transition-colors"
             >
-              {showManifest ? "Hide" : "Show"} Manifest
+              {showManifest ? 'Hide' : 'Show'} Manifest
             </button>
             <div className="text-lead-gray">
-              Checksum:{" "}
-              <span className="font-mono text-gold-industrial">
-                {generateChecksum().slice(-8)}
-              </span>
+              Checksum:{' '}
+              <span className="font-mono text-gold-industrial">{generateChecksum().slice(-8)}</span>
             </div>
           </div>
         </div>

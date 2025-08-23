@@ -1,15 +1,20 @@
-// PromptForge v3 - Industry Packs API
+// PROMPTFORGE™ v3 - Industry Packs API
 // Access la packs specializate pentru domenii cu gating pe entitlements
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getAvailablePacksForUser, getIndustryPack, getTemplatesForDomain } from '@/lib/industry-packs';
+import {
+  getAvailablePacksForUser,
+  getIndustryPack,
+  getTemplatesForDomain,
+} from '@/lib/industry-packs';
 import { type Domain } from '@/lib/ruleset';
 import { assertMembership, validateSACFHeaders, handleSecurityError } from '@/lib/security/assert';
 import { createClient } from '@supabase/supabase-js';
 
 // SACF - Development mode fallback pentru testing
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+const SUPABASE_SERVICE_ROLE =
+  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
@@ -22,7 +27,7 @@ async function getEntitlements(orgId: string): Promise<Record<string, boolean>> 
       canExportPDF: true,
       canExportJSON: true,
       hasAPI: false,
-      canExportBundleZip: false
+      canExportBundleZip: false,
     };
   }
 
@@ -36,7 +41,7 @@ async function getEntitlements(orgId: string): Promise<Record<string, boolean>> 
     if (error) throw error;
 
     return Object.fromEntries(
-      (data || []).map((r: any) => [r.flag, r.value])
+      (data || []).map((r: { flag: string; value: boolean }) => [r.flag, r.value])
     );
   } catch (error) {
     console.error('Failed to fetch entitlements:', error);
@@ -81,7 +86,8 @@ export async function GET(req: NextRequest) {
             domain,
             missing_entitlements: restrictedPack.missing_entitlements,
             upgrade_required: restrictedPack.upgrade_required,
-            upsell: restrictedPack.upgrade_required === 'enterprise' ? 'enterprise_needed' : 'pro_needed'
+            upsell:
+              restrictedPack.upgrade_required === 'enterprise' ? 'enterprise_needed' : 'pro_needed',
           },
           { status: 403 }
         );
@@ -98,15 +104,14 @@ export async function GET(req: NextRequest) {
           restricted: templates.restricted.map(t => ({
             ...t,
             restriction_reason: 'Missing required entitlements',
-            required_entitlements: t.required_entitlements
-          }))
+            required_entitlements: t.required_entitlements,
+          })),
         },
         access: {
           full_access: !!availablePack,
-          restricted_features: restrictedPack?.missing_entitlements || []
-        }
+          restricted_features: restrictedPack?.missing_entitlements || [],
+        },
       });
-
     } else {
       // Request pentru toate pack-urile
       const packsAccess = await getAvailablePacksForUser(entitlements);
@@ -116,7 +121,7 @@ export async function GET(req: NextRequest) {
         summary: {
           total_packs: packsAccess.available.length + packsAccess.restricted.length,
           available: packsAccess.available.length,
-          restricted: packsAccess.restricted.length
+          restricted: packsAccess.restricted.length,
         },
         available_packs: packsAccess.available.map(pack => ({
           domain: pack.domain,
@@ -124,19 +129,20 @@ export async function GET(req: NextRequest) {
           risk_level: pack.config.risk_level,
           templates_count: pack.templates.length,
           premium_features_count: pack.premium_features.length,
-          compliance_requirements: pack.compliance.regulations.length
+          compliance_requirements: pack.compliance.regulations.length,
         })),
         restricted_packs: packsAccess.restricted.map(item => ({
           domain: item.pack.domain,
           industry: item.pack.config.industry,
           missing_entitlements: item.missing_entitlements,
           upgrade_required: item.upgrade_required,
-          value_proposition: item.pack.premium_features[0]?.value_proposition || 'Advanced industry-specific features'
+          value_proposition:
+            item.pack.premium_features[0]?.value_proposition ||
+            'Advanced industry-specific features',
         })),
-        entitlements
+        entitlements,
       });
     }
-
   } catch (error) {
     console.error('Industry Packs API error:', error);
     return handleSecurityError(error);
@@ -178,7 +184,10 @@ export async function POST(req: NextRequest) {
     const template = pack.templates.find(t => t.id === templateId);
     if (!template) {
       return NextResponse.json(
-        { error: 'TEMPLATE_NOT_FOUND', message: `Template '${templateId}' not found in domain '${domain}'` },
+        {
+          error: 'TEMPLATE_NOT_FOUND',
+          message: `Template '${templateId}' not found in domain '${domain}'`,
+        },
         { status: 404 }
       );
     }
@@ -195,7 +204,7 @@ export async function POST(req: NextRequest) {
           template: templateId,
           missing_entitlements: missingEntitlements,
           upgrade_required: missingEntitlements.includes('hasAPI') ? 'enterprise' : 'pro',
-          upsell: missingEntitlements.includes('hasAPI') ? 'enterprise_needed' : 'pro_needed'
+          upsell: missingEntitlements.includes('hasAPI') ? 'enterprise_needed' : 'pro_needed',
         },
         { status: 403 }
       );
@@ -211,7 +220,7 @@ export async function POST(req: NextRequest) {
         {
           error: 'COMPLIANCE_VIOLATION',
           violations: complianceCheck.violations,
-          mandatory_disclaimers: pack.compliance.mandatory_disclaimers
+          mandatory_disclaimers: pack.compliance.mandatory_disclaimers,
         },
         { status: 400 }
       );
@@ -223,23 +232,22 @@ export async function POST(req: NextRequest) {
         id: template.id,
         name: template.name,
         category: template.category,
-        estimated_time_hours: template.estimated_time_hours
+        estimated_time_hours: template.estimated_time_hours,
       },
       prompt: finalPrompt,
       configuration: {
         domain: pack.domain,
         seven_d: template.template_7d,
         success_metrics: template.success_metrics,
-        compliance_notes: pack.config.compliance_notes
+        compliance_notes: pack.config.compliance_notes,
       },
       next_steps: [
         'Review the generated prompt for accuracy',
         'Test the prompt using /api/gpt-test',
-        'Export results using /api/export/bundle when satisfied'
+        'Export results using /api/export/bundle when satisfied',
       ],
-      mandatory_disclaimers: pack.compliance.mandatory_disclaimers
+      mandatory_disclaimers: pack.compliance.mandatory_disclaimers,
     });
-
   } catch (error) {
     console.error('Industry Pack generation error:', error);
     return handleSecurityError(error);
@@ -247,7 +255,12 @@ export async function POST(req: NextRequest) {
 }
 
 // Helper function pentru construirea prompt-ului final
-function buildFinalPrompt(template: any, pack: any, userInputs: any, customParameters: any): string {
+function buildFinalPrompt(
+  template: { prompt_template: string },
+  pack: { compliance: { mandatory_disclaimers: string[] } },
+  userInputs: Record<string, string> | null,
+  customParameters: Record<string, string> | null
+): string {
   let prompt = template.prompt_template;
 
   // Înlocuiește placeholder-urile cu input-urile utilizatorului
@@ -273,7 +286,10 @@ function buildFinalPrompt(template: any, pack: any, userInputs: any, customParam
 }
 
 // Helper function pentru validarea compliance
-function validateComplianceRequirements(pack: any, userInputs: any): {
+function validateComplianceRequirements(
+  pack: { compliance: { restricted_content: string[] } },
+  userInputs: Record<string, string> | null
+): {
   passed: boolean;
   violations: string[];
 } {
@@ -282,7 +298,7 @@ function validateComplianceRequirements(pack: any, userInputs: any): {
   // Verifică conținut restricționat
   if (userInputs) {
     const inputText = JSON.stringify(userInputs).toLowerCase();
-    
+
     for (const restrictedContent of pack.compliance.restricted_content) {
       const keywords = restrictedContent.toLowerCase().split(' ');
       if (keywords.some((keyword: string) => inputText.includes(keyword))) {
@@ -293,6 +309,6 @@ function validateComplianceRequirements(pack: any, userInputs: any): {
 
   return {
     passed: violations.length === 0,
-    violations
+    violations,
   };
 }

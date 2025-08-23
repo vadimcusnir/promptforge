@@ -7,14 +7,14 @@
       "config_file": "./saas.json"
     },
     {
-      "slug": "fintech", 
+      "slug": "fintech",
       "name": "FinTech - Banking, Payments, Lending",
       "description": "Digital Banking, Payments & Wallets, Lending Platforms, InsurTech, RegTech",
       "config_file": "./fintech.json"
     },
     {
       "slug": "ecommerce",
-      "name": "E-Commerce - Retail, Marketplaces", 
+      "name": "E-Commerce - Retail, Marketplaces",
       "description": "Online Retail, Marketplaces, D2C Brands, Social Commerce, Dropshipping",
       "config_file": "./ecommerce.json"
     },
@@ -63,15 +63,26 @@
     {
       "slug": "web3",
       "name": "Web3 - Blockchain, Crypto, DAOs",
-      "description": "DeFi, Crypto Exchanges, NFT Marketplaces, DAOs, Web3 Infrastructure", 
+      "description": "DeFi, Crypto Exchanges, NFT Marketplaces, DAOs, Web3 Infrastructure",
       "config_file": "./web3.json"
     }
   ],
   "total_domains": 25,
   "implemented": 11,
   "pending": [
-    "media", "real_estate", "hr", "ngo", "government", "manufacturing", 
-    "logistics", "travel", "gaming", "fashion", "beauty", "spiritual", 
-    "architecture", "agriculture"
+    "media",
+    "real_estate",
+    "hr",
+    "ngo",
+    "government",
+    "manufacturing",
+    "logistics",
+    "travel",
+    "gaming",
+    "fashion",
+    "beauty",
+    "spiritual",
+    "architecture",
+    "agriculture"
   ]
 }

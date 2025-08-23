@@ -1,63 +1,46 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
+import { useState, useRef } from 'react';
+import { Textarea } from '@/components/ui/textarea';
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import {
-  IndustrialCard,
-  IndustrialButton,
-  IndustrialBadge,
-} from "@/components/industrial-ui";
+} from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { IndustrialCard, IndustrialButton, IndustrialBadge } from '@/components/industrial-ui';
 import {
   GPTLiveEngine,
   type GPTLiveOptions,
   type GPTStreamChunk,
   type GPTLiveResult,
-} from "@/lib/gpt-live";
-import { PremiumGate } from "@/lib/premium-features";
-import type { GeneratedPrompt } from "@/types/promptforge";
-import {
-  Bot,
-  Square,
-  Activity,
-  TrendingUp,
-  Copy,
-  Download,
-  Settings,
-  Sparkles,
-  Clock,
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+} from '@/lib/gpt-live';
+import { PremiumGate } from '@/lib/premium-features';
+import type { GeneratedPrompt } from '@/types/promptforge';
+import { Bot, Square, Activity, TrendingUp, Copy, Settings, Sparkles, Clock } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface GPTLiveEditorProps {
   generatedPrompt: GeneratedPrompt | null;
   onEditComplete?: (result: GPTLiveResult) => void;
 }
 
-export function GPTLiveEditor({
-  generatedPrompt,
-  onEditComplete,
-}: GPTLiveEditorProps) {
+export function GPTLiveEditor({ generatedPrompt, onEditComplete }: GPTLiveEditorProps) {
   const [isOptimizing, setIsOptimizing] = useState(false);
-  const [streamingContent, setStreamingContent] = useState<string>("");
+  const [streamingContent, setStreamingContent] = useState<string>('');
   const [improvements, setImprovements] = useState<string[]>([]);
-  const [metrics, setMetrics] = useState<any>(null);
+  const [metrics, setMetrics] = useState<Record<string, number> | null>(null);
   const [result, setResult] = useState<GPTLiveResult | null>(null);
   const [progress, setProgress] = useState(0);
   const [options, setOptions] = useState<GPTLiveOptions>({
-    focus: "comprehensive",
-    tone: "professional",
-    length: "detailed",
+    focus: 'comprehensive',
+    tone: 'professional',
+    length: 'detailed',
     streaming: true,
-    model: "gpt-4o",
+    model: 'gpt-4o',
     temperature: 0.7,
     maxTokens: 4000,
   });
@@ -70,9 +53,9 @@ export function GPTLiveEditor({
   const handleOptimize = async () => {
     if (!generatedPrompt) {
       toast({
-        title: "Error",
-        description: "No prompt to optimize!",
-        variant: "destructive",
+        title: 'Error',
+        description: 'No prompt to optimize!',
+        variant: 'destructive',
       });
       return;
     }
@@ -81,15 +64,15 @@ export function GPTLiveEditor({
     const canUse = premiumGate.canUseGPTOptimization();
     if (!canUse.allowed) {
       toast({
-        title: "Premium Feature",
+        title: 'Premium Feature',
         description: canUse.reason,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
 
     setIsOptimizing(true);
-    setStreamingContent("");
+    setStreamingContent('');
     setImprovements([]);
     setMetrics(null);
     setResult(null);
@@ -99,7 +82,7 @@ export function GPTLiveEditor({
       const optimizationResult = await gptEngine.optimizeWithStreaming(
         generatedPrompt.prompt,
         options,
-        handleStreamChunk,
+        handleStreamChunk
       );
 
       setResult(optimizationResult);
@@ -107,15 +90,14 @@ export function GPTLiveEditor({
       premiumGate.consumeGPTOptimization();
 
       toast({
-        title: "Live optimization complete!",
+        title: 'Live optimization complete!',
         description: `Confidence: ${optimizationResult.confidence}% | Model: ${optimizationResult.model}`,
       });
     } catch (error) {
       toast({
-        title: "Optimization failed",
-        description:
-          error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive",
+        title: 'Optimization failed',
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        variant: 'destructive',
       });
     } finally {
       setIsOptimizing(false);
@@ -125,33 +107,33 @@ export function GPTLiveEditor({
 
   const handleStreamChunk = (chunk: GPTStreamChunk) => {
     switch (chunk.type) {
-      case "start":
+      case 'start':
         setProgress(10);
-        setStreamingContent(chunk.content || "");
+        setStreamingContent(chunk.content || '');
         break;
-      case "content":
-        setProgress((prev) => Math.min(prev + 20, 80));
-        setStreamingContent(chunk.content || "");
+      case 'content':
+        setProgress(prev => Math.min(prev + 20, 80));
+        setStreamingContent(chunk.content || '');
         break;
-      case "improvement":
+      case 'improvement':
         if (chunk.improvement) {
-          setImprovements((prev) => [...prev, chunk.improvement!]);
+          setImprovements(prev => [...prev, chunk.improvement!]);
         }
-        setProgress((prev) => Math.min(prev + 15, 85));
+        setProgress(prev => Math.min(prev + 15, 85));
         break;
-      case "metrics":
+      case 'metrics':
         setMetrics(chunk.metrics);
         setProgress(95);
         break;
-      case "complete":
+      case 'complete':
         setProgress(100);
-        setStreamingContent("Optimization complete!");
+        setStreamingContent('Optimization complete!');
         break;
-      case "error":
+      case 'error':
         toast({
-          title: "Streaming error",
+          title: 'Streaming error',
           description: chunk.error,
-          variant: "destructive",
+          variant: 'destructive',
         });
         break;
     }
@@ -163,7 +145,7 @@ export function GPTLiveEditor({
     }
     setIsOptimizing(false);
     setProgress(0);
-    setStreamingContent("");
+    setStreamingContent('');
   };
 
   const handleCopy = async () => {
@@ -171,23 +153,23 @@ export function GPTLiveEditor({
     try {
       await navigator.clipboard.writeText(result.editedPrompt);
       toast({
-        title: "Copied!",
-        description: "Optimized prompt copied to clipboard.",
+        title: 'Copied!',
+        description: 'Optimized prompt copied to clipboard.',
       });
     } catch (error) {
       toast({
-        title: "Copy failed",
-        description: "Could not copy prompt.",
-        variant: "destructive",
+        title: 'Copy failed',
+        description: 'Could not copy prompt.',
+        variant: 'destructive',
       });
     }
   };
 
   const handleDownload = () => {
     if (!result) return;
-    const blob = new Blob([result.editedPrompt], { type: "text/plain" });
+    const blob = new Blob([result.editedPrompt], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = `prompt_gpt_live_${Date.now()}.txt`;
     document.body.appendChild(a);
@@ -195,8 +177,8 @@ export function GPTLiveEditor({
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     toast({
-      title: "Downloaded!",
-      description: "Optimized prompt saved to file.",
+      title: 'Downloaded!',
+      description: 'Optimized prompt saved to file.',
     });
   };
 
@@ -222,9 +204,7 @@ export function GPTLiveEditor({
       <IndustrialCard className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Settings className="w-5 h-5 text-cyan-400" />
-          <h3 className="text-lg font-semibold text-white">
-            Live Optimization Settings
-          </h3>
+          <h3 className="text-lg font-semibold text-white">Live Optimization Settings</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -232,9 +212,7 @@ export function GPTLiveEditor({
             <label className="text-sm font-medium text-cyan-300">Model</label>
             <Select
               value={options.model}
-              onValueChange={(value: any) =>
-                setOptions({ ...options, model: value })
-              }
+              onValueChange={(value: any) => setOptions({ ...options, model: value })}
             >
               <SelectTrigger className="industrial-input">
                 <SelectValue />
@@ -251,9 +229,7 @@ export function GPTLiveEditor({
             <label className="text-sm font-medium text-cyan-300">Focus</label>
             <Select
               value={options.focus}
-              onValueChange={(value: any) =>
-                setOptions({ ...options, focus: value })
-              }
+              onValueChange={(value: any) => setOptions({ ...options, focus: value })}
             >
               <SelectTrigger className="industrial-input">
                 <SelectValue />
@@ -268,15 +244,11 @@ export function GPTLiveEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-cyan-300">
-              Temperature
-            </label>
+            <label className="text-sm font-medium text-cyan-300">Temperature</label>
             <div className="px-3">
               <Slider
                 value={[options.temperature]}
-                onValueChange={([value]) =>
-                  setOptions({ ...options, temperature: value })
-                }
+                onValueChange={([value]) => setOptions({ ...options, temperature: value })}
                 max={1}
                 min={0}
                 step={0.1}
@@ -291,14 +263,10 @@ export function GPTLiveEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-cyan-300">
-              Max Tokens
-            </label>
+            <label className="text-sm font-medium text-cyan-300">Max Tokens</label>
             <Select
               value={options.maxTokens.toString()}
-              onValueChange={(value) =>
-                setOptions({ ...options, maxTokens: Number.parseInt(value) })
-              }
+              onValueChange={value => setOptions({ ...options, maxTokens: Number.parseInt(value) })}
             >
               <SelectTrigger className="industrial-input">
                 <SelectValue />
@@ -347,10 +315,6 @@ export function GPTLiveEditor({
               <Copy className="w-4 h-4 mr-2" />
               Copy
             </IndustrialButton>
-            <IndustrialButton variant="secondary" onClick={handleDownload}>
-              <Download className="w-4 h-4 mr-2" />
-              Download
-            </IndustrialButton>
           </>
         )}
       </div>
@@ -361,9 +325,7 @@ export function GPTLiveEditor({
             <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center animate-pulse">
               <Bot className="w-4 h-4 text-white" />
             </div>
-            <h4 className="text-lg font-semibold text-white">
-              Live Processing Status
-            </h4>
+            <h4 className="text-lg font-semibold text-white">Live Processing Status</h4>
           </div>
 
           <Progress value={progress} className="mb-4 h-2" />
@@ -373,14 +335,9 @@ export function GPTLiveEditor({
 
             {improvements.length > 0 && (
               <div className="space-y-2">
-                <h5 className="text-sm font-semibold text-green-400">
-                  Live Improvements:
-                </h5>
+                <h5 className="text-sm font-semibold text-green-400">Live Improvements:</h5>
                 {improvements.map((improvement, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 text-sm animate-fade-in"
-                  >
+                  <div key={index} className="flex items-center gap-2 text-sm animate-fade-in">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                     <span className="text-slate-300">{improvement}</span>
                   </div>
@@ -392,12 +349,8 @@ export function GPTLiveEditor({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {Object.entries(metrics).map(([key, value]) => (
                   <div key={key} className="text-center">
-                    <div className="text-lg font-bold text-cyan-400">
-                      {value}%
-                    </div>
-                    <div className="text-xs text-slate-400 capitalize">
-                      {key}
-                    </div>
+                    <div className="text-lg font-bold text-cyan-400">{value}%</div>
+                    <div className="text-xs text-slate-400 capitalize">{key}</div>
                   </div>
                 ))}
               </div>
@@ -409,9 +362,7 @@ export function GPTLiveEditor({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-lg font-semibold text-white">
-              Original Prompt
-            </h4>
+            <h4 className="text-lg font-semibold text-white">Original Prompt</h4>
             {generatedPrompt && (
               <IndustrialBadge variant="default">
                 {generatedPrompt.prompt.length} chars
@@ -419,7 +370,7 @@ export function GPTLiveEditor({
             )}
           </div>
           <Textarea
-            value={generatedPrompt?.prompt || ""}
+            value={generatedPrompt?.prompt || ''}
             placeholder="Original prompt will appear here..."
             className="min-h-[500px] font-mono text-sm industrial-input"
             readOnly
@@ -428,9 +379,7 @@ export function GPTLiveEditor({
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-lg font-semibold text-white">
-              GPT Live Optimized
-            </h4>
+            <h4 className="text-lg font-semibold text-white">GPT Live Optimized</h4>
             {result && (
               <div className="flex gap-2">
                 <IndustrialBadge variant="success">
@@ -444,7 +393,7 @@ export function GPTLiveEditor({
             )}
           </div>
           <Textarea
-            value={result?.editedPrompt || ""}
+            value={result?.editedPrompt || ''}
             placeholder="Live optimized prompt will stream here..."
             className="min-h-[500px] font-mono text-sm industrial-input border-purple-400/50"
             readOnly

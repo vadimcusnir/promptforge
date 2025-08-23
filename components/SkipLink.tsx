@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { COPY } from "@/lib/copy";
+import { COPY } from '@/lib/copy';
 
 export function SkipLink() {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const main = document.querySelector("main");
+    const main = document.querySelector('main');
     if (main) {
       main.focus();
       main.scrollIntoView();

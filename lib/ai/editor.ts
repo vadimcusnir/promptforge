@@ -14,7 +14,7 @@ export async function improvePrompt({
   action,
   content,
   context,
-  preserveIntent
+  preserveIntent,
 }: {
   action: string;
   content: string;
@@ -47,18 +47,18 @@ Format your response as JSON:
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: 'gpt-4o-mini',
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: content }
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: content },
       ],
       temperature: 0.3,
-      max_tokens: 2000
+      max_tokens: 2000,
     });
 
     const response = completion.choices[0]?.message?.content;
     if (!response) {
-      throw new Error("No response from OpenAI");
+      throw new Error('No response from OpenAI');
     }
 
     // Try to parse JSON response
@@ -70,7 +70,7 @@ Format your response as JSON:
       parsed = {
         improved_prompt: response,
         improvements: [`Applied ${action} transformation`],
-        suggestions: ["Consider reviewing the output manually"]
+        suggestions: ['Consider reviewing the output manually'],
       };
     }
 
@@ -80,19 +80,19 @@ Format your response as JSON:
       suggestions: parsed.suggestions || [],
       usage: {
         total_tokens: completion.usage?.total_tokens || 0,
-        estimated_cost: (completion.usage?.total_tokens || 0) * 0.00001 // Rough estimate
-      }
+        estimated_cost: (completion.usage?.total_tokens || 0) * 0.00001, // Rough estimate
+      },
     };
   } catch (error) {
-    console.error("OpenAI API error:", error);
+    console.error('OpenAI API error:', error);
     return {
       content: content, // Return original on error
       improvements: [`Error occurred during ${action}`],
-      suggestions: ["Please try again or contact support"],
+      suggestions: ['Please try again or contact support'],
       usage: {
         total_tokens: 0,
-        estimated_cost: 0
-      }
+        estimated_cost: 0,
+      },
     };
   }
 }

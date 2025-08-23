@@ -56,7 +56,11 @@
       "vectors": [3, 6],
       "domains": ["marketing", "education", "media"],
       "complexity_min": "advanced",
-      "typical_use_cases": ["content optimization", "engagement prediction", "performance improvement"],
+      "typical_use_cases": [
+        "content optimization",
+        "engagement prediction",
+        "performance improvement"
+      ],
       "contract": {
         "input_required": ["content_library", "performance_data", "audience_insights"],
         "output_format": ["playbook", "json", "checklist"],
@@ -88,7 +92,11 @@
       "vectors": [3, 4],
       "domains": ["marketing", "ecommerce", "media"],
       "complexity_min": "standard",
-      "typical_use_cases": ["influencer marketing", "collaboration management", "campaign tracking"],
+      "typical_use_cases": [
+        "influencer marketing",
+        "collaboration management",
+        "campaign tracking"
+      ],
       "contract": {
         "input_required": ["campaign_goals", "influencer_criteria", "brand_guidelines"],
         "output_format": ["playbook", "checklist", "json"],
@@ -104,7 +112,11 @@
       "vectors": [2, 7],
       "domains": ["consulting", "healthcare", "legal"],
       "complexity_min": "expert",
-      "typical_use_cases": ["crisis management", "reputation protection", "emergency communication"],
+      "typical_use_cases": [
+        "crisis management",
+        "reputation protection",
+        "emergency communication"
+      ],
       "contract": {
         "input_required": ["crisis_scenarios", "stakeholder_map", "communication_channels"],
         "output_format": ["playbook", "checklist", "spec"],

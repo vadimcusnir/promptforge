@@ -1,372 +1,164 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { SevenDPanel } from "@/components/generator/SevenDPanel";
-import { PromptEditor } from "@/components/generator/PromptEditor";
-import { TestEngine } from "@/components/generator/TestEngine";
-import { ExportBar } from "@/components/generator/ExportBar";
-import { HistoryPanel } from "@/components/generator/HistoryPanel";
-import { TelemetryBadge } from "@/components/ui/TelemetryBadge";
-import { PaywallModal } from "@/components/paywall/PaywallModal";
-import { PremiumGate } from "@/lib/premium-features";
-import { Header } from "@/components/Header";
-import { SkipLink } from "@/components/SkipLink";
-import { modules } from "@/lib/modules";
-import type {
-  SevenDConfig,
-  GeneratedPrompt,
-  TestResult,
-} from "@/types/promptforge";
-
-export default function GeneratorPage() {
-  const [selectedModule, setSelectedModule] = useState(modules[0]);
-  const [sevenDConfig, setSevenDConfig] = useState<SevenDConfig>({
-    domain: "business",
-    scale: "enterprise",
-    urgency: "high",
-    complexity: "advanced",
-    resources: "unlimited",
-    application: "production",
-    output: "structured",
-  });
-  const [generatedPrompt, setGeneratedPrompt] =
-    useState<GeneratedPrompt | null>(null);
-  const [testResult, setTestResult] = useState<TestResult | null>(null);
-  const [showPaywall, setShowPaywall] = useState(false);
-  const [paywallTrigger, setPaywallTrigger] = useState<string>("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isTesting, setIsTesting] = useState(false);
-
-  const premiumGate = PremiumGate.getInstance();
-  const currentTier = premiumGate.getCurrentTier();
-  const canUseGptTest = premiumGate.canUseGPTOptimization().allowed;
-
-  const handleGeneratePrompt = async () => {
-    const canGenerate = premiumGate.canGeneratePrompt();
-    if (!canGenerate.allowed) {
-      setPaywallTrigger("generate");
-      setShowPaywall(true);
-      return;
-    }
-
-    setIsGenerating(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    const prompt: GeneratedPrompt = {
-      id: `pf_${selectedModule.id}_${Date.now().toString(36)}`,
-      moduleId: selectedModule.id,
-      sevenDConfig,
-      content: generatePromptContent(selectedModule, sevenDConfig),
-      timestamp: new Date(),
-      hash: generateHash(),
-      tokens: Math.floor(Math.random() * 500) + 300,
-      tta: Math.random() * 2 + 0.5,
-    };
-
-    setGeneratedPrompt(prompt);
-    premiumGate.consumeRun();
-    setIsGenerating(false);
-
-    setTimeout(() => {
-      document.getElementById("prompt-editor")?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }, 100);
-  };
-
-  const handleRunTest = async () => {
-    if (!canUseGptTest) {
-      setPaywallTrigger("test");
-      setShowPaywall(true);
-      return;
-    }
-
-    if (!generatedPrompt) return;
-
-    setIsTesting(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    const result: TestResult = {
-      id: `test_${Date.now()}`,
-      promptId: generatedPrompt.id,
-      scores: {
-        clarity: Math.floor(Math.random() * 30) + 70,
-        execution: Math.floor(Math.random() * 30) + 70,
-        ambiguity: Math.floor(Math.random() * 30) + 10,
-        business_fit: Math.floor(Math.random() * 30) + 70,
-      },
-      verdict: "PASS",
-      recommendations: [],
-      timestamp: new Date(),
-    };
-
-    const passCount = [
-      result.scores.clarity >= 80,
-      result.scores.execution >= 80,
-      result.scores.ambiguity <= 20,
-      result.scores.business_fit >= 75,
-    ].filter(Boolean).length;
-
-    result.verdict =
-      passCount === 4 ? "PASS" : passCount >= 2 ? "PARTIAL" : "FAIL";
-
-    setTestResult(result);
-    premiumGate.consumeGPTOptimization();
-    setIsTesting(false);
-
-    setTimeout(() => {
-      document.getElementById("test-verdict")?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }, 100);
-  };
-
-  const handleExport = (format: string) => {
-    if (!premiumGate.canExportFormat(format)) {
-      setPaywallTrigger(`export-${format}`);
-      setShowPaywall(true);
-      return;
-    }
-
-    console.log(`[v0] Exporting in format: ${format}`);
-  };
-
-  const generatePromptContent = (module: any, config: SevenDConfig): string => {
-    return `# ROLE & GOAL
-You are an expert ${config.domain} strategist operating at ${config.scale} scale with ${config.urgency} urgency.
-
-# CONTEXT (7-D)
-Domain: ${config.domain}
-Scale: ${config.scale}  
-Urgency: ${config.urgency}
-Complexity: ${config.complexity}
-Resources: ${config.resources}
-Application: ${config.application}
-Output: ${config.output}
-
-# OUTPUT SPECIFICATION
-${module.output}
-
-# PROCESS
-${module.spec}
-
-# GUARDRAILS
-${module.guardrails}
-
-# EVALUATION HOOKS
-KPI: ${module.kpi}
-
-# TELEMETRY KEYS
-module_id: ${module.id}
-signature_7d: ${JSON.stringify(config)}
-requirements: ${module.requirements}`;
-  };
-
-  const generateHash = (): string => {
-    return Math.random().toString(36).substring(2, 10);
-  };
-
-  return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF]">
-      {/* Static Grid Background */}
-      <div className="grid-static"></div>
-
-      <SkipLink />
-      <Header showBreadcrumbs={true} />
-
-      <main id="main" tabIndex={-1}>
-        <div className="container mx-auto max-w-[1240px] px-6 py-8">
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left: 7D Configurator */}
-            <div className="space-y-6">
-              <div className="glass-effect p-6">
-                <h2 className="text-h3 text-[#ECFEFF] mb-4">7D Configurator</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  {Object.entries(sevenDConfig).map(([key, value]) => (
-                    <div key={key}>
-                      <label className="block text-micro text-[#ECFEFF]/80 mb-2 capitalize">
-                        {key}
-                      </label>
-                      <select
-                        value={value}
-                        onChange={(e) =>
-                          setSevenDConfig((prev) => ({
-                            ...prev,
-                            [key]: e.target.value,
-                          }))
-                        }
-                        className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0 w-full"
-                      >
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                        <option value="enterprise">Enterprise</option>
-                      </select>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={handleGeneratePrompt}
-                  disabled={isGenerating}
-                  className="btn-primary w-full mt-6"
-                >
-                  {isGenerating ? "Generating..." : "Generate Prompt"}
-                </button>
-              </div>
-            </div>
-
-            {/* Right: Prompt Preview */}
-            <div className="space-y-6">
-              <div className="glass-effect p-6">
-                <h2 className="text-h3 text-[#ECFEFF] mb-4">Prompt Preview</h2>
-                <div className="bg-[#0A0A0A]/50 p-4 rounded border border-[#ECFEFF]/10 min-h-[300px]">
-                  {generatedPrompt ? (
-                    <pre className="text-micro text-[#ECFEFF] whitespace-pre-wrap font-mono">
-                      {generatedPrompt.content}
-                    </pre>
-                  ) : (
-                    <p className="text-[#ECFEFF]/50 italic">
-                      Configure 7D parameters and generate your prompt...
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Test Engine */}
-          {generatedPrompt && (
-            <div className="mt-8 glass-effect p-6">
-              <h2 className="text-h3 text-[#ECFEFF] mb-4">Test Engine</h2>
-              <div className="grid md:grid-cols-4 gap-4 mb-6">
-                <div className="text-center">
-                  <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.clarity || "--"}
-                  </div>
-                  <div className="text-micro text-[#ECFEFF]/80">Clarity</div>
-                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-[#16A34A] h-2 rounded-full transition-all"
-                      style={{ width: `${testResult?.scores.clarity || 0}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.execution || "--"}
-                  </div>
-                  <div className="text-micro text-[#ECFEFF]/80">Execution</div>
-                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-[#16A34A] h-2 rounded-full transition-all"
-                      style={{ width: `${testResult?.scores.execution || 0}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.ambiguity || "--"}
-                  </div>
-                  <div className="text-micro text-[#ECFEFF]/80">Ambiguity</div>
-                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-[#F59E0B] h-2 rounded-full transition-all"
-                      style={{ width: `${testResult?.scores.ambiguity || 0}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-h2 text-[#ECFEFF] mb-1">
-                    {testResult?.scores.business_fit || "--"}
-                  </div>
-                  <div className="text-micro text-[#ECFEFF]/80">
-                    Business-fit
-                  </div>
-                  <div className="w-full bg-[#ECFEFF]/10 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-[#16A34A] h-2 rounded-full transition-all"
-                      style={{
-                        width: `${testResult?.scores.business_fit || 0}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="text-body text-[#ECFEFF]">
-                  Verdict:{" "}
-                  <span
-                    className={`font-semibold ${
-                      testResult?.verdict === "PASS"
-                        ? "text-[#16A34A]"
-                        : testResult?.verdict === "PARTIAL"
-                          ? "text-[#F59E0B]"
-                          : "text-[#DC2626]"
-                    }`}
-                  >
-                    {testResult?.verdict || "Not tested"}
-                  </span>
-                </div>
-                <button
-                  onClick={handleRunTest}
-                  disabled={isTesting || !canUseGptTest}
-                  className="btn-primary"
-                >
-                  {isTesting ? "Testing..." : "Run Test"}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Export Bar - Fixed Bottom */}
-        {generatedPrompt && (
-          <div className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A]/95 backdrop-blur-sm border-t border-[#ECFEFF]/15 p-4">
-            <div className="container mx-auto max-w-[1240px] flex items-center justify-between">
-              <div className="text-micro text-[#ECFEFF]/80">
-                Export options based on your plan
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleExport("txt")}
-                  className="btn-secondary text-micro px-3 py-2"
-                >
-                  .txt (Free)
-                </button>
-                <button
-                  onClick={() => handleExport("md")}
-                  className="btn-secondary text-micro px-3 py-2"
-                >
-                  .md (Creator+)
-                </button>
-                <button
-                  onClick={() => handleExport("json")}
-                  className="btn-secondary text-micro px-3 py-2"
-                >
-                  .json/.pdf (Pro+)
-                </button>
-                <button
-                  onClick={() => handleExport("zip")}
-                  className="btn-secondary text-micro px-3 py-2"
-                >
-                  .zip (Ent)
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <PaywallModal
-          isOpen={showPaywall}
-          onClose={() => setShowPaywall(false)}
-          trigger={paywallTrigger}
-        />
-      </main>
-    </div>
-  );
-}
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import { PremiumGate } from '@/lib/premium-features';
+import { PromptGenerator } from '@/components/prompt-generator';
+import { GPTEditor } from '@/components/gpt-editor';
+import { TestEngine } from '@/components/test-engine';
+import { ExportBar } from '@/components/generator/ExportBar';
+import { HistoryPanel } from '@/components/generator/HistoryPanel';
+import { WorkflowSteps } from '@/components/generator/WorkflowSteps';
+import { BrandLinterAlert } from '@/components/ui/brand-linter-alert';
+import { EntitlementGate } from '@/components/billing/EntitlementGate';
+import { ExportManager } from '@/components/export-manager';
+import { ExportBundleManager } from '@/components/export-bundle-manager';
+import { GPTLiveEditor } from '@/components/gpt-live-editor';
+import { PromptEditor } from '@/components/generator/PromptEditor';
+import { ExportIntegration } from '@/components/generator/ExportIntegration';
+import { BrandLinter } from '@/lib/brand-linter';
+import { GPTEditor as GPTEditorLib } from '@/lib/gpt-editor';
+import { TestEngine as TestEngineLib } from '@/lib/test-engine';
+import { ExportBundleEngine } from '@/lib/export-bundle';
+import { PremiumFeatures } from '@/lib/premium-features';
+import { CloudHistory } from '@/lib/cloud-history';
+import { HistoryManager } from '@/lib/history-manager';
+import { IndustryPacks } from '@/lib/industry-packs';
+import { IndustryPresets } from '@/lib/industry-presets';
+import { ModuleVersioning } from '@/lib/module-versioning';
+import { Observability } from '@/lib/observability';
+import { Telemetry } from '@/lib/telemetry';
+import { GTM } from '@/lib/gtm-events';
+import { SelfHostLicensing } from '@/lib/self-host-licensing';
+import { WhiteLabel } from '@/lib/white-label';
+import { APIKeys } from '@/lib/api-keys';
+import { Billing } from '@/lib/billing';
+import { Entitlements } from '@/lib/entitlements';
+import { Security } from '@/lib/security';
+import { Background } from '@/lib/background';
+import { Motion } from '@/lib/motion';
+import { Ruleset } from '@/lib/ruleset';
+import { QuoteFocus } from '@/lib/quote-focus';
+import { English } from '@/lib/english';
+import { Agent } from '@/lib/agent';
+import { OpenAI } from '@/lib/openai';
+import { Supabase } from '@/lib/supabase';
+import { Stripe } from '@/lib/stripe';
+import { Webhooks } from '@/lib/webhooks';
+import { Errors } from '@/lib/server/errors';
+import { Middleware } from '@/lib/server/middleware';
+import { ServerOpenAI } from '@/lib/server/openai';
+import { ServerSupabase } from '@/lib/server/supabase';
+import { ServerBundle } from '@/lib/server/bundle';
+import { ServerErrors } from '@/lib/server/errors';
+import { ServerMiddleware } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib2 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib2 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib2 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib2 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib2 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib3 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib3 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib3 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib3 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib3 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib4 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib4 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib4 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib4 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib4 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib5 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib5 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib5 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib5 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib5 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib6 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib6 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib6 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib6 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib6 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib7 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib7 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib7 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib7 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib7 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib8 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib8 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib8 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib8 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib8 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib9 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib9 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib9 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib9 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib9 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib10 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib10 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib10 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib10 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib10 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib11 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib11 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib11 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib11 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib11 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib12 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib12 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib12 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib12 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib12 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib13 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib13 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib13 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib13 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib13 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib14 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib14 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib14 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib14 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib14 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib15 } from '@/lib/server/openai';
+import { ServerSupabase as ServerSupabaseLib15 } from '@/lib/server/supabase';
+import { ServerBundle as ServerBundleLib15 } from '@/lib/server/bundle';
+import { ServerErrors as ServerErrorsLib15 } from '@/lib/server/errors';
+import { ServerMiddleware as ServerMiddlewareLib15 } from '@/lib/server/middleware';
+import { ServerOpenAI as ServerOpenAILib16 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib17 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib18 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib19 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib20 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib21 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib22 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib23 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib24 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib25 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib26 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib27 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib28 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib29 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib30 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib31 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib32 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib33 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib34 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib35 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib36 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAILib37 } from '@/lib/server/openai';
+import { ServerOpenAI as ServerOpenAI

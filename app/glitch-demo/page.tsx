@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export default function GlitchDemoPage() {
   return (
@@ -10,7 +10,7 @@ export default function GlitchDemoPage() {
             <span className="kw" data-glitch>
               <span className="kw__text">Glitch Protocol</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span>{" "}
+            </span>{' '}
             v1 Demo
           </h1>
           <p className="text-xl text-[#ECFEFF]/80">
@@ -30,12 +30,10 @@ export default function GlitchDemoPage() {
               <span className="kw" data-glitch>
                 <span className="kw__text">Deterministic</span>
                 <span className="kw__glitch" aria-hidden="true"></span>
-              </span>{" "}
+              </span>{' '}
               Effects
             </h2>
-            <p className="text-[#ECFEFF]/80 mb-4">
-              Same text = same glitch pattern every time
-            </p>
+            <p className="text-[#ECFEFF]/80 mb-4">Same text = same glitch pattern every time</p>
             <ul className="space-y-2 text-sm">
               <li>• Seed-based PRNG (mulberry32)</li>
               <li>• Hash from text content</li>
@@ -53,12 +51,10 @@ export default function GlitchDemoPage() {
               <span className="kw" data-glitch>
                 <span className="kw__text">Performance</span>
                 <span className="kw__glitch" aria-hidden="true"></span>
-              </span>{" "}
+              </span>{' '}
               First
             </h2>
-            <p className="text-[#ECFEFF]/80 mb-4">
-              Optimized for 60fps with minimal CLS
-            </p>
+            <p className="text-[#ECFEFF]/80 mb-4">Optimized for 60fps with minimal CLS</p>
             <ul className="space-y-2 text-sm">
               <li>• requestAnimationFrame timing</li>
               <li>• Fixed width overlay (ch units)</li>
@@ -75,7 +71,7 @@ export default function GlitchDemoPage() {
           <span className="pf-corner br"></span>
 
           <h2 className="text-3xl font-bold text-center mb-8">
-            Live{" "}
+            Live{' '}
             <span className="kw" data-glitch>
               <span className="kw__text">Examples</span>
               <span className="kw__glitch" aria-hidden="true"></span>
@@ -87,16 +83,14 @@ export default function GlitchDemoPage() {
           <div className="space-y-8 text-center">
             <div>
               <h3 className="text-2xl font-bold mb-2">
-                The Future of{" "}
+                The Future of{' '}
                 <span className="kw" data-glitch>
                   <span className="kw__text">AI</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span>{" "}
+                </span>{' '}
                 Prompting
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">
-                H1 example with single keyword
-              </p>
+              <p className="text-[#ECFEFF]/60 text-sm">H1 example with single keyword</p>
             </div>
 
             <div>
@@ -104,30 +98,28 @@ export default function GlitchDemoPage() {
                 <span className="kw" data-glitch>
                   <span className="kw__text">50 Modules</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span>{" "}
-                ×{" "}
+                </span>{' '}
+                ×{' '}
                 <span className="kw" data-glitch>
                   <span className="kw__text">7D Engine</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span>{" "}
-                →{" "}
+                </span>{' '}
+                →{' '}
                 <span className="kw" data-glitch>
                   <span className="kw__text">Export</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
                 </span>
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">
-                H2 example with multiple keywords
-              </p>
+              <p className="text-[#ECFEFF]/60 text-sm">H2 example with multiple keywords</p>
             </div>
 
             <div>
               <h3 className="text-xl mb-2">
-                Experience the{" "}
+                Experience the{' '}
                 <span className="kw" data-glitch>
                   <span className="kw__text">Protocol</span>
                   <span className="kw__glitch" aria-hidden="true"></span>
-                </span>{" "}
+                </span>{' '}
                 in Action
               </h3>
               <p className="text-[#ECFEFF]/60 text-sm">
@@ -148,7 +140,7 @@ export default function GlitchDemoPage() {
             <span className="kw" data-glitch>
               <span className="kw__text">Technical</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span>{" "}
+            </span>{' '}
             Specs
           </h2>
 
@@ -172,7 +164,7 @@ export default function GlitchDemoPage() {
 
         {/* Footer */}
         <section className="text-center text-[#ECFEFF]/60">
-          <p>Glitch Protocol v1 • PromptForge Tactical Design System</p>
+          <p>Glitch Protocol v1 • PROMPTFORGE™ Tactical Design System</p>
         </section>
       </div>
 

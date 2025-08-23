@@ -1,4 +1,4 @@
-// PromptForge v3 - System Test API
+// PROMPTFORGE™ v3 - System Test API
 // Test complet: ruleset.yml → GPT Editor → GPT Test → Export Bundle
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -9,7 +9,7 @@ export async function GET() {
     // Test 1: Verifică ruleset.yml loading
     const enums = getEnums();
     const domains = enums.domain;
-    
+
     if (!domains || domains.length < 20) {
       throw new Error('Ruleset loading failed - insufficient domains');
     }
@@ -23,9 +23,9 @@ export async function GET() {
     // Test 3: Verifică 7D validation
     const testSevenD = {
       domain: 'saas',
-      output_format: 'spec'
+      output_format: 'spec',
     };
-    
+
     const validationResult = validate7D(testSevenD);
     if (!validationResult.isValid) {
       throw new Error(`7D validation failed: ${validationResult.errors.join(', ')}`);
@@ -33,9 +33,19 @@ export async function GET() {
 
     // Test 4: Verifică că toate câmpurile au fost populate cu defaults
     const normalized = validationResult.normalized;
-    const requiredFields = ['domain', 'scale', 'urgency', 'complexity', 'resources', 'application', 'output_format'];
-    const missingFields = requiredFields.filter(field => !normalized[field as keyof typeof normalized]);
-    
+    const requiredFields = [
+      'domain',
+      'scale',
+      'urgency',
+      'complexity',
+      'resources',
+      'application',
+      'output_format',
+    ];
+    const missingFields = requiredFields.filter(
+      field => !normalized[field as keyof typeof normalized]
+    );
+
     if (missingFields.length > 0) {
       throw new Error(`Missing fields after normalization: ${missingFields.join(', ')}`);
     }
@@ -45,37 +55,36 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       tests: {
         rulesetLoading: 'PASS',
-        domainDefaults: 'PASS', 
+        domainDefaults: 'PASS',
         sevenDValidation: 'PASS',
-        normalization: 'PASS'
+        normalization: 'PASS',
       },
       data: {
         availableDomains: domains.length,
         sampleDomainDefaults: saasDomainDefaults,
         normalizedSevenD: normalized,
-        signature: validationResult.signature
+        signature: validationResult.signature,
       },
       endpoints: {
         gptEditor: '/api/gpt-editor',
         gptTest: '/api/gpt-test',
         exportBundle: '/api/export/bundle',
-        entitlements: '/api/entitlements/[orgId]'
+        entitlements: '/api/entitlements/[orgId]',
       },
       nextSteps: [
         'Test /api/gpt-editor with prompt optimization',
         'Test /api/gpt-test with real GPT integration',
         'Test /api/export/bundle with all formats',
-        'Verify entitlements gating works correctly'
-      ]
+        'Verify entitlements gating works correctly',
+      ],
     });
-
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
         timestamp: new Date().toISOString(),
-        suggestion: 'Check that ruleset.yml exists in project root and contains valid YAML'
+        suggestion: 'Check that ruleset.yml exists in project root and contains valid YAML',
       },
       { status: 500 }
     );
@@ -98,16 +107,16 @@ export async function POST(req: NextRequest) {
         orgId,
         entitlements,
         capabilities: entitlements.capabilities,
-        restrictions: entitlements.restrictions
+        restrictions: entitlements.restrictions,
       });
     }
 
     if (testType === 'gpt-editor') {
       // Test GPT Editor endpoint
-      const testPrompt = "Create a marketing strategy for a SaaS product";
+      const testPrompt = 'Create a marketing strategy for a SaaS product';
       const testSevenD = {
         domain: 'saas',
-        output_format: 'playbook'
+        output_format: 'playbook',
       };
 
       // Simulăm un test call (fără a chema real GPT)
@@ -118,10 +127,10 @@ export async function POST(req: NextRequest) {
         testType: 'gpt-editor',
         input: {
           prompt: testPrompt,
-          sevenD: testSevenD
+          sevenD: testSevenD,
         },
         normalized7D: normalized.normalized,
-        note: 'This is a dry run - add orgId, userId, moduleId for real test'
+        note: 'This is a dry run - add orgId, userId, moduleId for real test',
       });
     }
 
@@ -129,12 +138,11 @@ export async function POST(req: NextRequest) {
       { error: 'Invalid test type. Supported: entitlements, gpt-editor' },
       { status: 400 }
     );
-
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Test failed'
+        error: error instanceof Error ? error.message : 'Test failed',
       },
       { status: 500 }
     );

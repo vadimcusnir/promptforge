@@ -1,52 +1,52 @@
 version: 2
 updates:
   # Enable version updates for npm
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Europe/Bucharest"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Europe/Bucharest'
     open-pull-requests-limit: 10
     reviewers:
-      - "vadimcusnir"
+      - 'vadimcusnir'
     assignees:
-      - "vadimcusnir"
+      - 'vadimcusnir'
     commit-message:
-      prefix: "deps"
-      prefix-development: "deps-dev"
-      include: "scope"
+      prefix: 'deps'
+      prefix-development: 'deps-dev'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "security"
+      - 'dependencies'
+      - 'security'
     allow:
-      - dependency-type: "all"
+      - dependency-type: 'all'
     ignore:
       # Ignore major version updates for stable dependencies
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "next"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'next'
+        update-types: ['version-update:semver-major']
 
   # Enable version updates for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Europe/Bucharest"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Europe/Bucharest'
     open-pull-requests-limit: 5
     reviewers:
-      - "vadimcusnir"
+      - 'vadimcusnir'
     assignees:
-      - "vadimcusnir"
+      - 'vadimcusnir'
     commit-message:
-      prefix: "ci"
-      include: "scope"
+      prefix: 'ci'
+      include: 'scope'
     labels:
-      - "github-actions"
-      - "dependencies"
+      - 'github-actions'
+      - 'dependencies'

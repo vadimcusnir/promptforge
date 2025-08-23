@@ -1,24 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  historyManager,
-  type HistoryEntry,
-  type HistoryStats,
-} from "@/lib/history-manager";
-import {
-  Clock,
-  Search,
-  Download,
-  Trash2,
-  Filter,
-  TrendingUp,
-  Activity,
-} from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { historyManager, type HistoryEntry, type HistoryStats } from '@/lib/history-manager';
+import { Clock, Search, Trash2, Filter, TrendingUp, Activity } from 'lucide-react';
 
 interface HistoryPanelProps {
   onRestoreEntry?: (entry: HistoryEntry) => void;
@@ -28,9 +16,9 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [stats, setStats] = useState<HistoryStats | null>(null);
   const [filters, setFilters] = useState({
-    type: "all" as "all" | "prompt" | "edit" | "test",
-    vector: "all",
-    searchTerm: "",
+    type: 'all' as 'all' | 'prompt' | 'edit' | 'test',
+    vector: 'all',
+    searchTerm: '',
   });
 
   useEffect(() => {
@@ -39,8 +27,8 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
 
   const refreshHistory = () => {
     const filterObj = {
-      ...(filters.type !== "all" && { type: filters.type }),
-      ...(filters.vector !== "all" && { vector: filters.vector }),
+      ...(filters.type !== 'all' && { type: filters.type }),
+      ...(filters.vector !== 'all' && { vector: filters.vector }),
       ...(filters.searchTerm && { searchTerm: filters.searchTerm }),
     };
 
@@ -53,11 +41,11 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
 
   const handleExport = () => {
     const exportData = historyManager.exportHistory();
-    const blob = new Blob([exportData], { type: "application/json" });
+    const blob = new Blob([exportData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `promptforge-history-${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `promptforge-history-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -66,9 +54,7 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
 
   const handleClearHistory = () => {
     if (
-      confirm(
-        "Are you sure you want to delete the entire history? This action cannot be undone.",
-      )
+      confirm('Are you sure you want to delete the entire history? This action cannot be undone.')
     ) {
       historyManager.clearHistory();
       refreshHistory();
@@ -81,32 +67,32 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("ro-RO", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Intl.DateTimeFormat('ro-RO', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     }).format(date);
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "prompt":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-      case "edit":
-        return "bg-purple-500/20 text-purple-400 border-purple-500/30";
-      case "test":
-        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case 'prompt':
+        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'edit':
+        return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'test':
+        return 'bg-green-500/20 text-green-400 border-green-500/30';
       default:
-        return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 8) return "text-green-400";
-    if (score >= 6) return "text-yellow-400";
-    return "text-red-400";
+    if (score >= 8) return 'text-green-400';
+    if (score >= 6) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   return (
@@ -116,25 +102,17 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
           <Card className="glass-effect p-4">
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-muted-foreground">
-                Total Entries
-              </span>
+              <span className="text-sm font-medium text-muted-foreground">Total Entries</span>
             </div>
-            <div className="text-2xl font-bold text-foreground">
-              {stats.totalEntries}
-            </div>
+            <div className="text-2xl font-bold text-foreground">{stats.totalEntries}</div>
           </Card>
 
           <Card className="glass-effect p-4">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-blue-400" />
-              <span className="text-sm font-medium text-muted-foreground">
-                Average Score
-              </span>
+              <span className="text-sm font-medium text-muted-foreground">Average Score</span>
             </div>
-            <div
-              className={`text-2xl font-bold ${getScoreColor(stats.averageScore)}`}
-            >
+            <div className={`text-2xl font-bold ${getScoreColor(stats.averageScore)}`}>
               {stats.averageScore.toFixed(1)}
             </div>
           </Card>
@@ -142,9 +120,7 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
           <Card className="glass-effect p-4">
             <div className="flex items-center gap-2 mb-2">
               <Filter className="w-4 h-4 text-purple-400" />
-              <span className="text-sm font-medium text-muted-foreground">
-                Popular Module
-              </span>
+              <span className="text-sm font-medium text-muted-foreground">Popular Module</span>
             </div>
             <div className="text-sm font-bold text-foreground break-words line-clamp-1">
               {stats.mostUsedModule}
@@ -154,13 +130,9 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
           <Card className="glass-effect p-4">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-green-400" />
-              <span className="text-sm font-medium text-muted-foreground">
-                Popular Vector
-              </span>
+              <span className="text-sm font-medium text-muted-foreground">Popular Vector</span>
             </div>
-            <div className="text-sm font-bold text-foreground">
-              V{stats.mostUsedVector}
-            </div>
+            <div className="text-sm font-bold text-foreground">V{stats.mostUsedVector}</div>
           </Card>
         </div>
       )}
@@ -172,18 +144,14 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
             <Input
               placeholder="Search in history..."
               value={filters.searchTerm}
-              onChange={(e) =>
-                setFilters({ ...filters, searchTerm: e.target.value })
-              }
+              onChange={e => setFilters({ ...filters, searchTerm: e.target.value })}
               className="w-64"
             />
           </div>
 
           <select
             value={filters.type}
-            onChange={(e) =>
-              setFilters({ ...filters, type: e.target.value as any })
-            }
+            onChange={e => setFilters({ ...filters, type: e.target.value as any })}
             className="bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground"
           >
             <option value="all">All Types</option>
@@ -194,7 +162,7 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
 
           <select
             value={filters.vector}
-            onChange={(e) => setFilters({ ...filters, vector: e.target.value })}
+            onChange={e => setFilters({ ...filters, vector: e.target.value })}
             className="bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground"
           >
             <option value="all">All Vectors</option>
@@ -209,7 +177,6 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
 
           <div className="flex gap-2 ml-auto">
             <Button variant="outline" size="sm" onClick={handleExport}>
-              <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
             <Button variant="outline" size="sm" onClick={handleClearHistory}>
@@ -229,16 +196,14 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
             </div>
           </Card>
         ) : (
-          history.map((entry) => (
+          history.map(entry => (
             <Card
               key={entry.id}
               className="glass-effect p-4 hover:glow-primary transition-all duration-300"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <Badge className={getTypeColor(entry.type)}>
-                    {entry.type.toUpperCase()}
-                  </Badge>
+                  <Badge className={getTypeColor(entry.type)}>{entry.type.toUpperCase()}</Badge>
                   <Badge variant="outline">V{entry.vector}</Badge>
                   <span className="text-sm font-medium text-foreground break-words line-clamp-1">
                     {entry.moduleName}
@@ -275,31 +240,24 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
               </div>
 
               <div className="text-sm text-muted-foreground mb-3">
-                <div className="line-clamp-3 break-words">
-                  {entry.content.substring(0, 200)}...
-                </div>
+                <div className="line-clamp-3 break-words">{entry.content.substring(0, 200)}...</div>
               </div>
 
               {entry.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {entry.tags.map((tag, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="text-xs break-words"
-                    >
+                    <Badge key={index} variant="secondary" className="text-xs break-words">
                       {tag}
                     </Badge>
                   ))}
                 </div>
               )}
 
-              {entry.metadata.improvements &&
-                entry.metadata.improvements.length > 0 && (
-                  <div className="mt-2 text-xs text-green-400 break-words line-clamp-2">
-                    Improvements: {entry.metadata.improvements.join(", ")}
-                  </div>
-                )}
+              {entry.metadata.improvements && entry.metadata.improvements.length > 0 && (
+                <div className="mt-2 text-xs text-green-400 break-words line-clamp-2">
+                  Improvements: {entry.metadata.improvements.join(', ')}
+                </div>
+              )}
             </Card>
           ))
         )}

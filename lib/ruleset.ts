@@ -1,4 +1,4 @@
-// PromptForge v3 - Ruleset SSOT Manager
+// PROMPTFORGE™ v3 - Ruleset SSOT Manager
 // Single Source of Truth pentru 7D enums, domain defaults și validări
 
 import { readFileSync } from 'fs';
@@ -7,29 +7,141 @@ import * as yaml from 'js-yaml';
 import { z } from 'zod';
 
 // Types pentru 7D Framework
-export type Domain = 'saas' | 'fintech' | 'ecommerce' | 'consulting' | 'education' | 'healthcare' | 'legal' | 'marketing' | 'media' | 'real_estate' | 'hr' | 'ngo' | 'government' | 'web3' | 'aiml' | 'cybersecurity' | 'manufacturing' | 'logistics' | 'travel' | 'gaming' | 'fashion' | 'beauty' | 'spiritual' | 'architecture' | 'agriculture';
+export type Domain =
+  | 'saas'
+  | 'fintech'
+  | 'ecommerce'
+  | 'consulting'
+  | 'education'
+  | 'healthcare'
+  | 'legal'
+  | 'marketing'
+  | 'media'
+  | 'real_estate'
+  | 'hr'
+  | 'ngo'
+  | 'government'
+  | 'web3'
+  | 'aiml'
+  | 'cybersecurity'
+  | 'manufacturing'
+  | 'logistics'
+  | 'travel'
+  | 'gaming'
+  | 'fashion'
+  | 'beauty'
+  | 'spiritual'
+  | 'architecture'
+  | 'agriculture';
 
-export type Scale = 'personal_brand' | 'solo' | 'startup' | 'boutique_agency' | 'smb' | 'corporate' | 'enterprise';
+export type Scale =
+  | 'personal_brand'
+  | 'solo'
+  | 'startup'
+  | 'boutique_agency'
+  | 'smb'
+  | 'corporate'
+  | 'enterprise';
 
 export type Urgency = 'low' | 'planned' | 'sprint' | 'pilot' | 'crisis';
 
 export type Complexity = 'foundational' | 'standard' | 'advanced' | 'expert';
 
-export type Resources = 'minimal' | 'solo' | 'lean_team' | 'agency_stack' | 'full_stack_org' | 'enterprise_budget';
+export type Resources =
+  | 'minimal'
+  | 'solo'
+  | 'lean_team'
+  | 'agency_stack'
+  | 'full_stack_org'
+  | 'enterprise_budget';
 
-export type Application = 'training' | 'audit' | 'implementation' | 'strategy_design' | 'crisis_response' | 'experimentation' | 'documentation';
+export type Application =
+  | 'training'
+  | 'audit'
+  | 'implementation'
+  | 'strategy_design'
+  | 'crisis_response'
+  | 'experimentation'
+  | 'documentation';
 
-export type OutputFormat = 'txt' | 'md' | 'checklist' | 'spec' | 'playbook' | 'json' | 'yaml' | 'diagram' | 'bundle';
+export type OutputFormat =
+  | 'txt'
+  | 'md'
+  | 'checklist'
+  | 'spec'
+  | 'playbook'
+  | 'json'
+  | 'yaml'
+  | 'diagram'
+  | 'bundle';
 
 // 7D Framework Schema
 export const SevenDSchema = z.object({
-  domain: z.enum(['saas', 'fintech', 'ecommerce', 'consulting', 'education', 'healthcare', 'legal', 'marketing', 'media', 'real_estate', 'hr', 'ngo', 'government', 'web3', 'aiml', 'cybersecurity', 'manufacturing', 'logistics', 'travel', 'gaming', 'fashion', 'beauty', 'spiritual', 'architecture', 'agriculture']),
-  scale: z.enum(['personal_brand', 'solo', 'startup', 'boutique_agency', 'smb', 'corporate', 'enterprise']).optional(),
+  domain: z.enum([
+    'saas',
+    'fintech',
+    'ecommerce',
+    'consulting',
+    'education',
+    'healthcare',
+    'legal',
+    'marketing',
+    'media',
+    'real_estate',
+    'hr',
+    'ngo',
+    'government',
+    'web3',
+    'aiml',
+    'cybersecurity',
+    'manufacturing',
+    'logistics',
+    'travel',
+    'gaming',
+    'fashion',
+    'beauty',
+    'spiritual',
+    'architecture',
+    'agriculture',
+  ]),
+  scale: z
+    .enum([
+      'personal_brand',
+      'solo',
+      'startup',
+      'boutique_agency',
+      'smb',
+      'corporate',
+      'enterprise',
+    ])
+    .optional(),
   urgency: z.enum(['low', 'planned', 'sprint', 'pilot', 'crisis']).optional(),
   complexity: z.enum(['foundational', 'standard', 'advanced', 'expert']).optional(),
-  resources: z.enum(['minimal', 'solo', 'lean_team', 'agency_stack', 'full_stack_org', 'enterprise_budget']).optional(),
-  application: z.enum(['training', 'audit', 'implementation', 'strategy_design', 'crisis_response', 'experimentation', 'documentation']).optional(),
-  output_format: z.enum(['txt', 'md', 'checklist', 'spec', 'playbook', 'json', 'yaml', 'diagram', 'bundle'])
+  resources: z
+    .enum(['minimal', 'solo', 'lean_team', 'agency_stack', 'full_stack_org', 'enterprise_budget'])
+    .optional(),
+  application: z
+    .enum([
+      'training',
+      'audit',
+      'implementation',
+      'strategy_design',
+      'crisis_response',
+      'experimentation',
+      'documentation',
+    ])
+    .optional(),
+  output_format: z.enum([
+    'txt',
+    'md',
+    'checklist',
+    'spec',
+    'playbook',
+    'json',
+    'yaml',
+    'diagram',
+    'bundle',
+  ]),
 });
 
 export type SevenD = z.infer<typeof SevenDSchema>;
@@ -44,15 +156,15 @@ const RulesetSchema = z.object({
     defaults_editable_only_here: z.boolean(),
     ui_cannot_override_defaults: z.boolean(),
     compatibility: z.object({
-      signature_fields: z.array(z.string())
+      signature_fields: z.array(z.string()),
     }),
     security: z.object({
       knowledge_scoping_tag: z.string(),
-      pii_public_export: z.string()
+      pii_public_export: z.string(),
     }),
     telemetry: z.object({
-      do_not_log_raw_client_content: z.boolean()
-    })
+      do_not_log_raw_client_content: z.boolean(),
+    }),
   }),
   sevenD: z.object({
     required: z.array(z.string()),
@@ -63,18 +175,18 @@ const RulesetSchema = z.object({
       complexity: z.array(z.string()),
       resources: z.array(z.string()),
       application: z.array(z.string()),
-      output_format: z.array(z.string())
+      output_format: z.array(z.string()),
     }),
     aliases: z.object({
       scale: z.record(z.string()),
-      output_format: z.record(z.string())
+      output_format: z.record(z.string()),
     }),
     validation: z.object({
       enum_only: z.boolean(),
-      raise_on_invalid: z.boolean()
+      raise_on_invalid: z.boolean(),
     }),
     fallback: z.object({
-      by_domain_defaults: z.boolean()
+      by_domain_defaults: z.boolean(),
     }),
     variability: z.object({
       diversity_budget: z.object({
@@ -82,19 +194,21 @@ const RulesetSchema = z.object({
         not_applied_to: z.array(z.string()),
         range: z.object({
           min: z.number(),
-          max: z.number()
+          max: z.number(),
         }),
-        default: z.number()
-      })
+        default: z.number(),
+      }),
     }),
-    domain_defaults: z.record(z.object({
-      scale: z.string(),
-      urgency: z.string(),
-      complexity: z.string(),
-      resources: z.string(),
-      application: z.string(),
-      output_format: z.string()
-    }))
+    domain_defaults: z.record(
+      z.object({
+        scale: z.string(),
+        urgency: z.string(),
+        complexity: z.string(),
+        resources: z.string(),
+        application: z.string(),
+        output_format: z.string(),
+      })
+    ),
   }),
   test_and_score: z.object({
     rubric_axes: z.array(z.string()),
@@ -103,50 +217,52 @@ const RulesetSchema = z.object({
       execution_min: z.number(),
       ambiguity_max: z.number(),
       business_fit_min: z.number(),
-      total_min: z.number()
+      total_min: z.number(),
     }),
     weights: z.object({
       clarity: z.number(),
       execution: z.number(),
       ambiguity_inv: z.number(),
-      business_fit: z.number()
+      business_fit: z.number(),
     }),
     auto_fix: z.object({
       enabled: z.boolean(),
       max_iterations: z.number(),
-      strategies: z.array(z.string())
-    })
+      strategies: z.array(z.string()),
+    }),
   }),
   export: z.object({
     structure: z.string(),
     artifacts: z.array(z.string()),
     checksum: z.object({
       algo: z.string(),
-      canonical_order: z.array(z.string())
+      canonical_order: z.array(z.string()),
     }),
     storage: z.object({
-      path_template: z.string()
+      path_template: z.string(),
     }),
     pdf: z.object({
       paper: z.string(),
       margin_mm: z.number(),
       header: z.string(),
       footer: z.string(),
-      watermark_trial: z.string()
-    })
+      watermark_trial: z.string(),
+    }),
   }),
   entitlements: z.object({
-    plans: z.record(z.object({
-      modules: z.string(),
-      features: z.array(z.string()),
-      flags: z.record(z.boolean()),
-      retention_days: z.number()
-    })),
+    plans: z.record(
+      z.object({
+        modules: z.string(),
+        features: z.array(z.string()),
+        flags: z.record(z.boolean()),
+        retention_days: z.number(),
+      })
+    ),
     ui_rules: z.object({
       hide_modules_without_entitlement: z.boolean(),
-      block_endpoints_without_entitlement: z.boolean()
-    })
-  })
+      block_endpoints_without_entitlement: z.boolean(),
+    }),
+  }),
 });
 
 type Ruleset = z.infer<typeof RulesetSchema>;
@@ -174,7 +290,7 @@ class RulesetManager {
       const rulesetPath = join(process.cwd(), 'ruleset.yml');
       const fileContent = readFileSync(rulesetPath, 'utf8');
       const parsedYaml = yaml.load(fileContent) as any;
-      
+
       this.ruleset = RulesetSchema.parse(parsedYaml);
       return this.ruleset;
     } catch (error) {
@@ -192,7 +308,7 @@ class RulesetManager {
   public getDomainDefaults(domain: Domain): Partial<SevenD> {
     const ruleset = this.loadRuleset();
     const defaults = ruleset.sevenD.domain_defaults[domain];
-    
+
     if (!defaults) {
       throw new Error(`No domain defaults found for: ${domain}`);
     }
@@ -204,14 +320,14 @@ class RulesetManager {
       complexity: defaults.complexity as Complexity,
       resources: defaults.resources as Resources,
       application: defaults.application as Application,
-      output_format: defaults.output_format as OutputFormat
+      output_format: defaults.output_format as OutputFormat,
     };
   }
 
   // Validează și normalizează 7D cu fallback pe domain defaults
-  public validate7D(input: Partial<SevenD>): { 
-    isValid: boolean; 
-    errors: string[]; 
+  public validate7D(input: Partial<SevenD>): {
+    isValid: boolean;
+    errors: string[];
     normalized: SevenD;
     signature: string;
   } {
@@ -240,15 +356,15 @@ class RulesetManager {
         complexity: input.complexity || domainDefaults.complexity!,
         resources: input.resources || domainDefaults.resources!,
         application: input.application || domainDefaults.application!,
-        output_format: input.output_format || domainDefaults.output_format!
+        output_format: input.output_format || domainDefaults.output_format!,
       };
 
       // Validează cu schema Zod
       const validationResult = SevenDSchema.safeParse(normalized);
-      
+
       if (!validationResult.success) {
         errors.push(...validationResult.error.errors.map(e => e.message));
-        
+
         if (ruleset.sevenD.validation.raise_on_invalid) {
           throw new Error(`7D validation failed: ${errors.join(', ')}`);
         }
@@ -261,15 +377,14 @@ class RulesetManager {
         isValid: validationResult.success,
         errors,
         normalized: validationResult.success ? validationResult.data : normalized,
-        signature
+        signature,
       };
-
     } catch (error) {
       return {
         isValid: false,
         errors: [error instanceof Error ? error.message : 'Unknown validation error'],
         normalized: input as SevenD,
-        signature: ''
+        signature: '',
       };
     }
   }
@@ -278,7 +393,7 @@ class RulesetManager {
   private generateSignature(sevenD: SevenD): string {
     const ruleset = this.loadRuleset();
     const signatureFields = ruleset.policies.compatibility.signature_fields;
-    
+
     const signatureParts = signatureFields.map(field => {
       const value = sevenD[field as keyof SevenD];
       return `${field}:${value}`;
@@ -317,14 +432,14 @@ class RulesetManager {
     if (!planConfig) return false;
 
     const moduleRange = planConfig.modules;
-    
+
     // Parse M01-M30 format
     const match = moduleRange.match(/M(\d+)-M(\d+)/);
     if (match) {
       const minModule = parseInt(match[1]);
       const maxModule = parseInt(match[2]);
       const currentModule = parseInt(moduleId.replace('M', ''));
-      
+
       return currentModule >= minModule && currentModule <= maxModule;
     }
 
@@ -344,7 +459,7 @@ class RulesetManager {
       project: ruleset.project,
       version: ruleset.semver,
       isSSoT: ruleset.is_ssot,
-      schemaVersion: ruleset.schema_version
+      schemaVersion: ruleset.schema_version,
     };
   }
 }
@@ -376,10 +491,10 @@ export function getExportConfig() {
 // Middleware pentru validare în API routes
 export function validateSevenDMiddleware(sevenD: any) {
   const result = validate7D(sevenD);
-  
+
   if (!result.isValid) {
     throw new Error(`7D validation failed: ${result.errors.join(', ')}`);
   }
-  
+
   return result.normalized;
 }

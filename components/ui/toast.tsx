@@ -1,24 +1,18 @@
-"use client";
+'use client';
 
-import { Motion } from "@/components/Motion";
-import { CheckCircle, AlertCircle, XCircle, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Motion } from '@/components/Motion';
+import { CheckCircle, AlertCircle, XCircle, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface ToastProps {
-  type: "success" | "error" | "warning";
+  type: 'success' | 'error' | 'warning';
   message: string;
   visible: boolean;
   onClose: () => void;
   duration?: number;
 }
 
-export function Toast({
-  type,
-  message,
-  visible,
-  onClose,
-  duration = 3000,
-}: ToastProps) {
+export function Toast({ type, message, visible, onClose, duration = 3000 }: ToastProps) {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
@@ -36,23 +30,23 @@ export function Toast({
 
   const getIcon = () => {
     switch (type) {
-      case "success":
+      case 'success':
         return <CheckCircle className="w-5 h-5 text-green-400" />;
-      case "error":
+      case 'error':
         return <XCircle className="w-5 h-5 text-red-400" />;
-      case "warning":
+      case 'warning':
         return <AlertCircle className="w-5 h-5 text-yellow-400" />;
     }
   };
 
   const getBgColor = () => {
     switch (type) {
-      case "success":
-        return "bg-green-900/20 border-green-500/30";
-      case "error":
-        return "bg-red-900/20 border-red-500/30";
-      case "warning":
-        return "bg-yellow-900/20 border-yellow-500/30";
+      case 'success':
+        return 'bg-green-900/20 border-green-500/30';
+      case 'error':
+        return 'bg-red-900/20 border-red-500/30';
+      case 'warning':
+        return 'bg-yellow-900/20 border-yellow-500/30';
     }
   };
 
@@ -60,10 +54,10 @@ export function Toast({
     <Motion
       intent="state"
       className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-lg border backdrop-blur-sm ${getBgColor()} ${
-        visible && !isExiting ? "toast-enter-active" : "toast-exit-active"
+        visible && !isExiting ? 'toast-enter-active' : 'toast-exit-active'
       }`}
     >
-      <Motion intent="state" className={type === "success" ? "success" : ""}>
+      <Motion intent="state" className={type === 'success' ? 'success' : ''}>
         {getIcon()}
       </Motion>
 
@@ -89,27 +83,24 @@ export function useToast() {
   const [toasts, setToasts] = useState<
     Array<{
       id: string;
-      type: "success" | "error" | "warning";
+      type: 'success' | 'error' | 'warning';
       message: string;
       visible: boolean;
     }>
   >([]);
 
-  const showToast = (
-    type: "success" | "error" | "warning",
-    message: string,
-  ) => {
+  const showToast = (type: 'success' | 'error' | 'warning', message: string) => {
     const id = Date.now().toString();
-    setToasts((prev) => [...prev, { id, type, message, visible: true }]);
+    setToasts(prev => [...prev, { id, type, message, visible: true }]);
   };
 
   const hideToast = (id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    setToasts(prev => prev.filter(toast => toast.id !== id));
   };
 
   const ToastContainer = () => (
     <>
-      {toasts.map((toast) => (
+      {toasts.map(toast => (
         <Toast
           key={toast.id}
           type={toast.type}
@@ -122,9 +113,9 @@ export function useToast() {
   );
 
   return {
-    success: (message: string) => showToast("success", message),
-    error: (message: string) => showToast("error", message),
-    warning: (message: string) => showToast("warning", message),
+    success: (message: string) => showToast('success', message),
+    error: (message: string) => showToast('error', message),
+    warning: (message: string) => showToast('warning', message),
     ToastContainer,
   };
 }

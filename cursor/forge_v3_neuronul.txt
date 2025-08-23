@@ -1000,14 +1000,14 @@ Poți uni cele două site-uri – chatgpt-prompting.com și chatgpt-prompting.co
 
 🔗 DE CE FUNCȚIONEAZĂ UNIFICAREA
 1. Arhitectură Duală deja definită
-Proiectul AI-Idei™ operează pe o arhitectură duală:
+Proiectul PromptForge™ operează pe o arhitectură duală:
 Librărie = conținut stratificat semantic (neuroni, prompts, guides, GPT-uri)
 Shop = declanșator comercial și simbolic (kituri, bundleuri, porți)
 Prin urmare:
 chatgpt-prompting.com poate fi fațada educațională / comunitară
 chatgpt-prompting.com poate deveni fațada comercială / tematică / entry-point de SEO
 2. Sistem Unificat: Planuri, Bundleuri, Scor, Porți
-Toate fișierele și componentele din chatgpt-prompting.com pot fi integrate în Librăria AI-Idei™ sub forma de:
+Toate fișierele și componentele din chatgpt-prompting.com pot fi integrate în Librăria PromptForge™ sub forma de:
 Prompturi (PRM_)
 Frameworkuri (FMW_)
 Templateuri (TPL_)
@@ -1035,7 +1035,7 @@ iar chatgpt-prompting.com devine landing comercial SEO și ads
 5. Userul nu simte dublura, ci ascensiunea
 Poți construi sistemul astfel încât:
 userul care vine din chatgpt-prompting.com intră direct în Librărie, dar este blurat peste tot
-i se sugerează activarea bundleurilor de inițiere → transfer în zona „ritualică” AI-Idei™
+i se sugerează activarea bundleurilor de inițiere → transfer în zona „ritualică" PromptForge™
 E ca și cum îl atragi cu un templu funcțional și apoi îl treci prin poarta simbolică.
 
 ✅ CE AI DE FĂCUT
@@ -1085,7 +1085,7 @@ II. INTEGRARE TEHNICĂ (STRUCTURĂ UNICĂ)
   - Free / Arhitect / Inițiat / Elite
   - Bundleuri vândute direct sau prin planuri
 
-✅ Librărie unică (AI-Idei™)
+✅ Librărie unică (PromptForge™)
   - Toate prompts/templates migrate ca:
     - PRM_... (Prompturi)
     - TPL_... (Templateuri)
@@ -1139,7 +1139,7 @@ chatgpt-prompting.com = unde începi rapid cu AI
 
 📦 Am generat planul complet de fuziune între cele două platforme:
 ✅ Un singur backend (Supabase + Stripe)
-✅ Librărie unificată (AI-Idei™) cu resurse din ambele
+✅ Librărie unificată (PromptForge™) cu resurse din ambele
 ✅ Două fațade (simbolică + comercială)
 ✅ Sistem de scor, planuri, bundleuri, acces sincronizat
 

@@ -99,9 +99,9 @@ validation:
   require_replace_domains:
     enabled: true
     rules:
-      - from: "ai-idei.com"
+      - from: "promptforge.app"
         to: "chatgpt-prompting.com"
-      - from: "ai-prompt-templates.com"
+      - from: "PromptForge.com"
         to: "chatgpt-prompting.com"
 
 prompts:

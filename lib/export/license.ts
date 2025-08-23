@@ -25,7 +25,7 @@ export function licenseNoticeForPlan(plan: PlanCode): string {
  * Get watermark text for trial users
  */
 export function getTrialWatermark(): string {
-  return process.env.EXPORT_WATERMARK_TRIAL || "TRIAL — Not for Redistribution";
+  return process.env.EXPORT_WATERMARK_TRIAL || 'TRIAL — Not for Redistribution';
 }
 
 /**
@@ -35,9 +35,9 @@ export function planAllowsFormat(plan: PlanCode, format: string): boolean {
   const formatPermissions: Record<PlanCode, string[]> = {
     pilot: ['md'],
     pro: ['md', 'json', 'pdf'],
-    enterprise: ['md', 'json', 'pdf', 'zip']
+    enterprise: ['md', 'json', 'pdf', 'zip'],
   };
-  
+
   return formatPermissions[plan]?.includes(format) || false;
 }
 
@@ -48,8 +48,8 @@ export function getAllowedFormats(plan: PlanCode): string[] {
   const formatPermissions: Record<PlanCode, string[]> = {
     pilot: ['md'],
     pro: ['md', 'json', 'pdf'],
-    enterprise: ['md', 'json', 'pdf', 'zip']
+    enterprise: ['md', 'json', 'pdf', 'zip'],
   };
-  
+
   return formatPermissions[plan] || [];
 }

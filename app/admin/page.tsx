@@ -1,75 +1,42 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Check, Shield, Zap, Crown } from 'lucide-react';
 
 export default function AdminPage() {
-  const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [comingSoonStatus, setComingSoonStatus] = useState<any>(null);
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    checkComingSoonStatus();
-  }, []);
+  const [error, setError] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
     try {
-      const res = await fetch("/api/admin-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ password }),
       });
 
-      if (res.ok) {
+      if (response.ok) {
         setIsLoggedIn(true);
-        setPassword("");
-        checkComingSoonStatus();
+        // Redirect to generator page after successful login
+        setTimeout(() => {
+          router.push('/generator');
+        }, 1000);
       } else {
-        alert("Invalid password");
+        const data = await response.json();
+        setError(data.error || 'Login failed');
       }
-    } catch (error) {
-      alert("Login failed");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const checkComingSoonStatus = async () => {
-    try {
-      const res = await fetch("/api/toggle-coming-soon");
-      if (res.ok) {
-        const data = await res.json();
-        setComingSoonStatus(data);
-        setIsLoggedIn(true);
-      }
-    } catch (error) {
-      console.log("Not logged in or error checking status");
-    }
-  };
-
-  const toggleComingSoon = async (on: boolean) => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("/api/toggle-coming-soon", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ on }),
-      });
-
-      if (res.ok) {
-        checkComingSoonStatus();
-        alert(`Coming Soon ${on ? "enabled" : "disabled"} successfully!`);
-      } else {
-        alert("Failed to toggle Coming Soon");
-      }
-    } catch (error) {
-      alert("Error toggling Coming Soon");
+    } catch (err) {
+      setError('Network error');
     } finally {
       setIsLoading(false);
     }
@@ -77,167 +44,114 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin-login", { method: "DELETE" });
+      await fetch('/api/admin-login', {
+        method: 'DELETE',
+      });
       setIsLoggedIn(false);
-      setComingSoonStatus(null);
-    } catch (error) {
-      console.error("Logout error:", error);
+      setPassword('');
+      router.push('/');
+    } catch (err) {
+      console.error('Logout error:', err);
     }
   };
 
-  if (!isLoggedIn) {
+  if (isLoggedIn) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center px-6">
-        <Card className="w-full max-w-md bg-white/5 backdrop-blur-sm border border-white/10">
-          <CardHeader>
-            <CardTitle className="text-center text-white">
-              Admin Login
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <Input
-                type="password"
-                placeholder="Admin password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                required
-              />
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-bold"
-              >
-                {isLoading ? "Logging in..." : "Login"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-green-500/20 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Check className="w-8 h-8 text-green-400" />
+          </div>
+          <h1 className="text-2xl font-bold mb-2">Admin Access Granted</h1>
+          <p className="text-[#ECFEFF]/70 mb-4">Redirecting to Generator page...</p>
+          <button
+            onClick={handleLogout}
+            className="btn-secondary px-4 py-2"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">PromptForge Admin</h1>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="border-white/20 text-white"
-          >
-            Logout
-          </Button>
+    <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF] flex items-center justify-center">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-[#164E63]/20 border border-[#164E63]/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-8 h-8 text-[#164E63]" />
+          </div>
+          <h1 className="text-3xl font-bold mb-2">Admin Access</h1>
+          <p className="text-[#ECFEFF]/70">Enter admin password to access all features</p>
         </div>
 
-        <div className="grid gap-6">
-          {/* Coming Soon Control */}
-          <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
-            <CardHeader>
-              <CardTitle className="text-white">Coming Soon Mode</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {comingSoonStatus && (
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-white/70">Environment Variable:</span>
-                    <span
-                      className={
-                        comingSoonStatus.coming_soon_env
-                          ? "text-green-400"
-                          : "text-gray-400"
-                      }
-                    >
-                      {comingSoonStatus.coming_soon_env ? "ON" : "OFF"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/70">Runtime Cookie:</span>
-                    <span
-                      className={
-                        comingSoonStatus.coming_soon_cookie
-                          ? "text-green-400"
-                          : "text-gray-400"
-                      }
-                    >
-                      {comingSoonStatus.coming_soon_cookie ? "ON" : "OFF"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between font-bold">
-                    <span className="text-white">Active Status:</span>
-                    <span
-                      className={
-                        comingSoonStatus.active
-                          ? "text-red-400"
-                          : "text-green-400"
-                      }
-                    >
-                      {comingSoonStatus.active
-                        ? "COMING SOON ACTIVE"
-                        : "SITE LIVE"}
-                    </span>
-                  </div>
-                </div>
-              )}
+        <div className="pf-block p-8">
+          <span className="pf-corner tl"></span>
+          <span className="pf-corner tr"></span>
+          <span className="pf-corner bl"></span>
+          <span className="pf-corner br"></span>
 
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => toggleComingSoon(true)}
-                  disabled={isLoading}
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                >
-                  Enable Coming Soon
-                </Button>
-                <Button
-                  onClick={() => toggleComingSoon(false)}
-                  disabled={isLoading}
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                >
-                  Disable Coming Soon
-                </Button>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-[#ECFEFF]/80 mb-2">
+                Admin Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#333] rounded-lg text-[#ECFEFF] focus:border-[#164E63] focus:outline-none transition-colors"
+                placeholder="Enter admin password"
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-sm text-red-400">{error}</p>
               </div>
+            )}
 
-              <p className="text-xs text-white/60">
-                When enabled, public users see /coming-soon page. Admins can
-                still access all pages.
-              </p>
-            </CardContent>
-          </Card>
+            <button
+              type="submit"
+              disabled={isLoading || !password.trim()}
+              className="w-full btn-notched py-3 px-6 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#ECFEFF] mr-2"></div>
+                  Authenticating...
+                </div>
+              ) : (
+                <>
+                  <Shield className="w-4 h-4 mr-2" />
+                  Access Admin Panel
+                </>
+              )}
+            </button>
+          </form>
 
-          {/* Quick Links */}
-          <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
-            <CardHeader>
-              <CardTitle className="text-white">Quick Links</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <a
-                href="/"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
-              >
-                → Homepage (Admin View)
-              </a>
-              <a
-                href="/coming-soon"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
-              >
-                → Coming Soon Page (Public View)
-              </a>
-              <a
-                href="/dashboard"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
-              >
-                → Dashboard
-              </a>
-              <a
-                href="/generator"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
-              >
-                → Generator
-              </a>
-            </CardContent>
-          </Card>
+          <div className="mt-6 pt-6 border-t border-[#333]">
+            <div className="text-center text-sm text-[#ECFEFF]/60">
+              <p className="mb-2">Admin access provides:</p>
+              <div className="flex items-center justify-center gap-4 text-xs">
+                <div className="flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-[#164E63]" />
+                  <span>All Pages</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Crown className="w-3 h-3 text-[#164E63]" />
+                  <span>Full Features</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Check className="w-3 h-3 text-[#164E63]" />
+                  <span>Bypass Gates</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

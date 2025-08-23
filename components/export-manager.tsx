@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { historyManager } from "@/lib/history-manager";
-import { Download, Printer, Share2, Copy, Check } from "lucide-react";
-import type { GeneratedPrompt } from "@/types/promptforge";
-import type { GPTEditResult } from "@/lib/gpt-editor";
-import type { TestResult } from "@/lib/test-engine";
+import { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { historyManager } from '@/lib/history-manager';
+import type { GeneratedPrompt } from '@/types/promptforge';
+import type { GPTEditResult } from '@/lib/gpt-editor';
+import type { TestResult } from '@/lib/test-engine';
+import { Check, Copy, Printer, Share2 } from 'lucide-react';
 
 interface ExportManagerProps {
   currentPrompt?: GeneratedPrompt | null;
@@ -21,12 +21,8 @@ export function ExportManager({
   editResults = [],
   testResults = [],
 }: ExportManagerProps) {
-  const [exportFormat, setExportFormat] = useState<
-    "json" | "csv" | "pdf" | "txt"
-  >("json");
-  const [exportScope, setExportScope] = useState<"current" | "session" | "all">(
-    "current",
-  );
+  const [exportFormat, setExportFormat] = useState<'json' | 'csv' | 'pdf' | 'txt'>('json');
+  const [exportScope, setExportScope] = useState<'current' | 'session' | 'all'>('current');
   const [copied, setCopied] = useState(false);
 
   const generateSessionReport = () => {
@@ -36,7 +32,7 @@ export function ExportManager({
     return {
       metadata: {
         generatedAt: new Date().toISOString(),
-        version: "PROMPTFORGE v3.0",
+        version: 'PROMPTFORGE v3.0',
         sessionId: `session_${Date.now()}`,
         totalEntries: stats.totalEntries,
       },
@@ -54,13 +50,13 @@ export function ExportManager({
     let data: any;
 
     switch (exportScope) {
-      case "current":
+      case 'current':
         data = { currentPrompt, editResults, testResults };
         break;
-      case "session":
+      case 'session':
         data = generateSessionReport();
         break;
-      case "all":
+      case 'all':
         data = {
           ...generateSessionReport(),
           fullHistory: historyManager.getHistory(),
@@ -69,12 +65,12 @@ export function ExportManager({
     }
 
     const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json",
+      type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `promptforge-export-${exportScope}-${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `promptforge-export-${exportScope}-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -84,46 +80,46 @@ export function ExportManager({
   const exportAsCSV = () => {
     const history = historyManager.getHistory();
     const headers = [
-      "Timestamp",
-      "Type",
-      "Module",
-      "Vector",
-      "Domain",
-      "Scale",
-      "Urgency",
-      "Validation Score",
-      "KPI Compliance",
-      "Structure Score",
-      "Clarity Score",
-      "Content Preview",
+      'Timestamp',
+      'Type',
+      'Module',
+      'Vector',
+      'Domain',
+      'Scale',
+      'Urgency',
+      'Validation Score',
+      'KPI Compliance',
+      'Structure Score',
+      'Clarity Score',
+      'Content Preview',
     ];
 
-    const csvRows = [headers.join(",")];
+    const csvRows = [headers.join(',')];
 
-    history.forEach((entry) => {
+    history.forEach(entry => {
       const row = [
         entry.timestamp.toISOString(),
         entry.type,
         entry.moduleName,
         `V${entry.vector}`,
-        entry.config?.domain || "N/A",
-        entry.config?.scale || "N/A",
-        entry.config?.urgency || "N/A",
-        entry.metadata.validationScore?.toFixed(2) || "N/A",
-        entry.metadata.kpiCompliance?.toFixed(2) || "N/A",
-        entry.metadata.structureScore?.toFixed(2) || "N/A",
-        entry.metadata.clarityScore?.toFixed(2) || "N/A",
+        entry.config?.domain || 'N/A',
+        entry.config?.scale || 'N/A',
+        entry.config?.urgency || 'N/A',
+        entry.metadata.validationScore?.toFixed(2) || 'N/A',
+        entry.metadata.kpiCompliance?.toFixed(2) || 'N/A',
+        entry.metadata.structureScore?.toFixed(2) || 'N/A',
+        entry.metadata.clarityScore?.toFixed(2) || 'N/A',
         `"${entry.content.substring(0, 100).replace(/"/g, '""')}..."`,
       ];
-      csvRows.push(row.join(","));
+      csvRows.push(row.join(','));
     });
 
-    const csvContent = csvRows.join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `promptforge-data-${new Date().toISOString().split("T")[0]}.csv`;
+    a.download = `promptforge-data-${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -136,7 +132,7 @@ export function ExportManager({
 
     let content = `PROMPTFORGE™ v3.0 - SESSION REPORT\n`;
     content += `=====================================\n\n`;
-    content += `Generation date: ${new Date().toLocaleString("en-US")}\n`;
+    content += `Generation date: ${new Date().toLocaleString('en-US')}\n`;
     content += `Export scope: ${exportScope}\n\n`;
     content += `GENERAL STATISTICS:\n`;
     content += `- Total entries: ${stats.totalEntries}\n`;
@@ -162,17 +158,17 @@ export function ExportManager({
       content += `========================\n\n`;
       history.forEach((entry, index) => {
         content += `${index + 1}. [${entry.type.toUpperCase()}] ${entry.moduleName} (V${entry.vector})\n`;
-        content += `   Date: ${entry.timestamp.toLocaleString("en-US")}\n`;
-        content += `   Score: ${entry.metadata.validationScore?.toFixed(2) || "N/A"}\n`;
+        content += `   Date: ${entry.timestamp.toLocaleString('en-US')}\n`;
+        content += `   Score: ${entry.metadata.validationScore?.toFixed(2) || 'N/A'}\n`;
         content += `   Preview: ${entry.content.substring(0, 150)}...\n\n`;
       });
     }
 
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `promptforge-report-${new Date().toISOString().split("T")[0]}.txt`;
+    a.download = `promptforge-report-${new Date().toISOString().split('T')[0]}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -189,25 +185,91 @@ export function ExportManager({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error("Failed to copy to clipboard:", error);
+      console.error('Failed to copy to clipboard:', error);
     }
   };
 
-  const handleExport = () => {
-    switch (exportFormat) {
-      case "json":
-        exportAsJSON();
+  const handleExport = async (format: string, data: Record<string, unknown>) => {
+    let blob: Blob;
+    let filename: string;
+
+    switch (format) {
+      case 'json':
+        blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        filename = `promptforge-export-${exportScope}-${new Date().toISOString().split('T')[0]}.json`;
         break;
-      case "csv":
-        exportAsCSV();
+      case 'csv':
+        const csvRows = [['Timestamp', 'Type', 'Module', 'Vector', 'Domain', 'Scale', 'Urgency', 'Validation Score', 'KPI Compliance', 'Structure Score', 'Clarity Score', 'Content Preview']];
+        data.history.forEach((entry: any) => {
+          csvRows.push([
+            entry.timestamp.toISOString(),
+            entry.type,
+            entry.moduleName,
+            `V${entry.vector}`,
+            entry.config?.domain || 'N/A',
+            entry.config?.scale || 'N/A',
+            entry.config?.urgency || 'N/A',
+            entry.metadata.validationScore?.toFixed(2) || 'N/A',
+            entry.metadata.kpiCompliance?.toFixed(2) || 'N/A',
+            entry.metadata.structureScore?.toFixed(2) || 'N/A',
+            entry.metadata.clarityScore?.toFixed(2) || 'N/A',
+            `"${entry.content.substring(0, 100).replace(/"/g, '""')}..."`,
+          ]);
+        });
+        const csvContent = csvRows.map(row => row.join(',')).join('\n');
+        blob = new Blob([csvContent], { type: 'text/csv' });
+        filename = `promptforge-data-${new Date().toISOString().split('T')[0]}.csv`;
         break;
-      case "txt":
-        exportAsTXT();
+      case 'txt':
+        let txtContent = `PROMPTFORGE™ v3.0 - SESSION REPORT\n`;
+        txtContent += `=====================================\n\n`;
+        txtContent += `Generation date: ${new Date().toLocaleString('en-US')}\n`;
+        txtContent += `Export scope: ${exportScope}\n\n`;
+        txtContent += `GENERAL STATISTICS:\n`;
+        txtContent += `- Total entries: ${data.statistics.totalEntries}\n`;
+        txtContent += `- Generated prompts: ${data.statistics.promptsGenerated}\n`;
+        txtContent += `- GPT edits: ${data.statistics.editsPerformed}\n`;
+        txtContent += `- Executed tests: ${data.statistics.testsExecuted}\n`;
+        txtContent += `- Average score: ${data.statistics.averageScore.toFixed(2)}\n`;
+        txtContent += `- Popular module: ${data.statistics.mostUsedModule}\n`;
+        txtContent += `- Popular vector: V${data.statistics.mostUsedVector}\n\n`;
+
+        if (data.currentSession.currentPrompt) {
+          txtContent += `CURRENT PROMPT:\n`;
+          txtContent += `==============\n`;
+          txtContent += `Module: ${data.currentSession.currentPrompt.moduleName}\n`;
+          txtContent += `Vector: V${data.currentSession.currentPrompt.vector}\n`;
+          txtContent += `Validation score: ${data.currentSession.currentPrompt.validationScore.toFixed(2)}\n`;
+          txtContent += `Session hash: ${data.currentSession.currentPrompt.sessionHash}\n\n`;
+          txtContent += `Content:\n${data.currentSession.currentPrompt.content}\n\n`;
+        }
+
+        if (data.currentSession.recentHistory.length > 0) {
+          txtContent += `RECENT HISTORY (${data.currentSession.recentHistory.length} entries):\n`;
+          txtContent += `========================\n\n`;
+          data.currentSession.recentHistory.forEach((entry: any, index: number) => {
+            txtContent += `${index + 1}. [${entry.type.toUpperCase()}] ${entry.moduleName} (V${entry.vector})\n`;
+            txtContent += `   Date: ${entry.timestamp.toLocaleString('en-US')}\n`;
+            txtContent += `   Score: ${entry.metadata.validationScore?.toFixed(2) || 'N/A'}\n`;
+            txtContent += `   Preview: ${entry.content.substring(0, 150)}...\n\n`;
+          });
+        }
+        blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+        filename = `promptforge-report-${new Date().toISOString().split('T')[0]}.txt`;
         break;
-      case "pdf":
-        alert("Export PDF will be available in the next version.");
-        break;
+      case 'pdf':
+        alert('Export PDF will be available in the next version.');
+        return;
     }
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -219,12 +281,10 @@ export function ExportManager({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Export Format
-            </label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Export Format</label>
             <select
               value={exportFormat}
-              onChange={(e) => setExportFormat(e.target.value as any)}
+              onChange={e => setExportFormat(e.target.value as any)}
               className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground"
             >
               <option value="json">JSON (Structured)</option>
@@ -235,12 +295,10 @@ export function ExportManager({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Export Scope
-            </label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Export Scope</label>
             <select
               value={exportScope}
-              onChange={(e) => setExportScope(e.target.value as any)}
+              onChange={e => setExportScope(e.target.value as any)}
               className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground"
             >
               <option value="current">Current Session</option>
@@ -250,26 +308,27 @@ export function ExportManager({
           </div>
 
           <div className="flex items-end">
-            <Button onClick={handleExport} className="w-full">
-              <Download className="w-4 h-4 mr-2" />
+            <Button onClick={() => handleExport(exportFormat, {
+              currentPrompt,
+              editResults,
+              testResults,
+              statistics: historyManager.getStats(),
+              currentSession: {
+                currentPrompt,
+                editResults: editResults.slice(0, 5),
+                testResults: testResults.slice(0, 5),
+                recentHistory: historyManager.getHistory().slice(0, 20),
+              },
+            })} className="w-full">
               Export {exportFormat.toUpperCase()}
             </Button>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={copyToClipboard}
-            disabled={!currentPrompt}
-          >
-            {copied ? (
-              <Check className="w-4 h-4 mr-2" />
-            ) : (
-              <Copy className="w-4 h-4 mr-2" />
-            )}
-            {copied ? "Copied!" : "Copy Prompt"}
+          <Button variant="outline" size="sm" onClick={copyToClipboard} disabled={!currentPrompt}>
+            {copied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
+            {copied ? 'Copied!' : 'Copy Prompt'}
           </Button>
 
           <Button variant="outline" size="sm" onClick={() => window.print()}>
@@ -284,7 +343,7 @@ export function ExportManager({
               if (navigator.share && currentPrompt) {
                 navigator.share({
                   title: `PROMPTFORGE™ - ${currentPrompt.moduleName}`,
-                  text: currentPrompt.content.substring(0, 200) + "...",
+                  text: currentPrompt.content.substring(0, 200) + '...',
                   url: window.location.href,
                 });
               }
@@ -308,35 +367,30 @@ export function ExportManager({
               Preview for {exportFormat.toUpperCase()} - {exportScope}
             </div>
             <div className="bg-input rounded-lg p-4 font-mono text-xs text-foreground max-h-64 overflow-y-auto">
-              {exportFormat === "json" && (
+              {exportFormat === 'json' && (
                 <pre>
-                  {JSON.stringify(generateSessionReport(), null, 2).substring(
-                    0,
-                    1000,
-                  )}
+                  {JSON.stringify(generateSessionReport(), null, 2).substring(0, 1000)}
                   ...
                 </pre>
               )}
-              {exportFormat === "txt" && (
+              {exportFormat === 'txt' && (
                 <div className="whitespace-pre-wrap">
                   {currentPrompt
                     ? `PROMPTFORGE™ v3.0 - SESSION REPORT\n\nPrompt: ${currentPrompt.moduleName}\nVector: V${currentPrompt.vector}\nScore: ${currentPrompt.validationScore.toFixed(2)}\n\n${currentPrompt.content.substring(0, 300)}...`
-                    : "No current prompt selected."}
+                    : 'No current prompt selected.'}
                 </div>
               )}
-              {exportFormat === "csv" && (
+              {exportFormat === 'csv' && (
                 <div>
-                  <div>
-                    Timestamp,Type,Module,Vector,Domain,ValidationScore...
-                  </div>
+                  <div>Timestamp,Type,Module,Vector,Domain,ValidationScore...</div>
                   <br />
                   {historyManager
                     .getHistory()
                     .slice(0, 3)
                     .map((entry, index) => (
                       <div key={index}>
-                        {entry.timestamp.toISOString()},{entry.type},
-                        {entry.moduleName},V{entry.vector},...
+                        {entry.timestamp.toISOString()},{entry.type},{entry.moduleName},V
+                        {entry.vector},...
                       </div>
                     ))}
                 </div>
@@ -353,20 +407,14 @@ export function ExportManager({
                 return (
                   <>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-primary">
-                        {stats.totalEntries}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Total Entries
-                      </div>
+                      <div className="text-2xl font-bold text-primary">{stats.totalEntries}</div>
+                      <div className="text-sm text-muted-foreground">Total Entries</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-blue-400">
                         {stats.promptsGenerated}
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        Prompts
-                      </div>
+                      <div className="text-sm text-muted-foreground">Prompts</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-purple-400">
@@ -375,9 +423,7 @@ export function ExportManager({
                       <div className="text-sm text-muted-foreground">Edits</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-400">
-                        {stats.testsExecuted}
-                      </div>
+                      <div className="text-2xl font-bold text-green-400">{stats.testsExecuted}</div>
                       <div className="text-sm text-muted-foreground">Tests</div>
                     </div>
                   </>

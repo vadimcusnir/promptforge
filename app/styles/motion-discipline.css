@@ -126,20 +126,20 @@
 }
 
 /* Data attribute based control */
-html[data-prm="1"] .motion-guide,
-html[data-prm="1"] .motion-state,
-html[data-prm="1"] .motion-explain {
+html[data-prm='1'] .motion-guide,
+html[data-prm='1'] .motion-state,
+html[data-prm='1'] .motion-explain {
   animation: none !important;
   transition: none !important;
 }
 
-html[data-motion-micro="0"] .motion-guide,
-html[data-motion-micro="0"] .motion-state {
+html[data-motion-micro='0'] .motion-guide,
+html[data-motion-micro='0'] .motion-state {
   animation: none !important;
   transition: none !important;
 }
 
-html[data-motion-primary="0"] .motion-explain {
+html[data-motion-primary='0'] .motion-explain {
   animation: none !important;
   transition: none !important;
 }

@@ -8,7 +8,11 @@
       "vectors": [7, 6],
       "domains": ["cybersecurity", "fintech", "healthcare"],
       "complexity_min": "expert",
-      "typical_use_cases": ["security auditing", "vulnerability assessment", "compliance verification"],
+      "typical_use_cases": [
+        "security auditing",
+        "vulnerability assessment",
+        "compliance verification"
+      ],
       "contract": {
         "input_required": ["system_architecture", "security_requirements", "compliance_standards"],
         "output_format": ["spec", "bundle", "checklist"],
@@ -108,7 +112,11 @@
       "contract": {
         "input_required": ["learning_data", "performance_metrics", "personalization_criteria"],
         "output_format": ["json", "spec", "playbook"],
-        "success_metrics": ["learning_improvement", "engagement_increase", "personalization_effectiveness"],
+        "success_metrics": [
+          "learning_improvement",
+          "engagement_increase",
+          "personalization_effectiveness"
+        ],
         "execution_time": "5-7 days"
       }
     },
@@ -124,7 +132,11 @@
       "contract": {
         "input_required": ["blockchain_requirements", "smart_contract_specs", "integration_points"],
         "output_format": ["spec", "json", "yaml"],
-        "success_metrics": ["transaction_reliability", "smart_contract_security", "integration_success"],
+        "success_metrics": [
+          "transaction_reliability",
+          "smart_contract_security",
+          "integration_success"
+        ],
         "execution_time": "7-14 days"
       }
     },
@@ -136,11 +148,19 @@
       "vectors": [6, 4, 1],
       "domains": ["ecommerce", "saas", "education"],
       "complexity_min": "expert",
-      "typical_use_cases": ["personalization", "recommendation systems", "user experience optimization"],
+      "typical_use_cases": [
+        "personalization",
+        "recommendation systems",
+        "user experience optimization"
+      ],
       "contract": {
         "input_required": ["user_behavior_data", "personalization_goals", "content_inventory"],
         "output_format": ["json", "spec", "playbook"],
-        "success_metrics": ["personalization_accuracy", "engagement_improvement", "conversion_increase"],
+        "success_metrics": [
+          "personalization_accuracy",
+          "engagement_improvement",
+          "conversion_increase"
+        ],
         "execution_time": "7-10 days"
       }
     },
@@ -156,7 +176,11 @@
       "contract": {
         "input_required": ["current_systems", "integration_points", "standards_requirements"],
         "output_format": ["bundle", "spec", "json"],
-        "success_metrics": ["integration_success_rate", "query_performance", "standards_compliance"],
+        "success_metrics": [
+          "integration_success_rate",
+          "query_performance",
+          "standards_compliance"
+        ],
         "execution_time": "14-21 days"
       }
     }

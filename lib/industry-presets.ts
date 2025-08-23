@@ -1,4 +1,4 @@
-// PromptForge v3 - Industry Presets System
+// PROMPTFORGE™ v3 - Industry Presets System
 // Presete predefinite per domeniu pentru configurare rapidă
 
 import { type Domain, type SevenD } from './ruleset';
@@ -45,7 +45,7 @@ const healthcarePresets: IndustryPreset[] = [
       complexity: 'advanced',
       resources: 'full_stack_org',
       application: 'implementation',
-      output_format: 'spec'
+      output_format: 'spec',
     },
     prompt_template: `You are a healthcare operations expert specializing in patient journey optimization. 
 
@@ -75,14 +75,26 @@ CONSTRAINTS:
       facility_type: 'Regional hospital with 300 beds',
       patient_volume: '150 patients/day average',
       pain_points: 'Long wait times, complex discharge process',
-      target_metric: 'patient satisfaction scores and discharge efficiency'
+      target_metric: 'patient satisfaction scores and discharge efficiency',
     },
     expected_outputs: {
       format: 'structured specification',
-      structure: ['Executive Summary', 'Current State Analysis', 'Proposed Solution', 'Implementation Plan', 'Success Metrics', 'Compliance Notes'],
-      sample_snippet: '## Patient Journey Optimization Plan\n\n### Executive Summary\nThis plan addresses workflow inefficiencies...'
+      structure: [
+        'Executive Summary',
+        'Current State Analysis',
+        'Proposed Solution',
+        'Implementation Plan',
+        'Success Metrics',
+        'Compliance Notes',
+      ],
+      sample_snippet:
+        '## Patient Journey Optimization Plan\n\n### Executive Summary\nThis plan addresses workflow inefficiencies...',
     },
-    success_metrics: ['Patient satisfaction increase', 'Reduced wait times', 'Compliance score maintenance'],
+    success_metrics: [
+      'Patient satisfaction increase',
+      'Reduced wait times',
+      'Compliance score maintenance',
+    ],
     time_to_complete_minutes: 45,
     required_entitlements: ['canUseAllModules', 'canExportPDF'],
     compliance_notes: 'HIPAA compliance verified, no PHI processing',
@@ -90,8 +102,8 @@ CONSTRAINTS:
       'Always include HIPAA compliance considerations',
       'Focus on patient safety and satisfaction',
       'Include measurable outcomes and KPIs',
-      'Consider interdisciplinary team coordination'
-    ]
+      'Consider interdisciplinary team coordination',
+    ],
   },
   {
     id: 'healthcare_compliance_audit',
@@ -100,7 +112,12 @@ CONSTRAINTS:
     domain: 'healthcare',
     category: 'compliance',
     difficulty: 'expert',
-    use_cases: ['Regulatory compliance', 'Internal audits', 'Joint Commission prep', 'HIPAA assessment'],
+    use_cases: [
+      'Regulatory compliance',
+      'Internal audits',
+      'Joint Commission prep',
+      'HIPAA assessment',
+    ],
     seven_d_config: {
       domain: 'healthcare',
       scale: 'corporate',
@@ -108,7 +125,7 @@ CONSTRAINTS:
       complexity: 'expert',
       resources: 'full_stack_org',
       application: 'audit',
-      output_format: 'checklist'
+      output_format: 'checklist',
     },
     prompt_template: `You are a healthcare compliance expert with extensive experience in {{compliance_type}} audits.
 
@@ -141,14 +158,26 @@ COMPLIANCE STANDARDS:
       org_type: 'Multi-specialty clinic with 50 providers',
       audit_focus: 'Electronic health records security',
       timeline: '6-month audit cycle',
-      previous_findings: 'Minor documentation gaps, access control improvements needed'
+      previous_findings: 'Minor documentation gaps, access control improvements needed',
     },
     expected_outputs: {
       format: 'detailed compliance checklist',
-      structure: ['Audit Scope', 'Regulatory Framework', 'Assessment Criteria', 'Documentation Requirements', 'Remediation Actions', 'Monitoring Plan'],
-      sample_snippet: '## HIPAA Security Audit Checklist\n\n### Administrative Safeguards\n- [ ] Security Officer designated...'
+      structure: [
+        'Audit Scope',
+        'Regulatory Framework',
+        'Assessment Criteria',
+        'Documentation Requirements',
+        'Remediation Actions',
+        'Monitoring Plan',
+      ],
+      sample_snippet:
+        '## HIPAA Security Audit Checklist\n\n### Administrative Safeguards\n- [ ] Security Officer designated...',
     },
-    success_metrics: ['Compliance score improvement', 'Audit findings reduction', 'Regulatory alignment'],
+    success_metrics: [
+      'Compliance score improvement',
+      'Audit findings reduction',
+      'Regulatory alignment',
+    ],
     time_to_complete_minutes: 60,
     required_entitlements: ['canUseAllModules', 'canExportPDF', 'hasAPI'],
     compliance_notes: 'Expert-level compliance framework, requires legal review',
@@ -156,9 +185,9 @@ COMPLIANCE STANDARDS:
       'Always cite current regulatory requirements',
       'Include implementation timelines',
       'Address both technical and administrative safeguards',
-      'Provide clear documentation requirements'
-    ]
-  }
+      'Provide clear documentation requirements',
+    ],
+  },
 ];
 
 // FinTech Presets
@@ -178,7 +207,7 @@ const fintechPresets: IndustryPreset[] = [
       complexity: 'advanced',
       resources: 'full_stack_org',
       application: 'implementation',
-      output_format: 'spec'
+      output_format: 'spec',
     },
     prompt_template: `You are a FinTech security architect specializing in API security for financial services.
 
@@ -211,12 +240,20 @@ CONSTRAINTS:
       api_type: 'Payment processing API with card transactions',
       transaction_volume: '10,000 transactions/day',
       regulatory_env: 'EU - PSD2 compliance required',
-      security_gaps: 'Rate limiting improvements, enhanced fraud detection'
+      security_gaps: 'Rate limiting improvements, enhanced fraud detection',
     },
     expected_outputs: {
       format: 'technical specification',
-      structure: ['Security Architecture', 'Implementation Guide', 'Compliance Framework', 'Monitoring Setup', 'Incident Response', 'Testing Procedures'],
-      sample_snippet: '## FinTech API Security Specification\n\n### Authentication Framework\nImplement OAuth 2.0 with PKCE...'
+      structure: [
+        'Security Architecture',
+        'Implementation Guide',
+        'Compliance Framework',
+        'Monitoring Setup',
+        'Incident Response',
+        'Testing Procedures',
+      ],
+      sample_snippet:
+        '## FinTech API Security Specification\n\n### Authentication Framework\nImplement OAuth 2.0 with PKCE...',
     },
     success_metrics: ['Security score improvement', 'Compliance adherence', 'Fraud reduction'],
     time_to_complete_minutes: 50,
@@ -226,9 +263,9 @@ CONSTRAINTS:
       'Always implement defense in depth',
       'Include comprehensive audit logging',
       'Design for regulatory compliance from start',
-      'Implement real-time fraud monitoring'
-    ]
-  }
+      'Implement real-time fraud monitoring',
+    ],
+  },
 ];
 
 // SaaS Presets
@@ -248,7 +285,7 @@ const saasPresets: IndustryPreset[] = [
       complexity: 'standard',
       resources: 'lean_team',
       application: 'implementation',
-      output_format: 'playbook'
+      output_format: 'playbook',
     },
     prompt_template: `You are a SaaS growth expert specializing in user onboarding optimization.
 
@@ -281,12 +318,20 @@ FOCUS AREAS:
       saas_type: 'Project management tool for small teams',
       current_metrics: '30% activation rate, 15% churn in first month',
       target_users: 'Small business owners and team leads',
-      key_features: 'Task management, team collaboration, reporting'
+      key_features: 'Task management, team collaboration, reporting',
     },
     expected_outputs: {
       format: 'implementation playbook',
-      structure: ['Current State Analysis', 'Optimized Onboarding Flow', 'Implementation Plan', 'Testing Framework', 'Success Metrics', 'Continuous Improvement'],
-      sample_snippet: '## SaaS Onboarding Optimization Playbook\n\n### Current State Analysis\nUser journey analysis reveals...'
+      structure: [
+        'Current State Analysis',
+        'Optimized Onboarding Flow',
+        'Implementation Plan',
+        'Testing Framework',
+        'Success Metrics',
+        'Continuous Improvement',
+      ],
+      sample_snippet:
+        '## SaaS Onboarding Optimization Playbook\n\n### Current State Analysis\nUser journey analysis reveals...',
     },
     success_metrics: ['Activation rate increase', 'Churn reduction', 'Time to value improvement'],
     time_to_complete_minutes: 35,
@@ -295,17 +340,13 @@ FOCUS AREAS:
       'Focus on immediate value demonstration',
       'Progressive feature disclosure',
       'Personalized onboarding paths',
-      'Continuous measurement and optimization'
-    ]
-  }
+      'Continuous measurement and optimization',
+    ],
+  },
 ];
 
 // Colectează toate presetele
-const allPresets: IndustryPreset[] = [
-  ...healthcarePresets,
-  ...fintechPresets,
-  ...saasPresets
-];
+const allPresets: IndustryPreset[] = [...healthcarePresets, ...fintechPresets, ...saasPresets];
 
 // Export functions
 export function getPresetsForDomain(domain: Domain): IndustryPreset[] {
@@ -356,7 +397,7 @@ export function getPresetStats(): {
     total: allPresets.length,
     by_domain: {} as Record<Domain, number>,
     by_category: {} as Record<string, number>,
-    by_difficulty: {} as Record<string, number>
+    by_difficulty: {} as Record<string, number>,
   };
 
   allPresets.forEach(preset => {

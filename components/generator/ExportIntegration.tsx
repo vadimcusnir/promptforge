@@ -10,13 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
-  TestTube, 
-  CheckCircle, 
-  XCircle, 
-  Download,
-  AlertTriangle 
-} from 'lucide-react';
+import { TestTube, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 
 import { ExportBundle } from '@/components/export-bundle';
 
@@ -48,10 +42,10 @@ export function ExportIntegration({
   testResult,
   orgId,
   userId,
-  className
+  className,
 }: ExportIntegrationProps) {
   const [showExport, setShowExport] = useState(false);
-  
+
   const { runId, moduleId, score, status } = testResult;
   const meetsDoD = score.overall_score >= 80;
   const isSuccessful = status === 'success';
@@ -59,19 +53,27 @@ export function ExportIntegration({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'success': return 'text-green-600';
-      case 'error': return 'text-red-600';
-      case 'partial': return 'text-yellow-600';
-      default: return 'text-gray-600';
+      case 'success':
+        return 'text-green-600';
+      case 'error':
+        return 'text-red-600';
+      case 'partial':
+        return 'text-yellow-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success': return <CheckCircle className="h-4 w-4" />;
-      case 'error': return <XCircle className="h-4 w-4" />;
-      case 'partial': return <AlertTriangle className="h-4 w-4" />;
-      default: return <TestTube className="h-4 w-4" />;
+      case 'success':
+        return <CheckCircle className="h-4 w-4" />;
+      case 'error':
+        return <XCircle className="h-4 w-4" />;
+      case 'partial':
+        return <AlertTriangle className="h-4 w-4" />;
+      default:
+        return <TestTube className="h-4 w-4" />;
     }
   };
 
@@ -84,11 +86,9 @@ export function ExportIntegration({
             <TestTube className="h-5 w-5" />
             Test Results - {moduleId}
           </CardTitle>
-          <CardDescription>
-            Run ID: {runId.slice(0, 8)}...
-          </CardDescription>
+          <CardDescription>Run ID: {runId.slice(0, 8)}...</CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
           {/* Status & Score */}
           <div className="flex items-center justify-between">
@@ -96,7 +96,7 @@ export function ExportIntegration({
               {getStatusIcon(status)}
               <span className="font-medium capitalize">{status}</span>
             </div>
-            <Badge variant={meetsDoD ? "default" : "destructive"}>
+            <Badge variant={meetsDoD ? 'default' : 'destructive'}>
               Score: {score.overall_score}/100
             </Badge>
           </div>
@@ -151,14 +151,9 @@ export function ExportIntegration({
                 {isExportEligible ? 'Export Eligible' : 'Export Not Available'}
               </span>
             </div>
-            
+
             {isExportEligible && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowExport(!showExport)}
-              >
-                <Download className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" onClick={() => setShowExport(!showExport)}>
                 {showExport ? 'Hide Export' : 'Show Export'}
               </Button>
             )}
@@ -170,7 +165,11 @@ export function ExportIntegration({
               <p className="font-medium mb-1">Export Requirements:</p>
               <ul className="space-y-1">
                 <li className={`flex items-center gap-2 ${isSuccessful ? 'text-green-600' : ''}`}>
-                  {isSuccessful ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                  {isSuccessful ? (
+                    <CheckCircle className="h-3 w-3" />
+                  ) : (
+                    <XCircle className="h-3 w-3" />
+                  )}
                   Run must complete successfully
                 </li>
                 <li className={`flex items-center gap-2 ${meetsDoD ? 'text-green-600' : ''}`}>
@@ -192,7 +191,7 @@ export function ExportIntegration({
             userId={userId}
             moduleId={moduleId}
             score={score.overall_score}
-            onExportComplete={(bundleId) => {
+            onExportComplete={bundleId => {
               console.log('Export completed:', bundleId);
               // Could trigger analytics, show success toast, etc.
             }}
@@ -216,24 +215,20 @@ export function TestResultsWithExport() {
       execution: 21,
       ambiguity: 21,
       business_fit: 22,
-      overall_score: 86
+      overall_score: 86,
     },
     status: 'success',
     output: 'Generated prompt content...',
     duration_ms: 2340,
     tokens_used: 1250,
-    cost_usd: 0.0045
+    cost_usd: 0.0045,
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold">Test Results</h1>
-      
-      <ExportIntegration
-        testResult={mockTestResult}
-        orgId="org-uuid"
-        userId="user-uuid"
-      />
+
+      <ExportIntegration testResult={mockTestResult} orgId="org-uuid" userId="user-uuid" />
     </div>
   );
 }

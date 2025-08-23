@@ -1,7 +1,7 @@
 /* CSS Custom Properties */
 :root {
   --accent: #00ff7f;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 /* Matrix Token Animations */
@@ -73,19 +73,19 @@ html:not(.matrix-animations-ready) .token-item {
 }
 
 /* Fixed reduced motion support - tokens remain visible but static */
-html[data-prm="1"] .token-item {
+html[data-prm='1'] .token-item {
   animation: none !important;
   opacity: 0.6 !important; /* Keep tokens visible but dimmed when motion is reduced */
   transform: none !important;
 }
 
-html[data-prm="1"] .quote-box {
+html[data-prm='1'] .quote-box {
   animation: none !important;
   transition: none !important;
 }
 
 /* Ensure tokens are always visible when animations are ready, even with reduced motion */
-html.matrix-animations-ready[data-prm="1"] .token-item {
+html.matrix-animations-ready[data-prm='1'] .token-item {
   opacity: 0.6 !important; /* Static but visible tokens */
 }
 
@@ -113,7 +113,7 @@ html.matrix-animations-ready[data-prm="1"] .token-item {
 /* Added manual animation toggle support and improved token visibility control */
 /* Ascunde tokens DOAR când utilizatorul n-a ales manual "On" */
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-animations="on"]) .bg-tokens {
+  html:not([data-animations='on']) .bg-tokens {
     display: none !important;
   }
 }
@@ -132,19 +132,19 @@ html.matrix-animations-ready[data-prm="1"] .token-item {
 
 /* Enhanced token visibility rules with manual override support */
 /* Default behavior - respect reduced motion unless manually overridden */
-html[data-prm="1"]:not([data-animations="on"]) .token-item {
+html[data-prm='1']:not([data-animations='on']) .token-item {
   animation: none !important;
   opacity: 0 !important; /* Hide completely unless manually enabled */
   transform: none !important;
 }
 
 /* Manual override - show tokens even with reduced motion when user chooses "On" */
-html[data-animations="on"] .token-item {
+html[data-animations='on'] .token-item {
   opacity: 0.6 !important; /* Always show when manually enabled */
   animation: tokenDrift 16s linear infinite;
 }
 
-html[data-animations="on"][data-prm="1"] .token-item {
+html[data-animations='on'][data-prm='1'] .token-item {
   animation: none !important; /* Respect reduced motion but keep visible */
   opacity: 0.6 !important;
   transform: none !important;

@@ -1,13 +1,24 @@
- {
+{
   "industry": "Consulting",
   "slug": "consulting",
   "jargon": [
-    "OKRs", "scope creep", "buy-in", "change management", "benchmarking",
-    "value proposition", "due diligence", "workstream", "deliverables"
+    "OKRs",
+    "scope creep",
+    "buy-in",
+    "change management",
+    "benchmarking",
+    "value proposition",
+    "due diligence",
+    "workstream",
+    "deliverables"
   ],
   "kpis": [
-    "ROI", "decision_speed", "execution_alignment", "client_satisfaction",
-    "project_on-time_rate", "scope adherence"
+    "ROI",
+    "decision_speed",
+    "execution_alignment",
+    "client_satisfaction",
+    "project_on-time_rate",
+    "scope adherence"
   ],
   "compliance_notes": "Contractual NDAs, ISO 9001 (quality management), Data Confidentiality Standards",
   "style_bias": "audit-like, autoritar, orientat pe diagrame și frameworks",
@@ -15,7 +26,7 @@
   "risk_level": "medium",
   "defaults_7d": {
     "scale": "boutique_agency",
-    "urgency": "planned", 
+    "urgency": "planned",
     "complexity": "advanced",
     "resources": "agency_stack",
     "application": "strategy_design",
@@ -40,4 +51,4 @@
     "ambiguity_max": 18,
     "business_fit_min": 80
   }
-} 
+}

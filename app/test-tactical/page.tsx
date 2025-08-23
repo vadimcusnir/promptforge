@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export default function TacticalTestPage() {
   return (
@@ -12,28 +12,28 @@ export default function TacticalTestPage() {
           <span className="pf-corner br"></span>
 
           <h1 className="text-h1 text-[#ECFEFF] mb-4">
-            Tactical{" "}
+            Tactical{' '}
             <span className="kw" data-glitch>
               <span className="kw__text">Design System</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span>{" "}
+            </span>{' '}
             Test
           </h1>
 
           <div className="pf-yard-line"></div>
 
           <p className="text-body text-[#ECFEFF]/80 mb-8">
-            Testing{" "}
+            Testing{' '}
             <span className="kw" data-glitch>
               <span className="kw__text">Glitch</span>
               <span className="kw__glitch" aria-hidden="true"></span>
             </span>
-            ,{" "}
+            ,{' '}
             <span className="kw" data-glitch>
               <span className="kw__text">Protocol</span>
               <span className="kw__glitch" aria-hidden="true"></span>
             </span>
-            , and{" "}
+            , and{' '}
             <span className="kw" data-glitch>
               <span className="kw__text">Sharp Buttons</span>
               <span className="kw__glitch" aria-hidden="true"></span>
@@ -54,7 +54,7 @@ export default function TacticalTestPage() {
           <span className="pf-corner br"></span>
 
           <h2 className="text-h2 text-[#ECFEFF] mb-4">
-            Block System with{" "}
+            Block System with{' '}
             <span className="kw" data-glitch>
               <span className="kw__text">Corner Markers</span>
               <span className="kw__glitch" aria-hidden="true"></span>
@@ -97,17 +97,13 @@ export default function TacticalTestPage() {
           <span className="pf-corner bl"></span>
           <span className="pf-corner br"></span>
 
-          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">
-            Sharp Button System
-          </h2>
+          <h2 className="text-h2 text-[#ECFEFF] text-center mb-4">Sharp Button System</h2>
 
           <div className="pf-yard-line"></div>
 
           <div className="grid md:grid-cols-2 gap-8 text-center">
             <div>
-              <h3 className="text-h3 text-[#ECFEFF] mb-4">
-                Sharp Edge Buttons
-              </h3>
+              <h3 className="text-h3 text-[#ECFEFF] mb-4">Sharp Edge Buttons</h3>
               <div className="space-y-4">
                 <button className="btn w-full">Primary Sharp</button>
                 <button className="btn w-full" disabled>
@@ -139,7 +135,7 @@ export default function TacticalTestPage() {
             <span className="kw" data-glitch>
               <span className="kw__text">Glitch Protocol</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span>{" "}
+            </span>{' '}
             Test
           </h2>
 
@@ -151,17 +147,17 @@ export default function TacticalTestPage() {
             <span className="kw" data-glitch>
               <span className="kw__text">Cognitive OS</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span>{" "}
+            </span>{' '}
             •
             <span className="kw" data-glitch>
               <span className="kw__text">7D Engine</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span>{" "}
+            </span>{' '}
             •
             <span className="kw" data-glitch>
               <span className="kw__text">Export</span>
               <span className="kw__glitch" aria-hidden="true"></span>
-            </span>{" "}
+            </span>{' '}
             •
             <span className="kw" data-glitch>
               <span className="kw__text">Modules</span>

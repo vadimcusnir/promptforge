@@ -1,4 +1,4 @@
-// PromptForge v3 - Cloud History System
+// PROMPTFORGE™ v3 - Cloud History System
 // Istoricul prompturilor cu RLS multi-user și retention policies
 
 import { createClient } from '@supabase/supabase-js';
@@ -7,7 +7,8 @@ import { stripSecrets } from './agent/hygiene';
 
 // SACF - Development mode fallback
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+const SUPABASE_SERVICE_ROLE =
+  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
@@ -105,8 +106,18 @@ class CloudHistoryManager {
     }
 
     const {
-      orgId, userId, moduleId, presetId, domain, sevenDConfig,
-      promptText, modelResponse, score, usage, tags = [], shareWithOrg = false
+      orgId,
+      userId,
+      moduleId,
+      presetId,
+      domain,
+      sevenDConfig,
+      promptText,
+      modelResponse,
+      score,
+      usage,
+      tags = [],
+      shareWithOrg = false,
     } = params;
 
     // Verifică entitlements pentru cloud history
@@ -120,7 +131,9 @@ class CloudHistoryManager {
     const sanitizedResponse = modelResponse ? stripSecrets(modelResponse) : undefined;
 
     // Calculează hash pentru deduplication
-    const promptHash = await this.calculatePromptHash(sanitizedPrompt + JSON.stringify(sevenDConfig));
+    const promptHash = await this.calculatePromptHash(
+      sanitizedPrompt + JSON.stringify(sevenDConfig)
+    );
 
     // Verifică dacă există deja
     const existing = await this.findExistingEntry(orgId, userId, promptHash);
@@ -130,7 +143,7 @@ class CloudHistoryManager {
         score,
         usage,
         tags: [...new Set([...existing.tags, ...tags])],
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       });
     }
 
@@ -155,7 +168,7 @@ class CloudHistoryManager {
       tags,
       is_favorite: false,
       shared_with_org: shareWithOrg,
-      expires_at: expiresAt.toISOString()
+      expires_at: expiresAt.toISOString(),
     };
 
     const { data, error } = await supabase
@@ -193,11 +206,18 @@ class CloudHistoryManager {
         total: 0,
         page: 1,
         limit: 20,
-        hasNextPage: false
+        hasNextPage: false,
       };
     }
 
-    const { orgId, userId, filters = {}, page = 1, limit = 20, includeFullContent = false } = params;
+    const {
+      orgId,
+      userId,
+      filters = {},
+      page = 1,
+      limit = 20,
+      includeFullContent = false,
+    } = params;
 
     // Verifică entitlements
     const hasCloudHistory = await this.checkCloudHistoryEntitlement(orgId);
@@ -206,10 +226,7 @@ class CloudHistoryManager {
     }
 
     // Construiește query cu RLS
-    let query = supabase
-      .from('prompt_history')
-      .select('*', { count: 'exact' })
-      .eq('org_id', orgId);
+    let query = supabase.from('prompt_history').select('*', { count: 'exact' }).eq('org_id', orgId);
 
     // Adaugă filtre pentru user (pentru propria istorie sau shared)
     if (!filters.user_id) {
@@ -244,9 +261,7 @@ class CloudHistoryManager {
 
     // Paginare și sortare
     const offset = (page - 1) * limit;
-    query = query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    query = query.order('created_at', { ascending: false }).range(offset, offset + limit - 1);
 
     const { data, error, count } = await query;
 
@@ -262,7 +277,7 @@ class CloudHistoryManager {
         return {
           ...entry,
           full_prompt: undefined,
-          model_response: undefined
+          model_response: undefined,
         };
       }
       return entry;
@@ -273,7 +288,7 @@ class CloudHistoryManager {
       total: count || 0,
       page,
       limit,
-      hasNextPage: (count || 0) > offset + limit
+      hasNextPage: (count || 0) > offset + limit,
     };
   }
 
@@ -291,8 +306,8 @@ class CloudHistoryManager {
         retention_summary: {
           active_entries: 0,
           expiring_soon: 0,
-          expired_entries: 0
-        }
+          expired_entries: 0,
+        },
       };
     }
 
@@ -315,19 +330,25 @@ class CloudHistoryManager {
 
     // Calculează statistici
     const totalEntries = basicStats.length;
-    const totalTokens = basicStats.reduce((sum, entry) => 
-      sum + (entry.usage?.tokens_input || 0) + (entry.usage?.tokens_output || 0), 0);
-    const totalCost = basicStats.reduce((sum, entry) => 
-      sum + (entry.usage?.cost_usd || 0), 0);
-    const avgScore = basicStats.length > 0 
-      ? basicStats.reduce((sum, entry) => sum + (entry.score?.composite || 0), 0) / basicStats.length
-      : 0;
+    const totalTokens = basicStats.reduce(
+      (sum, entry) => sum + (entry.usage?.tokens_input || 0) + (entry.usage?.tokens_output || 0),
+      0
+    );
+    const totalCost = basicStats.reduce((sum, entry) => sum + (entry.usage?.cost_usd || 0), 0);
+    const avgScore =
+      basicStats.length > 0
+        ? basicStats.reduce((sum, entry) => sum + (entry.score?.composite || 0), 0) /
+          basicStats.length
+        : 0;
 
     // Top domenii
-    const domainCounts = basicStats.reduce((acc, entry) => {
-      acc[entry.domain] = (acc[entry.domain] || 0) + 1;
-      return acc;
-    }, {} as Record<Domain, number>);
+    const domainCounts = basicStats.reduce(
+      (acc, entry) => {
+        acc[entry.domain] = (acc[entry.domain] || 0) + 1;
+        return acc;
+      },
+      {} as Record<Domain, number>
+    );
 
     const topDomains = Object.entries(domainCounts)
       .map(([domain, count]) => ({ domain: domain as Domain, count }))
@@ -340,7 +361,7 @@ class CloudHistoryManager {
       const date = new Date();
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().split('T')[0];
-      
+
       const { count } = await supabase
         .from('prompt_history')
         .select('*', { count: 'exact', head: true })
@@ -382,8 +403,8 @@ class CloudHistoryManager {
       retention_summary: {
         active_entries: activeEntries || 0,
         expiring_soon: expiringSoon || 0,
-        expired_entries: 0 // Expired entries sunt deja filtrate
-      }
+        expired_entries: 0, // Expired entries sunt deja filtrate
+      },
     };
   }
 
@@ -468,10 +489,7 @@ class CloudHistoryManager {
       return historyId;
     }
 
-    const { error } = await supabase
-      .from('prompt_history')
-      .update(updates)
-      .eq('id', historyId);
+    const { error } = await supabase.from('prompt_history').update(updates).eq('id', historyId);
 
     if (error) {
       throw new Error(`Failed to update history entry: ${error.message}`);
@@ -542,12 +560,12 @@ class CloudHistoryManager {
       .maybeSingle();
 
     const plan = data?.plan_code || 'pilot';
-    
+
     // Retention days pe plan conform ruleset.yml
     const retentionMap: Record<string, number> = {
-      'promptforge_pilot': 30,
-      'promptforge_pro': 90,
-      'promptforge_enterprise': 365
+      promptforge_pilot: 30,
+      promptforge_pro: 90,
+      promptforge_enterprise: 365,
     };
 
     return retentionMap[plan] || 30;

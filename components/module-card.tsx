@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { VECTORS, type PromptModule } from "@/types/promptforge";
-import { useState } from "react";
-import { Eye, Settings, Target, BarChart3 } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { VECTORS, type PromptModule } from '@/types/promptforge';
+import { useState } from 'react';
+import { Eye, Settings, Target, BarChart3 } from 'lucide-react';
 
 interface ModuleCardProps {
   module: PromptModule;
@@ -25,14 +25,13 @@ export function ModuleCard({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const primaryVector = module.vectors[0];
-  const defaultVectorColor =
-    VECTORS[primaryVector as keyof typeof VECTORS]?.color || "#6b7280";
+  const defaultVectorColor = VECTORS[primaryVector as keyof typeof VECTORS]?.color || '#6b7280';
   const cardVectorColor = vectorColor || defaultVectorColor;
 
   return (
     <Card
       className={`glass-effect p-4 cursor-pointer transition-all duration-300 hover:glow-primary hover:shadow-lg border-l-4 ${
-        isSelected ? "ring-2 ring-primary glow-primary" : ""
+        isSelected ? 'ring-2 ring-primary glow-primary' : ''
       }`}
       style={{ borderLeftColor: cardVectorColor }}
       onClick={() => onSelect(module.id)}
@@ -40,16 +39,16 @@ export function ModuleCard({
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-xs font-bold">
-            M{module.id.toString().padStart(2, "0")}
+            M{module.id.toString().padStart(2, '0')}
           </Badge>
           <div className="flex gap-1">
-            {module.vectors.map((v) => (
+            {module.vectors.map(v => (
               <Badge
                 key={v}
                 variant="secondary"
                 className="text-xs"
                 style={{
-                  color: VECTORS[v as keyof typeof VECTORS]?.color || "#6b7280",
+                  color: VECTORS[v as keyof typeof VECTORS]?.color || '#6b7280',
                 }}
               >
                 V{v}
@@ -77,37 +76,25 @@ export function ModuleCard({
           <div className="break-words">
             <div className="flex items-center gap-2 mb-1">
               <Settings className="w-4 h-4 text-blue-400" />
-              <span className="text-xs font-semibold text-foreground">
-                ⚙️ Specification
-              </span>
+              <span className="text-xs font-semibold text-foreground">⚙️ Specification</span>
             </div>
-            <p className="text-xs text-muted-foreground line-clamp-3 pl-6">
-              {module.spec}
-            </p>
+            <p className="text-xs text-muted-foreground line-clamp-3 pl-6">{module.spec}</p>
           </div>
 
           <div className="break-words">
             <div className="flex items-center gap-2 mb-1">
               <Target className="w-4 h-4 text-green-400" />
-              <span className="text-xs font-semibold text-foreground">
-                📋 Expected Output
-              </span>
+              <span className="text-xs font-semibold text-foreground">📋 Expected Output</span>
             </div>
-            <p className="text-xs text-muted-foreground line-clamp-2 pl-6">
-              {module.output}
-            </p>
+            <p className="text-xs text-muted-foreground line-clamp-2 pl-6">{module.output}</p>
           </div>
 
           <div className="break-words">
             <div className="flex items-center gap-2 mb-1">
               <BarChart3 className="w-4 h-4 text-orange-400" />
-              <span className="text-xs font-semibold text-foreground">
-                🛡️ Guardrails
-              </span>
+              <span className="text-xs font-semibold text-foreground">🛡️ Guardrails</span>
             </div>
-            <p className="text-xs text-muted-foreground line-clamp-2 pl-6">
-              {module.guardrails}
-            </p>
+            <p className="text-xs text-muted-foreground line-clamp-2 pl-6">{module.guardrails}</p>
           </div>
         </div>
       )}
@@ -115,9 +102,7 @@ export function ModuleCard({
       <div className="mb-4 p-2 glass-strong rounded">
         <div className="flex items-center gap-2 mb-1">
           <BarChart3 className="w-3 h-3 text-green-400" />
-          <span className="text-xs font-semibold text-foreground">
-            📊 KPI Target
-          </span>
+          <span className="text-xs font-semibold text-foreground">📊 KPI Target</span>
         </div>
         <p className="text-sm font-bold text-green-400 break-words line-clamp-1 pl-5">
           {module.kpi}
@@ -129,19 +114,19 @@ export function ModuleCard({
           size="sm"
           variant="outline"
           className="text-xs bg-transparent hover:bg-primary/10 flex-1"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             setIsExpanded(!isExpanded);
           }}
         >
           <Eye className="w-3 h-3 mr-1" />
-          {isExpanded ? "Minimize" : "Details"}
+          {isExpanded ? 'Minimize' : 'Details'}
         </Button>
         <Button
           size="sm"
           variant="outline"
           className="text-xs bg-transparent hover:bg-accent/10 flex-1"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             onViewDetails(module.id);
           }}

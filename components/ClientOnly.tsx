@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface ClientOnlyProps {
   children: React.ReactNode;
@@ -18,14 +18,14 @@ export function ClientOnly({
 
   useEffect(() => {
     const tryMount = () => {
-      if (typeof window !== "undefined" && document.readyState !== "loading") {
+      if (typeof window !== 'undefined' && document.readyState !== 'loading') {
         setHasMounted(true);
       } else if (retryCount < retryDelays.length - 1) {
         setTimeout(
           () => {
-            setRetryCount((prev) => prev + 1);
+            setRetryCount(prev => prev + 1);
           },
-          retryDelays[retryCount + 1] || 300,
+          retryDelays[retryCount + 1] || 300
         );
       }
     };

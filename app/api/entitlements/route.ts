@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   try {
     // Get current session
     const session = await getServerSession();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -27,17 +27,13 @@ export async function GET(req: NextRequest) {
     }
 
     // Create Supabase client with user session
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
+    const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+      global: {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
         },
-      }
-    );
+      },
+    });
 
     // Verify user is member of the organization
     const { data: membership, error: memberError } = await supabase
@@ -73,7 +69,7 @@ export async function GET(req: NextRequest) {
 
       // Convert to entitlements object
       const entitlementsObj = convertEntitlementsToObject(orgEntitlements || []);
-      
+
       return NextResponse.json({
         org_id: orgId,
         user_id: userId,
@@ -101,7 +97,6 @@ export async function GET(req: NextRequest) {
         role: membership.role,
       },
     });
-
   } catch (error) {
     console.error('[Entitlements API] Unexpected error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -111,46 +106,48 @@ export async function GET(req: NextRequest) {
 /**
  * Convert entitlements array to typed object
  */
-function convertEntitlementsToObject(entitlements: any[]): UserEntitlements {
+function convertEntitlementsToObject(
+  entitlements: Array<{ flag: string; value: boolean }>
+): UserEntitlements {
   const entitlementsMap: Record<string, boolean> = {};
-  
-  entitlements.forEach((ent) => {
+
+  entitlements.forEach(ent => {
     entitlementsMap[ent.flag] = ent.value;
   });
 
   return {
     // Core module access
     canUseAllModules: entitlementsMap.canUseAllModules || false,
-    
+
     // Export capabilities
     canExportMD: entitlementsMap.canExportMD || false,
     canExportPDF: entitlementsMap.canExportPDF || false,
     canExportJSON: entitlementsMap.canExportJSON || false,
     canExportBundleZip: entitlementsMap.canExportBundleZip || false,
-    
+
     // GPT and AI features
     canUseGptTestReal: entitlementsMap.canUseGptTestReal || false,
     hasEvaluatorAI: entitlementsMap.hasEvaluatorAI || false,
-    
+
     // Cloud and storage
     hasCloudHistory: entitlementsMap.hasCloudHistory || false,
-    
+
     // API access
     hasAPI: entitlementsMap.hasAPI || false,
-    
+
     // Enterprise features
     hasWhiteLabel: entitlementsMap.hasWhiteLabel || false,
     hasSeatsGT1: entitlementsMap.hasSeatsGT1 || false,
-    
+
     // Add-ons and packs
     hasExportDesigner: entitlementsMap.hasExportDesigner || false,
     hasFinTechPack: entitlementsMap.hasFinTechPack || false,
     hasEduPack: entitlementsMap.hasEduPack || false,
     hasIndustryTemplates: entitlementsMap.hasIndustryTemplates || false,
-    
+
     // Limits
-    maxRunsPerDay: parseInt(entitlementsMap.maxRunsPerDay as any) || 10,
-    maxSeats: parseInt(entitlementsMap.maxSeats as any) || 1,
+    maxRunsPerDay: parseInt(entitlementsMap.maxRunsPerDay as string) || 10,
+    maxSeats: parseInt(entitlementsMap.maxSeats as string) || 1,
   };
 }
 
@@ -166,20 +163,20 @@ export interface UserEntitlements {
   canExportJSON: boolean;
   canExportBundleZip: boolean;
   canUseGptTestReal: boolean;
-  
+
   // Premium features
   hasCloudHistory: boolean;
   hasEvaluatorAI: boolean;
   hasAPI: boolean;
   hasWhiteLabel: boolean;
   hasSeatsGT1: boolean;
-  
+
   // Add-ons
   hasExportDesigner: boolean;
   hasFinTechPack: boolean;
   hasEduPack: boolean;
   hasIndustryTemplates: boolean;
-  
+
   // Limits
   maxRunsPerDay: number;
   maxSeats: number;

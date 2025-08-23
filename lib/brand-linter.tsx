@@ -12,80 +12,80 @@ export interface BrandLinterResult {
 export interface LexiconRule {
   banned: string;
   replacement: string;
-  severity: "high" | "medium" | "low";
+  severity: 'high' | 'medium' | 'low';
 }
 
 // PROMPTFORGE™ Brand Lexicon - Banned words and replacements
 export const BANNED_LEXICON: LexiconRule[] = [
   {
-    banned: "ușor",
-    replacement: "rapid, operational, controllable",
-    severity: "high",
+    banned: 'ușor',
+    replacement: 'rapid, operational, controllable',
+    severity: 'high',
   },
   {
-    banned: "easy",
-    replacement: "rapid, operational, controllable",
-    severity: "high",
+    banned: 'easy',
+    replacement: 'rapid, operational, controllable',
+    severity: 'high',
   },
   {
-    banned: "magie",
-    replacement: "systematic, logical, validated",
-    severity: "high",
+    banned: 'magie',
+    replacement: 'systematic, logical, validated',
+    severity: 'high',
   },
   {
-    banned: "magic",
-    replacement: "systematic, logical, validated",
-    severity: "high",
+    banned: 'magic',
+    replacement: 'systematic, logical, validated',
+    severity: 'high',
   },
   {
-    banned: "inspirațional",
-    replacement: "strategic, functional, scalable",
-    severity: "medium",
+    banned: 'inspirațional',
+    replacement: 'strategic, functional, scalable',
+    severity: 'medium',
   },
   {
-    banned: "inspirational",
-    replacement: "strategic, functional, scalable",
-    severity: "medium",
+    banned: 'inspirational',
+    replacement: 'strategic, functional, scalable',
+    severity: 'medium',
   },
   {
-    banned: "schimbă-ți viața",
-    replacement: "optimize structure, run the system",
-    severity: "high",
+    banned: 'schimbă-ți viața',
+    replacement: 'optimize structure, run the system',
+    severity: 'high',
   },
   {
-    banned: "change your life",
-    replacement: "optimize structure, run the system",
-    severity: "high",
+    banned: 'change your life',
+    replacement: 'optimize structure, run the system',
+    severity: 'high',
   },
   {
-    banned: "fără efort",
-    replacement: "executable in < 5m, configurable",
-    severity: "medium",
+    banned: 'fără efort',
+    replacement: 'executable in < 5m, configurable',
+    severity: 'medium',
   },
   {
-    banned: "effortless",
-    replacement: "executable in < 5m, configurable",
-    severity: "medium",
+    banned: 'effortless',
+    replacement: 'executable in < 5m, configurable',
+    severity: 'medium',
   },
   {
-    banned: "convingător",
-    replacement: "with AI score ≥ 80/100",
-    severity: "medium",
+    banned: 'convingător',
+    replacement: 'with AI score ≥ 80/100',
+    severity: 'medium',
   },
   {
-    banned: "convincing",
-    replacement: "with AI score ≥ 80/100",
-    severity: "medium",
+    banned: 'convincing',
+    replacement: 'with AI score ≥ 80/100',
+    severity: 'medium',
   },
   {
-    banned: "transformă",
-    replacement: "optimize, systematize",
-    severity: "medium",
+    banned: 'transformă',
+    replacement: 'optimize, systematize',
+    severity: 'medium',
   },
   {
-    banned: "transform",
-    replacement: "optimize, systematize",
-    severity: "medium",
+    banned: 'transform',
+    replacement: 'optimize, systematize',
+    severity: 'medium',
   },
 ];
 
@@ -116,27 +116,25 @@ export class BrandLinter {
     // Check for CTA presence
     const ctaCheck = this.checkCTA(prompt);
     if (!ctaCheck.hasCTA) {
-      breaches.push("missing_cta");
-      fixes.push("Add a clear action at the end of the prompt.");
+      breaches.push('missing_cta');
+      fixes.push('Add a clear action at the end of the prompt.');
       score -= 15;
     }
 
     // Check for metrics/KPIs
     const metricCheck = this.checkMetrics(prompt);
     if (!metricCheck.hasMetric) {
-      breaches.push("no_kpi");
-      fixes.push(
-        "Include a measurable KPI (e.g., Open Rate ≥ 42%, TTA < 60s).",
-      );
+      breaches.push('no_kpi');
+      fixes.push('Include a measurable KPI (e.g., Open Rate ≥ 42%, TTA < 60s).');
       score -= 10;
     }
 
     // Check voice compliance (imperative, second person)
     const voiceCheck = this.checkVoice(prompt);
     if (!voiceCheck.compliant) {
-      breaches.push("passive_voice");
+      breaches.push('passive_voice');
       fixes.push(
-        'Rewrite using imperative voice: "Generate the prompt..." instead of "The prompt should be..."',
+        'Rewrite using imperative voice: "Generate the prompt..." instead of "The prompt should be..."'
       );
       score -= 10;
     }
@@ -144,10 +142,8 @@ export class BrandLinter {
     // Check structure completeness
     const structureCheck = this.checkStructure(prompt);
     if (!structureCheck.complete) {
-      breaches.push("incomplete_structure");
-      fixes.push(
-        "Include: Context → Requirement → Specification → KPI → Fallback",
-      );
+      breaches.push('incomplete_structure');
+      fixes.push('Include: Context → Requirement → Specification → KPI → Fallback');
       score -= 15;
     }
 
@@ -174,19 +170,19 @@ export class BrandLinter {
 
     const lowerPrompt = prompt.toLowerCase();
 
-    BANNED_LEXICON.forEach((rule) => {
+    BANNED_LEXICON.forEach(rule => {
       if (lowerPrompt.includes(rule.banned.toLowerCase())) {
-        breaches.push(`uses_banned_word_${rule.banned.replace(/\s+/g, "_")}`);
+        breaches.push(`uses_banned_word_${rule.banned.replace(/\s+/g, '_')}`);
         fixes.push(`Replace "${rule.banned}" with "${rule.replacement}".`);
 
         switch (rule.severity) {
-          case "high":
+          case 'high':
             penalty += 15;
             break;
-          case "medium":
+          case 'medium':
             penalty += 10;
             break;
-          case "low":
+          case 'low':
             penalty += 5;
             break;
         }
@@ -209,10 +205,10 @@ export class BrandLinter {
       /export\s+/i,
     ];
 
-    const hasCTA = ctaPatterns.some((pattern) => pattern.test(prompt));
+    const hasCTA = ctaPatterns.some(pattern => pattern.test(prompt));
     const suggestedCTA = hasCTA
-      ? "Continue with current action"
-      : "Generate the optimized prompt now";
+      ? 'Continue with current action'
+      : 'Generate the optimized prompt now';
 
     return { hasCTA, suggestedCTA };
   }
@@ -234,7 +230,7 @@ export class BrandLinter {
       /metric/i,
     ];
 
-    const hasMetric = metricPatterns.some((pattern) => pattern.test(prompt));
+    const hasMetric = metricPatterns.some(pattern => pattern.test(prompt));
     const hasKPI = /kpi|metric|score|rate|tta/i.test(prompt);
 
     return { hasMetric, hasKPI };
@@ -256,26 +252,16 @@ export class BrandLinter {
       /it would be/i,
     ];
 
-    const hasImperative = imperativePatterns.some((pattern) =>
-      pattern.test(prompt),
-    );
-    const hasPassive = passivePatterns.some((pattern) => pattern.test(prompt));
+    const hasImperative = imperativePatterns.some(pattern => pattern.test(prompt));
+    const hasPassive = passivePatterns.some(pattern => pattern.test(prompt));
 
     return { compliant: hasImperative && !hasPassive };
   }
 
   private checkStructure(prompt: string): { complete: boolean } {
-    const structureElements = [
-      /context/i,
-      /requirement/i,
-      /specification/i,
-      /output/i,
-      /format/i,
-    ];
+    const structureElements = [/context/i, /requirement/i, /specification/i, /output/i, /format/i];
 
-    const presentElements = structureElements.filter((pattern) =>
-      pattern.test(prompt),
-    );
+    const presentElements = structureElements.filter(pattern => pattern.test(prompt));
     return { complete: presentElements.length >= 3 };
   }
 
@@ -283,22 +269,22 @@ export class BrandLinter {
     let fixedPrompt = prompt;
 
     // Apply lexicon fixes
-    BANNED_LEXICON.forEach((rule) => {
-      const regex = new RegExp(rule.banned, "gi");
-      const replacements = rule.replacement.split(", ");
+    BANNED_LEXICON.forEach(rule => {
+      const regex = new RegExp(rule.banned, 'gi');
+      const replacements = rule.replacement.split(', ');
       fixedPrompt = fixedPrompt.replace(regex, replacements[0]);
     });
 
     // Add CTA if missing
     const ctaCheck = this.checkCTA(fixedPrompt);
     if (!ctaCheck.hasCTA) {
-      fixedPrompt += "\n\nGenerate the optimized prompt now.";
+      fixedPrompt += '\n\nGenerate the optimized prompt now.';
     }
 
     // Add KPI if missing
     const metricCheck = this.checkMetrics(fixedPrompt);
     if (!metricCheck.hasMetric) {
-      fixedPrompt += "\n\nKPI: Success rate ≥ 80%, TTA < 60s.";
+      fixedPrompt += '\n\nKPI: Success rate ≥ 80%, TTA < 60s.';
     }
 
     return fixedPrompt;

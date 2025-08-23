@@ -1,0 +1,16 @@
+node_modules/
+.next/
+build/
+dist/
+coverage/
+*.log
+*.lock
+.env*
+public/
+supabase/
+docs/
+cursor/
+rules/
+scripts/
+tests/
+tmp/

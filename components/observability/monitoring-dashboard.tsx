@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import React, { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   Activity,
   AlertTriangle,
@@ -21,18 +15,14 @@ import {
   Clock,
   DollarSign,
   Zap,
-  Shield,
   TrendingUp,
   TrendingDown,
   Eye,
   EyeOff,
   RefreshCw,
-} from "lucide-react";
-import { agentWatch, type AnomalyAlert } from "@/lib/observability/agent-watch";
-import {
-  auditLogger,
-  type AuditLogEntry,
-} from "@/lib/observability/audit-logger";
+} from 'lucide-react';
+import { agentWatch, type AnomalyAlert } from '@/lib/observability/agent-watch';
+import { auditLogger, type AuditLogEntry } from '@/lib/observability/audit-logger';
 
 interface MonitoringMetrics {
   agentStatus: {
@@ -90,7 +80,7 @@ export function MonitoringDashboard() {
       setLastUpdate(new Date());
       setIsLoading(false);
     } catch (error) {
-      console.error("Failed to update monitoring metrics:", error);
+      console.error('Failed to update monitoring metrics:', error);
       setIsLoading(false);
     }
   };
@@ -105,15 +95,15 @@ export function MonitoringDashboard() {
   }, [autoRefresh]);
 
   const getStatusColor = (enabled: boolean, degradationMode: boolean) => {
-    if (!enabled) return "destructive";
-    if (degradationMode) return "warning";
-    return "default";
+    if (!enabled) return 'destructive';
+    if (degradationMode) return 'warning';
+    return 'default';
   };
 
   const getStatusText = (enabled: boolean, degradationMode: boolean) => {
-    if (!enabled) return "DISABLED";
-    if (degradationMode) return "DEGRADED";
-    return "OPERATIONAL";
+    if (!enabled) return 'DISABLED';
+    if (degradationMode) return 'DEGRADED';
+    return 'OPERATIONAL';
   };
 
   const formatCurrency = (value: number) => `$${value.toFixed(4)}`;
@@ -154,17 +144,9 @@ export function MonitoringDashboard() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setAutoRefresh(!autoRefresh)}
-          >
-            {autoRefresh ? (
-              <Eye className="h-4 w-4" />
-            ) : (
-              <EyeOff className="h-4 w-4" />
-            )}
-            Auto-refresh {autoRefresh ? "ON" : "OFF"}
+          <Button variant="outline" size="sm" onClick={() => setAutoRefresh(!autoRefresh)}>
+            {autoRefresh ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+            Auto-refresh {autoRefresh ? 'ON' : 'OFF'}
           </Button>
           <Button variant="outline" size="sm" onClick={updateMetrics}>
             <RefreshCw className="h-4 w-4" />
@@ -181,19 +163,15 @@ export function MonitoringDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Agent Status</CardTitle>
-            <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <Badge
               variant={getStatusColor(
                 metrics.agentStatus.enabled,
-                metrics.agentStatus.degradationMode,
+                metrics.agentStatus.degradationMode
               )}
             >
-              {getStatusText(
-                metrics.agentStatus.enabled,
-                metrics.agentStatus.degradationMode,
-              )}
+              {getStatusText(metrics.agentStatus.enabled, metrics.agentStatus.degradationMode)}
             </Badge>
           </CardContent>
         </Card>
@@ -204,9 +182,7 @@ export function MonitoringDashboard() {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {formatNumber(metrics.agentStatus.totalRuns)}
-            </div>
+            <div className="text-2xl font-bold">{formatNumber(metrics.agentStatus.totalRuns)}</div>
             <p className="text-xs text-muted-foreground">
               {metrics.auditStats.total_runs} in audit log
             </p>
@@ -232,9 +208,7 @@ export function MonitoringDashboard() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {metrics.agentStatus.recentAlerts}
-            </div>
+            <div className="text-2xl font-bold">{metrics.agentStatus.recentAlerts}</div>
             <p className="text-xs text-muted-foreground">Last hour</p>
           </CardContent>
         </Card>
@@ -246,8 +220,8 @@ export function MonitoringDashboard() {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>System Alerts Detected</AlertTitle>
           <AlertDescription>
-            {metrics.agentStatus.recentAlerts} alerts in the last hour. Check
-            the alerts tab for details.
+            {metrics.agentStatus.recentAlerts} alerts in the last hour. Check the alerts tab for
+            details.
           </AlertDescription>
         </Alert>
       )}
@@ -257,8 +231,7 @@ export function MonitoringDashboard() {
           <XCircle className="h-4 w-4" />
           <AlertTitle>Kill-Switch Activated</AlertTitle>
           <AlertDescription>
-            Agent execution has been disabled. All agent-related operations are
-            blocked.
+            Agent execution has been disabled. All agent-related operations are blocked.
           </AlertDescription>
         </Alert>
       )}
@@ -268,8 +241,7 @@ export function MonitoringDashboard() {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Degradation Mode Active</AlertTitle>
           <AlertDescription>
-            System is running in degradation mode. Live testing is disabled,
-            simulation only.
+            System is running in degradation mode. Live testing is disabled, simulation only.
           </AlertDescription>
         </Alert>
       )}
@@ -287,9 +259,7 @@ export function MonitoringDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Avg Tokens
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Avg Tokens</CardTitle>
                 <Zap className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -319,31 +289,21 @@ export function MonitoringDashboard() {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {metrics.performance.avgScore.toFixed(1)}
-                </div>
-                <Progress
-                  value={metrics.performance.avgScore}
-                  className="mt-2"
-                />
+                <div className="text-2xl font-bold">{metrics.performance.avgScore.toFixed(1)}</div>
+                <Progress value={metrics.performance.avgScore} className="mt-2" />
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Error Rate
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
                 <TrendingDown className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {formatPercentage(metrics.performance.errorRate)}
                 </div>
-                <Progress
-                  value={metrics.performance.errorRate}
-                  className="mt-2"
-                />
+                <Progress value={metrics.performance.errorRate} className="mt-2" />
               </CardContent>
             </Card>
           </div>
@@ -353,26 +313,22 @@ export function MonitoringDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Recent Audit Logs</CardTitle>
-              <CardDescription>
-                Latest run executions and their outcomes
-              </CardDescription>
+              <CardDescription>Latest run executions and their outcomes</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {metrics.recentLogs.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-4">
-                    No recent logs available
-                  </p>
+                  <p className="text-muted-foreground text-center py-4">No recent logs available</p>
                 ) : (
-                  metrics.recentLogs.map((log) => (
+                  metrics.recentLogs.map(log => (
                     <div
                       key={log.run_id}
                       className="flex items-center justify-between p-3 border rounded-lg"
                     >
                       <div className="flex items-center space-x-3">
-                        {log.verdict === "pass" ? (
+                        {log.verdict === 'pass' ? (
                           <CheckCircle className="h-4 w-4 text-green-500" />
-                        ) : log.verdict === "partial_pass" ? (
+                        ) : log.verdict === 'partial_pass' ? (
                           <AlertTriangle className="h-4 w-4 text-yellow-500" />
                         ) : (
                           <XCircle className="h-4 w-4 text-red-500" />
@@ -385,9 +341,7 @@ export function MonitoringDashboard() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">
-                          {formatCurrency(log.cost)}
-                        </p>
+                        <p className="font-medium">{formatCurrency(log.cost)}</p>
                         <p className="text-sm text-muted-foreground">
                           {formatNumber(log.tokens)} tokens
                         </p>
@@ -404,40 +358,29 @@ export function MonitoringDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>System Alerts</CardTitle>
-              <CardDescription>
-                Anomaly detection and system warnings
-              </CardDescription>
+              <CardDescription>Anomaly detection and system warnings</CardDescription>
             </CardHeader>
             <CardContent>
               {metrics.recentAlerts.length === 0 ? (
                 <div className="text-center py-8">
                   <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
                   <p className="text-lg font-medium">All Systems Operational</p>
-                  <p className="text-muted-foreground">
-                    No recent alerts detected
-                  </p>
+                  <p className="text-muted-foreground">No recent alerts detected</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {metrics.recentAlerts.map((alert, index) => (
                     <Alert
                       key={index}
-                      variant={
-                        alert.severity === "critical"
-                          ? "destructive"
-                          : "default"
-                      }
+                      variant={alert.severity === 'critical' ? 'destructive' : 'default'}
                     >
                       <AlertTriangle className="h-4 w-4" />
-                      <AlertTitle>
-                        {alert.type.replace("_", " ").toUpperCase()}
-                      </AlertTitle>
+                      <AlertTitle>{alert.type.replace('_', ' ').toUpperCase()}</AlertTitle>
                       <AlertDescription>
                         {alert.message}
                         <br />
                         <span className="text-xs">
-                          Run: {alert.metrics.runId} •{" "}
-                          {alert.timestamp.toLocaleString()}
+                          Run: {alert.metrics.runId} • {alert.timestamp.toLocaleString()}
                         </span>
                       </AlertDescription>
                     </Alert>
@@ -457,32 +400,20 @@ export function MonitoringDashboard() {
               <CardContent className="space-y-2">
                 <div className="flex justify-between">
                   <span>Agents Enabled:</span>
-                  <Badge
-                    variant={
-                      metrics.agentStatus.enabled ? "default" : "destructive"
-                    }
-                  >
-                    {metrics.agentStatus.enabled ? "YES" : "NO"}
+                  <Badge variant={metrics.agentStatus.enabled ? 'default' : 'destructive'}>
+                    {metrics.agentStatus.enabled ? 'YES' : 'NO'}
                   </Badge>
                 </div>
                 <div className="flex justify-between">
                   <span>Degradation Mode:</span>
-                  <Badge
-                    variant={
-                      metrics.agentStatus.degradationMode
-                        ? "warning"
-                        : "default"
-                    }
-                  >
-                    {metrics.agentStatus.degradationMode
-                      ? "ACTIVE"
-                      : "INACTIVE"}
+                  <Badge variant={metrics.agentStatus.degradationMode ? 'warning' : 'default'}>
+                    {metrics.agentStatus.degradationMode ? 'ACTIVE' : 'INACTIVE'}
                   </Badge>
                 </div>
                 <div className="flex justify-between">
                   <span>Auto-refresh:</span>
-                  <Badge variant={autoRefresh ? "default" : "secondary"}>
-                    {autoRefresh ? "ON" : "OFF"}
+                  <Badge variant={autoRefresh ? 'default' : 'secondary'}>
+                    {autoRefresh ? 'ON' : 'OFF'}
                   </Badge>
                 </div>
               </CardContent>
@@ -495,9 +426,7 @@ export function MonitoringDashboard() {
               <CardContent className="space-y-2">
                 <div className="flex justify-between">
                   <span>Avg Duration:</span>
-                  <span>
-                    {(metrics.auditStats.avg_duration_ms / 1000).toFixed(1)}s
-                  </span>
+                  <span>{(metrics.auditStats.avg_duration_ms / 1000).toFixed(1)}s</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Error Rate:</span>

@@ -1,5 +1,5 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client';
+import { useEffect, useState } from 'react';
 
 export default function BackgroundRoot({
   ambient = true, // soft mode by default
@@ -12,8 +12,8 @@ export default function BackgroundRoot({
 
   useEffect(() => {
     // citește data-motion din <html>
-    const attr = document.documentElement.getAttribute("data-motion");
-    setMotionOff(attr === "off");
+    const attr = document.documentElement.getAttribute('data-motion');
+    setMotionOff(attr === 'off');
   }, []);
 
   // Dacă e disabled complet, returnează null

@@ -1,3 +1,36 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/no-var-requires": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-console": "warn",
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
 }

@@ -1,4 +1,4 @@
-// PromptForge v3 - Public API v1 - Generate Prompts
+// PROMPTFORGE™ v3 - Public API v1 - Generate Prompts
 // POST /api/public/v1/prompts/generate
 
 import { NextRequest, NextResponse } from 'next/server';

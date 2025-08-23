@@ -21,24 +21,24 @@ export function sha256(content: string | Buffer): string {
 export function canonicalChecksum(hashes: string[]): string {
   // Canonical order as specified in requirements
   const canonicalOrder = [
-    "prompt.txt",
-    "prompt.json", 
-    "prompt.md",
-    "prompt.pdf",
-    "manifest.json",
-    "telemetry.json"
+    'prompt.txt',
+    'prompt.json',
+    'prompt.md',
+    'prompt.pdf',
+    'manifest.json',
+    'telemetry.json',
   ];
-  
+
   // Sort hashes according to canonical order
   const orderedHashes: string[] = [];
-  
+
   for (const filename of canonicalOrder) {
     const hashEntry = hashes.find(h => h.startsWith(`${filename}:`));
     if (hashEntry) {
       orderedHashes.push(hashEntry.split(':')[1]); // Extract just the hash part
     }
   }
-  
+
   // Concatenate hashes line by line and hash the result
   const concatenated = orderedHashes.join('\n');
   return `sha256:${sha256(concatenated)}`;
@@ -63,21 +63,21 @@ export function validateHashFormat(hash: string): boolean {
  */
 export function generateChecksumFile(fileHashes: Record<string, string>): string {
   const canonicalOrder = [
-    "prompt.txt",
-    "prompt.json", 
-    "prompt.md",
-    "prompt.pdf",
-    "manifest.json",
-    "telemetry.json"
+    'prompt.txt',
+    'prompt.json',
+    'prompt.md',
+    'prompt.pdf',
+    'manifest.json',
+    'telemetry.json',
   ];
-  
+
   const lines: string[] = [];
-  
+
   for (const filename of canonicalOrder) {
     if (fileHashes[filename]) {
       lines.push(`sha256:${fileHashes[filename]}`);
     }
   }
-  
+
   return lines.join('\n') + '\n'; // Ensure final newline
 }

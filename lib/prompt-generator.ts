@@ -1,47 +1,40 @@
-import type {
-  PromptModule,
-  SessionConfig,
-  GeneratedPrompt,
-} from "@/types/promptforge";
-import { MODULES } from "./modules";
+import type { PromptModule, SessionConfig, GeneratedPrompt } from '@/types/promptforge';
+import { MODULES } from './modules';
 
 interface ContextVariants {
   [key: string]: string;
 }
 
 const CONTEXT_VARIANTS: ContextVariants = {
-  SaaS: "a growing SaaS platform serving enterprise clients",
-  fintech: "an innovative fintech company developing payment solutions",
-  ecommerce: "an online store focused on customer experience",
-  consulting: "a strategic consulting firm for tech companies",
-  personal_brand: "a personal brand in development with tech audience",
-  education: "an educational platform with digital courses",
+  SaaS: 'a growing SaaS platform serving enterprise clients',
+  fintech: 'an innovative fintech company developing payment solutions',
+  ecommerce: 'an online store focused on customer experience',
+  consulting: 'a strategic consulting firm for tech companies',
+  personal_brand: 'a personal brand in development with tech audience',
+  education: 'an educational platform with digital courses',
 };
 
 const URGENCY_MAP: ContextVariants = {
-  pilot: "a pilot project with 2-week deadline",
-  sprint: "a development sprint with 1-month delivery",
-  enterprise: "an enterprise implementation with 3-month timeline",
-  crisis: "a crisis situation requiring immediate response",
+  pilot: 'a pilot project with 2-week deadline',
+  sprint: 'a development sprint with 1-month delivery',
+  enterprise: 'an enterprise implementation with 3-month timeline',
+  crisis: 'a crisis situation requiring immediate response',
 };
 
 const APPLICATION_CONTEXT: ContextVariants = {
-  training: "for internal team training",
-  audit: "for auditing existing systems",
-  implementation: "for direct operational implementation",
-  crisis_response: "for responding to an ongoing crisis",
+  training: 'for internal team training',
+  audit: 'for auditing existing systems',
+  implementation: 'for direct operational implementation',
+  crisis_response: 'for responding to an ongoing crisis',
 };
 
 const COMPLEXITY_ADAPTATIONS: ContextVariants = {
-  standard: "standard implementation with best practices",
-  advanced: "advanced implementation with specific optimizations",
-  expert: "expert implementation with complex customizations",
+  standard: 'standard implementation with best practices',
+  advanced: 'advanced implementation with specific optimizations',
+  expert: 'expert implementation with complex customizations',
 };
 
-export function generateSessionHash(
-  config: SessionConfig,
-  moduleId: number,
-): string {
+export function generateSessionHash(config: SessionConfig, moduleId: number): string {
   const hashData = {
     module: moduleId,
     ...config,
@@ -58,10 +51,7 @@ export function generateSessionHash(
   return Math.abs(hash).toString(16).substring(0, 8);
 }
 
-export function generatePrompt(
-  moduleId: number,
-  config: SessionConfig,
-): GeneratedPrompt {
+export function generatePrompt(moduleId: number, config: SessionConfig): GeneratedPrompt {
   const module = MODULES[moduleId];
   if (!module) {
     throw new Error(`Module ${moduleId} not found`);
@@ -86,21 +76,19 @@ function buildPromptContent(
   module: PromptModule,
   config: SessionConfig,
   hash: string,
-  timestamp: Date,
+  timestamp: Date
 ): string {
   const contextDescription = CONTEXT_VARIANTS[config.domain] || config.domain;
   const urgencyDescription = URGENCY_MAP[config.urgency] || config.urgency;
-  const applicationDescription =
-    APPLICATION_CONTEXT[config.application] || config.application;
-  const complexityDescription =
-    COMPLEXITY_ADAPTATIONS[config.complexity] || config.complexity;
+  const applicationDescription = APPLICATION_CONTEXT[config.application] || config.application;
+  const complexityDescription = COMPLEXITY_ADAPTATIONS[config.complexity] || config.complexity;
 
   const promptContent = [
     `# ${module.name} - Industrial Generated Prompt`,
     ``,
     `## SESSION CONTEXT`,
     `- **Generation Hash:** ${hash}`,
-    `- **Timestamp:** ${timestamp.toLocaleString("en-US")}`,
+    `- **Timestamp:** ${timestamp.toLocaleString('en-US')}`,
     `- **Domain:** ${contextDescription}`,
     `- **Scale:** ${config.scale}`,
     `- **Urgency:** ${urgencyDescription}`,
@@ -135,8 +123,8 @@ function buildPromptContent(
     `${module.kpi}`,
     ``,
     `**Additional metrics for ${config.domain}:**`,
-    `- Time to implementation: <${config.urgency === "crisis" ? "24h" : "7 days"}`,
-    `- Adoption rate: >${config.scale === "enterprise" ? "85%" : "70%"}`,
+    `- Time to implementation: <${config.urgency === 'crisis' ? '24h' : '7 days'}`,
+    `- Adoption rate: >${config.scale === 'enterprise' ? '85%' : '70%'}`,
     `- Resource efficiency: optimal for "${config.resources}"`,
     ``,
     `## GUARDRAILS`,
@@ -150,7 +138,7 @@ function buildPromptContent(
     `## TELEMETRY`,
     `- **run_id:** "${hash}"`,
     `- **start_ts:** "${timestamp.toISOString()}"`,
-    `- **module:** "M${module.id.toString().padStart(2, "0")}"`,
+    `- **module:** "M${module.id.toString().padStart(2, '0')}"`,
     `- **context:** ${JSON.stringify({ domain: config.domain, scale: config.scale, urgency: config.urgency })}`,
     `- **success_criteria:** {${module.kpi}}`,
     ``,
@@ -167,10 +155,10 @@ function buildPromptContent(
     `4. **Dependencies:** Resources ${config.resources}, format ${config.outputFormat}`,
     ``,
     `---`,
-    `**PROMPTFORGE™ v3.0** | Generated: ${timestamp.toLocaleString("en-US")} | Hash: ${hash}`,
+    `**PROMPTFORGE™ v3.0** | Generated: ${timestamp.toLocaleString('en-US')} | Hash: ${hash}`,
   ];
 
-  return promptContent.join("\n");
+  return promptContent.join('\n');
 }
 
 export function rerollPrompt(existingPrompt: GeneratedPrompt): GeneratedPrompt {
@@ -186,16 +174,14 @@ export function validatePromptStructure(prompt: string): {
   hasOutput: boolean;
   hasGuardrails: boolean;
 } {
-  const hasTitle = prompt.includes("#");
-  const hasContext = prompt.toLowerCase().includes("context");
-  const hasKPI = prompt.toLowerCase().includes("kpi");
-  const hasOutput = prompt.toLowerCase().includes("output");
-  const hasGuardrails = prompt.toLowerCase().includes("guardrails");
+  const hasTitle = prompt.includes('#');
+  const hasContext = prompt.toLowerCase().includes('context');
+  const hasKPI = prompt.toLowerCase().includes('kpi');
+  const hasOutput = prompt.toLowerCase().includes('output');
+  const hasGuardrails = prompt.toLowerCase().includes('guardrails');
 
   const components = [hasTitle, hasContext, hasKPI, hasOutput, hasGuardrails];
-  const score = Math.round(
-    (components.filter(Boolean).length / components.length) * 100,
-  );
+  const score = Math.round((components.filter(Boolean).length / components.length) * 100);
 
   return {
     score,

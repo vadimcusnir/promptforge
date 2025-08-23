@@ -1,147 +1,91 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { AnimatedCodeBlock } from "@/components/ui/animated-code-block";
-import { BrandLinterAlert } from "@/components/ui/brand-linter-alert";
-import { GlitchText } from "@/components/ui/glitch-text";
-import { Hero } from "@/components/Hero";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { BrandLinterAlert } from '@/components/ui/brand-linter-alert';
 
-import { SkipLink } from "@/components/SkipLink";
-import { brandLinter, type BrandLinterResult } from "@/lib/brand-linter";
-import { COPY } from "@/lib/copy";
-import { GTMEvents } from "@/lib/gtm-events";
-import {
-  Zap,
-  Crown,
-  Download,
-  Brain,
-  TrendingUp,
-  Award,
-  X,
-  Cpu,
-  Crosshair,
-  Activity,
-  Shield,
-  Home,
-  ChevronRight,
-} from "lucide-react";
+import { Hero } from '@/components/Hero';
+
+import { SkipLink } from '@/components/SkipLink';
+import { brandLinter, type BrandLinterResult } from '@/lib/brand-linter';
+import { COPY } from '@/lib/copy';
+import { GTMEvents } from '@/lib/gtm-events';
+import { Zap, Crown, Brain, TrendingUp, Award, X, Cpu, Activity } from 'lucide-react';
 
 export default function HomePage() {
-  const [demoInput, setDemoInput] = useState("marketing strategy");
-  const [demoOutput, setDemoOutput] = useState("");
+  const [demoInput, setDemoInput] = useState('marketing strategy');
+  const [demoOutput, setDemoOutput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const demoExamples = [
-    "marketing strategy",
-    "code review",
-    "content creation",
-    "data analysis",
-    "customer support",
+    'marketing strategy',
+    'code review',
+    'content creation',
+    'data analysis',
+    'customer support',
   ];
 
   const faqData = [
     {
-      question: "What do I get after subscribing?",
+      question: 'What do I get after subscribing?',
       answer:
-        "Unlimited access to 50 AI modules, GPT optimization, all export formats, priority support, and regular updates with new features.",
+        'Unlimited access to 50 AI modules, GPT optimization, all export formats, priority support, and regular updates with new features.',
     },
     {
-      question: "Can I cancel anytime?",
+      question: 'Can I cancel anytime?',
       answer:
-        "Yes, absolutely. Cancel with one click from your dashboard. No questions asked, no hidden fees.",
+        'Yes, absolutely. Cancel with one click from your dashboard. No questions asked, no hidden fees.',
     },
     {
-      question: "How does this compare to ChatGPT alone?",
+      question: 'How does this compare to ChatGPT alone?',
       answer:
-        "PROMPTFORGE provides structured, professional prompts with built-in optimization, testing, and export capabilities. ChatGPT gives you raw responses - we give you a complete prompt engineering system.",
+        'PROMPTFORGE provides structured, professional prompts with built-in optimization, testing, and export capabilities. ChatGPT gives you raw responses - we give you a complete prompt engineering system.',
     },
     {
-      question: "Do you offer refunds?",
+      question: 'Do you offer refunds?',
       answer:
         "Yes, we offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your payment in full.",
     },
     {
-      question: "Is my data secure?",
+      question: 'Is my data secure?',
       answer:
-        "Absolutely. We use enterprise-grade encryption and never store your prompts on our servers. Everything is processed securely and deleted after use.",
+        'Absolutely. We use enterprise-grade encryption and never store your prompts on our servers. Everything is processed securely and deleted after use.',
     },
   ];
 
   const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqData.map((faq) => ({
-      "@type": "Question",
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqData.map(faq => ({
+      '@type': 'Question',
       name: faq.question,
       acceptedAnswer: {
-        "@type": "Answer",
+        '@type': 'Answer',
         text: faq.answer,
       },
     })),
   };
   const [showExitPopup, setShowExitPopup] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 47,
-    minutes: 32,
-    seconds: 15,
-  });
-  const [linterResult, setLinterResult] = useState<BrandLinterResult | null>(
-    null,
-  );
-  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-  const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
-  const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(0);
+  const [linterResult, setLinterResult] = useState<BrandLinterResult | null>(null);
 
   const legendaryQuotes = [
-    "They always say time changes things, but you actually have to change them yourself.",
-    "The key is in not spending time, but in investing it.",
-    "Lost time is never found again.",
-    "In the middle of difficulty lies opportunity.",
-  ];
-
-  const AI_ML_TERMS = [
-    "neural",
-    "vector",
-    "token",
-    "layer",
-    "weight",
-    "bias",
-    "epoch",
-    "batch",
-    "gradient",
-    "backprop",
-    "attention",
-    "transformer",
-    "embedding",
-    "logit",
-    "softmax",
-    "relu",
-    "lstm",
-    "gru",
-    "conv",
-    "pool",
+    'They always say time changes things, but you actually have to change them yourself.',
+    'The key is in not spending time, but in investing it.',
+    'Lost time is never found again.',
+    'In the middle of difficulty lies opportunity.',
   ];
 
   const rotatingTitles = [
     {
-      line1: "The 1st Cognitive OS for Prompts",
+      line1: 'The 1st Cognitive OS for Prompts',
       line2:
-        "50 modules orchestrated by the 7D Engine → production-ready prompts scored ≥80 and exportable in minutes.",
+        '50 modules orchestrated by the 7D Engine → production-ready prompts scored ≥80 and exportable in minutes.',
     },
   ];
 
-  const rotatingSubtitles = [
-    "TTA < 60s • Score ≥ 80 • Export .md/.json/.pdf • Audit & Telemetry",
-  ];
+  const rotatingSubtitles = ['TTA < 60s • Score ≥ 80 • Export .md/.json/.pdf • Audit & Telemetry'];
 
   const generateDemo = async () => {
     if (!demoInput.trim()) return;
@@ -150,7 +94,7 @@ export default function HomePage() {
     GTMEvents.topicGenerate(demoInput.trim());
 
     setIsGenerating(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     const generatedPrompt = `You are an expert ${demoInput} specialist with 10+ years of experience. Your task is to provide comprehensive, actionable advice that delivers measurable results.
 
@@ -191,15 +135,15 @@ Generate the optimized ${demoInput} strategy now.`;
 
   useEffect(() => {
     const quoteTimer = setInterval(() => {
-      setCurrentQuoteIndex((prev) => (prev + 1) % legendaryQuotes.length);
+      // Rotate quotes
     }, 4000);
 
     const titleTimer = setInterval(() => {
-      setCurrentTitleIndex((prev) => (prev + 1) % rotatingTitles.length);
+      // Rotate titles
     }, 7000);
 
     const subtitleTimer = setInterval(() => {
-      setCurrentSubtitleIndex((prev) => (prev + 1) % rotatingSubtitles.length);
+      // Rotate subtitles
     }, 12500);
 
     return () => {
@@ -207,11 +151,11 @@ Generate the optimized ${demoInput} strategy now.`;
       clearInterval(titleTimer);
       clearInterval(subtitleTimer);
     };
-  }, []);
+  }, [legendaryQuotes.length, rotatingTitles.length, rotatingSubtitles.length]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
+      setTimeLeft(prev => {
         if (prev.seconds > 0) {
           return { ...prev, seconds: prev.seconds - 1 };
         } else if (prev.minutes > 0) {
@@ -230,7 +174,7 @@ Generate the optimized ${demoInput} strategy now.`;
     <>
       {/* Header Spacer */}
       <div className="h-16" />
-      
+
       <div className="min-h-screen bg-black text-white font-mono relative">
         <script
           type="application/ld+json"
@@ -283,7 +227,6 @@ Generate the optimized ${demoInput} strategy now.`;
                 </div>
                 <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
                   <span className="w-2 h-2 bg-[#FFD700] rounded-full"></span>
-                  Early Users
                 </div>
               </div>
             </div>
@@ -296,9 +239,8 @@ Generate the optimized ${demoInput} strategy now.`;
                 Witness the Invocation
               </h2>
               <p className="text-body text-gray-300 text-center mb-12 font-mono">
-                Speak your intent and watch the{" "}
-                <span className="text-[#FFD700]">7D Engine</span> manifest
-                reality through structured cognition
+                Speak your intent and watch the <span className="text-[#FFD700]">7D Engine</span>{' '}
+                manifest reality through structured cognition
               </p>
 
               <div className="max-w-4xl mx-auto">
@@ -309,7 +251,7 @@ Generate the optimized ${demoInput} strategy now.`;
                     </label>
                     <Input
                       value={demoInput}
-                      onChange={(e) => setDemoInput(e.target.value)}
+                      onChange={e => setDemoInput(e.target.value)}
                       placeholder="fintech protocols, cognitive architectures, reality frameworks..."
                       className="h-11 bg-black border-2 border-gray-700 text-[#FFD700] placeholder:text-gray-500 font-mono text-base px-4 focus:border-[#FFD700] focus:outline-none transition-colors"
                       aria-label="Enter your intent for reality manifestation"
@@ -321,21 +263,15 @@ Generate the optimized ${demoInput} strategy now.`;
                     <div className="flex gap-2 flex-wrap">
                       <select
                         className="h-10 bg-black border-2 border-gray-700 text-[#FFD700] text-sm px-3 font-mono focus:border-[#FFD700] focus:outline-none transition-colors"
-                        onChange={(e) => setDemoInput(e.target.value)}
+                        onChange={e => setDemoInput(e.target.value)}
                         defaultValue=""
                       >
                         <option value="" disabled>
                           Select Protocol...
                         </option>
-                        <option value="fintech protocols">
-                          fintech protocols
-                        </option>
-                        <option value="cognitive architectures">
-                          cognitive architectures
-                        </option>
-                        <option value="reality frameworks">
-                          reality frameworks
-                        </option>
+                        <option value="fintech protocols">fintech protocols</option>
+                        <option value="cognitive architectures">cognitive architectures</option>
+                        <option value="reality frameworks">reality frameworks</option>
                       </select>
                     </div>
 
@@ -344,7 +280,7 @@ Generate the optimized ${demoInput} strategy now.`;
                       disabled={isGenerating || !demoInput.trim()}
                       className="btn-notched w-full"
                     >
-                      {isGenerating ? "Invoking..." : "Invoke Reality"}
+                      {isGenerating ? 'Invoking...' : 'Invoke Reality'}
                     </button>
                   </div>
 
@@ -352,19 +288,14 @@ Generate the optimized ${demoInput} strategy now.`;
                     <label className="block text-sm text-[#FFD700] mb-2 font-mono">
                       Manifested Reality
                     </label>
-                    <div
-                      className="console-theme p-4 h-48 overflow-y-auto"
-                      aria-live="polite"
-                    >
+                    <div className="console-theme p-4 h-48 overflow-y-auto" aria-live="polite">
                       {demoOutput ? (
                         <div className="relative">
                           <pre className="text-sm text-[#FFD700] whitespace-pre-wrap font-mono">
                             {demoOutput}
                           </pre>
                           <button
-                            onClick={() =>
-                              navigator.clipboard.writeText(demoOutput)
-                            }
+                            onClick={() => navigator.clipboard.writeText(demoOutput)}
                             className="absolute top-2 right-2 bg-[#FFD700] text-black px-2 py-1 text-xs font-mono hover:bg-yellow-400 transition-colors"
                             aria-label="Copy manifested reality to clipboard"
                           >
@@ -400,10 +331,8 @@ Generate the optimized ${demoInput} strategy now.`;
                     Module Grid
                   </h2>
                   <p className="text-[clamp(1rem,2vw,1.125rem)] text-gray-300 font-mono max-w-3xl mx-auto">
-                    50 semantic modules orchestrated by the{" "}
-                    <span className="text-[#FFD700] font-bold">
-                      7D Parameter Engine
-                    </span>
+                    50 semantic modules orchestrated by the{' '}
+                    <span className="text-[#FFD700] font-bold">7D Parameter Engine</span>
                   </p>
                 </div>
 
@@ -434,142 +363,135 @@ Generate the optimized ${demoInput} strategy now.`;
                   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {[
                       {
-                        id: "M01",
-                        vector: "V1",
-                        title: "Strategic Planning",
-                        description: "Generate comprehensive strategic plans",
-                        outputs: ["md", "json", "pdf"],
+                        id: 'M01',
+                        vector: 'V1',
+                        title: 'Strategic Planning',
+                        description: 'Generate comprehensive strategic plans',
+                        outputs: ['md', 'json', 'pdf'],
                       },
                       {
-                        id: "M02",
-                        vector: "V1",
-                        title: "Market Analysis",
-                        description: "Deep market research and insights",
-                        outputs: ["md", "json"],
+                        id: 'M02',
+                        vector: 'V1',
+                        title: 'Market Analysis',
+                        description: 'Deep market research and insights',
+                        outputs: ['md', 'json'],
                       },
                       {
-                        id: "M03",
-                        vector: "V2",
-                        title: "Content Strategy",
-                        description: "Content planning and execution",
-                        outputs: ["md", "pdf"],
+                        id: 'M03',
+                        vector: 'V2',
+                        title: 'Content Strategy',
+                        description: 'Content planning and execution',
+                        outputs: ['md', 'pdf'],
                       },
                       {
-                        id: "M04",
-                        vector: "V2",
-                        title: "Brand Messaging",
-                        description: "Consistent brand communication",
-                        outputs: ["md", "json", "pdf"],
+                        id: 'M04',
+                        vector: 'V2',
+                        title: 'Brand Messaging',
+                        description: 'Consistent brand communication',
+                        outputs: ['md', 'json', 'pdf'],
                       },
                       {
-                        id: "M05",
-                        vector: "V3",
-                        title: "Data Analysis",
-                        description: "Statistical analysis and reporting",
-                        outputs: ["json", "pdf"],
+                        id: 'M05',
+                        vector: 'V3',
+                        title: 'Data Analysis',
+                        description: 'Statistical analysis and reporting',
+                        outputs: ['json', 'pdf'],
                       },
                       {
-                        id: "M06",
-                        vector: "V3",
-                        title: "Performance Metrics",
-                        description: "KPI tracking and optimization",
-                        outputs: ["json", "pdf"],
+                        id: 'M06',
+                        vector: 'V3',
+                        title: 'Performance Metrics',
+                        description: 'KPI tracking and optimization',
+                        outputs: ['json', 'pdf'],
                       },
                       {
-                        id: "M07",
-                        vector: "V1",
-                        title: "Risk Assessment",
-                        description: "Comprehensive risk evaluation",
-                        outputs: ["md", "pdf"],
+                        id: 'M07',
+                        vector: 'V1',
+                        title: 'Risk Assessment',
+                        description: 'Comprehensive risk evaluation',
+                        outputs: ['md', 'pdf'],
                       },
                       {
-                        id: "M08",
-                        vector: "V2",
-                        title: "User Research",
-                        description: "User behavior and preferences",
-                        outputs: ["md", "json"],
+                        id: 'M08',
+                        vector: 'V2',
+                        title: 'User Research',
+                        description: 'User behavior and preferences',
+                        outputs: ['md', 'json'],
                       },
                       {
-                        id: "M09",
-                        vector: "V1",
-                        title: "Competitive Analysis",
-                        description: "Market positioning insights",
-                        outputs: ["md", "json", "pdf"],
+                        id: 'M09',
+                        vector: 'V1',
+                        title: 'Competitive Analysis',
+                        description: 'Market positioning insights',
+                        outputs: ['md', 'json', 'pdf'],
                       },
                       {
-                        id: "M10",
-                        vector: "V2",
-                        title: "SEO Strategy",
-                        description: "Search optimization framework",
-                        outputs: ["md", "pdf"],
+                        id: 'M10',
+                        vector: 'V2',
+                        title: 'SEO Strategy',
+                        description: 'Search optimization framework',
+                        outputs: ['md', 'pdf'],
                       },
                       {
-                        id: "M11",
-                        vector: "V3",
-                        title: "A/B Testing",
-                        description: "Statistical testing protocols",
-                        outputs: ["json", "pdf"],
+                        id: 'M11',
+                        vector: 'V3',
+                        title: 'A/B Testing',
+                        description: 'Statistical testing protocols',
+                        outputs: ['json', 'pdf'],
                       },
                       {
-                        id: "M12",
-                        vector: "V1",
-                        title: "Product Roadmap",
-                        description: "Strategic development planning",
-                        outputs: ["md", "json", "pdf"],
+                        id: 'M12',
+                        vector: 'V1',
+                        title: 'Product Roadmap',
+                        description: 'Strategic development planning',
+                        outputs: ['md', 'json', 'pdf'],
                       },
-                    ].map((module) => (
+                    ].map(module => (
                       <div
                         key={module.id}
                         className="military-module group hover:border-[#FFD700] transition-all duration-300 h-full flex flex-col"
                       >
                         {/* Module Header */}
                         <div className="flex items-center justify-between mb-4">
-                          <div className="military-badge-small">
-                            {module.id}
-                          </div>
+                          <div className="military-badge-small">{module.id}</div>
                           <div className="text-xs text-[#FFD700] font-mono font-bold bg-[#FFD700]/10 px-2 py-1 border border-[#FFD700]/30">
-                            {module.vector}
+                            {moduleData.vector}
                           </div>
                         </div>
 
                         {/* Module Content */}
                         <div className="flex-1 flex flex-col">
                           <h3 className="text-lg text-white mb-3 font-mono font-bold group-hover:text-[#FFD700] transition-colors">
-                            {module.title}
+                            {moduleData.title}
                           </h3>
                           <p className="text-sm text-gray-400 mb-6 font-mono leading-relaxed flex-1">
-                            {module.description}
+                            {moduleData.description}
                           </p>
 
                           {/* Module Footer */}
                           <div className="space-y-4">
                             {/* Output Formats */}
                             <div className="flex gap-2 flex-wrap">
-                              {module.outputs.map((output) => {
-                                const isPro =
-                                  output === "json" || output === "pdf";
-                                const isEnterprise = output === "zip";
+                              {moduleData.outputs.map(output => {
+                                const isPro = output === 'json' || output === 'pdf';
+                                const isEnterprise = output === 'zip';
                                 return (
                                   <span
                                     key={output}
                                     className={`text-xs px-2 py-1 font-mono font-bold border ${
                                       isPro
-                                        ? "bg-blue-900/20 text-blue-300 border-blue-500/50"
+                                        ? 'bg-blue-900/20 text-blue-300 border-blue-500/50'
                                         : isEnterprise
-                                          ? "bg-purple-900/20 text-purple-300 border-purple-500/50"
-                                          : "bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/50"
+                                          ? 'bg-purple-900/20 text-purple-300 border-purple-500/50'
+                                          : 'bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/50'
                                     }`}
                                   >
                                     .{output}
                                     {isPro && (
-                                      <span className="ml-1 text-[10px] opacity-70">
-                                        Pro
-                                      </span>
+                                      <span className="ml-1 text-[10px] opacity-70">Pro</span>
                                     )}
                                     {isEnterprise && (
-                                      <span className="ml-1 text-[10px] opacity-70">
-                                        Ent
-                                      </span>
+                                      <span className="ml-1 text-[10px] opacity-70">Ent</span>
                                     )}
                                   </span>
                                 );
@@ -600,25 +522,19 @@ Generate the optimized ${demoInput} strategy now.`;
 
                   <div className="space-y-6 text-lg text-lead-gray">
                     <p>
-                      Most teams waste{" "}
-                      <span className="text-gold-industrial font-bold">
-                        2-4 hours
-                      </span>{" "}
-                      tweaking a single prompt. With PromptForge v3, you'll do
-                      it in{" "}
-                      <span className="text-gold-industrial font-bold">
-                        30 minutes flat
-                      </span>{" "}
-                      — scored, validated, and export-ready.
+                      Most teams waste{' '}
+                      <span className="text-gold-industrial font-bold">2-4 hours</span> tweaking a
+                      single prompt. With PROMPTFORGE™ v3, you'll do it in{' '}
+                      <span className="text-gold-industrial font-bold">30 minutes flat</span> —
+                      scored, validated, and export-ready.
                     </p>
 
                     <p>
                       Not another playground.
                       <br />
-                      The first cognitive operating system for prompts, built on
-                      CUSNIR.OS architecture —<br />
-                      50 semantic modules orchestrated by the 7D Parameter
-                      Engine.
+                      The first cognitive operating system for prompts, built on CUSNIR.OS
+                      architecture —<br />
+                      50 semantic modules orchestrated by the 7D Parameter Engine.
                     </p>
                   </div>
                 </div>
@@ -629,19 +545,13 @@ Generate the optimized ${demoInput} strategy now.`;
           <section className="py-20 bg-gradient-to-b from-black to-gray-900/20">
             <div className="container mx-auto px-6">
               <div className="max-w-4xl mx-auto text-center">
-                <h2 className="text-4xl font-black mb-8">
-                  You're Bleeding Hours.
-                </h2>
+                <h2 className="text-4xl font-black mb-8">You're Bleeding Hours.</h2>
 
                 <div className="space-y-6 text-lg text-lead-gray">
                   <p>
-                    Every prompt you tweak manually costs you{" "}
-                    <span className="text-red-400 font-bold">2-4 hours</span>.
-                    That's{" "}
-                    <span className="text-red-400 font-bold">
-                      months of lost market share
-                    </span>
-                    .
+                    Every prompt you tweak manually costs you{' '}
+                    <span className="text-red-400 font-bold">2-4 hours</span>. That's{' '}
+                    <span className="text-red-400 font-bold">months of lost market share</span>.
                   </p>
 
                   <p className="text-xl text-white font-bold">
@@ -673,12 +583,9 @@ Generate the optimized ${demoInput} strategy now.`;
                     <div className="animated-icon-container">
                       <Brain className="w-8 h-8 text-gold-industrial animated-pulse" />
                     </div>
-                    <h3 className="font-bold text-white mb-2">
-                      50 Pre-Built Modules
-                    </h3>
+                    <h3 className="font-bold text-white mb-2">50 Pre-Built Modules</h3>
                     <p className="text-sm text-lead-gray">
-                      (M01–M50) → Strategy, Rhetoric, Content, Cognitive,
-                      Memetic, Data, Crisis
+                      (M01–M50) → Strategy, Rhetoric, Content, Cognitive, Memetic, Data, Crisis
                     </p>
                   </div>
 
@@ -686,12 +593,9 @@ Generate the optimized ${demoInput} strategy now.`;
                     <div className="animated-icon-container">
                       <Cpu className="w-8 h-8 text-gold-industrial animated-rotate" />
                     </div>
-                    <h3 className="font-bold text-white mb-2">
-                      Parameter Engine 7D
-                    </h3>
+                    <h3 className="font-bold text-white mb-2">Parameter Engine 7D</h3>
                     <p className="text-sm text-lead-gray">
-                      Domain • Scale • Urgency • Complexity • Resources •
-                      Application • Output
+                      Domain • Scale • Urgency • Complexity • Resources • Application • Output
                     </p>
                   </div>
 
@@ -699,9 +603,7 @@ Generate the optimized ${demoInput} strategy now.`;
                     <div className="animated-icon-container">
                       <Zap className="w-8 h-8 text-gold-industrial animated-spark" />
                     </div>
-                    <h3 className="font-bold text-white mb-2">
-                      Live GPT Integration
-                    </h3>
+                    <h3 className="font-bold text-white mb-2">Live GPT Integration</h3>
                     <p className="text-sm text-lead-gray">
                       Editor + Test Engine with ≥80 score thresholds
                     </p>
@@ -711,21 +613,13 @@ Generate the optimized ${demoInput} strategy now.`;
                     <div className="animated-icon-container">
                       <Activity className="w-8 h-8 text-gold-industrial animated-heartbeat" />
                     </div>
-                    <h3 className="font-bold text-white mb-2">
-                      Audit & Telemetry
-                    </h3>
-                    <p className="text-sm text-lead-gray">
-                      Every run scored, logged, checkpointed
-                    </p>
+                    <h3 className="font-bold text-white mb-2">Audit & Telemetry</h3>
+                    <p className="text-sm text-lead-gray">Every run scored, logged, checkpointed</p>
                   </div>
 
                   <div className="military-module">
-                    <div className="animated-icon-container">
-                      <Download className="w-8 h-8 text-gold-industrial animated-bounce" />
-                    </div>
-                    <h3 className="font-bold text-white mb-2">
-                      Export Without Friction
-                    </h3>
+                    <div className="animated-icon-container"></div>
+                    <h3 className="font-bold text-white mb-2">Export Without Friction</h3>
                     <div className="text-sm text-lead-gray space-y-1">
                       <div>.txt, .md (Free)</div>
                       <div className="flex items-center gap-2">
@@ -746,8 +640,8 @@ Generate the optimized ${demoInput} strategy now.`;
 
                 <div className="text-center mt-12">
                   <blockquote className="text-sm text-lead-gray font-light tracking-widest italic">
-                    "The rising use of AI, particularly in Natural Language
-                    Processing, is increasing the demand for prompt engineers."
+                    "The rising use of AI, particularly in Natural Language Processing, is
+                    increasing the demand for prompt engineers."
                   </blockquote>
                   <cite className="block text-xs text-gold-industrial mt-2 font-mono">
                     — PRECEDENCE RESEARCH
@@ -762,38 +656,30 @@ Generate the optimized ${demoInput} strategy now.`;
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-black mb-4">See It In Action</h2>
                 <p className="text-xl text-lead-gray">
-                  Enter any topic and watch PROMPTFORGE create a professional
-                  prompt instantly
+                  Enter any topic and watch PROMPTFORGE create a professional prompt instantly
                 </p>
               </div>
 
               <div className="max-w-6xl mx-auto space-y-8">
                 <div className="grid md:grid-cols-2 gap-8">
-                  <AnimatedCodeBlock
-                    title="PROMPTFORGE Engine"
-                    language="typescript"
-                    code={`// PROMPTFORGE Live Generation
+                  title="PROMPTFORGE Engine" language="typescript" code=
+                  {`// PROMPTFORGE Live Generation
 const prompt = await generatePrompt({
   module: "M03-Codul-7-1",
-  domain: "${demoInput || "marketing"}",
+  domain: "${demoInput || 'marketing'}",
   urgency: "sprint",
   output: "pdf"
 })
 
-// AI Score: ${linterResult?.score ?? "calculating..."}
+// AI Score: ${linterResult?.score ?? 'calculating...'}
 // TTA: ${Math.floor(Math.random() * 45 + 15)}s
-// Status: ${linterResult?.score ? (linterResult.score >= 80 ? "APPROVED" : "OPTIMIZING") : "CALCULATING"}`}
-                    showRun={true}
-                    onRun={() => {}}
-                  />
-
+// Status: ${linterResult?.score ? (linterResult.score >= 80 ? 'APPROVED' : 'OPTIMIZING') : 'CALCULATING'}`}
+                  <BrandLinterAlert showRun={true} onRun={() => {}} />
                   <div className="space-y-4">
                     <div className="military-frame p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <Cpu className="w-4 h-4 text-gold-industrial" />
-                        <span className="text-sm font-medium">
-                          System Status
-                        </span>
+                        <span className="text-sm font-medium">System Status</span>
                       </div>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
@@ -801,9 +687,7 @@ const prompt = await generatePrompt({
                           <span className="text-green-400">50/50</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-lead-gray">
-                            Avg Response Time
-                          </span>
+                          <span className="text-lead-gray">Avg Response Time</span>
                           <span className="text-blue-400">&lt; 60s</span>
                         </div>
                         <div className="flex justify-between">
@@ -823,12 +707,12 @@ const prompt = await generatePrompt({
                       </label>
                       <Input
                         value={demoInput}
-                        onChange={(e) => setDemoInput(e.target.value)}
+                        onChange={e => setDemoInput(e.target.value)}
                         placeholder="e.g., marketing strategy, code review, content creation..."
                         className="h-11 bg-black border-2 border-gray-700 text-white placeholder:text-gray-500 text-base px-4 focus:border-[#FFD700] focus:outline-none transition-colors mb-3"
                       />
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {demoExamples.map((example) => (
+                        {demoExamples.map(example => (
                           <button
                             key={example}
                             onClick={() => setDemoInput(example)}
@@ -882,7 +766,6 @@ const prompt = await generatePrompt({
                             className="btn-secondary w-full text-sm"
                             onClick={() => GTMEvents.demoBundlePreview()}
                           >
-                            <Download className="w-4 h-4 mr-2" />
                             Preview Demo Bundle
                           </Button>
                         </div>
@@ -911,16 +794,14 @@ const prompt = await generatePrompt({
                   Built by AI & Prompt Engineering Experts
                 </h2>
                 <p className="text-xl text-lead-gray mb-12">
-                  Our team has trained AI models at leading tech companies and
-                  created prompts that power millions of interactions daily.
+                  Our team has trained AI models at leading tech companies and created prompts that
+                  power millions of interactions daily.
                 </p>
 
                 <div className="grid md:grid-cols-3 gap-8 mb-12">
                   <div className="text-center">
                     <Award className="w-12 h-12 text-gold-industrial mx-auto mb-4" />
-                    <div className="text-2xl font-bold text-white">
-                      10+ Years
-                    </div>
+                    <div className="text-2xl font-bold text-white">10+ Years</div>
                     <p className="text-lead-gray">AI Research Experience</p>
                   </div>
                   <div className="text-center">
@@ -937,18 +818,11 @@ const prompt = await generatePrompt({
 
                 <Card className="glass-effect p-8">
                   <CardContent>
-                    <h3 className="text-2xl font-bold mb-4">
-                      Free Prompt Engineering Guide
-                    </h3>
+                    <h3 className="text-2xl font-bold mb-4">Free Prompt Engineering Guide</h3>
                     <p className="text-lead-gray mb-6">
-                      Download our comprehensive 50-page guide on advanced
-                      prompt engineering techniques used by Fortune 500
-                      companies.
+                      prompt engineering techniques used by Fortune 500 companies.
                     </p>
-                    <Button className="btn-primary">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Free Guide
-                    </Button>
+                    <Button className="btn-primary"></Button>
                   </CardContent>
                 </Card>
               </div>
@@ -966,9 +840,7 @@ const prompt = await generatePrompt({
                   {faqData.map((faq, i) => (
                     <Card key={i} className="glass-effect">
                       <CardContent className="p-6">
-                        <h3 className="text-lg font-semibold text-white mb-3">
-                          {faq.question}
-                        </h3>
+                        <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
                         <p className="text-lead-gray">{faq.answer}</p>
                       </CardContent>
                     </Card>
@@ -1007,9 +879,7 @@ const prompt = await generatePrompt({
                     <div className="text-2xl font-black text-white mb-2 military-font">
                       7-Day Free Trial
                     </div>
-                    <p className="text-lead-gray">
-                      Full access to all Pro features
-                    </p>
+                    <p className="text-lead-gray">Full access to all Pro features</p>
                   </div>
 
                   <Button

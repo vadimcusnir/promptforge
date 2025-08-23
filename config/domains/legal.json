@@ -2,12 +2,21 @@
   "industry": "Legal",
   "slug": "legal",
   "jargon": [
-    "case law", "precedent", "due diligence", "M&A", "arbitration",
-    "compliance framework", "GDPR clauses", "contract lifecycle management"
+    "case law",
+    "precedent",
+    "due diligence",
+    "M&A",
+    "arbitration",
+    "compliance framework",
+    "GDPR clauses",
+    "contract lifecycle management"
   ],
   "kpis": [
-    "contract_review_time", "compliance_incident_rate", "case_win_rate",
-    "client_retention_rate", "automation_adoption_rate"
+    "contract_review_time",
+    "compliance_incident_rate",
+    "case_win_rate",
+    "client_retention_rate",
+    "automation_adoption_rate"
   ],
   "compliance_notes": "GDPR, SOX, AML directives, Bar Association rules, Local/EU/US Contract Law",
   "style_bias": "juridic, precis, conservator, auditabil",
@@ -30,9 +39,9 @@
     "Include attorney-client privilege warnings"
   ],
   "evaluation_weights": {
-    "clarity": 0.30,
+    "clarity": 0.3,
     "execution": 0.35,
-    "ambiguity_inv": 0.20,
+    "ambiguity_inv": 0.2,
     "business_fit": 0.15
   },
   "thresholds": {

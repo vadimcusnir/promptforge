@@ -67,13 +67,13 @@ export function buildManifest(context: ManifestContext): BundleManifest {
     formats,
     artifacts,
     plan,
-    version
+    version,
   } = context;
 
   return {
     bundle_id: bundleId,
     run_id: runId,
-    project: process.env.NEXT_PUBLIC_SITE_NAME || "PromptForge_v3",
+    project: process.env.NEXT_PUBLIC_SITE_NAME || 'PromptForge_v3',
     module_id: moduleId,
     domain: domain,
     signature_7d: signature7d,
@@ -98,7 +98,7 @@ export function buildManifest(context: ManifestContext): BundleManifest {
 export function validateManifest(manifest: BundleManifest): boolean {
   const required = [
     'bundle_id',
-    'run_id', 
+    'run_id',
     'project',
     'module_id',
     'domain',
@@ -109,7 +109,7 @@ export function validateManifest(manifest: BundleManifest): boolean {
     'artifacts',
     'exported_at',
     'license_notice',
-    'version'
+    'version',
   ];
 
   for (const field of required) {

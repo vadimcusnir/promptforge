@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Crown, Zap, Building, ArrowRight, Sparkles } from 'lucide-react';
@@ -54,12 +54,14 @@ export function PaywallInline({ trigger, feature, orgId, compact = false }: Payw
       },
     };
 
-    return featureMap[feature] || {
-      name: 'Premium Feature',
-      description: 'Advanced functionality for professional use',
-      requiredPlan: 'pro' as const,
-      icon: Crown,
-    };
+    return (
+      featureMap[feature] || {
+        name: 'Premium Feature',
+        description: 'Advanced functionality for professional use',
+        requiredPlan: 'pro' as const,
+        icon: Crown,
+      }
+    );
   };
 
   const featureInfo = getFeatureInfo(feature);
@@ -77,7 +79,6 @@ export function PaywallInline({ trigger, feature, orgId, compact = false }: Payw
         },
         body: JSON.stringify({
           orgId,
-          planCode: featureInfo.requiredPlan,
           billingCycle: 'monthly',
           successUrl: window.location.href,
           cancelUrl: window.location.href,
@@ -104,15 +105,13 @@ export function PaywallInline({ trigger, feature, orgId, compact = false }: Payw
               <IconComponent className="w-4 h-4 text-amber-400" />
             </div>
             <div>
-              <h4 className="text-sm font-medium text-white">
-                {featureInfo.name}
-              </h4>
+              <h4 className="text-sm font-medium text-white">{featureInfo.name}</h4>
               <p className="text-xs text-slate-400">
                 Requires {featureInfo.requiredPlan === 'pro' ? 'Pro' : 'Enterprise'}
               </p>
             </div>
           </div>
-          
+
           <button
             onClick={handleUpgrade}
             className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-black text-sm font-medium rounded-md hover:from-amber-400 hover:to-orange-400 transition-all"
@@ -136,12 +135,8 @@ export function PaywallInline({ trigger, feature, orgId, compact = false }: Payw
 
         {/* Content */}
         <div className="space-y-2">
-          <h3 className="text-xl font-bold text-white">
-            {featureInfo.name} Locked
-          </h3>
-          <p className="text-slate-300">
-            {featureInfo.description}
-          </p>
+          <h3 className="text-xl font-bold text-white"></h3>
+          <p className="text-slate-300">{featureInfo.description}</p>
         </div>
 
         {/* Plan Info */}
@@ -157,7 +152,7 @@ export function PaywallInline({ trigger, feature, orgId, compact = false }: Payw
               )}
             </span>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-400">Required Plan</span>
             <span className="text-sm font-medium text-amber-400 capitalize">

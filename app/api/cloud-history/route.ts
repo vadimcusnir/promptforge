@@ -1,4 +1,4 @@
-// PromptForge v3 - Cloud History API
+// PROMPTFORGE™ v3 - Cloud History API
 // Istoricul prompturilor cu RLS și retention policies
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -22,14 +22,17 @@ export async function GET(req: NextRequest) {
 
     // Parse filters
     const filters: HistoryFilters = {};
-    if (url.searchParams.get('domain')) filters.domain = url.searchParams.get('domain') as any;
+    if (url.searchParams.get('domain')) filters.domain = url.searchParams.get('domain') as string;
     if (url.searchParams.get('module_id')) filters.module_id = url.searchParams.get('module_id')!;
     if (url.searchParams.get('preset_id')) filters.preset_id = url.searchParams.get('preset_id')!;
     if (url.searchParams.get('date_from')) filters.date_from = url.searchParams.get('date_from')!;
     if (url.searchParams.get('date_to')) filters.date_to = url.searchParams.get('date_to')!;
-    if (url.searchParams.get('min_score')) filters.min_score = parseFloat(url.searchParams.get('min_score')!);
-    if (url.searchParams.get('only_favorites')) filters.only_favorites = url.searchParams.get('only_favorites') === 'true';
-    if (url.searchParams.get('shared_only')) filters.shared_only = url.searchParams.get('shared_only') === 'true';
+    if (url.searchParams.get('min_score'))
+      filters.min_score = parseFloat(url.searchParams.get('min_score')!);
+    if (url.searchParams.get('only_favorites'))
+      filters.only_favorites = url.searchParams.get('only_favorites') === 'true';
+    if (url.searchParams.get('shared_only'))
+      filters.shared_only = url.searchParams.get('shared_only') === 'true';
     if (url.searchParams.get('user_id')) filters.user_id = url.searchParams.get('user_id')!;
     if (url.searchParams.get('tags')) filters.tags = url.searchParams.get('tags')!.split(',');
 
@@ -39,19 +42,19 @@ export async function GET(req: NextRequest) {
     if (action === 'stats') {
       // Request pentru statistici
       const stats = await cloudHistory.getHistoryStats(orgId, userId);
-      
+
       return NextResponse.json({
         orgId,
         userId,
         stats,
         retention_info: {
           note: 'Entries are automatically deleted based on your plan retention policy',
-          upgrade_hint: stats.retention_summary.expiring_soon > 0 
-            ? 'Upgrade to Pro or Enterprise for longer retention'
-            : null
-        }
+          upgrade_hint:
+            stats.retention_summary.expiring_soon > 0
+              ? 'Upgrade to Pro or Enterprise for longer retention'
+              : null,
+        },
       });
-
     } else {
       // Request pentru istoric
       const historyData = await cloudHistory.getHistory({
@@ -60,7 +63,7 @@ export async function GET(req: NextRequest) {
         filters,
         page,
         limit,
-        includeFullContent
+        includeFullContent,
       });
 
       return NextResponse.json({
@@ -68,13 +71,12 @@ export async function GET(req: NextRequest) {
         filters,
         content_access: {
           full_content_available: includeFullContent,
-          upgrade_hint: !includeFullContent 
+          upgrade_hint: !includeFullContent
             ? 'Upgrade to Pro for full prompt and response storage'
-            : null
-        }
+            : null,
+        },
       });
     }
-
   } catch (error) {
     console.error('Cloud History API error:', error);
     return handleSecurityError(error);
@@ -97,13 +99,24 @@ export async function POST(req: NextRequest) {
       case 'save':
         // Salvează un nou entry în istoric
         const {
-          moduleId, presetId, domain, sevenDConfig, promptText,
-          modelResponse, score, usage, tags, shareWithOrg
+          moduleId,
+          presetId,
+          domain,
+          sevenDConfig,
+          promptText,
+          modelResponse,
+          score,
+          usage,
+          tags,
+          shareWithOrg,
         } = params;
 
         if (!domain || !sevenDConfig || !promptText || !usage) {
           return NextResponse.json(
-            { error: 'MISSING_PARAMETERS', message: 'domain, sevenDConfig, promptText, and usage are required' },
+            {
+              error: 'MISSING_PARAMETERS',
+              message: 'domain, sevenDConfig, promptText, and usage are required',
+            },
             { status: 400 }
           );
         }
@@ -120,13 +133,13 @@ export async function POST(req: NextRequest) {
           score,
           usage,
           tags,
-          shareWithOrg
+          shareWithOrg,
         });
 
         return NextResponse.json({
           success: true,
           historyId,
-          message: 'Entry saved to cloud history'
+          message: 'Entry saved to cloud history',
         });
 
       case 'toggle_favorite':
@@ -146,7 +159,7 @@ export async function POST(req: NextRequest) {
           success: true,
           historyId: favoriteHistoryId,
           is_favorite: newFavoriteStatus,
-          message: newFavoriteStatus ? 'Added to favorites' : 'Removed from favorites'
+          message: newFavoriteStatus ? 'Added to favorites' : 'Removed from favorites',
         });
 
       case 'delete':
@@ -165,7 +178,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           success: true,
           historyId: deleteHistoryId,
-          message: 'Entry deleted from history'
+          message: 'Entry deleted from history',
         });
 
       default:
@@ -174,7 +187,6 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
     }
-
   } catch (error) {
     console.error('Cloud History POST error:', error);
     return handleSecurityError(error);

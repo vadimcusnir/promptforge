@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { X, Zap, Building, Crown, Check, ArrowRight } from 'lucide-react';
@@ -33,7 +33,7 @@ const PLANS: PlanFeature[] = [
       'Basic prompt generation',
       'Markdown export',
       '10 runs per day',
-      'Community support'
+      'Community support',
     ],
   },
   {
@@ -50,7 +50,7 @@ const PLANS: PlanFeature[] = [
       'Cloud history',
       'Evaluator AI',
       '100 runs per day',
-      'Priority support'
+      'Priority support',
     ],
   },
   {
@@ -66,7 +66,7 @@ const PLANS: PlanFeature[] = [
       'White-label options',
       'Multi-seat support',
       '1000 runs per day',
-      'Dedicated support'
+      'Dedicated support',
     ],
   },
 ];
@@ -79,18 +79,26 @@ export function PaywallModal({ isOpen, onClose, trigger, feature, orgId }: Paywa
 
   const getTriggerMessage = (trigger: string, feature: keyof UserEntitlements) => {
     const messages: Record<string, string> = {
-      gpt_test_real: 'Real GPT test scoring requires Pro plan. Get detailed analysis and optimization recommendations.',
-      export_pdf: 'PDF reports require Pro plan. Generate professional documentation with your branding.',
-      export_json: 'JSON export with metadata requires Pro plan. Export structured data for integrations.',
-      export_bundle: 'Bundle exports require Enterprise plan. Get complete packages with assets and manifests.',
+      gpt_test_real:
+        'Real GPT test scoring requires Pro plan. Get detailed analysis and optimization recommendations.',
+      export_pdf:
+        'PDF reports require Pro plan. Generate professional documentation with your branding.',
+      export_json:
+        'JSON export with metadata requires Pro plan. Export structured data for integrations.',
+      export_bundle:
+        'Bundle exports require Enterprise plan. Get complete packages with assets and manifests.',
       api_access: 'API access requires Enterprise plan. Integrate PromptForge into your workflows.',
-      evaluator_ai: 'AI evaluation requires Pro plan. Get intelligent scoring and improvement suggestions.',
+      evaluator_ai:
+        'AI evaluation requires Pro plan. Get intelligent scoring and improvement suggestions.',
       cloud_history: 'Cloud history requires Pro plan. Access your prompts from anywhere.',
       multi_seat: 'Multi-seat access requires Enterprise plan. Collaborate with your team.',
       white_label: 'White-label options require Enterprise plan. Brand the platform as your own.',
     };
 
-    return messages[trigger] || `${feature.replace(/([A-Z])/g, ' $1').toLowerCase()} requires a premium plan. Upgrade to unlock advanced capabilities.`;
+    return (
+      messages[trigger] ||
+      `${feature.replace(/([A-Z])/g, ' $1').toLowerCase()} requires a premium plan. Upgrade to unlock advanced capabilities.`
+    );
   };
 
   const getRecommendedPlan = (feature: keyof UserEntitlements): 'pro' | 'enterprise' => {
@@ -98,14 +106,14 @@ export function PaywallModal({ isOpen, onClose, trigger, feature, orgId }: Paywa
       'hasAPI',
       'canExportBundleZip',
       'hasWhiteLabel',
-      'hasSeatsGT1'
+      'hasSeatsGT1',
     ];
 
     return enterpriseFeatures.includes(feature) ? 'enterprise' : 'pro';
   };
 
-  const recommendedPlanCode = getRecommendedPlan(feature);
   const currentPlan = subscription?.plan_code;
+  const recommendedPlan = getRecommendedPlan(feature);
 
   const handleUpgrade = async (planCode: 'pro' | 'enterprise') => {
     try {
@@ -142,9 +150,7 @@ export function PaywallModal({ isOpen, onClose, trigger, feature, orgId }: Paywa
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold text-white">
-              Upgrade Required
-            </h2>
+            <h2 className="text-3xl font-bold text-white">Upgrade Required</h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-slate-700/50 rounded-lg transition-colors"
@@ -155,9 +161,7 @@ export function PaywallModal({ isOpen, onClose, trigger, feature, orgId }: Paywa
 
           {/* Trigger Message */}
           <div className="mb-8 p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-lg">
-            <p className="text-amber-300 text-lg">
-              {getTriggerMessage(trigger, feature)}
-            </p>
+            <p className="text-amber-300 text-lg">{getTriggerMessage(trigger, feature)}</p>
           </div>
 
           {/* Billing Toggle */}
@@ -191,12 +195,13 @@ export function PaywallModal({ isOpen, onClose, trigger, feature, orgId }: Paywa
 
           {/* Plans Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PLANS.map((plan) => {
+            {PLANS.map(plan => {
               const IconComponent = plan.icon;
               const isCurrentPlan = currentPlan === plan.code;
-              const isRecommended = plan.code === recommendedPlanCode;
+              const isRecommended = plan.recommended || false;
               const price = billingCycle === 'annual' ? plan.annualPrice : plan.price;
-              const monthlyPrice = billingCycle === 'annual' ? Math.round(plan.annualPrice / 12) : plan.price;
+              const monthlyPrice =
+                billingCycle === 'annual' ? Math.round(plan.annualPrice / 12) : plan.price;
 
               return (
                 <div
@@ -205,8 +210,8 @@ export function PaywallModal({ isOpen, onClose, trigger, feature, orgId }: Paywa
                     isRecommended
                       ? 'border-amber-500/50 bg-gradient-to-br from-amber-500/5 to-orange-500/5 ring-2 ring-amber-500/20'
                       : isCurrentPlan
-                      ? 'border-blue-500/50 bg-blue-500/5'
-                      : 'border-slate-700/50 bg-slate-800/30'
+                        ? 'border-blue-500/50 bg-blue-500/5'
+                        : 'border-slate-700/50 bg-slate-800/30'
                   }`}
                 >
                   {isRecommended && (
@@ -227,31 +232,31 @@ export function PaywallModal({ isOpen, onClose, trigger, feature, orgId }: Paywa
 
                   <div className="text-center space-y-4">
                     <div className="flex justify-center">
-                      <div className={`p-3 rounded-full ${
-                        isRecommended 
-                          ? 'bg-gradient-to-br from-amber-500/20 to-orange-500/20' 
-                          : 'bg-slate-700/50'
-                      }`}>
-                        <IconComponent className={`w-6 h-6 ${
-                          isRecommended ? 'text-amber-400' : 'text-slate-300'
-                        }`} />
+                      <div
+                        className={`p-3 rounded-full ${
+                          isRecommended
+                            ? 'bg-gradient-to-br from-amber-500/20 to-orange-500/20'
+                            : 'bg-slate-700/50'
+                        }`}
+                      >
+                        <IconComponent
+                          className={`w-6 h-6 ${
+                            isRecommended ? 'text-amber-400' : 'text-slate-300'
+                          }`}
+                        />
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-2">
-                        {plan.name}
-                      </h3>
+                      <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
                       <div className="space-y-1">
                         <div className="flex items-center justify-center gap-2">
-                          <span className="text-3xl font-bold text-white">
-                            ${monthlyPrice}
-                          </span>
+                          <span className="text-3xl font-bold text-white">${monthlyPrice}</span>
                           <span className="text-slate-400">/month</span>
                         </div>
                         {billingCycle === 'annual' && plan.price > 0 && (
                           <div className="text-sm text-green-400">
-                            ${price}/year (save ${(plan.price * 12) - plan.annualPrice})
+                            ${price}/year (save ${plan.price * 12 - plan.annualPrice})
                           </div>
                         )}
                       </div>

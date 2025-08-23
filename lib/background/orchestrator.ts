@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from 'react';
 
-export type MotionLevel = "full" | "soft" | "static";
-export type LayerState =
-  | "inactive"
-  | "initializing"
-  | "active"
-  | "paused"
-  | "error";
+export type MotionLevel = 'full' | 'soft' | 'static';
+export type LayerState = 'inactive' | 'initializing' | 'active' | 'paused' | 'error';
 
 export interface LayerConfig {
   id: string;
@@ -26,7 +21,7 @@ export interface OrchestrationContext {
   viewport: { width: number; height: number; visible: boolean };
   motion: MotionLevel;
   performance: {
-    tier: "hi" | "mid" | "low";
+    tier: 'hi' | 'mid' | 'low';
     cpuLoad: number;
     memoryUsage: number;
   };
@@ -37,8 +32,7 @@ export interface OrchestrationContext {
 export class BackgroundOrchestrator {
   private layers: Map<string, LayerConfig> = new Map();
   private context: OrchestrationContext;
-  private observers: Map<string, (context: OrchestrationContext) => void> =
-    new Map();
+  private observers: Map<string, (context: OrchestrationContext) => void> = new Map();
   private performanceMonitor: PerformanceObserver | null = null;
   private retryAttempts: Map<string, number> = new Map();
   private maxRetries = 3;
@@ -46,8 +40,8 @@ export class BackgroundOrchestrator {
   constructor() {
     this.context = {
       viewport: { width: 0, height: 0, visible: true },
-      motion: "full",
-      performance: { tier: "hi", cpuLoad: 0, memoryUsage: 0 },
+      motion: 'full',
+      performance: { tier: 'hi', cpuLoad: 0, memoryUsage: 0 },
       interaction: { tabActive: true, inputFocused: false, userIdle: false },
       timing: { startTime: Date.now(), currentTime: Date.now() },
     };
@@ -57,7 +51,7 @@ export class BackgroundOrchestrator {
 
   private initializeMonitoring() {
     // Viewport monitoring
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const updateViewport = () => {
         this.context.viewport = {
           width: window.innerWidth,
@@ -67,8 +61,8 @@ export class BackgroundOrchestrator {
         this.notifyObservers();
       };
 
-      window.addEventListener("resize", updateViewport);
-      document.addEventListener("visibilitychange", updateViewport);
+      window.addEventListener('resize', updateViewport);
+      document.addEventListener('visibilitychange', updateViewport);
       updateViewport();
 
       // Tab activity monitoring
@@ -81,55 +75,54 @@ export class BackgroundOrchestrator {
         this.notifyObservers();
       };
 
-      window.addEventListener("focus", handleFocus);
-      window.addEventListener("blur", handleBlur);
+      window.addEventListener('focus', handleFocus);
+      window.addEventListener('blur', handleBlur);
 
       // Input focus monitoring
       const handleInputFocus = (e: FocusEvent) => {
         const target = e.target as HTMLElement;
         this.context.interaction.inputFocused =
-          target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.contentEditable === "true";
+          target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.contentEditable === 'true';
         this.notifyObservers();
       };
 
-      document.addEventListener("focusin", handleInputFocus);
-      document.addEventListener("focusout", handleInputFocus);
+      document.addEventListener('focusin', handleInputFocus);
+      document.addEventListener('focusout', handleInputFocus);
 
       // Reduced motion detection
-      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       const updateMotion = () => {
-        this.context.motion = mediaQuery.matches ? "static" : "full";
+        this.context.motion = mediaQuery.matches ? 'static' : 'full';
         this.notifyObservers();
       };
-      mediaQuery.addEventListener("change", updateMotion);
+      mediaQuery.addEventListener('change', updateMotion);
       updateMotion();
 
       // Performance monitoring
-      if ("PerformanceObserver" in window) {
-        this.performanceMonitor = new PerformanceObserver((list) => {
+      if ('PerformanceObserver' in window) {
+        this.performanceMonitor = new PerformanceObserver(list => {
           const entries = list.getEntries();
-          entries.forEach((entry) => {
-            if (entry.entryType === "measure") {
+          entries.forEach(entry => {
+            if (entry.entryType === 'measure') {
               // Update performance metrics
               this.updatePerformanceMetrics();
             }
           });
         });
         this.performanceMonitor.observe({
-          entryTypes: ["measure", "navigation"],
+          entryTypes: ['measure', 'navigation'],
         });
       }
     }
   }
 
   private updatePerformanceMetrics() {
-    if (typeof window !== "undefined" && "performance" in window) {
+    if (typeof window !== 'undefined' && 'performance' in window) {
       const memory = (performance as any).memory;
       if (memory) {
-        this.context.performance.memoryUsage =
-          memory.usedJSHeapSize / 1024 / 1024; // MB
+        this.context.performance.memoryUsage = memory.usedJSHeapSize / 1024 / 1024; // MB
       }
 
       // Simple FPS estimation
@@ -139,8 +132,7 @@ export class BackgroundOrchestrator {
         frameCount++;
         if (currentTime - lastTime >= 1000) {
           const fps = frameCount;
-          this.context.performance.tier =
-            fps >= 50 ? "hi" : fps >= 30 ? "mid" : "low";
+          this.context.performance.tier = fps >= 50 ? 'hi' : fps >= 30 ? 'mid' : 'low';
           frameCount = 0;
           lastTime = currentTime;
         }
@@ -151,7 +143,7 @@ export class BackgroundOrchestrator {
   }
 
   registerLayer(config: LayerConfig): void {
-    this.layers.set(config.id, { ...config, state: "inactive" });
+    this.layers.set(config.id, { ...config, state: 'inactive' });
     this.retryAttempts.set(config.id, 0);
   }
 
@@ -168,7 +160,7 @@ export class BackgroundOrchestrator {
         return;
       }
 
-      layer.state = "initializing";
+      layer.state = 'initializing';
       this.layers.set(layerId, layer);
 
       // Progressive initialization with delays
@@ -176,20 +168,16 @@ export class BackgroundOrchestrator {
       const attemptCount = this.retryAttempts.get(layerId) || 0;
 
       if (attemptCount >= this.maxRetries) {
-        layer.state = "error";
+        layer.state = 'error';
         this.layers.set(layerId, layer);
-        reject(
-          new Error(
-            `Layer ${layerId} failed after ${this.maxRetries} attempts`,
-          ),
-        );
+        reject(new Error(`Layer ${layerId} failed after ${this.maxRetries} attempts`));
         return;
       }
 
       setTimeout(
         () => {
           try {
-            layer.state = "active";
+            layer.state = 'active';
             this.layers.set(layerId, layer);
             this.retryAttempts.set(layerId, 0);
             resolve();
@@ -198,7 +186,7 @@ export class BackgroundOrchestrator {
             this.startLayer(layerId).then(resolve).catch(reject);
           }
         },
-        delays[Math.min(attemptCount, delays.length - 1)],
+        delays[Math.min(attemptCount, delays.length - 1)]
       );
     });
   }
@@ -206,23 +194,23 @@ export class BackgroundOrchestrator {
   stopLayer(layerId: string): void {
     const layer = this.layers.get(layerId);
     if (layer) {
-      layer.state = "inactive";
+      layer.state = 'inactive';
       this.layers.set(layerId, layer);
     }
   }
 
   pauseLayer(layerId: string): void {
     const layer = this.layers.get(layerId);
-    if (layer && layer.state === "active") {
-      layer.state = "paused";
+    if (layer && layer.state === 'active') {
+      layer.state = 'paused';
       this.layers.set(layerId, layer);
     }
   }
 
   resumeLayer(layerId: string): void {
     const layer = this.layers.get(layerId);
-    if (layer && layer.state === "paused") {
-      layer.state = "active";
+    if (layer && layer.state === 'paused') {
+      layer.state = 'active';
       this.layers.set(layerId, layer);
     }
   }
@@ -232,25 +220,18 @@ export class BackgroundOrchestrator {
     if (!this.context.viewport.visible) return false;
 
     // Check motion preferences
-    if (this.context.motion === "static") return false;
+    if (this.context.motion === 'static') return false;
 
     // Check performance constraints
-    if (
-      this.context.performance.memoryUsage > layer.performanceBudget.maxMemoryMB
-    )
-      return false;
+    if (this.context.performance.memoryUsage > layer.performanceBudget.maxMemoryMB) return false;
 
     // Check interaction state
-    if (this.context.interaction.inputFocused && layer.priority < 5)
-      return false;
+    if (this.context.interaction.inputFocused && layer.priority < 5) return false;
 
     return layer.enabled;
   }
 
-  subscribe(
-    layerId: string,
-    callback: (context: OrchestrationContext) => void,
-  ): void {
+  subscribe(layerId: string, callback: (context: OrchestrationContext) => void): void {
     this.observers.set(layerId, callback);
   }
 
@@ -260,11 +241,11 @@ export class BackgroundOrchestrator {
 
   private notifyObservers(): void {
     this.context.timing.currentTime = Date.now();
-    this.observers.forEach((callback) => {
+    this.observers.forEach(callback => {
       try {
         callback(this.context);
       } catch (error) {
-        console.error("[v0] Observer callback error:", error);
+        console.error('[v0] Observer callback error:', error);
       }
     });
   }
@@ -297,7 +278,7 @@ export function useBackgroundOrchestrator() {
       setContext(newContext);
     };
 
-    orchestratorRef.current.subscribe("main", updateContext);
+    orchestratorRef.current.subscribe('main', updateContext);
     setContext(orchestratorRef.current.getContext());
 
     return () => {
@@ -334,7 +315,6 @@ export function useBackgroundOrchestrator() {
     stopLayer,
     pauseLayer,
     resumeLayer,
-    getLayerState: (layerId: string) =>
-      orchestratorRef.current?.getLayerState(layerId) || null,
+    getLayerState: (layerId: string) => orchestratorRef.current?.getLayerState(layerId) || null,
   };
 }

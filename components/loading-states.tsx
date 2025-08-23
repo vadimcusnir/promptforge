@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
+import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 
 export function ModuleCardSkeleton() {
   return (
@@ -34,11 +34,11 @@ export function PromptGeneratorSkeleton() {
   );
 }
 
-export function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
+export function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-6 h-6",
-    lg: "w-8 h-8",
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8',
   };
 
   return (
@@ -48,11 +48,7 @@ export function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   );
 }
 
-export function ProcessingIndicator({
-  message = "Processing...",
-}: {
-  message?: string;
-}) {
+export function ProcessingIndicator({ message = 'Processing...' }: { message?: string }) {
   return (
     <div className="flex items-center gap-3 p-4 glass-effect rounded-lg animate-pulse-glow">
       <LoadingSpinner />
@@ -61,17 +57,17 @@ export function ProcessingIndicator({
   );
 }
 
-export function PromptForgeLoading({ 
-  size = "md", 
-  message = "Forging..." 
-}: { 
-  size?: "sm" | "md" | "lg";
+export function PromptForgeLoading({
+  size = 'md',
+  message = 'Forging...',
+}: {
+  size?: 'sm' | 'md' | 'lg';
   message?: string;
 }) {
   const sizeClasses = {
-    sm: "w-8 h-8",
-    md: "w-12 h-12",
-    lg: "w-16 h-16",
+    sm: 'w-8 h-8',
+    md: 'w-12 h-12',
+    lg: 'w-16 h-16',
   };
 
   return (
@@ -80,8 +76,8 @@ export function PromptForgeLoading({
         <Image
           src="/forge_v3_logo/nav_static_03_loading.webp"
           alt="Loading..."
-          width={size === "sm" ? 32 : size === "md" ? 48 : 64}
-          height={size === "sm" ? 32 : size === "md" ? 48 : 64}
+          width={size === 'sm' ? 32 : size === 'md' ? 48 : 64}
+          height={size === 'sm' ? 32 : size === 'md' ? 48 : 64}
           className={`${sizeClasses[size]} object-contain animate-spin-slow`}
         />
       </div>

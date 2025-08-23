@@ -73,6 +73,7 @@ psql -f supabase/migrations/006_seed_plans.sql
    - Enterprise: $99/month, $990/year
 
 2. **Update Product IDs in `lib/billing/stripe-config.ts`:**
+
    ```typescript
    export const STRIPE_PRODUCTS: StripeProduct[] = [
      {
@@ -122,20 +123,20 @@ import { EntitlementGate } from '@/components/billing/EntitlementGate';
 
 ## 🎯 Feature Matrix
 
-| Feature | Pilot | Pro | Enterprise |
-|---------|-------|-----|------------|
-| All Modules | ❌ | ✅ | ✅ |
-| Markdown Export | ✅ | ✅ | ✅ |
-| PDF Export | ❌ | ✅ | ✅ |
-| JSON Export | ❌ | ✅ | ✅ |
-| GPT Test Real | ❌ | ✅ | ✅ |
-| Cloud History | ❌ | ✅ | ✅ |
-| Evaluator AI | ❌ | ✅ | ✅ |
-| API Access | ❌ | ❌ | ✅ |
-| Bundle ZIP | ❌ | ❌ | ✅ |
-| White Label | ❌ | ❌ | ✅ |
-| Multi-seat | ❌ | ❌ | ✅ |
-| Max Runs/Day | 10 | 100 | 1000 |
+| Feature         | Pilot | Pro | Enterprise |
+| --------------- | ----- | --- | ---------- |
+| All Modules     | ❌    | ✅  | ✅         |
+| Markdown Export | ✅    | ✅  | ✅         |
+| PDF Export      | ❌    | ✅  | ✅         |
+| JSON Export     | ❌    | ✅  | ✅         |
+| GPT Test Real   | ❌    | ✅  | ✅         |
+| Cloud History   | ❌    | ✅  | ✅         |
+| Evaluator AI    | ❌    | ✅  | ✅         |
+| API Access      | ❌    | ❌  | ✅         |
+| Bundle ZIP      | ❌    | ❌  | ✅         |
+| White Label     | ❌    | ❌  | ✅         |
+| Multi-seat      | ❌    | ❌  | ✅         |
+| Max Runs/Day    | 10    | 100 | 1000       |
 
 ## 🔄 Webhook Flow
 
@@ -168,6 +169,7 @@ The main component for feature gating:
 ```
 
 **Props:**
+
 - `orgId`: Organization ID for entitlements lookup
 - `feature`: Feature key from `UserEntitlements` interface
 - `mode`: Display mode for paywall
@@ -202,6 +204,7 @@ npm run test:unit tests/billing/
 ```
 
 Tests cover:
+
 - Stripe webhook handling
 - Entitlements API
 - React hooks
@@ -215,6 +218,7 @@ npm run test:e2e tests/e2e/billing-flow.spec.ts
 ```
 
 Tests cover:
+
 - Complete upgrade flow
 - Paywall interactions
 - Feature gating
@@ -226,6 +230,7 @@ Tests cover:
 ### Stripe Webhooks
 
 All webhook events are logged with:
+
 - Event type and ID
 - Organization ID
 - Plan code
@@ -235,6 +240,7 @@ All webhook events are logged with:
 ### Entitlements
 
 Access patterns are tracked for:
+
 - Feature usage analytics
 - Conversion optimization
 - Performance monitoring

@@ -1,10 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import {
-  ENHANCED_NARRATIVE_QUOTES,
-  type EnhancedNarrativeQuote,
-} from "@/lib/data/background-data";
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { ENHANCED_NARRATIVE_QUOTES, type EnhancedNarrativeQuote } from '@/lib/data/background-data';
 
 interface NarrativeLayerProps {
   className?: string;
@@ -23,13 +20,13 @@ interface ActiveQuote extends EnhancedNarrativeQuote {
   currentChar: number;
   isActive: boolean;
   animationDelay: number;
-  phase: "pre" | "typing" | "hold" | "fadeout" | "cooldown";
+  phase: 'pre' | 'typing' | 'hold' | 'fadeout' | 'cooldown';
   phaseStartTime: number;
   lastCharTime: number;
 }
 
 export function NarrativeLayer({
-  className = "",
+  className = '',
   style,
   interval,
   typingSpeed,
@@ -42,38 +39,35 @@ export function NarrativeLayer({
   const nextQuoteTimeout = useRef<NodeJS.Timeout>();
 
   // Get position for corner placement
-  const getCornerPosition = useCallback(
-    (corner: ActiveQuote["corner"], container: HTMLElement) => {
-      const rect = container.getBoundingClientRect();
-      const margin = 40; // Distance from edges
+  const getCornerPosition = useCallback((corner: ActiveQuote['corner'], container: HTMLElement) => {
+    const rect = container.getBoundingClientRect();
+    const margin = 40; // Distance from edges
 
-      switch (corner) {
-        case "top-left":
-          return { x: margin, y: margin };
-        case "top-right":
-          return { x: rect.width - 300 - margin, y: margin };
-        case "bottom-left":
-          return { x: margin, y: rect.height - 100 - margin };
-        case "bottom-right":
-          return {
-            x: rect.width - 300 - margin,
-            y: rect.height - 100 - margin,
-          };
-        case "center":
-          return { x: rect.width / 2 - 150, y: rect.height / 2 - 50 };
-        default:
-          return { x: margin, y: margin };
-      }
-    },
-    [],
-  );
+    switch (corner) {
+      case 'top-left':
+        return { x: margin, y: margin };
+      case 'top-right':
+        return { x: rect.width - 300 - margin, y: margin };
+      case 'bottom-left':
+        return { x: margin, y: rect.height - 100 - margin };
+      case 'bottom-right':
+        return {
+          x: rect.width - 300 - margin,
+          y: rect.height - 100 - margin,
+        };
+      case 'center':
+        return { x: rect.width / 2 - 150, y: rect.height / 2 - 50 };
+      default:
+        return { x: margin, y: margin };
+    }
+  }, []);
 
   // Select next quote based on priority and cooldown
   const selectNextQuote = useCallback(() => {
     if (!containerRef.current || interval === 0) return null;
 
     const availableQuotes = ENHANCED_NARRATIVE_QUOTES.filter(
-      (quote) => !cooldownQuotes.has(quote.text),
+      quote => !cooldownQuotes.has(quote.text)
     );
 
     if (availableQuotes.length === 0) {
@@ -83,9 +77,7 @@ export function NarrativeLayer({
     }
 
     // Sort by priority (higher is better)
-    const sortedQuotes = [...availableQuotes].sort(
-      (a, b) => b.priority - a.priority,
-    );
+    const sortedQuotes = [...availableQuotes].sort((a, b) => b.priority - a.priority);
 
     // Select from top 3 priorities with some randomness
     const topQuotes = sortedQuotes.slice(0, Math.min(3, sortedQuotes.length));
@@ -110,7 +102,7 @@ export function NarrativeLayer({
       currentChar: 0,
       isActive: true,
       animationDelay: 0,
-      phase: "pre",
+      phase: 'pre',
       phaseStartTime: Date.now(),
       lastCharTime: Date.now(),
     };
@@ -132,16 +124,16 @@ export function NarrativeLayer({
       const updatedQuote = { ...activeQuote };
 
       switch (activeQuote.phase) {
-        case "pre":
+        case 'pre':
           // Pre-delay phase
           if (timeSincePhaseStart >= activeQuote.preDelay) {
-            updatedQuote.phase = "typing";
+            updatedQuote.phase = 'typing';
             updatedQuote.phaseStartTime = currentTime;
             updatedQuote.opacity = 1;
           }
           break;
 
-        case "typing":
+        case 'typing':
           // Character-by-character typing
           if (
             timeSinceLastChar >= typingSpeed &&
@@ -151,43 +143,43 @@ export function NarrativeLayer({
             updatedQuote.lastCharTime = currentTime;
 
             // Add glitch effects for certain styles
-            if (activeQuote.style === "glitch" && Math.random() < 0.1) {
+            if (activeQuote.style === 'glitch' && Math.random() < 0.1) {
               updatedQuote.opacity = 0.3 + Math.random() * 0.7;
             }
           }
 
           // Move to hold phase when typing complete
           if (updatedQuote.currentChar >= activeQuote.text.length) {
-            updatedQuote.phase = "hold";
+            updatedQuote.phase = 'hold';
             updatedQuote.phaseStartTime = currentTime;
             updatedQuote.opacity = 1;
           }
           break;
 
-        case "hold":
+        case 'hold':
           // Hold at full visibility
           if (timeSincePhaseStart >= activeQuote.hold) {
-            updatedQuote.phase = "fadeout";
+            updatedQuote.phase = 'fadeout';
             updatedQuote.phaseStartTime = currentTime;
           }
           break;
 
-        case "fadeout":
+        case 'fadeout':
           // Fade out animation
           const fadeProgress = timeSincePhaseStart / activeQuote.out;
           updatedQuote.opacity = Math.max(0, 1 - fadeProgress);
 
           if (fadeProgress >= 1) {
-            updatedQuote.phase = "cooldown";
+            updatedQuote.phase = 'cooldown';
             updatedQuote.phaseStartTime = currentTime;
             updatedQuote.isActive = false;
 
             // Add to cooldown list
-            setCooldownQuotes((prev) => new Set([...prev, activeQuote.text]));
+            setCooldownQuotes(prev => new Set([...prev, activeQuote.text]));
 
             // Schedule cooldown removal
             setTimeout(() => {
-              setCooldownQuotes((prev) => {
+              setCooldownQuotes(prev => {
                 const newSet = new Set(prev);
                 newSet.delete(activeQuote.text);
                 return newSet;
@@ -211,7 +203,7 @@ export function NarrativeLayer({
 
       animationRef.current = requestAnimationFrame(animateQuote);
     },
-    [activeQuote, typingSpeed, reducedMotion, interval, startQuote],
+    [activeQuote, typingSpeed, reducedMotion, interval, startQuote]
   );
 
   // Start animation loop
@@ -248,25 +240,25 @@ export function NarrativeLayer({
 
   const getStyleClass = () => {
     switch (activeQuote.style) {
-      case "matrix":
-        return "font-mono text-green-400";
-      case "glitch":
-        return "font-mono text-red-400";
-      case "typing":
+      case 'matrix':
+        return 'font-mono text-green-400';
+      case 'glitch':
+        return 'font-mono text-red-400';
+      case 'typing':
       default:
-        return "font-sans text-white";
+        return 'font-sans text-white';
     }
   };
 
   const getTextShadow = () => {
     switch (activeQuote.style) {
-      case "matrix":
-        return "0 0 10px rgba(0, 255, 127, 0.5)";
-      case "glitch":
-        return "0 0 10px rgba(255, 90, 36, 0.5), 2px 2px 0px rgba(255, 0, 0, 0.3)";
-      case "typing":
+      case 'matrix':
+        return '0 0 10px rgba(0, 255, 127, 0.5)';
+      case 'glitch':
+        return '0 0 10px rgba(255, 90, 36, 0.5), 2px 2px 0px rgba(255, 0, 0, 0.3)';
+      case 'typing':
       default:
-        return "0 0 5px rgba(255, 255, 255, 0.3)";
+        return '0 0 5px rgba(255, 255, 255, 0.3)';
     }
   };
 
@@ -276,8 +268,8 @@ export function NarrativeLayer({
       className={className}
       style={{
         ...style,
-        transform: "none", // Critical: no transforms
-        willChange: "auto",
+        transform: 'none', // Critical: no transforms
+        willChange: 'auto',
       }}
     >
       {activeQuote && (
@@ -288,16 +280,14 @@ export function NarrativeLayer({
             top: `${activeQuote.y}px`,
             opacity: activeQuote.opacity,
             transform: `scale(${activeQuote.scale})`,
-            fontSize: "14px",
-            lineHeight: "1.4",
+            fontSize: '14px',
+            lineHeight: '1.4',
             textShadow: getTextShadow(),
-            willChange: "opacity",
+            willChange: 'opacity',
           }}
         >
           {activeQuote.text.substring(0, activeQuote.currentChar)}
-          {activeQuote.phase === "typing" && (
-            <span className="animate-pulse">|</span>
-          )}
+          {activeQuote.phase === 'typing' && <span className="animate-pulse">|</span>}
         </div>
       )}
     </div>

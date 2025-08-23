@@ -1,47 +1,46 @@
-"use client";
+'use client';
 
 import React, { ReactNode } from 'react';
 import { useEntitlements, UserEntitlements } from '@/hooks/use-entitlements';
 import { PaywallModal } from './PaywallModal';
 import { PaywallInline } from './PaywallInline';
-import { Lock, Crown, Zap } from 'lucide-react';
 
 interface EntitlementGateProps {
   /**
    * Organization ID for checking entitlements
    */
   orgId: string;
-  
+
   /**
    * Feature key to check in entitlements
    */
   feature: keyof UserEntitlements;
-  
+
   /**
    * Content to show when user has access
    */
   children: ReactNode;
-  
+
   /**
    * Display mode for paywall
    */
   mode?: 'modal' | 'inline' | 'replace';
-  
+
   /**
    * Custom trigger message for paywall
    */
   trigger?: string;
-  
+
   /**
    * Fallback content when access is denied (for 'replace' mode)
    */
   fallback?: ReactNode;
-  
+
   /**
    * Show loading state while checking entitlements
    */
   showLoading?: boolean;
-  
+
   /**
    * Custom className for styling
    */
@@ -50,7 +49,7 @@ interface EntitlementGateProps {
 
 /**
  * EntitlementGate - Modern feature gating component
- * 
+ *
  * Checks user entitlements and shows appropriate paywall when access is denied.
  * Supports multiple display modes and integrates with real Stripe billing.
  */
@@ -88,9 +87,7 @@ export function EntitlementGate({
       <div className={className}>
         {children}
         {error.includes('offline') && (
-          <div className="mt-2 text-xs text-amber-400">
-            ⚠️ Using cached permissions
-          </div>
+          <div className="mt-2 text-xs text-amber-400">⚠️ Using cached permissions</div>
         )}
       </div>
     );
@@ -110,10 +107,7 @@ export function EntitlementGate({
     case 'modal':
       return (
         <div className={className}>
-          <div 
-            onClick={() => setShowPaywall(true)}
-            className="cursor-pointer"
-          >
+          <div onClick={() => setShowPaywall(true)} className="cursor-pointer">
             {children}
           </div>
           <PaywallModal
@@ -129,11 +123,7 @@ export function EntitlementGate({
     case 'inline':
       return (
         <div className={className}>
-          <PaywallInline
-            trigger={featureTrigger}
-            feature={feature}
-            orgId={orgId}
-          />
+          <PaywallInline trigger={featureTrigger} feature={feature} orgId={orgId} />
         </div>
       );
 
@@ -141,10 +131,7 @@ export function EntitlementGate({
       return (
         <div className={className}>
           {fallback || (
-            <FeatureLockedPlaceholder 
-              feature={feature}
-              onUpgrade={() => setShowPaywall(true)}
-            />
+            <EntitlementLocked feature={feature} onUpgrade={() => setShowPaywall(true)} />
           )}
           <PaywallModal
             isOpen={showPaywall}
@@ -164,52 +151,51 @@ export function EntitlementGate({
 /**
  * Default locked placeholder for replace mode
  */
-function FeatureLockedPlaceholder({ 
-  feature, 
-  onUpgrade 
-}: { 
+function EntitlementLocked({
+  feature,
+  onUpgrade,
+}: {
   feature: keyof UserEntitlements;
   onUpgrade: () => void;
 }) {
   const getFeatureInfo = (feature: keyof UserEntitlements) => {
     const featureMap = {
-      canUseGptTestReal: { 
-        icon: Zap, 
-        name: 'GPT Test Engine', 
-        plan: 'Pro' 
+      canUseGptTestReal: {
+        icon: Zap,
+        name: 'GPT Test Engine',
+        plan: 'Pro',
       },
-      canExportPDF: { 
-        icon: Crown, 
-        name: 'PDF Export', 
-        plan: 'Pro' 
+      canExportPDF: {
+        icon: Crown,
+        name: 'PDF Export',
+        plan: 'Pro',
       },
-      canExportJSON: { 
-        icon: Crown, 
-        name: 'JSON Export', 
-        plan: 'Pro' 
+      canExportJSON: {
+        icon: Crown,
+        name: 'JSON Export',
+        plan: 'Pro',
       },
-      canExportBundleZip: { 
-        icon: Lock, 
-        name: 'Bundle Export', 
-        plan: 'Enterprise' 
+      canExportBundleZip: {
+        name: 'Bundle Export',
+        plan: 'Enterprise',
       },
-      hasAPI: { 
-        icon: Lock, 
-        name: 'API Access', 
-        plan: 'Enterprise' 
+      hasAPI: {
+        name: 'API Access',
+        plan: 'Enterprise',
       },
-      hasEvaluatorAI: { 
-        icon: Zap, 
-        name: 'Evaluator AI', 
-        plan: 'Pro' 
+      hasEvaluatorAI: {
+        icon: Zap,
+        name: 'Evaluator AI',
+        plan: 'Pro',
       },
     };
 
-    return featureMap[feature] || { 
-      icon: Lock, 
-      name: 'Premium Feature', 
-      plan: 'Pro' 
-    };
+    return (
+      featureMap[feature] || {
+        name: 'Premium Feature',
+        plan: 'Pro',
+      }
+    );
   };
 
   const info = getFeatureInfo(feature);
@@ -222,15 +208,11 @@ function FeatureLockedPlaceholder({
           <IconComponent className="w-6 h-6 text-amber-400" />
         </div>
       </div>
-      
-      <h3 className="text-lg font-semibold text-white mb-2">
-        {info.name} Locked
-      </h3>
-      
-      <p className="text-slate-300 text-sm mb-4">
-        Upgrade to {info.plan} to unlock this feature
-      </p>
-      
+
+      <h3 className="text-lg font-semibold text-white mb-2"></h3>
+
+      <p className="text-slate-300 text-sm mb-4">Upgrade to {info.plan} to unlock this feature</p>
+
       <button
         onClick={onUpgrade}
         className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-medium rounded-lg hover:from-amber-400 hover:to-orange-400 transition-all"
@@ -280,11 +262,9 @@ export function withEntitlementGate<P extends object>(
     fallback?: ReactNode;
   } = {}
 ) {
-  return function EntitlementWrappedComponent(
-    props: P & { orgId: string }
-  ) {
+  return function EntitlementWrappedComponent(props: P & { orgId: string }) {
     const { orgId, ...componentProps } = props;
-    
+
     return (
       <EntitlementGate
         orgId={orgId}
@@ -304,7 +284,7 @@ export function withEntitlementGate<P extends object>(
  */
 export function useFeatureAccess(orgId: string, feature: keyof UserEntitlements) {
   const { canUseFeature, loading, error } = useEntitlements(orgId);
-  
+
   return {
     hasAccess: canUseFeature(feature),
     loading,

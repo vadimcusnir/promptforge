@@ -1,13 +1,23 @@
 {
-  "industry": "AI/ML", 
+  "industry": "AI/ML",
   "slug": "aiml",
   "jargon": [
-    "LLM", "fine-tuning", "embedding", "multi-agent", "reinforcement learning",
-    "prompt chaining", "vector DB", "hallucination control"
+    "LLM",
+    "fine-tuning",
+    "embedding",
+    "multi-agent",
+    "reinforcement learning",
+    "prompt chaining",
+    "vector DB",
+    "hallucination control"
   ],
   "kpis": [
-    "model_accuracy", "inference_latency", "token_efficiency", 
-    "adoption_rate", "agent_success_rate", "deployment_costs"
+    "model_accuracy",
+    "inference_latency",
+    "token_efficiency",
+    "adoption_rate",
+    "agent_success_rate",
+    "deployment_costs"
   ],
   "compliance_notes": "AI Act (EU), NIST AI Risk Framework (US), Data Privacy (GDPR), Model Accountability Guidelines, OpenAI Policy guardrails",
   "style_bias": "tehnic, inovativ, semi-academic dar pragmatic (whitepaper style)",
@@ -17,7 +27,7 @@
     "scale": "startup",
     "urgency": "sprint",
     "complexity": "expert",
-    "resources": "full_stack_org", 
+    "resources": "full_stack_org",
     "application": "experimentation",
     "output": ["spec", "json"]
   },
@@ -32,8 +42,8 @@
   "evaluation_weights": {
     "clarity": 0.25,
     "execution": 0.35,
-    "ambiguity_inv": 0.20,
-    "business_fit": 0.20
+    "ambiguity_inv": 0.2,
+    "business_fit": 0.2
   },
   "thresholds": {
     "clarity_min": 80,

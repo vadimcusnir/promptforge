@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 /**
  * Standardized API Error System
@@ -9,117 +9,117 @@ export const API_ERROR_CODES = {
   // 400 - Bad Request
   INVALID_7D_ENUM: {
     code: 400,
-    message: "Invalid 7D enum value",
-    type: "INVALID_7D_ENUM"
+    message: 'Invalid 7D enum value',
+    type: 'INVALID_7D_ENUM',
   },
   MISSING_OUTPUT_FORMAT: {
     code: 400,
-    message: "Missing required output_format",
-    type: "MISSING_OUTPUT_FORMAT"
+    message: 'Missing required output_format',
+    type: 'MISSING_OUTPUT_FORMAT',
   },
   INVALID_REQUEST_FORMAT: {
     code: 400,
-    message: "Invalid request format",
-    type: "INVALID_REQUEST_FORMAT"
+    message: 'Invalid request format',
+    type: 'INVALID_REQUEST_FORMAT',
   },
-  
+
   // 401 - Unauthorized
   UNAUTHENTICATED: {
     code: 401,
-    message: "Missing or invalid authentication",
-    type: "UNAUTHENTICATED"
+    message: 'Missing or invalid authentication',
+    type: 'UNAUTHENTICATED',
   },
   INVALID_API_KEY: {
     code: 401,
-    message: "Invalid or disabled API key",
-    type: "UNAUTHENTICATED"
+    message: 'Invalid or disabled API key',
+    type: 'UNAUTHENTICATED',
   },
   MISSING_AUTH_HEADER: {
     code: 401,
-    message: "Authentication required",
-    type: "UNAUTHENTICATED"
+    message: 'Authentication required',
+    type: 'UNAUTHENTICATED',
   },
-  
+
   // 403 - Forbidden
   ENTITLEMENT_REQUIRED: {
     code: 403,
-    message: "Insufficient permissions",
-    type: "ENTITLEMENT_REQUIRED"
+    message: 'Insufficient permissions',
+    type: 'ENTITLEMENT_REQUIRED',
   },
   PLAN_UPGRADE_REQUIRED: {
     code: 403,
-    message: "Plan upgrade required",
-    type: "ENTITLEMENT_REQUIRED"
+    message: 'Plan upgrade required',
+    type: 'ENTITLEMENT_REQUIRED',
   },
-  
+
   // 404 - Not Found
   MODULE_NOT_FOUND: {
     code: 404,
-    message: "Module not found or disabled",
-    type: "MODULE_NOT_FOUND"
+    message: 'Module not found or disabled',
+    type: 'MODULE_NOT_FOUND',
   },
   RUN_NOT_FOUND: {
     code: 404,
-    message: "Run not found",
-    type: "MODULE_NOT_FOUND"
+    message: 'Run not found',
+    type: 'MODULE_NOT_FOUND',
   },
   RESOURCE_NOT_FOUND: {
     code: 404,
-    message: "Resource not found",
-    type: "MODULE_NOT_FOUND"
+    message: 'Resource not found',
+    type: 'MODULE_NOT_FOUND',
   },
-  
+
   // 409 - Conflict
   RULESET_CONFLICT: {
     code: 409,
-    message: "Ruleset validation failed",
-    type: "RULESET_CONFLICT"
+    message: 'Ruleset validation failed',
+    type: 'RULESET_CONFLICT',
   },
-  
+
   // 422 - Unprocessable Entity
   INPUT_SCHEMA_MISMATCH: {
     code: 422,
-    message: "Input validation failed",
-    type: "INPUT_SCHEMA_MISMATCH"
+    message: 'Input validation failed',
+    type: 'INPUT_SCHEMA_MISMATCH',
   },
   SEVEND_SIGNATURE_MISMATCH: {
     code: 422,
-    message: "7D signature mismatch",
-    type: "INPUT_SCHEMA_MISMATCH"
+    message: '7D signature mismatch',
+    type: 'INPUT_SCHEMA_MISMATCH',
   },
   INVALID_CONTENT_LANGUAGE: {
     code: 422,
-    message: "Content must be in English only",
-    type: "INPUT_SCHEMA_MISMATCH"
+    message: 'Content must be in English only',
+    type: 'INPUT_SCHEMA_MISMATCH',
   },
   SCORE_BELOW_THRESHOLD: {
     code: 422,
-    message: "Score below minimum threshold",
-    type: "INPUT_SCHEMA_MISMATCH"
+    message: 'Score below minimum threshold',
+    type: 'INPUT_SCHEMA_MISMATCH',
   },
-  
+
   // 429 - Too Many Requests
   RATE_LIMITED: {
     code: 429,
-    message: "Rate limit exceeded",
-    type: "RATE_LIMITED"
+    message: 'Rate limit exceeded',
+    type: 'RATE_LIMITED',
   },
-  
+
   // 500 - Internal Server Error
   INTERNAL_RUN_ERROR: {
     code: 500,
-    message: "Internal execution error",
-    type: "INTERNAL_RUN_ERROR"
+    message: 'Internal execution error',
+    type: 'INTERNAL_RUN_ERROR',
   },
   OPENAI_API_ERROR: {
     code: 503,
-    message: "OpenAI service temporarily unavailable",
-    type: "INTERNAL_RUN_ERROR"
+    message: 'OpenAI service temporarily unavailable',
+    type: 'INTERNAL_RUN_ERROR',
   },
   DATABASE_ERROR: {
     code: 500,
-    message: "Database operation failed",
-    type: "INTERNAL_RUN_ERROR"
+    message: 'Database operation failed',
+    type: 'INTERNAL_RUN_ERROR',
   },
 } as const;
 
@@ -137,7 +137,7 @@ export class StandardAPIError extends Error {
   constructor(apiCode: APIErrorCode, details?: any, customMessage?: string) {
     const errorConfig = API_ERROR_CODES[apiCode];
     super(customMessage || errorConfig.message);
-    
+
     this.name = 'StandardAPIError';
     this.apiCode = apiCode;
     this.code = errorConfig.code;
@@ -156,7 +156,7 @@ export function createErrorResponse(
   additionalHeaders?: Record<string, string>
 ): NextResponse {
   const errorConfig = API_ERROR_CODES[apiCode];
-  
+
   const errorBody = {
     error: errorConfig.type,
     message: customMessage || errorConfig.message,
@@ -188,32 +188,25 @@ export function createRateLimitResponse(
   resetTime: number,
   customMessage?: string
 ): NextResponse {
-  return createErrorResponse(
-    'RATE_LIMITED',
-    { remaining, resetTime },
-    customMessage,
-    {
-      'X-RateLimit-Limit': '30',
-      'X-RateLimit-Remaining': remaining.toString(),
-      'X-RateLimit-Reset': Math.ceil(resetTime / 1000).toString(),
-    }
-  );
+  return createErrorResponse('RATE_LIMITED', { remaining, resetTime }, customMessage, {
+    'X-RateLimit-Limit': '30',
+    'X-RateLimit-Remaining': remaining.toString(),
+    'X-RateLimit-Reset': Math.ceil(resetTime / 1000).toString(),
+  });
 }
 
 /**
  * Handle validation errors from Zod
  */
 export function createValidationErrorResponse(zodError: any): NextResponse {
-  return createErrorResponse(
-    'INPUT_SCHEMA_MISMATCH',
-    {
-      validation_errors: zodError.errors?.map((err: any) => ({
+  return createErrorResponse('INPUT_SCHEMA_MISMATCH', {
+    validation_errors:
+      zodError.errors?.map((err: any) => ({
         field: err.path?.join('.'),
         message: err.message,
         code: err.code,
       })) || [],
-    }
-  );
+  });
 }
 
 /**
@@ -224,8 +217,8 @@ export function createEntitlementErrorResponse(
   currentPlan?: string,
   customMessage?: string
 ): NextResponse {
-  const entitlements = Array.isArray(requiredEntitlements) 
-    ? requiredEntitlements 
+  const entitlements = Array.isArray(requiredEntitlements)
+    ? requiredEntitlements
     : [requiredEntitlements];
 
   return createErrorResponse(
@@ -300,9 +293,7 @@ export function createCORSResponse(): NextResponse {
 /**
  * Error handler wrapper for API routes
  */
-export function withErrorHandler<T extends any[]>(
-  handler: (...args: T) => Promise<NextResponse>
-) {
+export function withErrorHandler<T extends any[]>(handler: (...args: T) => Promise<NextResponse>) {
   return async (...args: T): Promise<NextResponse> => {
     try {
       return await handler(...args);

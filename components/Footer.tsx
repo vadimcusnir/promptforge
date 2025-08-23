@@ -1,4 +1,5 @@
-import Image from "next/image";
+import Image from 'next/image';
+import Link from 'next/link';
 
 export function Footer() {
   return (
@@ -8,16 +9,16 @@ export function Footer() {
           <div className="mb-3 font-semibold">Product</div>
           <ul className="space-y-2">
             <li>
-              <a href="/generator">Generator</a>
+              <Link href="/generator">Generator</Link>
             </li>
             <li>
-              <a href="/modules">Modules</a>
+              <Link href="/modules">Modules</Link>
             </li>
             <li>
-              <a href="/pricing">Pricing</a>
+              <Link href="/pricing">Pricing</Link>
             </li>
             <li>
-              <a href="/docs/api">Docs</a>
+              <Link href="/docs/api">Docs</Link>
             </li>
           </ul>
         </div>
@@ -25,10 +26,10 @@ export function Footer() {
           <div className="mb-3 font-semibold">Docs</div>
           <ul className="space-y-2">
             <li>
-              <a href="/docs/api">API Reference</a>
+              <Link href="/docs/api">API Reference</Link>
             </li>
             <li>
-              <a href="/docs">Guides</a>
+              <Link href="/docs">Guides</Link>
             </li>
           </ul>
         </div>
@@ -36,10 +37,10 @@ export function Footer() {
           <div className="mb-3 font-semibold">Company</div>
           <ul className="space-y-2">
             <li>
-              <a href="/about">About</a>
+              <Link href="/about">About</Link>
             </li>
             <li>
-              <a href="/contact">Contact</a>
+              <Link href="/contact">Contact</Link>
             </li>
           </ul>
         </div>
@@ -47,10 +48,10 @@ export function Footer() {
           <div className="mb-3 font-semibold">Legal</div>
           <ul className="space-y-2">
             <li>
-              <a href="/privacy">Privacy Policy</a>
+              <Link href="/privacy">Privacy Policy</Link>
             </li>
             <li>
-              <a href="/terms">Terms of Service</a>
+              <Link href="/terms">Terms of Service</Link>
             </li>
           </ul>
         </div>
@@ -59,21 +60,22 @@ export function Footer() {
         <div className="flex items-center gap-3">
           <Image
             src="/forge_v3_logo/nav_static_03_loading.webp"
-            alt="PromptForge™ Logo"
+            alt="PROMPTFORGE™ Logo"
             width={24}
             height={24}
             className="w-6 h-6 object-contain opacity-60"
           />
           <div className="text-xs text-white/60">
-            © 2025 PROMPTFORGE™. All rights reserved. — You don't write prompts. You invoke realities.
+            © 2025 PROMPTFORGE™. All rights reserved. — You dondon'tapos;t write prompts. You
+            invoke realities.
           </div>
         </div>
         <div className="flex gap-2">
           <span
             className="px-2.5 py-1 rounded-md border"
             style={{
-              borderColor: "var(--pf-gold-500)",
-              background: "rgba(199,168,105,.12)",
+              borderColor: 'var(--pf-gold-500)',
+              background: 'rgba(199,168,105,.12)',
             }}
           >
             Stripe Verified
@@ -81,8 +83,8 @@ export function Footer() {
           <span
             className="px-2.5 py-1 rounded-md border"
             style={{
-              borderColor: "var(--pf-gold-500)",
-              background: "rgba(199,168,105,.12)",
+              borderColor: 'var(--pf-gold-500)',
+              background: 'rgba(199,168,105,.12)',
             }}
           >
             GDPR Compliant

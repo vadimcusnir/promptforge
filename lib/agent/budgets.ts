@@ -1,4 +1,4 @@
-// PromptForge v3 - SACF Budget Guard
+// PROMPTFORGE™ v3 - SACF Budget Guard
 // Rate limiting, cost control și resource management
 
 export interface Budget {
@@ -19,7 +19,7 @@ const DEFAULT_BUDGET: Budget = {
   tokensMax: 12000,
   requestsPerMin: 60,
   costUsdMax: 1.5,
-  timeoutMs: 20000
+  timeoutMs: 20000,
 };
 
 export class BudgetGuard {
@@ -32,7 +32,7 @@ export class BudgetGuard {
       tokens: 0,
       requests: 0,
       costUsd: 0,
-      timeElapsed: 0
+      timeElapsed: 0,
     };
     this.startTime = Date.now();
   }
@@ -45,7 +45,7 @@ export class BudgetGuard {
     if (this.usage.tokens + tokens > this.budget.tokensMax) {
       return {
         allowed: false,
-        reason: `Token limit exceeded: ${this.usage.tokens + tokens} > ${this.budget.tokensMax}`
+        reason: `Token limit exceeded: ${this.usage.tokens + tokens} > ${this.budget.tokensMax}`,
       };
     }
 
@@ -53,21 +53,21 @@ export class BudgetGuard {
     if (this.usage.costUsd + costUsd > this.budget.costUsdMax) {
       return {
         allowed: false,
-        reason: `Cost limit exceeded: $${(this.usage.costUsd + costUsd).toFixed(4)} > $${this.budget.costUsdMax}`
+        reason: `Cost limit exceeded: $${(this.usage.costUsd + costUsd).toFixed(4)} > $${this.budget.costUsdMax}`,
       };
     }
 
     // Verifică rate limit
     const now = Date.now();
     const oneMinuteAgo = now - 60000;
-    
+
     // Curăță request-urile vechi
     this.requestTimes = this.requestTimes.filter(time => time > oneMinuteAgo);
-    
+
     if (this.requestTimes.length >= this.budget.requestsPerMin) {
       return {
         allowed: false,
-        reason: `Rate limit exceeded: ${this.requestTimes.length} requests in last minute (max: ${this.budget.requestsPerMin})`
+        reason: `Rate limit exceeded: ${this.requestTimes.length} requests in last minute (max: ${this.budget.requestsPerMin})`,
       };
     }
 
@@ -75,7 +75,7 @@ export class BudgetGuard {
     if (this.usage.timeElapsed > this.budget.timeoutMs) {
       return {
         allowed: false,
-        reason: `Global timeout exceeded: ${this.usage.timeElapsed}ms > ${this.budget.timeoutMs}ms`
+        reason: `Global timeout exceeded: ${this.usage.timeElapsed}ms > ${this.budget.timeoutMs}ms`,
       };
     }
 
@@ -110,12 +110,12 @@ export class BudgetGuard {
     requests: number;
   } {
     this.updateTimeElapsed();
-    
+
     return {
       tokens: (this.usage.tokens / this.budget.tokensMax) * 100,
       cost: (this.usage.costUsd / this.budget.costUsdMax) * 100,
       time: (this.usage.timeElapsed / this.budget.timeoutMs) * 100,
-      requests: (this.requestTimes.length / this.budget.requestsPerMin) * 100
+      requests: (this.requestTimes.length / this.budget.requestsPerMin) * 100,
     };
   }
 
@@ -131,7 +131,7 @@ export class BudgetGuard {
       tokens: 0,
       requests: 0,
       costUsd: 0,
-      timeElapsed: 0
+      timeElapsed: 0,
     };
     this.startTime = Date.now();
     this.requestTimes = [];
@@ -141,12 +141,12 @@ export class BudgetGuard {
   withBudget(newBudget: Partial<Budget>): BudgetGuard {
     const updatedBudget = { ...this.budget, ...newBudget };
     const newGuard = new BudgetGuard(updatedBudget);
-    
+
     // Copiază usage-ul curent
     newGuard.usage = { ...this.usage };
     newGuard.startTime = this.startTime;
     newGuard.requestTimes = [...this.requestTimes];
-    
+
     return newGuard;
   }
 
@@ -163,7 +163,7 @@ export class BudgetGuard {
   } {
     const utilization = this.getUtilization();
     const timeInSeconds = this.usage.timeElapsed / 1000;
-    
+
     return {
       budget: this.budget,
       usage: this.getUsage(),
@@ -171,8 +171,8 @@ export class BudgetGuard {
       efficiency: {
         tokensPerRequest: this.usage.requests > 0 ? this.usage.tokens / this.usage.requests : 0,
         costPerToken: this.usage.tokens > 0 ? this.usage.costUsd / this.usage.tokens : 0,
-        requestsPerSecond: timeInSeconds > 0 ? this.usage.requests / timeInSeconds : 0
-      }
+        requestsPerSecond: timeInSeconds > 0 ? this.usage.requests / timeInSeconds : 0,
+      },
     };
   }
 }
@@ -185,25 +185,25 @@ export function createBudgetForPlan(planCode: string): Budget {
         tokensMax: 5000,
         requestsPerMin: 30,
         costUsdMax: 0.5,
-        timeoutMs: 15000
+        timeoutMs: 15000,
       };
-      
+
     case 'promptforge_pro':
       return {
         tokensMax: 12000,
         requestsPerMin: 60,
         costUsdMax: 1.5,
-        timeoutMs: 20000
+        timeoutMs: 20000,
       };
-      
+
     case 'promptforge_enterprise':
       return {
         tokensMax: 25000,
         requestsPerMin: 120,
         costUsdMax: 5.0,
-        timeoutMs: 30000
+        timeoutMs: 30000,
       };
-      
+
     default:
       return DEFAULT_BUDGET;
   }
@@ -221,24 +221,27 @@ class OrgRateLimiter {
     return OrgRateLimiter.instance;
   }
 
-  checkOrgRateLimit(orgId: string, limitPerMinute: number): { allowed: boolean; remaining: number } {
+  checkOrgRateLimit(
+    orgId: string,
+    limitPerMinute: number
+  ): { allowed: boolean; remaining: number } {
     const now = Date.now();
     const oneMinuteAgo = now - 60000;
-    
+
     // Obține istoricul pentru organizație
     let requestTimes = this.orgRequestCounts.get(orgId) || [];
-    
+
     // Curăță request-urile vechi
     requestTimes = requestTimes.filter(time => time > oneMinuteAgo);
-    
+
     // Actualizează istoricul
     this.orgRequestCounts.set(orgId, requestTimes);
-    
+
     const remaining = Math.max(0, limitPerMinute - requestTimes.length);
-    
+
     return {
       allowed: requestTimes.length < limitPerMinute,
-      remaining
+      remaining,
     };
   }
 
@@ -253,10 +256,10 @@ class OrgRateLimiter {
   cleanup(): void {
     const now = Date.now();
     const oneMinuteAgo = now - 60000;
-    
+
     for (const [orgId, times] of this.orgRequestCounts.entries()) {
       const recentTimes = times.filter(time => time > oneMinuteAgo);
-      
+
       if (recentTimes.length === 0) {
         this.orgRequestCounts.delete(orgId);
       } else {
@@ -270,7 +273,10 @@ export const orgRateLimiter = OrgRateLimiter.getInstance();
 
 // Cleanup automat la fiecare 5 minute
 if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
-    orgRateLimiter.cleanup();
-  }, 5 * 60 * 1000);
+  setInterval(
+    () => {
+      orgRateLimiter.cleanup();
+    },
+    5 * 60 * 1000
+  );
 }

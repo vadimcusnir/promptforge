@@ -1,7 +1,7 @@
 export interface HistoryEntry {
   id: string;
   timestamp: Date;
-  type: "prompt" | "edit" | "test";
+  type: 'prompt' | 'edit' | 'test';
   moduleId: number;
   moduleName: string;
   vector: string;
@@ -43,7 +43,7 @@ export class HistoryManager {
     return HistoryManager.instance;
   }
 
-  addEntry(entry: Omit<HistoryEntry, "id" | "timestamp">): HistoryEntry {
+  addEntry(entry: Omit<HistoryEntry, 'id' | 'timestamp'>): HistoryEntry {
     const newEntry: HistoryEntry = {
       ...entry,
       id: this.generateId(),
@@ -62,7 +62,7 @@ export class HistoryManager {
   }
 
   getHistory(filters?: {
-    type?: "prompt" | "edit" | "test";
+    type?: 'prompt' | 'edit' | 'test';
     vector?: string;
     moduleId?: number;
     dateRange?: { start: Date; end: Date };
@@ -72,30 +72,27 @@ export class HistoryManager {
 
     if (filters) {
       if (filters.type) {
-        filtered = filtered.filter((entry) => entry.type === filters.type);
+        filtered = filtered.filter(entry => entry.type === filters.type);
       }
-      if (filters.vector && filters.vector !== "all") {
-        filtered = filtered.filter((entry) => entry.vector === filters.vector);
+      if (filters.vector && filters.vector !== 'all') {
+        filtered = filtered.filter(entry => entry.vector === filters.vector);
       }
       if (filters.moduleId) {
-        filtered = filtered.filter(
-          (entry) => entry.moduleId === filters.moduleId,
-        );
+        filtered = filtered.filter(entry => entry.moduleId === filters.moduleId);
       }
       if (filters.dateRange) {
         filtered = filtered.filter(
-          (entry) =>
-            entry.timestamp >= filters.dateRange!.start &&
-            entry.timestamp <= filters.dateRange!.end,
+          entry =>
+            entry.timestamp >= filters.dateRange!.start && entry.timestamp <= filters.dateRange!.end
         );
       }
       if (filters.searchTerm) {
         const term = filters.searchTerm.toLowerCase();
         filtered = filtered.filter(
-          (entry) =>
+          entry =>
             entry.content.toLowerCase().includes(term) ||
             entry.moduleName.toLowerCase().includes(term) ||
-            entry.tags.some((tag) => tag.toLowerCase().includes(term)),
+            entry.tags.some(tag => tag.toLowerCase().includes(term))
         );
       }
     }
@@ -104,20 +101,16 @@ export class HistoryManager {
   }
 
   getStats(): HistoryStats {
-    const promptEntries = this.history.filter((e) => e.type === "prompt");
-    const editEntries = this.history.filter((e) => e.type === "edit");
-    const testEntries = this.history.filter((e) => e.type === "test");
+    const promptEntries = this.history.filter(e => e.type === 'prompt');
+    const editEntries = this.history.filter(e => e.type === 'edit');
+    const testEntries = this.history.filter(e => e.type === 'test');
 
     // Calculate average score
-    const scoredEntries = this.history.filter(
-      (e) => e.metadata.validationScore,
-    );
+    const scoredEntries = this.history.filter(e => e.metadata.validationScore);
     const averageScore =
       scoredEntries.length > 0
-        ? scoredEntries.reduce(
-            (sum, e) => sum + (e.metadata.validationScore || 0),
-            0,
-          ) / scoredEntries.length
+        ? scoredEntries.reduce((sum, e) => sum + (e.metadata.validationScore || 0), 0) /
+          scoredEntries.length
         : 0;
 
     // Find most used module and vector
@@ -126,7 +119,7 @@ export class HistoryManager {
         acc[entry.moduleName] = (acc[entry.moduleName] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     const vectorCount = this.history.reduce(
@@ -134,15 +127,13 @@ export class HistoryManager {
         acc[entry.vector] = (acc[entry.vector] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     const mostUsedModule =
-      Object.entries(moduleCount).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-      "N/A";
+      Object.entries(moduleCount).sort(([, a], [, b]) => b - a)[0]?.[0] || 'N/A';
     const mostUsedVector =
-      Object.entries(vectorCount).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-      "N/A";
+      Object.entries(vectorCount).sort(([, a], [, b]) => b - a)[0]?.[0] || 'N/A';
 
     return {
       totalEntries: this.history.length,
@@ -157,7 +148,7 @@ export class HistoryManager {
   }
 
   deleteEntry(id: string): boolean {
-    const index = this.history.findIndex((entry) => entry.id === id);
+    const index = this.history.findIndex(entry => entry.id === id);
     if (index !== -1) {
       this.history.splice(index, 1);
       this.saveToStorage();
@@ -175,11 +166,11 @@ export class HistoryManager {
     return JSON.stringify(
       {
         exportDate: new Date().toISOString(),
-        version: "3.0",
+        version: '3.0',
         entries: this.history,
       },
       null,
-      2,
+      2
     );
   }
 
@@ -195,7 +186,7 @@ export class HistoryManager {
         return true;
       }
     } catch (error) {
-      console.error("Failed to import history:", error);
+      console.error('Failed to import history:', error);
     }
     return false;
   }
@@ -205,22 +196,19 @@ export class HistoryManager {
   }
 
   private saveToStorage(): void {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem(
-          "promptforge_history",
-          JSON.stringify(this.history),
-        );
+        localStorage.setItem('promptforge_history', JSON.stringify(this.history));
       } catch (error) {
-        console.error("Failed to save history to storage:", error);
+        console.error('Failed to save history to storage:', error);
       }
     }
   }
 
   private loadFromStorage(): void {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem("promptforge_history");
+        const stored = localStorage.getItem('promptforge_history');
         if (stored) {
           const parsed = JSON.parse(stored);
           this.history = parsed.map((entry: any) => ({
@@ -229,13 +217,13 @@ export class HistoryManager {
           }));
         }
       } catch (error) {
-        console.error("Failed to load history from storage:", error);
+        console.error('Failed to load history from storage:', error);
       }
     }
   }
 
   constructor() {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       this.loadFromStorage();
     }
   }

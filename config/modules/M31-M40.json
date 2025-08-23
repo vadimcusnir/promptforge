@@ -24,7 +24,11 @@
       "vectors": [4, 6, 1],
       "domains": ["ecommerce", "saas", "marketing"],
       "complexity_min": "advanced",
-      "typical_use_cases": ["conversion optimization", "experiment management", "performance improvement"],
+      "typical_use_cases": [
+        "conversion optimization",
+        "experiment management",
+        "performance improvement"
+      ],
       "contract": {
         "input_required": ["current_funnel", "conversion_data", "optimization_goals"],
         "output_format": ["playbook", "json", "checklist"],
@@ -60,7 +64,11 @@
       "contract": {
         "input_required": ["customer_data", "success_metrics", "intervention_criteria"],
         "output_format": ["playbook", "json", "yaml"],
-        "success_metrics": ["customer_health_improvement", "intervention_effectiveness", "success_rate"],
+        "success_metrics": [
+          "customer_health_improvement",
+          "intervention_effectiveness",
+          "success_rate"
+        ],
         "execution_time": "3-5 days"
       }
     },
@@ -92,7 +100,11 @@
       "contract": {
         "input_required": ["user_behavior_data", "segmentation_criteria", "business_objectives"],
         "output_format": ["json", "spec", "playbook"],
-        "success_metrics": ["segmentation_accuracy", "personalization_effectiveness", "business_impact"],
+        "success_metrics": [
+          "segmentation_accuracy",
+          "personalization_effectiveness",
+          "business_impact"
+        ],
         "execution_time": "5-7 days"
       }
     },
@@ -120,7 +132,11 @@
       "vectors": [1, 6, 5],
       "domains": ["education", "consulting", "hr"],
       "complexity_min": "advanced",
-      "typical_use_cases": ["knowledge management", "information retrieval", "organizational learning"],
+      "typical_use_cases": [
+        "knowledge management",
+        "information retrieval",
+        "organizational learning"
+      ],
       "contract": {
         "input_required": ["knowledge_sources", "retrieval_requirements", "user_personas"],
         "output_format": ["spec", "json", "playbook"],
@@ -136,7 +152,11 @@
       "vectors": [5, 6],
       "domains": ["saas", "consulting", "hr"],
       "complexity_min": "standard",
-      "typical_use_cases": ["workflow automation", "process optimization", "operational efficiency"],
+      "typical_use_cases": [
+        "workflow automation",
+        "process optimization",
+        "operational efficiency"
+      ],
       "contract": {
         "input_required": ["current_processes", "automation_goals", "system_integrations"],
         "output_format": ["yaml", "json", "diagram"],

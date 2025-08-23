@@ -8,11 +8,23 @@ import { createClient } from '@supabase/supabase-js';
 import { getServerSession } from 'next-auth';
 
 // Import export modules
-import { composeTxt, composeMd, composeJson, composeTelemetry, normalizeContent } from '@/lib/export/composeArtifacts';
+import {
+  composeTxt,
+  composeMd,
+  composeJson,
+  composeTelemetry,
+  normalizeContent,
+} from '@/lib/export/composeArtifacts';
 import { renderPdf, isUserInTrial } from '@/lib/export/renderPdf';
 import { buildManifest, validateManifest } from '@/lib/export/buildManifest';
 import { sha256, canonicalChecksum, generateChecksumFile } from '@/lib/export/hash';
-import { uploadArtifacts, generateStoragePath, getContentType, createZipArchive, validateStorageConfig } from '@/lib/export/storage';
+import {
+  uploadArtifacts,
+  generateStoragePath,
+  getContentType,
+  createZipArchive,
+  validateStorageConfig,
+} from '@/lib/export/storage';
 import { planAllowsFormat, type PlanCode } from '@/lib/export/license';
 
 // Import telemetry
@@ -35,12 +47,12 @@ interface ExportResponse {
 
 export async function POST(req: NextRequest) {
   const startTime = Date.now();
-  let traceId = crypto.randomUUID();
-  
+  const traceId = crypto.randomUUID();
+
   try {
     // Validate environment
     validateStorageConfig();
-    
+
     // Get session
     const session = await getServerSession();
     if (!session?.user?.id) {
@@ -83,10 +95,14 @@ export async function POST(req: NextRequest) {
       .eq('org_id', orgId)
       .eq('user_id', userId);
 
-    const entitlements = entitlementsData?.reduce((acc, ent) => {
-      acc[ent.flag] = ent.value;
-      return acc;
-    }, {} as Record<string, boolean>) || {};
+    const entitlements =
+      entitlementsData?.reduce(
+        (acc, ent) => {
+          acc[ent.flag] = ent.value;
+          return acc;
+        },
+        {} as Record<string, boolean>
+      ) || {};
 
     // Get subscription info
     const { data: subscription } = await supabase
@@ -105,16 +121,16 @@ export async function POST(req: NextRequest) {
       user_id: userId,
       plan: plan,
       trace_id: traceId,
-      timestamp: startTime
+      timestamp: startTime,
     });
 
     // Check entitlements for each requested format
     for (const format of formats) {
       if (!planAllowsFormat(plan, format)) {
         return NextResponse.json(
-          { 
+          {
             error: 'ENTITLEMENT_REQUIRED',
-            message: `Format '${format}' requires ${format === 'zip' ? 'Enterprise' : 'Pro'} plan`
+            message: `Format '${format}' requires ${format === 'zip' ? 'Enterprise' : 'Pro'} plan`,
           },
           { status: 403 }
         );
@@ -122,9 +138,9 @@ export async function POST(req: NextRequest) {
 
       // Check specific entitlements
       const entitlementChecks: Record<string, string> = {
-        'pdf': 'canExportPDF',
-        'json': 'canExportJSON',
-        'zip': 'canExportBundleZip'
+        pdf: 'canExportPDF',
+        json: 'canExportJSON',
+        zip: 'canExportBundleZip',
       };
 
       const requiredEntitlement = entitlementChecks[format];
@@ -132,7 +148,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             error: 'ENTITLEMENT_REQUIRED',
-            message: `Missing entitlement: ${requiredEntitlement}`
+            message: `Missing entitlement: ${requiredEntitlement}`,
           },
           { status: 403 }
         );
@@ -142,10 +158,12 @@ export async function POST(req: NextRequest) {
     // Load run data and validate DoD
     const { data: run, error: runError } = await supabase
       .from('runs')
-      .select(`
+      .select(
+        `
         *,
         prompt_scores(*)
-      `)
+      `
+      )
       .eq('id', runId)
       .eq('org_id', orgId)
       .single();
@@ -160,7 +178,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           error: 'DOD_NOT_MET',
-          message: 'Run score must be >= 80 for export'
+          message: 'Run score must be >= 80 for export',
         },
         { status: 422 }
       );
@@ -170,8 +188,8 @@ export async function POST(req: NextRequest) {
     if (run.status !== 'success' || !run.telemetry) {
       return NextResponse.json(
         {
-          error: 'DOD_NOT_MET', 
-          message: 'Run must be successful with complete output'
+          error: 'DOD_NOT_MET',
+          message: 'Run must be successful with complete output',
         },
         { status: 422 }
       );
@@ -207,7 +225,7 @@ export async function POST(req: NextRequest) {
     // Always generate core files
     const promptContent = promptHistory.output;
     const normalizedPrompt = normalizeContent(promptContent);
-    
+
     // Generate txt
     artifacts['prompt.txt'] = composeTxt({ prompt: normalizedPrompt });
     fileHashes['prompt.txt'] = sha256(artifacts['prompt.txt'] as string);
@@ -218,7 +236,7 @@ export async function POST(req: NextRequest) {
       output: promptContent,
       meta: run.telemetry,
       moduleId: run.module_id,
-      domain: promptHistory.parameter_set_id || 'general'
+      domain: promptHistory.parameter_set_id || 'general',
     });
     artifacts['prompt.json'] = JSON.stringify(jsonContent, null, 2);
     fileHashes['prompt.json'] = sha256(artifacts['prompt.json'] as string);
@@ -232,7 +250,7 @@ export async function POST(req: NextRequest) {
         guardrails: module.guardrails,
         moduleId: run.module_id,
         domain: promptHistory.parameter_set_id || 'general',
-        prompt: normalizedPrompt
+        prompt: normalizedPrompt,
       });
       fileHashes['prompt.md'] = sha256(artifacts['prompt.md'] as string);
     }
@@ -245,29 +263,33 @@ export async function POST(req: NextRequest) {
         content: normalizedPrompt,
         moduleId: run.module_id,
         domain: promptHistory.parameter_set_id || 'general',
-        isTrialUser
+        isTrialUser,
       });
       fileHashes['prompt.pdf'] = sha256(artifacts['prompt.pdf'] as Uint8Array);
     }
 
     // Generate telemetry
-    artifacts['telemetry.json'] = JSON.stringify(composeTelemetry({
-      score: {
-        clarity: score.clarity,
-        execution: score.execution,
-        ambiguity: score.ambiguity,
-        business_fit: score.business_fit,
-        overall_score: score.overall_score
-      },
-      tokens: {
-        input: run.telemetry.tokens_input || 0,
-        output: run.telemetry.tokens_output || 0,
-        total: run.tokens_used || 0
-      },
-      tta: run.duration_ms || 0,
-      cost_usd: parseFloat(run.cost_usd || '0'),
-      model: run.model || 'unknown'
-    }), null, 2);
+    artifacts['telemetry.json'] = JSON.stringify(
+      composeTelemetry({
+        score: {
+          clarity: score.clarity,
+          execution: score.execution,
+          ambiguity: score.ambiguity,
+          business_fit: score.business_fit,
+          overall_score: score.overall_score,
+        },
+        tokens: {
+          input: run.telemetry.tokens_input || 0,
+          output: run.telemetry.tokens_output || 0,
+          total: run.tokens_used || 0,
+        },
+        tta: run.duration_ms || 0,
+        cost_usd: parseFloat(run.cost_usd || '0'),
+        model: run.model || 'unknown',
+      }),
+      null,
+      2
+    );
     fileHashes['telemetry.json'] = sha256(artifacts['telemetry.json'] as string);
 
     // Generate manifest
@@ -282,18 +304,19 @@ export async function POST(req: NextRequest) {
         clarity: score.clarity,
         execution: score.execution,
         ambiguity: score.ambiguity,
-        business_fit: score.business_fit
+        business_fit: score.business_fit,
       },
       formats: formats.filter(f => f !== 'zip'),
       artifacts: Object.keys(fileHashes).map(filename => ({
         file: filename,
         checksum: `sha256:${fileHashes[filename]}`,
-        bytes: typeof artifacts[filename] === 'string' 
-          ? new TextEncoder().encode(artifacts[filename] as string).length
-          : (artifacts[filename] as Uint8Array).length
+        bytes:
+          typeof artifacts[filename] === 'string'
+            ? new TextEncoder().encode(artifacts[filename] as string).length
+            : (artifacts[filename] as Uint8Array).length,
       })),
       plan,
-      version: '1.0.0'
+      version: '1.0.0',
     });
 
     if (!validateManifest(manifest)) {
@@ -320,19 +343,19 @@ export async function POST(req: NextRequest) {
       domain: promptHistory.parameter_set_id || 'general',
       moduleId: run.module_id,
       runId,
-      filename: '' // Will be appended per file
+      filename: '', // Will be appended per file
     }).replace(/\/$/, ''); // Remove trailing slash
 
     const uploadArtifactsList = Object.entries(artifacts).map(([filename, content]) => ({
       filename,
       content,
-      contentType: getContentType(filename)
+      contentType: getContentType(filename),
     }));
 
     const uploadResults = await uploadArtifacts(basePath, uploadArtifactsList);
 
     // Save bundle to database
-    const { data: bundleRecord, error: bundleError } = await supabase
+    const { error: bundleError } = await supabase
       .from('bundles')
       .insert({
         id: bundleId,
@@ -341,12 +364,12 @@ export async function POST(req: NextRequest) {
         paths: Object.fromEntries(
           Object.entries(uploadResults).map(([filename, result]) => [
             filename.split('.')[0], // Remove extension for key
-            result.url
+            result.url,
           ])
         ),
         checksum: canonicalChecksumValue,
         version: '1.0.0',
-        license_notice: manifest.license_notice
+        license_notice: manifest.license_notice,
       })
       .select()
       .single();
@@ -370,36 +393,32 @@ export async function POST(req: NextRequest) {
       trace_id: traceId,
       duration_ms: Date.now() - startTime,
       bytes_total: totalBytes,
-      checksum: canonicalChecksumValue
+      checksum: canonicalChecksumValue,
     });
 
     // Return response
     const response: ExportResponse = {
       bundleId,
       paths: Object.fromEntries(
-        Object.entries(uploadResults).map(([filename, result]) => [
-          filename,
-          result.url
-        ])
+        Object.entries(uploadResults).map(([filename, result]) => [filename, result.url])
       ),
       license_notice: manifest.license_notice,
       checksum: canonicalChecksumValue,
-      formats
+      formats,
     };
 
     return NextResponse.json(response);
-
   } catch (error) {
     console.error('[Export API] Error:', error);
-    
+
     // Track export failed
     await trackEvent('export.failed', {
       trace_id: traceId,
       duration_ms: Date.now() - startTime,
       error_code: error instanceof Error ? error.message : 'UNKNOWN_ERROR',
-      error_message: error instanceof Error ? error.message : String(error)
+      error_message: error instanceof Error ? error.message : String(error),
     });
-    
+
     if (error instanceof Error) {
       if (error.message.includes('ENTITLEMENT_REQUIRED')) {
         return NextResponse.json({ error: error.message }, { status: 403 });
@@ -408,7 +427,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 422 });
       }
     }
-    
+
     return NextResponse.json(
       { error: 'EXPORT_FAILED', message: 'Internal server error' },
       { status: 500 }

@@ -40,8 +40,8 @@ const TOKEN_PRICES = {
 function calculateCost(model: string, promptTokens: number, completionTokens: number): number {
   const pricing = TOKEN_PRICES[model as keyof typeof TOKEN_PRICES];
   if (!pricing) return 0;
-  
-  return (promptTokens * pricing.input) + (completionTokens * pricing.output);
+
+  return promptTokens * pricing.input + completionTokens * pricing.output;
 }
 
 /**
@@ -82,7 +82,7 @@ Return a JSON object with:
       model: 'gpt-4-turbo',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: prompt }
+        { role: 'user', content: prompt },
       ],
       temperature: 0.2,
       max_tokens: 2000,
@@ -109,10 +109,9 @@ Return a JSON object with:
       model: 'gpt-4-turbo',
       duration_ms: Date.now() - startTime,
     };
-
   } catch (error) {
     if (error instanceof APIError) throw error;
-    
+
     console.error('[OpenAI] Prompt optimization error:', error);
     throw new APIError('INTERNAL_RUN_ERROR', `OpenAI API error: ${error}`);
   }
@@ -143,7 +142,7 @@ export async function runGPTTest(
       model: 'gpt-4',
       messages: [
         { role: 'system', content: prompt },
-        { role: 'user', content: testCases[0]?.input || 'Please demonstrate your capabilities.' }
+        { role: 'user', content: testCases[0]?.input || 'Please demonstrate your capabilities.' },
       ],
       temperature: 0.7,
       max_tokens: 1500,
@@ -180,7 +179,7 @@ Return JSON: {"clarity": 0-100, "execution": 0-100, "ambiguity": 0-100, "busines
       model: 'gpt-4',
       messages: [
         { role: 'system', content: 'You are a prompt evaluation expert. Return only valid JSON.' },
-        { role: 'user', content: evaluationPrompt }
+        { role: 'user', content: evaluationPrompt },
       ],
       temperature: 0.1,
       max_tokens: 500,
@@ -204,13 +203,13 @@ Return JSON: {"clarity": 0-100, "execution": 0-100, "ambiguity": 0-100, "busines
         business_fit: Math.max(0, Math.min(100, evalData.business_fit || 0)),
         composite: 0, // Will be calculated below
       };
-      
+
       // Calculate composite score (weighted average)
       scores.composite = Math.round(
-        (scores.clarity * 0.25) +
-        (scores.execution * 0.35) +
-        (scores.ambiguity * 0.20) +
-        (scores.business_fit * 0.20)
+        scores.clarity * 0.25 +
+          scores.execution * 0.35 +
+          scores.ambiguity * 0.2 +
+          scores.business_fit * 0.2
       );
     } catch {
       // Fallback scores if JSON parsing fails
@@ -227,7 +226,8 @@ Return JSON: {"clarity": 0-100, "execution": 0-100, "ambiguity": 0-100, "busines
       prompt_tokens: testUsage.prompt_tokens + evalUsage.prompt_tokens,
       completion_tokens: testUsage.completion_tokens + evalUsage.completion_tokens,
       total_tokens: testUsage.total_tokens + evalUsage.total_tokens,
-      cost_usd: calculateCost('gpt-4', 
+      cost_usd: calculateCost(
+        'gpt-4',
         testUsage.prompt_tokens + evalUsage.prompt_tokens,
         testUsage.completion_tokens + evalUsage.completion_tokens
       ),
@@ -242,10 +242,9 @@ Return JSON: {"clarity": 0-100, "execution": 0-100, "ambiguity": 0-100, "busines
       },
       scores,
     };
-
   } catch (error) {
     if (error instanceof APIError) throw error;
-    
+
     console.error('[OpenAI] GPT test error:', error);
     throw new APIError('INTERNAL_RUN_ERROR', `GPT test failed: ${error}`);
   }
@@ -254,7 +253,11 @@ Return JSON: {"clarity": 0-100, "execution": 0-100, "ambiguity": 0-100, "busines
 /**
  * Auto-tighten prompt if score is below threshold
  */
-export async function tightenPrompt(prompt: string, domain: string, currentScore: number): Promise<GPTResponse> {
+export async function tightenPrompt(
+  prompt: string,
+  domain: string,
+  currentScore: number
+): Promise<GPTResponse> {
   if (currentScore >= 80) {
     return {
       content: prompt,
@@ -283,7 +286,7 @@ Return only the improved prompt, no explanation.`;
 export async function checkOpenAILimits(): Promise<{ allowed: boolean; reason?: string }> {
   // Simple budget check (in production, implement proper rate limiting)
   const maxCostPerHour = 100; // $100/hour limit
-  
+
   // For now, always allow (implement proper tracking)
   return { allowed: true };
 }

@@ -24,11 +24,19 @@
       "vectors": [1],
       "domains": ["marketing", "saas", "consulting"],
       "complexity_min": "standard",
-      "typical_use_cases": ["digital presence audit", "visibility assessment", "improvement planning"],
+      "typical_use_cases": [
+        "digital presence audit",
+        "visibility assessment",
+        "improvement planning"
+      ],
       "contract": {
         "input_required": ["current_presence_data", "target_market", "competitor_analysis"],
         "output_format": ["spec", "md", "checklist"],
-        "success_metrics": ["visibility_score", "improvement_plan_completion", "implementation_success"],
+        "success_metrics": [
+          "visibility_score",
+          "improvement_plan_completion",
+          "implementation_success"
+        ],
         "execution_time": "1-3 days"
       }
     },
@@ -120,7 +128,11 @@
       "vectors": [4, 5],
       "domains": ["saas", "ecommerce", "education"],
       "complexity_min": "advanced",
-      "typical_use_cases": ["customer lifetime value", "retention optimization", "revenue expansion"],
+      "typical_use_cases": [
+        "customer lifetime value",
+        "retention optimization",
+        "revenue expansion"
+      ],
       "contract": {
         "input_required": ["customer_data", "usage_patterns", "revenue_goals"],
         "output_format": ["spec", "playbook", "json"],

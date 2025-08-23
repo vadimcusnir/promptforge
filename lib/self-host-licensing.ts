@@ -1,4 +1,4 @@
-// PromptForge v3 - Self-Host Licensing System
+// PROMPTFORGE™ v3 - Self-Host Licensing System
 // Sistem de licențe pentru deployment-uri self-hosted
 
 import { createClient } from '@supabase/supabase-js';
@@ -6,7 +6,8 @@ import crypto from 'crypto';
 
 // SACF - Development mode fallback
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+const SUPABASE_SERVICE_ROLE =
+  process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
@@ -14,18 +15,18 @@ export interface LicenseKey {
   id: string;
   license_key: string; // Encrypted license key
   license_hash: string; // SHA-256 hash pentru validare
-  
+
   // License details
   license_type: 'trial' | 'development' | 'production' | 'enterprise' | 'custom';
   edition: 'community' | 'professional' | 'enterprise' | 'unlimited';
-  
+
   // Usage limits
   max_users: number;
   max_modules: number;
   max_runs_per_month: number;
   max_storage_gb: number;
   max_api_calls_per_month: number;
-  
+
   // Features
   features: {
     hasCloudHistory: boolean;
@@ -38,36 +39,36 @@ export interface LicenseKey {
     hasPrioritySupport: boolean;
     hasSLA: boolean;
   };
-  
+
   // Deployment
   deployment_type: 'single_instance' | 'multi_instance' | 'kubernetes' | 'docker_swarm';
   max_instances: number;
   allowed_domains: string[];
   allowed_ips: string[];
-  
+
   // Time constraints
   issued_at: string;
   valid_from: string;
   valid_until: string;
   grace_period_days: number;
-  
+
   // Organization
   org_name: string;
   org_id?: string;
   contact_email: string;
   contact_phone?: string;
-  
+
   // Technical
   hardware_fingerprint?: string; // Pentru binding la hardware
   environment_variables: Record<string, string>; // Configurații specifice
-  
+
   // Status
   is_active: boolean;
   is_revoked: boolean;
   revocation_reason?: string;
   last_validation: string;
   validation_count: number;
-  
+
   // Audit
   created_by: string;
   created_at: string;
@@ -119,23 +120,23 @@ export interface LicenseActivation {
 export interface LicenseUsage {
   license_id: string;
   timestamp: string;
-  
+
   // Resource usage
   active_users: number;
   total_modules: number;
   runs_count: number;
   storage_used_mb: number;
   api_calls_count: number;
-  
+
   // Performance metrics
   response_time_avg_ms: number;
   error_rate_percent: number;
   uptime_percent: number;
-  
+
   // Feature usage
   features_used: string[];
   modules_accessed: string[];
-  
+
   // Compliance
   within_limits: boolean;
   warnings: string[];
@@ -213,7 +214,7 @@ class SelfHostLicensingManager {
         validation_count: 0,
         created_by: params.createdBy,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
 
       return { licenseKey: mockLicenseKey, licenseData: mockLicense };
@@ -251,14 +252,10 @@ class SelfHostLicensingManager {
       is_revoked: false,
       last_validation: new Date().toISOString(),
       validation_count: 0,
-      created_by: params.createdBy
+      created_by: params.createdBy,
     };
 
-    const { data, error } = await supabase
-      .from('licenses')
-      .insert([license])
-      .select()
-      .single();
+    const { data, error } = await supabase.from('licenses').insert([license]).select().single();
 
     if (error) {
       throw new Error(`Failed to create license: ${error.message}`);
@@ -268,7 +265,10 @@ class SelfHostLicensingManager {
   }
 
   // Validează o licență
-  async validateLicense(licenseKey: string, activation?: LicenseActivation): Promise<LicenseValidation> {
+  async validateLicense(
+    licenseKey: string,
+    activation?: LicenseActivation
+  ): Promise<LicenseValidation> {
     const validationErrors: string[] = [];
     const warnings: string[] = [];
 
@@ -302,7 +302,7 @@ class SelfHostLicensingManager {
             hasAdvancedAnalytics: true,
             hasCustomIntegrations: true,
             hasPrioritySupport: false,
-            hasSLA: false
+            hasSLA: false,
           },
           deployment_type: 'single_instance',
           max_instances: 1,
@@ -321,7 +321,7 @@ class SelfHostLicensingManager {
           validation_count: 1,
           created_by: 'dev-system',
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         };
 
         this.cache.set(licenseKey, { license: mockLicense, timestamp: Date.now() });
@@ -339,14 +339,14 @@ class SelfHostLicensingManager {
           current_modules: 0,
           runs_this_month: 0,
           storage_used_gb: 0,
-          api_calls_this_month: 0
+          api_calls_this_month: 0,
         },
         compliance_status: {
           within_limits: false,
           approaching_limits: false,
           exceeded_limits: true,
-          limit_warnings: ['License validation failed']
-        }
+          limit_warnings: ['License validation failed'],
+        },
       };
     }
 
@@ -374,14 +374,14 @@ class SelfHostLicensingManager {
             current_modules: 0,
             runs_this_month: 0,
             storage_used_gb: 0,
-            api_calls_this_month: 0
+            api_calls_this_month: 0,
           },
           compliance_status: {
             within_limits: false,
             approaching_limits: false,
             exceeded_limits: true,
-            limit_warnings: ['License not found']
-          }
+            limit_warnings: ['License not found'],
+          },
         };
       }
 
@@ -393,14 +393,15 @@ class SelfHostLicensingManager {
         .from('licenses')
         .update({
           last_validation: new Date().toISOString(),
-          validation_count: license.validation_count + 1
+          validation_count: license.validation_count + 1,
         })
         .eq('id', license.id);
 
       return this.performValidation(license, activation, validationErrors, warnings);
-
     } catch (error) {
-      validationErrors.push(`License validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      validationErrors.push(
+        `License validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
       return {
         is_valid: false,
         validation_errors: validationErrors,
@@ -411,20 +412,23 @@ class SelfHostLicensingManager {
           current_modules: 0,
           runs_this_month: 0,
           storage_used_gb: 0,
-          api_calls_this_month: 0
+          api_calls_this_month: 0,
         },
         compliance_status: {
           within_limits: false,
           approaching_limits: false,
           exceeded_limits: true,
-          limit_warnings: ['Validation error']
-        }
+          limit_warnings: ['Validation error'],
+        },
       };
     }
   }
 
   // Activează o licență pe un sistem
-  async activateLicense(licenseKey: string, activation: LicenseActivation): Promise<{
+  async activateLicense(
+    licenseKey: string,
+    activation: LicenseActivation
+  ): Promise<{
     success: boolean;
     activation_id?: string;
     error?: string;
@@ -452,14 +456,16 @@ class SelfHostLicensingManager {
       // Store activation
       const { data, error } = await supabase
         .from('license_activations')
-        .insert([{
-          license_id: license.id,
-          activation_code: activation.activation_code,
-          hardware_fingerprint: activation.hardware_fingerprint,
-          environment_info: activation.environment_info,
-          network_info: activation.network_info,
-          timestamp: activation.timestamp
-        }])
+        .insert([
+          {
+            license_id: license.id,
+            activation_code: activation.activation_code,
+            hardware_fingerprint: activation.hardware_fingerprint,
+            environment_info: activation.environment_info,
+            network_info: activation.network_info,
+            timestamp: activation.timestamp,
+          },
+        ])
         .select('id')
         .single();
 
@@ -476,11 +482,10 @@ class SelfHostLicensingManager {
       }
 
       return { success: true, activation_id: data.id };
-
     } catch (error) {
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Activation failed' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Activation failed',
       };
     }
   }
@@ -489,9 +494,10 @@ class SelfHostLicensingManager {
   private isActivationAllowed(license: LicenseKey, activation: LicenseActivation): boolean {
     // Check domain restrictions
     if (license.allowed_domains.length > 0) {
-      const domainAllowed = license.allowed_domains.some(domain => 
-        activation.network_info.hostname.includes(domain) ||
-        activation.network_info.ip_addresses.some(ip => ip.includes(domain))
+      const domainAllowed = license.allowed_domains.some(
+        domain =>
+          activation.network_info.hostname.includes(domain) ||
+          activation.network_info.ip_addresses.some(ip => ip.includes(domain))
       );
       if (!domainAllowed) return false;
     }
@@ -518,9 +524,9 @@ class SelfHostLicensingManager {
       this.generateRandomString(4, '0123456789'),
       this.generateRandomString(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
       this.generateRandomString(4, '0123456789'),
-      this.generateRandomString(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+      this.generateRandomString(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
     ];
-    
+
     return segments.join('-');
   }
 
@@ -560,11 +566,17 @@ class SelfHostLicensingManager {
     }
 
     if (now > validUntil) {
-      const gracePeriodEnd = new Date(validUntil.getTime() + license.grace_period_days * 24 * 60 * 60 * 1000);
+      const gracePeriodEnd = new Date(
+        validUntil.getTime() + license.grace_period_days * 24 * 60 * 60 * 1000
+      );
       if (now > gracePeriodEnd) {
-        validationErrors.push(`License expired and grace period ended. Expired: ${validUntil.toISOString()}`);
+        validationErrors.push(
+          `License expired and grace period ended. Expired: ${validUntil.toISOString()}`
+        );
       } else {
-        warnings.push(`License expired on ${validUntil.toISOString()}. Grace period ends: ${gracePeriodEnd.toISOString()}`);
+        warnings.push(
+          `License expired on ${validUntil.toISOString()}. Grace period ends: ${gracePeriodEnd.toISOString()}`
+        );
       }
     }
 
@@ -581,7 +593,7 @@ class SelfHostLicensingManager {
       current_modules: 15,
       runs_this_month: 2500,
       storage_used_gb: 45,
-      api_calls_this_month: 12500
+      api_calls_this_month: 12500,
     };
 
     // Check limits
@@ -594,7 +606,7 @@ class SelfHostLicensingManager {
       warnings,
       next_validation: new Date(Date.now() + this.VALIDATION_INTERVAL).toISOString(),
       usage_stats: usageStats,
-      compliance_status: complianceStatus
+      compliance_status: complianceStatus,
     };
   }
 
@@ -627,28 +639,36 @@ class SelfHostLicensingManager {
     // Check storage limits
     if (usage.storage_used_gb >= license.max_storage_gb * 0.9) {
       approachingLimits = true;
-      warnings.push(`Approaching storage limit: ${usage.storage_used_gb}/${license.max_storage_gb} GB`);
+      warnings.push(
+        `Approaching storage limit: ${usage.storage_used_gb}/${license.max_storage_gb} GB`
+      );
     }
     if (usage.storage_used_gb > license.max_storage_gb) {
       exceededLimits = true;
-      warnings.push(`Exceeded storage limit: ${usage.storage_used_gb}/${license.max_storage_gb} GB`);
+      warnings.push(
+        `Exceeded storage limit: ${usage.storage_used_gb}/${license.max_storage_gb} GB`
+      );
     }
 
     // Check API call limits
     if (usage.api_calls_this_month >= license.max_api_calls_per_month * 0.9) {
       approachingLimits = true;
-      warnings.push(`Approaching API call limit: ${usage.api_calls_this_month}/${license.max_api_calls_per_month}`);
+      warnings.push(
+        `Approaching API call limit: ${usage.api_calls_this_month}/${license.max_api_calls_per_month}`
+      );
     }
     if (usage.api_calls_this_month > license.max_api_calls_per_month) {
       exceededLimits = true;
-      warnings.push(`Exceeded API call limit: ${usage.api_calls_this_month}/${license.max_api_calls_per_month}`);
+      warnings.push(
+        `Exceeded API call limit: ${usage.api_calls_this_month}/${license.max_api_calls_per_month}`
+      );
     }
 
     return {
       within_limits: !exceededLimits && !approachingLimits,
       approaching_limits: approachingLimits,
       exceeded_limits: exceededLimits,
-      limit_warnings: warnings
+      limit_warnings: warnings,
     };
   }
 

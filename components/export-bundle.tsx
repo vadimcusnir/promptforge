@@ -12,18 +12,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Download, 
-  FileText, 
-  FileJson, 
-  FileImage, 
-  Archive, 
-  CheckCircle,
-  AlertCircle,
-  Loader2
-} from 'lucide-react';
+import { FileJson, FileImage, Archive, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
-import { useExportBundle, downloadFile, getFileExtension, formatBytes } from '@/hooks/use-export-bundle';
+import {
+  useExportBundle,
+  downloadFile,
+  getFileExtension,
+  formatBytes,
+} from '@/hooks/use-export-bundle';
 import { useEntitlements } from '@/hooks/use-entitlements';
 
 export interface ExportBundleProps {
@@ -50,8 +46,7 @@ const FORMAT_OPTIONS: FormatOption[] = [
     id: 'md',
     name: 'Markdown',
     description: 'Human-readable format with documentation',
-    icon: FileText,
-    requiredPlan: 'pilot'
+    requiredPlan: 'pilot',
   },
   {
     id: 'json',
@@ -59,7 +54,7 @@ const FORMAT_OPTIONS: FormatOption[] = [
     description: 'Structured data with 7D parameters and metadata',
     icon: FileJson,
     requiredPlan: 'pro',
-    entitlementKey: 'canExportJSON'
+    entitlementKey: 'canExportJSON',
   },
   {
     id: 'pdf',
@@ -67,7 +62,7 @@ const FORMAT_OPTIONS: FormatOption[] = [
     description: 'Professional document with branding',
     icon: FileImage,
     requiredPlan: 'pro',
-    entitlementKey: 'canExportPDF'
+    entitlementKey: 'canExportPDF',
   },
   {
     id: 'zip',
@@ -75,8 +70,8 @@ const FORMAT_OPTIONS: FormatOption[] = [
     description: 'Complete package with all formats',
     icon: Archive,
     requiredPlan: 'enterprise',
-    entitlementKey: 'canExportBundleZip'
-  }
+    entitlementKey: 'canExportBundleZip',
+  },
 ];
 
 export function ExportBundle({
@@ -86,7 +81,7 @@ export function ExportBundle({
   moduleId,
   score,
   className,
-  onExportComplete
+  onExportComplete,
 }: ExportBundleProps) {
   const [selectedFormats, setSelectedFormats] = useState<string[]>(['md']);
   const { exportBundle, loading, error, lastExport } = useExportBundle();
@@ -96,11 +91,7 @@ export function ExportBundle({
   const meetsDoD = score >= 80;
 
   const handleFormatChange = (formatId: string, checked: boolean) => {
-    setSelectedFormats(prev => 
-      checked 
-        ? [...prev, formatId]
-        : prev.filter(f => f !== formatId)
-    );
+    setSelectedFormats(prev => (checked ? [...prev, formatId] : prev.filter(f => f !== formatId)));
   };
 
   const handleExport = async () => {
@@ -113,7 +104,7 @@ export function ExportBundle({
         runId,
         formats: selectedFormats,
         orgId,
-        userId
+        userId,
       });
 
       onExportComplete?.(result.bundleId);
@@ -122,7 +113,7 @@ export function ExportBundle({
     }
   };
 
-  const handleDownload = async (filename: string, url: string) => {
+  const handleDownload = async (url: string, filename: string) => {
     try {
       await downloadFile(url, filename);
     } catch (err) {
@@ -158,7 +149,7 @@ export function ExportBundle({
           Generate auditable bundles from validated runs (Score ≥ 80)
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* DoD Status */}
         <div className="flex items-center gap-2">
@@ -168,7 +159,7 @@ export function ExportBundle({
             <AlertCircle className="h-4 w-4 text-red-600" />
           )}
           <span className="text-sm">
-            Score: <Badge variant={meetsDoD ? "default" : "destructive"}>{score}/100</Badge>
+            Score: <Badge variant={meetsDoD ? 'default' : 'destructive'}>{score}/100</Badge>
           </span>
           {meetsDoD && (
             <Badge variant="outline" className="text-green-600">
@@ -190,19 +181,17 @@ export function ExportBundle({
         <div className="space-y-3">
           <h4 className="text-sm font-medium">Export Formats</h4>
           <div className="grid grid-cols-1 gap-3">
-            {FORMAT_OPTIONS.map((format) => {
+            {FORMAT_OPTIONS.map(format => {
               const canUse = canUseFormat(format);
               const isSelected = selectedFormats.includes(format.id);
-              
+
               return (
                 <div key={format.id} className="flex items-start space-x-3">
                   <Checkbox
                     id={format.id}
                     checked={isSelected}
                     disabled={!canUse || !meetsDoD}
-                    onCheckedChange={(checked) => 
-                      handleFormatChange(format.id, checked as boolean)
-                    }
+                    onCheckedChange={checked => handleFormatChange(format.id, checked as boolean)}
                   />
                   <div className="grid gap-1.5 leading-none flex-1">
                     <label
@@ -219,9 +208,7 @@ export function ExportBundle({
                         </Badge>
                       )}
                     </label>
-                    <p className="text-xs text-muted-foreground">
-                      {format.description}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{format.description}</p>
                   </div>
                 </div>
               );
@@ -230,7 +217,7 @@ export function ExportBundle({
         </div>
 
         {/* Export Button */}
-        <Button 
+        <Button
           onClick={handleExport}
           disabled={!meetsDoD || selectedFormats.length === 0 || loading}
           className="w-full"
@@ -241,10 +228,7 @@ export function ExportBundle({
               Generating Bundle...
             </>
           ) : (
-            <>
-              <Download className="h-4 w-4 mr-2" />
-              Export Bundle
-            </>
+            <>Export Bundle</>
           )}
         </Button>
 
@@ -264,18 +248,10 @@ export function ExportBundle({
               <span className="text-sm font-medium">Export Complete</span>
               <Badge variant="outline">{lastExport.bundleId.slice(0, 8)}</Badge>
             </div>
-            
+
             <div className="space-y-2">
-              <h5 className="text-sm font-medium">Downloads</h5>
               {Object.entries(lastExport.paths).map(([filename, url]) => (
-                <Button
-                  key={filename}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDownload(filename, url)}
-                  className="w-full justify-start"
-                >
-                  <Download className="h-3 w-3 mr-2" />
+                <Button key={filename} variant="outline" size="sm" className="w-full justify-start">
                   {filename}
                   <span className="ml-auto text-xs text-muted-foreground">
                     .{getFileExtension(filename.split('.')[0])}
@@ -283,7 +259,7 @@ export function ExportBundle({
                 </Button>
               ))}
             </div>
-            
+
             <div className="text-xs text-muted-foreground">
               <p>Checksum: {lastExport.checksum.slice(0, 16)}...</p>
               <p>{lastExport.license_notice}</p>

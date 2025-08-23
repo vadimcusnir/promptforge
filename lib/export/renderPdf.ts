@@ -20,20 +20,20 @@ export interface PdfContext {
  */
 export async function renderPdf(context: PdfContext): Promise<Uint8Array> {
   const { title, content, moduleId, domain, isTrialUser, brandName } = context;
-  
+
   // For now, we'll create a basic HTML structure that can be converted to PDF
   // In production, you'd use a library like puppeteer, playwright, or @react-pdf/renderer
-  
+
   const watermarkText = isTrialUser ? getTrialWatermark() : '';
-  const siteName = brandName || process.env.NEXT_PUBLIC_SITE_NAME || 'PromptForge v3';
-  
+  const siteName = brandName || process.env.NEXT_PUBLIC_SITE_NAME || 'PROMPTFORGE™ v3';
+
   const htmlContent = generatePdfHtml({
     title,
     content,
     moduleId,
     domain,
     watermarkText,
-    siteName
+    siteName,
   });
 
   // This is a placeholder implementation
@@ -53,7 +53,7 @@ function generatePdfHtml(context: {
   siteName: string;
 }): string {
   const { title, content, moduleId, domain, watermarkText, siteName } = context;
-  
+
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -65,10 +65,14 @@ function generatePdfHtml(context: {
         @page {
             margin: 2cm;
             size: A4;
-            ${watermarkText ? `
+            ${
+              watermarkText
+                ? `
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='200' height='50' viewBox='0 0 200 50'%3e%3ctext x='100' y='25' text-anchor='middle' font-family='Arial' font-size='12' fill='%23cccccc' opacity='0.3' transform='rotate(-45 100 25)'%3e${encodeURIComponent(watermarkText)}%3c/text%3e%3c/svg%3e");
             background-repeat: repeat;
-            ` : ''}
+            `
+                : ''
+            }
         }
         
         body {
@@ -115,7 +119,9 @@ function generatePdfHtml(context: {
             color: #999;
         }
         
-        ${watermarkText ? `
+        ${
+          watermarkText
+            ? `
         .watermark {
             position: fixed;
             top: 50%;
@@ -127,7 +133,9 @@ function generatePdfHtml(context: {
             pointer-events: none;
             white-space: nowrap;
         }
-        ` : ''}
+        `
+            : ''
+        }
     </style>
 </head>
 <body>
@@ -160,7 +168,7 @@ async function convertHtmlToPdf(html: string): Promise<Uint8Array> {
   // - puppeteer: await page.pdf({ format: 'A4', printBackground: true })
   // - playwright: await page.pdf({ format: 'A4', printBackground: true })
   // - @react-pdf/renderer for React-based PDFs
-  
+
   // For now, return a minimal PDF-like structure
   const pdfContent = `%PDF-1.4
 1 0 obj
@@ -228,10 +236,10 @@ function escapeHtml(text: string): string {
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#039;'
+    "'": '&#039;',
   };
-  
-  return text.replace(/[&<>"']/g, (m) => map[m]);
+
+  return text.replace(/[&<>"']/g, m => map[m]);
 }
 
 /**

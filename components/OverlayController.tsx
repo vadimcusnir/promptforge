@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 // SSOT: Route class mapping from ruleset.yml
 const ROUTE_CLASS_MAP: Record<string, string> = {
-  "/": "route-marketing",
-  "/generator": "route-generator",
-  "/dashboard": "route-dashboard",
+  '/': 'route-marketing',
+  '/generator': 'route-generator',
+  '/dashboard': 'route-dashboard',
 };
 
 // All possible route classes for cleanup
@@ -29,10 +29,10 @@ export function OverlayController() {
   useEffect(() => {
     const startTime = performance.now();
 
-    const overlayElement = document.querySelector<HTMLElement>("#bg-overlay");
+    const overlayElement = document.querySelector<HTMLElement>('#bg-overlay');
     if (!overlayElement) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn("[OverlayController] #bg-overlay element not found");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[OverlayController] #bg-overlay element not found');
       }
       return;
     }
@@ -41,24 +41,24 @@ export function OverlayController() {
     overlayElement.classList.remove(...ALL_ROUTE_CLASSES);
 
     // Apply new route class
-    const routeClass = ROUTE_CLASS_MAP[pathname] ?? "route-marketing";
+    const routeClass = ROUTE_CLASS_MAP[pathname] ?? 'route-marketing';
     overlayElement.classList.add(routeClass);
 
     // Performance: Enable hardware acceleration
-    overlayElement.style.willChange = "transform, opacity";
+    overlayElement.style.willChange = 'transform, opacity';
 
     // Diagnostics: Check performance requirement (≤50ms)
     const applyTime = performance.now() - startTime;
-    if (applyTime > 50 && process.env.NODE_ENV === "development") {
+    if (applyTime > 50 && process.env.NODE_ENV === 'development') {
       console.warn(
-        `[OverlayController] Overlay apply took ${applyTime.toFixed(2)}ms (>50ms requirement)`,
+        `[OverlayController] Overlay apply took ${applyTime.toFixed(2)}ms (>50ms requirement)`
       );
     }
 
     // Cleanup function - enforce cleanup_on_unmount policy
     return () => {
       if (overlayElement) {
-        overlayElement.style.willChange = "";
+        overlayElement.style.willChange = '';
         overlayElement.classList.remove(...ALL_ROUTE_CLASSES);
       }
     };
