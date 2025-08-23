@@ -47,7 +47,7 @@ export async function POST(
     // Parse request body
     const body = await request.json();
     const validatedInput = RunRequestSchema.parse(body);
-  const { moduleId } = params;
+    const { moduleId } = params;
 
     // Initialize Supabase client
     const supabase = createRouteHandlerClient({ cookies });
@@ -133,8 +133,9 @@ export async function POST(
     }
 
     // Validate 7D parameters
+    let normalizedParams: any;
     if (orgId) {
-      const normalizedParams = await validateParams7D(validatedInput, moduleId);
+      normalizedParams = await validateParams7D(validatedInput, moduleId);
 
       // Check complexity requirements
       const complexityLevels = ["foundational", "standard", "advanced", "expert"];
@@ -201,12 +202,13 @@ export async function POST(
       if (runError) {
         throw new Error(`Failed to create run record: ${runError.message}`);
       }
+    }
 
     // Generate prompt
     const generationStart = Date.now();
     const promptResult = await generatePrompt({
       moduleId,
-      parameters: normalizedParams,
+      parameters: normalizedParams || {},
       context: validatedInput.context,
       requirements: validatedInput.specific_requirements
     });
@@ -214,9 +216,9 @@ export async function POST(
 
     // Evaluate prompt (if real mode and entitlement allows)
     let evaluation = null;
-    if (validatedInput.api_key || await hasEntitlement(orgId, "hasEvaluatorAI")) {
+    if (validatedInput.api_key || (orgId && await hasEntitlement(orgId, "hasEvaluatorAI"))) {
       const evaluationStart = Date.now();
-      evaluation = await evaluatePrompt(promptResult.content, normalizedParams.domain);
+      evaluation = await evaluatePrompt(promptResult.content, normalizedParams?.domain || 'general');
       const evaluationTime = Date.now() - evaluationStart;
 
       // Store evaluation

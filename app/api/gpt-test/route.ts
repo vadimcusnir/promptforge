@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Parse and validate request
-    const body = await request.json();
+  // Parse and validate request
+  const body = await request.json();
     const validatedInput = TestRequestSchema.parse(body);
 
     // Initialize Supabase client
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!orgMember) {
-      return NextResponse.json(
+        return NextResponse.json(
         { error: "User not associated with any organization" },
         { status: 403 }
       );
