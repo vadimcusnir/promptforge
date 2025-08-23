@@ -905,6 +905,460 @@ feedback de stare pentru user.
 
 
 
+Punctul 7 – Probleme de design și accesibilitate – trebuie tratat cu seriozitate pentru a menține consistența vizuală, funcționalitatea accesibilă și respectarea super-regulilor vizuale impuse de identitatea PromptForge™. Mai jos este analiza completă + soluții tehnice avansate.
+
+🔍 OBSERVAȚII PRINCIPALE
+1. Header ne-sticky și inconsistent
+
+Simptom: Dispare la scroll, afectând navigarea persistentă.
+
+Cauză: Absența position: sticky în combinație cu lipsa top: 0 și z-index stabil.
+
+Impact: Fricțiune UX ridicată + inconsecvență față de designul brutalist fluid.
+
+2. Footer cu linkuri fără pagini
+
+Simptom: Linkuri ca „About”, „Privacy”, „Terms” duc la 404 sau afișează doar header/footer.
+
+Cauză: Lipsă de pagini funcționale sau fallback (ComingSoon/PaywallGate).
+
+Impact: Creează experiență de tip „dead end” → pierdere încredere în platformă.
+
+3. Contrast insuficient + culori nealiniate cu brandingul
+
+Simptom: Texte gri (#888) pe fundal negru (#000) → contrast < 4.5:1.
+
+Simptom 2: CTA-uri în verde în loc de aur/roșu (contrar brandingului ritualic).
+
+Cauză: Lipsă audit de accesibilitate (Lighthouse/AXE) + lipsă tokenuri vizuale centralizate.
+
+Impact: Inaccesibil pentru utilizatorii cu deficiențe vizuale + deviere de la limbajul sacru.
+
+4. Formulare fără label-uri vizibile
+
+Simptom: Câmpurile din generator 7D nu au label explicit, ci doar placeholder.
+
+Cauză: Lipsă implementare aria-label, aria-describedby sau <label for="...">.
+
+Impact: Neaccesibil pentru screen readers, afectează conformitatea WCAG.
+
+🛠 RECOMANDĂRI TEHNICE DETALIATE
+✅ Header Sticky Brutalist
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--black);
+  border-bottom: 1px solid var(--glitch-green);
+}
+
+
+Asigură-te că layout-ul nu folosește overflow: hidden pe body sau alte containere părinte care inhibă sticky.
+
+✅ Înlocuire Footer Linkuri Neimplementate
+{!isPageReady ? (
+  <ComingSoonInteractive flag="footer-about" />
+) : (
+  <Link href="/about">About</Link>
+)}
+
+
+Alternativ: elimină complet linkurile din <footer> până la activare cu flag .env sau site_settings din Supabase.
+
+✅ Contrast & Tokenuri Vizuale
+
+Folosește tokens.css central pentru controlul culorilor.
+
+Redefinește paleta de bază:
+
+--text: #E0E0E0;
+--cta-primary: #FFD700; /* auriu ritualic */
+--cta-secondary: #FF0000; /* roșu de inițiere */
+--bg: #000000;
+
+
+Test contrast: contrast-ratio >= 4.5:1 → folosind utilitar axe-core sau Lighthouse audit.
+
+✅ Labeluri Accesibile
+
+Pentru fiecare câmp în generatorul 7D:
+
+<label htmlFor="domain">Domain</label>
+<select id="domain" name="domain" aria-label="Select Domain" />
+
+
+Adaugă aria-describedby acolo unde ai hinturi.
+
+În form.tsx, adaugă fallbackuri pentru screen reader:
+
+<span className="sr-only" id="domainHint">Choose the industry domain</span>
+<select aria-describedby="domainHint" />
+
+🧪 Teste de Accesibilitate (Jest + Playwright)
+test('header is sticky', async () => {
+  const header = await page.$('header');
+  const position = await header.evaluate(el => getComputedStyle(el).position);
+  expect(position).toBe('sticky');
+});
+
+test('form fields have labels', async () => {
+  const labels = await page.$$eval('label', labels => labels.length);
+  expect(labels).toBeGreaterThan(5);
+});
+
+🧱 TASKURI PENTRU AGENTUL CURSOR
+// 1. Activează sticky header
+setCssRule('.header', { position: 'sticky', top: 0, zIndex: 50 });
+
+// 2. Înlocuiește linkurile neimplementate cu ComingSoonInteractive
+replaceFooterLinksWithComingSoon(['about', 'terms', 'privacy']);
+
+// 3. Schimbă paleta culorilor pentru CTA
+updateTokensCss({
+  '--cta-primary': '#FFD700',
+  '--cta-secondary': '#FF0000',
+});
+
+// 4. Adaugă label-uri pentru toate câmpurile
+auditFormLabelsAndAddIfMissing();
+
+// 5. Rulează Lighthouse + axe-core pentru contrast + accessibility
+runAccessibilityAudit();
+
+🧠 GÂNDIRE STRATEGICĂ
+
+Conform viziunii PROMPTFORGE™, interfața este un sistem ritualic, nu un UI convențional. Fiecare erori de accesibilitate = deviere semantică. Fiecare element trebuie să respecte:
+
+Vizibilitate ≠ Evidență, ci Declanșare Intenționată.
+
+Contrastul ≠ doar lizibilitate, ci diferențiere inițiatică.
+
+Structura ≠ doar ordine, ci sacrificiu cognitiv redus.
 
 
 
+
+
+
+
+
+Punctul 8: Localizarea și consistența limbajului este esențial pentru credibilitatea, experiența și profesionalismul platformei PromptForge. Într-un context globalizat, unde produsul se poziționează ca un ritual AI avansat destinat utilizatorilor cu standarde înalte, inconsecvențele lingvistice devin imediat vizibile și potențial dăunătoare.
+
+🔍 OBSERVAȚII (actuale)
+🧩 Situația întâlnită:
+
+În interfața Generatorului 7D sau în zonele de configurare, apar termeni precum:
+
+„limba” (în loc de „language”)
+
+„surse cu autor+data” (în loc de „source with author+date”)
+
+Restul platformei este scris exclusiv în engleză, inclusiv toate componentele de branding, scorare, rulare de teste, modale și UI interactiv.
+
+Lipsesc sistemele de localizare (i18n), iar textul este inserat direct („hardcoded”) în JSX.
+
+⚠️ IMPACT NEGATIV
+Problemă	Impact
+Amestec de limbi în aceeași interfață	Creează confuzie cognitivă, reduce credibilitatea
+Lipsă coerență tonală	Împiedică standardizarea voice & tone
+Fără sistem i18n	Cost crescut la scalare, imposibilitate de traducere programatică
+Branding afectat	PromptForge este poziționat ca elitist, iar astfel de inconsistențe îl fragilizează
+🎯 OBIECTIVE
+
+Elimină toate fragmentele în română din UI (chiar și în dev).
+
+Convertește toate string-urile din JSX în sistem i18n centralizat.
+
+Definirea standardelor pentru copy: tonalitate, formă verbală, stil.
+
+Oferă fallback EN + extensie pentru traducere (RO, FR, DE etc).
+
+Teste automate pentru consistență lingvistică.
+
+🛠️ RECOMANDĂRI TEHNICE COMPLETE
+1. Instalează sistemul de localizare next-i18next
+npm install next-i18next i18next react-i18next
+
+2. Creează fișierele de traducere
+/public/locales/
+  en/common.json
+  ro/common.json
+
+common.json (exemplu EN)
+{
+  "domain": "Domain",
+  "scale": "Scale",
+  "urgency": "Urgency",
+  "complexity": "Complexity",
+  "resources": "Resources",
+  "application": "Application",
+  "output": "Output Format",
+  "select": "Select...",
+  "generate_prompt": "Generate Prompt",
+  "run_test": "Run Test"
+}
+
+common.json (exemplu RO)
+{
+  "domain": "Domeniu",
+  "scale": "Scară",
+  "urgency": "Urgență",
+  "complexity": "Complexitate",
+  "resources": "Resurse",
+  "application": "Aplicare",
+  "output": "Format output",
+  "select": "Selectează...",
+  "generate_prompt": "Generează prompt",
+  "run_test": "Rulează test"
+}
+
+3. Integrare în componentă
+import { useTranslation } from 'next-i18next';
+
+export default function SevenDConfigurator() {
+  const { t } = useTranslation('common');
+
+  return (
+    <>
+      <label htmlFor="domain">{t('domain')}</label>
+      <select id="domain">{t('select')}</select>
+
+      <label>{t('generate_prompt')}</label>
+      <button>{t('generate_prompt')}</button>
+    </>
+  );
+}
+
+4. Configurare Next.js
+
+În next.config.js:
+
+const { i18n } = require('./next-i18next.config');
+module.exports = {
+  i18n,
+};
+
+
+În next-i18next.config.js:
+
+module.exports = {
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'ro', 'fr'],
+  },
+};
+
+5. Setare fallback EN
+
+Toate componentele care nu sunt încă localizate trebuie să cadă automat pe fallback en.
+Nu lăsa stringuri hardcoded în JSX – folosește t('key') peste tot, inclusiv în:
+
+Placeholdere
+
+ARIA-label-uri
+
+Toast-uri
+
+Microcopy și CTA-uri
+
+🔎 DETECTARE AUTOMATĂ A STRINGURILOR ÎN ROMÂNĂ
+
+Script Jest de audit:
+
+test('no Romanian string in UI', async () => {
+  const elements = await page.$$eval('*', elms =>
+    elms.map(e => e.textContent).filter(text =>
+      text?.match(/[ăâîșțĂÂÎȘȚ]/)
+    )
+  );
+  expect(elements).toEqual([]);
+});
+
+✅ TASKURI PENTRU AGENTUL CURSOR
+replaceAllHardcodedStringsWithTKey(); // mapare în common.json
+removeMixedLanguageStrings(); // normalizează toate în engleză
+generateCommonJsonFromCurrentText();
+setupNextI18nextConfig();
+auditUiForLocaleInconsistency();
+
+🧠 GÂNDIRE STRATEGICĂ
+
+În PromptForge, limbajul nu este doar text — este invocare.
+Neuniformitatea = fractură semantică.
+Sistemul trebuie să vorbească cu o voce unică, ritualică, imposibil de rupt.
+
+BONUS – Sistem de Voice & Tone pentru copy PromptForge
+Element	Guideline
+Formă verbală	Activă, imperativă, ritualică
+Ton	Brutalist, mistic, precis
+Persoană	2nd person singular/plural (you/your)
+Limbaj	Minimal, ne-metaforic (în afară de glitch)
+Exemple	“Generate”, “Invoke”, “Extract”, “Burn”
+REZULTAT AȘTEPTAT
+
+Nu mai există text românesc în interfață.
+
+Toate componentele au traducere EN/RO centralizată.
+
+Sistemul de copy este coerent, extensibil și scalabil.
+
+Exporturile și scorurile pot fi localizate în viitor fără refactorizare.
+
+Auditul de consistență este trecut automat.
+
+
+
+
+
+
+✅ PAȘI URMĂTORI – SSOT ACTUALIZAT (Detaliat)
+1. Actualizează ruleset.yml cu validări stricte
+routes:
+  - path: /modules
+    required: true
+    fallback: ComingSoonInteractive
+  - path: /pricing
+    required: true
+    fallback: ComingSoonInteractive
+  - path: /docs
+    required: true
+    fallback: ComingSoonInteractive
+  - path: /protocol
+    required: true
+    fallback: PaywallGate
+
+cta:
+  - label: "Run a 30-minute test"
+    href: "/test"
+    fallback: ComingSoonInteractive
+  - label: "Upgrade to Save & Export"
+    redirect_to: "/pricing"
+    requiredEntitlement: export:pdf
+
+export:
+  - format: txt
+    plan: Free
+    watermark: true
+  - format: md
+    plan: Creator
+  - format: json
+    plan: Pro
+  - format: pdf
+    plan: Pro
+  - format: zip
+    plan: Enterprise
+
+2. Implementează ComingSoon & Paywall fallback logic
+🔧 În components/navigation.tsx, footer.tsx și see-it-in-action.tsx:
+<Link href="/privacy">
+  <ComingSoonInteractive flag="footer-privacy" />
+</Link>
+
+<EntitlementGate requiredEntitlement="export:pdf" fallback={<PaywallGate />}>
+  <ExportPDFButton />
+</EntitlementGate>
+
+3. Scripturi de testare (Jest/Playwright)
+✅ În tests/ui/export.test.ts:
+test('Export PDF is gated', async () => {
+  const pdfButton = await page.$('text=PDF');
+  expect(await pdfButton.isDisabled()).toBe(true);
+});
+
+test('Upgrade button redirects to /pricing', async () => {
+  await page.click('text=Upgrade to Save & Export');
+  await expect(page).toHaveURL('/pricing');
+});
+
+✅ În tests/accessibility/header-footer.test.ts:
+test('Header is sticky', async () => {
+  const header = await page.$('header');
+  const position = await header.evaluate(el => getComputedStyle(el).position);
+  expect(position).toBe('sticky');
+});
+
+4. Reîmprospătare design (branding vizual)
+
+Actualizează tokens.css:
+
+--cta-primary: #FFD700; /* Auriu */
+--cta-secondary: #FF0000; /* Roșu ritualic */
+--text-default: #E0E0E0;
+--bg: #000000;
+
+
+Înlocuiește verdele din .btn-generate cu:
+
+background: linear-gradient(to right, #FFD700, #FF0000);
+
+
+În generator.tsx:
+
+<button className="btn-brutalist glitch-effect">GENERATE PROMPT</button>
+
+5. Refactorizare și cod PR-review enforce
+🔧 Creează pr-checklist.md cu următoarele reguli:
+
+ Toate linkurile au fallback: ComingSoonInteractive sau PaywallGate.
+
+ Fiecare export este învelit în EntitlementGate.
+
+ Toate butoanele CTA au data-gtm-event.
+
+ Fiecare formular are <label> și aria-describedby.
+
+ Textul este în engleză, extras în i18n.
+
+6. Localizare unificată (EN / RO)
+✅ Instalare:
+npm install next-i18next
+
+✅ Integrare:
+import { useTranslation } from 'next-i18next';
+const { t } = useTranslation('common');
+
+✅ Config EN/RO:
+// en/common.json
+{
+  "generate_prompt": "Generate Prompt",
+  "upgrade": "Upgrade to Pro",
+  "export_pdf": "Export as PDF"
+}
+
+✅ Audit Jest:
+test('no Romanian strings', async () => {
+  const texts = await page.$$eval('*', nodes => nodes.map(n => n.textContent));
+  expect(texts.join(' ')).not.toMatch(/[ăâîșț]/);
+});
+
+7. Validare în CI/CD
+În .github/workflows/ci.yml:
+jobs:
+  test:
+    steps:
+      - run: npm run test
+      - run: npm run test:e2e
+      - run: npm run lint
+      - run: npm run validate-ssot
+
+8. Mesaje pentru agentul Cursor (rezumate ca prompts)
+// Prompturi directe pentru agent:
+enforceStickyHeader();
+gateAllExportButtonsWithEntitlementGate();
+replaceDeadLinksWithComingSoon();
+redirectUpgradeButtonsTo('/pricing');
+auditContrastAndTypography();
+replaceHardcodedTextWithTKey();
+runAllE2ETestsForCTAsAndRouting();
+
+🔚 Concluzie
+
+Acești pași asigură:
+
+Respectarea super‑regulei vizuale și de funcționalitate.
+
+Eliminarea tuturor dead link-urilor.
+
+Integrare a exporturilor și scorurilor într-un sistem de gating clar.
+
+Rigiditate formală în testare și refactor.

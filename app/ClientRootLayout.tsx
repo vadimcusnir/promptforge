@@ -12,7 +12,7 @@ import { OverlayController } from "@/components/OverlayController";
 import { MotionProvider } from "@/lib/motion/provider";
 import { useEffect } from "react";
 
-import { telemetry } from "@/lib/telemetry";
+import { telemetry } from "@/lib/telemetry-client";
 import "./globals.css";
 import "./styles/variables.css";
 import "./styles/animations.css";

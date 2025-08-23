@@ -433,3 +433,68 @@ Copiază manual folderul cu reguli în repo (pf_rules_v3/) și păstrează-l ca 
 Pune Hub-ul pe taburi, leagă editor/test/export, apoi autentificarea.
 
 Revino la mine cu erorile/edge-case-urile întâlnite; îți scriu patch-urile de cod (rute + UI) direct.
+
+
+
+
+
+
+
+Am analizat repo‑ul prompt‑forge prin conectorul GitHub și am observat că au apărut modificări semnificative față de planurile inițiale. Site‑ul are acum pagini și API‑uri noi pentru analytics, QA, notificări și testare, pe lângă generatorul GPT existent. Mai jos găsești concluziile și o estimare de timp pentru a parcurge totul în detaliu:
+
+Modificări principale identificate
+
+Pagini noi: /dashboard a rămas scheletul central, dar au apărut componente clientside avansate – AnalyticsDashboard și TestingDashboard – care se vor integra ca tab-uri în Hub. Există și o pagină /test pentru verificarea rapidă a API-urilor și un dashboard pentru notificări, plus rute documentate ca /app/test/page.tsx pentru verificări locale
+GitHub
+GitHub
+.
+
+API-uri extinse: Pe lângă gpt-editor și gpt-test, există acum rute pentru analytics (/api/analytics/user, business, export)
+GitHub
+, pentru testare (/api/testing/run-tests) și pentru notificări (/api/notifications/send)
+GitHub
+. Acestea gestionează telemetria, exportul de date JSON/CSV, rularea testelor, precum și trimiterea de alerte.
+
+Sistem de telemetrie și analytics: Un modul robust lib/telemetry/analytics.ts oferă tracking pentru apeluri GPT, acțiuni utilizator, performanță și utilizare module
+GitHub
+. Acest sistem se integrează cu Supabase pentru stocare.
+
+Sistem de notificări: Existența unei componente NotificationDashboard și a hook‑ului useNotifications arată că aplicația poate gestiona alerte de securitate, performanță, eroare, etc. Există route POST /api/notifications/send care validează și trimite notificări
+GitHub
+.
+
+Pagini de test/QA: components/testing-dashboard.tsx conține logica pentru a rula teste API, performance și security, a afișa rezultatele și a exporta în JSON/CSV
+GitHub
+.
+
+Dashboard pentru analytics: components/analytics-dashboard.tsx oferă un UI complet cu metrice pentru rulări, rate de succes, scoruri medii, distribuția calității, activitate recentă, module populare, etc. și permite exportul datelor
+GitHub
+.
+
+Estimare timp pentru a-ți forma o viziune strategică
+Pentru a înțelege toate aceste funcționalități și a contura o direcție vizionară asupra produsului, ai nevoie de o analiză integrată a modului în care noile componente (analytics, QA, notificări) se împletesc cu fluxul principal al generatorului. Asta înseamnă:
+
+Clarificarea obiectivelor de business (ce metrice urmărim, ce planuri de abonament sunt propuse, cum monetizăm datele) și identificarea unui parcurs de evoluție a produsului (de ex., un marketplace de module sau integrare cu no-code tools).
+
+Sincronizarea designului UI cu noul set de funcții și cu brandingul PromptForge.
+
+Stabilirea priorităților de dezvoltare: finalizarea Hub‑ului central, implementarea completă a exportului bundle, autentificare și managementul abonaților, plus eventuale extensii (History cloud, modul marketplace).
+
+Durată estimată: ~1–2 zile lucrătoare pentru analiza codului, înțelegerea fluxurilor și definirea unei viziuni strategice coerente.
+
+Estimare timp pentru a înțelege operațional și tehnic
+Pe lângă viziunea de ansamblu, e necesar să aprofundezi detaliile tehnice:
+
+API-uri: înțelegerea contractelor /api/gpt-editor, /api/gpt-test, /api/analytics/*, /api/testing/run-tests, /api/notifications/send și implementarea POST /api/run/{moduleId} (care încă lipsește)
+GitHub
+.
+
+Entitlements & Planuri: modul în care se verifică planurile (Pilot, Pro, Enterprise) pe server și în UI, respectând DoR/DoD și gating la exporturi.
+
+Telemetrie & rate limiting: configurarea rate limit-urilor per plan, salvarea telemetriei în Supabase și integrarea cu analytics-dashboard.
+
+UI/UX: adaptarea componentelor existente (home-interactive, quality gates, etc.) la un Hub pe taburi și testarea interacțiunilor.
+
+Integrări: autentificare (Supabase Auth), sistem de plăți (Stripe), sisteme externe (Slack, GitHub, Email) pentru notificări.
+
+Durată estimată: ~4–5 zile lucrătoare pentru a examina și testa în detaliu toate fișierele, a documenta interfețele, a verifica fiecare API call și a defini clar modul de extindere/integrare.

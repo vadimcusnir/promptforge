@@ -3,13 +3,31 @@
 
 import OpenAI from 'openai';
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error('OPENAI_API_KEY environment variable is required');
+// Initialize OpenAI client only when needed
+let openaiInstance: OpenAI | null = null;
+
+function getOpenAI(): OpenAI {
+  if (!openaiInstance) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY environment variable is required');
+    }
+    openaiInstance = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiInstance;
 }
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+export const openai = {
+  chat: {
+    completions: {
+      create: async (options: any) => {
+        const client = getOpenAI();
+        return client.chat.completions.create(options);
+      }
+    }
+  }
+};
 
 export interface ChatOptions {
   system: string;

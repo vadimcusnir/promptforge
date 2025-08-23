@@ -5,10 +5,16 @@ import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 
 // SACF - Development mode fallback pentru testing
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+let supabase: any = null;
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
+function getSupabase() {
+  if (!supabase) {
+    const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dev-placeholder.supabase.co';
+    const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dev-placeholder';
+    supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
+  }
+  return supabase;
+}
 
 // Verifică dacă utilizatorul este membru al organizației
 export async function assertMembership(orgId?: string, userId?: string) {
@@ -25,7 +31,7 @@ export async function assertMembership(orgId?: string, userId?: string) {
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('org_members')
       .select('role')
       .eq('org_id', finalOrgId)
@@ -53,7 +59,7 @@ export async function assertMembership(orgId?: string, userId?: string) {
 // Verifică entitlement specific pentru organizație
 export async function assertEntitlement(orgId: string, flag: string) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('entitlements_effective_org')
       .select('value')
       .eq('org_id', orgId)

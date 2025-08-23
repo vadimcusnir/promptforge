@@ -4,10 +4,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!
-);
+// Initialize Supabase client only when needed
+let supabaseInstance: any = null;
+
+function getSupabase() {
+  if (!supabaseInstance) {
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE;
+    
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
+      throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE environment variables are required');
+    }
+    
+    supabaseInstance = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
+  }
+  return supabaseInstance;
+}
 
 export async function GET(
   req: NextRequest,
@@ -24,7 +36,7 @@ export async function GET(
     }
 
     // Obține entitlements pentru organizație
-    const { data: entitlements, error: entitlementsError } = await supabase
+    const { data: entitlements, error: entitlementsError } = await getSupabase()
       .from('entitlements')
       .select('flag, value, source, expires_at')
       .eq('org_id', orgId)
@@ -47,14 +59,14 @@ export async function GET(
     );
 
     // Obține informații despre subscripție
-    const { data: subscription } = await supabase
+    const { data: subscription } = await getSupabase()
       .from('subscriptions')
       .select('plan_code, status, trial_end, seats')
       .eq('org_id', orgId)
       .single();
 
     // Obține informații despre plan
-    const { data: plan } = await supabase
+    const { data: plan } = await getSupabase()
       .from('plans')
       .select('code, name')
       .eq('code', subscription?.plan_code)

@@ -17,7 +17,7 @@ const EditorRequestSchema = z.object({
     "segment"       // Break into sections/steps
   ]),
   content: z.string().min(10).max(10000),
-  context?: z.object({
+  context: z.object({
     domain: z.string().optional(),
     target_audience: z.string().optional(),
     specific_goal: z.string().optional(),
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     const rateLimitKey = `gpt-editor:${user.id}`;
     const rateLimitCount = await checkRateLimit(rateLimitKey, 10, 60); // 10 requests per minute
     
-    if (rateLimitCount > 10) {
+    if (rateLimitCount >= 10) {
       return NextResponse.json(
         { error: "Rate limit exceeded. Please wait before making more requests." },
         { status: 429 }
