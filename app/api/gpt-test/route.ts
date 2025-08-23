@@ -23,7 +23,7 @@ const TestRequestSchema = z.object({
     expected_outcome: z.string().optional()
   })).max(5).optional(),
   evaluation_focus: z.array(z.enum([
-    "clarity", "execution", "ambiguity", "business_fit", "safety", "compliance"
+    "clarity", "execution", "ambiguity", "businessFit", "safety", "compliance"
   ])).optional(),
   model_config: z.object({
     temperature: z.number().min(0).max(2).default(0.4),
@@ -94,13 +94,12 @@ export async function POST(request: NextRequest) {
       for (const scenario of validatedInput.test_scenarios) {
         const scenarioStart = Date.now();
         
-        const testResult = await testPromptLive({
-          prompt: validatedInput.content,
-          scenario: scenario.input,
-          expectedOutcome: scenario.expected_outcome,
-          domain: validatedInput.domain,
-          modelConfig: validatedInput.model_config
-        });
+        const testResult = await testPromptLive(
+          validatedInput.content,
+          scenario.input,
+          scenario.expected_outcome,
+          validatedInput.model_config
+        );
         
         const scenarioTime = Date.now() - scenarioStart;
         
@@ -110,14 +109,13 @@ export async function POST(request: NextRequest) {
           expected_outcome: scenario.expected_outcome,
           actual_output: testResult.output,
           success: testResult.success,
-          metrics: testResult.metrics,
           execution_time_ms: scenarioTime,
-          tokens_used: testResult.usage?.total_tokens || 0,
-          cost_usd: testResult.usage?.estimated_cost || 0
+          tokens_used: testResult.tokensUsed,
+          cost_usd: testResult.cost
         });
 
-        totalTokensUsed += testResult.usage?.total_tokens || 0;
-        totalCost += testResult.usage?.estimated_cost || 0;
+        totalTokensUsed += testResult.tokensUsed;
+        totalCost += testResult.cost;
       }
     } else {
       // Generate default test scenarios based on domain
@@ -126,12 +124,12 @@ export async function POST(request: NextRequest) {
       for (const scenario of defaultScenarios.slice(0, 3)) { // Max 3 default scenarios
         const scenarioStart = Date.now();
         
-        const testResult = await testPromptLive({
-          prompt: validatedInput.content,
-          scenario: scenario.input,
-          domain: validatedInput.domain,
-          modelConfig: validatedInput.model_config
-        });
+        const testResult = await testPromptLive(
+          validatedInput.content,
+          scenario.input,
+          undefined,
+          validatedInput.model_config
+        );
         
         const scenarioTime = Date.now() - scenarioStart;
         
@@ -140,14 +138,13 @@ export async function POST(request: NextRequest) {
           scenario_input: scenario.input,
           actual_output: testResult.output,
           success: testResult.success,
-          metrics: testResult.metrics,
           execution_time_ms: scenarioTime,
-          tokens_used: testResult.usage?.total_tokens || 0,
-          cost_usd: testResult.usage?.estimated_cost || 0
+          tokens_used: testResult.tokensUsed,
+          cost_usd: testResult.cost
         });
 
-        totalTokensUsed += testResult.usage?.total_tokens || 0;
-        totalCost += testResult.usage?.estimated_cost || 0;
+        totalTokensUsed += testResult.tokensUsed;
+        totalCost += testResult.cost;
       }
     }
 
@@ -156,7 +153,7 @@ export async function POST(request: NextRequest) {
     const evaluation = await evaluatePrompt(
       validatedInput.content, 
       validatedInput.domain,
-      validatedInput.evaluation_focus
+      { focusAreas: validatedInput.evaluation_focus }
     );
     const evaluationTime = Date.now() - evaluationStart;
 
@@ -168,19 +165,16 @@ export async function POST(request: NextRequest) {
     const recommendations = generateRecommendations(testResults, evaluation);
 
     // Log test usage
-    await logEvent({
-      event: "gpt_test_live_used",
+    await logEvent("gpt_test_live_used", "business", {
       orgId: orgMember.org_id,
       userId: user.id,
-      payload: {
-        test_id: testId,
-        domain: validatedInput.domain,
-        scenarios_count: testResults.length,
-        success_rate: successRate,
-        total_tokens: totalTokensUsed,
-        total_cost_usd: totalCost,
-        evaluation_scores: evaluation.scores
-      }
+      test_id: testId,
+      domain: validatedInput.domain,
+      scenarios_count: testResults.length,
+      success_rate: successRate,
+      total_tokens: totalTokensUsed,
+      total_cost_usd: totalCost,
+      evaluation_scores: evaluation.scores
     });
 
     const totalTime = Date.now() - startTime;
@@ -192,7 +186,6 @@ export async function POST(request: NextRequest) {
       test_results: testResults,
       evaluation: {
         scores: evaluation.scores,
-        verdict: evaluation.verdict,
         feedback: evaluation.feedback
       },
       summary: {
@@ -224,7 +217,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (error.message.includes("entitlement") || error.message.includes("plan")) {
+    if (error instanceof Error && (error.message.includes("entitlement") || error.message.includes("plan"))) {
       return NextResponse.json(
         { 
           error: "Live testing requires Pro plan or higher",
@@ -234,7 +227,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (error.message.includes("rate limit")) {
+    if (error instanceof Error && error.message.includes("rate limit")) {
       return NextResponse.json(
         { error: "Rate limit exceeded" },
         { status: 429 }
@@ -266,7 +259,7 @@ export async function GET(request: NextRequest) {
         "fashion", "beauty", "spiritual", "architecture", "agriculture"
       ],
       evaluation_criteria: [
-        "clarity", "execution", "ambiguity", "business_fit", "safety", "compliance"
+        "clarity", "execution", "ambiguity", "businessFit", "safety", "compliance"
       ],
       model_options: {
         temperature: { min: 0, max: 2, default: 0.4 },
@@ -304,7 +297,7 @@ async function generateDefaultScenarios(domain: string) {
     // Add more domain-specific scenarios as needed
   };
 
-  return scenarios[domain] || [
+  return (scenarios as Record<string, any>)[domain] || [
     { name: "General Inquiry", input: "User has a general question about the service" },
     { name: "Problem Solving", input: "User needs help solving a specific problem" },
     { name: "Information Request", input: "User is looking for specific information" }

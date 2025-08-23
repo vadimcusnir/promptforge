@@ -284,13 +284,13 @@ export class TelemetryEngine {
         .length,
       exportsCreated: businessEvents.filter((e) => e.event === "export_created")
         .length,
-      modulesUsed: [
-        ...new Set(businessEvents.map((e) => e.data.moduleId).filter(Boolean)),
-      ],
-      vectorsUsed: [
-        ...new Set(businessEvents.map((e) => e.data.vector).filter(Boolean)),
-      ],
-      featuresUsed: [...new Set(businessEvents.map((e) => e.event))],
+              modulesUsed: [
+          ...Array.from(new Set(businessEvents.map((e) => e.data.moduleId).filter(Boolean))),
+        ],
+        vectorsUsed: [
+          ...Array.from(new Set(businessEvents.map((e) => e.data.vector).filter(Boolean))),
+        ],
+        featuresUsed: [...Array.from(new Set(businessEvents.map((e) => e.event)))],
       clickHeatmap,
     };
   }
@@ -503,3 +503,58 @@ export class TelemetryEngine {
 
 // Global telemetry instance
 export const telemetry = TelemetryEngine.getInstance();
+
+/**
+ * Convenience function to log events directly
+ */
+export function logEvent(
+  event: string,
+  category: "user" | "system" | "performance" | "error" | "business",
+  data: Record<string, any> = {}
+): void {
+  telemetry.trackEvent(event, category, data);
+}
+
+/**
+ * Log telemetry data for module runs
+ */
+export async function logRunTelemetry(data: {
+  runId: string;
+  orgId: string;
+  userId: string;
+  moduleId: string;
+  parameters: Record<string, any>;
+  telemetry: {
+    generation_time_ms: number;
+    evaluation_time_ms: number | null;
+    bundle_time_ms: number;
+    total_time_ms: number;
+    tokens_used: number;
+    estimated_cost_usd: number;
+  };
+  evaluation?: any;
+}): Promise<void> {
+  const { runId, orgId, userId, moduleId, parameters, telemetry: runTelemetry, evaluation } = data;
+  
+  // Log the run event
+  logEvent("module_run_completed", "performance", {
+    runId,
+    orgId,
+    userId,
+    moduleId,
+    parameters,
+    telemetry: runTelemetry,
+    evaluation: evaluation ? {
+      scores: evaluation.scores,
+      feedback: evaluation.feedback
+    } : null
+  });
+  
+  // Track business metrics
+  logEvent("module_usage", "business", {
+    moduleId,
+    orgId,
+    cost: runTelemetry.estimated_cost_usd,
+    tokens: runTelemetry.tokens_used
+  });
+}

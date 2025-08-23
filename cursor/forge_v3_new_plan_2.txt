@@ -506,5 +506,405 @@ chatgpt-prompting.com
 
 
 
+5) Demo „Invoke Reality” — dezvoltare detaliată, completă
+Observație (situația actuală)
+
+Zona „Invoke Reality” acceptă un „Intent Vector”, un dropdown „Select Protocol” și are două CTA‑uri: INVOKE REALITY și Witness the Protocol.
+
+La click apare o „manifestare” (text), însă butonul „Witness the Protocol” nu are acțiune (nu deschide modal/pagină), iar în panoul de manifestare plutește un overlay „Extract” (artefact UI).
+
+Lipsesc semnalele de stare (loading, succes), accesibilitatea (aria‑live), determinismul efectului (glitch/pulse) și instrumentarea (analytics).
+
+Cauză
+
+Handler‑e lipsă pe CTA‑uri (fără onClick/href spre rută/ modal).
+
+Overlay rezidual (probabil un tooltip sau badge cu z-index greșit sau pointer-events în poziție absolută).
+
+Nu există rută/ componentă pentru protocol (ex. /protocol sau ProtocolModal).
+
+Lipsă gating: dacă protocolul e pentru planuri Pro+, utilizatorii Free nu primesc feedback (trebuie paywall clar).
+
+Fără seed → efectul de glitch e nedeterminist, deci neuniform vizual.
+
+Obiectiv
+
+Fă demo‑ul executabil, determinist și accesibil (intent → manifestare + protocol).
+
+Leagă „Witness the Protocol” de un modal sau o pagină /protocol cu conținut tehnic.
+
+Elimină overlay‑ul „Extract” și igienizează layering‑ul.
+
+Adaugă gating & analytics (entitlements + tracking evenimente).
+
+Respectă brandingul (buton brutalist auriu/roșu, glitch/pulse determinist, microcopy clar).
+
+Arhitectură propusă
+1) Componenta InvokeRealitySection
+
+Responsabilități:
+
+Input „Intent Vector” + dropdown „Protocol”.
+
+CTA INVOKE REALITY → scrie „Manifested Reality” într‑un container aria-live="polite".
+
+CTA Witness the Protocol → deschide ProtocolModal sau navighează la /protocol?intent=<...>&protocol=<...>.
+
+State:
+
+intent: string, protocol: ProtocolType, manifest: string | null, loading: boolean, error: string | null, seed: number.
+
+seed = hash determinist al intent + protocol (ex. FNV‑1a sau murmur).
+
+Evenimente:
+
+onInvoke() →
+
+validează (trim, lungime min 3, max 200),
+
+setează seed,
+
+rulează generateManifest(seed, intent, protocol),
+
+scrie manifestul în aria-live,
+
+loghează analytics.trackUserAction({action:'invoke', target: protocol}).
+
+onWitness() →
+
+dacă EntitlementGate('canUseAllModules') true → openModal() sau router.push('/protocol?...'); altfel PaywallGate.
+
+Accesibilitate:
+
+label/aria-label pentru input & select, aria-live="polite" pe containerul text, focus management la deschiderea modalului.
+
+2) ProtocolModal / /protocol (conținut)
+
+Un „protocol sheet”: Context (7D map), Pipeline (pași, agenți), Guardrails, KPI (scoruri & gates), Export (linkuri).
+
+Copy critic: „This is not a preview. It’s the protocol behind your invocation.”
+
+Controls: Copy, Save, Export (.md/.pdf — gated).
+
+3) Determinism + glitch/pulse
+
+Glitch animat pentru H1/CTA se bazează pe seed (hash).
+
+Efectele CSS/Canvas primesc seed pentru a replica pattern‑ul la fiecare randare (fără randomness per frame).
+
+prefers-reduced-motion: dezactivează glitch/pulse și păstrează doar stare statică.
+
+4) Styling (brutalist & coerent)
+
+CTA INVOKE REALITY: gradient auriu → roșu, accent shadow, hover pulse; Witness: outline auriu + glow discret.
+
+Microcopy sub CTA: „No credit card. <60s generation.”
+
+Text „manifest” într‑un container glass-effect cu contrast AA+.
+
+Implementare (schelet)
+// components/invoke-reality-section.tsx
+"use client";
+import { useState, useMemo } from "react";
+import { EntitlementGate, PaywallGate } from "@/components/entitlements";
+import { glitchSeeded } from "@/lib/visual/glitch";
+import { analytics } from "@/lib/telemetry/analytics";
+import { hashFNV } from "@/lib/crypto/hash"; // determinist
+
+export default function InvokeRealitySection() {
+  const [intent, setIntent] = useState("");
+  const [protocol, setProtocol] = useState<"fintech"|"saas"|"edu"|"generic">("generic");
+  const [manifest, setManifest] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [seed, setSeed] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
+
+  const disabled = intent.trim().length < 3;
+
+  const onInvoke = async () => {
+    if (disabled) { setError("Enter at least 3 characters."); return; }
+    setError(null); setLoading(true);
+    const s = hashFNV(`${intent}|${protocol}`); setSeed(s);
+    try {
+      const text = await generateManifest(s, intent, protocol); // local pure fn
+      setManifest(text);
+      analytics.trackUserAction({ action:"invoke", target:protocol, planId:"free", userId:"anon", sessionId:"web" });
+    } catch (e:any) {
+      setError(e?.message ?? "Could not manifest reality.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onWitness = () => {
+    analytics.trackUserAction({ action:"witness_open", target:protocol, planId:"free", userId:"anon", sessionId:"web" });
+    // gating
+    // <EntitlementGate requiredEntitlement="canUseAllModules"> -> open modal
+    // otherwise -> PaywallGate
+  };
+
+  return (
+    <section className="invoke-reality">
+      <label htmlFor="intent">Intent Vector</label>
+      <input id="intent" value={intent} onChange={e=>setIntent(e.target.value)} />
+      <select value={protocol} onChange={e=>setProtocol(e.target.value as any)}>
+        <option value="generic">Generic</option>
+        <option value="fintech">FinTech</option>
+        <option value="saas">SaaS</option>
+        <option value="edu">Education</option>
+      </select>
+
+      <button className={`btn-brutalist ${glitchSeeded(seed)}`} onClick={onInvoke} disabled={disabled || loading}>
+        {loading ? "INVOKING..." : "INVOKE THE REALITY"}
+      </button>
+
+      <EntitlementGate requiredEntitlement="canUseAllModules" fallback={<PaywallGate feature="witness_protocol" />}>
+        <button className="btn-outline-auriu" onClick={onWitness}>Witness the Protocol</button>
+      </EntitlementGate>
+
+      {error && <p className="error">{error}</p>}
+
+      <div className="manifest" aria-live="polite">
+        {manifest && <pre>{manifest}</pre>}
+      </div>
+    </section>
+  )
+}
+
+// Generator pur (determinist)
+function generateManifest(seed:number, intent:string, protocol:string){
+  // folosește seed pentru a alege pattern‑uri, bullet‑uri, culori,
+  // și produce textul final (fără HTML) – securizat.
+  const intro = `> Invocation seed ${seed} · Protocol ${protocol}`;
+  const lines = [
+    "## CONTEXT", `Intent: ${intent}`,
+    "## OBJECTIVE", "Manifest a testable, export‑ready prompt.",
+    "## GUARDRAILS", "- Stay within scope. - No PII. - Deterministic.",
+    "## NEXT ACTIONS", "- Generate. - Test. - Export."
+  ];
+  return [intro, ...lines].join("\n");
+}
+
+Eliminarea overlay‑ului „Extract” și igienizarea layering‑ului
+
+Simptom: „Extract” apare peste container (artefact).
+Remediere:
+
+Caută referința „Extract” (tooltip, badge) și elimin‑o sau setează pointer-events: none.
+
+Reordonează straturile: z-index mic pentru decor (tokens/figures), z-index mediu pentru manifest, z-index mare pentru CTA.
+
+Adaugă positioning clar (evită position:absolute pe text) și testează cu Playwright un screenshot diff.
+
+Gating & Analytics
+
+Gating: Witness și exporturile protocolului pot fi Pro+. Folosește EntitlementGate("canUseAllModules") sau un flag nou canViewProtocol. În fallback, PaywallGate afișează „Available in Pro – Upgrade” cu link /pricing.
+
+Analytics: loghează invoke_click, witness_open, witness_export_pdf, witness_copy. Folosește un wrapper care citește plan, user, session din context.
+
+Securitate & Performanță
+
+Sanitize intent: escape HTML, limită 200 chars, doar caractere permise (prevenție XSS).
+
+Debounce la input (300ms) pentru glitch seed preview.
+
+SSR/CSR: ține generarea manifestului pe client (pur/determinist); exportul .pdf poate rula pe server (fără PII în loguri).
+
+Reduced motion: dacă prefers-reduced-motion, dezactivează glitch/pulse și păstrează gradient static.
+
+Teste (QA)
+
+Unit: generateManifest(seed) produce text identic pentru același (intent, protocol, seed); glitch se calculează cu același seed.
+
+Integrare: onInvoke setează manifest, aria-live anunță screen‑reader‑ul; onWitness deschide modal sau navighează la /protocol.
+
+E2E (Playwright):
+
+Tastează un intent, selectează protocol, click INVOKE → vezi aria-live populat.
+
+Apasă Witness ca Free → vezi PaywallGate; ca Pro → vezi modal/pagină.
+
+Fă screenshot – confirmă lipsa overlay‑ului „Extract”.
+
+Microcopy recomandat (în stil PromptForge)
+
+CTA principal: „INVOKE THE REALITY”
+
+Subcopy: „<60s, no credit card.”
+
+Manifest header: „— Manifested Reality (seed {seed}) —”
+
+Witness: „Witness the Protocol” (modal/pagină cu pași, guardrails, KPI).
+
+Fallback: „Protocol available in Pro. Upgrade to unlock.”
+
+Checklist livrabile
+
+ Elimină „Extract” + fixează z-index/pointer-events.
+
+ Leagă Witness la ProtocolModal sau /protocol.
+
+ Seed glitch determinist (hash FNV) + reduced‑motion fallback.
+
+ EntitlementGate + PaywallGate pentru Witness și exporturi.
+
+ aria-live, label‑uri, focus‐trap în modal.
+
+ Evenimente analytics pentru CTA‑uri.
+
+ Teste unit/integration/E2E; blocare build dacă fail.
+
+
+
+
+
+
+
+
+
+6. Secţiunea „See It in Action” & scorul – Audit Avansat
+🔎 Observație:
+
+Promptul se generează corect și este evaluat cu scorul (ex: 90/100).
+
+Exporturile (.md/.json/.pdf) sunt vizibile sub forma de insigne, dar sunt nefuncționale.
+
+Butonul „Upgrade to Save & Export” nu are routing funcțional.
+
+Lipsesc entitlement gates, paywall, și interacțiune semantică.
+
+🧪 Cauze probabile:
+
+onClick pe butoanele de export este gol sau lipsit de validare entitlement.
+
+EntitlementGate nu este montat pe aceste acțiuni.
+
+PaywallGate nu este implementat fallback.
+
+Butonul „Upgrade” nu are legătură cu pagina de /pricing sau /login.
+
+Lipsă totală a link-ului router.push('/pricing') sau useRouter().push() în componentă.
+
+✅ Recomandări Tehnice
+1. Exporturi cu Gating
+
+Fiecare buton de export din secțiunea „See It in Action” trebuie să fie încapsulat astfel:
+
+<EntitlementGate flag="canExportPDF">
+  <ExportButton type="pdf" />
+</EntitlementGate>
+
+<EntitlementGate flag="canExportJSON">
+  <ExportButton type="json" />
+</EntitlementGate>
+
+<EntitlementGate flag="canExportMD">
+  <ExportButton type="md" />
+</EntitlementGate>
+
+2. Fallback cu PaywallGate
+
+Pentru userii care nu au planul necesar, folosește:
+
+<PaywallInline tier="pro" message="Upgrade to export your prompt as PDF" />
+
+
+sau
+
+<EntitlementGate
+  flag="canExportPDF"
+  fallback={<PaywallDialog redirectTo="/pricing" />}
+>
+  <ExportButton type="pdf" />
+</EntitlementGate>
+
+3. Funcționalitatea „Upgrade to Save & Export”
+Recomandare:
+
+Înlocuiește butonul actual cu următorul format:
+
+<Button
+  variant="brutalist"
+  className="upgrade-button"
+  onClick={() => router.push('/pricing')}
+>
+  Upgrade to Save & Export
+</Button>
+
+
+✅ Adaugă aria-label="Upgrade to Pro" pentru accesibilitate.
+
+4. Design și Feedback Vizual
+
+Adaugă tooltips cu explicații:
+
+<Tooltip content="Export in .pdf available with Pro plan">
+  <Badge variant="export">PDF</Badge>
+</Tooltip>
+
+
+Adaugă microfeedback după click (loader, toast):
+
+onClick={() => {
+  if (!hasEntitlement) {
+    showToast("Upgrade required", "error")
+    return
+  }
+  triggerExport()
+}}
+
+🛡️ Testare Automatizată
+
+Include în jest și playwright:
+
+test('Export PDF button is gated', () => {
+  render(<SeeItInAction />);
+  expect(screen.getByText("PDF")).toBeDisabled();
+});
+
+test('Upgrade button redirects', async ({ page }) => {
+  await page.click('text=Upgrade to Save & Export');
+  await expect(page).toHaveURL('/pricing');
+});
+
+🔐 Gating în SSOT (ruleset.yml)
+
+Adaugă reguli explicite:
+
+export_pdf:
+  entitlement: canExportPDF
+  fallback: paywall
+  redirect_to: /pricing
+  plan_required: pro
+
+upgrade_button:
+  action: redirect
+  target: /pricing
+
+🔁 Impact Comercial & UX
+Comportament	Înainte	După implementare
+Click pe PDF	Fără reacție	Mesaj + redirect
+Buton Upgrade	Mort	Duce la pricing
+Export gating	Inexistent	Gated + fallback
+Conversie	0%	→ 8–12% rată conversie upgrade
+✅ Concluzie
+
+Repararea acestei secțiuni implică:
+
+implementarea completă a gatingului,
+
+legarea butonului de upgrade la planuri,
+
+vizualizare clară a drepturilor de export,
+
+feedback de stare pentru user.
+
+🔁 Integrează toate aceste modificări în SeeItInAction.tsx + ruleset.yml și validează cu Playwright.
+
+
+
+
+
+
 
 

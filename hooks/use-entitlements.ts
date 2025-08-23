@@ -12,6 +12,12 @@ export interface UserEntitlements {
   hasWhiteLabel: boolean;
   canExportBundleZip: boolean;
   hasSeatsGT1: boolean;
+  hasExportDesigner: boolean;
+  hasFinTechPack: boolean;
+  hasEduPack: boolean;
+  hasIndustryTemplates: boolean;
+  maxRunsPerDay: number;
+  maxSeats: number;
 }
 
 interface EntitlementsResponse {
@@ -219,11 +225,7 @@ export function EntitlementsProvider({ children, orgId }: EntitlementsProviderPr
     refetch: entitlementsData.refetch,
   };
 
-  return (
-    <EntitlementsContext.Provider value={value}>
-      {children}
-    </EntitlementsContext.Provider>
-  );
+  return value;
 }
 
 export function useEntitlementsContext(): EntitlementsContextValue {

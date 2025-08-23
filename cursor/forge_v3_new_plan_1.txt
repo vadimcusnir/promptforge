@@ -252,3 +252,184 @@ Repo-ul devine manualul echipei & agentului; fiecare run se închide ca artefact
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Situația ACUM (repo + produs)
+
+App Router + layout: app/layout.tsx corect; meta + fonturi.
+
+Pagini:
+
+/dashboard – schelet (date mock, fără taburi și fără wiring complet).
+
+/docs/api – documentație pentru POST /api/run/{moduleId} (spec); utilă pentru Enterprise.
+
+/test – pagină de verificare rapidă a API-urilor.
+
+API-uri reale / semireale:
+
+/api/gpt-editor – live GPT (validare 7-D, prag scor ≥80, gating Pro+).
+
+/api/gpt-test – structură gata (validare 7-D, gating Pro+), scoruri mock ușor de înlocuit cu live.
+
+/api/entitlements – flags efective (planuri).
+
+/api/analytics/{user,business,export} – metrice utilizator/business + export JSON/CSV.
+
+/api/testing/run-tests – rulează suite (api/performance/security) + summary.
+
+Librării critice în repo:
+
+SevenD validator, DoR/DoD gates, ExportBundleManager (manifest + checksum, plan-gates), Telemetry/Analytics, Plan/Entitlements Manager, Rate Limiter, Supabase clients.
+
+UI avansat disponibil:
+
+analytics-dashboard.tsx (metrici + export).
+
+testing-dashboard.tsx (rulare teste + rezultate).
+
+Lipsește: Hub unificat pe taburi; UI „Tools” (SevenD + ModuleGrid + Editor + Test + Export) legat la API; /api/run/{moduleId} efectiv; /pricing + Stripe; auth UI; History (cloud) în interfață.
+
+Ce facem MAI DEPARTE (de azi, din starea actuală)
+P0 — Hub v1 la /dashboard (critic)
+
+Obiectiv: un singur ecran cu taburi: Tools / Analytics / QA / History / Resources.
+
+Tab: Tools
+
+Montezi panou SevenD (alegeri enum).
+
+ModuleGrid (deocamdată stub cu 10–12 module exemplu).
+
+PromptEditor → leagă la POST /api/gpt-editor (trimiți prompt, sevenD).
+
+TestEngine → leagă la POST /api/gpt-test (trimiți prompt, testType, sevenD).
+
+Export → buton care lovește un endpoint intern (temporar) care invocă ExportBundleManager și returnează artefactele corecte după plan.
+
+Tab: Analytics
+
+Montezi analytics-dashboard.tsx; alimentezi cu /api/analytics/user + /api/analytics/business (admin).
+
+Expune butoanele de export JSON/CSV (există deja în componentă).
+
+Tab: QA
+
+Montezi testing-dashboard.tsx; conectezi la /api/testing/run-tests.
+
+Tab: History
+
+Pentru P0: listă locală (mock) din sesiune + hook pentru viitoarea legare la Supabase runs/bundles.
+
+Tab: Resources
+
+Link rapid la /docs/api, /pricing (placeholder), README_rules.
+
+Gating (UI + server)
+
+Folosești hook-ul entitlements în UI ca să afișezi paywall pe acțiunile Pro/Enterprise (Test live, Export PDF/JSON, ZIP).
+
+Decizia finală rămâne server-side (API blochează fără entitlement).
+
+DoR/DoD (la butonul Export/Test)
+
+DoR: 7-D valid + input ≥64 bytes.
+
+DoD: scor ≥80 + manifest + checksum.
+
+Acceptanță P0
+
+/dashboard funcțional cu 5 taburi.
+
+Editor/Test/Export rezolvă răspunsuri 200/4xx conform ruleset.
+
+Paywall-uri vizibile pe acțiunile gated.
+
+Fără CLS, focus vizibil, contrast ok.
+
+P1 — Autentificare + sesiune + entitlements live
+
+Montezi Supabase Auth (provider + context).
+
+Atașezi token la apelurile API (Authorization: Bearer …).
+
+/api/entitlements devine sursa de adevăr pentru gating.
+
+UI: badge cu planul curent și starea entitlement-urilor.
+
+P2 — Export Bundle server-side (prod)
+
+Creezi POST /api/export-bundle care folosește ExportBundleManager (txt/md/json/pdf + manifest + checksum; zip doar Enterprise).
+
+Salvezi în bundles (Supabase) path-urile și checksum.
+
+În UI, butonul Export descarcă artefactul cerut; History va citi apoi din Supabase.
+
+P3 — History (cloud)
+
+Creezi view simplu /runs server-side → Tab: History afișează rulările (run_id, scor, timp, artefacte).
+
+Filtre: modul, scor, dată.
+
+P4 — Executor de module
+
+Implementezi POST /api/run/{moduleId}: 7-D validate → plan gates → exec modul → export opțional → telemetry.
+
+Registry Mxx minimalist (JSON/TS) cu input/outputs/KPI.
+
+În Tools, la select modul → „Run module” lovește acest endpoint.
+
+P5 — Pricing + Stripe (gating real)
+
+/pricing (matrix clar), Stripe checkout + webhook → upsert subscriptions + entitlements.
+
+După plată, UI vede entitlements actualizate (refetch).
+
+P6 — Notificări & alerte (opțional)
+
+Integrezi Notification System (Slack/GitHub/Email) pentru evenimente critice: pass-rate sub 80%, erori API, rate-limit atins.
+
+DoR/DoD (oficial, pentru tot sprintul)
+
+DoR: 7-D valid, entitlement OK, input minim, testcases definite (unde e cazul).
+
+DoD: scor ≥80, export complet (artefacte + manifest + checksum), telemetry salvat, fără erori în consolă, gating testat.
+
+Ordinea de commit (practic)
+
+feat: dashboard hub tabs (Tools/Analytics/QA/History/Resources).
+
+feat: tools → wire gpt-editor/gpt-test (server + UI; paywall pe Pro+).
+
+feat: export-bundle API + UI; DoD enforced.
+
+feat: auth provider + entitlements fetch (UI reflectă plan).
+
+feat: history cloud (runs/bundles) + filtre.
+
+feat: /api/run/{moduleId} + registry + legături din Tools.
+
+feat: pricing + stripe webhook (gating real).
+
+chore: telemetry events + analytics polish.
+
+ops: rate-limiter & notifications (dacă dorești în acest ciclu).
+
+Ce ai de făcut acum (tu)
+
+Copiază manual folderul cu reguli în repo (pf_rules_v3/) și păstrează-l ca SSOT.
+
+Pune Hub-ul pe taburi, leagă editor/test/export, apoi autentificarea.
+
+Revino la mine cu erorile/edge-case-urile întâlnite; îți scriu patch-urile de cod (rute + UI) direct.

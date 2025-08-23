@@ -27,11 +27,11 @@ const RunRequestSchema = z.object({
   output_format: z.enum(["txt", "md", "checklist", "spec", "playbook", "json", "yaml", "diagram", "bundle"]),
   
   // Optional context
-  context?: z.string().max(5000).optional(),
-  specific_requirements?: z.string().max(2000).optional(),
+  context: z.string().max(5000).optional(),
+  specific_requirements: z.string().max(2000).optional(),
   
   // API key (for Enterprise external access)
-  api_key?: z.string().optional()
+  api_key: z.string().optional()
 });
 
 export async function POST(
@@ -39,9 +39,9 @@ export async function POST(
   { params }: { params: { moduleId: string } }
 ) {
   const startTime = Date.now();
-  let runId: string;
-  let orgId: string;
-  let userId: string;
+  let runId: string | undefined;
+  let orgId: string | undefined;
+  let userId: string | undefined;
 
   try {
     // Parse request body
@@ -70,7 +70,7 @@ export async function POST(
         );
       }
 
-      if (!apiKey.scopes.includes("run_modules")) {
+      if (!apiKey.scopes?.includes("run_modules")) {
     return NextResponse.json(
           { error: "API key lacks run_modules scope" },
           { status: 403 }
@@ -122,82 +122,85 @@ export async function POST(
     }
 
     // Check entitlements
-    await withEntitlementGate(orgId, ["canUseAllModules"], async () => {
-      // Additional module-specific checks
-      const allowedModules = await supabase.rpc("pf_get_allowed_modules", { p_org: orgId });
-      if (!allowedModules.includes(moduleId)) {
-        throw new Error("Module not included in current plan");
-      }
-    });
+    if (orgId) {
+      await withEntitlementGate(orgId, ["canUseAllModules"], async () => {
+        // Additional module-specific checks
+        const { data: allowedModules } = await supabase.rpc("pf_get_allowed_modules", { p_org: orgId });
+        if (allowedModules && !allowedModules.includes(moduleId)) {
+          throw new Error("Module not included in current plan");
+        }
+      });
+    }
 
     // Validate 7D parameters
-    const normalizedParams = await validateParams7D(validatedInput, moduleId);
+    if (orgId) {
+      const normalizedParams = await validateParams7D(validatedInput, moduleId);
 
-    // Check complexity requirements
-    const complexityLevels = ["foundational", "standard", "advanced", "expert"];
-    const minComplexityIndex = complexityLevels.indexOf(module.complexity_min);
-    const userComplexityIndex = complexityLevels.indexOf(validatedInput.complexity);
-    
-    if (userComplexityIndex < minComplexityIndex) {
-      return NextResponse.json(
-        { 
-          error: "Complexity level too low for this module",
-          minimum_required: module.complexity_min,
-          provided: validatedInput.complexity
-        },
-        { status: 400 }
-      );
-    }
+      // Check complexity requirements
+      const complexityLevels = ["foundational", "standard", "advanced", "expert"];
+      const minComplexityIndex = complexityLevels.indexOf(module.complexity_min);
+      const userComplexityIndex = complexityLevels.indexOf(validatedInput.complexity);
+      
+      if (userComplexityIndex < minComplexityIndex) {
+        return NextResponse.json(
+          { 
+            error: "Complexity level too low for this module",
+            minimum_required: module.complexity_min,
+            provided: validatedInput.complexity
+          },
+          { status: 400 }
+        );
+      }
 
-    // Generate unique run ID and hash
-    runId = crypto.randomUUID();
-    const runHash = await generateRunHash(normalizedParams, moduleId);
+      // Generate unique run ID and hash
+      runId = crypto.randomUUID();
+      const runHash = await generateRunHash(normalizedParams, moduleId);
 
-    // Check for duplicate run (same module + same params)
-    const { data: existingRun } = await supabase
-      .from("runs")
-      .select("id, status, created_at")
-      .eq("org_id", orgId)
-      .eq("module_id", moduleId) 
-      .eq("run_hash", runHash)
-      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()) // Last 24h
-      .single();
-
-    if (existingRun && existingRun.status === "ok") {
-      // Return cached result if recent and successful
-      const { data: existingBundle } = await supabase
-        .from("bundles")
-        .select("*")
-        .eq("run_id", existingRun.id)
+      // Check for duplicate run (same module + same params)
+      const { data: existingRun } = await supabase
+        .from("runs")
+        .select("id, status, created_at")
+        .eq("org_id", orgId)
+        .eq("module_id", moduleId) 
+        .eq("run_hash", runHash)
+        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()) // Last 24h
         .single();
 
-      if (existingBundle) {
-        return NextResponse.json({
-          run_id: existingRun.id,
-          status: "cached",
-          bundle_id: existingBundle.id,
-          created_at: existingRun.created_at
-        });
+      if (existingRun && existingRun.status === "ok") {
+        // Return cached result if recent and successful
+        const { data: existingBundle } = await supabase
+          .from("bundles")
+          .select("*")
+          .eq("run_id", existingRun.id)
+          .single();
+
+        if (existingBundle) {
+          return NextResponse.json({
+            run_id: existingRun.id,
+            status: "cached",
+            bundle_id: existingBundle.id,
+            created_at: existingRun.created_at
+          });
+        }
       }
-  }
 
-  // Create run record
-    const { error: runError } = await supabase
-      .from("runs")
-      .insert({
-        id: runId,
-    org_id: orgId,
-        user_id: userId,
-    module_id: moduleId,
-        run_hash: runHash,
-        parameter_set_7d: normalizedParams,
-        mode: validatedInput.api_key ? "real" : "sim", // API calls default to real mode
-        status: "running"
-      });
+      // Create run record
+      const { error: runError } = await supabase
+        .from("runs")
+        .insert({
+          id: runId,
+          org_id: orgId,
+          user_id: userId,
+          module_id: moduleId,
+          run_hash: runHash,
+          parameter_set_7d: normalizedParams,
+          mode: validatedInput.api_key ? "real" : "sim", // API calls default to real mode
+          status: "running"
+        });
 
-    if (runError) {
-      throw new Error(`Failed to create run record: ${runError.message}`);
-    }
+      if (runError) {
+        throw new Error(`Failed to create run record: ${runError.message}`);
+      }
 
     // Generate prompt
     const generationStart = Date.now();
@@ -222,26 +225,25 @@ export async function POST(
         clarity: evaluation.scores.clarity,
         execution: evaluation.scores.execution,
         ambiguity: evaluation.scores.ambiguity,
-        business_fit: evaluation.scores.business_fit,
-        composite: evaluation.scores.composite,
-        verdict: evaluation.verdict,
-        thresholds: evaluation.thresholds,
-        weights: evaluation.weights,
+        businessFit: evaluation.scores.businessFit,
         feedback: evaluation.feedback
       });
     }
 
     // Create export bundle
     const bundleStart = Date.now();
-    const bundle = await createBundle({
-      runId,
-      moduleId,
-      content: promptResult.content,
-      parameters: normalizedParams,
-      evaluation,
-      outputFormat: validatedInput.output_format,
-      orgId
-    });
+    let bundle;
+    if (orgId) {
+      bundle = await createBundle({
+        runId: runId!,
+        moduleId,
+        content: promptResult.content,
+        parameters: normalizedParams,
+        evaluation,
+        outputFormat: validatedInput.output_format,
+        orgId
+      });
+    }
     const bundleTime = Date.now() - bundleStart;
 
     // Update run with success status and telemetry
@@ -267,23 +269,25 @@ export async function POST(
       .eq("id", runId);
 
     // Log telemetry
-    await logRunTelemetry({
-      runId,
-      orgId,
-      userId,
-      moduleId,
-      parameters: normalizedParams,
-      telemetry: telemetryData,
-      evaluation
-    });
+    if (runId && orgId && userId) {
+      await logRunTelemetry({
+        runId,
+        orgId,
+        userId,
+        moduleId,
+        parameters: normalizedParams,
+        telemetry: telemetryData,
+        evaluation
+      });
+    }
 
     return NextResponse.json({
       run_id: runId,
-      bundle_id: bundle.id,
+      bundle_id: bundle?.id || null,
       status: "completed",
       evaluation: evaluation ? {
         scores: evaluation.scores,
-        verdict: evaluation.verdict
+        feedback: evaluation.feedback
       } : null,
       telemetry: {
         total_time_ms: totalTime,
@@ -298,15 +302,18 @@ export async function POST(
 
     // Update run status to failed if run was created
     if (runId) {
+      const supabase = createRouteHandlerClient({ cookies });
       await supabase.from("runs").update({
         status: "failed",
         runtime_ms: Date.now() - startTime
       }).eq("id", runId);
     }
 
-    if (error.message.includes("entitlement") || error.message.includes("plan")) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    
+    if (errorMessage.includes("entitlement") || errorMessage.includes("plan")) {
       return NextResponse.json(
-        { error: error.message },
+        { error: errorMessage },
         { status: 402 } // Payment required
       );
     }

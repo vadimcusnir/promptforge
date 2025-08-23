@@ -30,6 +30,8 @@ const PUBLIC_ALLOW = [
   "/assets",
   "/robots.txt",
   "/sitemap.xml",
+  "/glitch-keywords.js",
+  "/forge_v3_logo",
 ];
 
 const gatedRoutes: Record<string, string> = {
