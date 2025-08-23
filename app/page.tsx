@@ -455,24 +455,24 @@ Generate the optimized ${demoInput} strategy now.`;
                         <div className="flex items-center justify-between mb-4">
                           <div className="military-badge-small">{module.id}</div>
                           <div className="text-xs text-[#FFD700] font-mono font-bold bg-[#FFD700]/10 px-2 py-1 border border-[#FFD700]/30">
-                            {moduleData.vector}
+                            {module.vector}
                           </div>
                         </div>
 
                         {/* Module Content */}
                         <div className="flex-1 flex flex-col">
                           <h3 className="text-lg text-white mb-3 font-mono font-bold group-hover:text-[#FFD700] transition-colors">
-                            {moduleData.title}
+                            {module.title}
                           </h3>
                           <p className="text-sm text-gray-400 mb-6 font-mono leading-relaxed flex-1">
-                            {moduleData.description}
+                            {module.description}
                           </p>
 
                           {/* Module Footer */}
                           <div className="space-y-4">
                             {/* Output Formats */}
                             <div className="flex gap-2 flex-wrap">
-                              {moduleData.outputs.map(output => {
+                              {module.outputs.map(output => {
                                 const isPro = output === 'json' || output === 'pdf';
                                 const isEnterprise = output === 'zip';
                                 return (
