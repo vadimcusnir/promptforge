@@ -253,7 +253,7 @@ export async function POST(req: NextRequest) {
         domain: promptHistory.parameter_set_id || 'general',
         isTrialUser
       });
-      fileHashes['prompt.pdf'] = sha256(artifacts['prompt.pdf'] as Uint8Array);
+      fileHashes['prompt.pdf'] = sha256(Buffer.from(artifacts['prompt.pdf'] as Uint8Array));
     }
 
     // Generate telemetry
@@ -406,8 +406,8 @@ export async function POST(req: NextRequest) {
     // Track export failed
     await trackEvent({
       event: 'export.failed',
-      orgId,
-      userId,
+      orgId: body.orgId,
+      userId: user.email,
       payload: {
         trace_id: traceId,
         duration_ms: Date.now() - startTime,
