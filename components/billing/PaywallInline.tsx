@@ -15,7 +15,7 @@ export function PaywallInline({ trigger, feature, orgId, compact = false }: Payw
   const { subscription, isPlan, isTrialing, daysUntilExpiry } = useEntitlements(orgId);
 
   const getFeatureInfo = (feature: keyof UserEntitlements) => {
-    const featureMap = {
+    const featureMap: Partial<Record<keyof UserEntitlements, { name: string; description: string; requiredPlan: 'pro' | 'enterprise'; icon: any }>> = {
       canUseGptTestReal: {
         name: 'GPT Test Engine',
         description: 'Real-time testing with detailed analysis',
@@ -51,6 +51,12 @@ export function PaywallInline({ trigger, feature, orgId, compact = false }: Payw
         description: 'Intelligent scoring and improvement suggestions',
         requiredPlan: 'pro' as const,
         icon: Sparkles,
+      },
+      hasCloudHistory: {
+        name: 'Cloud History',
+        description: 'Access your prompt history across devices',
+        requiredPlan: 'pro' as const,
+        icon: Crown,
       },
     };
 

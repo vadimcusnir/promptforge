@@ -172,7 +172,7 @@ function FeatureLockedPlaceholder({
   onUpgrade: () => void;
 }) {
   const getFeatureInfo = (feature: keyof UserEntitlements) => {
-    const featureMap = {
+    const featureMap: Partial<Record<keyof UserEntitlements, { icon: any; name: string; plan: string }>> = {
       canUseGptTestReal: { 
         icon: Zap, 
         name: 'GPT Test Engine', 
@@ -201,6 +201,11 @@ function FeatureLockedPlaceholder({
       hasEvaluatorAI: { 
         icon: Zap, 
         name: 'Evaluator AI', 
+        plan: 'Pro' 
+      },
+      hasCloudHistory: { 
+        icon: Crown, 
+        name: 'Cloud History', 
         plan: 'Pro' 
       },
     };

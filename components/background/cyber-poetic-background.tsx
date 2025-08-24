@@ -400,7 +400,7 @@ export function CyberPoeticBackground() {
 
     const densities = getDensities();
     const figures: EnhancedGeometricFigure[] = [];
-    const figureTypes: EnhancedGeometricFigure["type"][] = [
+    const figureTypes: EnhancedGeometricFigure["shape"][] = [
       "point",
       "line",
       "bar",
@@ -413,19 +413,24 @@ export function CyberPoeticBackground() {
     ];
 
     for (let i = 0; i < densities.geometricFigures; i++) {
-      const type = figureTypes[Math.floor(Math.random() * figureTypes.length)];
+      const shape = figureTypes[Math.floor(Math.random() * figureTypes.length)];
       figures.push({
         id: `figure-${i}`,
-        type,
+        shape,
         x: Math.random() * 100,
         y: Math.random() * 100,
         width:
-          type === "line" ? 20 + Math.random() * 40 : 2 + Math.random() * 8,
+          shape === "line" ? 20 + Math.random() * 40 : 2 + Math.random() * 8,
         height:
-          type === "bar" ? 10 + Math.random() * 30 : 2 + Math.random() * 8,
+          shape === "bar" ? 10 + Math.random() * 30 : 2 + Math.random() * 8,
         rotation: Math.random() * 360,
         opacity: 0.3 + Math.random() * 0.4,
         color: colors[Math.floor(Math.random() * colors.length)],
+        path: "linear",
+        duration: 8000 + Math.random() * 4000,
+        variance: 0.1 + Math.random() * 0.3,
+        z: Math.floor(Math.random() * 10),
+        blend: "normal",
         animationDelay: Math.random() * 8000,
       });
     }
@@ -713,7 +718,7 @@ export function CyberPoeticBackground() {
               transform: `rotate(${figure.rotation}deg) translateZ(0)`,
               opacity: figure.opacity,
               backgroundColor: figure.color,
-              borderRadius: figure.type === "point" ? "50%" : "0",
+              borderRadius: figure.shape === "point" ? "50%" : "0",
               willChange: "transform, opacity",
               transition: "all 0.2s ease-out",
             }}
@@ -741,7 +746,7 @@ export function CyberPoeticBackground() {
                   textShadow: "0 0 15px rgba(255, 90, 36, 0.5)",
                   willChange: "transform, opacity",
                   filter:
-                    quote.animationType === "glitch" && Math.random() < 0.1
+                    quote.style === "glitch" && Math.random() < 0.1
                       ? "hue-rotate(45deg)"
                       : "none",
                   transition: "all 0.3s ease-out",

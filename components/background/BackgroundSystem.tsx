@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { MatrixTokenLayer } from "./MatrixTokenLayer";
 import { NarrativeLayer } from "./NarrativeLayer";
-import { GeometricLayer } from "./GeometricLayer";
+
 
 interface BackgroundSystemProps {
   className?: string;
@@ -82,14 +82,7 @@ export function BackgroundSystem({ className = "" }: BackgroundSystemProps) {
       aria-hidden="true"
     >
       {/* Z-Index Level 0: Grid + Geometric Figures */}
-      {settings.geometricEnabled && (
-        <GeometricLayer
-          className="absolute inset-0"
-          style={{ zIndex: 0 }}
-          reducedMotion={reducedMotion}
-          isDashboard={isDashboard}
-        />
-      )}
+      {/* GeometricLayer component removed - not implemented */}
 
       {/* Z-Index Level 0: Matrix Tokens */}
       {settings.tokensEnabled && (
