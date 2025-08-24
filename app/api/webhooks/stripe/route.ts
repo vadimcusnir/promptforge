@@ -7,7 +7,7 @@ import { mapPriceToPlanCode, mapPriceToAddonCode, validateStripeEnvironment } fr
 validateStripeEnvironment();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET!, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-07-30.basil',
 });
 
 const supabase = createClient(
@@ -155,11 +155,11 @@ async function handleSubscriptionUpsert(subscription: Stripe.Subscription) {
       trial_end: subscription.trial_end 
         ? new Date(subscription.trial_end * 1000).toISOString() 
         : null,
-      current_period_start: subscription.current_period_start
-        ? new Date(subscription.current_period_start * 1000).toISOString()
+      current_period_start: subscription.start_date
+        ? new Date(subscription.start_date * 1000).toISOString()
         : null,
-      current_period_end: subscription.current_period_end
-        ? new Date(subscription.current_period_end * 1000).toISOString()
+      current_period_end: subscription.billing_cycle_anchor
+        ? new Date(subscription.billing_cycle_anchor * 1000).toISOString()
         : null,
       cancel_at_period_end: subscription.cancel_at_period_end,
     }, {
@@ -243,7 +243,8 @@ async function handleTrialWillEnd(subscription: Stripe.Subscription) {
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   console.log(`[Stripe Webhook] Payment failed: ${invoice.id}`);
   
-  if (invoice.subscription) {
+  const subscriptionId = invoice.subscription_id;
+  if (subscriptionId) {
     // Update subscription status if needed
     const { error } = await supabase
       .from('subscriptions')
@@ -251,7 +252,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
         status: 'past_due',
         updated_at: new Date().toISOString(),
       })
-      .eq('stripe_subscription_id', invoice.subscription as string);
+      .eq('stripe_subscription_id', subscriptionId);
 
     if (error) {
       console.error('[Stripe Webhook] Error updating payment failed subscription:', error);
