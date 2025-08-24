@@ -1,37 +1,79 @@
-import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
-import { mapPriceToPlanCode, mapPriceToAddonCode, validateStripeEnvironment } from '@/lib/billing/stripe-config';
+import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
+import { headers } from "next/headers";
 
-// Validate environment on module load
-validateStripeEnvironment();
-
-const stripe = new Stripe(process.env.STRIPE_SECRET!, {
-  apiVersion: '2025-07-30.basil',
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-07-30.basil",
 });
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-/**
- * Stripe Webhook Handler
- * Handles subscription lifecycle events and applies entitlements
- */
-export async function POST(req: NextRequest) {
-  const body = await req.text();
-  const signature = req.headers.get('stripe-signature');
+// Plan mapping for entitlements
+const PLAN_ENTITLEMENTS = {
+  creator: {
+    monthlyRunsRemaining: 100,
+    monthlyGPTOptimizationsRemaining: 50,
+    monthlyExportsRemaining: 50,
+    canExportJSON: true,
+    canExportPDF: false,
+    canExportBundleZip: false,
+    hasCloudHistory: true,
+    hasAdvancedAnalytics: false,
+    hasCustomModules: false,
+    hasTeamCollaboration: false,
+    hasPrioritySupport: false,
+    maxTeamMembers: 1,
+    maxCustomModules: 0,
+    maxStorageGB: 5,
+  },
+  pro: {
+    monthlyRunsRemaining: 1000,
+    monthlyGPTOptimizationsRemaining: 500,
+    monthlyExportsRemaining: 500,
+    canExportJSON: true,
+    canExportPDF: true,
+    canExportBundleZip: false,
+    hasCloudHistory: true,
+    hasAdvancedAnalytics: true,
+    hasCustomModules: true,
+    hasTeamCollaboration: true,
+    hasPrioritySupport: false,
+    maxTeamMembers: 5,
+    maxCustomModules: 10,
+    maxStorageGB: 25,
+  },
+  enterprise: {
+    monthlyRunsRemaining: -1, // Unlimited
+    monthlyGPTOptimizationsRemaining: -1, // Unlimited
+    monthlyExportsRemaining: -1, // Unlimited
+    canExportJSON: true,
+    canExportPDF: true,
+    canExportBundleZip: true,
+    hasCloudHistory: true,
+    hasAdvancedAnalytics: true,
+    hasCustomModules: true,
+    hasTeamCollaboration: true,
+    hasPrioritySupport: true,
+    maxTeamMembers: -1, // Unlimited
+    maxCustomModules: -1, // Unlimited
+    maxStorageGB: 100,
+  },
+};
+
+export async function POST(request: NextRequest) {
+  const body = await request.text();
+  const headersList = await headers();
+  const signature = headersList.get("stripe-signature");
 
   if (!signature) {
-    console.error('[Stripe Webhook] Missing signature');
-    return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing stripe signature" },
+      { status: 400 }
+    );
   }
 
   let event: Stripe.Event;
@@ -42,326 +84,175 @@ export async function POST(req: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (err: any) {
-    console.error('[Stripe Webhook] Signature verification failed:', err.message);
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+  } catch (err) {
+    console.error("Webhook signature verification failed:", err);
+    return NextResponse.json(
+      { error: "Invalid signature" },
+      { status: 400 }
+    );
   }
-
-  console.log(`[Stripe Webhook] Received event: ${event.type}`);
 
   try {
     switch (event.type) {
-      case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+      case "customer.subscription.created":
+        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
         break;
-
-      case 'customer.subscription.created':
-      case 'customer.subscription.updated':
-        await handleSubscriptionUpsert(event.data.object as Stripe.Subscription);
+      case "customer.subscription.updated":
+        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
         break;
-
-      case 'customer.subscription.deleted':
+      case "customer.subscription.deleted":
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
-
-      case 'customer.subscription.trial_will_end':
-        await handleTrialWillEnd(event.data.object as Stripe.Subscription);
-        break;
-
-      case 'invoice.payment_failed':
-        await handlePaymentFailed(event.data.object as Stripe.Invoice);
-        break;
-
-      case 'invoice.payment_succeeded':
+      case "invoice.payment_succeeded":
         await handlePaymentSucceeded(event.data.object as Stripe.Invoice);
         break;
-
+      case "invoice.payment_failed":
+        await handlePaymentFailed(event.data.object as Stripe.Invoice);
+        break;
       default:
-        console.log(`[Stripe Webhook] Unhandled event type: ${event.type}`);
+        console.log(`Unhandled event type: ${event.type}`);
     }
 
-    return NextResponse.json({ received: true }, { status: 200 });
+    return NextResponse.json({ received: true });
   } catch (error) {
-    console.error('[Stripe Webhook] Error processing event:', error);
+    console.error("Error processing webhook:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Webhook processing failed" },
       { status: 500 }
     );
   }
 }
 
-/**
- * Handle checkout session completed
- */
-async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  console.log(`[Stripe Webhook] Checkout completed: ${session.id}`);
+async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+  const planId = subscription.metadata.plan_id;
+  const userId = subscription.metadata.supabase_user_id;
+  const billingCycle = subscription.metadata.billing_cycle;
 
-  if (session.mode === 'subscription' && session.subscription) {
-    // Fetch the full subscription object
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    );
-    await handleSubscriptionUpsert(subscription);
-  }
-
-  // Handle one-time payments for add-ons
-  if (session.mode === 'payment' && session.metadata?.addon_code) {
-    await handleAddonPurchase(session);
-  }
-}
-
-/**
- * Handle subscription creation/update
- */
-async function handleSubscriptionUpsert(subscription: Stripe.Subscription) {
-  console.log(`[Stripe Webhook] Processing subscription: ${subscription.id}`);
-
-  const customerId = subscription.customer as string;
-  const priceId = subscription.items.data[0]?.price?.id;
-  
-  if (!priceId) {
-    console.error('[Stripe Webhook] No price ID found in subscription');
+  if (!planId || !userId) {
+    console.error("Missing metadata in subscription:", subscription.metadata);
     return;
   }
 
-  const planCode = mapPriceToPlanCode(priceId);
-  if (!planCode) {
-    console.error(`[Stripe Webhook] Unknown price ID: ${priceId}`);
+  const entitlements = PLAN_ENTITLEMENTS[planId as keyof typeof PLAN_ENTITLEMENTS];
+  if (!entitlements) {
+    console.error("Unknown plan:", planId);
     return;
   }
 
-  const seats = subscription.items.data[0]?.quantity || 1;
-  
-  // Get org_id from subscription metadata or customer lookup
-  const orgId = subscription.metadata?.org_id || await lookupOrgByCustomer(customerId);
-  
-  if (!orgId) {
-    console.error(`[Stripe Webhook] No org_id found for customer: ${customerId}`);
-    return;
-  }
-
-  console.log(`[Stripe Webhook] Upserting subscription for org: ${orgId}, plan: ${planCode}`);
-
-  // 1. Upsert subscription
-  const { error: subError } = await supabase
-    .from('subscriptions')
-    .upsert({
-      org_id: orgId,
-      stripe_customer_id: customerId,
-      stripe_subscription_id: subscription.id,
-      plan_code: planCode,
-      status: subscription.status,
-      seats,
-      trial_end: subscription.trial_end 
-        ? new Date(subscription.trial_end * 1000).toISOString() 
-        : null,
-      current_period_start: subscription.start_date
-        ? new Date(subscription.start_date * 1000).toISOString()
-        : null,
-      current_period_end: subscription.billing_cycle_anchor
-        ? new Date(subscription.billing_cycle_anchor * 1000).toISOString()
-        : null,
-      cancel_at_period_end: subscription.cancel_at_period_end,
-    }, {
-      onConflict: 'stripe_subscription_id'
-    });
-
-  if (subError) {
-    console.error('[Stripe Webhook] Error upserting subscription:', subError);
-    throw subError;
-  }
-
-  // 2. Apply plan entitlements
-  const { error: entError } = await supabase.rpc('pf_apply_plan_entitlements', {
-    org_uuid: orgId,
-    plan_code_val: planCode,
+  // Update or create subscription record
+  await supabase.from("subscriptions").upsert({
+    user_id: userId,
+    stripe_subscription_id: subscription.id,
+    stripe_customer_id: subscription.customer as string,
+    plan_code: planId,
+    status: subscription.status,
+    billing_cycle: billingCycle,
+    current_period_start: new Date(subscription.start_date * 1000).toISOString(),
+    current_period_end: new Date(subscription.billing_cycle_anchor * 1000).toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   });
 
-  if (entError) {
-    console.error('[Stripe Webhook] Error applying plan entitlements:', entError);
-    throw entError;
-  }
+  // Update user entitlements
+  await supabase.from("user_entitlements").upsert({
+    user_id: userId,
+    plan_tier: planId,
+    ...entitlements,
+    updated_at: new Date().toISOString(),
+  });
 
-  console.log(`[Stripe Webhook] Successfully applied ${planCode} entitlements to org ${orgId}`);
+  console.log(`Subscription created for user ${userId} with plan ${planId}`);
 }
 
-/**
- * Handle subscription deletion/cancellation
- */
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  console.log(`[Stripe Webhook] Subscription deleted: ${subscription.id}`);
+async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  const userId = subscription.metadata.supabase_user_id;
+  const planId = subscription.metadata.plan_id;
 
-  const customerId = subscription.customer as string;
-  const orgId = subscription.metadata?.org_id || await lookupOrgByCustomer(customerId);
-  
-  if (!orgId) {
-    console.error(`[Stripe Webhook] No org_id found for deleted subscription: ${subscription.id}`);
+  if (!userId || !planId) {
+    console.error("Missing metadata in subscription update:", subscription.metadata);
     return;
   }
 
   // Update subscription status
-  const { error: subError } = await supabase
-    .from('subscriptions')
+  await supabase
+    .from("subscriptions")
     .update({
-      status: 'canceled',
+      status: subscription.status,
+      current_period_start: new Date(subscription.start_date * 1000).toISOString(),
+      current_period_end: new Date(subscription.billing_cycle_anchor * 1000).toISOString(),
       updated_at: new Date().toISOString(),
     })
-    .eq('stripe_subscription_id', subscription.id);
+    .eq("stripe_subscription_id", subscription.id);
 
-  if (subError) {
-    console.error('[Stripe Webhook] Error updating canceled subscription:', subError);
-    throw subError;
-  }
-
-  // Apply fallback plan (pilot) or remove entitlements
-  const { error: entError } = await supabase.rpc('pf_apply_plan_entitlements', {
-    org_uuid: orgId,
-    plan_code_val: 'pilot', // Fallback to pilot plan
-  });
-
-  if (entError) {
-    console.error('[Stripe Webhook] Error applying fallback entitlements:', entError);
-    throw entError;
-  }
-
-  console.log(`[Stripe Webhook] Applied fallback entitlements to org ${orgId}`);
-}
-
-/**
- * Handle trial will end notification
- */
-async function handleTrialWillEnd(subscription: Stripe.Subscription) {
-  console.log(`[Stripe Webhook] Trial will end: ${subscription.id}`);
-  
-  // You can implement trial end notifications here
-  // For example, send email to org admins about trial ending
-}
-
-/**
- * Handle payment failed
- */
-async function handlePaymentFailed(invoice: Stripe.Invoice) {
-  console.log(`[Stripe Webhook] Payment failed: ${invoice.id}`);
-  
-  // In newer Stripe versions, subscription ID might be in metadata or we need to handle differently
-  // For now, skip this handler until we can determine the correct property
-  console.log(`[Stripe Webhook] Payment failed handler - subscription ID not available in this Stripe version`);
-}
-
-/**
- * Handle payment succeeded
- */
-async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
-  console.log(`[Stripe Webhook] Payment succeeded: ${invoice.id}`);
-  
-  // In newer Stripe versions, subscription ID might be in metadata or we need to handle differently
-  // For now, skip this handler until we can determine the correct property
-  console.log(`[Stripe Webhook] Payment succeeded handler - subscription ID not available in this Stripe version`);
-}
-
-/**
- * Handle add-on purchase (one-time payment)
- */
-async function handleAddonPurchase(session: Stripe.Checkout.Session) {
-  const addonCode = session.metadata?.addon_code;
-  const orgId = session.metadata?.org_id;
-  const userId = session.metadata?.user_id;
-
-  if (!addonCode || !orgId) {
-    console.error('[Stripe Webhook] Missing addon metadata in session');
-    return;
-  }
-
-  console.log(`[Stripe Webhook] Processing addon purchase: ${addonCode} for org: ${orgId}`);
-
-  // Insert user addon record
-  const { error: addonError } = await supabase
-    .from('user_addons')
-    .upsert({
-      org_id: orgId,
-      user_id: userId ?? null,
-      addon_code: addonCode,
-      status: 'active',
-      // Set expiry based on addon type (e.g., 1 year for industry packs)
-      expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-    }, {
-      onConflict: 'org_id,user_id,addon_code'
-    });
-
-  if (addonError) {
-    console.error('[Stripe Webhook] Error inserting addon:', addonError);
-    throw addonError;
-  }
-
-  // Apply addon-specific entitlements
-  await applyAddonEntitlements(orgId, userId ?? null, addonCode);
-}
-
-/**
- * Apply entitlements for specific add-ons
- */
-async function applyAddonEntitlements(orgId: string, userId: string | null, addonCode: string) {
-  const addonEntitlements: Record<string, Record<string, boolean>> = {
-    evaluator_ai: {
-      hasEvaluatorAI: true,
-    },
-    export_designer: {
-      hasExportDesigner: true,
-    },
-    fintech_pack: {
-      hasFinTechPack: true,
-      hasIndustryTemplates: true,
-    },
-    edu_pack: {
-      hasEduPack: true,
-      hasIndustryTemplates: true,
-    },
-  };
-
-  const entitlements = addonEntitlements[addonCode];
-  if (!entitlements) {
-    console.log(`[Stripe Webhook] No entitlements defined for addon: ${addonCode}`);
-    return;
-  }
-
-  // Insert entitlements for this addon
-  for (const [flag, value] of Object.entries(entitlements)) {
-    const { error } = await supabase
-      .from('entitlements')
-      .upsert({
-        org_id: orgId,
-        user_id: userId,
-        flag,
-        value,
-        source: 'addon',
-        source_ref: addonCode,
-      }, {
-        onConflict: 'org_id,user_id,flag,source,source_ref'
-      });
-
-    if (error) {
-      console.error('[Stripe Webhook] Error inserting addon entitlement:', error);
-      throw error;
+  // If plan changed, update entitlements
+  if (subscription.status === "active") {
+    const entitlements = PLAN_ENTITLEMENTS[planId as keyof typeof PLAN_ENTITLEMENTS];
+    if (entitlements) {
+      await supabase
+        .from("user_entitlements")
+        .update({
+          plan_tier: planId,
+          ...entitlements,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("user_id", userId);
     }
   }
 
-  console.log(`[Stripe Webhook] Applied ${addonCode} entitlements to org ${orgId}`);
+  console.log(`Subscription updated for user ${userId}: ${subscription.status}`);
 }
 
-/**
- * Lookup org_id by Stripe customer ID
- */
-async function lookupOrgByCustomer(customerId: string): Promise<string | null> {
-  const { data, error } = await supabase
-    .from('subscriptions')
-    .select('org_id')
-    .eq('stripe_customer_id', customerId)
-    .single();
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  const userId = subscription.metadata.supabase_user_id;
 
-  if (error || !data) {
-    console.error('[Stripe Webhook] Could not find org for customer:', customerId);
-    return null;
+  if (!userId) {
+    console.error("Missing user ID in subscription deletion:", subscription.metadata);
+    return;
   }
 
-  return data.org_id;
+  // Mark subscription as cancelled
+  await supabase
+    .from("subscriptions")
+    .update({
+      status: "cancelled",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("stripe_subscription_id", subscription.id);
+
+  // Reset user to free plan entitlements
+  await supabase
+    .from("user_entitlements")
+    .update({
+      plan_tier: "free",
+      monthlyRunsRemaining: 10,
+      monthlyGPTOptimizationsRemaining: 0,
+      monthlyExportsRemaining: 5,
+      canExportJSON: false,
+      canExportPDF: false,
+      canExportBundleZip: false,
+      hasCloudHistory: false,
+      hasAdvancedAnalytics: false,
+      hasCustomModules: false,
+      hasTeamCollaboration: false,
+      hasPrioritySupport: false,
+      maxTeamMembers: 1,
+      maxCustomModules: 0,
+      maxStorageGB: 1,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", userId);
+
+  console.log(`Subscription cancelled for user ${userId}`);
+}
+
+async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+  // In newer Stripe versions, we need to get subscription ID from the subscription object
+  // For now, we'll skip this handler until we can determine the correct approach
+  console.log("Payment succeeded - subscription ID handling needs update for current Stripe version");
+}
+
+async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  // In newer Stripe versions, we need to get subscription ID from the subscription object
+  // For now, we'll skip this handler until we can determine the correct approach
+  console.log("Payment failed - subscription ID handling needs update for current Stripe version");
 }

@@ -1,299 +1,215 @@
-import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
-import { getUserFromCookies } from '@/lib/auth';
-import { createClient } from '@supabase/supabase-js';
-import { getProductByPlanCode } from '@/lib/billing/stripe-config';
+import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
+import { getUserFromCookies } from "@/lib/auth";
+import { createClient } from "@supabase/supabase-js";
 
-// Initialize clients only when needed
-let stripeInstance: Stripe | null = null;
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-07-30.basil",
+});
 
-function getStripe(): Stripe {
-  if (!stripeInstance) {
-    const STRIPE_SECRET = process.env.STRIPE_SECRET;
-    if (!STRIPE_SECRET) {
-      throw new Error('STRIPE_SECRET environment variable is required');
-    }
-    stripeInstance = new Stripe(STRIPE_SECRET, {
-      apiVersion: '2025-07-30.basil',
-    });
-  }
-  return stripeInstance;
-}
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-function getSupabase() {
-  if (!supabaseInstance) {
-    const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE;
-    
-    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
-      throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE environment variables are required');
-    }
-    
-    supabaseInstance = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    });
-  }
-  return supabaseInstance;
-}
+// Plan configuration
+const PLANS = {
+  creator: {
+    monthly: {
+      priceId: process.env.STRIPE_CREATOR_MONTHLY_PRICE_ID,
+      amount: 1900, // $19.00
+    },
+    annual: {
+      priceId: process.env.STRIPE_CREATOR_ANNUAL_PRICE_ID,
+      amount: 19000, // $190.00
+    },
+  },
+  pro: {
+    monthly: {
+      priceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
+      amount: 4900, // $49.00
+    },
+    annual: {
+      priceId: process.env.STRIPE_PRO_ANNUAL_PRICE_ID,
+      amount: 49000, // $490.00
+    },
+  },
+  enterprise: {
+    monthly: {
+      priceId: process.env.STRIPE_ENTERPRISE_MONTHLY_PRICE_ID,
+      amount: 19900, // $199.00
+    },
+    annual: {
+      priceId: process.env.STRIPE_ENTERPRISE_ANNUAL_PRICE_ID,
+      amount: 199000, // $1990.00
+    },
+  },
+};
 
-interface CreateCheckoutRequest {
-  orgId: string;
-  planCode: 'pilot' | 'pro' | 'enterprise';
-  billingCycle: 'monthly' | 'annual';
-  successUrl: string;
-  cancelUrl: string;
-  seats?: number;
-}
-
-/**
- * Create Stripe Checkout Session
- * Handles subscription creation and upgrades
- */
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest) {
   try {
-    // Get current user from cookies
     const user = await getUserFromCookies();
-    
-    if (!user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body: CreateCheckoutRequest = await req.json();
-    const { orgId, planCode, billingCycle, successUrl, cancelUrl, seats = 1 } = body;
-
-    // Validate request
-    if (!orgId || !planCode || !billingCycle) {
-      return NextResponse.json({ 
-        error: 'Missing required fields: orgId, planCode, billingCycle' 
-      }, { status: 400 });
-    }
-
-    if (planCode === 'pilot') {
-      return NextResponse.json({ 
-        error: 'Cannot create checkout for pilot plan' 
-      }, { status: 400 });
-    }
-
-    // Verify user is admin of the organization
-    const { data: membership, error: memberError } = await getSupabase()
-      .from('org_members')
-      .select('role')
-      .eq('org_id', orgId)
-      .eq('user_id', user.email)
-      .single();
-
-    // Type assertion for membership data
-    const typedMembership = membership as { role: string } | null;
-
-    if (memberError || !typedMembership || !['owner', 'admin'].includes(typedMembership.role)) {
-      return NextResponse.json({ 
-        error: 'Not authorized to manage billing for this organization' 
-      }, { status: 403 });
-    }
-
-    // Get Stripe product configuration
-    const product = getProductByPlanCode(planCode);
-    if (!product) {
-      return NextResponse.json({ 
-        error: `Unknown plan: ${planCode}` 
-      }, { status: 400 });
-    }
-
-    const priceId = billingCycle === 'annual' ? product.prices.annual : product.prices.monthly;
-    if (!priceId) {
-      return NextResponse.json({ 
-        error: `No ${billingCycle} price configured for ${planCode}` 
-      }, { status: 400 });
-    }
-
-    // Check for existing subscription
-    const { data: existingSubscription } = await getSupabase()
-      .from('subscriptions')
-      .select('stripe_customer_id, stripe_subscription_id, plan_code, status')
-      .eq('org_id', orgId)
-      .single();
-
-    // Type assertion for subscription data
-    const typedSubscription = existingSubscription as {
-      stripe_customer_id: string;
-      stripe_subscription_id: string;
-      plan_code: string;
-      status: string;
-    } | null;
-
-    let customerId = typedSubscription?.stripe_customer_id;
-
-    // Create or retrieve Stripe customer
-    if (!customerId) {
-      const customer = await getStripe().customers.create({
-        email: user.email!,
-        metadata: {
-          org_id: orgId,
-          user_id: user.email,
-        },
-      });
-      customerId = customer.id;
-    }
-
-    // Determine checkout mode
-    const isUpgrade = typedSubscription && 
-      typedSubscription.status === 'active' && 
-      typedSubscription.stripe_subscription_id;
-
-    if (isUpgrade) {
-      // For upgrades, we'll create a new subscription and cancel the old one
-      // This is simpler than prorating, but you could implement prorating here
-      
-      const checkoutSession = await getStripe().checkout.sessions.create({
-        customer: customerId,
-        mode: 'subscription',
-        line_items: [
-          {
-            price: priceId,
-            quantity: seats,
-          },
-        ],
-        success_url: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: cancelUrl,
-        metadata: {
-          org_id: orgId,
-          user_id: user.email,
-          plan_code: planCode,
-          billing_cycle: billingCycle,
-          seats: seats.toString(),
-          upgrade_from: typedSubscription.plan_code,
-          old_subscription_id: typedSubscription.stripe_subscription_id,
-        },
-        subscription_data: {
-          metadata: {
-            org_id: orgId,
-            plan_code: planCode,
-          },
-        },
-        allow_promotion_codes: true,
-        billing_address_collection: 'auto',
-        tax_id_collection: {
-          enabled: true,
-        },
-      });
-
-      return NextResponse.json({ url: checkoutSession.url });
-    } else {
-      // New subscription
-      const checkoutSession = await getStripe().checkout.sessions.create({
-        customer: customerId,
-        mode: 'subscription',
-        line_items: [
-          {
-            price: priceId,
-            quantity: seats,
-          },
-        ],
-        success_url: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: cancelUrl,
-        metadata: {
-          org_id: orgId,
-          user_id: user.email,
-          plan_code: planCode,
-          billing_cycle: billingCycle,
-          seats: seats.toString(),
-        },
-        subscription_data: {
-          metadata: {
-            org_id: orgId,
-            plan_code: planCode,
-          },
-          trial_period_days: planCode === 'pro' ? 14 : undefined, // 14-day trial for Pro
-        },
-        allow_promotion_codes: true,
-        billing_address_collection: 'auto',
-        tax_id_collection: {
-          enabled: true,
-        },
-      });
-
-      return NextResponse.json({ url: checkoutSession.url });
-    }
-
-  } catch (error) {
-    console.error('[Billing Checkout] Error:', error);
-    
-    if (error instanceof Stripe.errors.StripeError) {
+    if (!user) {
       return NextResponse.json(
-        { error: `Stripe error: ${error.message}` },
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { planId, billingCycle, successUrl, cancelUrl } = body;
+
+    if (!planId || !billingCycle || !successUrl || !cancelUrl) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
+    if (planId === "free") {
+      return NextResponse.json(
+        { error: "Cannot create checkout for free plan" },
+        { status: 400 }
+      );
+    }
+
+    const plan = PLANS[planId as keyof typeof PLANS];
+    if (!plan) {
+      return NextResponse.json(
+        { error: "Invalid plan" },
+        { status: 400 }
+      );
+    }
+
+    const billingConfig = plan[billingCycle as keyof typeof plan];
+    if (!billingConfig) {
+      return NextResponse.json(
+        { error: "Invalid billing cycle" },
+        { status: 400 }
+      );
+    }
+
+    // Check if user already has a subscription
+    const { data: existingSubscription } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", user.email)
+      .eq("status", "active")
+      .single();
+
+    if (existingSubscription) {
+      return NextResponse.json(
+        { error: "User already has an active subscription" },
+        { status: 400 }
+      );
+    }
+
+    // Create or get customer
+    let customer;
+    const { data: existingCustomer } = await supabase
+      .from("customers")
+      .select("stripe_customer_id")
+      .eq("email", user.email)
+      .single();
+
+    if (existingCustomer?.stripe_customer_id) {
+      customer = await stripe.customers.retrieve(existingCustomer.stripe_customer_id);
+    } else {
+      customer = await stripe.customers.create({
+        email: user.email,
+        metadata: {
+          supabase_user_id: user.email,
+        },
+      });
+
+      // Store customer in Supabase
+      await supabase.from("customers").upsert({
+        email: user.email,
+        stripe_customer_id: customer.id,
+        created_at: new Date().toISOString(),
+      });
+    }
+
+    // Create checkout session
+    const session = await stripe.checkout.sessions.create({
+      customer: customer.id,
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: billingConfig.priceId,
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
+      subscription_data: {
+        metadata: {
+          plan_id: planId,
+          billing_cycle: billingCycle,
+          supabase_user_id: user.email,
+        },
+      },
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: {
+        plan_id: planId,
+        billing_cycle: billingCycle,
+        supabase_user_id: user.email,
+      },
+    });
+
+    return NextResponse.json({ url: session.url });
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
 
-/**
- * Get current subscription info
- */
-export async function GET(req: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest) {
   try {
     const user = await getUserFromCookies();
-    
-    if (!user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
-    const { searchParams } = new URL(req.url);
-    const orgId = searchParams.get('org_id');
-
-    if (!orgId) {
-      return NextResponse.json({ error: 'org_id required' }, { status: 400 });
-    }
-
-    // Verify user is member of the organization
-    const { data: membership, error: memberError } = await getSupabase()
-      .from('org_members')
-      .select('role')
-      .eq('org_id', orgId)
-      .eq('user_id', user.email)
+    // Get user's current subscription status
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select(`
+        *,
+        plans (
+          name,
+          features
+        )
+      `)
+      .eq("user_id", user.email)
+      .eq("status", "active")
       .single();
 
-    // Type assertion for membership data
-    const typedMembership = membership as { role: string } | null;
-
-    if (memberError || !typedMembership) {
-      return NextResponse.json({ 
-        error: 'Not a member of this organization' 
-      }, { status: 403 });
-    }
-
-    // Get subscription info
-    const { data: subscription, error: subError } = await getSupabase()
-      .from('subscriptions')
-      .select('*')
-      .eq('org_id', orgId)
-      .single();
-
-    if (subError && subError.code !== 'PGRST116') { // Not found is OK
-      console.error('[Billing Info] Error fetching subscription:', subError);
-      return NextResponse.json({ 
-        error: 'Failed to fetch subscription' 
-      }, { status: 500 });
+    if (!subscription) {
+      return NextResponse.json({
+        hasSubscription: false,
+        plan: "free",
+        features: [],
+      });
     }
 
     return NextResponse.json({
-      subscription: subscription || null,
-      canManageBilling: ['owner', 'admin'].includes(typedMembership.role),
+      hasSubscription: true,
+      plan: subscription.plan_code,
+      features: subscription.plans?.features || [],
+      status: subscription.status,
+      current_period_end: subscription.current_period_end,
     });
-
   } catch (error) {
-    console.error('[Billing Info] Error:', error);
+    console.error("Error fetching subscription status:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

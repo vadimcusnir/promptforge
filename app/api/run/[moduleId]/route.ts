@@ -1,119 +1,98 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { z } from "zod";
-import { withEntitlementGate } from "@/lib/gating";
-import { logRunTelemetry } from "@/lib/telemetry";
-import { generatePrompt } from "@/lib/ai/generator";
-import { evaluatePrompt } from "@/lib/ai/evaluator";
-import { createBundle } from "@/lib/exports";
-import { validateParams7D } from "@/lib/param-engine";
+import { getUserFromCookies } from "@/lib/auth";
+import { createClient } from "@supabase/supabase-js";
+import { generatePrompt } from "@/lib/prompt-generator";
+import { modules } from "@/lib/modules";
+import { logEvent } from "@/lib/telemetry";
 
-// Request schema validation
-const RunRequestSchema = z.object({
-  // 7D Parameters (required)
-  domain: z.enum([
-    "saas", "fintech", "ecommerce", "consulting", "education", 
-    "healthcare", "legal", "marketing", "media", "real_estate",
-    "hr", "ngo", "government", "web3", "aiml", "cybersecurity",
-    "manufacturing", "logistics", "travel", "gaming", 
-    "fashion", "beauty", "spiritual", "architecture", "agriculture"
-  ]),
-  scale: z.enum(["personal_brand", "solo", "startup", "boutique_agency", "smb", "corporate", "enterprise"]),
-  urgency: z.enum(["low", "planned", "sprint", "pilot", "crisis"]),
-  complexity: z.enum(["foundational", "standard", "advanced", "expert"]),
-  resources: z.enum(["minimal", "solo", "lean_team", "agency_stack", "full_stack_org", "enterprise_budget"]),
-  application: z.enum(["training", "audit", "implementation", "strategy_design", "crisis_response", "experimentation", "documentation"]),
-  output_format: z.enum(["txt", "md", "checklist", "spec", "playbook", "json", "yaml", "diagram", "bundle"]),
-  
-  // Optional context
-  context: z.string().max(5000).optional(),
-  specific_requirements: z.string().max(2000).optional(),
-  
-  // API key (for Enterprise external access)
-  api_key: z.string().optional()
-});
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+// Rate limiting configuration
+const RATE_LIMITS = {
+  free: { requests: 10, window: 3600 }, // 10 requests per hour
+  creator: { requests: 100, window: 3600 }, // 100 requests per hour
+  pro: { requests: 1000, window: 3600 }, // 1000 requests per hour
+  enterprise: { requests: 10000, window: 3600 }, // 10000 requests per hour
+};
+
+interface RunRequest {
+  sevenDConfig: any;
+  customParameters?: Record<string, any>;
+  telemetry?: {
+    sessionId?: string;
+    clientInfo?: string;
+    userAgent?: string;
+  };
+}
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { moduleId: string } }
+  { params }: { params: Promise<{ moduleId: string }> }
 ) {
-  const startTime = Date.now();
-  let runId: string | undefined;
-  let orgId: string | undefined;
-  let userId: string | undefined;
-
   try {
-    // Parse request body
-    const body = await request.json();
-    const validatedInput = RunRequestSchema.parse(body);
-    const { moduleId } = params;
-
-    // Initialize Supabase client
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Authentication & authorization
-    let user;
-    if (validatedInput.api_key) {
-      // API key authentication (Enterprise)
-      const { data: apiKey } = await supabase
-        .from("api_keys")
-        .select("org_id, scopes, rate_limit_rpm, revoked_at")
-        .eq("key_hash", validatedInput.api_key)
-        .is("revoked_at", null)
-        .single();
-
-      if (!apiKey) {
-    return NextResponse.json(
-          { error: "Invalid API key" },
-          { status: 401 }
-        );
-      }
-
-      if (!apiKey.scopes?.includes("run_modules")) {
-    return NextResponse.json(
-          { error: "API key lacks run_modules scope" },
-          { status: 403 }
-        );
-      }
-
-      orgId = apiKey.org_id;
-      userId = "api_user"; // Special user for API calls
-    } else {
-      // Session authentication
-      const { data: { user: sessionUser } } = await supabase.auth.getUser();
-      if (!sessionUser) {
-    return NextResponse.json(
-          { error: "Authentication required" },
-          { status: 401 }
-        );
-      }
-      user = sessionUser;
-      userId = user.id;
-
-      // Get user's org
-      const { data: orgMember } = await supabase
-        .from("org_members")
-        .select("org_id")
-        .eq("user_id", userId)
-        .single();
-
-      if (!orgMember) {
-    return NextResponse.json(
-          { error: "User not associated with any organization" },
-          { status: 403 }
-        );
-      }
-      orgId = orgMember.org_id;
+    const { moduleId } = await params;
+    const user = await getUserFromCookies();
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
-    // Validate module exists and user can access it
-    const { data: module } = await supabase
-      .from("modules")
-      .select("id, title, vectors, complexity_min")
-      .eq("id", moduleId)
+    // Get user entitlements
+    const { data: entitlements } = await supabase
+      .from("user_entitlements")
+      .select("*")
+      .eq("user_id", user.email)
       .single();
 
+    if (!entitlements) {
+      return NextResponse.json(
+        { error: "User entitlements not found" },
+        { status: 403 }
+      );
+    }
+
+    // Check if user has Enterprise plan for this API
+    if (entitlements.plan_tier !== "enterprise") {
+      return NextResponse.json(
+        { 
+          error: "Enterprise plan required",
+          requiredPlan: "enterprise",
+          currentPlan: entitlements.plan_tier,
+          upgradeUrl: "/pricing"
+        },
+        { status: 403 }
+      );
+    }
+
+    // Rate limiting check
+    if (!user.email) {
+      return NextResponse.json(
+        { error: "User email not found" },
+        { status: 400 }
+      );
+    }
+    
+    const rateLimit = await checkRateLimit(user.email, entitlements.plan_tier);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded",
+          retryAfter: rateLimit.retryAfter,
+          limit: rateLimit.limit,
+          window: rateLimit.window
+        },
+        { status: 429 }
+      );
+    }
+
+    // Validate module ID
+    const module = modules.find(m => m.id.toString() === moduleId);
     if (!module) {
       return NextResponse.json(
         { error: "Module not found" },
@@ -121,204 +100,93 @@ export async function POST(
       );
     }
 
-    // Check entitlements
-    if (orgId) {
-      await withEntitlementGate(orgId, ["canUseAllModules"], async () => {
-        // Additional module-specific checks
-        const { data: allowedModules } = await supabase.rpc("pf_get_allowed_modules", { p_org: orgId });
-        if (allowedModules && !allowedModules.includes(moduleId)) {
-          throw new Error("Module not included in current plan");
-        }
-      });
-    }
+    const body: RunRequest = await request.json();
+    const { sevenDConfig, customParameters, telemetry } = body;
 
-    // Validate 7D parameters
-    let normalizedParams: any;
-    if (orgId) {
-      normalizedParams = await validateParams7D(validatedInput, moduleId);
-
-      // Check complexity requirements
-      const complexityLevels = ["foundational", "standard", "advanced", "expert"];
-      const minComplexityIndex = complexityLevels.indexOf(module.complexity_min);
-      const userComplexityIndex = complexityLevels.indexOf(validatedInput.complexity);
-      
-      if (userComplexityIndex < minComplexityIndex) {
-        return NextResponse.json(
-          { 
-            error: "Complexity level too low for this module",
-            minimum_required: module.complexity_min,
-            provided: validatedInput.complexity
-          },
-          { status: 400 }
-        );
-      }
-
-      // Generate unique run ID and hash
-      runId = crypto.randomUUID();
-      const runHash = await generateRunHash(normalizedParams, moduleId);
-
-      // Check for duplicate run (same module + same params)
-      const { data: existingRun } = await supabase
-        .from("runs")
-        .select("id, status, created_at")
-        .eq("org_id", orgId)
-        .eq("module_id", moduleId) 
-        .eq("run_hash", runHash)
-        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()) // Last 24h
-        .single();
-
-      if (existingRun && existingRun.status === "ok") {
-        // Return cached result if recent and successful
-        const { data: existingBundle } = await supabase
-          .from("bundles")
-          .select("*")
-          .eq("run_id", existingRun.id)
-          .single();
-
-        if (existingBundle) {
-          return NextResponse.json({
-            run_id: existingRun.id,
-            status: "cached",
-            bundle_id: existingBundle.id,
-            created_at: existingRun.created_at
-          });
-        }
-      }
-
-      // Create run record
-      const { error: runError } = await supabase
-        .from("runs")
-        .insert({
-          id: runId,
-          org_id: orgId,
-          user_id: userId,
-          module_id: moduleId,
-          run_hash: runHash,
-          parameter_set_7d: normalizedParams,
-          mode: validatedInput.api_key ? "real" : "sim", // API calls default to real mode
-          status: "running"
-        });
-
-      if (runError) {
-        throw new Error(`Failed to create run record: ${runError.message}`);
-      }
-    }
-
-    // Generate prompt
-    const generationStart = Date.now();
-    const promptResult = await generatePrompt({
-      moduleId,
-      parameters: normalizedParams || {},
-      context: validatedInput.context,
-      requirements: validatedInput.specific_requirements
-    });
-    const generationTime = Date.now() - generationStart;
-
-    // Evaluate prompt (if real mode and entitlement allows)
-    let evaluation = null;
-    if (validatedInput.api_key || (orgId && await hasEntitlement(orgId, "hasEvaluatorAI"))) {
-      const evaluationStart = Date.now();
-      evaluation = await evaluatePrompt(promptResult.content, normalizedParams?.domain || 'general');
-      const evaluationTime = Date.now() - evaluationStart;
-
-      // Store evaluation
-      await supabase.from("scores").insert({
-        run_id: runId,
-        clarity: evaluation.scores.clarity,
-        execution: evaluation.scores.execution,
-        ambiguity: evaluation.scores.ambiguity,
-        businessFit: evaluation.scores.businessFit,
-        feedback: evaluation.feedback
-      });
-    }
-
-    // Create export bundle
-    const bundleStart = Date.now();
-    let bundle;
-    if (orgId) {
-      bundle = await createBundle({
-        runId: runId!,
-        moduleId,
-        content: promptResult.content,
-        parameters: normalizedParams,
-        evaluation,
-        outputFormat: validatedInput.output_format,
-        orgId
-      });
-    }
-    const bundleTime = Date.now() - bundleStart;
-
-    // Update run with success status and telemetry
-    const totalTime = Date.now() - startTime;
-    const telemetryData = {
-      generation_time_ms: generationTime,
-      evaluation_time_ms: evaluation ? Date.now() - startTime - generationTime - bundleTime : null,
-      bundle_time_ms: bundleTime,
-      total_time_ms: totalTime,
-      tokens_used: promptResult.usage?.total_tokens || 0,
-      estimated_cost_usd: promptResult.usage?.estimated_cost || 0
-    };
-
-    await supabase
-      .from("runs")
-      .update({
-        status: "ok",
-        runtime_ms: totalTime,
-        tokens: telemetryData.tokens_used,
-        cost_usd: telemetryData.estimated_cost_usd,
-        telemetry: telemetryData
-      })
-      .eq("id", runId);
-
-    // Log telemetry
-    if (runId && orgId && userId) {
-      await logRunTelemetry({
-        runId,
-        orgId,
-        userId,
-        moduleId,
-        parameters: normalizedParams,
-        telemetry: telemetryData,
-        evaluation
-      });
-    }
-
-    return NextResponse.json({
-      run_id: runId,
-      bundle_id: bundle?.id || null,
-      status: "completed",
-      evaluation: evaluation ? {
-        scores: evaluation.scores,
-        feedback: evaluation.feedback
-      } : null,
-      telemetry: {
-        total_time_ms: totalTime,
-        tokens_used: telemetryData.tokens_used,
-        estimated_cost_usd: telemetryData.estimated_cost_usd
-      },
-      created_at: new Date().toISOString()
-    });
-
-  } catch (error) {
-    console.error("Run API error:", error);
-
-    // Update run status to failed if run was created
-    if (runId) {
-      const supabase = createRouteHandlerClient({ cookies });
-      await supabase.from("runs").update({
-        status: "failed",
-        runtime_ms: Date.now() - startTime
-      }).eq("id", runId);
-    }
-
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    
-    if (errorMessage.includes("entitlement") || errorMessage.includes("plan")) {
+    // Basic validation of 7-D configuration
+    if (!sevenDConfig || typeof sevenDConfig !== "object") {
       return NextResponse.json(
-        { error: errorMessage },
-        { status: 402 } // Payment required
+        { 
+          error: "Invalid 7-D configuration",
+          details: "sevenDConfig must be an object"
+        },
+        { status: 400 }
       );
     }
+
+    // Generate prompt with enhanced parameters for Enterprise
+    const promptResult = await generatePrompt(module.id, sevenDConfig);
+
+    // Track usage for Enterprise users
+    await trackEnterpriseUsage(user.email, moduleId, {
+      sevenDConfig,
+      customParameters,
+      telemetry,
+      promptLength: promptResult.content.length,
+      tokens: promptResult.tokens || 0,
+    });
+
+    // Enhanced response for Enterprise users
+    const response = {
+      success: true,
+      data: {
+        prompt: promptResult,
+        module: {
+          id: module.id,
+          name: module.name,
+          description: module.description,
+          vector: module.vector,
+        },
+        sevenDConfig: sevenDConfig,
+        customParameters: customParameters || {},
+        telemetry: {
+          sessionId: telemetry?.sessionId,
+          timestamp: new Date().toISOString(),
+          usageId: `ent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        },
+        artifacts: {
+          promptHash: await generateHash(promptResult.content),
+          configHash: await generateHash(JSON.stringify(sevenDConfig)),
+          metadataHash: await generateHash(JSON.stringify(customParameters || {})),
+        },
+        rateLimit: {
+          remaining: rateLimit.remaining,
+          resetTime: rateLimit.resetTime,
+        },
+      },
+    };
+
+    // Log Enterprise API usage
+    await logEvent({
+      event: "enterprise_api_used",
+      orgId: "enterprise",
+      userId: user.email,
+      payload: {
+        moduleId,
+        sevenDConfig,
+        customParameters,
+        promptLength: promptResult.content.length,
+        tokens: promptResult.tokens || 0,
+        rateLimitRemaining: rateLimit.remaining,
+      },
+    });
+
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error("Error in Enterprise API:", error);
+    
+    // Log error for Enterprise users
+    const moduleId = params ? await params.then(p => p.moduleId) : "unknown";
+    await logEvent({
+      event: "enterprise_api_error",
+      orgId: "enterprise",
+      userId: "system",
+      payload: {
+        error: error instanceof Error ? error.message : "Unknown error",
+        moduleId,
+        timestamp: new Date().toISOString(),
+      },
+    });
 
     return NextResponse.json(
       { error: "Internal server error" },
@@ -327,21 +195,91 @@ export async function POST(
   }
 }
 
-// Helper functions
-async function generateRunHash(params: any, moduleId: string): Promise<string> {
-  const hashInput = JSON.stringify({ ...params, moduleId });
-  const encoder = new TextEncoder();
-  const data = encoder.encode(hashInput);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+async function checkRateLimit(userId: string, planTier: string): Promise<{
+  allowed: boolean;
+  remaining: number;
+  retryAfter?: number;
+  limit: number;
+  window: number;
+  resetTime: string;
+}> {
+  const config = RATE_LIMITS[planTier as keyof typeof RATE_LIMITS] || RATE_LIMITS.free;
+  const now = Math.floor(Date.now() / 1000);
+  const windowStart = now - config.window;
+  
+  // Get current usage
+  const { data: usage } = await supabase
+    .from("api_usage")
+    .select("id, requests_count, window_start")
+    .eq("user_id", userId)
+    .eq("window_start", windowStart)
+    .single();
+
+  const currentCount = usage?.requests_count || 0;
+  const remaining = Math.max(0, config.requests - currentCount);
+  const allowed = currentCount < config.requests;
+
+  // Update usage count
+  if (usage && usage.id) {
+    await supabase
+      .from("api_usage")
+      .update({ 
+        requests_count: currentCount + 1,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", usage.id);
+  } else {
+    await supabase
+      .from("api_usage")
+      .insert({
+        user_id: userId,
+        window_start: windowStart,
+        requests_count: 1,
+        plan_tier: planTier,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+  }
+
+  const resetTime = new Date((windowStart + config.window) * 1000).toISOString();
+
+  return {
+    allowed,
+    remaining,
+    limit: config.requests,
+    window: config.window,
+    resetTime,
+    ...(allowed ? {} : { retryAfter: config.window - (now - windowStart) }),
+  };
 }
 
-async function hasEntitlement(orgId: string, flag: string): Promise<boolean> {
-  const supabase = createRouteHandlerClient({ cookies });
-  const { data } = await supabase.rpc("pf_has_entitlement", { 
-    p_org: orgId, 
-    p_flag: flag 
+async function trackEnterpriseUsage(
+  userId: string, 
+  moduleId: string, 
+  metadata: {
+    sevenDConfig: any;
+    customParameters?: Record<string, any>;
+    telemetry?: any;
+    promptLength: number;
+    tokens: number;
+  }
+) {
+  await supabase.from("enterprise_usage").insert({
+    user_id: userId,
+    module_id: moduleId,
+    seven_d_config: metadata.sevenDConfig,
+    custom_parameters: metadata.customParameters,
+    telemetry: metadata.telemetry,
+    prompt_length: metadata.promptLength,
+    tokens: metadata.tokens,
+    created_at: new Date().toISOString(),
   });
-  return data || false;
+}
+
+async function generateHash(data: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const dataBuffer = encoder.encode(data);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
 }
