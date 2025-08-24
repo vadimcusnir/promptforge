@@ -11,10 +11,12 @@ import { VECTORS } from "@/types/promptforge";
 import { Search, Filter, Grid, List } from "lucide-react";
 
 interface ModuleGridProps {
-  selectedModule: number | null;
-  onSelectModule: (moduleId: number) => void;
-  vectorFilter: string;
-  onVectorFilterChange: (vector: string) => void;
+  selectedModule?: number | null;
+  onSelectModule?: (moduleId: number) => void;
+  vectorFilter?: string;
+  onVectorFilterChange?: (vector: string) => void;
+  selectedVector?: string;
+  searchQuery?: string;
 }
 
 export function ModuleGrid({
@@ -22,10 +24,16 @@ export function ModuleGrid({
   onSelectModule,
   vectorFilter,
   onVectorFilterChange,
+  selectedVector,
+  searchQuery: externalSearchQuery,
 }: ModuleGridProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showDetails, setShowDetails] = useState<number | null>(null);
+  
+  // Use external props if provided, otherwise use internal state
+  const searchQuery = externalSearchQuery ?? internalSearchQuery;
+  const vectorFilter = selectedVector ?? vectorFilter;
 
   const filteredModules = useMemo(() => {
     let modules = Object.values(MODULES);
@@ -63,7 +71,13 @@ export function ModuleGrid({
           <Input
             placeholder="Search modules..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              if (externalSearchQuery !== undefined) {
+                // External search is controlled by parent
+                return;
+              }
+              setInternalSearchQuery(e.target.value);
+            }}
             className="pl-10 glass-effect"
           />
         </div>
