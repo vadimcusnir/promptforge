@@ -2,6 +2,7 @@ import type {
   PromptModule,
   SessionConfig,
   GeneratedPrompt,
+  SevenDConfig,
 } from "@/types/promptforge";
 import { MODULES } from "./modules";
 
@@ -79,6 +80,10 @@ export function generatePrompt(
     config,
     moduleId,
     prompt,
+    sevenDConfig: config as SevenDConfig, // Convert SessionConfig to SevenDConfig
+    content: prompt, // Alias for prompt
+    tokens: Math.floor(Math.random() * 500) + 300, // Mock token count
+    tta: Math.random() * 2 + 0.5, // Mock time to action
   };
 }
 

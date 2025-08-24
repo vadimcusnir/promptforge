@@ -8,6 +8,7 @@ export interface PromptModule {
   kpi: string;
   guardrails: string;
   vectors: number[];
+  vector?: number; // Added for backward compatibility
 }
 
 export interface SessionConfig {
@@ -19,6 +20,7 @@ export interface SessionConfig {
   complexity: string;
   application: string;
   outputFormat: string;
+  output: string; // Added to match SevenDConfig interface
 }
 
 export interface SevenDConfig {
@@ -29,6 +31,8 @@ export interface SevenDConfig {
   resources: string;
   application: string;
   output: string;
+  outputFormat: string; // Added for backward compatibility
+  vector: string; // Added to match SessionConfig interface
 }
 
 export interface GeneratedPrompt {
@@ -36,10 +40,21 @@ export interface GeneratedPrompt {
   moduleId: number;
   sevenDConfig: SevenDConfig;
   content: string;
+  prompt: string; // Alias for content for backward compatibility
+  config: SevenDConfig; // Alias for sevenDConfig for backward compatibility
   timestamp: Date;
   hash: string;
   tokens: number;
   tta: number;
+  // Additional properties for backward compatibility
+  moduleName?: string;
+  vector?: number;
+  sessionHash?: string;
+  // Test scores (optional, populated after testing)
+  validationScore?: number;
+  kpiCompliance?: number;
+  structureScore?: number;
+  clarityScore?: number;
 }
 
 export interface TestResults {
@@ -79,13 +94,13 @@ export interface HistoryEntry {
 }
 
 export const VECTORS = {
-  1: { name: "V1: Systems & Agents", color: "text-red-400" },
-  2: { name: "V2: Marketing & Sales", color: "text-blue-400" },
-  3: { name: "V3: Content & Education", color: "text-green-400" },
-  4: { name: "V4: Decisions & Cognitive", color: "text-yellow-400" },
-  5: { name: "V5: Semiotic Branding", color: "text-purple-400" },
-  6: { name: "V6: Data & Analytics", color: "text-cyan-400" },
-  7: { name: "V7: Crisis & PR", color: "text-orange-400" },
+  1: { name: "V1: Systems & Agents", color: "text-red-400", description: "AI agents, automation, and system orchestration" },
+  2: { name: "V2: Marketing & Sales", color: "text-blue-400", description: "Customer acquisition, conversion, and retention" },
+  3: { name: "V3: Content & Education", color: "text-green-400", description: "Knowledge transfer, learning, and content creation" },
+  4: { name: "V4: Decisions & Cognitive", color: "text-yellow-400", description: "Strategic thinking, analysis, and decision-making" },
+  5: { name: "V5: Semiotic Branding", color: "text-purple-400", description: "Brand identity, messaging, and visual communication" },
+  6: { name: "V6: Data & Analytics", color: "text-cyan-400", description: "Insights, metrics, and data-driven decisions" },
+  7: { name: "V7: Crisis & PR", color: "text-orange-400", description: "Risk management, communication, and reputation" },
 } as const;
 
 // Glitch Protocol Types

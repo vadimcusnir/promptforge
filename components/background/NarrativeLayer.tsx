@@ -38,8 +38,8 @@ export function NarrativeLayer({
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeQuote, setActiveQuote] = useState<ActiveQuote | null>(null);
   const [cooldownQuotes, setCooldownQuotes] = useState<Set<string>>(new Set());
-  const animationRef = useRef<number>();
-  const nextQuoteTimeout = useRef<NodeJS.Timeout>();
+  const animationRef = useRef<number | null>(null);
+  const nextQuoteTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Get position for corner placement
   const getCornerPosition = useCallback(

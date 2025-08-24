@@ -1,12 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { SevenDPanel } from "@/components/generator/SevenDPanel";
-import { PromptEditor } from "@/components/generator/PromptEditor";
-import { TestEngine } from "@/components/generator/TestEngine";
-import { ExportBar } from "@/components/generator/ExportBar";
-import { HistoryPanel } from "@/components/generator/HistoryPanel";
-import { TelemetryBadge } from "@/components/ui/TelemetryBadge";
+import React, { useState } from "react";
 import { PaywallModal } from "@/components/paywall/PaywallModal";
 import { PremiumGate } from "@/lib/premium-features";
 import { Header } from "@/components/Header";
@@ -19,7 +13,7 @@ import type {
 } from "@/types/promptforge";
 
 export default function GeneratorPage() {
-  const [selectedModule, setSelectedModule] = useState(modules[0]);
+  const [selectedModule] = useState(modules[0]);
   const [sevenDConfig, setSevenDConfig] = useState<SevenDConfig>({
     domain: "business",
     scale: "enterprise",
@@ -28,6 +22,8 @@ export default function GeneratorPage() {
     resources: "unlimited",
     application: "production",
     output: "structured",
+    outputFormat: "structured",
+    vector: "V3",
   });
   const [generatedPrompt, setGeneratedPrompt] =
     useState<GeneratedPrompt | null>(null);
@@ -38,7 +34,7 @@ export default function GeneratorPage() {
   const [isTesting, setIsTesting] = useState(false);
 
   const premiumGate = PremiumGate.getInstance();
-  const currentTier = premiumGate.getCurrentTier();
+  // const currentTier = premiumGate.getCurrentTier(); // TODO: Implement tier display
   const canUseGptTest = premiumGate.canUseGPTOptimization().allowed;
 
   const handleGeneratePrompt = async () => {
@@ -58,6 +54,8 @@ export default function GeneratorPage() {
       moduleId: selectedModule.id,
       sevenDConfig,
       content: generatePromptContent(selectedModule, sevenDConfig),
+      prompt: generatePromptContent(selectedModule, sevenDConfig), // Alias for content
+      config: sevenDConfig, // Alias for sevenDConfig
       timestamp: new Date(),
       hash: generateHash(),
       tokens: Math.floor(Math.random() * 500) + 300,
@@ -132,10 +130,10 @@ export default function GeneratorPage() {
       return;
     }
 
-    console.log(`[v0] Exporting in format: ${format}`);
+    // console.log(`[v0] Exporting in format: ${format}`); // TODO: Replace with proper logging
   };
 
-  const generatePromptContent = (module: any, config: SevenDConfig): string => {
+  const generatePromptContent = (module: typeof modules[0], config: SevenDConfig): string => {
     return `# ROLE & GOAL
 You are an expert ${config.domain} strategist operating at ${config.scale} scale with ${config.urgency} urgency.
 
@@ -196,7 +194,7 @@ requirements: ${module.requirements}`;
                         onChange={(e) =>
                           setSevenDConfig((prev) => ({
                             ...prev,
-                            [key]: e.target.value,
+                            [key]: e.target.value as keyof SevenDConfig,
                           }))
                         }
                         className="glass-effect text-[#ECFEFF] text-micro px-3 py-2 border-0 w-full"

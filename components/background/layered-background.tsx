@@ -91,7 +91,7 @@ const ORANGE_QUOTES = [
 
 export function LayeredBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
   const reducedMotion = useReducedMotion();
   const fpsTier = useFpsTier();
 

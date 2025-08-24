@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,12 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { AnimatedCodeBlock } from "@/components/ui/animated-code-block";
 import { BrandLinterAlert } from "@/components/ui/brand-linter-alert";
-import { GlitchText } from "@/components/ui/glitch-text";
 import { Hero } from "@/components/Hero";
 
 import { SkipLink } from "@/components/SkipLink";
 import { brandLinter, type BrandLinterResult } from "@/lib/brand-linter";
-import { COPY } from "@/lib/copy";
 import { GTMEvents } from "@/lib/gtm-events";
 import {
   Zap,
@@ -28,11 +26,7 @@ import {
   Award,
   X,
   Cpu,
-  Crosshair,
   Activity,
-  Shield,
-  Home,
-  ChevronRight,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -89,59 +83,59 @@ export default function HomePage() {
     })),
   };
   const [showExitPopup, setShowExitPopup] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 47,
-    minutes: 32,
-    seconds: 15,
-  });
+  // const [timeLeft, setTimeLeft] = useState({
+  //   hours: 47,
+  //   minutes: 32,
+  //   seconds: 15,
+  // }); // TODO: Implement countdown timer
   const [linterResult, setLinterResult] = useState<BrandLinterResult | null>(
     null,
   );
-  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-  const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
-  const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(0);
+  // const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0); // TODO: Implement quote rotation
+  // const [currentTitleIndex, setCurrentTitleIndex] = useState(0); // TODO: Implement title rotation
+  // const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(0); // TODO: Implement subtitle rotation
 
-  const legendaryQuotes = [
-    "They always say time changes things, but you actually have to change them yourself.",
-    "The key is in not spending time, but in investing it.",
-    "Lost time is never found again.",
-    "In the middle of difficulty lies opportunity.",
-  ];
+  // const legendaryQuotes = [ // TODO: Implement quote rotation
+  //   "They always say time changes things, but you actually have to change them yourself.",
+  //   "The key is in not spending time, but in investing it.",
+  //   "Lost time is never found again.",
+  //   "In the middle of difficulty lies opportunity.",
+  // ];
 
-  const AI_ML_TERMS = [
-    "neural",
-    "vector",
-    "token",
-    "layer",
-    "weight",
-    "bias",
-    "epoch",
-    "batch",
-    "gradient",
-    "backprop",
-    "attention",
-    "transformer",
-    "embedding",
-    "logit",
-    "softmax",
-    "relu",
-    "lstm",
-    "gru",
-    "conv",
-    "pool",
-  ];
+  // const AI_ML_TERMS = [ // TODO: Implement AI/ML term highlighting
+  //   "neural",
+  //   "vector",
+  //   "token",
+  //   "layer",
+  //   "weight",
+  //   "bias",
+  //   "epoch",
+  //   "batch",
+  //   "gradient",
+  //   "backprop",
+  //   "attention",
+  //   "transformer",
+  //   "embedding",
+  //   "logit",
+  //   "softmax",
+  //   "relu",
+  //   "lstm",
+  //   "gru",
+  //   "conv",
+  //   "pool",
+  // ];
 
-  const rotatingTitles = [
-    {
-      line1: "The 1st Cognitive OS for Prompts",
-      line2:
-        "50 modules orchestrated by the 7D Engine → production-ready prompts scored ≥80 and exportable in minutes.",
-    },
-  ];
+  // const rotatingTitles = [ // TODO: Implement title rotation
+  //   {
+  //     line1: "The 1st Cognitive OS for Prompts",
+  //     line2:
+  //       "50 modules orchestrated by the 7D Engine → production-ready prompts scored ≥80 and exportable in minutes.",
+  //   },
+  // ];
 
-  const rotatingSubtitles = [
-    "TTA < 60s • Score ≥ 80 • Export .md/.json/.pdf • Audit & Telemetry",
-  ];
+  // const rotatingSubtitles = [ // TODO: Implement subtitle rotation
+  //   "TTA < 60s • Score ≥ 80 • Export .md/.json/.pdf • Audit & Telemetry",
+  // ];
 
   const generateDemo = async () => {
     if (!demoInput.trim()) return;
@@ -189,42 +183,42 @@ Generate the optimized ${demoInput} strategy now.`;
     }
   };
 
-  useEffect(() => {
-    const quoteTimer = setInterval(() => {
-      setCurrentQuoteIndex((prev) => (prev + 1) % legendaryQuotes.length);
-    }, 4000);
+  // useEffect(() => { // TODO: Implement rotation timers
+  //   const quoteTimer = setInterval(() => {
+  //     setCurrentQuoteIndex((prev) => (prev + 1) % legendaryQuotes.length);
+  //   }, 4000);
 
-    const titleTimer = setInterval(() => {
-      setCurrentTitleIndex((prev) => (prev + 1) % rotatingTitles.length);
-    }, 7000);
+  //   const titleTimer = setInterval(() => {
+  //     setCurrentTitleIndex((prev) => (prev + 1) % rotatingTitles.length);
+  //   }, 7000);
 
-    const subtitleTimer = setInterval(() => {
-      setCurrentSubtitleIndex((prev) => (prev + 1) % rotatingSubtitles.length);
-    }, 12500);
+  //   const subtitleTimer = setInterval(() => {
+  //     setCurrentSubtitleIndex((prev) => (prev + 1) % rotatingSubtitles.length);
+  //   }, 12500);
 
-    return () => {
-      clearInterval(quoteTimer);
-      clearInterval(titleTimer);
-      clearInterval(subtitleTimer);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(quoteTimer);
+  //     clearInterval(titleTimer);
+  //     clearInterval(subtitleTimer);
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        } else if (prev.minutes > 0) {
-          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        } else if (prev.hours > 0) {
-          return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        }
-        return prev;
-      });
-    }, 1000);
+  // useEffect(() => { // TODO: Implement countdown timer
+  //   const timer = setInterval(() => {
+  //     setTimeLeft((prev) => {
+  //       if (prev.seconds > 0) {
+  //         return { ...prev, seconds: prev.seconds - 1 };
+  //       } else if (prev.minutes > 0) {
+  //         return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+  //       } else if (prev.hours > 0) {
+  //         return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+  //       }
+  //       return prev;
+  //     });
+  //   }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   return (
     <>

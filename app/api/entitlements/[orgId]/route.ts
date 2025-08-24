@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client only when needed
-let supabaseInstance: any = null;
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
 function getSupabase() {
   if (!supabaseInstance) {
@@ -46,8 +46,20 @@ export async function GET(
       throw entitlementsError;
     }
 
+    // Type assertion for entitlements data
+    const typedEntitlements = (entitlements || []) as Array<{
+      flag: string;
+      value: boolean;
+      source: string;
+      expires_at: string | null;
+    }>;
+
+    if (entitlementsError) {
+      throw entitlementsError;
+    }
+
     // Filtrează entitlements expirate
-    const activeEntitlements = (entitlements || []).filter(e => 
+    const activeEntitlements = typedEntitlements.filter(e => 
       !e.expires_at || new Date(e.expires_at) > new Date()
     );
 
@@ -65,12 +77,26 @@ export async function GET(
       .eq('org_id', orgId)
       .single();
 
+    // Type assertion for subscription data
+    const typedSubscription = subscription as {
+      plan_code: string;
+      status: string;
+      trial_end: string | null;
+      seats: number;
+    } | null;
+
     // Obține informații despre plan
     const { data: plan } = await getSupabase()
       .from('plans')
       .select('code, name')
-      .eq('code', subscription?.plan_code)
+      .eq('code', typedSubscription?.plan_code)
       .single();
+
+    // Type assertion for plan data
+    const typedPlan = plan as {
+      code: string;
+      name: string;
+    } | null;
 
     // Determină capabilitățile de export
     const exportCapabilities = {

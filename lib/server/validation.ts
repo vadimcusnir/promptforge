@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createHash } from "crypto";
+import { StandardAPIError as APIError } from "./errors";
 
 /**
  * 7D Validation Schema - SSOT (Single Source of Truth)

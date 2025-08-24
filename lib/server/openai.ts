@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { APIError } from './validation';
+import { StandardAPIError as APIError } from './errors';
 
 /**
  * OpenAI client for GPT operations

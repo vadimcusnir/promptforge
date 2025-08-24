@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { APIError } from './validation';
+import { StandardAPIError as APIError } from './errors';
 
 /**
  * Server-side Supabase client utilities

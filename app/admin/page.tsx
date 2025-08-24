@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [comingSoonStatus, setComingSoonStatus] = useState<any>(null);
+  const [comingSoonStatus, setComingSoonStatus] = useState<{
+    coming_soon_env: boolean;
+    coming_soon_cookie: boolean;
+    active: boolean;
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -33,7 +38,7 @@ export default function AdminPage() {
       } else {
         alert("Invalid password");
       }
-    } catch (error) {
+    } catch {
       alert("Login failed");
     } finally {
       setIsLoading(false);
@@ -48,7 +53,7 @@ export default function AdminPage() {
         setComingSoonStatus(data);
         setIsLoggedIn(true);
       }
-    } catch (error) {
+    } catch {
       console.log("Not logged in or error checking status");
     }
   };
@@ -68,7 +73,7 @@ export default function AdminPage() {
       } else {
         alert("Failed to toggle Coming Soon");
       }
-    } catch (error) {
+    } catch {
       alert("Error toggling Coming Soon");
     } finally {
       setIsLoading(false);
@@ -80,8 +85,8 @@ export default function AdminPage() {
       await fetch("/api/admin-login", { method: "DELETE" });
       setIsLoggedIn(false);
       setComingSoonStatus(null);
-    } catch (error) {
-      console.error("Logout error:", error);
+    } catch {
+      console.error("Logout error");
     }
   };
 
@@ -212,30 +217,30 @@ export default function AdminPage() {
               <CardTitle className="text-white">Quick Links</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <a
+              <Link
                 href="/"
                 className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
               >
                 → Homepage (Admin View)
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/coming-soon"
                 className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
               >
                 → Coming Soon Page (Public View)
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/dashboard"
                 className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
               >
                 → Dashboard
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/generator"
                 className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
               >
                 → Generator
-              </a>
+              </Link>
             </CardContent>
           </Card>
         </div>

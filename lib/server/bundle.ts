@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 import { createHash } from 'crypto';
-import { APIError } from './validation';
+import { StandardAPIError as APIError } from './errors';
 
 /**
  * Bundle generation utilities for export functionality

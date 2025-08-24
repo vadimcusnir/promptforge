@@ -41,7 +41,7 @@ export function MatrixTokenLayer({
 }: MatrixTokenLayerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [tokens, setTokens] = useState<ActiveToken[]>([]);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
   const lastFrameTime = useRef<number>(0);
 
   // Initialize tokens

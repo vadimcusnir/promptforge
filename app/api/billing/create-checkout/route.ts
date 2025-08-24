@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getServerSession } from 'next-auth';
 import { createClient } from '@supabase/supabase-js';
-import { getProductByPlanCode, validateStripeEnvironment } from '@/lib/billing/stripe-config';
+import { getProductByPlanCode } from '@/lib/billing/stripe-config';
 
 // Initialize clients only when needed
 let stripeInstance: Stripe | null = null;
-let supabaseInstance: any = null;
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
 function getStripe(): Stripe {
   if (!stripeInstance) {
@@ -53,7 +53,7 @@ interface CreateCheckoutRequest {
  * Create Stripe Checkout Session
  * Handles subscription creation and upgrades
  */
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // Get current session
     const session = await getServerSession();
@@ -228,7 +228,7 @@ export async function POST(req: NextRequest) {
 /**
  * Get current subscription info
  */
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const session = await getServerSession();
     

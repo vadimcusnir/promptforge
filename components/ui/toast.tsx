@@ -12,6 +12,9 @@ interface ToastProps {
   duration?: number;
 }
 
+// Export the interface for compatibility
+export type { ToastProps };
+
 export function Toast({
   type,
   message,
@@ -128,3 +131,46 @@ export function useToast() {
     ToastContainer,
   };
 }
+
+// Additional toast components for compatibility
+export function ToastClose({ className, ...props }: React.ComponentProps<"button">) {
+  return (
+    <button
+      className="absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600"
+      {...props}
+    />
+  );
+}
+
+export function ToastDescription({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className="text-sm opacity-90"
+      {...props}
+    />
+  );
+}
+
+export function ToastProvider({ children, ...props }: React.ComponentProps<"div">) {
+  return <div {...props}>{children}</div>;
+}
+
+export function ToastTitle({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className="text-sm font-semibold"
+      {...props}
+    />
+  );
+}
+
+export function ToastViewport({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"
+      {...props}
+    />
+  );
+}
+
+export type ToastActionElement = React.ReactElement<typeof ToastClose>;

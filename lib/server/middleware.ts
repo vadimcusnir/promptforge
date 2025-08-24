@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { APIError } from "./validation";
+import { StandardAPIError as APIError } from "./errors";
 
 /**
  * API Middleware utilities for rate limiting, security headers, and error handling

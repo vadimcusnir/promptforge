@@ -182,8 +182,12 @@ class ModuleVersioningManager {
           new_features: ['Core functionality', 'Basic parameters'],
           bug_fixes: [],
           performance_improvements: [],
-          seven_d_defaults: { domain: 'general', complexity: 'standard' },
-          domain_specific: {},
+          seven_d_defaults: { domain: 'saas', complexity: 'standard' },
+          domain_specific: {
+            saas: { domain: 'saas', complexity: 'standard' },
+            fintech: { domain: 'fintech', complexity: 'standard' },
+            ecommerce: { domain: 'ecommerce', complexity: 'standard' }
+          },
           guardrails: ['Content safety', 'Input validation'],
           evaluation_criteria: [
             { metric: 'Clarity', weight: 0.4, description: 'How clear is the output' },
@@ -238,8 +242,12 @@ class ModuleVersioningManager {
           new_features: ['New parameter support', 'Enhanced examples'],
           bug_fixes: ['Fixed parameter validation'],
           performance_improvements: ['Optimized content generation'],
-          seven_d_defaults: { domain: 'general', complexity: 'standard' },
-          domain_specific: {},
+          seven_d_defaults: { domain: 'saas', complexity: 'standard' },
+          domain_specific: {
+            saas: { domain: 'saas', complexity: 'standard' },
+            fintech: { domain: 'fintech', complexity: 'standard' },
+            ecommerce: { domain: 'ecommerce', complexity: 'standard' }
+          },
           guardrails: ['Content safety', 'Input validation', 'Enhanced security'],
           evaluation_criteria: [
             { metric: 'Clarity', weight: 0.4, description: 'How clear is the output' },

@@ -34,6 +34,8 @@ export function HistoryPanel({ onRestoreConfig }: HistoryPanelProps) {
             resources: "unlimited",
             application: "production",
             output: "structured",
+            outputFormat: "structured",
+            vector: "V3",
           },
           timestamp: new Date(Date.now() - 3600000),
           score: 91,

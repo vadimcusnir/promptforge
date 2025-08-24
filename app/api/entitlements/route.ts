@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { getServerSession } from 'next-auth';
+import { getUserFromCookies } from '@/lib/auth';
 
 /**
  * Entitlements API
@@ -10,33 +10,26 @@ import { getServerSession } from 'next-auth';
 
 export async function GET(req: NextRequest) {
   try {
-    // Get current session
-    const session = await getServerSession();
+    // Get current user from cookies
+    const user = getUserFromCookies();
     
-    if (!session?.user?.id) {
+    if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get org_id from query params or derive from user
     const { searchParams } = new URL(req.url);
     const orgId = searchParams.get('org_id');
-    const userId = session.user.id;
+    const userId = user.email; // Use email as user identifier
 
     if (!orgId) {
       return NextResponse.json({ error: 'org_id required' }, { status: 400 });
     }
 
-    // Create Supabase client with user session
+    // Create Supabase client
     const supabase = createClient(
       process.env.SUPABASE_URL!,
-      process.env.SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        },
-      }
+      process.env.SUPABASE_ANON_KEY!
     );
 
     // Verify user is member of the organization
