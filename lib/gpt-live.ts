@@ -1,4 +1,4 @@
-import type { GPTEditOptions, GPTEditResult } from "./gpt-edit"; // Assuming GPTEditOptions and GPTEditResult are declared in another file
+import type { GPTEditOptions, GPTEditResult } from "./gpt-editor"; // GPTEditOptions and GPTEditResult are declared in gpt-editor.ts
 
 export interface GPTLiveOptions extends GPTEditOptions {
   streaming: boolean;
@@ -27,6 +27,9 @@ export interface GPTLiveResult extends GPTEditResult {
   totalTokens: number;
   streamingTime: number;
   realTime: boolean;
+  // Additional properties for backward compatibility
+  confidence: number;
+  editedPrompt: string;
 }
 
 export class GPTLiveEngine {

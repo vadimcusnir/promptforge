@@ -72,7 +72,6 @@ export function GPTLiveEditor({
       toast({
         title: "Error",
         description: "No prompt to optimize!",
-        variant: "destructive",
       });
       return;
     }
@@ -83,7 +82,6 @@ export function GPTLiveEditor({
       toast({
         title: "Premium Feature",
         description: canUse.reason,
-        variant: "destructive",
       });
       return;
     }
@@ -115,7 +113,6 @@ export function GPTLiveEditor({
         title: "Optimization failed",
         description:
           error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive",
       });
     } finally {
       setIsOptimizing(false);
@@ -151,7 +148,6 @@ export function GPTLiveEditor({
         toast({
           title: "Streaming error",
           description: chunk.error,
-          variant: "destructive",
         });
         break;
     }
@@ -178,7 +174,6 @@ export function GPTLiveEditor({
       toast({
         title: "Copy failed",
         description: "Could not copy prompt.",
-        variant: "destructive",
       });
     }
   };
@@ -393,7 +388,7 @@ export function GPTLiveEditor({
                 {Object.entries(metrics).map(([key, value]) => (
                   <div key={key} className="text-center">
                     <div className="text-lg font-bold text-cyan-400">
-                      {value}%
+                      {value as number}%
                     </div>
                     <div className="text-xs text-slate-400 capitalize">
                       {key}
