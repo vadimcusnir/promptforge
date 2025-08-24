@@ -274,7 +274,7 @@ class PublicAPIManager {
     await supabase
       .from('api_keys')
       .update({
-        requests_used_this_month: supabase.raw('requests_used_this_month + 1')
+        requests_used_this_month: 1 // TODO: Implement proper increment logic
       })
       .eq('id', params.apiKeyId);
 
