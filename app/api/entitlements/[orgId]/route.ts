@@ -89,7 +89,7 @@ export async function GET(
     const { data: plan } = await getSupabase()
       .from('plans')
       .select('code, name')
-      .eq('code', typedSubscription?.plan_code)
+      .eq('code', typedSubscription?.plan_code || 'free')
       .single();
 
     // Type assertion for plan data
@@ -124,15 +124,15 @@ export async function GET(
     };
 
     // Verifică dacă este în trial
-    const isTrialing = subscription?.status === 'trialing';
-    const trialEndsAt = subscription?.trial_end;
+    const isTrialing = typedSubscription?.status === 'trialing';
+    const trialEndsAt = typedSubscription?.trial_end;
 
     return NextResponse.json({
       orgId,
       plan: {
-        code: plan?.code || 'free',
-        name: plan?.name || 'Free',
-        status: subscription?.status || 'inactive'
+        code: typedPlan?.code || 'free',
+        name: typedPlan?.name || 'Free',
+        status: typedSubscription?.status || 'inactive'
       },
       trial: {
         isActive: isTrialing,
@@ -140,7 +140,7 @@ export async function GET(
       },
       seats: {
         used: 1, // TODO: Calculate actual usage
-        total: subscription?.seats || 1
+        total: typedSubscription?.seats || 1
       },
       flags,
       capabilities: {

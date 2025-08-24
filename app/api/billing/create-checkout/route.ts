@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getServerSession } from 'next-auth';
+import { getUserFromCookies } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import { getProductByPlanCode } from '@/lib/billing/stripe-config';
 
@@ -15,7 +15,7 @@ function getStripe(): Stripe {
       throw new Error('STRIPE_SECRET environment variable is required');
     }
     stripeInstance = new Stripe(STRIPE_SECRET, {
-      apiVersion: '2023-10-16',
+      apiVersion: '2025-07-30.basil',
     });
   }
   return stripeInstance;
@@ -55,10 +55,10 @@ interface CreateCheckoutRequest {
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    // Get current session
-    const session = await getServerSession();
+    // Get current user from cookies
+    const user = getUserFromCookies();
     
-    if (!session?.user?.id) {
+    if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -83,10 +83,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .from('org_members')
       .select('role')
       .eq('org_id', orgId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.email)
       .single();
 
-    if (memberError || !membership || !['owner', 'admin'].includes(membership.role)) {
+    // Type assertion for membership data
+    const typedMembership = membership as { role: string } | null;
+
+    if (memberError || !typedMembership || !['owner', 'admin'].includes(typedMembership.role)) {
       return NextResponse.json({ 
         error: 'Not authorized to manage billing for this organization' 
       }, { status: 403 });
@@ -114,24 +117,32 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .eq('org_id', orgId)
       .single();
 
-    let customerId = existingSubscription?.stripe_customer_id;
+    // Type assertion for subscription data
+    const typedSubscription = existingSubscription as {
+      stripe_customer_id: string;
+      stripe_subscription_id: string;
+      plan_code: string;
+      status: string;
+    } | null;
+
+    let customerId = typedSubscription?.stripe_customer_id;
 
     // Create or retrieve Stripe customer
     if (!customerId) {
       const customer = await getStripe().customers.create({
-        email: session.user.email!,
+        email: user.email!,
         metadata: {
           org_id: orgId,
-          user_id: session.user.id,
+          user_id: user.email,
         },
       });
       customerId = customer.id;
     }
 
     // Determine checkout mode
-    const isUpgrade = existingSubscription && 
-      existingSubscription.status === 'active' && 
-      existingSubscription.stripe_subscription_id;
+    const isUpgrade = typedSubscription && 
+      typedSubscription.status === 'active' && 
+      typedSubscription.stripe_subscription_id;
 
     if (isUpgrade) {
       // For upgrades, we'll create a new subscription and cancel the old one
@@ -150,12 +161,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         cancel_url: cancelUrl,
         metadata: {
           org_id: orgId,
-          user_id: session.user.id,
+          user_id: user.email,
           plan_code: planCode,
           billing_cycle: billingCycle,
           seats: seats.toString(),
-          upgrade_from: existingSubscription.plan_code,
-          old_subscription_id: existingSubscription.stripe_subscription_id,
+          upgrade_from: typedSubscription.plan_code,
+          old_subscription_id: typedSubscription.stripe_subscription_id,
         },
         subscription_data: {
           metadata: {
@@ -186,7 +197,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         cancel_url: cancelUrl,
         metadata: {
           org_id: orgId,
-          user_id: session.user.id,
+          user_id: user.email,
           plan_code: planCode,
           billing_cycle: billingCycle,
           seats: seats.toString(),
@@ -230,9 +241,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const session = await getServerSession();
+    const user = getUserFromCookies();
     
-    if (!session?.user?.id) {
+    if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -248,10 +259,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       .from('org_members')
       .select('role')
       .eq('org_id', orgId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.email)
       .single();
 
-    if (memberError || !membership) {
+    // Type assertion for membership data
+    const typedMembership = membership as { role: string } | null;
+
+    if (memberError || !typedMembership) {
       return NextResponse.json({ 
         error: 'Not a member of this organization' 
       }, { status: 403 });
@@ -273,7 +287,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
       subscription: subscription || null,
-      canManageBilling: ['owner', 'admin'].includes(membership.role),
+      canManageBilling: ['owner', 'admin'].includes(typedMembership.role),
     });
 
   } catch (error) {
