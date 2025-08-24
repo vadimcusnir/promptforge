@@ -174,15 +174,20 @@ export class AgentWatchWorker {
     this.checkImmediateAnomalies(metrics);
 
     // Track in telemetry system
-    telemetry.trackEvent("agent_metrics_recorded", "system", {
-      runId: metrics.runId,
-      orgId: metrics.orgId,
-      moduleId: metrics.moduleId,
-      tokens: metrics.tokens,
-      cost: metrics.cost,
-      duration: metrics.duration,
-      score: metrics.score,
-      errorRate: metrics.errorRate,
+    telemetry.trackEvent({
+      event: "agent_metrics_recorded",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        runId: metrics.runId,
+        orgId: metrics.orgId,
+        moduleId: metrics.moduleId,
+        tokens: metrics.tokens,
+        cost: metrics.cost,
+        duration: metrics.duration,
+        score: metrics.score,
+        errorRate: metrics.errorRate,
+      }
     });
   }
 
@@ -329,14 +334,19 @@ export class AgentWatchWorker {
     });
 
     // Track alert in telemetry
-    telemetry.trackEvent("agent_alert", "system", {
-      type: alert.type,
-      severity: alert.severity,
-      message: alert.message,
-      runId: alert.metrics.runId,
-      orgId: alert.metrics.orgId,
-      threshold: alert.threshold,
-      actual: alert.actual,
+    telemetry.trackEvent({
+      event: "agent_alert",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        type: alert.type,
+        severity: alert.severity,
+        message: alert.message,
+        runId: alert.metrics.runId,
+        orgId: alert.metrics.orgId,
+        threshold: alert.threshold,
+        actual: alert.actual,
+      }
     });
   }
 
@@ -377,9 +387,14 @@ export class AgentWatchWorker {
     // Update SSOT flag
     this.updateSSotFlag("degrade_to_simulation", true);
 
-    telemetry.trackEvent("degradation_mode_enabled", "system", {
-      timestamp: new Date().toISOString(),
-      reason: "Anomaly detection triggered degradation",
+    telemetry.trackEvent({
+      event: "degradation_mode_enabled",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        timestamp: new Date().toISOString(),
+        reason: "Anomaly detection triggered degradation",
+      }
     });
   }
 
@@ -394,8 +409,13 @@ export class AgentWatchWorker {
 
     this.updateSSotFlag("degrade_to_simulation", false);
 
-    telemetry.trackEvent("degradation_mode_disabled", "system", {
-      timestamp: new Date().toISOString(),
+    telemetry.trackEvent({
+      event: "degradation_mode_disabled",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        timestamp: new Date().toISOString(),
+      }
     });
   }
 
@@ -411,9 +431,14 @@ export class AgentWatchWorker {
     // Update SSOT configuration
     this.updateSSotFlag("agents_enabled", false);
 
-    telemetry.trackEvent("kill_switch_activated", "system", {
-      reason,
-      timestamp: new Date().toISOString(),
+    telemetry.trackEvent({
+      event: "kill_switch_activated",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        reason,
+        timestamp: new Date().toISOString(),
+      }
     });
 
     // Notify all systems
@@ -443,10 +468,15 @@ export class AgentWatchWorker {
     // For now, we'll just track the change
     console.log(`[AgentWatch] SSOT Flag updated: ${flag} = ${value}`);
 
-    telemetry.trackEvent("ssot_flag_updated", "system", {
-      flag,
-      value,
-      timestamp: new Date().toISOString(),
+    telemetry.trackEvent({
+      event: "ssot_flag_updated",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        flag,
+        value,
+        timestamp: new Date().toISOString(),
+      }
     });
   }
 

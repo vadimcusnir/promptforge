@@ -38,7 +38,7 @@ export interface ModuleVersion {
   
   // Configuration
   seven_d_defaults: Partial<SevenD>;
-  domain_specific: Record<Domain, Partial<SevenD>>;
+  domain_specific: Partial<Record<Domain, Partial<SevenD>>>;
   guardrails: string[];
   evaluation_criteria: Array<{
     metric: string;

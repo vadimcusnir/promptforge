@@ -50,7 +50,6 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
       toast({
         title: "Error",
         description: "No prompt to optimize!",
-        variant: "destructive",
       });
       return;
     }
@@ -70,7 +69,6 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
       toast({
         title: "Optimization error",
         description: "Could not optimize prompt. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsEditing(false);
@@ -90,7 +88,6 @@ export function GPTEditor({ generatedPrompt, onEditComplete }: GPTEditorProps) {
       toast({
         title: "Copy error",
         description: "Could not copy prompt.",
-        variant: "destructive",
       });
     }
   };

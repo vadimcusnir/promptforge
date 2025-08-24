@@ -7,6 +7,7 @@ import {
   agentWatch,
   auditLogger,
   alertSystem,
+  AgentWatchWorker,
   initializeObservability,
 } from "@/lib/observability";
 

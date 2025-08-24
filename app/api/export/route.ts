@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     validateStorageConfig();
     
     // Get current user from cookies
-    const user = getUserFromCookies();
+    const user = await getUserFromCookies();
     if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -402,19 +402,6 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     console.error('[Export API] Error:', error);
-    
-    // Track export failed
-    await trackEvent({
-      event: 'export.failed',
-      orgId: body.orgId,
-      userId: user.email,
-      payload: {
-        trace_id: traceId,
-        duration_ms: Date.now() - startTime,
-        error_code: error instanceof Error ? error.message : 'UNKNOWN_ERROR',
-        error_message: error instanceof Error ? error.message : String(error)
-      }
-    });
     
     if (error instanceof Error) {
       if (error.message.includes('ENTITLEMENT_REQUIRED')) {

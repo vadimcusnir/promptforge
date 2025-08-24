@@ -3,6 +3,10 @@
  * Centralized exports and initialization for the observability infrastructure
  */
 
+import { agentWatch, AgentWatchWorker } from "./agent-watch";
+import { auditLogger, AuditLogger } from "./audit-logger";
+import { alertSystem, AlertSystem } from "./alert-system";
+
 export { agentWatch, AgentWatchWorker } from "./agent-watch";
 export { auditLogger, AuditLogger } from "./audit-logger";
 export { alertSystem, AlertSystem } from "./alert-system";

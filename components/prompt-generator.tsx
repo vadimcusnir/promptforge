@@ -58,7 +58,6 @@ export function PromptGenerator({
       toast({
         title: "Error",
         description: "Select a module before generating the prompt!",
-        variant: "destructive",
       });
       return;
     }
@@ -81,7 +80,6 @@ export function PromptGenerator({
         toast({
           title: "Error generating prompt",
           description: "Could not generate the prompt. Please try again.",
-          variant: "destructive",
         });
       } finally {
         setIsGenerating(false);
@@ -120,7 +118,6 @@ export function PromptGenerator({
       toast({
         title: "Error copying prompt",
         description: "Could not copy the prompt.",
-        variant: "destructive",
       });
     }
   };

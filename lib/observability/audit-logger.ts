@@ -114,14 +114,19 @@ export class AuditLogger {
     this.persistLog(logEntry);
 
     // Track in telemetry
-    telemetry.trackEvent("audit_log_created", "system", {
-      run_id: params.run_id,
-      org_id: params.org_id,
-      module_id: params.module_id,
-      verdict,
-      tokens: params.tokens,
-      cost: params.cost,
-      duration_ms: params.duration_ms,
+    telemetry.trackEvent({
+      event: "audit_log_created",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        run_id: params.run_id,
+        org_id: params.org_id,
+        module_id: params.module_id,
+        verdict,
+        tokens: params.tokens,
+        cost: params.cost,
+        duration_ms: params.duration_ms,
+      }
     });
 
     console.log(
@@ -207,7 +212,15 @@ export class AuditLogger {
       console.error("[AuditLogger] Failed to persist log entry:", error);
 
       // Track the failure
-      telemetry.trackError(error as Error, "audit_log_persistence");
+      telemetry.trackEvent({
+        event: "audit_log_persistence_error",
+        orgId: "system",
+        userId: "system",
+        payload: {
+          error: error instanceof Error ? error.message : String(error),
+          context: "audit_log_persistence"
+        }
+      });
     }
   }
 

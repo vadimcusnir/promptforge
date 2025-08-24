@@ -56,7 +56,7 @@ interface CreateCheckoutRequest {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // Get current user from cookies
-    const user = getUserFromCookies();
+    const user = await getUserFromCookies();
     
     if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -241,7 +241,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const user = getUserFromCookies();
+    const user = await getUserFromCookies();
     
     if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

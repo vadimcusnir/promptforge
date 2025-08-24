@@ -14,7 +14,7 @@ if (!supabaseUrl || !supabaseServiceKey) {
 }
 
 // Service role client for admin operations
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+export const supabaseAdmin = createClient(supabaseUrl!, supabaseServiceKey!, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
@@ -23,7 +23,12 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 
 // User client factory for RLS operations
 export function createUserClient(userToken: string) {
-  return createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY!, {
+  const anonKey = process.env.SUPABASE_ANON_KEY;
+  if (!anonKey) {
+    throw new Error('SUPABASE_ANON_KEY environment variable is required');
+  }
+  
+  return createClient(supabaseUrl!, anonKey, {
     global: {
       headers: {
         Authorization: `Bearer ${userToken}`,

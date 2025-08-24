@@ -11,7 +11,7 @@ import { getUserFromCookies } from '@/lib/auth';
 export async function GET(req: NextRequest) {
   try {
     // Get current user from cookies
-    const user = getUserFromCookies();
+    const user = await getUserFromCookies();
     
     if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

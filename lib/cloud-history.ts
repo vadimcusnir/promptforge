@@ -325,7 +325,8 @@ class CloudHistoryManager {
 
     // Top domenii
     const domainCounts = basicStats.reduce((acc, entry) => {
-      acc[entry.domain] = (acc[entry.domain] || 0) + 1;
+      const domain = entry.domain as Domain;
+      acc[domain] = (acc[domain] || 0) + 1;
       return acc;
     }, {} as Record<Domain, number>);
 

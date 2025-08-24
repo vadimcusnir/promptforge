@@ -205,15 +205,28 @@ export class AlertSystem {
       await this.sendNotifications(alert, incident);
 
       // Track in telemetry
-      telemetry.trackEvent("alert_processed", "system", {
-        alert_type: alert.type,
-        severity: alert.severity,
-        incident_id: incident.id,
-        channels_notified: this.getChannelsForAlert(alert).length,
+      telemetry.trackEvent({
+        event: "alert_processed",
+        orgId: "system",
+        userId: "system",
+        payload: {
+          alert_type: alert.type,
+          severity: alert.severity,
+          incident_id: incident.id,
+          channels_notified: this.getChannelsForAlert(alert).length,
+        }
       });
     } catch (error) {
       console.error("[AlertSystem] Failed to process alert:", error);
-      telemetry.trackError(error as Error, "alert_processing");
+      telemetry.trackEvent({
+        event: "alert_processing_error",
+        orgId: "system",
+        userId: "system",
+        payload: {
+          error: error instanceof Error ? error.message : String(error),
+          context: "alert_processing"
+        }
+      });
     }
   }
 
@@ -571,9 +584,14 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
       `Acknowledged by ${acknowledgedBy} at ${new Date().toISOString()}`,
     );
 
-    telemetry.trackEvent("incident_acknowledged", "system", {
-      incident_id: incidentId,
-      acknowledged_by: acknowledgedBy,
+    telemetry.trackEvent({
+      event: "incident_acknowledged",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        incident_id: incidentId,
+        acknowledged_by: acknowledgedBy,
+      }
     });
 
     return true;
@@ -597,11 +615,16 @@ ${alert.metrics.score ? `- Score: ${alert.metrics.score}` : ""}
       `Resolved by ${resolvedBy} at ${new Date().toISOString()}`,
     );
 
-    telemetry.trackEvent("incident_resolved", "system", {
-      incident_id: incidentId,
-      resolved_by: resolvedBy,
-      duration_minutes:
-        incident.resolved_at.getTime() - incident.started_at.getTime() / 60000,
+    telemetry.trackEvent({
+      event: "incident_resolved",
+      orgId: "system",
+      userId: "system",
+      payload: {
+        incident_id: incidentId,
+        resolved_by: resolvedBy,
+        duration_minutes:
+          incident.resolved_at.getTime() - incident.started_at.getTime() / 60000,
+      }
     });
 
     return true;

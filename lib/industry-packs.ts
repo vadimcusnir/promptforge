@@ -237,7 +237,11 @@ class IndustryPacksManager {
       required_entitlements: this.getRequiredEntitlementsForTemplate(domain, template.category!),
       template_7d: {
         domain,
-        ...config.defaults_7d,
+        scale: config.defaults_7d.scale as any,
+        urgency: config.defaults_7d.urgency as any,
+        complexity: config.defaults_7d.complexity as any,
+        resources: config.defaults_7d.resources as any,
+        application: config.defaults_7d.application as any,
         output_format: config.default_output_format as any
       },
       prompt_template: this.generatePromptTemplate(domain, config, template.category!),

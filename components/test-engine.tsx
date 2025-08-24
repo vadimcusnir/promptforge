@@ -63,7 +63,6 @@ export function TestEngine({
       toast({
         title: "Error",
         description: "No prompt to test!",
-        variant: "destructive",
       });
       return;
     }
@@ -79,13 +78,11 @@ export function TestEngine({
       toast({
         title: "Test completed!",
         description: `Overall score: ${result.scores.overall}% | Status: ${result.status}`,
-        variant: result.status === "success" ? "default" : "destructive",
       });
     } catch (error) {
       toast({
         title: "Test error",
         description: "Could not execute test. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsRunning(false);
