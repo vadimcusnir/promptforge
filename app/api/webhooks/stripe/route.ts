@@ -243,7 +243,7 @@ async function handleTrialWillEnd(subscription: Stripe.Subscription) {
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   console.log(`[Stripe Webhook] Payment failed: ${invoice.id}`);
   
-  const subscriptionId = invoice.subscription_id;
+  const subscriptionId = typeof invoice.subscription === 'string' ? invoice.subscription : invoice.subscription.id;
   if (subscriptionId) {
     // Update subscription status if needed
     const { error } = await supabase
