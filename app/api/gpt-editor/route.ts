@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (error.message.includes("rate limit")) {
+    if (error instanceof Error && error.message.includes("rate limit")) {
       return NextResponse.json(
         { error: "Rate limit exceeded" },
         { status: 429 }

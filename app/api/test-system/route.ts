@@ -22,8 +22,8 @@ export async function GET() {
 
     // Test 3: Verifică 7D validation
     const testSevenD = {
-      domain: 'saas',
-      output_format: 'spec'
+      domain: 'saas' as const,
+      output_format: 'spec' as const
     };
     
     const validationResult = validate7D(testSevenD);
@@ -106,8 +106,8 @@ export async function POST(req: NextRequest) {
       // Test GPT Editor endpoint
       const testPrompt = "Create a marketing strategy for a SaaS product";
       const testSevenD = {
-        domain: 'saas',
-        output_format: 'playbook'
+        domain: 'saas' as const,
+        output_format: 'playbook' as const
       };
 
       // Simulăm un test call (fără a chema real GPT)

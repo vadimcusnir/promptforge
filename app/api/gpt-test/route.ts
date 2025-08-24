@@ -165,16 +165,19 @@ export async function POST(request: NextRequest) {
     const recommendations = generateRecommendations(testResults, evaluation);
 
     // Log test usage
-    await logEvent("gpt_test_live_used", "business", {
+    await logEvent({
+      event: "gpt_test_live_used",
       orgId: orgMember.org_id,
       userId: user.id,
-      test_id: testId,
-      domain: validatedInput.domain,
-      scenarios_count: testResults.length,
-      success_rate: successRate,
-      total_tokens: totalTokensUsed,
-      total_cost_usd: totalCost,
-      evaluation_scores: evaluation.scores
+      payload: {
+        test_id: testId,
+        domain: validatedInput.domain,
+        scenarios_count: testResults.length,
+        success_rate: successRate,
+        total_tokens: totalTokensUsed,
+        total_cost_usd: totalCost,
+        evaluation_scores: evaluation.scores
+      }
     });
 
     const totalTime = Date.now() - startTime;

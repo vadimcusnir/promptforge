@@ -378,7 +378,7 @@ export async function POST(req: NextRequest) {
           status: 'PASS',
           results: injectionResults,
           summary: {
-            suspicious_detected: injectionResults.filter(r => r.result.suspicious).length,
+            suspicious_detected: injectionResults.filter((r: any) => r.result.suspicious).length,
             total_tested: injectionResults.length
           }
         });
