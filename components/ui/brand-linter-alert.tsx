@@ -80,15 +80,6 @@ export function BrandLinterAlert({
           <Progress
             value={result.score}
             className="h-2"
-            // @ts-ignore
-            style={{
-              "--progress-background":
-                result.score >= 80
-                  ? "#22c55e"
-                  : result.score >= 60
-                    ? "#eab308"
-                    : "#ef4444",
-            }}
           />
 
           <AlertDescription className="space-y-3">

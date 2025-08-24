@@ -42,7 +42,7 @@ interface FormatOption {
   description: string;
   icon: React.ComponentType<{ className?: string }>;
   requiredPlan: 'pilot' | 'pro' | 'enterprise';
-  entitlementKey?: keyof import('@/app/api/entitlements/route').UserEntitlements;
+  entitlementKey?: keyof Pick<import('@/app/api/entitlements/route').UserEntitlements, 'canExportJSON' | 'canExportPDF' | 'canExportBundleZip'>;
 }
 
 const FORMAT_OPTIONS: FormatOption[] = [

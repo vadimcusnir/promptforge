@@ -137,7 +137,6 @@ export function ExportBundleManager({
         toast({
           title: "Premium Feature Required",
           description: `${selectedFormat.toUpperCase()} export requires ${requiredTier} plan`,
-          variant: "destructive",
         });
         return;
       }
@@ -186,7 +185,6 @@ export function ExportBundleManager({
         title: "Export Failed",
         description:
           error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive",
       });
     } finally {
       setIsExporting(false);

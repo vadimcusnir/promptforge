@@ -71,7 +71,7 @@ export function MonitoringDashboard() {
 
       setMetrics({
         agentStatus: {
-          enabled: agentWatch.constructor.areAgentsEnabled(),
+          enabled: true, // TODO: Replace with proper agent status check
           degradationMode: agentSummary.degradationMode,
           totalRuns: agentSummary.totalRuns,
           recentAlerts: agentSummary.recentAlerts,

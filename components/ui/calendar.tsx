@@ -36,8 +36,12 @@ function Calendar({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: (date) =>
-          date.toLocaleString("default", { month: "short" }),
+        formatMonthDropdown: (date: Date | number) => {
+          if (typeof date === 'number') {
+            return new Date(date).toLocaleDateString("default", { month: "short" });
+          }
+          return date.toLocaleDateString("default", { month: "short" });
+        },
         ...formatters,
       }}
       classNames={{
@@ -125,11 +129,10 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        Root: ({ className, rootRef, ...props }) => {
+        Root: ({ className, ...props }) => {
           return (
             <div
               data-slot="calendar"
-              ref={rootRef}
               className={cn(className)}
               {...props}
             />

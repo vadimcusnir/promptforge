@@ -1,6 +1,6 @@
 "use client";
 import clsx from "clsx";
-import { createElement, forwardRef } from "react";
+import { createElement, forwardRef, JSX } from "react";
 import { useMotion } from "@/lib/motion/provider";
 
 const INTENT_CLASS_MAP = {
@@ -40,7 +40,7 @@ export const Motion = forwardRef<HTMLElement, MotionProps>(
     })();
 
     const motionClass = shouldApplyMotion
-      ? INTENT_CLASS_MAP[intent]
+      ? INTENT_CLASS_MAP[intent as MotionIntent]
       : undefined;
 
     return createElement(

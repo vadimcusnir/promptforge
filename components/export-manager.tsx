@@ -152,7 +152,7 @@ export function ExportManager({
       content += `==============\n`;
       content += `Module: ${currentPrompt.moduleName}\n`;
       content += `Vector: V${currentPrompt.vector}\n`;
-      content += `Validation score: ${currentPrompt.validationScore.toFixed(2)}\n`;
+      content += `Validation score: ${currentPrompt.validationScore?.toFixed(2) || "N/A"}\n`;
       content += `Session hash: ${currentPrompt.sessionHash}\n\n`;
       content += `Content:\n${currentPrompt.content}\n\n`;
     }
@@ -182,7 +182,7 @@ export function ExportManager({
   const copyToClipboard = async () => {
     if (!currentPrompt) return;
 
-    const content = `PROMPTFORGE™ v3.0 - ${currentPrompt.moduleName}\nVector: V${currentPrompt.vector}\nScore: ${currentPrompt.validationScore.toFixed(2)}\nHash: ${currentPrompt.sessionHash}\n\n${currentPrompt.content}`;
+    const content = `PROMPTFORGE™ v3.0 - ${currentPrompt.moduleName}\nVector: V${currentPrompt.vector}\nScore: ${currentPrompt.validationScore?.toFixed(2) || "N/A"}\nHash: ${currentPrompt.sessionHash}\n\n${currentPrompt.content}`;
 
     try {
       await navigator.clipboard.writeText(content);
@@ -320,7 +320,7 @@ export function ExportManager({
               {exportFormat === "txt" && (
                 <div className="whitespace-pre-wrap">
                   {currentPrompt
-                    ? `PROMPTFORGE™ v3.0 - SESSION REPORT\n\nPrompt: ${currentPrompt.moduleName}\nVector: V${currentPrompt.vector}\nScore: ${currentPrompt.validationScore.toFixed(2)}\n\n${currentPrompt.content.substring(0, 300)}...`
+                    ? `PROMPTFORGE™ v3.0 - SESSION REPORT\n\nPrompt: ${currentPrompt.moduleName}\nVector: V${currentPrompt.vector}\nScore: ${currentPrompt.validationScore?.toFixed(2) || "N/A"}\n\n${currentPrompt.content.substring(0, 300)}...`
                     : "No current prompt selected."}
                 </div>
               )}
