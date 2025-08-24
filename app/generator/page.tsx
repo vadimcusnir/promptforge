@@ -16,6 +16,9 @@ import type {
   TestResult,
   PromptModule,
 } from "@/types/promptforge";
+import { ExportPipeline } from "@/lib/export/export-pipeline";
+import { Button } from "@/components/ui/button";
+import { Loader2, Download } from "lucide-react";
 
 export default function GeneratorPage() {
   const router = useRouter();
@@ -41,8 +44,10 @@ export default function GeneratorPage() {
   const [isExporting, setIsExporting] = useState(false);
   const [entitlements, setEntitlements] = useState<any>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [availableExportFormats, setAvailableExportFormats] = useState<string[]>([]);
 
   const entitlementsManager = EntitlementsManager.getInstance();
+  const exportPipeline = ExportPipeline.getInstance();
 
   // Check for upgrade success/cancelled
   useEffect(() => {
@@ -75,6 +80,10 @@ export default function GeneratorPage() {
       
       const userEntitlements = await entitlementsManager.getUserEntitlements(mockUserId, mockOrgId);
       setEntitlements(userEntitlements);
+      
+      // Get available export formats based on entitlements
+      const formats = exportPipeline.getAvailableFormats(userEntitlements);
+      setAvailableExportFormats(formats);
     } catch (error) {
       console.error('Error loading entitlements:', error);
       // Set default free tier entitlements
@@ -84,6 +93,7 @@ export default function GeneratorPage() {
         canUseGPTOptimization: false,
         monthlyRunsRemaining: 10
       });
+      setAvailableExportFormats(['txt']);
     }
   };
 
@@ -259,72 +269,39 @@ export default function GeneratorPage() {
   const handleExport = async (format: string) => {
     if (!generatedPrompt) return;
 
-    // Check entitlements
-    const canExport = await entitlementsManager.canExportFormat("user_123", "org_456", format);
-    if (!canExport.allowed) {
-      setPaywallTrigger(`export-${format}`);
-      setShowPaywall(true);
-      return;
-    }
-
     setIsExporting(true);
 
     try {
-      // Call the export API
-      const response = await fetch('/api/export', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          promptId: generatedPrompt.id,
-          format,
-          sevenDConfig: generatedPrompt.sevenDConfig,
-          moduleId: generatedPrompt.moduleId,
-        }),
-      });
+      const result = await exportPipeline.exportPrompt(
+        generatedPrompt,
+        format,
+        entitlements,
+        false // Not a trial user
+      );
 
-      if (!response.ok) {
-        throw new Error('Failed to export');
-      }
-
-      const data = await response.json();
-      
-      // Handle different export formats
-      if (format === 'json') {
-        const blob = new Blob([JSON.stringify(generatedPrompt, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `prompt-${generatedPrompt.id}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-      } else if (format === 'pdf') {
-        // For PDF, the API should return a download URL
-        if (data.downloadUrl) {
-          window.open(data.downloadUrl, '_blank');
-        }
-      } else if (format === 'zip') {
-        // For bundle exports, the API should return a download URL
-        if (data.downloadUrl) {
-          window.open(data.downloadUrl, '_blank');
-        }
-      } else {
-        // For text formats, create a blob download
-        const blob = new Blob([generatedPrompt.content], { type: 'text/plain' });
+      if (result.success && result.data) {
+        // Create download
+        const blob = Buffer.isBuffer(result.data) 
+          ? new Blob([result.data]) 
+          : new Blob([result.data], { type: 'text/plain' });
+        
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `prompt-${generatedPrompt.id}.${format}`;
         a.click();
         URL.revokeObjectURL(url);
+
+        toast({
+          title: "Export Successful!",
+          description: `Your prompt has been exported in ${format.toUpperCase()} format.`,
+        });
+      } else {
+        toast({
+          title: "Export Failed",
+          description: result.error || "There was an error exporting your prompt.",
+        });
       }
-
-      toast({
-        title: "Export Successful!",
-        description: `Your prompt has been exported in ${format.toUpperCase()} format.`,
-      });
-
     } catch (error) {
       console.error('Error exporting:', error);
       toast({
@@ -527,66 +504,39 @@ export default function GeneratorPage() {
                 </div>
 
                 {/* Export Options */}
-                <div className="bg-card border rounded-lg p-6">
-                  <h2 className="text-2xl font-semibold mb-4">Export Options</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <button
-                      onClick={() => handleExport("txt")}
-                      disabled={isExporting}
-                      className="p-4 border rounded-lg hover:bg-muted transition-all disabled:opacity-50"
-                    >
-                      <div className="text-center">
-                        <div className="text-lg font-medium">.txt</div>
-                        <div className="text-sm text-muted-foreground">Free</div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleExport("md")}
-                      disabled={isExporting || !entitlements?.canExportJSON}
-                      className="p-4 border rounded-lg hover:bg-muted transition-all disabled:opacity-50"
-                    >
-                      <div className="text-center">
-                        <div className="text-lg font-medium">.md</div>
-                        <div className="text-sm text-muted-foreground">Creator+</div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleExport("json")}
-                      disabled={isExporting || !entitlements?.canExportJSON}
-                      className="p-4 border rounded-lg hover:bg-muted transition-all disabled:opacity-50"
-                    >
-                      <div className="text-center">
-                        <div className="text-lg font-medium">.json</div>
-                        <div className="text-sm text-muted-foreground">Creator+</div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleExport("pdf")}
-                      disabled={isExporting || !entitlements?.canExportPDF}
-                      className="p-4 border rounded-lg hover:bg-muted transition-all disabled:opacity-50"
-                    >
-                      <div className="text-center">
-                        <div className="text-lg font-medium">.pdf</div>
-                        <div className="text-sm text-muted-foreground">Pro+</div>
-                      </div>
-                    </button>
-                  </div>
-                  
-                  {entitlements?.canExportBundleZip && (
-                    <div className="mt-4">
-                      <button
-                        onClick={() => handleExport("zip")}
-                        disabled={isExporting}
-                        className="p-4 border rounded-lg hover:bg-muted transition-all disabled:opacity-50 w-full"
-                      >
-                        <div className="text-center">
-                          <div className="text-lg font-medium">Bundle Export (.zip)</div>
-                          <div className="text-sm text-muted-foreground">Enterprise</div>
-                        </div>
-                      </button>
+                {generatedPrompt && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Export Options</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {availableExportFormats.map((format) => (
+                        <Button
+                          key={format}
+                          onClick={() => handleExport(format)}
+                          disabled={isExporting}
+                          variant="outline"
+                          className="capitalize"
+                        >
+                          {isExporting ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Exporting...
+                            </>
+                          ) : (
+                            <>
+                              <Download className="mr-2 h-4 w-4" />
+                              Export as {format.toUpperCase()}
+                            </>
+                          )}
+                        </Button>
+                      ))}
                     </div>
-                  )}
-                </div>
+                    {availableExportFormats.length === 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        No export formats available. Upgrade your plan to unlock more export options.
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
