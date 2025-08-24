@@ -33,7 +33,7 @@ export function ModuleGrid({
   
   // Use external props if provided, otherwise use internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
-  const vectorFilter = selectedVector ?? vectorFilter;
+  const effectiveVectorFilter = selectedVector ?? vectorFilter;
 
   const filteredModules = useMemo(() => {
     let modules = Object.values(MODULES);
@@ -135,7 +135,7 @@ export function ModuleGrid({
                 key={module.id}
                 module={module}
                 isSelected={selectedModule === module.id}
-                onSelect={onSelectModule}
+                onSelect={onSelectModule || (() => {})}
                 onViewDetails={handleViewDetails}
               />
             ))}
@@ -169,7 +169,7 @@ export function ModuleGrid({
                   key={module.id}
                   module={module}
                   isSelected={selectedModule === module.id}
-                  onSelect={onSelectModule}
+                  onSelect={onSelectModule || (() => {})}
                   onViewDetails={handleViewDetails}
                   vectorColor={vector.color}
                 />
@@ -191,8 +191,12 @@ export function ModuleGrid({
           <Button
             variant="outline"
             onClick={() => {
-              setSearchQuery("");
-              onVectorFilterChange("all");
+              if (externalSearchQuery === undefined) {
+                setInternalSearchQuery("");
+              }
+              if (onVectorFilterChange) {
+                onVectorFilterChange("all");
+              }
             }}
             className="mt-4"
           >
