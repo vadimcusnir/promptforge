@@ -324,7 +324,7 @@ export async function GET(req: NextRequest) {
     const capabilities = {
       baseFormats: ['txt', 'md'],
       availableFormats: ['txt', 'md'],
-      restrictions: []
+      restrictions: [] as string[]
     };
 
     if (flags.canExportJSON) {

@@ -99,14 +99,19 @@ export async function POST(req: NextRequest) {
     const plan: PlanCode = subscription?.plan_code || 'pilot';
 
     // Track export started
-    await trackEvent('export.started', {
-      run_id: runId,
-      formats: formats,
-      org_id: orgId,
-      user_id: userId,
-      plan: plan,
-      trace_id: traceId,
-      timestamp: startTime
+    await trackEvent({
+      event: 'export.started',
+      orgId,
+      userId,
+      payload: {
+        run_id: runId,
+        formats: formats,
+        org_id: orgId,
+        user_id: userId,
+        plan: plan,
+        trace_id: traceId,
+        timestamp: startTime
+      }
     });
 
     // Check entitlements for each requested format
@@ -361,17 +366,22 @@ export async function POST(req: NextRequest) {
     const totalBytes = Object.values(uploadResults).reduce((sum, result) => sum + result.bytes, 0);
 
     // Track export finished
-    await trackEvent('export.finished', {
-      run_id: runId,
-      bundle_id: bundleId,
-      formats: formats,
-      org_id: orgId,
-      user_id: userId,
-      plan: plan,
-      trace_id: traceId,
-      duration_ms: Date.now() - startTime,
-      bytes_total: totalBytes,
-      checksum: canonicalChecksumValue
+    await trackEvent({
+      event: 'export.finished',
+      orgId,
+      userId,
+      payload: {
+        run_id: runId,
+        bundle_id: bundleId,
+        formats: formats,
+        org_id: orgId,
+        user_id: userId,
+        plan: plan,
+        trace_id: traceId,
+        duration_ms: Date.now() - startTime,
+        bytes_total: totalBytes,
+        checksum: canonicalChecksumValue
+      }
     });
 
     // Return response
@@ -394,11 +404,16 @@ export async function POST(req: NextRequest) {
     console.error('[Export API] Error:', error);
     
     // Track export failed
-    await trackEvent('export.failed', {
-      trace_id: traceId,
-      duration_ms: Date.now() - startTime,
-      error_code: error instanceof Error ? error.message : 'UNKNOWN_ERROR',
-      error_message: error instanceof Error ? error.message : String(error)
+    await trackEvent({
+      event: 'export.failed',
+      orgId,
+      userId,
+      payload: {
+        trace_id: traceId,
+        duration_ms: Date.now() - startTime,
+        error_code: error instanceof Error ? error.message : 'UNKNOWN_ERROR',
+        error_message: error instanceof Error ? error.message : String(error)
+      }
     });
     
     if (error instanceof Error) {
