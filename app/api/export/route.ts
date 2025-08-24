@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { getServerSession } from 'next-auth';
+import { getUserFromCookies } from '@/lib/auth';
 
 // Import export modules
 import { composeTxt, composeMd, composeJson, composeTelemetry, normalizeContent } from '@/lib/export/composeArtifacts';
@@ -41,19 +41,20 @@ export async function POST(req: NextRequest) {
     // Validate environment
     validateStorageConfig();
     
-    // Get session
-    const session = await getServerSession();
-    if (!session?.user?.id) {
+    // Get current user from cookies
+    const user = getUserFromCookies();
+    if (!user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse request
     const body: ExportRequest = await req.json();
-    const { runId, formats, orgId, userId } = body;
+    const { runId, formats, orgId } = body;
+    const userId = user.email; // Use current user's email
 
-    if (!runId || !formats?.length || !orgId || !userId) {
+    if (!runId || !formats?.length || !orgId) {
       return NextResponse.json(
-        { error: 'Missing required fields: runId, formats, orgId, userId' },
+        { error: 'Missing required fields: runId, formats, orgId' },
         { status: 400 }
       );
     }
