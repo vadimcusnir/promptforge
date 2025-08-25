@@ -102,8 +102,8 @@ export function middleware(req: NextRequest) {
     const role = req.cookies.get("pf_role")?.value ?? "member";
     const isAdmin = role === "admin";
 
-    if (!isAdmin) {
-      // Public goes to /coming-soon
+    if (!isAdmin && pathname !== "/coming-soon") {
+      // Public goes to /coming-soon (except if already on coming-soon page)
       const comingSoonUrl = req.nextUrl.clone();
       comingSoonUrl.pathname = "/coming-soon";
       // Optional: keep original destination as query for analytics
