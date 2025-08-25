@@ -23,6 +23,7 @@ import {
   TrendingUp,
   Award,
 } from "lucide-react";
+import { BrandLinterAlert } from "@/components/ui/brand-linter-alert";
 
 export default function HomePage() {
   const [demoInput, setDemoInput] = useState("marketing strategy");
@@ -33,14 +34,8 @@ export default function HomePage() {
     if (!demoInput.trim()) return;
     setIsGenerating(true);
     try {
-      // Create a mock result since brandLinter doesn't have a call signature
-      const mockResult = {
-        score: 85,
-        issues: [],
-        suggestions: ["Consider adding more specific details", "Include measurable outcomes"],
-        status: "good"
-      };
-      setDemoOutput(JSON.stringify(mockResult, null, 2));
+      const result = brandLinter.validatePrompt(demoInput);
+      setDemoOutput(JSON.stringify(result, null, 2));
     } catch (error) {
       setDemoOutput("Error generating demo output");
     } finally {
@@ -214,6 +209,20 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Brand Linter Alert */}
+        <BrandLinterAlert 
+          result={{
+            score: 85,
+            breaches: [],
+            fixes: [],
+            cta: "Continue with current action",
+            has_metric: true,
+            has_kpi: true,
+            voice_compliant: true,
+            structure_complete: true
+          }}
+        />
       </main>
     </>
   );

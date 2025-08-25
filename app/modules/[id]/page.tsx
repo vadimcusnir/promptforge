@@ -6,13 +6,14 @@ import { ModuleDemo } from "@/components/module-demo";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 interface ModulePageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function ModulePage({ params }: ModulePageProps) {
-  const moduleId = Number.parseInt(params.id);
+export default async function ModulePage({ params }: ModulePageProps) {
+  const { id } = await params;
+  const moduleId = Number.parseInt(id);
   const module = modules.find((m) => m.id === moduleId);
 
   if (!module) {

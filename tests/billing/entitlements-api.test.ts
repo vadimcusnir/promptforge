@@ -19,6 +19,9 @@ const mockSupabaseClient = {
     select: vi.fn(() => ({
       eq: vi.fn(() => ({
         single: vi.fn(),
+        eq: vi.fn(() => ({
+          single: vi.fn(),
+        })),
       })),
     })),
   })),
@@ -76,7 +79,9 @@ describe('Entitlements API', () => {
       mockSupabaseClient.from.mockReturnValueOnce({
         select: vi.fn(() => ({
           eq: vi.fn(() => ({
-            eq: vi.fn(() => Promise.resolve({
+            single: vi.fn(),
+            eq: vi.fn(() => ({
+              single: vi.fn(),
               data: [
                 { flag: 'canUseGptTestReal', value: true, sources: ['plan'], earliest_expiry: null },
                 { flag: 'canExportPDF', value: true, sources: ['plan'], earliest_expiry: null },
@@ -192,7 +197,9 @@ describe('Entitlements API', () => {
       mockSupabaseClient.from.mockReturnValueOnce({
         select: vi.fn(() => ({
           eq: vi.fn(() => ({
-            eq: vi.fn(() => Promise.resolve({
+            single: vi.fn(),
+            eq: vi.fn(() => ({
+              single: vi.fn(),
               data: null,
               error: new Error('User entitlements error'),
             })),
@@ -203,12 +210,16 @@ describe('Entitlements API', () => {
       // Mock org entitlements query success
       mockSupabaseClient.from.mockReturnValueOnce({
         select: vi.fn(() => ({
-          eq: vi.fn(() => Promise.resolve({
-            data: [
-              { flag: 'canUseAllModules', value: false, sources: ['plan'], earliest_expiry: null },
-              { flag: 'canExportMD', value: true, sources: ['plan'], earliest_expiry: null },
-            ],
-            error: null,
+          eq: vi.fn(() => ({
+            single: vi.fn(),
+            eq: vi.fn(() => ({
+              single: vi.fn(),
+              data: [
+                { flag: 'canUseAllModules', value: false, sources: ['plan'], earliest_expiry: null },
+                { flag: 'canExportMD', value: true, sources: ['plan'], earliest_expiry: null },
+              ],
+              error: null,
+            })),
           })),
         })),
       });
@@ -260,7 +271,9 @@ describe('Entitlements API', () => {
       mockSupabaseClient.from.mockReturnValueOnce({
         select: vi.fn(() => ({
           eq: vi.fn(() => ({
-            eq: vi.fn(() => Promise.resolve({
+            single: vi.fn(),
+            eq: vi.fn(() => ({
+              single: vi.fn(),
               data: [
                 { flag: 'canUseGptTestReal', value: true },
                 { flag: 'canExportPDF', value: false },
@@ -317,7 +330,9 @@ describe('Entitlements API', () => {
       mockSupabaseClient.from.mockReturnValueOnce({
         select: vi.fn(() => ({
           eq: vi.fn(() => ({
-            eq: vi.fn(() => Promise.resolve({
+            single: vi.fn(),
+            eq: vi.fn(() => ({
+              single: vi.fn(),
               data: [], // No entitlements
               error: null,
             })),

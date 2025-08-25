@@ -10,7 +10,7 @@ vi.mock('@/lib/billing/stripe-config');
 
 const mockSupabaseClient = {
   from: vi.fn(() => ({
-    upsert: vi.fn(() => ({ error: null })),
+    upsert: vi.fn(() => ({ error: null as null | Error })),
     select: vi.fn(() => ({ 
       eq: vi.fn(() => ({ 
         single: vi.fn(() => ({ data: { org_id: 'test-org-id' }, error: null }))
@@ -152,7 +152,9 @@ describe('Stripe Webhook Handler', () => {
       expect(response.status).toBe(200);
       
       // Verify trial_end was processed correctly
-      const upsertCall = mockSupabaseClient.from().upsert.mock.calls[0][0];
+      const upsertCalls = mockSupabaseClient.from().upsert.mock.calls as any[][];
+      expect(upsertCalls.length).toBeGreaterThan(0);
+      const upsertCall = upsertCalls[0][0];
       expect(upsertCall.trial_end).toBeTruthy();
     });
   });
@@ -223,7 +225,9 @@ describe('Stripe Webhook Handler', () => {
       expect(response.status).toBe(200);
       
       // Verify seats were updated
-      const upsertCall = mockSupabaseClient.from().upsert.mock.calls[0][0];
+      const upsertCalls = mockSupabaseClient.from().upsert.mock.calls as any[][];
+      expect(upsertCalls.length).toBeGreaterThan(0);
+      const upsertCall = upsertCalls[0][0];
       expect(upsertCall.seats).toBe(5);
       expect(upsertCall.plan_code).toBe('enterprise');
     });
@@ -357,6 +361,11 @@ describe('Stripe Webhook Handler', () => {
       // Mock database error
       mockSupabaseClient.from.mockReturnValue({
         upsert: vi.fn(() => ({ error: new Error('Database error') })),
+        select: vi.fn(() => ({ 
+          eq: vi.fn(() => ({ 
+            single: vi.fn(() => ({ data: { org_id: 'test-org-id' }, error: null }))
+          }))
+        })),
       });
 
       const subscription = createMockSubscription();

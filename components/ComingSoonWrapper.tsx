@@ -18,6 +18,7 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
       try {
         // Skip check for coming-soon page itself and API routes
         if (pathname === "/coming-soon" || pathname.startsWith("/api/")) {
+          console.log(`[ComingSoonWrapper] Skipping check for: ${pathname}`);
           setIsAdmin(true);
           setIsChecking(false);
           return;
