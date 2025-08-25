@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createHash } from "crypto";
-import { StandardAPIError as APIError } from "./errors";
+import { APIError } from "./errors";
 
 /**
  * 7D Validation Schema - SSOT (Single Source of Truth)
@@ -456,10 +456,10 @@ export function assertDoR(context: DoRContext): void {
     throw new APIError("ENTITLEMENT_REQUIRED");
   }
   if (!context.outputSpecLoaded) {
-    throw new APIError("INPUT_SCHEMA_MISMATCH", "output_spec not loaded");
+    throw new APIError("INPUT_SCHEMA_MISMATCH", { reason: "output_spec not loaded" });
   }
   if (!context.testsDefined) {
-    throw new APIError("INPUT_SCHEMA_MISMATCH", "tests not defined");
+    throw new APIError("INPUT_SCHEMA_MISMATCH", { reason: "tests not defined" });
   }
 }
 
@@ -467,16 +467,16 @@ export function assertDoD(context: DoDContext): void {
   if (context.score < 80) {
     throw new APIError(
       "INTERNAL_RUN_ERROR",
-      "Score below minimum threshold (80)",
+      { reason: "Score below minimum threshold (80)" },
     );
   }
   if (!context.manifestPresent) {
-    throw new APIError("INTERNAL_RUN_ERROR", "Manifest missing");
+    throw new APIError("INTERNAL_RUN_ERROR", { reason: "Manifest missing" });
   }
   if (!context.checksumValid) {
-    throw new APIError("INTERNAL_RUN_ERROR", "Checksum validation failed");
+    throw new APIError("INTERNAL_RUN_ERROR", { reason: "Checksum validation failed" });
   }
   if (!context.telemetryClean) {
-    throw new APIError("INTERNAL_RUN_ERROR", "Telemetry contains PII");
+    throw new APIError("INTERNAL_RUN_ERROR", { reason: "Telemetry contains PII" });
   }
 }

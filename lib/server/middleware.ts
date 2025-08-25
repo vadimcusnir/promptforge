@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { StandardAPIError as APIError } from "./errors";
+import { APIError } from "./errors";
 
 /**
  * API Middleware utilities for rate limiting, security headers, and error handling
@@ -198,7 +198,7 @@ export async function validateJsonBody(req: NextRequest): Promise<any> {
   try {
     return await req.json();
   } catch (error) {
-    throw new APIError('INPUT_SCHEMA_MISMATCH', 'Invalid JSON body');
+    throw new APIError('INPUT_SCHEMA_MISMATCH', { reason: 'Invalid JSON body' });
   }
 }
 
@@ -259,7 +259,7 @@ export function withMiddleware<T extends any[]>(
         const missing = validateHeaders(req, options.requiredHeaders);
         if (missing.length > 0) {
           return errorResponse(
-            new APIError('UNAUTHENTICATED', `Missing required headers: ${missing.join(', ')}`),
+            new APIError('UNAUTHENTICATED', { missingHeaders: missing.join(', ') }),
           );
         }
       }
@@ -269,7 +269,7 @@ export function withMiddleware<T extends any[]>(
         const { orgId, userId, apiKey } = getAuthContext(req);
         if (!orgId && !apiKey) {
           return errorResponse(
-            new APIError('UNAUTHENTICATED', 'Authentication required'),
+            new APIError('UNAUTHENTICATED', { reason: 'Authentication required' }),
           );
         }
       }

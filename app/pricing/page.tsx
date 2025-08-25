@@ -11,10 +11,10 @@ import { toast } from "@/hooks/use-toast";
 interface PlanFeature {
   name: string;
   description: string;
-  free: boolean;
-  creator: boolean;
-  pro: boolean;
-  enterprise: boolean;
+  free: boolean | string;
+  creator: boolean | string;
+  pro: boolean | string;
+  enterprise: boolean | string;
 }
 
 interface PlanTier {
@@ -204,7 +204,7 @@ export default function PricingPage() {
     if (planId === "free") {
       toast({
         title: "Free Plan",
-        description: "You're already on the free plan!",
+        description: "You&apos;re already on the free plan!",
       });
       return;
     }
@@ -434,7 +434,7 @@ export default function PricingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  You'll receive a notification when approaching limits. Upgrade your plan to continue generating prompts.
+                  You&apos;ll receive a notification when approaching limits. Upgrade your plan to continue generating prompts.
                 </p>
               </CardContent>
             </Card>

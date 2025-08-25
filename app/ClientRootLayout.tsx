@@ -17,6 +17,11 @@ import "./globals.css";
 import "./styles/variables.css";
 import "./styles/animations.css";
 
+// Expose telemetry engine globally for glitch protocol
+interface WindowWithTelemetry extends Window {
+  telemetryEngine: typeof telemetry;
+}
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   display: "swap",
@@ -83,8 +88,9 @@ function ReadySetter() {
       console.log("[v0] Fonts ready, initiating matrix ready sequence");
 
       // Expose telemetry engine globally for glitch protocol
+
       if (typeof window !== "undefined") {
-        (window as any).telemetryEngine = telemetry;
+        (window as unknown as WindowWithTelemetry).telemetryEngine = telemetry;
       }
 
       // Immediate attempt

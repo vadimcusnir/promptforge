@@ -325,7 +325,7 @@ describe('useEntitlements Hook', () => {
       });
 
       const { result, rerender } = renderHook(
-        ({ orgId }) => useEntitlements(orgId),
+        ({ orgId }: { orgId: string }) => useEntitlements(orgId),
         { initialProps: { orgId: 'org-123' } }
       );
 

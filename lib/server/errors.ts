@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ZodError, ZodIssue } from "zod";
 
 /**
  * Standardized API Error System
@@ -128,13 +129,13 @@ export type APIErrorCode = keyof typeof API_ERROR_CODES;
 /**
  * Standardized API Error class
  */
-export class StandardAPIError extends Error {
+export class APIError extends Error {
   public readonly code: number;
   public readonly type: string;
-  public readonly details?: any;
+  public readonly details?: Record<string, unknown>;
   public readonly apiCode: APIErrorCode;
 
-  constructor(apiCode: APIErrorCode, details?: any, customMessage?: string) {
+  constructor(apiCode: APIErrorCode, details?: Record<string, unknown>, customMessage?: string) {
     const errorConfig = API_ERROR_CODES[apiCode];
     super(customMessage || errorConfig.message);
     
@@ -150,17 +151,15 @@ export class StandardAPIError extends Error {
  * Create standardized error response
  */
 export function createErrorResponse(
-  apiCode: APIErrorCode,
-  details?: any,
-  customMessage?: string,
-  additionalHeaders?: Record<string, string>
-): NextResponse {
-  const errorConfig = API_ERROR_CODES[apiCode];
+  error: Error | string,
+  statusCode: number = 500
+): Response {
+  const errorConfig = API_ERROR_CODES[error as APIErrorCode];
   
   const errorBody = {
     error: errorConfig.type,
-    message: customMessage || errorConfig.message,
-    ...(details && { details }),
+    message: errorConfig.message,
+    ...(error instanceof Error && { details: error.message }),
   };
 
   const headers = {
@@ -171,11 +170,10 @@ export function createErrorResponse(
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Access-Control-Allow-Origin': 'https://chatgpt-prompting.com',
     'Cache-Control': 'no-cache, no-store, must-revalidate',
-    ...additionalHeaders,
   };
 
-  return NextResponse.json(errorBody, {
-    status: errorConfig.code,
+  return new Response(JSON.stringify(errorBody), {
+    status: statusCode,
     headers,
   });
 }
@@ -188,31 +186,38 @@ export function createRateLimitResponse(
   resetTime: number,
   customMessage?: string
 ): NextResponse {
-  return createErrorResponse(
-    'RATE_LIMITED',
-    { remaining, resetTime },
-    customMessage,
+  const headers = {
+    'X-RateLimit-Limit': '30',
+    'X-RateLimit-Remaining': remaining.toString(),
+    'X-RateLimit-Reset': Math.ceil(resetTime / 1000).toString(),
+  };
+
+  return NextResponse.json(
     {
-      'X-RateLimit-Limit': '30',
-      'X-RateLimit-Remaining': remaining.toString(),
-      'X-RateLimit-Reset': Math.ceil(resetTime / 1000).toString(),
-    }
+      error: "RATE_LIMITED",
+      message: customMessage || "Rate limit exceeded",
+      remaining,
+      resetTime,
+    },
+    { status: 429, headers }
   );
 }
 
 /**
  * Handle validation errors from Zod
  */
-export function createValidationErrorResponse(zodError: any): NextResponse {
-  return createErrorResponse(
-    'INPUT_SCHEMA_MISMATCH',
+export function createValidationErrorResponse(zodError: ZodError): NextResponse {
+  return NextResponse.json(
     {
-      validation_errors: zodError.errors?.map((err: any) => ({
+      error: "VALIDATION_ERROR",
+      message: "Input validation failed",
+      validation_errors: zodError.errors?.map((err: ZodIssue) => ({
         field: err.path?.join('.'),
         message: err.message,
         code: err.code,
       })) || [],
-    }
+    },
+    { status: 422 }
   );
 }
 
@@ -228,13 +233,14 @@ export function createEntitlementErrorResponse(
     ? requiredEntitlements 
     : [requiredEntitlements];
 
-  return createErrorResponse(
-    'ENTITLEMENT_REQUIRED',
+  return NextResponse.json(
     {
+      error: "ENTITLEMENT_REQUIRED",
+      message: customMessage || "Insufficient permissions",
       required_entitlements: entitlements,
       current_plan: currentPlan,
     },
-    customMessage
+    { status: 403 }
   );
 }
 
@@ -246,24 +252,25 @@ export function create7DErrorResponse(
   value?: any,
   allowedValues?: string[]
 ): NextResponse {
-  return createErrorResponse(
-    'INVALID_7D_ENUM',
+  return NextResponse.json(
     {
+      error: "INVALID_7D_ENUM",
+      message: `Invalid 7D enum value for field: ${field}`,
       invalid_field: field,
       invalid_value: value,
       allowed_values: allowedValues,
     },
-    `Invalid 7D enum value for field: ${field}`
+    { status: 400 }
   );
 }
 
 /**
  * Success response helper with consistent headers
  */
-export function createSuccessResponse(
-  data: any,
-  status: number = 200,
-  additionalHeaders?: Record<string, string>
+export function createSuccessResponse<T>(
+  data: T,
+  message?: string,
+  metadata?: Record<string, unknown>
 ): NextResponse {
   const headers = {
     'Content-Type': 'application/json',
@@ -273,11 +280,12 @@ export function createSuccessResponse(
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Access-Control-Allow-Origin': 'https://chatgpt-prompting.com',
     'Cache-Control': 'no-cache, no-store, must-revalidate',
-    ...additionalHeaders,
+    ...(message ? { 'X-Message': message } : {}),
+    ...(metadata ? { 'X-Metadata': JSON.stringify(metadata) } : {}),
   };
 
   return NextResponse.json(data, {
-    status,
+    status: 200,
     headers,
   });
 }
@@ -300,23 +308,23 @@ export function createCORSResponse(): NextResponse {
 /**
  * Error handler wrapper for API routes
  */
-export function withErrorHandler<T extends any[]>(
-  handler: (...args: T) => Promise<NextResponse>
-) {
-  return async (...args: T): Promise<NextResponse> => {
+export function withErrorHandler<T extends unknown[]>(
+  handler: (...args: T) => Promise<Response>
+): (...args: T) => Promise<Response> {
+  return async (...args: T): Promise<Response> => {
     try {
       return await handler(...args);
     } catch (error) {
       console.error('[API] Unhandled error:', error);
 
       // Handle StandardAPIError
-      if (error instanceof StandardAPIError) {
-        return createErrorResponse(error.apiCode, error.details, error.message);
+      if (error instanceof APIError) {
+        return createErrorResponse(error.apiCode);
       }
 
       // Handle Zod validation errors
       if (error && typeof error === 'object' && 'issues' in error) {
-        return createValidationErrorResponse(error);
+        return createValidationErrorResponse(error as ZodError);
       }
 
       // Handle OpenAI API errors

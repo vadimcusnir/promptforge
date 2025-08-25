@@ -6,9 +6,9 @@ import {
   GPTTestRequestSchema,
   ExportBundleRequestSchema,
   RunModuleRequestSchema,
-  APIError,
   DOMAIN_DEFAULTS 
 } from '../../lib/server/validation';
+import { APIError } from '../../lib/server/errors';
 
 describe('7D Validation', () => {
   describe('normalize7D', () => {

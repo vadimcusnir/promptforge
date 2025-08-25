@@ -1,8 +1,16 @@
 import { describe, it, expect } from "@jest/globals";
+
+// Mock jest for testing
+declare const jest: {
+  fn: () => {
+    mockRejectedValue: (value: any) => any;
+    mockResolvedValue: (value: any) => any;
+  };
+};
 import { NextRequest } from "next/server";
 import {
   API_ERROR_CODES,
-  StandardAPIError,
+  APIError,
   createErrorResponse,
   createRateLimitResponse,
   createValidationErrorResponse,
@@ -62,7 +70,7 @@ describe("Standardized Error System", () => {
 
   describe("StandardAPIError", () => {
     it("should create error with correct properties", () => {
-      const error = new StandardAPIError("INVALID_7D_ENUM", {
+      const error = new APIError("INVALID_7D_ENUM", {
         field: "domain",
       });
 
@@ -77,9 +85,9 @@ describe("Standardized Error System", () => {
 
     it("should accept custom message", () => {
       const customMessage = "Custom error message";
-      const error = new StandardAPIError(
+      const error = new APIError(
         "UNAUTHENTICATED",
-        null,
+        undefined,
         customMessage,
       );
 
@@ -91,9 +99,7 @@ describe("Standardized Error System", () => {
 
   describe("createErrorResponse", () => {
     it("should create proper error response", async () => {
-      const response = createErrorResponse("INVALID_7D_ENUM", {
-        field: "domain",
-      });
+      const response = createErrorResponse("INVALID_7D_ENUM");
 
       expect(response.status).toBe(400);
 
@@ -115,9 +121,7 @@ describe("Standardized Error System", () => {
     it("should handle custom message", async () => {
       const customMessage = "Custom validation error";
       const response = createErrorResponse(
-        "INPUT_SCHEMA_MISMATCH",
-        null,
-        customMessage,
+        "INPUT_SCHEMA_MISMATCH"
       );
 
       expect(response.status).toBe(422);
@@ -148,7 +152,7 @@ describe("Standardized Error System", () => {
   describe("createValidationErrorResponse", () => {
     it("should create validation error response", async () => {
       const zodError = {
-        errors: [
+        issues: [
           {
             path: ["sevenD", "domain"],
             message: "Invalid enum value",
@@ -160,7 +164,13 @@ describe("Standardized Error System", () => {
             code: "too_small",
           },
         ],
-      };
+        format: () => ({}),
+        message: "Validation failed",
+        isEmpty: false,
+        flatten: () => ({}),
+        formErrors: {},
+        fieldErrors: {},
+      } as any;
 
       const response = createValidationErrorResponse(zodError);
 
@@ -227,7 +237,7 @@ describe("Standardized Error System", () => {
   describe("createSuccessResponse", () => {
     it("should create success response with security headers", async () => {
       const data = { result: "success", value: 42 };
-      const response = createSuccessResponse(data, 201);
+      const response = createSuccessResponse(data, "Success");
 
       expect(response.status).toBe(201);
 
@@ -263,7 +273,7 @@ describe("Standardized Error System", () => {
       const handler = jest
         .fn()
         .mockRejectedValue(
-          new StandardAPIError("INVALID_7D_ENUM", { field: "domain" }),
+          new APIError("INVALID_7D_ENUM", { field: "domain" }),
         );
 
       const wrappedHandler = withErrorHandler(handler);

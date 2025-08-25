@@ -1,22 +1,227 @@
-# Stripe Integration & Enterprise API Setup
+# Stripe Integration Setup Guide
 
-## Overview
+This guide covers setting up Stripe products, prices, and webhooks for PromptForge v3.
 
-This guide covers setting up the complete pricing and Stripe integration for PromptForge, including the Enterprise API endpoint.
+## 🏗️ Stripe Product Setup
 
-## 1. Stripe Configuration
+### 1. Create Products in Stripe Dashboard
 
-### Environment Variables Required
+Navigate to [Stripe Dashboard → Products](https://dashboard.stripe.com/products) and create the following products:
 
-Add these to your `.env.local` file:
+#### Free Plan (No Product Needed)
+- Free users don't require a Stripe product
+- They get basic access with limited features
 
+#### Creator Plan
+- **Product Name:** `PromptForge Creator`
+- **Description:** `Professional prompt generation with 100 prompts/month and 50 exports/month`
+- **Features:** 
+  - 100 prompts per month
+  - 50 exports per month
+  - Markdown export format
+  - Basic analytics
+
+#### Pro Plan
+- **Product Name:** `PromptForge Pro`
+- **Description:** `Advanced prompt generation with 1000 prompts/month and 500 exports/month`
+- **Features:**
+  - 1000 prompts per month
+  - 500 exports per month
+  - PDF, JSON, and ZIP export formats
+  - Advanced analytics and testing
+  - Priority support
+
+#### Enterprise Plan
+- **Product Name:** `PromptForge Enterprise`
+- **Description:** `Unlimited enterprise-grade prompt generation with API access`
+- **Features:**
+  - Unlimited prompts and exports
+  - All export formats (PDF, JSON, ZIP, TXT, MD)
+  - Enterprise API access
+  - Advanced analytics and monitoring
+  - Dedicated support
+  - Custom integrations
+
+### 2. Create Price Plans
+
+For each paid product, create both monthly and annual pricing:
+
+#### Creator Plan Prices
+- **Monthly:** $19/month
+- **Annual:** $190/year (2 months free)
+
+#### Pro Plan Prices
+- **Monthly:** $49/month
+- **Annual:** $490/year (2 months free)
+
+#### Enterprise Plan Prices
+- **Monthly:** $199/month
+- **Annual:** $1990/year (2 months free)
+
+### 3. Configure Price Settings
+
+For each price:
+- **Billing Model:** Standard pricing
+- **Billing Period:** Monthly or Yearly
+- **Price:** Set the amount in your preferred currency
+- **Trial Period:** Optional (e.g., 7 days)
+- **Metadata:**
+  - `plan_type`: `creator`, `pro`, or `enterprise`
+  - `billing_cycle`: `monthly` or `annual`
+
+## 🔗 Webhook Configuration
+
+### 1. Create Webhook Endpoint
+
+1. Go to [Stripe Dashboard → Webhooks](https://dashboard.stripe.com/webhooks)
+2. Click "Add endpoint"
+3. **Endpoint URL:** `https://yourdomain.com/api/webhooks/stripe`
+4. **Events to send:**
+   - `customer.subscription.created`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `invoice.payment_succeeded`
+   - `invoice.payment_failed`
+   - `customer.subscription.trial_will_end`
+
+### 2. Get Webhook Signing Secret
+
+After creating the webhook:
+1. Click on the webhook endpoint
+2. Go to "Signing secret"
+3. Click "Reveal" to get the `whsec_...` secret
+4. Add this to your environment variables as `STRIPE_WEBHOOK_SECRET`
+
+## 📊 Database Schema
+
+### Required Tables
+
+The following tables must exist in your Supabase database:
+
+```sql
+-- Subscriptions table
+CREATE TABLE subscriptions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  stripe_subscription_id TEXT UNIQUE,
+  plan_code TEXT NOT NULL DEFAULT 'free',
+  status TEXT NOT NULL DEFAULT 'active',
+  current_period_start TIMESTAMP WITH TIME ZONE,
+  current_period_end TIMESTAMP WITH TIME ZONE,
+  cancel_at_period_end BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User entitlements table
+CREATE TABLE user_entitlements (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL UNIQUE,
+  plan_code TEXT NOT NULL DEFAULT 'free',
+  can_export_pdf BOOLEAN DEFAULT FALSE,
+  can_export_json BOOLEAN DEFAULT FALSE,
+  can_export_bundle_zip BOOLEAN DEFAULT FALSE,
+  can_use_gpt_test_real BOOLEAN DEFAULT FALSE,
+  max_prompts_per_month INTEGER DEFAULT 10,
+  max_exports_per_month INTEGER DEFAULT 5,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Customers table
+CREATE TABLE customers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL UNIQUE,
+  stripe_customer_id TEXT UNIQUE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- API usage tracking
+CREATE TABLE api_usage (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  requests_count INTEGER DEFAULT 0,
+  window_start TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enterprise usage tracking
+CREATE TABLE enterprise_usage (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  module_id TEXT NOT NULL,
+  request_data JSONB,
+  response_data JSONB,
+  execution_time_ms INTEGER,
+  tokens_used INTEGER,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+### Row Level Security (RLS) Policies
+
+```sql
+-- Enable RLS on all tables
+ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_entitlements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE api_usage ENABLE ROW LEVEL SECURITY;
+ALTER TABLE enterprise_usage ENABLE ROW LEVEL SECURITY;
+
+-- Subscriptions: Users can only see their own subscriptions
+CREATE POLICY "Users can view own subscriptions" ON subscriptions
+  FOR SELECT USING (user_id = auth.jwt() ->> 'email');
+
+-- User entitlements: Users can only see their own entitlements
+CREATE POLICY "Users can view own entitlements" ON user_entitlements
+  FOR SELECT USING (user_id = auth.jwt() ->> 'email');
+
+-- Customers: Users can only see their own customer record
+CREATE POLICY "Users can view own customer record" ON customers
+  FOR SELECT USING (email = auth.jwt() ->> 'email');
+
+-- API usage: Users can only see their own usage
+CREATE POLICY "Users can view own API usage" ON api_usage
+  FOR SELECT USING (user_id = auth.jwt() ->> 'email');
+
+-- Enterprise usage: Users can only see their own usage
+CREATE POLICY "Users can view own enterprise usage" ON enterprise_usage
+  FOR SELECT USING (user_id = auth.jwt() ->> 'email');
+```
+
+## 🧪 Testing Setup
+
+### 1. Test Mode vs Live Mode
+
+- **Development/Testing:** Use test keys (`sk_test_...`, `pk_test_...`)
+- **Production:** Use live keys (`sk_live_...`, `pk_live_...`)
+
+### 2. Test Cards
+
+Use these test card numbers:
+- **Success:** `4242 4242 4242 4242`
+- **Decline:** `4000 0000 0000 0002`
+- **Insufficient Funds:** `4000 0000 0000 9995`
+
+### 3. Test Webhook Endpoint
+
+For local testing, use Stripe CLI:
 ```bash
-# Stripe Configuration
-STRIPE_SECRET_KEY=sk_test_... # or sk_live_... for production
-STRIPE_PUBLISHABLE_KEY=pk_test_... # or pk_live_... for production
-STRIPE_WEBHOOK_SECRET=whsec_...
+# Install Stripe CLI
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
 
-# Stripe Price IDs for Plans
+# This will give you a webhook signing secret for local testing
+```
+
+## 🚀 Production Deployment
+
+### 1. Environment Variables
+
+Ensure these are set in your production environment:
+```bash
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_CREATOR_MONTHLY_PRICE_ID=price_...
 STRIPE_CREATOR_ANNUAL_PRICE_ID=price_...
 STRIPE_PRO_MONTHLY_PRICE_ID=price_...
@@ -25,237 +230,59 @@ STRIPE_ENTERPRISE_MONTHLY_PRICE_ID=price_...
 STRIPE_ENTERPRISE_ANNUAL_PRICE_ID=price_...
 ```
 
-### Setting Up Stripe Products & Prices
+### 2. Webhook URL
 
-1. **Create Products in Stripe Dashboard:**
-   - Creator Plan
-   - Pro Plan  
-   - Enterprise Plan
-
-2. **Create Prices for Each Plan:**
-   - Monthly prices (recurring)
-   - Annual prices (recurring with 20% discount)
-
-3. **Copy Price IDs:**
-   - Use the price IDs in your environment variables
-
-## 2. Stripe Webhook Setup
-
-### Webhook Endpoint
+Update your webhook endpoint URL to your production domain:
 ```
 https://yourdomain.com/api/webhooks/stripe
 ```
 
-### Events to Listen For
-- `customer.subscription.created`
-- `customer.subscription.updated`
-- `customer.subscription.deleted`
-- `invoice.payment_succeeded`
-- `invoice.payment_failed`
+### 3. Database Migration
 
-### Webhook Secret
-- Generate in Stripe Dashboard
-- Add to `STRIPE_WEBHOOK_SECRET` environment variable
+Run the database schema creation scripts in your production Supabase instance.
 
-## 3. Database Schema
+## 🔍 Monitoring & Troubleshooting
 
-### Required Tables
+### 1. Stripe Dashboard
 
-#### `subscriptions`
-```sql
-CREATE TABLE subscriptions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL,
-  stripe_subscription_id TEXT UNIQUE NOT NULL,
-  stripe_customer_id TEXT NOT NULL,
-  plan_code TEXT NOT NULL,
-  status TEXT NOT NULL,
-  billing_cycle TEXT NOT NULL,
-  current_period_start TIMESTAMP WITH TIME ZONE,
-  current_period_end TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+Monitor in [Stripe Dashboard](https://dashboard.stripe.com):
+- **Webhooks:** Delivery status and retry attempts
+- **Subscriptions:** Active subscriptions and churn
+- **Payments:** Successful and failed payments
+- **Customers:** Customer creation and updates
 
-#### `user_entitlements`
-```sql
-CREATE TABLE user_entitlements (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT UNIQUE NOT NULL,
-  plan_tier TEXT NOT NULL DEFAULT 'free',
-  monthlyRunsRemaining INTEGER NOT NULL DEFAULT 10,
-  monthlyGPTOptimizationsRemaining INTEGER NOT NULL DEFAULT 0,
-  monthlyExportsRemaining INTEGER NOT NULL DEFAULT 5,
-  canExportJSON BOOLEAN NOT NULL DEFAULT FALSE,
-  canExportPDF BOOLEAN NOT NULL DEFAULT FALSE,
-  canExportBundleZip BOOLEAN NOT NULL DEFAULT FALSE,
-  hasCloudHistory BOOLEAN NOT NULL DEFAULT FALSE,
-  hasAdvancedAnalytics BOOLEAN NOT NULL DEFAULT FALSE,
-  hasCustomModules BOOLEAN NOT NULL DEFAULT FALSE,
-  hasTeamCollaboration BOOLEAN NOT NULL DEFAULT FALSE,
-  hasPrioritySupport BOOLEAN NOT NULL DEFAULT FALSE,
-  maxTeamMembers INTEGER NOT NULL DEFAULT 1,
-  maxCustomModules INTEGER NOT NULL DEFAULT 0,
-  maxStorageGB INTEGER NOT NULL DEFAULT 1,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+### 2. Application Logs
 
-#### `customers`
-```sql
-CREATE TABLE customers (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email TEXT UNIQUE NOT NULL,
-  stripe_customer_id TEXT UNIQUE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+Check your application logs for:
+- Webhook processing errors
+- Database operation failures
+- API rate limit issues
 
-#### `api_usage`
-```sql
-CREATE TABLE api_usage (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL,
-  window_start INTEGER NOT NULL,
-  requests_count INTEGER NOT NULL DEFAULT 1,
-  plan_tier TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+### 3. Common Issues
 
-#### `enterprise_usage`
-```sql
-CREATE TABLE enterprise_usage (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL,
-  module_id TEXT NOT NULL,
-  seven_d_config JSONB,
-  custom_parameters JSONB,
-  telemetry JSONB,
-  prompt_length INTEGER,
-  tokens INTEGER,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+- **Webhook signature verification failed:** Check webhook secret
+- **Database connection errors:** Verify Supabase credentials
+- **Rate limiting:** Check API usage limits
+- **Subscription not updating:** Verify webhook events are configured
 
-## 4. Enterprise API
+## 📋 Setup Checklist
 
-### Endpoint
-```
-POST /api/run/{moduleId}
-```
+- [ ] Create Stripe products (Creator, Pro, Enterprise)
+- [ ] Set up monthly and annual pricing
+- [ ] Configure webhook endpoint
+- [ ] Get webhook signing secret
+- [ ] Set environment variables
+- [ ] Create database tables
+- [ ] Configure RLS policies
+- [ ] Test webhook locally
+- [ ] Deploy to production
+- [ ] Test end-to-end flow
+- [ ] Monitor webhook delivery
+- [ ] Verify subscription updates
 
-### Access Control
-- **Enterprise Plan Only**: This endpoint is restricted to users with Enterprise subscriptions
-- **Rate Limiting**: 10,000 requests per hour for Enterprise users
-- **Enhanced Features**: Includes telemetry, artifacts, and custom parameters
+## 🆘 Support
 
-### Request Format
-```json
-{
-  "sevenDConfig": {
-    "domain": "saas",
-    "scale": "enterprise",
-    "urgency": "planned",
-    "complexity": "expert",
-    "resources": "enterprise_budget",
-    "application": "strategy_design",
-    "output": "structured"
-  },
-  "customParameters": {
-    "industry": "technology",
-    "audience": "executives",
-    "tone": "professional"
-  },
-  "telemetry": {
-    "sessionId": "session_123",
-    "clientInfo": "enterprise_dashboard",
-    "userAgent": "enterprise-client/1.0"
-  }
-}
-```
-
-### Response Format
-```json
-{
-  "success": true,
-  "data": {
-    "prompt": { /* Generated prompt data */ },
-    "module": { /* Module information */ },
-    "sevenDConfig": { /* 7-D configuration used */ },
-    "customParameters": { /* Custom parameters */ },
-    "telemetry": {
-      "sessionId": "session_123",
-      "timestamp": "2024-01-01T00:00:00Z",
-      "usageId": "ent_1234567890_abc123"
-    },
-    "artifacts": {
-      "promptHash": "sha256_hash",
-      "configHash": "sha256_hash",
-      "metadataHash": "sha256_hash"
-    },
-    "rateLimit": {
-      "remaining": 9999,
-      "resetTime": "2024-01-01T01:00:00Z"
-    }
-  }
-}
-```
-
-## 5. Testing
-
-### Test Stripe Webhooks
-1. Use Stripe CLI for local testing:
-   ```bash
-   stripe listen --forward-to localhost:3000/api/webhooks/stripe
-   ```
-
-2. Test subscription creation:
-   ```bash
-   stripe trigger customer.subscription.created
-   ```
-
-### Test Enterprise API
-1. Create an Enterprise user account
-2. Test the `/api/run/{moduleId}` endpoint
-3. Verify rate limiting and entitlements
-
-## 6. Production Deployment
-
-### Environment Variables
-- Use production Stripe keys (`sk_live_`, `pk_live_`)
-- Set production webhook endpoint
-- Configure production database
-
-### Monitoring
-- Monitor webhook delivery in Stripe Dashboard
-- Track API usage and rate limiting
-- Monitor subscription lifecycle events
-
-### Security
-- Validate webhook signatures
-- Implement proper rate limiting
-- Secure API endpoints with authentication
-
-## 7. Troubleshooting
-
-### Common Issues
-1. **Webhook signature verification fails**
-   - Check `STRIPE_WEBHOOK_SECRET` environment variable
-   - Verify webhook endpoint URL
-
-2. **Subscription not created in database**
-   - Check webhook delivery in Stripe Dashboard
-   - Verify database connection and permissions
-
-3. **Rate limiting not working**
-   - Check `api_usage` table exists
-   - Verify user entitlements are properly set
-
-### Debug Logs
-- Check server logs for webhook processing
-- Monitor Stripe Dashboard for webhook delivery status
-- Verify database operations in Supabase logs
+- **Stripe Support:** [support.stripe.com](https://support.stripe.com)
+- **Stripe Documentation:** [stripe.com/docs](https://stripe.com/docs)
+- **Webhook Testing:** Use Stripe CLI for local testing
+- **Logs:** Check both Stripe Dashboard and application logs

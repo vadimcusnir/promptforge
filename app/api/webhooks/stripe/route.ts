@@ -12,55 +12,39 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// Adăugăm interfața pentru erori custom
+interface CustomError extends Error {
+  code: string;
+  flag?: string;
+  required?: string;
+  actual?: string;
+}
+
 // Plan mapping for entitlements
 const PLAN_ENTITLEMENTS = {
   creator: {
-    monthlyRunsRemaining: 100,
-    monthlyGPTOptimizationsRemaining: 50,
-    monthlyExportsRemaining: 50,
-    canExportJSON: true,
+    max_prompts_per_month: 100,
+    max_exports_per_month: 50,
+    canExportJSON: false,
     canExportPDF: false,
     canExportBundleZip: false,
-    hasCloudHistory: true,
-    hasAdvancedAnalytics: false,
-    hasCustomModules: false,
-    hasTeamCollaboration: false,
-    hasPrioritySupport: false,
-    maxTeamMembers: 1,
-    maxCustomModules: 0,
-    maxStorageGB: 5,
+    can_use_gpt_test_real: false,
   },
   pro: {
-    monthlyRunsRemaining: 1000,
-    monthlyGPTOptimizationsRemaining: 500,
-    monthlyExportsRemaining: 500,
-    canExportJSON: true,
-    canExportPDF: true,
-    canExportBundleZip: false,
-    hasCloudHistory: true,
-    hasAdvancedAnalytics: true,
-    hasCustomModules: true,
-    hasTeamCollaboration: true,
-    hasPrioritySupport: false,
-    maxTeamMembers: 5,
-    maxCustomModules: 10,
-    maxStorageGB: 25,
-  },
-  enterprise: {
-    monthlyRunsRemaining: -1, // Unlimited
-    monthlyGPTOptimizationsRemaining: -1, // Unlimited
-    monthlyExportsRemaining: -1, // Unlimited
+    max_prompts_per_month: 1000,
+    max_exports_per_month: 500,
     canExportJSON: true,
     canExportPDF: true,
     canExportBundleZip: true,
-    hasCloudHistory: true,
-    hasAdvancedAnalytics: true,
-    hasCustomModules: true,
-    hasTeamCollaboration: true,
-    hasPrioritySupport: true,
-    maxTeamMembers: -1, // Unlimited
-    maxCustomModules: -1, // Unlimited
-    maxStorageGB: 100,
+    can_use_gpt_test_real: true,
+  },
+  enterprise: {
+    max_prompts_per_month: -1, // Unlimited
+    max_exports_per_month: -1, // Unlimited
+    canExportJSON: true,
+    canExportPDF: true,
+    canExportBundleZip: true,
+    can_use_gpt_test_real: true,
   },
 };
 
@@ -143,7 +127,6 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   await supabase.from("subscriptions").upsert({
     user_id: userId,
     stripe_subscription_id: subscription.id,
-    stripe_customer_id: subscription.customer as string,
     plan_code: planId,
     status: subscription.status,
     billing_cycle: billingCycle,
@@ -156,7 +139,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   // Update user entitlements
   await supabase.from("user_entitlements").upsert({
     user_id: userId,
-    plan_tier: planId,
+    plan_code: planId,
     ...entitlements,
     updated_at: new Date().toISOString(),
   });
@@ -191,7 +174,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       await supabase
         .from("user_entitlements")
         .update({
-          plan_tier: planId,
+          plan_code: planId,
           ...entitlements,
           updated_at: new Date().toISOString(),
         })
@@ -223,21 +206,13 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   await supabase
     .from("user_entitlements")
     .update({
-      plan_tier: "free",
-      monthlyRunsRemaining: 10,
-      monthlyGPTOptimizationsRemaining: 0,
-      monthlyExportsRemaining: 5,
+      plan_code: "free",
+      max_prompts_per_month: 10,
+      max_exports_per_month: 5,
       canExportJSON: false,
       canExportPDF: false,
       canExportBundleZip: false,
-      hasCloudHistory: false,
-      hasAdvancedAnalytics: false,
-      hasCustomModules: false,
-      hasTeamCollaboration: false,
-      hasPrioritySupport: false,
-      maxTeamMembers: 1,
-      maxCustomModules: 0,
-      maxStorageGB: 1,
+      can_use_gpt_test_real: false,
       updated_at: new Date().toISOString(),
     })
     .eq("user_id", userId);

@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 import { createHash } from 'crypto';
-import { StandardAPIError as APIError } from './errors';
+import { APIError } from './errors';
 
 /**
  * Bundle generation utilities for export functionality
@@ -108,7 +108,7 @@ export async function generateBundle(
         continue;
         
       default:
-        throw new APIError('INPUT_SCHEMA_MISMATCH', `Unsupported format: ${format}`);
+        throw new APIError('INPUT_SCHEMA_MISMATCH', { format });
     }
     
     files.set(fileName, Buffer.from(fileContent, 'utf-8'));

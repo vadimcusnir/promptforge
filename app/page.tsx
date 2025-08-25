@@ -61,7 +61,7 @@ export default function HomePage() {
     {
       question: "Do you offer refunds?",
       answer:
-        "Yes, we offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your payment in full.",
+        "Yes, we offer a 30-day money-back guarantee. If you&apos;re not satisfied, we&apos;ll refund your payment in full.",
     },
     {
       question: "Is my data secure?",
@@ -148,7 +148,7 @@ export default function HomePage() {
 
     const generatedPrompt = `You are an expert ${demoInput} specialist with 10+ years of experience. Your task is to provide comprehensive, actionable advice that delivers measurable results.
 
-CONTEXT: You're working with a client who needs immediate, practical solutions that can be implemented within 24-48 hours.
+CONTEXT: You&apos;re working with a client who needs immediate, practical solutions that can be implemented within 24-48 hours.
 
 REQUIREMENTS:
 - Provide 3-5 specific, actionable steps
@@ -624,14 +624,14 @@ Generate the optimized ${demoInput} strategy now.`;
             <div className="container mx-auto px-6">
               <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-4xl font-black mb-8">
-                  You're Bleeding Hours.
+                  You&apos;re Bleeding Hours.
                 </h2>
 
                 <div className="space-y-6 text-lg text-lead-gray">
                   <p>
                     Every prompt you tweak manually costs you{" "}
                     <span className="text-red-400 font-bold">2-4 hours</span>.
-                    That's{" "}
+                    That&apos;s{" "}
                     <span className="text-red-400 font-bold">
                       months of lost market share
                     </span>
@@ -639,7 +639,7 @@ Generate the optimized ${demoInput} strategy now.`;
                   </p>
 
                   <p className="text-xl text-white font-bold">
-                    Your competitor isn't smarter. He's just faster.
+                    Your competitor isn&apos;t smarter. He&apos;s just faster.
                   </p>
 
                   <div className="mt-8">

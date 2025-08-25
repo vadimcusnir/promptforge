@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create or get customer
-    let customer;
+    let customer: Stripe.Customer;
     const { data: existingCustomer } = await supabase
       .from("customers")
       .select("stripe_customer_id")
@@ -113,12 +113,12 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (existingCustomer?.stripe_customer_id) {
-      customer = await stripe.customers.retrieve(existingCustomer.stripe_customer_id);
+      customer = await stripe.customers.retrieve(existingCustomer.stripe_customer_id) as Stripe.Customer;
     } else {
       customer = await stripe.customers.create({
-        email: user.email,
+        email: user.email!,
         metadata: {
-          supabase_user_id: user.email,
+          supabase_user_id: user.email!,
         },
       });
 
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
         metadata: {
           plan_id: planId,
           billing_cycle: billingCycle,
-          supabase_user_id: user.email,
+          supabase_user_id: user.email!,
         },
       },
       success_url: successUrl,
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         plan_id: planId,
         billing_cycle: billingCycle,
-        supabase_user_id: user.email,
+        supabase_user_id: user.email!,
       },
     });
 

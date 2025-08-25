@@ -147,7 +147,7 @@ export default function ComingSoonPage() {
               Thank you for joining!
             </h2>
             <p className="text-white/80 leading-relaxed">
-              You'll be among the first to access PromptForge and receive the
+              You&apos;ll be among the first to access PromptForge and receive the
               free demo bundle.
             </p>
             <p className="mt-4 text-sm text-white/60">

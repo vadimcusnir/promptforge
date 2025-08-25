@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { StandardAPIError as APIError } from './errors';
+import { APIError } from './errors';
 
 /**
  * Server-side Supabase client utilities
@@ -138,7 +138,7 @@ export async function getEffectiveEntitlements(orgId: string, userId?: string): 
   const { data, error } = await query;
 
   if (error) {
-    throw new APIError('INTERNAL_RUN_ERROR', `Failed to fetch entitlements: ${error.message}`);
+    throw new APIError('INTERNAL_RUN_ERROR', { reason: 'Failed to fetch entitlements', error: error.message });
   }
 
   const entitlements: Record<string, boolean> = {};
@@ -172,7 +172,7 @@ export async function createRun(run: Omit<RunRecord, 'id' | 'started_at' | 'vers
     .single();
 
   if (error) {
-    throw new APIError('INTERNAL_RUN_ERROR', `Failed to create run: ${error.message}`);
+    throw new APIError('INTERNAL_RUN_ERROR', { reason: 'Failed to create run', error: error.message });
   }
 
   return data;
@@ -196,7 +196,7 @@ export async function updateRunStatus(
     .eq('id', runId);
 
   if (error) {
-    throw new APIError('INTERNAL_RUN_ERROR', `Failed to update run: ${error.message}`);
+    throw new APIError('INTERNAL_RUN_ERROR', { reason: 'Failed to update run', error: error.message });
   }
 }
 
@@ -212,7 +212,7 @@ export async function savePromptScore(score: PromptScore): Promise<void> {
     });
 
   if (error) {
-    throw new APIError('INTERNAL_RUN_ERROR', `Failed to save prompt score: ${error.message}`);
+    throw new APIError('INTERNAL_RUN_ERROR', { reason: 'Failed to save prompt score', error: error.message });
   }
 }
 
@@ -230,7 +230,7 @@ export async function createBundle(bundle: Omit<BundleRecord, 'id' | 'created_at
     .single();
 
   if (error) {
-    throw new APIError('INTERNAL_RUN_ERROR', `Failed to create bundle: ${error.message}`);
+    throw new APIError('INTERNAL_RUN_ERROR', { reason: 'Failed to create bundle', error: error.message });
   }
 
   return data;

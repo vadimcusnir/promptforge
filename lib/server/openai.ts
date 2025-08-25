@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { StandardAPIError as APIError } from './errors';
+import { APIError } from './errors';
 
 /**
  * OpenAI client for GPT operations
@@ -90,12 +90,12 @@ Return a JSON object with:
 
     const usage = response.usage;
     if (!usage) {
-      throw new APIError('INTERNAL_RUN_ERROR', 'No usage data from OpenAI');
+      throw new APIError('INTERNAL_RUN_ERROR', { reason: 'No usage data from OpenAI' });
     }
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
-      throw new APIError('INTERNAL_RUN_ERROR', 'No content from OpenAI');
+      throw new APIError('INTERNAL_RUN_ERROR', { reason: 'No content from OpenAI' });
     }
 
     return {
@@ -114,7 +114,7 @@ Return a JSON object with:
     if (error instanceof APIError) throw error;
     
     console.error('[OpenAI] Prompt optimization error:', error);
-    throw new APIError('INTERNAL_RUN_ERROR', `OpenAI API error: ${error}`);
+    throw new APIError('INTERNAL_RUN_ERROR', { error: String(error) });
   }
 }
 
@@ -151,12 +151,12 @@ export async function runGPTTest(
 
     const testUsage = testResponse.usage;
     if (!testUsage) {
-      throw new APIError('INTERNAL_RUN_ERROR', 'No usage data from test');
+      throw new APIError('INTERNAL_RUN_ERROR', { reason: 'No usage data from test' });
     }
 
     const testContent = testResponse.choices[0]?.message?.content;
     if (!testContent) {
-      throw new APIError('INTERNAL_RUN_ERROR', 'No content from test');
+      throw new APIError('INTERNAL_RUN_ERROR', { reason: 'No content from test' });
     }
 
     // Evaluate the prompt and response
@@ -190,7 +190,7 @@ Return JSON: {"clarity": 0-100, "execution": 0-100, "ambiguity": 0-100, "busines
     const evalContent = evaluationResponse.choices[0]?.message?.content;
 
     if (!evalUsage || !evalContent) {
-      throw new APIError('INTERNAL_RUN_ERROR', 'Evaluation failed');
+      throw new APIError('INTERNAL_RUN_ERROR', { reason: 'Evaluation failed' });
     }
 
     // Parse evaluation scores
@@ -247,7 +247,7 @@ Return JSON: {"clarity": 0-100, "execution": 0-100, "ambiguity": 0-100, "busines
     if (error instanceof APIError) throw error;
     
     console.error('[OpenAI] GPT test error:', error);
-    throw new APIError('INTERNAL_RUN_ERROR', `GPT test failed: ${error}`);
+    throw new APIError('INTERNAL_RUN_ERROR', { error: String(error) });
   }
 }
 

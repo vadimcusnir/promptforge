@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 
 // SACF - Development mode fallback pentru testing
-let supabase: any = null;
+let supabase: ReturnType<typeof createClient> | null = null;
 
 function getSupabase() {
   if (!supabase) {
@@ -14,6 +14,16 @@ function getSupabase() {
     supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
   }
   return supabase;
+}
+
+// Adăugăm interfața o singură dată la începutul fișierului
+interface CustomError extends Error {
+  code: string;
+  flag?: string;
+  required?: string;
+  actual?: string;
+  score?: number;
+  minimum?: number;
 }
 
 // Verifică dacă utilizatorul este membru al organizației
@@ -26,7 +36,7 @@ export async function assertMembership(orgId?: string, userId?: string) {
   
   if (!finalOrgId || !finalUserId) {
     const error = new Error('UNAUTHENTICATED: Missing orgId or userId');
-    (error as any).code = 'UNAUTHENTICATED';
+    (error as CustomError).code = 'UNAUTHENTICATED';
     throw error;
   }
 
@@ -40,18 +50,18 @@ export async function assertMembership(orgId?: string, userId?: string) {
 
     if (error || !data) {
       const forbiddenError = new Error('FORBIDDEN: User is not a member of this organization');
-      (forbiddenError as any).code = 'FORBIDDEN';
+      (forbiddenError as CustomError).code = 'FORBIDDEN';
       throw forbiddenError;
     }
 
-    return data.role;
+    return (data as { role: string }).role;
   } catch (error) {
-    if (error instanceof Error && (error as any).code) {
+    if (error instanceof Error && (error as CustomError).code) {
       throw error;
     }
     
     const dbError = new Error('DATABASE_ERROR: Failed to verify membership');
-    (dbError as any).code = 'DATABASE_ERROR';
+    (dbError as CustomError).code = 'DATABASE_ERROR';
     throw dbError;
   }
 }
@@ -66,21 +76,21 @@ export async function assertEntitlement(orgId: string, flag: string) {
       .eq('flag', flag)
       .single();
 
-    if (error || !data || !data.value) {
+    if (error || !data || !(data as { value: boolean }).value) {
       const entitlementError = new Error(`ENTITLEMENT_REQUIRED: Missing flag '${flag}'`);
-      (entitlementError as any).code = 'ENTITLEMENT_REQUIRED';
-      (entitlementError as any).flag = flag;
+      (entitlementError as CustomError).code = 'ENTITLEMENT_REQUIRED';
+      (entitlementError as CustomError).flag = flag;
       throw entitlementError;
     }
 
     return true;
   } catch (error) {
-    if (error instanceof Error && (error as any).code === 'ENTITLEMENT_REQUIRED') {
+    if (error instanceof Error && (error as CustomError).code === 'ENTITLEMENT_REQUIRED') {
       throw error;
     }
     
     const dbError = new Error(`DATABASE_ERROR: Failed to verify entitlement '${flag}'`);
-    (dbError as any).code = 'DATABASE_ERROR';
+    (dbError as CustomError).code = 'DATABASE_ERROR';
     throw dbError;
   }
 }
@@ -96,9 +106,9 @@ export async function assertRole(orgId: string, userId: string, minRole: 'owner'
 
     if (userLevel < minLevel) {
       const roleError = new Error(`INSUFFICIENT_ROLE: Requires ${minRole}, has ${userRole}`);
-      (roleError as any).code = 'INSUFFICIENT_ROLE';
-      (roleError as any).required = minRole;
-      (roleError as any).actual = userRole;
+      (roleError as CustomError).code = 'INSUFFICIENT_ROLE';
+      (roleError as CustomError).required = minRole;
+      (roleError as CustomError).actual = userRole;
       throw roleError;
     }
 
@@ -111,7 +121,7 @@ export async function assertRole(orgId: string, userId: string, minRole: 'owner'
 // Verifică dacă run-ul aparține organizației
 export async function assertRunOwnership(runId: string, orgId: string) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('runs')
       .select('org_id, status')
       .eq('id', runId)
@@ -119,24 +129,24 @@ export async function assertRunOwnership(runId: string, orgId: string) {
 
     if (error || !data) {
       const notFoundError = new Error('RUN_NOT_FOUND: Run does not exist');
-      (notFoundError as any).code = 'RUN_NOT_FOUND';
+      (notFoundError as CustomError).code = 'RUN_NOT_FOUND';
       throw notFoundError;
     }
 
-    if (data.org_id !== orgId) {
+    if ((data as { org_id: string }).org_id !== orgId) {
       const accessError = new Error('ACCESS_DENIED: Run belongs to different organization');
-      (accessError as any).code = 'ACCESS_DENIED';
+      (accessError as CustomError).code = 'ACCESS_DENIED';
       throw accessError;
     }
 
     return data;
   } catch (error) {
-    if (error instanceof Error && (error as any).code) {
+    if (error instanceof Error && (error as CustomError).code) {
       throw error;
     }
     
     const dbError = new Error('DATABASE_ERROR: Failed to verify run ownership');
-    (dbError as any).code = 'DATABASE_ERROR';
+    (dbError as CustomError).code = 'DATABASE_ERROR';
     throw dbError;
   }
 }
@@ -144,7 +154,7 @@ export async function assertRunOwnership(runId: string, orgId: string) {
 // Verifică scorul pentru export
 export async function assertExportEligible(runId: string, minScore: number = 80) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('prompt_scores')
       .select('overall_score')
       .eq('run_id', runId)
@@ -152,26 +162,26 @@ export async function assertExportEligible(runId: string, minScore: number = 80)
 
     if (error || !data) {
       const noScoreError = new Error('NO_SCORE: Run has not been scored yet');
-      (noScoreError as any).code = 'NO_SCORE';
+      (noScoreError as CustomError).code = 'NO_SCORE';
       throw noScoreError;
     }
 
-    if (data.overall_score < minScore) {
-      const lowScoreError = new Error(`SCORE_TOO_LOW: Score ${data.overall_score} is below minimum ${minScore}`);
-      (lowScoreError as any).code = 'SCORE_TOO_LOW';
-      (lowScoreError as any).score = data.overall_score;
-      (lowScoreError as any).minimum = minScore;
+    if ((data as { overall_score: number }).overall_score < minScore) {
+      const lowScoreError = new Error(`SCORE_TOO_LOW: Score ${(data as { overall_score: number }).overall_score} is below minimum ${minScore}`);
+      (lowScoreError as CustomError).code = 'SCORE_TOO_LOW';
+      (lowScoreError as CustomError).score = (data as { overall_score: number }).overall_score;
+      (lowScoreError as CustomError).minimum = minScore;
       throw lowScoreError;
     }
 
-    return data.overall_score;
+    return (data as { overall_score: number }).overall_score;
   } catch (error) {
-    if (error instanceof Error && (error as any).code) {
+    if (error instanceof Error && (error as CustomError).code) {
       throw error;
     }
     
     const dbError = new Error('DATABASE_ERROR: Failed to verify export eligibility');
-    (dbError as any).code = 'DATABASE_ERROR';
+    (dbError as CustomError).code = 'DATABASE_ERROR';
     throw dbError;
   }
 }
@@ -179,7 +189,7 @@ export async function assertExportEligible(runId: string, minScore: number = 80)
 // Wrapper pentru error handling consistent
 export function handleSecurityError(error: unknown): Response {
   if (error instanceof Error) {
-    const code = (error as any).code;
+    const code = (error as CustomError).code;
     
     switch (code) {
       case 'UNAUTHENTICATED':
@@ -196,8 +206,8 @@ export function handleSecurityError(error: unknown): Response {
             error: code, 
             message: error.message,
             ...(code === 'INSUFFICIENT_ROLE' && {
-              required: (error as any).required,
-              actual: (error as any).actual
+              required: (error as CustomError).required,
+              actual: (error as CustomError).actual
             })
           },
           { status: 403 }
@@ -208,8 +218,8 @@ export function handleSecurityError(error: unknown): Response {
           { 
             error: 'ENTITLEMENT_REQUIRED', 
             message: error.message,
-            flag: (error as any).flag,
-            upsell: (error as any).flag?.includes('API') || (error as any).flag?.includes('Zip') 
+            flag: (error as CustomError).flag,
+            upsell: (error as CustomError).flag?.includes('API') || (error as CustomError).flag?.includes('Zip') 
               ? 'enterprise_needed' 
               : 'pro_needed'
           },
@@ -227,8 +237,8 @@ export function handleSecurityError(error: unknown): Response {
           { 
             error: 'SCORE_TOO_LOW', 
             message: error.message,
-            score: (error as any).score,
-            minimum: (error as any).minimum
+            score: (error as CustomError).score,
+            minimum: (error as CustomError).minimum
           },
           { status: 400 }
         );
@@ -270,7 +280,7 @@ export async function validateSACFHeaders(): Promise<{ orgId: string; runId?: st
   
   if (!orgId) {
     const error = new Error('MISSING_HEADERS: x-org-id header is required');
-    (error as any).code = 'MISSING_HEADERS';
+    (error as CustomError).code = 'MISSING_HEADERS';
     throw error;
   }
   

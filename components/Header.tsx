@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { COPY } from "@/lib/copy";
 import { Home, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from 'next/link';
 
 interface HeaderProps {
   isAuthenticated?: boolean;
@@ -46,7 +47,7 @@ export function Header({
         <div className="flex items-center justify-between h-16">
           {/* Logo (Rună Digitală) */}
           <div className="flex items-center">
-            <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-150">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-150">
               <div className="w-8 h-8 flex items-center justify-center">
                 <Image
                   src="/forge_v3_logo/nav_static_03_loading.webp"
@@ -63,7 +64,7 @@ export function Header({
               >
                 {COPY.brand}
               </div>
-            </a>
+            </Link>
           </div>
 
           <div className="flex items-center space-x-8">
@@ -72,7 +73,7 @@ export function Header({
               className="hidden md:flex items-center space-x-6 text-sm font-mono"
               aria-label="Primary navigation"
             >
-              <a
+              <Link
                 href="/modules"
                 className="text-white transition-colors duration-150 hover:text-[var(--pf-gold-600)]"
                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
@@ -80,8 +81,8 @@ export function Header({
                 aria-current={pathname === "/modules" ? "page" : undefined}
               >
                 Modules
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/pricing"
                 className="text-white transition-colors duration-150"
                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
@@ -89,8 +90,8 @@ export function Header({
                 aria-current={pathname === "/pricing" ? "page" : undefined}
               >
                 Pricing
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/docs"
                 className="text-white transition-colors duration-150"
                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
@@ -98,8 +99,8 @@ export function Header({
                 aria-current={pathname === "/docs" ? "page" : undefined}
               >
                 Docs
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/login"
                 className="text-white transition-colors duration-150"
                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
@@ -107,7 +108,7 @@ export function Header({
                 aria-current={pathname === "/login" ? "page" : undefined}
               >
                 Login
-              </a>
+              </Link>
             </nav>
 
             {/* Mobile Menu Button */}

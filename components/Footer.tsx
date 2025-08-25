@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from 'next/link';
 
 export function Footer() {
   return (
@@ -11,7 +12,9 @@ export function Footer() {
               <a href="/generator">Generator</a>
             </li>
             <li>
-              <a href="/modules">Modules</a>
+              <Link href="/modules/" className="text-gray-400 hover:text-white">
+                Modules
+              </Link>
             </li>
             <li>
               <a href="/pricing">Pricing</a>

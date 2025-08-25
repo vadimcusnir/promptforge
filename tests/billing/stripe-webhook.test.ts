@@ -112,6 +112,7 @@ describe('Stripe Webhook Handler', () => {
         livemode: false,
         pending_webhooks: 1,
         request: { id: null, idempotency_key: null },
+        api_version: '2025-07-30.basil',
       };
 
       mockStripe.webhooks.constructEvent.mockReturnValue(event);
@@ -140,6 +141,7 @@ describe('Stripe Webhook Handler', () => {
         livemode: false,
         pending_webhooks: 1,
         request: { id: null, idempotency_key: null },
+        api_version: '2025-07-30.basil',
       };
 
       mockStripe.webhooks.constructEvent.mockReturnValue(event);
@@ -166,11 +168,37 @@ describe('Stripe Webhook Handler', () => {
             price: {
               id: 'price_enterprise_monthly',
               object: 'price',
-            },
+              active: true,
+              billing_scheme: 'per_unit',
+              created: Math.floor(Date.now() / 1000),
+              currency: 'usd',
+              livemode: false,
+              lookup_key: null,
+              metadata: {},
+              nickname: null,
+              product: 'prod_enterprise',
+              recurring: {
+                interval: 'month',
+                interval_count: 1,
+                usage_type: 'licensed',
+              },
+              tax_behavior: 'unspecified',
+              type: 'recurring',
+              unit_amount: 99900,
+              unit_amount_decimal: '99900',
+            } as any,
             quantity: 5, // Multi-seat
-          }],
+            billing_thresholds: null,
+            created: Math.floor(Date.now() / 1000),
+            current_period_end: Math.floor(Date.now() / 1000) + 86400 * 30,
+            current_period_start: Math.floor(Date.now() / 1000),
+            metadata: {},
+            proration_behavior: 'create_prorations',
+            quantity_metadata: {},
+            tax_rates: [],
+            unit_amount_decimal: '99900',
+          } as any],
           has_more: false,
-          total_count: 1,
           url: '/v1/subscription_items',
         },
       });
@@ -184,6 +212,7 @@ describe('Stripe Webhook Handler', () => {
         livemode: false,
         pending_webhooks: 1,
         request: { id: null, idempotency_key: null },
+        api_version: '2025-07-30.basil',
       };
 
       mockStripe.webhooks.constructEvent.mockReturnValue(event);
@@ -212,6 +241,7 @@ describe('Stripe Webhook Handler', () => {
         livemode: false,
         pending_webhooks: 1,
         request: { id: null, idempotency_key: null },
+        api_version: '2025-07-30.basil',
       };
 
       mockStripe.webhooks.constructEvent.mockReturnValue(event);
@@ -264,11 +294,37 @@ describe('Stripe Webhook Handler', () => {
             price: {
               id: 'price_unknown',
               object: 'price',
-            },
+              active: true,
+              billing_scheme: 'per_unit',
+              created: Math.floor(Date.now() / 1000),
+              currency: 'usd',
+              livemode: false,
+              lookup_key: null,
+              metadata: {},
+              nickname: null,
+              product: 'prod_unknown',
+              recurring: {
+                interval: 'month',
+                interval_count: 1,
+                usage_type: 'licensed',
+              },
+              tax_behavior: 'unspecified',
+              type: 'recurring',
+              unit_amount: 1000,
+              unit_amount_decimal: '1000',
+            } as any,
             quantity: 1,
-          }],
+            billing_thresholds: null,
+            created: Math.floor(Date.now() / 1000),
+            current_period_end: Math.floor(Date.now() / 1000) + 86400 * 30,
+            current_period_start: Math.floor(Date.now() / 1000),
+            metadata: {},
+            proration_behavior: 'create_prorations',
+            quantity_metadata: {},
+            tax_rates: [],
+            unit_amount_decimal: '1000',
+          } as any],
           has_more: false,
-          total_count: 1,
           url: '/v1/subscription_items',
         },
       });
@@ -282,6 +338,7 @@ describe('Stripe Webhook Handler', () => {
         livemode: false,
         pending_webhooks: 1,
         request: { id: null, idempotency_key: null },
+        api_version: '2025-07-30.basil',
       };
 
       mockStripe.webhooks.constructEvent.mockReturnValue(event);
@@ -312,6 +369,7 @@ describe('Stripe Webhook Handler', () => {
         livemode: false,
         pending_webhooks: 1,
         request: { id: null, idempotency_key: null },
+        api_version: '2025-07-30.basil',
       };
 
       mockStripe.webhooks.constructEvent.mockReturnValue(event);
@@ -335,6 +393,7 @@ describe('Stripe Webhook Handler', () => {
         livemode: false,
         pending_webhooks: 1,
         request: { id: null, idempotency_key: null },
+        api_version: '2025-07-30.basil',
       };
 
       mockStripe.webhooks.constructEvent.mockReturnValue(event);
