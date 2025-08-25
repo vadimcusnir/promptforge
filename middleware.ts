@@ -62,7 +62,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Coming Soon System - CHECK FIRST
+  // Coming Soon System - CHECK FIRST and handle ALL non-public paths
   // Runtime toggle via cookie (set with /api/toggle-coming-soon)
   const comingSoonCookie = req.cookies.get("coming_soon")?.value === "on";
   const COMING_SOON = COMING_SOON_ENV || comingSoonCookie;
@@ -72,8 +72,8 @@ export function middleware(req: NextRequest) {
     const role = req.cookies.get("pf_role")?.value ?? "member";
     const isAdmin = role === "admin";
 
+    // If not admin and not already on coming-soon page, redirect
     if (!isAdmin && pathname !== "/coming-soon") {
-      // Public goes to /coming-soon (except if already on coming-soon page)
       const comingSoonUrl = req.nextUrl.clone();
       comingSoonUrl.pathname = "/coming-soon";
       // Optional: keep original destination as query for analytics
@@ -112,7 +112,8 @@ export function middleware(req: NextRequest) {
     return response;
   }
 
-
+  // If we get here, the path is not public and Coming Soon is not active
+  // This handles all other routes including the homepage when Coming Soon is off
 
   // Existing gated routes logic (preserve existing functionality)
   const entry = Object.entries(gatedRoutes).find(([path]) =>
