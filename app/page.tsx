@@ -38,6 +38,7 @@ export default function HomePage() {
   const [demoInput, setDemoInput] = useState("marketing strategy");
   const [demoOutput, setDemoOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isCheckingComingSoon, setIsCheckingComingSoon] = useState(true);
 
   // Check for Coming Soon mode on component mount
   useEffect(() => {
@@ -52,16 +53,31 @@ export default function HomePage() {
             if (!adminRole) {
               // Redirect to coming-soon page if not admin
               router.push("/coming-soon");
+              return;
             }
           }
         }
       } catch (error) {
         console.error("Error checking coming soon status:", error);
+      } finally {
+        setIsCheckingComingSoon(false);
       }
     };
 
     checkComingSoon();
   }, [router]);
+
+  // Show loading state while checking Coming Soon status
+  if (isCheckingComingSoon) {
+    return (
+      <div className="min-h-screen bg-black text-white font-mono flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-2xl text-[#FFD700] mb-4">Checking status...</div>
+          <div className="text-sm text-gray-400">Please wait while we verify access</div>
+        </div>
+      </div>
+    );
+  }
 
   const demoExamples = [
     "marketing strategy",
