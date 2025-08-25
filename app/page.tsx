@@ -39,16 +39,16 @@ export default function HomePage() {
     } catch (error) {
       setDemoOutput("Error generating demo output");
     } finally {
-      setIsGenerating(false);
+    setIsGenerating(false);
     }
   };
 
   return (
     <>
-      <SkipLink />
+        <SkipLink />
       <main className="min-h-screen">
-        <Hero />
-        
+          <Hero />
+
         {/* Demo Section */}
         <section className="py-20 bg-gradient-to-b from-black to-gray-900">
           <div className="container mx-auto px-6">
@@ -60,8 +60,8 @@ export default function HomePage() {
                 Test our AI-powered brand consistency checker
               </p>
             </div>
-            
-            <div className="max-w-4xl mx-auto">
+
+              <div className="max-w-4xl mx-auto">
               <Card className="bg-gray-800 border-gray-700">
                 <CardHeader>
                   <CardTitle className="text-white">Live Demo</CardTitle>
@@ -85,8 +85,8 @@ export default function HomePage() {
                       {isGenerating ? "Analyzing..." : "Analyze"}
                     </Button>
                   </div>
-                  
-                  {demoOutput && (
+
+                      {demoOutput && (
                     <div className="mt-6">
                       <h3 className="text-lg font-semibold text-white mb-2">Analysis Result:</h3>
                       <AnimatedCodeBlock
@@ -97,18 +97,18 @@ export default function HomePage() {
                     </div>
                   )}
                 </CardContent>
-              </Card>
+                </Card>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
         {/* Features Grid */}
         <section className="py-20 bg-gray-900">
-          <div className="container mx-auto px-6">
+            <div className="container mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-white mb-4">
                 Why Choose PromptForge?
-              </h2>
+                </h2>
               <p className="text-xl text-gray-300">
                 Enterprise-grade prompt engineering with military precision
               </p>
@@ -149,19 +149,19 @@ export default function HomePage() {
                     Multiple export formats for any workflow integration
                   </CardDescription>
                 </CardHeader>
-              </Card>
+                </Card>
 
               <Card className="bg-gray-800 border-gray-700 hover:border-red-500 transition-colors">
                 <CardHeader>
                   <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mb-4">
                     <Brain className="w-6 h-6 text-white" />
-                  </div>
+              </div>
                   <CardTitle className="text-white">AI-Powered</CardTitle>
                   <CardDescription className="text-gray-300">
                     Advanced AI algorithms optimize prompts for maximum effectiveness
                   </CardDescription>
                 </CardHeader>
-              </Card>
+                    </Card>
 
               <Card className="bg-gray-800 border-gray-700 hover:border-yellow-500 transition-colors">
                 <CardHeader>
@@ -223,7 +223,7 @@ export default function HomePage() {
             structure_complete: true
           }}
         />
-      </main>
+        </main>
     </>
   );
 }

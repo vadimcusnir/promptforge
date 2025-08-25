@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ClientOnly } from "@/components/ClientOnly";
 import { DigitalRune } from "@/components/background/DigitalRune";
 
@@ -10,6 +10,13 @@ export default function ComingSoonPage() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check if user is admin (has admin cookies)
+    const adminRole = document.cookie.includes("pf_role=admin");
+    setIsAdmin(adminRole);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -119,12 +126,15 @@ export default function ComingSoonPage() {
               No spam. Just launch updates.
             </p>
 
-            <a
-              href="/demo-bundle"
-              className="mt-4 inline-block text-sm text-[#d1a954] hover:text-[#d1a954]/80 underline transition-colors"
-            >
-              Preview Demo Bundle →
-            </a>
+            {/* Demo Bundle Link - Only show for admin users */}
+            {isAdmin && (
+              <a
+                href="/demo-bundle"
+                className="mt-4 inline-block text-sm text-[#d1a954] hover:text-[#d1a954]/80 underline transition-colors"
+              >
+                Preview Demo Bundle →
+              </a>
+            )}
           </>
         ) : (
           <div className="max-w-md bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8">

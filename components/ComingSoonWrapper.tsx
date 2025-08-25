@@ -24,6 +24,19 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
           return;
         }
 
+        // Protect demo-bundle page from non-admin users during coming-soon mode
+        if (pathname === "/demo-bundle") {
+          console.log(`[ComingSoonWrapper] Demo bundle access requested: ${pathname}`);
+          // Only allow access if user is admin
+          const adminRole = document.cookie.includes("pf_role=admin");
+          if (!adminRole) {
+            console.log(`[ComingSoonWrapper] Non-admin user trying to access demo-bundle, redirecting to coming-soon`);
+            setIsAdmin(false);
+            setIsChecking(false);
+            return;
+          }
+        }
+
         // Check if user is admin (has admin cookies)
         const adminRole = document.cookie.includes("pf_role=admin");
         console.log(`[ComingSoonWrapper] Path: ${pathname}, Admin role found: ${adminRole}`);

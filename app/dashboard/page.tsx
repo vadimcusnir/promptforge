@@ -227,7 +227,7 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               <Badge variant="outline" className="text-sm">
                 {authState.workspace?.plan_tier || 'free'} Plan
-              </Badge>
+            </Badge>
               <Button onClick={() => router.push('/generator')}>
                 <Plus className="w-4 h-4 mr-2" />
                 New Prompt
@@ -315,7 +315,7 @@ export default function DashboardPage() {
                 </p>
               </CardContent>
             </Card>
-          </div>
+        </div>
 
           {/* Prompt History */}
           <Card>
@@ -334,31 +334,31 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              {/* Filters */}
+        {/* Filters */}
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
+              <Input
                     placeholder="Search prompts..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
-                  />
-                </div>
-                
+              />
+            </div>
+
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-full sm:w-48">
-                    <Filter className="w-4 h-4 mr-2" />
+                <Filter className="w-4 h-4 mr-2" />
                     <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
+              </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Prompts</SelectItem>
                     <SelectItem value="tested">Tested</SelectItem>
                     <SelectItem value="untested">Untested</SelectItem>
                     <SelectItem value="exported">Exported</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              </SelectContent>
+            </Select>
+          </div>
 
               {/* History List */}
               <div className="space-y-4">
@@ -393,8 +393,8 @@ export default function DashboardPage() {
                                 </span>
                               </div>
                             )}
-                          </div>
-                          
+          </div>
+
                           <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                             {typeof item.prompt === 'string' ? item.prompt.substring(0, 200) + '...' : 'Prompt content'}
                           </p>
@@ -412,11 +412,11 @@ export default function DashboardPage() {
                               <div className="flex items-center gap-1">
                                 <BarChart3 className="w-3 h-3" />
                                 Score: {item.score}%
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        
+                </div>
+            )}
+          </div>
+        </div>
+
                         <div className="flex flex-col items-end gap-2">
                           <div className="flex gap-1">
                             {item.exportedFormats.map((format) => (
@@ -424,7 +424,7 @@ export default function DashboardPage() {
                                 .{format}
                               </Badge>
                             ))}
-                          </div>
+              </div>
                           
                           <div className="flex gap-1">
                             <Button
@@ -434,14 +434,14 @@ export default function DashboardPage() {
                             >
                               View
                             </Button>
-                            <Button
+              <Button
                               size="sm"
-                              variant="outline"
+                variant="outline"
                               onClick={() => handleExport(item.prompt, 'txt')}
-                            >
+              >
                               <Download className="w-3 h-3" />
-                            </Button>
-                          </div>
+              </Button>
+            </div>
                         </div>
                       </div>
                     </div>
@@ -450,7 +450,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
+      </div>
       </main>
     </div>
   );
