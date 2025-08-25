@@ -48,6 +48,11 @@ export function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const { pathname } = req.nextUrl;
 
+  // Debug logging
+  console.log(`[MIDDLEWARE] Processing path: ${pathname}`);
+  console.log(`[MIDDLEWARE] Coming Soon ENV: ${COMING_SOON_ENV}`);
+  console.log(`[MIDDLEWARE] Coming Soon Cookie: ${req.cookies.get("coming_soon")?.value}`);
+
   // English-only routing logic (preserve existing functionality)
   const [, maybeLocale, ...rest] = url.pathname.split("/");
   if (BLOCKED_LOCALES.includes(maybeLocale)) {
@@ -67,13 +72,18 @@ export function middleware(req: NextRequest) {
   const comingSoonCookie = req.cookies.get("coming_soon")?.value === "on";
   const COMING_SOON = COMING_SOON_ENV || comingSoonCookie;
 
+  console.log(`[MIDDLEWARE] Final Coming Soon status: ${COMING_SOON}`);
+
   if (COMING_SOON) {
     // Bypass for admin (cookie "pf_role=admin" set at auth)
     const role = req.cookies.get("pf_role")?.value ?? "member";
     const isAdmin = role === "admin";
 
+    console.log(`[MIDDLEWARE] User role: ${role}, isAdmin: ${isAdmin}`);
+
     // If not admin and not already on coming-soon page, redirect
     if (!isAdmin && pathname !== "/coming-soon") {
+      console.log(`[MIDDLEWARE] Redirecting ${pathname} to /coming-soon`);
       const comingSoonUrl = req.nextUrl.clone();
       comingSoonUrl.pathname = "/coming-soon";
       // Optional: keep original destination as query for analytics
@@ -84,6 +94,7 @@ export function middleware(req: NextRequest) {
 
   // Allow public + static + /coming-soon + /api
   if (pathAllowed(pathname)) {
+    console.log(`[MIDDLEWARE] Path ${pathname} is public, allowing access`);
     // Add security headers for all responses
     const response = NextResponse.next();
     response.headers.set("Content-Language", "en");
@@ -114,6 +125,7 @@ export function middleware(req: NextRequest) {
 
   // If we get here, the path is not public and Coming Soon is not active
   // This handles all other routes including the homepage when Coming Soon is off
+  console.log(`[MIDDLEWARE] Path ${pathname} is not public, proceeding to gated routes logic`);
 
   // Existing gated routes logic (preserve existing functionality)
   const entry = Object.entries(gatedRoutes).find(([path]) =>
