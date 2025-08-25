@@ -32,7 +32,6 @@ const PUBLIC_ALLOW = [
   "/sitemap.xml",
   "/glitch-keywords.js",
   "/forge_v3_logo",
-  "/", // Add homepage to public allow
 ];
 
 const gatedRoutes: Record<string, string> = {
