@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,9 +31,34 @@ import {
 } from "lucide-react";
 
 export default function HomePage() {
+  const router = useRouter();
   const [demoInput, setDemoInput] = useState("marketing strategy");
   const [demoOutput, setDemoOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Check for Coming Soon mode on component mount
+  useEffect(() => {
+    const checkComingSoon = async () => {
+      try {
+        const response = await fetch("/api/coming-soon-status");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.active) {
+            // Check if user is admin (has admin cookies)
+            const adminRole = document.cookie.includes("pf_role=admin");
+            if (!adminRole) {
+              // Redirect to coming-soon page if not admin
+              router.push("/coming-soon");
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error checking coming soon status:", error);
+      }
+    };
+
+    checkComingSoon();
+  }, [router]);
 
   const demoExamples = [
     "marketing strategy",
