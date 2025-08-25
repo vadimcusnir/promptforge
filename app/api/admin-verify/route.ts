@@ -13,27 +13,23 @@ export async function GET(req: NextRequest) {
       }, { status: 401 });
     }
 
-    // Verify the admin session is valid by checking coming soon status
-    // This ensures the admin cookies are still valid
-    const comingSoonRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/toggle-coming-soon`, {
-      headers: {
-        Cookie: `pf_role=${adminRole}; pf_uid=admin-001; pf_email=admin@promptforge.com`
-      }
-    });
-
-    if (comingSoonRes.ok) {
-      return NextResponse.json({ 
-        authenticated: true, 
-        role: "admin",
-        message: "Admin session valid" 
-      });
-    } else {
-      // If we can't access admin endpoints, session is invalid
+    // Check if we have the required admin cookies
+    const adminUid = req.cookies.get("pf_uid")?.value;
+    const adminEmail = req.cookies.get("pf_email")?.value;
+    
+    if (!adminUid || !adminEmail) {
       return NextResponse.json({ 
         authenticated: false, 
-        error: "Admin session expired" 
+        error: "Incomplete admin session" 
       }, { status: 401 });
     }
+
+    // Admin session is valid
+    return NextResponse.json({ 
+      authenticated: true, 
+      role: "admin",
+      message: "Admin session valid" 
+    });
 
   } catch (error) {
     return NextResponse.json({ 
