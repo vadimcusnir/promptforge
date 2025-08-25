@@ -62,6 +62,26 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Coming Soon System - CHECK FIRST
+  // Runtime toggle via cookie (set with /api/toggle-coming-soon)
+  const comingSoonCookie = req.cookies.get("coming_soon")?.value === "on";
+  const COMING_SOON = COMING_SOON_ENV || comingSoonCookie;
+
+  if (COMING_SOON) {
+    // Bypass for admin (cookie "pf_role=admin" set at auth)
+    const role = req.cookies.get("pf_role")?.value ?? "member";
+    const isAdmin = role === "admin";
+
+    if (!isAdmin && pathname !== "/coming-soon") {
+      // Public goes to /coming-soon (except if already on coming-soon page)
+      const comingSoonUrl = req.nextUrl.clone();
+      comingSoonUrl.pathname = "/coming-soon";
+      // Optional: keep original destination as query for analytics
+      comingSoonUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(comingSoonUrl);
+    }
+  }
+
   // Allow public + static + /coming-soon + /api
   if (pathAllowed(pathname)) {
     // Add security headers for all responses
@@ -92,25 +112,7 @@ export function middleware(req: NextRequest) {
     return response;
   }
 
-  // Coming Soon System
-  // Runtime toggle via cookie (set with /api/toggle-coming-soon)
-  const comingSoonCookie = req.cookies.get("coming_soon")?.value === "on";
-  const COMING_SOON = COMING_SOON_ENV || comingSoonCookie;
 
-  if (COMING_SOON) {
-    // Bypass for admin (cookie "pf_role=admin" set at auth)
-    const role = req.cookies.get("pf_role")?.value ?? "member";
-    const isAdmin = role === "admin";
-
-    if (!isAdmin && pathname !== "/coming-soon") {
-      // Public goes to /coming-soon (except if already on coming-soon page)
-      const comingSoonUrl = req.nextUrl.clone();
-      comingSoonUrl.pathname = "/coming-soon";
-      // Optional: keep original destination as query for analytics
-      comingSoonUrl.searchParams.set("from", pathname);
-      return NextResponse.redirect(comingSoonUrl);
-    }
-  }
 
   // Existing gated routes logic (preserve existing functionality)
   const entry = Object.entries(gatedRoutes).find(([path]) =>
