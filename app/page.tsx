@@ -44,27 +44,48 @@ export default function HomePage() {
   useEffect(() => {
     const checkComingSoon = async () => {
       try {
+        console.log("Checking Coming Soon status...");
         const response = await fetch("/api/coming-soon-status");
+        console.log("API response:", response);
+        
         if (response.ok) {
           const data = await response.json();
+          console.log("Coming Soon data:", data);
+          
           if (data.active) {
+            console.log("Coming Soon is active, checking admin status...");
             // Check if user is admin (has admin cookies)
             const adminRole = document.cookie.includes("pf_role=admin");
+            console.log("Admin role found:", adminRole);
+            
             if (!adminRole) {
+              console.log("Not admin, redirecting to coming-soon...");
               // Redirect to coming-soon page if not admin
               router.push("/coming-soon");
               return;
+            } else {
+              console.log("Admin user, allowing access to homepage");
             }
+          } else {
+            console.log("Coming Soon is not active");
           }
+        } else {
+          console.log("API response not ok:", response.status);
         }
       } catch (error) {
         console.error("Error checking coming soon status:", error);
       } finally {
+        console.log("Setting isCheckingComingSoon to false");
         setIsCheckingComingSoon(false);
       }
     };
 
-    checkComingSoon();
+    // Add a small delay to ensure the component is fully mounted
+    const timer = setTimeout(() => {
+      checkComingSoon();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [router]);
 
   // Show loading state while checking Coming Soon status
@@ -74,6 +95,7 @@ export default function HomePage() {
         <div className="text-center">
           <div className="text-2xl text-[#FFD700] mb-4">Checking status...</div>
           <div className="text-sm text-gray-400">Please wait while we verify access</div>
+          <div className="text-xs text-gray-500 mt-2">Debug: Component mounted, checking Coming Soon...</div>
         </div>
       </div>
     );
