@@ -30,6 +30,9 @@ import {
   Activity,
 } from "lucide-react";
 
+// Force dynamic rendering to ensure client-side redirect works
+export const dynamic = 'force-dynamic';
+
 export default function HomePage() {
   const router = useRouter();
   const [demoInput, setDemoInput] = useState("marketing strategy");
