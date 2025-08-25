@@ -256,3 +256,4 @@ test-results.xml
 
 # Next.js API routes (exclude from public ignore)
 !app/api/public/
+.env*.local

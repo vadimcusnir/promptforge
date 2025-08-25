@@ -17,7 +17,8 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    checkComingSoonStatus();
+    // Check if user is already authenticated on page load
+    checkAuthentication();
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -34,7 +35,8 @@ export default function AdminPage() {
       if (res.ok) {
         setIsLoggedIn(true);
         setPassword("");
-        checkComingSoonStatus();
+        // Now check the coming soon status after successful login
+        checkAuthentication();
       } else {
         alert("Invalid password");
       }
@@ -45,16 +47,39 @@ export default function AdminPage() {
     }
   };
 
-  const checkComingSoonStatus = async () => {
+  const checkAuthentication = async () => {
+    try {
+      const res = await fetch("/api/admin-verify");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.authenticated) {
+          setIsLoggedIn(true);
+          // Now fetch the coming soon status
+          await fetchComingSoonStatus();
+        } else {
+          setIsLoggedIn(false);
+          setComingSoonStatus(null);
+        }
+      } else {
+        setIsLoggedIn(false);
+        setComingSoonStatus(null);
+      }
+    } catch {
+      console.log("Authentication check failed");
+      setIsLoggedIn(false);
+      setComingSoonStatus(null);
+    }
+  };
+
+  const fetchComingSoonStatus = async () => {
     try {
       const res = await fetch("/api/toggle-coming-soon");
       if (res.ok) {
         const data = await res.json();
         setComingSoonStatus(data);
-        setIsLoggedIn(true);
       }
     } catch {
-      console.log("Not logged in or error checking status");
+      console.log("Error fetching coming soon status");
     }
   };
 
@@ -68,7 +93,7 @@ export default function AdminPage() {
       });
 
       if (res.ok) {
-        checkComingSoonStatus();
+        checkAuthentication();
         alert(`Coming Soon ${on ? "enabled" : "disabled"} successfully!`);
       } else {
         alert("Failed to toggle Coming Soon");
