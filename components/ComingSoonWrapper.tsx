@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ComingSoonPage } from "@/app/coming-soon/page";
+import ComingSoonPage from "@/app/coming-soon/page";
 
 interface ComingSoonWrapperProps {
   children: React.ReactNode;
@@ -45,12 +45,8 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
       }
     };
 
-    // Add a small delay to ensure the component is fully mounted
-    const timer = setTimeout(() => {
-      checkAccess();
-    }, 100);
-
-    return () => clearTimeout(timer);
+    // Check immediately without delay
+    checkAccess();
   }, [pathname]);
 
   // Show loading state while checking access
