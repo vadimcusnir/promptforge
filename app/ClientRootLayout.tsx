@@ -10,6 +10,7 @@ import { useRouteOverlay } from "@/hooks/use-route-overlay";
 import { QuoteFocusProvider } from "@/lib/quote-focus";
 import { OverlayController } from "@/components/OverlayController";
 import { MotionProvider } from "@/lib/motion/provider";
+import { ComingSoonWrapper } from "@/components/ComingSoonWrapper";
 import { useEffect } from "react";
 
 import { telemetry } from "@/lib/telemetry-client";
@@ -156,7 +157,9 @@ html {
             <QuoteFocusProvider>
               <OverlayController />
               <ClientReady />
-              {children}
+              <ComingSoonWrapper>
+                {children}
+              </ComingSoonWrapper>
             </QuoteFocusProvider>
           </MotionProvider>
         </div>
