@@ -45,37 +45,22 @@ export default function HomePage() {
     const checkComingSoon = async () => {
       try {
         console.log("Checking Coming Soon status...");
-        const response = await fetch("/api/coming-soon-status");
-        console.log("API response:", response);
         
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Coming Soon data:", data);
-          
-          if (data.active) {
-            console.log("Coming Soon is active, checking admin status...");
-            // Check if user is admin (has admin cookies)
-            const adminRole = document.cookie.includes("pf_role=admin");
-            console.log("Admin role found:", adminRole);
-            
-            if (!adminRole) {
-              console.log("Not admin, redirecting to coming-soon...");
-              // Redirect to coming-soon page if not admin
-              router.push("/coming-soon");
-              return;
-            } else {
-              console.log("Admin user, allowing access to homepage");
-            }
-          } else {
-            console.log("Coming Soon is not active");
-          }
+        // Check if user is admin (has admin cookies)
+        const adminRole = document.cookie.includes("pf_role=admin");
+        console.log("Admin role found:", adminRole);
+        
+        if (!adminRole) {
+          console.log("Not admin, redirecting to coming-soon...");
+          // Redirect to coming-soon page if not admin
+          router.push("/coming-soon");
+          return;
         } else {
-          console.log("API response not ok:", response.status);
+          console.log("Admin user, allowing access to homepage");
+          setIsCheckingComingSoon(false);
         }
       } catch (error) {
         console.error("Error checking coming soon status:", error);
-      } finally {
-        console.log("Setting isCheckingComingSoon to false");
         setIsCheckingComingSoon(false);
       }
     };
