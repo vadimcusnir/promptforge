@@ -26,6 +26,7 @@ export function Header({
     if (pathname === "/modules") return "Modules";
     if (pathname === "/pricing") return "Pricing";
     if (pathname === "/dashboard") return "Dashboard";
+    if (pathname === "/contact") return "Contact";
     return "Page";
   };
 
@@ -71,6 +72,7 @@ export function Header({
             {/* Desktop Navigation */}
             <nav
               className="hidden md:flex items-center space-x-6 text-sm font-mono"
+              role="navigation"
               aria-label="Primary navigation"
             >
               <Link
@@ -81,6 +83,15 @@ export function Header({
                 aria-current={pathname === "/modules" ? "page" : undefined}
               >
                 Modules
+              </Link>
+              <Link
+                href="/generator"
+                className="text-white transition-colors duration-150"
+                onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "white"}
+                aria-current={pathname === "/generator" ? "page" : undefined}
+              >
+                Generator
               </Link>
               <Link
                 href="/pricing"
@@ -101,6 +112,15 @@ export function Header({
                 Docs
               </Link>
               <Link
+                href="/contact"
+                className="text-white transition-colors duration-150"
+                onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "white"}
+                aria-current={pathname === "/contact" ? "page" : undefined}
+              >
+                Contact
+              </Link>
+              <Link
                 href="/login"
                 className="text-white transition-colors duration-150"
                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--pf-gold-600)"}
@@ -113,7 +133,7 @@ export function Header({
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-white hover:text-[#d1a954] transition-colors duration-150"
+              className="md:hidden p-3 text-white hover:text-[#d1a954] transition-colors duration-150 min-w-[44px] min-h-[44px] flex items-center justify-center"
               onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
               aria-expanded={isMobileNavOpen}
               aria-controls="mobile-nav"
@@ -131,6 +151,14 @@ export function Header({
                 <path d="M3 12h18M3 6h18M3 18h18" />
               </svg>
             </button>
+
+            {/* CTA Button */}
+            <Button
+              className="hidden md:block px-6 py-3 bg-[#d1a954] text-black font-medium rounded hover:bg-[#b8954a] transition-colors duration-150 min-w-[44px] min-h-[44px]"
+              data-gate="pro"
+            >
+              {COPY.cta_start}
+            </Button>
           </div>
         </div>
       </div>
@@ -144,69 +172,63 @@ export function Header({
           aria-modal="true"
           aria-label="Mobile navigation"
         >
-          <nav className="px-6 py-4">
+          <nav className="px-6 py-4" role="navigation" aria-label="Mobile navigation">
             <ul className="space-y-4">
               <li>
-                <button
+                <Link
+                  href="/generator"
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
-                  {COPY.nav_generator}
-                </button>
+                  Generator
+                </Link>
               </li>
               <li>
-                <button
+                <Link
+                  href="/modules"
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
-                  {COPY.nav_modules}
-                </button>
+                  Modules
+                </Link>
               </li>
               <li>
-                <button
+                <Link
+                  href="/pricing"
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
-                  {COPY.nav_pricing}
-                </button>
+                  Pricing
+                </Link>
               </li>
               <li>
-                <button
+                <Link
+                  href="/docs"
                   className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
-                  {COPY.nav_docs}
-                </button>
+                  Docs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
+                  onClick={() => setIsMobileNavOpen(false)}
+                >
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="block text-white hover:text-[#d1a954] transition-colors duration-150 py-2 w-full text-left"
+                  onClick={() => setIsMobileNavOpen(false)}
+                >
+                  Login
+                </Link>
               </li>
             </ul>
-
-            <div className="mt-6 pt-6 border-t border-gray-800 space-y-3">
-              {isAuthenticated ? (
-                <Button
-                  className="block w-full text-center px-4 py-3 bg-[#d1a954] text-black font-medium rounded hover:bg-[#b8954a] transition-colors duration-150"
-                  data-gate="pro"
-                  onClick={() => setIsMobileNavOpen(false)}
-                >
-                  {COPY.nav_dashboard}
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    className="block w-full text-center px-4 py-3 bg-transparent border border-white/20 text-white font-medium rounded hover:bg-white/10 transition-colors duration-150"
-                    onClick={() => setIsMobileNavOpen(false)}
-                  >
-                    {COPY.nav_signin}
-                  </Button>
-                  <Button
-                    className="block w-full text-center px-4 py-3 bg-[#d1a954] text-black font-medium rounded hover:bg-[#b8954a] transition-colors duration-150"
-                    data-gate="pro"
-                    onClick={() => setIsMobileNavOpen(false)}
-                  >
-                    {COPY.cta_start}
-                  </Button>
-                </>
-              )}
-            </div>
           </nav>
         </div>
       )}

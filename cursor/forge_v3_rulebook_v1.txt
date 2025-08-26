@@ -75,17 +75,68 @@ Migrare: semver major ⇒ script compatibilitate.
 
 H. Licențe & Entitlements
 
-SKU:
+H1. Planuri & SKU-uri
 
-Pilot (M01–M10, export txt/md)
+Pilot: M01–M10, export txt/md, istoric local
+Pro: M01–M30, export txt/md/pdf, istoric cloud, test simulare
+Creator: M01–M40, export txt/md/pdf/json, istoric complet, test live GPT
+Enterprise: M01–M50, export txt/md/pdf/json/zip, API complet, multi-industry
 
-Pro (M01–M30, pdf + cloud history)
+H2. Feature Flags & Gating
 
-Enterprise (M01–M50, API + multi-industry)
+Export capabilities:
+- canExportPDF: Pro+ (score ≥80)
+- canExportJSON: Creator+ (score ≥80)  
+- canExportBundleZip: Enterprise (score ≥80)
+- canUseGptTestReal: Creator+ (entitlement check)
 
-Industrie: chei per domain → feature_flags.
+Module access:
+- module_eligibility: verificat la runtime cu 7D+entitlements
+- industry_gating: chei per domain → feature_flags
+- version_locking: module semver verificat vs plan
 
-Rule: fără entitlement ⇒ ascunzi UI + blochezi endpoint.
+H3. Gating Vizibil în UI
+
+Principii:
+- Fără entitlement ⇒ ascunzi UI + blochezi endpoint (403 FORBIDDEN)
+- Paywall contextual: modal inline pentru upgrade
+- Lock icons pe module/features restricționate
+- Butoane "Upgrade to Pro" cu styling auriu
+- Banners informative pentru features gated
+
+Implementare:
+- EntitlementGate component pentru wrapping
+- useEntitlements hook pentru verificări runtime
+- PaywallModal cu upgrade CTA
+- Status indicators pentru module locked/unlocked
+
+H4. Validări Runtime
+
+API endpoints:
+- Verifică entitlements înainte de execuție
+- Returnează 403 "ENTITLEMENT_REQUIRED" + flag
+- Loghează toate verificările în audit trail
+- Rate limiting per plan (Free: 10/min, Pro: 60/min, Enterprise: 200/min)
+
+UI validation:
+- Disable butoane pentru features gated
+- Show upgrade prompts contextual
+- Hide export options neeligibile
+- Dim module cards locked
+
+H5. Stripe Integration
+
+Webhook handlers:
+- customer.subscription.created/updated/cancelled
+- invoice.payment_succeeded/failed
+- Update entitlements în Supabase
+- Sync feature flags cu planul curent
+
+Entitlement mapping:
+- Stripe price_id → plan_code → entitlements
+- Feature flags activate la payment success
+- Grace period pentru failed payments
+- Downgrade automat la subscription end
 
 I. Securitate & Conformitate
 
@@ -95,15 +146,163 @@ PII: anonimizat la export public.
 
 Telemetrie: nu loghezi brut conținutul clientului.
 
-J. UI/UX
+J. UI/UX & Web Design Protocol
 
-Selector Module: doar eligibile (7D+entitlements).
+J1. Sistemul Visual SKRE (70/20/10)
 
-Editor: șabloane fixe, nu poți șterge secțiuni.
+Paleta de culori:
+- 70% fundaluri întunecate: #000000, #0e0e0e, #1a1a1a, #2a2a2a
+- 20% gri industrial: #404040, #606060, #808080, #a0a0a0  
+- 10% aur accent: #d1a954, #e6c200, #ffd700, #ffed4e
 
-Test Engine: scor vizibil + dif explicativ.
+Fonturi:
+- Montserrat: headings (H1-H6), navigație, butoane CTA
+- Open Sans: body text, inputuri, descrieri
 
-Istoric: filtre după domain, M##, scor, TTA.
+Efecte vizuale:
+- Glassmorphism: .glass-effect cu backdrop-blur și transparență
+- Glow: .glow-primary pentru elemente active și focus
+- Skeleton loaders: pentru stări de loading
+- Micro-animații: fade-in, slide-up, scale (respectând prefers-reduced-motion)
+
+J2. Structura Globală & Layout
+
+Header (sticky):
+- Logo digital rună cu glow subtil (stânga)
+- Navigație: Generator, Modules, Pricing, Docs, Dashboard, About
+- User actions: Login/Sign up (buton auriu pentru CTA)
+- Sticky pe scroll cu backdrop-blur
+
+Footer:
+- Fundal #0e0e0e cu border auriu superior
+- Linkuri: Privacy Policy, Terms, Contact, GDPR, Stripe
+- Runa ca watermark subtil
+- Spacing generos pentru respirație
+
+Layout responsive:
+- useIsMobile() pentru layouturi adaptive
+- Breakpoint-uri: mobile (320px), tablet (768px), desktop (1024px+)
+- Grid system flexibil cu CSS Grid + Flexbox
+
+J3. Componente Reutilizabile
+
+Butoane:
+- Primary: fundal auriu, text întunecat, hover glow
+- Secondary: transparent cu border auriu, hover fill
+- Disabled: gri cu opacity redusă
+- Loading: spinner auriu cu text "Generating..."
+
+Carduri:
+- Base: glass-effect cu border subtil
+- Module cards: cu vector badges și status indicators
+- Pricing tiers: cu feature highlights și CTA buttons
+- Dashboard entries: cu action buttons și status colors
+
+Inputuri & Filtre:
+- Vector filter: dropdown pentru V1-V7 cu styling SKRE
+- Search bar: cu icon și placeholder text
+- Form fields: dark theme cu focus auriu
+- Tabs & Accordions: pentru structurarea conținutului
+
+J4. Fluxul Generatorului (Ordinea Canonică)
+
+Secvența obligatorie:
+1. Select Module → eligibil (7D+entitlements)
+2. Configure 7D → dropdowns cu valori enum din ruleset.yml
+3. Generate → cu skeleton loader și progress bar
+4. Edit → prompt editable cu features gated per plan
+5. Test → scores vizibile + diff explicativ
+6. Export → formaturi disponibile per entitlements
+
+Micro-interacțiuni:
+- Skeleton loaders pentru generare și testare
+- Toast notifications pentru succes/eroare
+- Progress bars pentru operații lungi
+- Hover states cu glow și scale subtil
+
+J5. Gating Vizibil & Entitlements
+
+UI Responsive la planuri:
+- Free: doar txt/md export, test simulare
+- Creator: + pdf export, istoric limitat
+- Pro: + json export, test live GPT, API basic
+- Enterprise: + zip bundle, multi-industry, API complet
+
+Paywall components:
+- Modal inline pentru upgrade
+- Banners contextuale pentru features gated
+- Butoane "Upgrade to Pro" cu styling auriu
+- Lock icons pe module/features restricționate
+
+J6. Responsivitate & Accesibilitate
+
+Mobile-first approach:
+- Layouturi adaptive cu useIsMobile()
+- Touch-friendly butoane (min 44px)
+- Swipe gestures pentru navigație
+- Collapsible sidebar pentru mobile
+
+Accesibilitate:
+- ARIA labels pentru screen readers
+- Keyboard navigation completă
+- Contrast ratio ≥ 4.5:1 (WCAG AA)
+- Respectă prefers-reduced-motion
+- Focus indicators vizibili (auriu)
+
+J7. Implementarea Tehnică
+
+CSS Variables (tokens):
+```css
+:root {
+  --background: #0e0e0e;
+  --card: #1a1a1a;
+  --border: #404040;
+  --primary: #d1a954;
+  --accent: #e6c200;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+}
+```
+
+Tailwind config:
+- Extend colors cu paleta SKRE
+- Custom utilities pentru glass-effect și glow
+- Responsive breakpoints standardizate
+- Animation classes pentru micro-interacțiuni
+
+Componente React:
+- useIsMobile() hook pentru responsive logic
+- GlassCard, SKREButton, VectorFilter
+- PaywallModal, EntitlementGate
+- SkeletonLoader, ToastNotification
+
+J8. Validări & Conformitate
+
+Conformitate cu arhitectura:
+- UI doar vizualizează; nu poate scrie defaults
+- Entitlements verifică la runtime (H. Licențe)
+- 7D validation strict cu enum-uri din ruleset.yml
+- Export gating conform planuri (Free/Creator/Pro/Enterprise)
+
+Testare UI:
+- Cross-browser compatibility (Chrome, Firefox, Safari, Edge)
+- Lighthouse score ≥ 90 (Performance, Accessibility, Best Practices)
+- Mobile responsiveness testing
+- Accessibility audit cu axe-core
+
+J9. Integrare cu Sistemul Existente
+
+Compatibilitate cu:
+- Motorul 7-D (capitolul A)
+- Entitlements & Licențe (capitolul H)  
+- Securitatea & Conformitatea (capitolul I)
+- Export Pipeline & Test Engine (capitolul F)
+
+UI-ul respectă:
+- SSOT din ruleset.yml
+- RLS policies din Supabase
+- Rate limiting și budget controls
+- Audit logging pentru toate acțiunile
 
 K. Monetizare
 
@@ -809,6 +1008,96 @@ Păstrezi versiunea ruleset_version în fiecare run; refuzi rulari cu mismatch d
 o specificație completă (executabilă) pentru C. Module (M01–M50) – contract, guardrails, DoR/DoD, teste, KPI, deps, semver – plus schelete de cod.
 
 C. Module (M01–M50) — Specificație completă
+
+C. Module & Gating Vizibil — specificație executabilă
+
+C.1. Selector Module cu Entitlements
+
+Principii:
+- Afișează numai M## permise de entitlements și compatibile 7D
+- Module gated: lock icons + status "locked"
+- Module unlocked: status "available" + "Explore" button
+- Filter by vector (V1-V7) cu entitlement awareness
+
+Implementare:
+- ModuleGrid component cu entitlement checks
+- useEntitlements hook pentru verificări runtime
+- Lock icons pe module restricționate
+- Status indicators pentru locked/unlocked
+
+C.2. Module Cards cu Gating
+
+Free plan:
+- M01-M10: unlocked (txt/md export)
+- M11-M50: locked + lock icon
+- Tooltip: "Module M11+ requires Creator+ plan"
+- CTA: "Upgrade to Creator" cu styling auriu
+
+Creator plan:
+- M01-M40: unlocked (txt/md/pdf export)
+- M41-M50: locked + lock icon
+- Tooltip: "Module M41+ requires Pro+ plan"
+- CTA: "Upgrade to Pro" cu styling auriu
+
+Pro+ plan:
+- M01-M50: unlocked (toate export formats)
+- Full access cu status "premium"
+
+C.3. Paywall Components pentru Module
+
+Modal pentru upgrade:
+- Context: "Module M15 requires Creator+ plan"
+- Feature highlights: "Access to 40+ strategic modules"
+- CTA: "Upgrade to Creator" cu pricing
+- Trial offer: "7 days free, then $19/month"
+
+Banner contextual:
+- Inline pentru module gated
+- Styling SKRE cu aur accent
+- Clear upgrade path
+- Non-intrusive design
+
+C.4. Validări Runtime
+
+API endpoints:
+- /api/modules: returnează doar module eligibile
+- /api/modules/{id}: verifică entitlements înainte de access
+- Returnează 403 "ENTITLEMENT_REQUIRED" + module_code
+- Rate limiting per plan (Free: 20/min, Creator: 60/min, Pro: 200/min)
+
+UI validation:
+- Disable "Explore" pentru module gated
+- Show upgrade prompts contextual
+- Display entitlement status per module
+- Graceful fallback la module unlocked
+
+C.5. Editor & Test Engine
+
+Editor:
+- Încarcă șablonul modulului eligibil
+- Câmpurile outputs.fields apar ca form
+- Nu permiți ștergerea secțiunilor obligatorii
+- Gating pentru features premium (GPT edit, live test)
+
+Test Engine:
+- Afișezi scor + dif vs. outputs.fields
+- Incidente de guardrails vizibile
+- Test simulare pentru toate planurile
+- Test live GPT gated de canUseGptTestReal
+
+C.6. Conformitate cu Arhitectura
+
+Module respectă:
+- SSOT din ruleset.yml
+- Entitlements & Licențe (capitolul H)
+- Export Pipeline & Gating (capitolul F)
+- Securitatea & Conformitatea (capitolul I)
+
+UI-ul respectă:
+- RLS policies din Supabase
+- Rate limiting și budget controls
+- Audit logging pentru toate acțiunile
+- Gating vizibil pentru features premium
 C1) Taxonomie, identificatori, vectori
 
 module_code: string fix, format M## (ex: M07), unic.
@@ -1294,6 +1583,87 @@ Export bundle: prompt.txt + prompt.md + prompt.json + prompt.pdf + telemetry.jso
 specificația completă pentru E. Test & Score — rubrici cuantificabile, formule, evaluator AI, auto‑fix, contract API și telemetrie. O faci plug‑and‑play.
 
 E. Test & Score — specificație executabilă
+
+E. Test Engine & Gating Vizibil — specificație executabilă
+
+E.1. Tipuri de Teste & Entitlements
+
+Test Simulare (Free/Creator):
+- Evaluare locală cu rubrici 7D
+- Scoruri calculate pe baza de pattern matching
+- Nu folosește GPT live
+- Disponibil pentru toate planurile
+
+Test Live GPT (Creator+):
+- Evaluare cu GPT-4 real
+- Scoruri validate de AI
+- Feedback contextual și specific
+- Gated de canUseGptTestReal
+
+E.2. UI Responsive la Planuri
+
+Free/Creator:
+- Buton "Test Simulare" activ
+- Buton "Test Live GPT" disabled + lock icon
+- Tooltip: "Live GPT testing requires Creator+ plan"
+- CTA: "Upgrade to Creator" cu styling auriu
+
+Creator+:
+- Ambele butoane active
+- Test simulare ca fallback
+- Test live GPT ca feature premium
+- Status indicator pentru testul curent
+
+E.3. Paywall Components pentru Test Engine
+
+Modal pentru upgrade:
+- Context: "Live GPT testing requires Creator+ plan"
+- Feature highlights: "Get AI-powered feedback and detailed scoring"
+- CTA: "Upgrade to Creator" cu pricing
+- Trial offer: "7 days free, then $19/month"
+
+Banner contextual:
+- Inline pentru features gated
+- Styling SKRE cu aur accent
+- Clear upgrade path
+- Non-intrusive design
+
+E.4. Validări Runtime
+
+API endpoints:
+- /api/evaluate/simulate: disponibil pentru toți
+- /api/evaluate/live: verifică canUseGptTestReal
+- Returnează 403 "ENTITLEMENT_REQUIRED" + "canUseGptTestReal"
+- Rate limiting per plan (Free: 10/min, Creator: 30/min, Pro: 100/min)
+
+UI validation:
+- Disable butoane pentru features gated
+- Show upgrade prompts contextual
+- Display entitlement status per test type
+- Graceful fallback la test simulare
+
+E.5. Integrare cu Test Engine
+
+Test Engine:
+- Afișezi scor + dif vs. outputs.fields
+- Incidente de guardrails vizibile
+- Test simulare pentru toate planurile
+- Test live GPT gated de canUseGptTestReal
+- Auto-fix "tighten-once" pentru scoruri <80
+
+E.6. Conformitate cu Arhitectura
+
+Test Engine respectă:
+- SSOT din ruleset.yml
+- Entitlements & Licențe (capitolul H)
+- Export Pipeline & Gating (capitolul F)
+- Securitatea & Conformitatea (capitolul I)
+
+UI-ul respectă:
+- RLS policies din Supabase
+- Rate limiting și budget controls
+- Audit logging pentru toate acțiunile
+- Gating vizibil pentru features premium
 E1. Obiectiv
 
 Evaluezi fiecare run pe 4 axe, 0–25 fiecare (total 0–100). Gate-ul este 80. Sub 80: rulezi o singură iterație de auto‑fix „tighten-once”; dacă rămâne <80 ⇒ fail.
@@ -1478,6 +1848,64 @@ Request
 Response 200
 
 {
+
+E8. Gating Vizibil & Entitlements
+
+E8.1. Tipuri de Teste
+
+Test Simulare (Free/Creator):
+- Evaluare locală cu rubrici 7D
+- Scoruri calculate pe baza de pattern matching
+- Nu folosește GPT live
+- Disponibil pentru toate planurile
+
+Test Live GPT (Creator+):
+- Evaluare cu GPT-4 real
+- Scoruri validate de AI
+- Feedback contextual și specific
+- Gated de canUseGptTestReal
+
+E8.2. UI Responsive la Planuri
+
+Free/Creator:
+- Buton "Test Simulare" activ
+- Buton "Test Live GPT" disabled + lock icon
+- Tooltip: "Live GPT testing requires Creator+ plan"
+- CTA: "Upgrade to Creator" cu styling auriu
+
+Creator+:
+- Ambele butoane active
+- Test simulare ca fallback
+- Test live GPT ca feature premium
+- Status indicator pentru testul curent
+
+E8.3. Paywall Components
+
+Modal pentru upgrade:
+- Context: "Live GPT testing requires Creator+ plan"
+- Feature highlights: "Get AI-powered feedback and detailed scoring"
+- CTA: "Upgrade to Creator" cu pricing
+- Trial offer: "7 days free, then $19/month"
+
+Banner contextual:
+- Inline pentru features gated
+- Styling SKRE cu aur accent
+- Clear upgrade path
+- Non-intrusive design
+
+E8.4. Validări Runtime
+
+API endpoints:
+- /api/evaluate/simulate: disponibil pentru toți
+- /api/evaluate/live: verifică canUseGptTestReal
+- Returnează 403 "ENTITLEMENT_REQUIRED" + "canUseGptTestReal"
+- Rate limiting per plan (Free: 10/min, Creator: 30/min, Pro: 100/min)
+
+UI validation:
+- Disable butoane pentru features gated
+- Show upgrade prompts contextual
+- Display entitlement status per test type
+- Graceful fallback la test simulare
   "scores": { "clarity":22, "execution":21, "ambiguity":20, "business_fit":23, "total":86 },
   "incidents": [],
   "next_action": "pass|tighten|fail"
@@ -1573,6 +2001,71 @@ export function totalScore(s: Scores): number {
 specificația completă pentru F. Export & Checksum — deterministică, verificabilă, gata de implementare.
 
 F. Export & Checksum — specificație executabilă
+
+F. Export & Gating Vizibil — specificație executabilă
+
+F.1. Planuri & Capabilități
+
+Free: prompt.txt, prompt.md (score ≥80)
+Creator: + prompt.pdf (score ≥80)
+Pro: + prompt.json (score ≥80)
+Enterprise: + bundle.zip, API export, multi-industry
+
+F.2. Gating Vizibil în UI
+
+Principii:
+- Fără entitlement ⇒ ascunzi opțiunea de export
+- Lock icons pe formaturi gated
+- Butoane "Upgrade to Pro" contextuale
+- Paywall modal pentru upgrade
+
+Implementare:
+- ExportBar component cu entitlement checks
+- useEntitlements hook pentru verificări runtime
+- Disable butoane pentru formaturi neeligibile
+- Show upgrade prompts pentru features gated
+
+F.3. Validări Runtime
+
+API endpoints:
+- Verifică entitlements înainte de export
+- Returnează 403 "ENTITLEMENT_REQUIRED" + format
+- Loghează toate verificările în audit trail
+- Rate limiting per plan (Free: 5/min, Pro: 20/min, Enterprise: 100/min)
+
+UI validation:
+- Hide export options neeligibile
+- Show upgrade prompts contextual
+- Disable export butoane pentru features gated
+- Display entitlement status per format
+
+F.4. Paywall Components
+
+Modal inline pentru upgrade:
+- Context: "Export PDF requires Pro plan"
+- CTA: "Upgrade to Pro" cu styling auriu
+- Feature highlights: ce obții cu upgrade-ul
+- Pricing: preț lunar/anual cu toggle
+
+Banners contextuale:
+- Inline pentru features gated
+- Styling SKRE cu aur accent
+- Clear upgrade path
+- Non-intrusive design
+
+F.5. Conformitate cu Arhitectura
+
+Export respectă:
+- SSOT din ruleset.yml
+- Entitlements & Licențe (capitolul H)
+- Module & Gating (capitolul C)
+- Securitatea & Conformitatea (capitolul I)
+
+UI-ul respectă:
+- RLS policies din Supabase
+- Rate limiting și budget controls
+- Audit logging pentru toate acțiunile
+- Gating vizibil pentru features premium
 F1. Obiectiv
 
 Ambalezi fiecare run valid într-un bundle imutabil, verificabil criptografic, cu manifest minim și checksum canonic.
@@ -1686,15 +2179,56 @@ Două spații între hash și nume fișier (format shasum -a 256 compatibil).
 
 Ultima linie BUNDLE <sha256> este hash‑ul de pachet (vezi F5).
 
-F4. Entitlements & gating la export
+F4. Entitlements & Gating la Export
 
-Pilot: export permis doar prompt.txt, prompt.md. prompt.pdf, prompt.json blocate (403).
+F4.1. Planuri & Capabilități
 
-Pro: txt, md, pdf, json permise.
+Free: prompt.txt, prompt.md (score ≥80)
+Creator: + prompt.pdf (score ≥80)
+Pro: + prompt.json (score ≥80)
+Enterprise: + bundle.zip, API export, multi-industry
 
-Enterprise: toate + API de export + multi‑industry.
+F4.2. Gating Vizibil în UI
 
-UI ascunde opțiunile nepermise; API blochează oricum.
+Principii:
+- Fără entitlement ⇒ ascunzi opțiunea de export
+- Lock icons pe formaturi gated
+- Butoane "Upgrade to Pro" contextuale
+- Paywall modal pentru upgrade
+
+Implementare:
+- ExportBar component cu entitlement checks
+- useEntitlements hook pentru verificări runtime
+- Disable butoane pentru formaturi neeligibile
+- Show upgrade prompts pentru features gated
+
+F4.3. Validări Runtime
+
+API endpoints:
+- Verifică entitlements înainte de export
+- Returnează 403 "ENTITLEMENT_REQUIRED" + format
+- Loghează toate verificările în audit trail
+- Rate limiting per plan (Free: 5/min, Pro: 20/min, Enterprise: 100/min)
+
+UI validation:
+- Hide export options neeligibile
+- Show upgrade prompts contextual
+- Disable export butoane pentru features gated
+- Display entitlement status per format
+
+F4.4. Paywall Components
+
+Modal inline pentru upgrade:
+- Context: "Export PDF requires Pro plan"
+- CTA: "Upgrade to Pro" cu styling auriu
+- Feature highlights: ce obții cu upgrade-ul
+- Pricing: preț lunar/anual cu toggle
+
+Banners contextuale:
+- Inline pentru features gated
+- Styling SKRE cu aur accent
+- Clear upgrade path
+- Non-intrusive design
 
 F5. Hashing & checksum (determinism complet)
 Algoritmi
@@ -1905,6 +2439,87 @@ export async function exportBundle(runId: string, reqFiles: ("txt"|"md"|"pdf"|"j
 
 
 G. Versionare & Istoric complet, executabil pentru Supabase/Postgres (RLS, DDL, funcții, migrare semver, audit). Ține‑l ca blueprint direct pentru repo.
+
+G. Test Engine & Gating Vizibil — specificație executabilă
+
+G.1. Tipuri de Teste & Entitlements
+
+Test Simulare (Free/Creator):
+- Evaluare locală cu rubrici 7D
+- Scoruri calculate pe baza de pattern matching
+- Nu folosește GPT live
+- Disponibil pentru toate planurile
+
+Test Live GPT (Creator+):
+- Evaluare cu GPT-4 real
+- Scoruri validate de AI
+- Feedback contextual și specific
+- Gated de canUseGptTestReal
+
+G.2. UI Responsive la Planuri
+
+Free/Creator:
+- Buton "Test Simulare" activ
+- Buton "Test Live GPT" disabled + lock icon
+- Tooltip: "Live GPT testing requires Creator+ plan"
+- CTA: "Upgrade to Creator" cu styling auriu
+
+Creator+:
+- Ambele butoane active
+- Test simulare ca fallback
+- Test live GPT ca feature premium
+- Status indicator pentru testul curent
+
+G.3. Paywall Components pentru Test Engine
+
+Modal pentru upgrade:
+- Context: "Live GPT testing requires Creator+ plan"
+- Feature highlights: "Get AI-powered feedback and detailed scoring"
+- CTA: "Upgrade to Creator" cu pricing
+- Trial offer: "7 days free, then $19/month"
+
+Banner contextual:
+- Inline pentru features gated
+- Styling SKRE cu aur accent
+- Clear upgrade path
+- Non-intrusive design
+
+G.4. Validări Runtime
+
+API endpoints:
+- /api/evaluate/simulate: disponibil pentru toți
+- /api/evaluate/live: verifică canUseGptTestReal
+- Returnează 403 "ENTITLEMENT_REQUIRED" + "canUseGptTestReal"
+- Rate limiting per plan (Free: 10/min, Creator: 30/min, Pro: 100/min)
+
+UI validation:
+- Disable butoane pentru features gated
+- Show upgrade prompts contextual
+- Display entitlement status per test type
+- Graceful fallback la test simulare
+
+G.5. Integrare cu Test Engine
+
+Test Engine:
+- Afișezi scor + dif vs. outputs.fields
+- Incidente de guardrails vizibile
+- Test simulare pentru toate planurile
+- Test live GPT gated de canUseGptTestReal
+- Auto-fix "tighten-once" pentru scoruri <80
+
+G.6. Conformitate cu Arhitectura
+
+Test Engine respectă:
+- SSOT din ruleset.yml
+- Entitlements & Licențe (capitolul H)
+- Export Pipeline & Gating (capitolul F)
+- Securitatea & Conformitatea (capitolul I)
+
+UI-ul respectă:
+- RLS policies din Supabase
+- Rate limiting și budget controls
+- Audit logging pentru toate acțiunile
+- Gating vizibil pentru features premium
 
 G. Versionare & Istoric — specificație executabilă
 G1) Principii
@@ -3873,4 +4488,163 @@ jobs:
       - run: node scripts/bump-version --type minor
       - run: pnpm run self-tests
       - run: node scripts/tag-and-sign
+
+
+M. Implementarea UI/UX & Web Design Protocol
+
+M1. Sistemul Visual SKRE (70/20/10)
+
+Paleta de culori:
+- 70% fundaluri întunecate: #000000, #0e0e0e, #1a1a1a, #2a2a2a
+- 20% gri industrial: #404040, #606060, #808080, #a0a0a0  
+- 10% aur accent: #d1a954, #e6c200, #ffd700, #ffed4e
+
+Fonturi:
+- Montserrat: headings (H1-H6), navigație, butoane CTA
+- Open Sans: body text, inputuri, descrieri
+
+Efecte vizuale:
+- Glassmorphism: .glass-effect cu backdrop-blur și transparență
+- Glow: .glow-primary pentru elemente active și focus
+- Skeleton loaders: pentru stări de loading
+- Micro-animații: fade-in, slide-up, scale (respectând prefers-reduced-motion)
+
+M2. Structura Globală & Layout
+
+Header (sticky):
+- Logo digital rună cu glow subtil (stânga)
+- Navigație: Generator, Modules, Pricing, Docs, Dashboard, About
+- User actions: Login/Sign up (buton auriu pentru CTA)
+- Sticky pe scroll cu backdrop-blur
+
+Footer:
+- Fundal #0e0e0e cu border auriu superior
+- Linkuri: Privacy Policy, Terms, Contact, GDPR, Stripe
+- Runa ca watermark subtil
+- Spacing generos pentru respirație
+
+Layout responsive:
+- useIsMobile() pentru layouturi adaptive
+- Breakpoint-uri: mobile (320px), tablet (768px), desktop (1024px+)
+- Grid system flexibil cu CSS Grid + Flexbox
+
+M3. Componente Reutilizabile
+
+Butoane:
+- Primary: fundal auriu, text întunecat, hover glow
+- Secondary: transparent cu border auriu, hover fill
+- Disabled: gri cu opacity redusă
+- Loading: spinner auriu cu text "Generating..."
+
+Carduri:
+- Base: glass-effect cu border subtil
+- Module cards: cu vector badges și status indicators
+- Pricing tiers: cu feature highlights și CTA buttons
+- Dashboard entries: cu action buttons și status colors
+
+Inputuri & Filtre:
+- Vector filter: dropdown pentru V1-V7 cu styling SKRE
+- Search bar: cu icon și placeholder text
+- Form fields: dark theme cu focus auriu
+- Tabs & Accordions: pentru structurarea conținutului
+
+M4. Fluxul Generatorului (Ordinea Canonică)
+
+Secvența obligatorie:
+1. Select Module → eligibil (7D+entitlements)
+2. Configure 7D → dropdowns cu valori enum din ruleset.yml
+3. Generate → cu skeleton loader și progress bar
+4. Edit → prompt editable cu features gated per plan
+5. Test → scores vizibile + diff explicativ
+6. Export → formaturi disponibile per entitlements
+
+Micro-interacțiuni:
+- Skeleton loaders pentru generare și testare
+- Toast notifications pentru succes/eroare
+- Progress bars pentru operații lungi
+- Hover states cu glow și scale subtil
+
+M5. Gating Vizibil & Entitlements
+
+UI Responsive la planuri:
+- Free: doar txt/md export, test simulare
+- Creator: + pdf export, istoric limitat
+- Pro: + json export, test live GPT, API basic
+- Enterprise: + zip bundle, multi-industry, API complet
+
+Paywall components:
+- Modal inline pentru upgrade
+- Banners contextuale pentru features gated
+- Butoane "Upgrade to Pro" cu styling auriu
+- Lock icons pe module/features restricționate
+
+M6. Responsivitate & Accesibilitate
+
+Mobile-first approach:
+- Layouturi adaptive cu useIsMobile()
+- Touch-friendly butoane (min 44px)
+- Swipe gestures pentru navigație
+- Collapsible sidebar pentru mobile
+
+Accesibilitate:
+- ARIA labels pentru screen readers
+- Keyboard navigation completă
+- Contrast ratio ≥ 4.5:1 (WCAG AA)
+- Respectă prefers-reduced-motion
+- Focus indicators vizibili (auriu)
+
+M7. Implementarea Tehnică
+
+CSS Variables (tokens):
+```css
+:root {
+  --background: #0e0e0e;
+  --card: #1a1a1a;
+  --border: #404040;
+  --primary: #d1a954;
+  --accent: #e6c200;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+}
+```
+
+Tailwind config:
+- Extend colors cu paleta SKRE
+- Custom utilities pentru glass-effect și glow
+- Responsive breakpoints standardizate
+- Animation classes pentru micro-interacțiuni
+
+Componente React:
+- useIsMobile() hook pentru responsive logic
+- GlassCard, SKREButton, VectorFilter
+- PaywallModal, EntitlementGate
+- SkeletonLoader, ToastNotification
+
+M8. Validări & Conformitate
+
+Conformitate cu arhitectura:
+- UI doar vizualizează; nu poate scrie defaults
+- Entitlements verifică la runtime (H. Licențe)
+- 7D validation strict cu enum-uri din ruleset.yml
+- Export gating conform planuri (Free/Creator/Pro/Enterprise)
+
+Testare UI:
+- Cross-browser compatibility (Chrome, Firefox, Safari, Edge)
+- Lighthouse score ≥ 90 (Performance, Accessibility, Best Practices)
+- Mobile responsiveness testing
+- Accessibility audit cu axe-core
+
+M9. Integrare cu Sistemul Existente
+
+Compatibilitate cu:
+- Motorul 7-D (capitolul A)
+- Entitlements & Licențe (capitolul H)  
+- Securitatea & Conformitatea (capitolul I)
+- Export Pipeline & Test Engine (capitolul F)
+
+UI-ul respectă:
+- SSOT din ruleset.yml
+- RLS policies din Supabase
+- Rate limiting și budget controls
+- Audit logging pentru toate acțiunile
 

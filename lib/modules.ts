@@ -12,6 +12,19 @@ export const MODULES: Record<number, PromptModule> = {
     kpi: "TTI, steps_passed, coverage surse, defect rate <2%",
     guardrails: "no guesswork, citeaza oficial",
     vectors: [1, 6, 5],
+    vector: 1,
+    complexity: "advanced",
+    domain: "ai",
+    defaultConfig: {
+      scale: "startup",
+      urgency: "planned",
+      complexity: "advanced",
+      resources: "specialized_team",
+      application: "research",
+      output: "structured",
+      outputFormat: "spec",
+      vector: "V1",
+    },
   },
   2: {
     id: 2,
@@ -23,6 +36,19 @@ export const MODULES: Record<number, PromptModule> = {
     kpi: "modularity>0.35, NMI pe validare >0.6",
     guardrails: "test out-of-domain; fallback interpretabil",
     vectors: [2, 5],
+    vector: 2,
+    complexity: "expert",
+    domain: "ai",
+    defaultConfig: {
+      scale: "scaleup",
+      urgency: "normal",
+      complexity: "expert",
+      resources: "specialized_team",
+      application: "research",
+      output: "structured",
+      outputFormat: "spec",
+      vector: "V2",
+    },
   },
   3: {
     id: 3,
@@ -35,6 +61,19 @@ export const MODULES: Record<number, PromptModule> = {
     kpi: "uplift CR target +15%",
     guardrails: "fara promisiuni nerealiste; probe sociale atasate",
     vectors: [2, 6],
+    vector: 2,
+    complexity: "intermediate",
+    domain: "marketing",
+    defaultConfig: {
+      scale: "startup",
+      urgency: "normal",
+      complexity: "intermediate",
+      resources: "lean_team",
+      application: "mvp",
+      output: "structured",
+      outputFormat: "spec",
+      vector: "V2",
+    },
   },
   4: {
     id: 4,
@@ -46,6 +85,19 @@ export const MODULES: Record<number, PromptModule> = {
     kpi: "recall semnificare >90%",
     guardrails: "coerenta inter-document",
     vectors: [2, 5],
+    vector: 2,
+    complexity: "intermediate",
+    domain: "marketing",
+    defaultConfig: {
+      scale: "midsize",
+      urgency: "planned",
+      complexity: "intermediate",
+      resources: "specialized_team",
+      application: "concept",
+      output: "structured",
+      outputFormat: "spec",
+      vector: "V2",
+    },
   },
   5: {
     id: 5,
@@ -58,6 +110,19 @@ export const MODULES: Record<number, PromptModule> = {
     kpi: "hit-rate >70%, leak=0",
     guardrails: "PII hashing",
     vectors: [4, 5],
+    vector: 4,
+    complexity: "advanced",
+    domain: "ai",
+    defaultConfig: {
+      scale: "enterprise",
+      urgency: "planned",
+      complexity: "advanced",
+      resources: "specialized_team",
+      application: "production",
+      output: "structured",
+      outputFormat: "spec",
+      vector: "V4",
+    },
   },
 };
 
@@ -98,5 +163,55 @@ export function getModuleStats() {
         ? a
         : b,
     )[0],
+  };
+}
+
+// Enhanced module metadata for SSR
+export interface ModuleMetadata {
+  id: number;
+  name: string;
+  description: string;
+  requirements: string;
+  spec: string;
+  output: string;
+  kpi: string;
+  guardrails: string;
+  vectors: number[];
+  vector: number;
+  complexity: string;
+  domain: string;
+  defaultConfig: {
+    scale: string;
+    urgency: string;
+    complexity: string;
+    resources: string;
+    application: string;
+    output: string;
+    outputFormat: string;
+    vector: string;
+  };
+}
+
+export async function getModuleMetadata(moduleId: number): Promise<ModuleMetadata | null> {
+  const module = MODULES[moduleId];
+  if (!module) return null;
+
+  // In a real implementation, this would fetch additional metadata
+  // from external sources or databases
+  return {
+    ...module,
+    vector: module.vector || 1,
+    complexity: module.complexity || "standard",
+    domain: module.domain || "general",
+    defaultConfig: {
+      scale: "startup",
+      urgency: "planned",
+      complexity: "standard",
+      resources: "lean_team",
+      application: "mvp",
+      output: "structured",
+      outputFormat: "spec",
+      vector: `V${module.vector || 1}`,
+    },
   };
 }

@@ -8,7 +8,7 @@ export function SkipLink() {
     const main = document.querySelector("main");
     if (main) {
       main.focus();
-      main.scrollIntoView();
+      main.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -16,7 +16,8 @@ export function SkipLink() {
     <a
       href="#main"
       onClick={handleClick}
-      className="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[1200] focus:px-4 focus:py-2 focus:bg-black focus:text-white focus:rounded focus:outline-2 focus:outline-white focus:outline-offset-2"
+      className="skip-link absolute -top-10 left-6 bg-[#d1a954] text-black px-4 py-2 rounded z-[1200] transition-all duration-300 focus:top-6 focus:outline-2 focus:outline-white focus:outline-offset-2"
+      tabIndex={0}
     >
       {COPY.skip_to_content}
     </a>

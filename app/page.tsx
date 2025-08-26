@@ -45,15 +45,15 @@ export default function HomePage() {
 
   return (
     <>
-        <SkipLink />
-      <main className="min-h-screen">
-          <Hero />
+      <SkipLink />
+      <main className="min-h-screen" role="main" id="main" tabIndex={-1}>
+        <Hero />
 
         {/* Demo Section */}
-        <section className="py-20 bg-gradient-to-b from-black to-gray-900">
+        <section className="py-20 bg-gradient-to-b from-black to-gray-900" aria-labelledby="demo-heading">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-white mb-4">
+              <h2 id="demo-heading" className="text-4xl font-bold text-white mb-4">
                 Try the Brand Linter
               </h2>
               <p className="text-xl text-gray-300">
@@ -61,7 +61,7 @@ export default function HomePage() {
               </p>
             </div>
 
-              <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto">
               <Card className="bg-gray-800 border-gray-700">
                 <CardHeader>
                   <CardTitle className="text-white">Live Demo</CardTitle>
@@ -76,19 +76,21 @@ export default function HomePage() {
                       onChange={(e) => setDemoInput(e.target.value)}
                       placeholder="Enter text to analyze..."
                       className="flex-1 bg-gray-700 border-gray-600 text-white"
+                      aria-label="Text to analyze"
                     />
                     <Button 
                       onClick={handleDemoGenerate}
                       disabled={isGenerating}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-blue-600 hover:bg-blue-700 min-w-[44px] min-h-[44px]"
+                      aria-label={isGenerating ? "Analyzing text" : "Analyze text"}
                     >
                       {isGenerating ? "Analyzing..." : "Analyze"}
                     </Button>
                   </div>
 
-                      {demoOutput && (
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-white mb-2">Analysis Result:</h3>
+                  {demoOutput && (
+                    <div className="mt-6" role="region" aria-labelledby="result-heading">
+                      <h3 id="result-heading" className="text-lg font-semibold text-white mb-2">Analysis Result:</h3>
                       <AnimatedCodeBlock
                         code={demoOutput}
                         language="json"
@@ -97,18 +99,18 @@ export default function HomePage() {
                     </div>
                   )}
                 </CardContent>
-                </Card>
-              </div>
+              </Card>
             </div>
-          </section>
+          </div>
+        </section>
 
         {/* Features Grid */}
-        <section className="py-20 bg-gray-900">
-            <div className="container mx-auto px-6">
+        <section className="py-20 bg-gray-900" aria-labelledby="features-heading">
+          <div className="container mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-white mb-4">
+              <h2 id="features-heading" className="text-4xl font-bold text-white mb-4">
                 Why Choose PromptForge?
-                </h2>
+              </h2>
               <p className="text-xl text-gray-300">
                 Enterprise-grade prompt engineering with military precision
               </p>

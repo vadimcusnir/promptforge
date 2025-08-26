@@ -22,6 +22,8 @@ const BLOCKED_LOCALES = [
 const PUBLIC_ALLOW = [
   "/coming-soon",
   "/demo-bundle",
+  "/about",
+  "/contact",
   "/api",
   "/favicon",
   "/og",

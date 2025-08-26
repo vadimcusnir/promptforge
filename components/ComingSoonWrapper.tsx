@@ -16,8 +16,8 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
   useEffect(() => {
     const checkAccess = () => {
       try {
-        // Skip check for coming-soon page itself and API routes
-        if (pathname === "/coming-soon" || pathname.startsWith("/api/")) {
+        // Skip check for coming-soon page itself, API routes, blog pages, about page, and contact page
+        if (pathname === "/coming-soon" || pathname.startsWith("/api/") || pathname.startsWith("/blog") || pathname === "/about" || pathname === "/contact") {
           console.log(`[ComingSoonWrapper] Skipping check for: ${pathname}`);
           setIsAdmin(true);
           setIsChecking(false);
@@ -40,6 +40,31 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
         // Check if user is admin (has admin cookies)
         const adminRole = document.cookie.includes("pf_role=admin");
         console.log(`[ComingSoonWrapper] Path: ${pathname}, Admin role found: ${adminRole}`);
+        
+        // TEMPORARY: Bypass admin check for development
+        // Check if we're in development by looking for localhost in the URL
+        if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+          console.log(`[ComingSoonWrapper] Development mode (localhost), bypassing admin check`);
+          setIsAdmin(true);
+          setIsChecking(false);
+          return;
+        }
+        
+        // Also check for development environment variable
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[ComingSoonWrapper] Development environment detected, bypassing admin check`);
+          setIsAdmin(true);
+          setIsChecking(false);
+          return;
+        }
+        
+        // TEMPORARY: Force bypass for contact page in development
+        if (pathname === '/contact') {
+          console.log(`[ComingSoonWrapper] Force bypassing contact page access in development`);
+          setIsAdmin(true);
+          setIsChecking(false);
+          return;
+        }
         
         if (!adminRole) {
           console.log(`[ComingSoonWrapper] Not admin, showing coming-soon content for ${pathname}`);

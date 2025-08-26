@@ -28,6 +28,7 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedVector, setSelectedVector] = useState<string>("all");
   const [selectedComplexity, setSelectedComplexity] = useState<string>("all");
+  const [selectedDomain, setSelectedDomain] = useState<string>("all");
 
   const filteredModules = useMemo(() => {
     return modules.filter((module) => {
@@ -38,19 +39,58 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
       const matchesVector = selectedVector === "all" || 
                            (module.vector && module.vector.toString() === selectedVector);
       
-      const complexity = getModuleComplexity(module);
-      const matchesComplexity = selectedComplexity === "all" || complexity === selectedComplexity;
+      const matchesComplexity = selectedComplexity === "all" || 
+                               module.complexity === selectedComplexity;
       
-      return matchesSearch && matchesVector && matchesComplexity;
+      const matchesDomain = selectedDomain === "all" || 
+                           module.domain === selectedDomain;
+      
+      return matchesSearch && matchesVector && matchesComplexity && matchesDomain;
     });
-  }, [modules, searchQuery, selectedVector, selectedComplexity]);
+  }, [modules, searchQuery, selectedVector, selectedComplexity, selectedDomain]);
 
-  const getModuleComplexity = (module: PromptModule): string => {
-    // Use a default complexity if not available
-    const complexity = 3; // Default to intermediate
-    if (complexity <= 2) return "beginner";
-    if (complexity <= 4) return "intermediate";
-    return "advanced";
+  const getComplexityColor = (complexity: string): string => {
+    switch (complexity) {
+      case "simple":
+        return "bg-green-100 text-green-800";
+      case "standard":
+        return "bg-blue-100 text-blue-800";
+      case "advanced":
+        return "bg-yellow-100 text-yellow-800";
+      case "expert":
+        return "bg-red-100 text-red-800";
+      case "research":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getDomainColor = (domain: string): string => {
+    switch (domain) {
+      case "saas":
+        return "bg-blue-100 text-blue-800";
+      case "ecommerce":
+        return "bg-green-100 text-green-800";
+      case "fintech":
+        return "bg-purple-100 text-purple-800";
+      case "healthtech":
+        return "bg-red-100 text-red-800";
+      case "edtech":
+        return "bg-yellow-100 text-yellow-800";
+      case "ai":
+        return "bg-indigo-100 text-indigo-800";
+      case "enterprise":
+        return "bg-gray-100 text-gray-800";
+      case "startup":
+        return "bg-orange-100 text-orange-800";
+      case "nonprofit":
+        return "bg-pink-100 text-pink-800";
+      case "government":
+        return "bg-slate-100 text-slate-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
   };
 
   const getVectorNames = (vectorIds: number[]): string[] => {
@@ -58,19 +98,6 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
       const vector = VECTORS[id as keyof typeof VECTORS];
       return vector?.name || `V${id}`;
     }).slice(0, 2);
-  };
-
-  const getComplexityColor = (complexity: string): string => {
-    switch (complexity) {
-      case "beginner":
-        return "bg-green-100 text-green-800";
-      case "intermediate":
-        return "bg-yellow-100 text-yellow-800";
-      case "advanced":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
   };
 
   return (
@@ -118,9 +145,31 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Complexities</SelectItem>
-              <SelectItem value="beginner">Beginner</SelectItem>
-              <SelectItem value="intermediate">Intermediate</SelectItem>
+              <SelectItem value="simple">Simple</SelectItem>
+              <SelectItem value="standard">Standard</SelectItem>
               <SelectItem value="advanced">Advanced</SelectItem>
+              <SelectItem value="expert">Expert</SelectItem>
+              <SelectItem value="research">Research</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedDomain} onValueChange={setSelectedDomain}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Target className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Filter by domain" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Domains</SelectItem>
+              <SelectItem value="saas">SaaS</SelectItem>
+              <SelectItem value="ecommerce">E-commerce</SelectItem>
+              <SelectItem value="fintech">FinTech</SelectItem>
+              <SelectItem value="healthtech">HealthTech</SelectItem>
+              <SelectItem value="edtech">EdTech</SelectItem>
+              <SelectItem value="ai">AI/ML</SelectItem>
+              <SelectItem value="enterprise">Enterprise</SelectItem>
+              <SelectItem value="startup">Startup</SelectItem>
+              <SelectItem value="nonprofit">Non-profit</SelectItem>
+              <SelectItem value="government">Government</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -152,7 +201,7 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
-                      General
+                      {module.domain}
                     </span>
                   </div>
                   
@@ -168,9 +217,9 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
                   <div className="flex items-center gap-2">
                     <Badge 
                       variant="secondary" 
-                      className={getComplexityColor(getModuleComplexity(module))}
+                      className={getComplexityColor(module.complexity)}
                     >
-                      {getModuleComplexity(module)}
+                      {module.complexity}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
                       Score: 3/5
@@ -179,8 +228,13 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
                   
                   <div className="flex flex-wrap gap-1">
                     <Badge variant="outline" className="text-xs">
-                      General
+                      {module.domain}
                     </Badge>
+                    {module.vectors && module.vectors.length > 0 && (
+                      <Badge variant="outline" className="text-xs">
+                        {module.vectors.length} vectors
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -223,6 +277,19 @@ export function ModuleSelector({ selectedModule, onModuleSelect, modules }: Modu
                   <h4 className="font-medium text-sm mb-2">Guardrails</h4>
                   <p className="text-sm text-muted-foreground">{selectedModule.guardrails}</p>
                 </div>
+                {selectedModule.defaultConfig && (
+                  <div>
+                    <h4 className="font-medium text-sm mb-2">Default Configuration</h4>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div><span className="font-medium">Scale:</span> {selectedModule.defaultConfig.scale}</div>
+                      <div><span className="font-medium">Urgency:</span> {selectedModule.defaultConfig.urgency}</div>
+                      <div><span className="font-medium">Complexity:</span> {selectedModule.defaultConfig.complexity}</div>
+                      <div><span className="font-medium">Resources:</span> {selectedModule.defaultConfig.resources}</div>
+                      <div><span className="font-medium">Application:</span> {selectedModule.defaultConfig.application}</div>
+                      <div><span className="font-medium">Vector:</span> {selectedModule.defaultConfig.vector}</div>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

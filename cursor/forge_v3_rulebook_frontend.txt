@@ -1,0 +1,923 @@
+
+
+## 📁 **ROOT STRUCTURE**
+```
+/
+├── 📄 page.tsx (Landing - Single Screen Promise)
+├── 🔧 /generator (Core Workflow)
+├── 📚 /modules (50 Operational Modules)
+├── 💰 /pricing (Plans & Entitlements)
+├── 📖 /docs (Documentation Portal)
+├── 📊 /dashboard (User Analytics)
+├── 🎯 /guides (Step-by-step Tutorials)
+├── ℹ️ /about (Mission & Team)
+├── 📞 /contact (Initiation Ritual)
+├── ⚖️ /privacy (Legal)
+├── 📋 /terms (Legal)
+├── 🔐 /login (Authentication)
+├── ✍️ /signup (Authentication)
+└── 🚧 /coming-soon (Maintenance Mode)
+
+
+
+Below is a protocol detailing the order, rules and underlying logic for implementing the PromptForge™ web design. It synthesizes the SKRE visual system, the project’s architecture and the plan you’ve laid out so far.
+
+1. Establish the foundation
+1.1. Set up global styles
+Paletă SKRE: Define colors gold-industrial, lead-gray, plus multiple blacks (e.g., #000, #0e0e0e, #1a1a1a) in Tailwind config. Stick to the 70/20/10 ratio: dark backgrounds (70 %), gray for secondary elements (20 %) and gold accents (10 %)
+GitHub
+.Fonts: Import Montserrat for headings and Open Sans for body text via app/layout.tsx; set them globally.
+
+Global CSS: Add utilities for glassmorphism (.glass-effect), glow (.glow-primary), skeleton loaders and key animations (fade‑in, slide‑up)
+GitHub
+. Define tokens such as --background, --card, --border, --primary, --accent
+GitHub
+.
+
+1.2. Build core layout
+
+Header: Create a sticky header that stays on top while scrolling. Left side shows the digital rune (logo) with subtle glow; right side hosts nav links (“Generator”, “Modules”, “Pricing”, “Docs”, “Dashboard”, “About”) and user actions (Login/Sign up). Use gold for the active link or CTA button.
+
+Footer: Use a dark background (#0e0e0e) with a thin gold top border. Include links to Privacy Policy, Terms, Contact, and legal badges (GDPR, Stripe). Place a small version of the rune as watermark and ensure there’s enough breathing space.
+
+1.3. Create reusable components
+
+Buttons: Primary (gold background, dark text) and secondary (transparent background, gold border) versions with hover/active states.
+
+Cards: Base card component with subtle glass effect; variants for module cards, pricing tiers and dashboard entries.
+
+Filters & Inputs: Vector filter component (for V1–V7) and search bar with an icon, adopting dark theme and gold accent.
+
+Tabs & Accordions: To structure Generator sub‑sections and Docs sub‑topics.
+
+Paywall components: Paywall modal and inline banners triggered by entitlements
+GitHub
+.
+
+2. Construct each page
+2.1. Landing (/) – already planned
+
+Implement the single‑screen promise with hero, proof bar, interactive demo, social proof and pricing teaser. Use SKRE background animation layers, high contrast headings and a clear CTA.
+
+2.2. Generator (/generator)
+
+Follow the flow: module selection → configure 7D → Generate → Edit → Test → Export
+GitHub
+. Divide the page into:
+
+Module filter/search panel (left on desktop, top on mobile) to choose modules by vector and search.
+
+Main panel with tabs:
+
+7D Configuration: drop‑downs and selectors for domain, scale, urgency, complexity, resources, application and output.
+
+Generator: shows output prompt; displays session hash and timestamp; allows copy/download.
+
+Editor: displays editable prompt with features gated by plan (real GPT edit vs simulated)
+GitHub
+.
+
+Test Engine: shows scores and validation results; differentiates simulated vs live tests.
+
+History & Export: lists recent runs; buttons to export (.txt/.md/.json/.pdf/.zip) based on entitlements.
+
+Use micro‑interactions: skeleton loaders, toast notifications and progress bars for tests and exports
+GitHub
+.
+
+2.3. Modules (/modules)
+
+Implement the catalog page with a header (“50 Operational Modules. 7 Vectors. Zero Improvisation.”)
+GitHub
+. Provide:
+
+Vector filter bar and search bar.
+
+A summary bar with total modules and vector distribution.
+
+A responsive grid of module cards; each shows module name, description, vector badges and an “Explore” button.
+
+Overlay to display full module details (requirements, spec, outputs, KPIs, guardrails) and CTA “Use in Generator”.
+
+Lock or dim modules that the user’s plan does not permit; clicking them shows an upgrade paywall
+GitHub
+.
+
+2.4. Pricing (/pricing)
+
+Keep the existing structure but restyle it: dark cards with gold highlights, clear monthly/annual toggle, and a column for Enterprise with contact CTA. Use icons to represent features (export formats, real test, API access). Include microcopy about trial watermarking.
+
+2.5. Dashboard (/dashboard)
+
+Create a table view of prompt runs with filters (module, domain, date, status) and a summary bar (runs count, average scores). Each row shows run_id, module, score summary and action buttons (re‑run, view prompt, export). Maintain gating (download pdf/json/zip only on appropriate plan). Use dark cards and gold for primary actions.
+
+2.6. Docs (/docs) and API docs (/docs/api)
+
+Design a docs portal with a left sidebar nav and search. Organize topics: Overview, Module catalog, 7D parameters, Test Engine, Export Pipeline, Entitlements, Examples, API Reference. Use code blocks with dark backgrounds and gold syntax highlighting. Include sample curl commands and JSON responses; label enterprise‑only endpoints clearly.
+
+2.7. Guides (/guides)
+
+Publish step‑by‑step tutorials with images or diagrams. Each guide ends with a CTA to try the feature in Generator.
+
+2.8. About (/about) and Contact (/contact)
+
+Use storytelling: present PromptForge™’s mission (“Transform language into ritualised code”) and team, emphasising the rune narrative. For Contact, replace a generic form with a mini “initiation ritual” (name, domain, intention) and discrete instructions. Maintain the dark ambiance and golden highlights.
+
+2.9. Legal pages (/privacy & /terms)
+
+Keep these minimalist: dark background, gray text, generous spacing. Include internal anchors and a back‑to‑top link. Place a small rune watermark in the footer.
+
+2.10. Login (/login) and Signup
+
+Create glassmorphic cards centered on screen with email/password fields and social auth buttons. Use the rune as a subtle loader indicator. Provide a link to “Forgot password?” and “Don’t have an account? Sign up”.
+
+3. Implementation logic & ordering
+
+Initialize project: Scaffold Next.js app; configure Tailwind and shadcn/ui; add fonts and global CSS.
+
+Define colors and tokens: Update Tailwind config with SKRE palette and assign CSS variables.
+
+Create Layout: Implement app/layout.tsx to include header, footer and global providers.
+
+Build foundational components: Buttons, cards, inputs, tabs, vectors filter, paywall modals.
+
+Develop pages incrementally: Start with Generator (core logic), then Modules, Landing, Pricing, Docs, Dashboard, Guides, and remaining pages. Use placeholder content until real data and API integration are ready.
+
+Integrate Supabase: Add auth flows, role‑based RLS policies and entitlements.
+
+Wire Stripe: Create products/prices and webhook handlers; test checkout and entitlements gating.
+
+Implement Test Engine & Export: Add simulation by default; connect live GPT for Pro/Enterprise. Generate artifacts (.txt/.md/.json/.pdf, bundle.zip) with checksums and watermark when needed
+GitHub
+.
+
+Add telemetry & analytics: Log run_ids, scores, page events (CTA clicks, scroll depth). Use these for PLG optimisations.
+
+Ensure responsiveness & accessibility: Test on desktop/mobile; respect prefers-reduced-motion; provide ARIA labels and keyboard navigation.
+
+Polish & deploy: Conduct cross‑browser tests, run Lighthouse to ensure ≥ 90 performance. Deploy to Vercel, seed demo bundles and verify all gating rules.
+
+By following this protocol—establishing a robust global foundation, building modular components, then iterating through each page while enforcing entitlements and maintaining the SKRE aesthetic—you ensure the PromptForge™ web interface remains coherent, performant and ready for production.
+
+
+
+
+
+Mai jos găsești recomandările pentru a demara implementarea unui design web profesionist, „high‑ticket”, cu accente aurii și animații contemporane:
+
+1. Paletă și identitate vizuală
+
+Folosește protocolul SKRE: fundaluri întunecate (#000, #0e0e0e, #1a1a1a) și accente aurii (#d1a954) și gri plumb (#5a5a5a). Paleta e deja sugerată în design‑ul front‑end actual, care utilizează variabile CSS pentru fundal, card, border, primary și accent în app/globals.css
+GitHub
+.
+
+Raport cromatic: 70 % negru, 20 % gri, 10 % auriu. Aurul nu trebuie folosit ca fundal; apare doar pe butoanele CTA, badge‑urile de autoritate, titluri și iconițe.
+
+Tipografie: continuă cu Montserrat (headings) și Open Sans (corp), așa cum se folosește în aplicația actuală
+GitHub
+. Asigură-te că mărimile și contrastul respectă standardele WCAG.
+
+Logo: folosește „runa digitală” ca element central. Integrează animații subtile (pulsare pe ~, glow la hover) și nu afișa niciun text lângă simbol – accentuează misterul și premium feel‑ul.
+
+2. Layout și structură
+
+Ghidează-te după arhitectura E2B: hero generos, segmente clare cu mult spațiu alb (sau negru în cazul tău), iconițe minimaliste și text concis. Propun următoarea structură:
+
+Hero cu CTA unic:
+
+Titlu impactant (“Creează prompturi ca un profesionist în 10 secunde”).
+
+Subtitlu clar (“Fără teste inutile, fără blocaje”) și un buton primar aurit (“Încearcă Gratuit”).
+
+Fundal animat cu cele 4 straturi descrise (linii, tokeni verzi, figuri geometrice, citate portocalii) și efecte parallax; respectă prefers-reduced-motion pentru utilizatorii sensibili.
+
+O zonă mică de demo interactiv: un input în care vizitatorul tastează un cuvânt și vede cum generatorul produce un prompt (similar cu “demo box” din front‑end)
+GitHub
+.
+
+Dovadă socială și cifre:
+– Afișează logo‑uri de companii/agenții, un număr mare de prompturi generate și scorul mediu (motiv de încredere).
+– Plasează subtitluri “+12 000 prompturi generate zilnic” sau “Trusted by leading SaaS teams”.
+
+Comparativ Before/After:
+– Două coloane: “Fără AI – ore pierdute, teste eșuate” vs. “Cu PromptForge – 3 clickuri, prompt clar”.
+– Folosește pictograme simple sau ascii‑style (inspirație din E2B) și text scurt.
+
+Prezentare de funcții:
+– Secțiuni pentru “Generator”, “Editor”, “Test Engine”, “History”, “Export” (coincide cu structura existentă din front‑end
+GitHub
+).
+– Fiecare card descrie pe scurt beneficiul, are o iconiță Phosphor (de exemplu zap pentru generare, edit pentru Editor) și un buton “Află mai mult” (border gri, text aurit).
+– Poți afișa un cod‑snippet cu structura promptului (monospace pe fundal negru) – element vizual atractiv similar E2B.
+
+Pricing:
+– Trei coloane (Basic, Pro, Team/Enterprise). Accentuează Pro cu border aurit și un badge “Cel mai popular”.
+– Folosește bullet points concise și un CTA “Alege planul” pentru fiecare. Asigură gating‑ul corect (txt/JSON/PDF/zip) cum este planificat
+GitHub
+.
+
+Autoritate & Educație:
+– Adaugă o secțiune cu “Creat de experți în AI & Prompt Engineering” și un link către un ghid PDF gratuit (lead magnet).
+– Poți include 1–2 testimonial video/text.
+
+FOMO & Urgență:
+– Integrează un countdown (“Preț special expiră în 48h”) și un mesaj de limitare (“Doar 500 de utilizatori activi”).
+– Folosește micro‑interacțiuni (glow pe cifre, pulsare ușoară).
+
+FAQ & Footer:
+– Răspunde la întrebările esențiale (“Ce primesc?”, “Pot anula?”, “Cum se compară cu ChatGPT?”).
+– Footer cu link‑uri legale, contact, iconițe de plată (Stripe Verified, GDPR Compliant).
+
+3. Animații și micro‑interacțiuni
+
+Fundal multi‑layer: urmează specificațiile din fișierul dedicat (patru straturi cu mișcări lente, glitch‑uri, citate portocalii). Afișează citate din narrative.json la intervale neregulate; sincronizează reducerea densității tokenilor când apare un mesaj.
+
+Hover & focus: butoanele aurii vor avea un efect de luminozitate + shadow; elementele interactive pot primi un glitch discret (urmează exemplul din e2b.dev).
+
+Loading & feedback: folosește bare de progres și skeleton‑loaders (glow ușor), deja implementate în front‑end
+GitHub
+.
+
+Reduce motion: când utilizatorul are prefers-reduced-motion activat, oprește glitch‑ul și animațiile complexe, așa cum se cere în fișierul de setări.
+
+4. Implementare front‑end
+
+Config și setup:
+– Actualizează app/layout.tsx și app/globals.css cu paleta SKRE și fonturile.
+– Folosește shadcn/ui pentru carduri și butoane; definește clase .bg-gold-industrial, .text-gold-industrial, .border-lead-gray etc. în Tailwind config.
+– Integrează Phosphor Icons (npm install phosphor-react).
+
+Componente:
+– În app/page.tsx construiește Hero + Demo, Social Proof, Before/After, Features, Pricing, Authority, FOMO, FAQ.
+– Adaugă componenta BackgroundLayers care gestionează stratul de fundal cu preferințe de mișcare.
+– Creează modul “PriceCard” cu props pentru plan și gating.
+– Păstrează structurile existente (PromptGenerator, GPTEditor, TestEngine, HistoryPanel, ExportManager) pentru generatorul propriu
+GitHub
+.
+
+Gating și entitlements:
+– Adaugă hook‑urile useEntitlements și withEntitlementGate astfel încât butoanele “Run GPT Test Real” și “Export PDF/JSON/zip” să deschidă paywall‑ul nativ
+GitHub
+.
+– Conectează planurile la Stripe, conform specificațiilor.
+
+Performance & accesibilitate:
+– Verifică Lighthouse (≥ 90), optimizează imagini SVG pentru rună și icons, lazy‑load video/testimoniale.
+– Respectă aria‑label‑urile și asigură focus states vizibile, similar cu e2b.dev (ex. subliniază butoane la tastatură).
+
+Testare și iterare:
+– Testează pe desktop și mobil; verifică designul cu prefers-reduced-motion.
+– Colectează telemetrie: view_home_above_fold, cta_click, scroll_75, etc., pentru a evalua performanța designului.
+
+Concluzie
+
+Combinația dintre structura clară și minimalismul tehnic al e2b.dev și estetica „runică” dark‑industrial din PromptForge™ poate duce la un design premium, solid și contemporan. Folosind paleta SKRE și organizând conținutul pe secțiuni orientate spre conversie (demonstrație imediată, dovadă socială, comparativ, prețuri), vei crea o experiență care comunică valoarea “high‑ticket” și încredere, respectând în același timp constrângerile tehnice și de branding specifice proiectului.
+
+
+
+
+
+
+Mai jos găsești o descriere pentru fiecare secțiune, începând cu pagina /generator (nucleul aplicației), precum și recomandări de îmbunătățire.
+
+1. /generator (nucleu funcțional)
+
+Această pagină reunește toate fluxurile produsului: selecția modulului, configurarea 7D, generarea promptului, optimizarea, testarea, istoricul și exportul
+GitHub
+. Designul ar trebui să urmărească trei obiective: claritate, ritm și orientare spre acțiune.
+
+Structură generală:
+
+Sidebar vertical cu trei secțiuni: Module, Istoric, Export. Folosește carduri în relief (fundal #1a1a1a) cu border gri și iconițe Phosphor.
+
+Panel central cu taburi orizontale: Configurație 7D, Generator, Editor, Test, Istoric
+GitHub
+. Fiecare tab conține acțiuni și rezultate în carduri separate, cu butoane aurii pentru “Generează”, “Optimizează”, “Rulează test real”, “Exportă”.
+
+Pietre de verificare (badges) vizibile lângă fiecare tab: arată run_id, scoruri și status (simulat vs real).
+
+Componentă “Module Selection”: prezintă cele 50 de module în grid. Fiecare card afișează numele, vectorul, descrierea și butoane de Pre-Preview și Select. Filtarea pe vectori și căutarea trebuie să fie accesibile în partea de sus. În aplicația existentă, ModuleGrid și ModuleCard oferă deja această funcționalitate
+GitHub
+ – stilizează‑le cu border aurii la hover.
+
+Configurare 7D: folosește un formular în două coloane cu drop‑down‑uri sau selectoare pentru domain, scale, urgency, complexity, resources, application și output. Afișează un preview al configului (JSON) la dreapta. Valorile default și descrierile trebuie preluate din params.ts (găzduit în viitorul folder lib/).
+
+Fluxuri și gating:
+– Generate Prompt: buton aurit; la click, componenta PromptGenerator produce promptul structurat și îl salvează în istoric
+GitHub
+.
+– Editor (Pro+): afișează promptul cu highlight și permite editarea. Dacă userul nu are plan Pro, butonul “Optimizează” deschide un paywall nativ (componenta PaywallModal); gatingul e implementat cu useEntitlements și withEntitlementGate
+GitHub
+.
+– Test Engine (Pro+): afișează scoruri de claritate, execuție, aliniere etc. Utilizatorii Free/Creator au acces la simulare; butonul “Run Real Test” deschide paywall.
+– Export: listează tipurile disponibile – txt/md (Free/Creator), pdf/json (Pro) și bundle.zip (Enterprise). Un buton “Exportă” deschide ExportDialog și verifică entitlements
+GitHub
+.
+
+Estetică și feedback: folosește skeleton‑loaders, bare de progres și toasturi shadcn pentru feedback vizual
+GitHub
+. Menține paleta SKRE: aur pentru acțiuni, gri pentru subtitluri, negru pentru fundal.
+
+2. /about și /contact
+
+Aceste pagini sunt destinate poziționării brandului și dialogului cu comunitatea. Stilul trebuie să fie narativ și misterios, reflectând runa digitală descrisă în fișierele de branding.
+
+/about: prezintă misiunea (“Transpunem limbajul uman într-un sistem de comenzi ritualice”), viziunea și echipa (fără poze personalizate – folosește runele ca avatar). Include timeline cu momente cheie (lansarea M01‑M50, semnarea primilor clienți). Un paragraf scurt explică modul în care PromptForge™ “selectează” inițiații, nu “vinde” un produs.
+
+/contact: înlocuiește tipicul formular de contact cu un Ritual de Inițiere. Utilizatorii trebuie să completeze un scurt chestionar (nume, domeniu, motiv) înainte de a putea trimite mesajul. Folosește simbolul ~ ca indicator de încărcare și finalizează cu un mesaj de tip “Am primit comanda. Așteaptă o rună de răspuns”.
+
+3. /pricing
+
+Structura curentă rămâne (planuri Free, Creator, Pro, Enterprise), dar aspectul se aliniază cu noua estetică. Schimbări:
+
+Toate cardurile au fundal #1a1a1a, border gri, iconițe minimaliste; planul Pro este evidențiat cu un contur aurit.
+
+Toggle lunar/anual clar (10× anual). Adaugă o etichetă pentru trialul Pro de 7 zile și menționează watermark pentru export PDF în perioada de trial.
+
+Fiecare rând al tabelului este asociat vizual cu o capabilitate (ex: test real, export PDF/json, bundle.zip); folosește badge‑uri de culoare aurie pentru “Included” și gri pentru “Not included”.
+
+4. /dashboard
+
+Dashboard-ul înlocuiește /generator pentru utilizatorii conectați, oferindu-le o vedere de ansamblu asupra rulărilor:
+
+Sidebar: listă de filtre (module, domeniu, dată, scor).
+
+Tabel principal: coloane pentru run_id, modul, scoruri, status (simulat vs real), dată. O pictogramă aurie deschide un meniu de acțiuni: Rerun, View prompt, Export.
+
+Rezumat: deasupra tabelului, afișează statistici – număr total de rulări, medie scoruri, vectori cei mai utilizați.
+
+Design: menține paleta dark, cardurile sunt separate prin linii subțiri gri, text alb/gri; scorurile sunt colorate în funcție de evaluare (verde pentru >80, roșu pentru <50).
+
+5. /login
+
+Păstrează minimalismul: un card centrat pe ecran cu fundal transparent (“glass effect”). Include opțiunile “Sign in with email”, “Sign in with Google/GitHub”. Utilizează runa ~ ca indicator de progres în câmpurile de input. Textul ajutător (ex: “Nu ai cont? Înregistrează-te”) trebuie să fie gri plumb, iar butonul de login – aurit.
+
+6. /docs și /api-reference
+
+/docs: pagină de documentație generală. Folosește un sidebar navigațional pe stânga cu capitole (“Introduction”, “Getting Started”, “Modules”, “7D Parameters”, “Guides”). Conținutul principal este prezentat în blocuri de text bine spațiate, cu titluri aurii, cod pe fundal negru și border gri. Afișează diagrame sau pseudocode pentru a explica fluxurile (Generare → Editare → Test → Export).
+
+/api-reference: conține informațiile tehnice pentru endpointul POST /api/run/{moduleId}, parametrii params7D, schema răspunsului și exemple curl. Fiecare parametru trebuie listat într-un tabel; codul de exemplu este afișat ca în e2b.dev (monospace pe fond negru). Meniul lateral include și alt endpoint (ex. GET /docs/modul/{id} dacă planurile o vor cere în viitor). Include badge‑uri “Enterprise Only” pentru features premium.
+
+7. /modules
+
+Această pagină afișează catalogul M01–M50 și este inspirată de ModuleGrid:
+
+Filtare pe vectori (V1–V7) și planuri.
+
+Cardurile modulului arată: titlu, vector, descriere scurtă, tags (kpi, guardrails), un buton “Vezi detalii” care deschide un overlay cu spec complet.
+
+Butoanele “Start” vor fi dezactivate sau vor deschide paywall pentru utilizatorii fără drepturi (ex. doar M01, M10, M18 sunt free).
+
+Panoul de detalii afișează structura completă (context, cerințe, KPIs, guardrails). O mini‑hartă semio‑vectorială ar putea ilustra poziționarea fiecărui modul în cei 7 vectori.
+
+8. /guides
+
+Guiajele sunt tutoriale interactive care explică modul de utilizare al fiecărei funcționalități. Structură:
+
+Sidebar cu titlurile ghidurilor (“Cum configurezi 7D”, “Cum evaluezi un prompt”, “Cum exporti bundle-ul”).
+
+Secțiunea de conținut afișează text, imagini (de ex. capturi de ecran annotate), cod de exemplu și linkuri interne către modulul sau API-ul relevant.
+
+La finalul fiecărui ghid, include un CTA “Încearcă acum în generator” care conduce direct la /generator cu parametrii precompletați.
+
+9. /privacy & /terms
+
+Aceste pagini sunt pur legale; păstrează tipografia clară (corp text gri, titluri albe), spațiere generoasă și un fundal simplu (#0e0e0e). Folosește runa mică ca watermark discret în colțul paginii. Un link la “Contact” pentru întrebări legale se află la final.
+
+Concluzie
+
+Fiecare pagină trebuie să respecte coerența vizuală și narativă stabilită pentru homepage: paletă dark‑industrial, accente aurii, iconografie minimă, micro‑interacțiuni subtile. Generatorul este nucleul produsului – asigură‑te că fluxurile sale (selectare modul, configurare 7D, generare, editare, testare, export) sunt bine separate vizual și că gatingul pe planuri funcționează impecabil
+GitHub
+. Pagini precum pricing, dashboard și modules ar trebui să scoată în evidență valoarea și diferențiatorii (50 de module + scoring 7D), iar documentația/API reference să fie pragmatică și ușor de urmărit.
+
+
+
+
+
+Pentru pagina /modules, structura și estetica trebuie să susțină ideea că ai în față un catalog industrial de „moduli operaționali” – nu un simplu listă de template‑uri. În codul existent, ModulesPage definește deja câteva elemente cheie: tagline‑ul “50 Operational Modules. 7 Vectors. Zero Improvisation.” și mesajul care invită utilizatorul să aleagă un modul și să configureze parametrii 7‑D
+GitHub
+. În continuare găsești recomandări de design și funcționalitate pentru a face această pagină coerentă cu restul experienței PromptForge™.
+
+1. Structură și layout
+
+Header fix:
+– Afișează titlul și subtitlurile preluate din page.tsx: “50 Operational Modules. 7 Vectors. Zero Improvisation.” și “Choose your module, configure 7‑D parameters, export the artifact”
+GitHub
+. Folosește font Montserrat, font-weight 700, mărime mare (~3rem) și auriu pentru cuvintele cheie (“50”, “7 Vectors”, “Zero Improvisation”) pentru a le accentua.
+– Subtitlul folosește un ton mai mic (Open Sans, 1.1rem) și culoare gri plumb, pentru a nu concura vizual cu titlul.
+
+Bară de filtrare și căutare:
+– Include un VectorFilter orizontal cu butoane sau taguri (All, V1…V7) care respectă paleta SKRE. Butonul selectat capătă fundal auriu, celelalte rămân transparente cu border aurit.
+– SearchBar cu iconiță Phosphor “magnifying glass”; la hover borderul devine aurit. În fundal, inputul poate avea un gradient subtil pentru a ieși în evidență pe tema dark.
+
+Metrică rapidă:
+– Sub filtre, inserează un mic “insight bar” care arată câte module sunt disponibile, distribuția pe vectori și vectorul cel mai frecvent, folosind funcția getModuleStats() din lib/modules.ts. Pentru exemplu: “Total: 50 modules / Most popular vector: V2 / Distribution: V1:14, V2:13, …”.
+
+Grid de module:
+– Afisează modulele în carduri de 2–3 pe rând (responsive), cu border subțire aurit și hover glow. Fiecare card include:
+
+Numele modulului în font Montserrat (alb).
+
+Un badge cu vectorii asociați (ex. V1, V6) colorate conform schemei cromatice a vectorilor din types/promptforge.ts
+GitHub
+.
+
+Descrierea scurtă (maximum 2 linii) în gri plumb.
+
+O listă mini-iconițe pentru spec/outputs/KPIs/guardrails (cu tooltips pentru detalii).
+
+Un buton “Explore Module” (fundal aurit) care deschide un Module Detail Overlay.
+
+Module Detail Overlay:
+– Când utilizatorul selectează un modul, afișează un overlay pe centru, semi-transparent peste fundal. În acesta prezintă structura completă: Requirements, Spec, Output, KPIs, Guardrails. Folosește o prezentare tip “accordion” sau “tab” pentru a nu supraîncărca vizual.
+– Include butonul “Select & Configure 7D” care, când se apasă, îl trimite pe utilizator în pagina /generator cu modulul respectiv preselectat. În plus, afișează un link “See 7D Configuration Guide” (ancoră către /guides).
+
+2. Gating și entitlements
+
+Vizibilitate: Planurile Free pot vedea doar modulele din allowlist [M01, M10, M18]
+GitHub
+. Cardurile pentru celelalte module se afișează în tonuri de gri și au un badge “Pro / Enterprise”. La hover sau click, un popover explică ce plan este necesar pentru a accesa modulul și include un CTA “Upgrade Now” (trimite spre /pricing).
+
+Tooltip entitlements: La afișarea detaliilor modulului, dacă utilizatorul nu are dreptul de a rula testul real sau exportul bundle, butonul respectiv arată un icon “lock” cu tooltip.
+
+3. Aesthetic & UX
+
+Paleta SKRE: fundal #000 în întreaga pagină, carduri #1a1a1a, text alb/gri, accente aurii pentru acțiuni.
+
+Animații: la încărcarea paginii, gridul de module poate apărea cu o tranziție ușoară de fade‑in și slide‑up (500 ms), în concordanță cu animațiile generale din front‑end.
+
+Responsive: Pe dispozitive mobile, gridul se transformă într-o listă scrollabilă, iar bara de filtrare devine un dropdown. Filtrul vectorilor rămâne accesibil; search bar se extinde la 100% lățime.
+
+Accesibilitate: Asigură contrastul minim, focuse states vizibile și aria-label-uri pentru butoane și carduri; toate cardurile pot fi selectate și cu tastatura.
+
+4. Conținut și narativ
+
+Păstrează tonul “operational” și “ritualic”: descrierile modulelor pot conține trimiteri semiotice (“pipeline multi-agent research validation SOP cu telemetrie”), dar sunt concise.
+
+În modulul de detalii, evidențiază rolul fiecărei secțiuni: Requirements = input minim, Spec = algoritmul intern, Outputs = artefactele livrate, KPIs = metrice de succes, Guardrails = restricții.
+
+Încheie pagina cu o scurtă notă inspirată: “Zero improvizație. Totul este mapat, testat, măsurat.”
+
+Prin aceste elemente, pagina /modules va funcționa ca o vitrină pentru arsenalul PromptForge™. Ea trebuie să faciliteze explorarea, să clarifice ce face fiecare modul și să invite utilizatorul să pornească generatorul cu un modul selectat.
+
+
+
+
+
+Pentru pagina /docs, rolul principal este de a ghida utilizatorii prin arhitectura PromptForge™ (fluxuri, parametri, entitlements) și de a documenta API‑ul public. Fiind o aplicație tehnică, această pagină trebuie să combine claritatea structurii cu estetica industrială SKRE. Iată cum o poți concepe:
+
+1. Structură generală
+
+Hero de intrare:
+– Titlu mare: “PromptForge™ Documentation”.
+– Subtitlu: “Understand the protocol. Invoke reality.”, cu accent aurit pe cuvintele “protocol” și “reality”.
+– Un mic paragraf explicativ care reamintește că sistemul se bazează pe 50 de module, motorul 7D și entitlements per plan
+GitHub
+.
+
+Navigație laterală:
+– Un sidebar fix pe stânga cu linkuri către secțiunile majore: Overview, Modules API, 7D Parameters, Test Engine, Export Pipeline, Entitlements & Plans, Examples, Curl Reference.
+– Stil: fundal #0e0e0e, text alb, border subțire gri pe stânga. Itemul activ este evidențiat cu un punct aurit sau o linie verticală aurie.
+
+Search bar:
+– Deasupra conținutului, un input cu iconiță “search”, border aurit, pe fundal negru. Permite filtrarea rapidă a articolelor din documentație.
+
+Conținutul principal:
+– Paginile se încarcă în panoul principal. Fiecare secțiune are titluri cu margin‑top generos și un anchor la care se poate da copy.
+– Folosește cod blocuri pe fundal #1a1a1a, font monospace și border aurit pentru a delimita exemplele (curl, JSON).
+– Include diagrame simple (de ex. un flow chart 7D → Generate → Test → Export) și tabele pentru parametri (domain, scale, urgency etc.).
+
+2. Conținut detaliat
+
+Overview:
+– Descrie pe scurt arhitectura: motorul 7D, cele 50 module și fluxurile “Generate → Edit → Test → Export”
+GitHub
+.
+– Explică rolul fiecărei entități: modul, parametri, prompt, run_id, scoruri, etc.
+– Încheie cu un apel la acțiune: “Ready to generate? Go to /generator” (buton aurit).
+
+Modules API:
+– Explică structura modules.ts (id, name, description, requirements, spec, output, KPI, guardrails, vectors).
+– Oferă exemple de accesare a unui modul prin API: GET /api/modules/{id} (dacă se implementează) sau POST /api/run/{moduleId}.
+– Afișează un tabel cu o descriere scurtă a vectorilor V1-V7 (Strategic, Retoric, etc.) și care module aparțin fiecăruia.
+
+7D Parameters:
+– Defalcă fiecare parametru (domain, scale, urgency, complexity, resources, application, output) cu valorile posibile, efectele lor și exemple.
+– Folosește un JSON ilustrativ pentru a arăta cum arată config‑ul complet și cum este trimis în API.
+
+Test Engine:
+– Explică faptul că există un mod simulare (toți userii) și un mod real (Pro/Enterprise)
+GitHub
+.
+– Prezintă câmpurile de scor: structură, KPI compliance, claritate, executabilitate, business fit.
+– Include un exemplu de răspuns JSON cu scoruri simulate și un exemplu cu scoruri reale.
+
+Export Pipeline:
+– Arată că exporturile sunt artefacte: .txt, .md, .json, .pdf și .zip (Enterprise).
+– Explică watermark‑ul pentru trial și restricțiile pe planuri (txt/md pentru Free, pdf/json pentru Pro, zip pentru Enterprise)
+GitHub
+.
+– Oferă un exemplu de structură bundle: ce fișiere conține, formatul manifestului și cum se calculează checksum.
+
+Entitlements & Plans:
+– Prezintă tabelul capabilităților per plan (Free, Creator, Pro, Enterprise, add‑on‑uri).
+– Indică modul în care entitlements sunt controlate în front‑end (useEntitlements, withEntitlementGate) și salvate în Supabase.
+– Afișează flow‑ul de upgrade: cum se face checkout‑ul Stripe și cum se activează flagurile.
+
+Examples & Guides:
+– Include un scurt tutorial “How to generate your first prompt” cu pași și capturi (sau ASCII art).
+– Oferă un exemplu complet de request cu parametri 7D (în curl) și un răspuns complet (JSON).
+– Adaugă linkuri către /guides pentru tutoriale detaliate.
+
+3. Stil și interacțiuni
+
+Paleta SKRE: menține fundaluri întunecate, text alb și accente aurii pe titluri, linkuri și butoane.
+
+Iconografie Phosphor: folosește iconițe pentru secțiunile nav (ex. “Book” pentru docs, “Terminal” pentru API).
+
+Highlights: scoate în evidență cu cod colorat (auriu pentru chei, verde pentru valori) parametrii 7D și câmpurile din JSON pentru a spori lizibilitatea.
+
+Micro‑interacțiuni: la scroll, bară de progres laterală; la hover pe un heading, afișează un icon “link” aurit pentru copy anchor; la expandarea unui cod-block, tranziție smooth.
+
+4. Gating și redirecturi
+
+La secțiunea API, evidențiază cu un banner: “API access is available for Enterprise plans” și adaugă un CTA “Contact Sales” care trimite la /pricing.
+
+Dacă un utilizator non‑autentificat accesează /docs/api, redirecționează‑l către /login cu un mesaj clar: “You need to log in to view API documentation.”
+
+Prin organizarea acestei pagini de documentație într-un format modular, ușor de parcurs, și menținând estetica industrială PromptForge™ (fundal dark, accente aurii, elemente grafice minimaliste), vei oferi utilizatorilor o experiență profesională și coerentă. Documentația nu este doar un manual, ci o invitație la a înțelege și a utiliza „protocolul de invocare” în mod corect și responsabil.
+
+
+
+
+
+
+Pentru a păstra coerența vizuală și premium‑feel-ul PromptForge™, header‑ul și footer‑ul trebuie să respecte aceleași principii SKRE (tema dark, accente aurii și stil minimalist):
+
+Header
+• Sticky & întunecat: folosește un fundal #0e0e0e sau #000 și menține bara fixată pe ecran la scroll, astfel încât navigarea să fie mereu accesibilă.
+• Logo runic: în partea stângă plasează runa digitală; aplică un efect subtil de glow/aură pe accentul auriu pentru a atrage atenția fără să distragă.
+• Navigație clară: listează principalele secțiuni (“Generator”, “Modules”, “Pricing”, “Docs”, “Dashboard”, “About”) la dreapta; menține spațiu generos între linkuri și folosește un font sans-serif elegant (Montserrat). Linkul activ are text auriu și un underline/glow discret.
+• Acțiuni: pentru butoanele de autentificare (“Log in”, “Sign up”), folosește un stil de buton cu border aurit sau fundal auriu, astfel încât să iasă în evidență față de restul navigației.
+• Responsive & accesibilitate: pe mobil, convertește meniul într-un hamburger; menține contrastul suficient și evidențiază starea de focus pentru navigare cu tastatura.
+
+Footer
+• Fundal și delimitare: un fundal mai închis (de exemplu #0e0e0e) cu o linie aurie subțire în partea superioară pentru separare.
+• Conținut structurat: împarte footerul în două‑trei zone:
+– Linkuri legale și utilitare – Privacy Policy, Terms, API Terms, Contact;
+– Navigație secundară – About, Blog/Guides, Docs, Pricing;
+– Social & branding – o versiune miniaturală a rune‑i digitală ca watermark, plus iconițe discrete pentru eventuale canale sociale.
+• Tipografie & cromatică: folosește text gri plumb pentru linkuri obișnuite și accent aurit doar pentru linkuri interactive sau hover; menține spațieri ample pentru lizibilitate.
+• Elemente suplimentare: dacă este necesar, poți include un scurt disclaimer (“© PromptForge™ 2025. All rights reserved.”) sau un mic mesaj inspirațional (în stilul narativ al brandului) la baza footerului.
+
+Respectând aceste linii directoare, header‑ul și footer‑ul vor încadra armonios conținutul paginilor și vor comunica imediat premium‑feel‑ul PromptForge™, fără a concura cu restul elementelor vizuale.
+
+
+
+
+
+Pentru a transforma pagina /blog și șabloanele /blog/* într‑un spațiu elegant și ușor de citit, trebuie să îmbini estetica dark‑industrial PromptForge™ (paleta SKRE) cu cele mai bune practici de design de blog, inspirate de site‑urile de top. Mai jos găseşti o serie de reguli și principii concrete pentru structura, designul grafic și aranjarea textelor.
+
+1. Principii generale de design
+
+Paleta SKRE: păstrează fundaluri negre (#000 / #0e0e0e) și carduri #1a1a1a, cu accente aurii #d1a954 (pentru butoane, linkuri active) și gri plumb #5a5a5a (pentru subtitluri și borderuri)
+GitHub
+. Aurul trebuie folosit doar ca declanşator vizual (CTA-uri, linkuri esenţiale)
+GitHub
+.
+
+Tipografie și contrast: foloseşte Montserrat pentru titluri și Open Sans pentru text; menţine un contrast puternic (text deschis pe fundal închis) și alege mărimi lizibile (minim 16px pentru textul corp)
+nealschaffer.com
+. Linia de text ideală este între 50–75 de caractere
+nealschaffer.com
+, cu line-height 1.5–1.6, pentru a reduce oboseala vizuală
+nealschaffer.com
+.
+
+Lăţime optimă a containerului: limitează lăţimea zonei de conţinut la 60–70 unităţi ch (de exemplu max-width: 65ch; margin: 0 auto;) pentru o citire confortabilă
+ogalweb.com
+. Această regulă asigură că ochii cititorului nu trebuie să parcurgă linii prea lungi
+ogalweb.com
+.
+
+Structură scanabilă: foloseşte subtitluri descriptive, paragrafe scurte (max. 3–4 fraze), listări marcate şi bold pentru idei importante
+nealschaffer.com
+. Include un rezumat TL;DR la început și un Table of Contents cu ancore către secţiuni pentru a facilita skim‑ing-ul
+ogalweb.com
+.
+
+Imagini și elemente vizuale: integrează imagini de calitate, grafice și citate evidenţiate pentru a întrerupe blocurile mari de text
+ogalweb.com
+; optimizează dimensiunea și oferă text alternativ pentru accesibilitate
+nealschaffer.com
+. Păstrează echilibrul între design și conţinut – nu satura pagina cu efecte
+ogalweb.com
+.
+
+Informaţii despre autor: afişează la începutul articolului numele autorului, o fotografie şi o mini‑biografie pentru a creşte credibilitatea
+ogalweb.com
+. Leagă numele de o pagină cu mai multe articole ale autorului.
+
+Navigaţie clară și call‑to‑actions: menține header‑ul sticky cu navigaţie spre secțiuni (Home, Modules, Pricing, Blog, etc.) și un search bar. Include butoane aurii pentru acţiuni principale (ex.: abonare la newsletter).
+
+Performanță și SEO: optimizează viteza (compresie imagini, caching)
+nealschaffer.com
+, foloseşte URL‑uri scurte şi descriptive (ex. /blog/cum-functioneaza-test-engine), implementează link‑uri interne între articole relevante
+nealschaffer.com
+.
+
+2. Structura /blog
+
+Pagina /blog servește ca index pentru articole, cu filtrare și navigare intuitivă:
+
+Hero: o bandă subţire cu titlu (“Blog PromptForge™”) şi un scurt text despre misiune. Fundal negru cu un detaliu grafic subtil (de ex. un pattern din rune).
+
+Grid de articole:
+
+Carduri: Afişează imaginea de copertă (aspect 16:9), titlul, un excerpt de 2–3 rânduri și data publicării. Foloseşte un border plumb și un hover glow auriu discret.
+
+Metadate: Sub titlu, afişează domeniul (dacă există), vectorii relevanţi, autorul și timpul de citire (ex.: “5 min”).
+
+Layout: 3–4 carduri pe rând pe desktop; 1 card pe rând pe mobil; spacing generos pentru a evita aglomerarea.
+
+Filtrare și căutare: un sidebar (sau un meniu dropdown pe mobil) care permite filtrarea după vectori/teme/domenii, precum şi un search box cu iconiţă Phosphor.
+
+Articole recomandate: secţiune laterală sau sub grid cu 2–3 articole populare / recomandate.
+
+CTA: la finalul paginii, un banner dark cu text alb şi buton auriu pentru abonarea la newsletter sau încercarea generatorului.
+
+3. Structura /blog/{slug} (pagină articol)
+
+Hero & meta:
+
+Titlu mare în Montserrat (3rem+), cu accent auriu pe cuvintele-cheie.
+
+Subtitlu / tagline şi un meta‑bar sub titlu: autor, dată, timp de citire, vectori/domenii. Poziţionează această bară imediat sub titlu pentru conectarea cu autorul
+ogalweb.com
+.
+
+Dacă imaginea de copertă este reprezentativă, foloseşte un hero vizual (întins pe lăţimea optimă, dark overlay + text).
+
+Rezumat & ToC: introduce imediat după meta un paragraf TL;DR (2–3 propoziţii) şi un Table of Contents clicabil
+ogalweb.com
+. Ancorele trebuie să scrolleze lin către secţiunile respective.
+
+Corp articol:
+
+Container de maximum 65ch lăţime
+ogalweb.com
+, centrat, cu spaţiu alb (negru/gri) consistent în jur.
+
+Secţiuni clar delimitate: foloseşte heading‑uri H2/H3; paragrafe scurte; bullet points; block‑quotes stilizate (border aurit pe stânga).
+
+Imagini și infografice: integrată la fiecare 3–4 paragrafe; redimensionează pentru lăţimea containerului; adaugă caption şi alt text
+nealschaffer.com
+.
+
+Callouts / note: foloseşte carduri sau box‑uri semitransparente pentru definiţii, exemple, avertismente – acestea sparg ritmul şi îmbunătăţesc retenţia.
+
+Cod (dacă e tehnic): prezintă codul în blocuri dark (#1a1a1a) cu accent auriu; adaugă buton de copy.
+
+Linkuri interne & referinţe: foloseşte ancore spre alte articole sau pagini din site (ex. “află mai multe despre vectori”).
+
+Elemente auxiliare:
+
+Author box la final cu fotografia, biografia extinsă şi butoane spre social media ale autorului
+ogalweb.com
+.
+
+Related posts: un container cu 3 articole relevante; foloseşte carduri mini (imagine + titlu + domeniu) plasate la final sau în text
+ogalweb.com
+.
+
+Înscriere la newsletter / CTA: un banner auriu închis cu text alb la final; invită cititorii să primească update-uri sau să testeze generatorul.
+
+Comments (opţional): secţiune de comentarii moderată; design clean, cu reply threading uşor de urmărit; spaţiere generoasă între comentarii.
+
+Navigare secundară:
+
+Un breadcrumb discret (Home → Blog → Articol) la început pentru uşurinţa navigării.
+
+Un buton “Înapoi la blog” imediat după finalul articolului.
+
+Shortcut‑uri la următorul şi precedentul articol (dacă există).
+
+4. Aspecte tehnice și SEO
+
+URL friendly: utilizează structura /blog/{slug}; slugul trebuie să fie descriptiv şi fără date redundante
+nealschaffer.com
+.
+
+Schema.org: adaugă markup pentru Articol (author, datePublished, readingTime) pentru a îmbunătăţi SEO.
+
+Lazy loading: implementează încărcarea întârziată pentru imagini şi video pentru a menţine viteza
+nealschaffer.com
+.
+
+Mobile‑first: asigură-te că grila, imaginile şi fonturile se adaptează perfect pe ecran mic; ToC și meta‑bar pot fi pliate într-un meniu lateral.
+
+Accessibility: foloseşte aria-label-uri la butoane, alt text la imagini şi asigură contrast bun între text şi fundal.
+
+Prin aplicarea acestor reguli – combinând paleta SKRE cu cele mai bune practici de blog design (lăţime optimă, tipografie clară, structură scanabilă, meta‑informaţii clare, imagini de calitate)
+ogalweb.com
+nealschaffer.com
+ – vei crea un blog PromptForge™ care arată premium, este uşor de citit şi respectă atât identitatea brandului, cât şi nevoile cititorilor moderni.
+
+
+
+
+
+Instrucțiuni pentru pagina /signup
+
+Pentru a păstra coerența cu estetica PromptForge™ și a oferi o experiență de înscriere plăcută, pagina trebuie să respecte paleta SKRE, să utilizeze componentele existente și să integreze fluxul de înregistrare definit în cod. Codul actual (register/page.tsx) oferă un formular complet de înscriere cu validare și feedback
+raw.githubusercontent.com
+raw.githubusercontent.com
+; designul trebuie să îl adapteze vizual pentru tema dark‑industrial cu accente aurii.
+
+1. Layout și estetică
+
+Fundal întunecat: pagina trebuie să ocupe întreaga înălțime a ecranului (min-h-screen), cu fundal #0e0e0e și pattern discret; conținutul este centrat vertical și orizontal
+raw.githubusercontent.com
+.
+
+Card glassmorphic: formularul este plasat într-un card semi‑transparent (Card), cu border gri și colțuri rotunjite. Cardul include un CardHeader cu titlu (“Create Your Account”) și subtitlu (“Join PromptForge and start building better prompts”)
+raw.githubusercontent.com
+.
+
+Tipografie: folosește Montserrat pentru titluri și Open Sans pentru text; accentuează cu auriu elementele interactive (butoane, linkuri) și folosește gri plumb pentru descrieri.
+
+2. Structura formularului
+
+Câmpuri de introducere: formularul conține următoarele câmpuri:
+
+Full Name – obligatoriu
+raw.githubusercontent.com
+. Include o iconiță “User” în interiorul inputului
+raw.githubusercontent.com
+.
+
+Email Address – obligatoriu, cu tip email
+raw.githubusercontent.com
+raw.githubusercontent.com
+ și iconiță “Mail”.
+
+Password – obligatoriu, minim 8 caractere
+raw.githubusercontent.com
+; inputul permite afișare/ascundere parolă printr‑un buton “Eye”
+raw.githubusercontent.com
+; sub câmp se adaugă un text “Must be at least 8 characters long”
+raw.githubusercontent.com
+.
+
+Confirm Password – verifică potrivirea parolei
+raw.githubusercontent.com
+raw.githubusercontent.com
+; permite afișare/ascundere parolă.
+
+Workspace Name – obligatoriu
+raw.githubusercontent.com
+; include iconița “Building” și un buton “Auto” care completează automat numele de workspace pe baza numelui de utilizator
+raw.githubusercontent.com
+. Un text de ajutor clarifică faptul că acesta este spațiul personal pentru organizarea prompturilor
+raw.githubusercontent.com
+.
+
+Validare: la submit se apelează funcția validateForm care verifică prezența tuturor câmpurilor, lungimea parolei și potrivirea confirmării
+raw.githubusercontent.com
+. Dacă apare o eroare, un banner roșu cu iconiță AlertCircle afișează mesajul
+raw.githubusercontent.com
+.
+
+Feedback: la succes, afișează un mesaj verde (“Account created successfully! Please check your email…”) cu iconiță CheckCircle
+raw.githubusercontent.com
+; aplicația redirecționează apoi automat către /dashboard după 2 secunde
+raw.githubusercontent.com
+. Butonul principal afișează “Creating Account…” în timpul procesării și este dezactivat când loading este adevărat
+raw.githubusercontent.com
+.
+
+Link spre login: sub formular există o linie de divizare cu text “Already have an account?” și un link “Sign in to your account” care redirecționează către /auth/login
+raw.githubusercontent.com
+.
+
+3. Secțiune “Features Preview”
+
+După formular, include o secțiune care enumeră beneficiile contului gratuit: 10 monthly prompts, Basic exports, Module library și Cloud history, fiecare însoțit de o iconiță verde de validare
+raw.githubusercontent.com
+. La final, un link “View all plan features →” trimite la pagina de pricing
+raw.githubusercontent.com
+. Această secțiune reamintește utilizatorului valoarea contului gratuit și poate fi stilizată cu un border superior aurit pentru separare.
+
+4. Considerații suplimentare
+
+Accesibilitate: adaugă label‑uri htmlFor pentru fiecare input și aria-label pe butoanele de toggle parolă; asigură contrast ridicat și suport pentru navigare cu tastatura.
+
+Flux de semnare: după crearea contului, se folosește supabaseAuth.signUp urmat de supabaseAuth.signIn pentru autentificare automată
+raw.githubusercontent.com
+.
+
+Responsive: pe ecrane mobile, cardul ocupă aproape toată lățimea (max‑w-md) și păstrează spațiu suficient între câmpuri; butonul de “Auto” devine full‑width sub input dacă spațiul lateral nu permite plasarea lui la dreapta.
+
+Prin urmare, pagina /signup va fi o experiență de onboarding simplă, clară și premium, care respectă paleta dark‑aurie PromptForge™ și utilizează feedback vizual pentru a ghida utilizatorul, urmând structura și logica din componenta existentă
+raw.githubuse
+
+
+
+
+Instrucțiuni pentru /coming‑soon (Maintenance / Waitlist Page)
+
+Pagina „Coming Soon” reprezintă un modul auto‑instalat care se afișează înainte ca orice altă rută sau componentă a aplicației să fie încărcată. Conform blueprint‑ului oficial din forge_v3_coming_soon.txt, ea are rolul de a colecta înscrieri pe lista de așteptare și de a putea fi activată sau dezactivată printr‑un singur flag
+raw.githubusercontent.com
+.
+
+1. Comportament și activare
+
+Bootstrapping: La inițializarea aplicației Next.js, verifică variabila COMING_SOON=true din .env sau starea site_settings.coming_soon=on în tabelul Supabase. Dacă unul dintre ele e activ, toate cererile sunt override‑ate către /coming‑soon
+raw.githubusercontent.com
+.
+
+Isolare totală: când pagina este activată, nu se încarcă niciun alt modul, rută sau asset din PromptForge – designul și componentele vin din blueprint‑ul intern
+raw.githubusercontent.com
+. Dezactivarea paginii prin flag permite aplicației să funcționeze normal fără reziduuri
+raw.githubusercontent.com
+.
+
+Toggle API: implementează endpointul /api/toggle-coming-soon (accesibil doar admin‑ilor) care modifică valoarea în site_settings și golește eventual cookie‑ul local. Astfel, modulul poate fi activat/dezactivat dinamic
+raw.githubusercontent.com
+.
+
+2. Structură și design
+
+Încorporare în SKRE: folosește fundalul întunecat și accentele aurii ale temei PromptForge. Ecranul trebuie să fie minimalist, cu o singură secțiune centrală:
+
+Un titlu (“We’re forging something powerful.”) și un subtitlu (“Join the waitlist to be among the first”).
+
+Formularul de înscriere: două câmpuri (“Name” și “Email”), ambele obligatorii, cu validare de e‑mail și buton aurit “Join Waitlist”. Folosește iconițe discrete (User, Mail) și skeleton loader în buton în timpul submit‑ului.
+
+Mesaj de confirmare: după submit, redirectează la o pagină /thankyou unde mulțumești utilizatorului și confirmi înscrierea
+raw.githubusercontent.com
+.
+
+Includerea unei imagine animate (sparks/runes) sau un pattern de fundal subtil pentru a păstra estetica industrială.
+
+UX și accesibilitate:
+
+Utilizează animații minimaliste; respectă preferința prefers-reduced-motion.
+
+Formularele trebuie să aibă etichete clare, aria-label și mesaje de eroare prietenoase (“Please enter a valid email”).
+
+Asigură contrast bun între text și fundal; butonul de submit devine disabled când datele sunt invalide.
+
+3. Integrare cu Supabase
+
+Tabelul waitlist_signups: creează tabela waitlist_signups cu câmpuri id uuid, org_id uuid, email text unique, name text, created_at timestamptz și RLS activat
+raw.githubusercontent.com
+.
+
+Politici RLS: configurează politicile select_by_org și insert_by_org astfel încât doar membrii organizației să-și vadă înscrierile și să poată insera date
+raw.githubusercontent.com
+.
+
+Endpoint API: creează /api/waitlist care primește POST { name, email }, verifică formatul e‑mailului și deduplică (email unic). La succes, inserează în waitlist_signups și redirecționează la /thankyou
+raw.githubusercontent.com
+.
+
+4. Export și audit
+
+Bundle cu manifest: la instalare, generează automat un bundle cu 5 fișiere: prompt.txt, prompt.md, prompt.json, prompt.pdf (branded) și manifest.json + checksum.txt
+raw.githubusercontent.com
+. Acest bundle documentează spec‑ul paginii de coming‑soon (instrucțiunile de generare, schema DB și parametrii 7D).
+
+Stocare în Supabase: salvează bundle‑ul în Storage pentru audit și licențiere
+raw.githubusercontent.com
+. manifest.json trebuie să includă versiunea PromptForge, timestamp, org_id, modul (“coming_soon”) și semnătura 7D.
+
+5. Dezactivare și fallback
+
+Când COMING_SOON este dezactivat, middleware‑ul renunță la override și permite accesul la toate paginile (landing, generator etc.). Nu rămân cookie‑uri sau redirecționări reziduale
+raw.githubusercontent.com
+.
+
+Ghidarea în cadrul UI: în Admin Dashboard, adaugă un toggle vizual “Coming Soon mode” care apelează /api/toggle-coming-soon și indică dacă modul este ON/OFF.
+
+
+
+
+
+Am descris în detaliu paginile rămase (/signup și /coming‑soon); structura PromptForge™ este acum completă. Următorii pași vizează implementarea efectivă a aplicației:
+
+Scaffold proiectul conform layout‑ului indicat în blueprint: creați folderul app cu paginile /, /generator, /pricing, /dashboard, /docs/api, etc., și folderul lib pentru module, parametri, gating, exporturi, scoring și integrarea Stripe/Supabase.
+
+Crearea bazei de date: aplicați schema din db/schema.sql, importați seed‑urile (modulele M01–M50 și planurile), configurați RLS. Verificați forge_v3_backend_supabase.txt și forge_v3_backend_supabase_2.txt pentru detaliile tabelelor și politicilor.
+
+Integrați UI/UX: implementați header‑ul și footer‑ul descrise, aplicați paleta SKRE și animațiile. Pentru fiecare pagină (Landing, Generator, Modules, Pricing, Dashboard, Docs, Guides, About, Contact, Legal, Auth, Coming‑Soon) respectați layout‑urile și gating‑ul de entitlements stabilite.
+
+Implementați motorul 7‑D și catalogul de module în lib/modules.ts și lib/params.ts. Construiți componente pentru selectarea modulului, configurarea 7‑D și generarea prompturilor.
+
+Legătura cu Supabase și Stripe: configurați autentificarea, workspace‑urile, abonamentele și webhook‑urile pentru actualizarea entitlements. Asigurați‑vă că exportul, testarea live și API‑ul public sunt condiționate de plan.
+
+Construiți pipeline‑ul de exporturi: generați fișiere .txt, .md, .json, .pdf și pentru Enterprise archivați-le în bundle.zip cu checksum și manifest.
+
+Testați complet: verificați că fiecare plan are acces doar la capabilitățile permise; rulați test engine‑ul în modul simulat și live; testați exporturile și API‑ul. Asigurați‑vă că modulul Coming‑Soon poate fi activat/dezactivat prin flag și că înscrierile din waitlist se salvează corect.
+
+Cu această hartă finală, PromptForge™ poate fi lansat în condițiile stabilite (Vercel + Supabase + Stripe) și scalat ulterior cu neuroni suplimentari, marketplace și API extins.

@@ -3,13 +3,13 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-white/10">
+    <footer className="mt-24 border-t border-white/10" role="contentinfo">
       <div className="max-w-screen-xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-4 gap-8 text-sm">
         <div>
           <div className="mb-3 font-semibold">Product</div>
-          <ul className="space-y-2">
+          <ul className="space-y-2" role="list">
             <li>
-              <a href="/generator">Generator</a>
+              <Link href="/generator" className="text-gray-400 hover:text-white">Generator</Link>
             </li>
             <li>
               <Link href="/modules/" className="text-gray-400 hover:text-white">
@@ -17,43 +17,43 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <a href="/pricing">Pricing</a>
+              <Link href="/pricing" className="text-gray-400 hover:text-white">Pricing</Link>
             </li>
             <li>
-              <a href="/docs/api">Docs</a>
+              <Link href="/docs/api" className="text-gray-400 hover:text-white">Docs</Link>
             </li>
           </ul>
         </div>
         <div>
           <div className="mb-3 font-semibold">Docs</div>
-          <ul className="space-y-2">
+          <ul className="space-y-2" role="list">
             <li>
-              <a href="/docs/api">API Reference</a>
+              <Link href="/docs/api" className="text-gray-400 hover:text-white">API Reference</Link>
             </li>
             <li>
-              <a href="/docs">Guides</a>
+              <Link href="/docs" className="text-gray-400 hover:text-white">Guides</Link>
             </li>
           </ul>
         </div>
         <div>
           <div className="mb-3 font-semibold">Company</div>
-          <ul className="space-y-2">
+          <ul className="space-y-2" role="list">
             <li>
-              <a href="/about">About</a>
+              <Link href="/about" className="text-gray-400 hover:text-white">About</Link>
             </li>
             <li>
-              <a href="/contact">Contact</a>
+              <Link href="/contact" className="text-gray-400 hover:text-white">Contact</Link>
             </li>
           </ul>
         </div>
         <div>
           <div className="mb-3 font-semibold">Legal</div>
-          <ul className="space-y-2">
+          <ul className="space-y-2" role="list">
             <li>
-              <a href="/privacy">Privacy Policy</a>
+              <Link href="/privacy" className="text-gray-400 hover:text-white">Privacy Policy</Link>
             </li>
             <li>
-              <a href="/terms">Terms of Service</a>
+              <Link href="/terms" className="text-gray-400 hover:text-white">Terms of Service</Link>
             </li>
           </ul>
         </div>

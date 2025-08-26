@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -121,9 +121,18 @@ const DOMAIN_DEFAULTS: Partial<Record<string, Partial<SevenDConfig>>> = {
 interface SevenDConfiguratorProps {
   config: SevenDConfig;
   onConfigChange: (config: SevenDConfig) => void;
+  moduleDefaults?: Partial<SevenDConfig>;
 }
 
-export function SevenDConfigurator({ config, onConfigChange }: SevenDConfiguratorProps) {
+export function SevenDConfigurator({ config, onConfigChange, moduleDefaults }: SevenDConfiguratorProps) {
+  // Apply module defaults when they change
+  useEffect(() => {
+    if (moduleDefaults) {
+      const newConfig = { ...config, ...moduleDefaults };
+      onConfigChange(newConfig);
+    }
+  }, [moduleDefaults]);
+
   const handleParameterChange = (parameter: keyof SevenDConfig, value: string) => {
     const newConfig = { ...config, [parameter]: value };
     
@@ -148,6 +157,11 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
     return option?.description || "";
   };
 
+  const isParameterModified = (parameter: keyof SevenDConfig): boolean => {
+    if (!moduleDefaults) return false;
+    return config[parameter] !== moduleDefaults[parameter];
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -158,6 +172,11 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
         <CardDescription>
           Configure your prompt generation parameters using our comprehensive 7-D framework.
           Each dimension affects how your prompt is structured and optimized.
+          {moduleDefaults && (
+            <span className="block mt-2 text-sm text-muted-foreground">
+              Module defaults are pre-applied and can be customized as needed.
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -187,7 +206,12 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
 
           {/* Scale Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Scale</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Scale
+              {isParameterModified('scale') && (
+                <Badge variant="outline" className="text-xs">Modified</Badge>
+              )}
+            </label>
             <Select value={config.scale} onValueChange={(value) => handleParameterChange("scale", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select scale" />
@@ -210,7 +234,12 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
 
           {/* Urgency Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Urgency</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Urgency
+              {isParameterModified('urgency') && (
+                <Badge variant="outline" className="text-xs">Modified</Badge>
+              )}
+            </label>
             <Select value={config.urgency} onValueChange={(value) => handleParameterChange("urgency", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select urgency" />
@@ -233,7 +262,12 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
 
           {/* Complexity Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Complexity</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Complexity
+              {isParameterModified('complexity') && (
+                <Badge variant="outline" className="text-xs">Modified</Badge>
+              )}
+            </label>
             <Select value={config.complexity} onValueChange={(value) => handleParameterChange("complexity", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select complexity" />
@@ -256,7 +290,12 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
 
           {/* Resources Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Resources</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Resources
+              {isParameterModified('resources') && (
+                <Badge variant="outline" className="text-xs">Modified</Badge>
+              )}
+            </label>
             <Select value={config.resources} onValueChange={(value) => handleParameterChange("resources", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select resources" />
@@ -279,7 +318,12 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
 
           {/* Application Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Application</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Application
+              {isParameterModified('application') && (
+                <Badge variant="outline" className="text-xs">Modified</Badge>
+              )}
+            </label>
             <Select value={config.application} onValueChange={(value) => handleParameterChange("application", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select application" />
@@ -302,7 +346,12 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
 
           {/* Output Format Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Output Format</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Output Format
+              {isParameterModified('outputFormat') && (
+                <Badge variant="outline" className="text-xs">Modified</Badge>
+              )}
+            </label>
             <Select value={config.outputFormat} onValueChange={(value) => handleParameterChange("outputFormat", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select output format" />
@@ -325,7 +374,12 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
 
           {/* Vector Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Vector</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Vector
+              {isParameterModified('vector') && (
+                <Badge variant="outline" className="text-xs">Modified</Badge>
+              )}
+            </label>
             <Select value={config.vector} onValueChange={(value) => handleParameterChange("vector", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select vector" />
@@ -357,6 +411,14 @@ export function SevenDConfigurator({ config, onConfigChange }: SevenDConfigurato
             <div><span className="font-medium">Output:</span> {config.outputFormat}</div>
             <div><span className="font-medium">Vector:</span> {config.vector}</div>
           </div>
+          {moduleDefaults && (
+            <div className="mt-3 pt-3 border-t border-muted-foreground/20">
+              <p className="text-xs text-muted-foreground">
+                <span className="font-medium">Module Defaults Applied:</span> Some parameters have been pre-configured based on the selected module. 
+                You can modify any of these values to customize your prompt generation.
+              </p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

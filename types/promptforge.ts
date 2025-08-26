@@ -8,7 +8,19 @@ export interface PromptModule {
   kpi: string;
   guardrails: string;
   vectors: number[];
-  vector?: number; // Added for backward compatibility
+  vector: number; // Required for the enhanced structure
+  complexity: string; // Required for the enhanced structure
+  domain: string; // Required for the enhanced structure
+  defaultConfig: {
+    scale: string;
+    urgency: string;
+    complexity: string;
+    resources: string;
+    application: string;
+    output: string;
+    outputFormat: string;
+    vector: string;
+  }; // Required for the enhanced structure
 }
 
 export interface SessionConfig {
@@ -55,6 +67,8 @@ export interface GeneratedPrompt {
   kpiCompliance?: number;
   structureScore?: number;
   clarityScore?: number;
+  // Run tracking
+  runId?: string;
 }
 
 export interface TestResults {
@@ -91,6 +105,7 @@ export interface HistoryEntry {
   timestamp: Date;
   score?: number;
   verdict?: string;
+  runId?: string;
 }
 
 export const VECTORS = {
