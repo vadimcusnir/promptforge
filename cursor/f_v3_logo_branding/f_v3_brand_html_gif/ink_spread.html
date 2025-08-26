@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge - Ink Spread Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .logo-bg {
+            width: 100%;
+            height: 100%;
+            background: #F4B001;
+            border-radius: 30px;
+            position: absolute;
+        }
+
+        .ink-blob {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #000000;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .logo-container:hover .ink-blob {
+            opacity: 1;
+            width: 140px;
+            height: 140px;
+            border-radius: 20%;
+            animation: inkSpread 0.8s ease-out;
+        }
+
+        @keyframes inkSpread {
+            0% {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                filter: blur(0px);
+            }
+            30% {
+                width: 80px;
+                height: 80px;
+                border-radius: 40%;
+                filter: blur(2px);
+            }
+            60% {
+                width: 120px;
+                height: 120px;
+                border-radius: 30%;
+                filter: blur(1px);
+            }
+            100% {
+                width: 140px;
+                height: 140px;
+                border-radius: 20%;
+                filter: blur(0px);
+            }
+        }
+
+        .glyph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            transition-delay: 0.5s;
+        }
+
+        .logo-container:hover .glyph {
+            opacity: 1;
+        }
+
+        .glyph-path {
+            fill: #F4B001;
+            stroke: none;
+        }
+
+        .ink-drops {
+            position: absolute;
+            width: 6px;
+            height: 8px;
+            background: #000000;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0;
+            z-index: 3;
+        }
+
+        .drop-1 { top: 30%; left: 45%; }
+        .drop-2 { top: 40%; right: 35%; }
+        .drop-3 { bottom: 35%; left: 40%; }
+        .drop-4 { top: 60%; left: 30%; }
+
+        .logo-container:hover .ink-drops {
+            opacity: 1;
+            animation: inkDrip 1s ease-out;
+        }
+
+        @keyframes inkDrip {
+            0% {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(5px);
+                opacity: 0;
+            }
+        }
+
+        .title {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .ink-indicator {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #000000;
+            background: #FFD700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover .ink-indicator {
+            opacity: 1;
+        }
+
+        .ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .logo-container:hover .ripple {
+            animation: rippleEffect 0.6s ease-out;
+        }
+
+        @keyframes rippleEffect {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="ink-indicator">🖋️ INK SPREADING</div>
+        
+        <div class="ripple"></div>
+        
+        <div class="ink-drops drop-1"></div>
+        <div class="ink-drops drop-2"></div>
+        <div class="ink-drops drop-3"></div>
+        <div class="ink-drops drop-4"></div>
+        
+        <div class="logo-bg"></div>
+        <div class="ink-blob"></div>
+        
+        <svg class="glyph" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Central vertical line -->
+            <rect class="glyph-path" x="55" y="20" width="10" height="80" />
+            
+            <!-- Top diamond -->
+            <path class="glyph-path" d="M60 10 L80 30 L60 50 L40 30 Z" />
+            <rect class="glyph-path" x="55" y="25" width="10" height="20" />
+            
+            <!-- Left zigzag -->
+            <path class="glyph-path" d="M35 50 L15 70 L35 90 L25 100 L0 70 L25 40 Z" />
+            
+            <!-- Right zigzag -->
+            <path class="glyph-path" d="M85 50 L105 70 L85 90 L95 100 L120 70 L95 40 Z" />
+            
+            <!-- Bottom triangle -->
+            <path class="glyph-path" d="M60 100 L85 110 L35 110 Z" />
+            
+            <!-- Face elements -->
+            <path class="glyph-path" d="M45 75 Q60 85 75 75" stroke="#F4B001" stroke-width="3" fill="none" />
+            <rect class="glyph-path" x="55" y="90" width="10" height="8" />
+        </svg>
+        
+        <div class="title">Ink Spread</div>
+    </div>
+</body>
+</html>
+

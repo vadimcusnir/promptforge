@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Data Cube Rotation - Un cub minimalist care se rotește lent, cu fețele colorate în negru și auriu -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Definirea grupului pentru cub -->
+  <g id="cube">
+    <!-- Fața din spate (vizibilă inițial) -->
+    <polygon id="face-back" points="206,206 306,206 306,306 206,306" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+      <animate
+        attributeName="points"
+        values="206,206 306,206 306,306 206,306;
+                176,176 336,176 336,336 176,336;
+                206,206 306,206 306,306 206,306;
+                176,176 336,176 336,336 176,336;
+                206,206 306,206 306,306 206,306"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animate
+        attributeName="fill"
+        values="#5a5a5a;#FFD700;#5a5a5a;#FFD700;#5a5a5a"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Fața din stânga -->
+    <polygon id="face-left" points="206,206 206,306 156,256" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+      <animate
+        attributeName="points"
+        values="206,206 206,306 156,256;
+                176,176 176,336 116,256;
+                206,206 206,306 156,256;
+                176,176 176,336 116,256;
+                206,206 206,306 156,256"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animate
+        attributeName="fill"
+        values="#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Fața din dreapta -->
+    <polygon id="face-right" points="306,206 306,306 356,256" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+      <animate
+        attributeName="points"
+        values="306,206 306,306 356,256;
+                336,176 336,336 396,256;
+                306,206 306,306 356,256;
+                336,176 336,336 396,256;
+                306,206 306,306 356,256"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animate
+        attributeName="fill"
+        values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Fața de sus -->
+    <polygon id="face-top" points="206,206 306,206 256,156" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+      <animate
+        attributeName="points"
+        values="206,206 306,206 256,156;
+                176,176 336,176 256,116;
+                206,206 306,206 256,156;
+                176,176 336,176 256,116;
+                206,206 306,206 256,156"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animate
+        attributeName="fill"
+        values="#FFD700;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Fața de jos -->
+    <polygon id="face-bottom" points="206,306 306,306 256,356" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+      <animate
+        attributeName="points"
+        values="206,306 306,306 256,356;
+                176,336 336,336 256,396;
+                206,306 306,306 256,356;
+                176,336 336,336 256,396;
+                206,306 306,306 256,356"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animate
+        attributeName="fill"
+        values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Fața din față (apare și dispare în timpul rotației) -->
+    <polygon id="face-front" points="206,206 306,206 306,306 206,306" fill="#FFD700" stroke="#E0E0E0" stroke-width="1" opacity="0">
+      <animate
+        attributeName="opacity"
+        values="0;1;0;1;0"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animate
+        attributeName="points"
+        values="206,206 306,206 306,306 206,306;
+                176,176 336,176 336,336 176,336;
+                206,206 306,206 306,306 206,306;
+                176,176 336,176 336,336 176,336;
+                206,206 306,206 306,306 206,306"
+        keyTimes="0;0.25;0.5;0.75;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Animație de rotație pentru întregul cub -->
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="16s"
+      repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Efecte de date pentru cub -->
+  <!-- Linii de date care curg pe fețele cubului -->
+  <line id="data-line-1" x1="206" y1="226" x2="306" y2="226" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,5" opacity="0.7">
+    <animate
+      attributeName="x1"
+      values="206;176;206;176;206"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="306;336;306;336;306"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="226;196;226;196;226"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="226;196;226;196;226"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      from="0"
+      to="20"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="data-line-2" x1="206" y1="256" x2="306" y2="256" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,5" opacity="0.7">
+    <animate
+      attributeName="x1"
+      values="206;176;206;176;206"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="306;336;306;336;306"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="256;256;256;256;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="256;256;256;256;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      from="0"
+      to="-20"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="data-line-3" x1="206" y1="286" x2="306" y2="286" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,5" opacity="0.7">
+    <animate
+      attributeName="x1"
+      values="206;176;206;176;206"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="306;336;306;336;306"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="286;316;286;316;286"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="286;316;286;316;286"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      from="0"
+      to="20"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Puncte de date care pulsează la colțurile cubului -->
+  <circle id="data-point-1" cx="206" cy="206" r="4" fill="#FFD700" opacity="0.7">
+    <animate
+      attributeName="cx"
+      values="206;176;206;176;206"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="206;176;206;176;206"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="4;5;4;3;4"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="data-point-2" cx="306" cy="206" r="4" fill="#FFD700" opacity="0.7">
+    <animate
+      attributeName="cx"
+      values="306;336;306;336;306"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="206;176;206;176;206"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="4;3;4;5;4"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="data-point-3" cx="306" cy="306" r="4" fill="#FFD700" opacity="0.7">
+    <animate
+      attributeName="cx"
+      values="306;336;306;336;306"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="306;336;306;336;306"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="4;5;4;3;4"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="data-point-4" cx="206" cy="306" r="4" fill="#FFD700" opacity="0.7">
+    <animate
+      attributeName="cx"
+      values="206;176;206;176;206"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="306;336;306;336;306"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="4;3;4;5;4"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Text "DATA CUBE" -->
+  <text x="256" y="416" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">DATA CUBE</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Data Cube Rotation</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un cub minimalist care se rotește lent, cu fețele colorate în negru și auriu, reprezentând transformarea datelor. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

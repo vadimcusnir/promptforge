@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Clock Minimal - un ceas 2D fără cifre, doar cu limbile; secundarul accelerează brusc -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Cadranul ceasului -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Marcaje pentru ore (12 linii) -->
+  <line x1="256" y1="116" x2="256" y2="136" stroke="#E0E0E0" stroke-width="2"/> <!-- 12 -->
+  <line x1="326" y1="136" x2="316" y2="152" stroke="#E0E0E0" stroke-width="2"/> <!-- 1 -->
+  <line x1="376" y1="186" x2="360" y2="196" stroke="#E0E0E0" stroke-width="2"/> <!-- 2 -->
+  <line x1="396" y1="256" x2="376" y2="256" stroke="#E0E0E0" stroke-width="2"/> <!-- 3 -->
+  <line x1="376" y1="326" x2="360" y2="316" stroke="#E0E0E0" stroke-width="2"/> <!-- 4 -->
+  <line x1="326" y1="376" x2="316" y2="360" stroke="#E0E0E0" stroke-width="2"/> <!-- 5 -->
+  <line x1="256" y1="396" x2="256" y2="376" stroke="#E0E0E0" stroke-width="2"/> <!-- 6 -->
+  <line x1="186" y1="376" x2="196" y2="360" stroke="#E0E0E0" stroke-width="2"/> <!-- 7 -->
+  <line x1="136" y1="326" x2="152" y2="316" stroke="#E0E0E0" stroke-width="2"/> <!-- 8 -->
+  <line x1="116" y1="256" x2="136" y2="256" stroke="#E0E0E0" stroke-width="2"/> <!-- 9 -->
+  <line x1="136" y1="186" x2="152" y2="196" stroke="#E0E0E0" stroke-width="2"/> <!-- 10 -->
+  <line x1="186" y1="136" x2="196" y2="152" stroke="#E0E0E0" stroke-width="2"/> <!-- 11 -->
+  
+  <!-- Centrul ceasului -->
+  <circle cx="256" cy="256" r="8" fill="#FFD700"/>
+  
+  <!-- Limba pentru ore (cea mai scurtă) -->
+  <line id="hour-hand" x1="256" y1="256" x2="256" y2="196" stroke="#E0E0E0" stroke-width="4" stroke-linecap="round">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="60s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Limba pentru minute (medie) -->
+  <line id="minute-hand" x1="256" y1="256" x2="256" y2="156" stroke="#E0E0E0" stroke-width="3" stroke-linecap="round">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="30s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Limba pentru secunde (cea mai lungă, roșie) -->
+  <line id="second-hand" x1="256" y1="256" x2="256" y2="136" stroke="#FF0000" stroke-width="2" stroke-linecap="round">
+    <!-- Animație normală pentru secundar -->
+    <animateTransform
+      id="normal-rotation"
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="10s"
+      repeatCount="indefinite"
+      begin="0s; fast-rotation.end"/>
+    
+    <!-- Animație accelerată pentru secundar (simbolizând "timp pierdut") -->
+    <animateTransform
+      id="fast-rotation"
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="720 256 256"
+      dur="2s"
+      repeatCount="1"
+      begin="normal-rotation.end"/>
+  </line>
+  
+  <!-- Efect de umbră pentru secundar când accelerează -->
+  <line id="second-hand-shadow" x1="256" y1="256" x2="256" y2="136" stroke="#FF0000" stroke-width="2" stroke-linecap="round" opacity="0">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="720 256 256"
+      dur="2s"
+      repeatCount="1"
+      begin="normal-rotation.end"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="1"
+      begin="normal-rotation.end"/>
+  </line>
+  
+  <!-- Text "TIME LOST" care apare când secundarul accelerează -->
+  <text id="time-lost-text" x="256" y="340" font-family="'JetBrains Mono', monospace" font-size="16" fill="#FF0000" text-anchor="middle" opacity="0">
+    TIME LOST
+    <animate
+      attributeName="opacity"
+      values="0;1;1;0"
+      keyTimes="0;0.1;0.9;1"
+      dur="2s"
+      repeatCount="1"
+      begin="normal-rotation.end"/>
+  </text>
+  
+  <!-- Cerc de pulsație care apare când secundarul accelerează -->
+  <circle id="pulse-circle" cx="256" cy="256" r="0" fill="none" stroke="#FF0000" stroke-width="2" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;160"
+      keyTimes="0;1"
+      dur="2s"
+      repeatCount="1"
+      begin="normal-rotation.end"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.5;0"
+      keyTimes="0;1"
+      dur="2s"
+      repeatCount="1"
+      begin="normal-rotation.end"/>
+  </circle>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Clock Minimal</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un ceas 2D fără cifre, doar cu limbile; secundarul accelerează brusc, simbolizând „timp pierdut". Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Steaua cu 8 colțuri - un simbol geometric cu semnificație ezoterică -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru stea -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior (contur) -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Cercul interior (contur) -->
+  <circle id="inner-circle" cx="256" cy="256" r="70" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Steaua cu 8 colțuri (linii) -->
+  <!-- Linia 1 (orizontală) -->
+  <line id="line-1" x1="116" y1="256" x2="396" y2="256" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (verticală) -->
+  <line id="line-2" x1="256" y1="116" x2="256" y2="396" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#FFD700;#E0E0E0;#E0E0E0"
+      keyTimes="0;0.125;0.625;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (diagonală 1) -->
+  <line id="line-3" x1="159" y1="159" x2="353" y2="353" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#FFD700;#E0E0E0;#E0E0E0;#E0E0E0"
+      keyTimes="0;0.25;0.25;0.75;0.75;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (diagonală 2) -->
+  <line id="line-4" x1="353" y1="159" x2="159" y2="353" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FFD700;#E0E0E0;#E0E0E0;#E0E0E0"
+      keyTimes="0;0.375;0.375;0.375;0.875;0.875;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Punctele de intersecție ale stelei -->
+  <!-- Punct 1 (dreapta) -->
+  <circle id="point-1" cx="396" cy="256" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct 2 (sus) -->
+  <circle id="point-2" cx="256" cy="116" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a"
+      keyTimes="0;0.125;0.625;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;8;6;6"
+      keyTimes="0;0.125;0.625;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct 3 (stânga) -->
+  <circle id="point-3" cx="116" cy="256" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#5a5a5a"
+      keyTimes="0;0.25;0.25;0.5;0.75;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;8;6;6;6"
+      keyTimes="0;0.25;0.25;0.5;0.75;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct 4 (jos) -->
+  <circle id="point-4" cx="256" cy="396" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#5a5a5a"
+      keyTimes="0;0.375;0.375;0.375;0.625;0.875;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;6;8;6;6;6"
+      keyTimes="0;0.375;0.375;0.375;0.625;0.875;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct 5 (dreapta sus) -->
+  <circle id="point-5" cx="353" cy="159" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#5a5a5a"
+      keyTimes="0;0.5;0.5;0.5;0.5;0.75;0.875;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;6;6;8;6;6;6"
+      keyTimes="0;0.5;0.5;0.5;0.5;0.75;0.875;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct 6 (dreapta jos) -->
+  <circle id="point-6" cx="353" cy="353" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#5a5a5a"
+      keyTimes="0;0.625;0.625;0.625;0.625;0.625;0.75;0.875;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;6;6;6;8;6;6;6"
+      keyTimes="0;0.625;0.625;0.625;0.625;0.625;0.75;0.875;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct 7 (stânga jos) -->
+  <circle id="point-7" cx="159" cy="353" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#5a5a5a"
+      keyTimes="0;0.75;0.75;0.75;0.75;0.75;0.75;0.875;0.9375;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;6;6;6;6;8;6;6;6"
+      keyTimes="0;0.75;0.75;0.75;0.75;0.75;0.75;0.875;0.9375;1;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct 8 (stânga sus) -->
+  <circle id="point-8" cx="159" cy="159" r="6" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.875;0.875;0.875;0.875;0.875;0.875;0.875;0.9375;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;6;6;6;6;6;8;6"
+      keyTimes="0;0.875;0.875;0.875;0.875;0.875;0.875;0.875;0.9375;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Centrul stelei -->
+  <circle id="center" cx="256" cy="256" r="10" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="10;12;10;12;10"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de rotație pentru stea -->
+  <g id="star-rotation">
+    <!-- Linii de energie care radiază din centru -->
+    <line id="energy-line-1" x1="256" y1="256" x2="306" y2="256" stroke="#FFD700" stroke-width="1" opacity="0.5">
+      <animate
+        attributeName="x2"
+        values="306;396;306"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      <animate
+        attributeName="opacity"
+        values="0.5;0.8;0.5"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 256 256"
+        to="360 256 256"
+        dur="16s"
+        repeatCount="indefinite"/>
+    </line>
+    
+    <line id="energy-line-2" x1="256" y1="256" x2="256" y2="206" stroke="#FFD700" stroke-width="1" opacity="0.5">
+      <animate
+        attributeName="y2"
+        values="206;116;206"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      <animate
+        attributeName="opacity"
+        values="0.5;0.8;0.5"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="45 256 256"
+        to="405 256 256"
+        dur="16s"
+        repeatCount="indefinite"/>
+    </line>
+    
+    <line id="energy-line-3" x1="256" y1="256" x2="206" y2="256" stroke="#FFD700" stroke-width="1" opacity="0.5">
+      <animate
+        attributeName="x2"
+        values="206;116;206"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      <animate
+        attributeName="opacity"
+        values="0.5;0.8;0.5"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="90 256 256"
+        to="450 256 256"
+        dur="16s"
+        repeatCount="indefinite"/>
+    </line>
+    
+    <line id="energy-line-4" x1="256" y1="256" x2="256" y2="306" stroke="#FFD700" stroke-width="1" opacity="0.5">
+      <animate
+        attributeName="y2"
+        values="306;396;306"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      <animate
+        attributeName="opacity"
+        values="0.5;0.8;0.5"
+        keyTimes="0;0.5;1"
+        dur="8s"
+        repeatCount="indefinite"/>
+      
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="135 256 256"
+        to="495 256 256"
+        dur="16s"
+        repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Simboluri ezoterice care apar la colțurile stelei -->
+  <text id="symbol-1" x="396" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">🜁
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-2" x="256" y="116" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">🜂
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;1;0"
+      keyTimes="0;0.575;0.575;0.575;0.625;0.675"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-3" x="116" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">🜃
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;1;0"
+      keyTimes="0;0.7;0.7;0.7;0.7;0.7;0.75;0.8"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-4" x="256" y="396" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">🜄
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;1;0"
+      keyTimes="0;0.825;0.825;0.825;0.825;0.825;0.825;0.825;0.875;0.925"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "STEAUA CU 8 COLȚURI" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">STEAUA CU 8 COLȚURI</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Steaua cu 8 colțuri</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol geometric cu semnificație ezoterică. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

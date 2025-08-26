@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Masca de gaz - un simbol al filtrării și protecției -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru mască -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Masca de gaz (contur) -->
+  <!-- Partea principală a măștii -->
+  <path id="mask-body" d="M256 156 C196 156 156 196 156 256 C156 316 196 356 256 356 C316 356 356 316 356 256 C356 196 316 156 256 156 Z" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Ochii măștii -->
+  <!-- Ochiul stâng -->
+  <ellipse id="left-eye" cx="216" cy="216" rx="40" ry="30" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Ochiul drept -->
+  <ellipse id="right-eye" cx="296" cy="216" rx="40" ry="30" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Filtrul măștii -->
+  <rect id="filter-base" x="236" y="266" width="40" height="60" rx="10" ry="10" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Linii de filtru -->
+  <line id="filter-line-1" x1="246" y1="276" x2="266" y2="276" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="filter-line-2" x1="246" y1="286" x2="266" y2="286" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="filter-line-3" x1="246" y1="296" x2="266" y2="296" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="filter-line-4" x1="246" y1="306" x2="266" y2="306" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Curele pentru mască -->
+  <path id="strap-top" d="M176 196 C156 176 136 176 116 196" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <path id="strap-bottom" d="M176 316 C156 336 136 336 116 316" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <path id="strap-top-right" d="M336 196 C356 176 376 176 396 196" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <path id="strap-bottom-right" d="M336 316 C356 336 376 336 396 316" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de filtrare -->
+  <!-- Particule care intră în filtru -->
+  <circle id="particle-1" cx="216" cy="216" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cx"
+      values="216;236;256"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="216;246;276"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-2" cx="296" cy="216" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.3"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cx"
+      values="296;276;256"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="216;246;276"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-3" cx="256" cy="196" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.2;0.3;0.4"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cx"
+      values="256;256;256"
+      keyTimes="0;0.2;0.3"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="196;236;276"
+      keyTimes="0;0.2;0.3"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particule filtrate care ies din filtru -->
+  <circle id="filtered-particle-1" cx="256" cy="326" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.2;0.3;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="326;336;346"
+      keyTimes="0;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="filtered-particle-2" cx="246" cy="326" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.3;0.4;0.5;0.5;0.6;0.7"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="326;336;346"
+      keyTimes="0;0.6;0.7"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="filtered-particle-3" cx="266" cy="326" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.4;0.5;0.6;0.6;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="326;336;346"
+      keyTimes="0;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru ochi -->
+  <ellipse id="left-eye-pulse" cx="216" cy="216" rx="40" ry="30" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0;0;0;0;0.2;0"
+      keyTimes="0;0.1;0.2;0.3;0.6;0.7;0.8;0.9"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <ellipse id="right-eye-pulse" cx="296" cy="216" rx="40" ry="30" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.2;0;0;0;0;0.2;0"
+      keyTimes="0;0.1;0.2;0.3;0.6;0.7;0.7;0.8;0.9"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Efecte de pulsație pentru filtru -->
+  <rect id="filter-pulse" x="236" y="266" width="40" height="60" rx="10" ry="10" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.2;0;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Simboluri pentru filtrare -->
+  <text id="filter-symbol-1" x="256" y="286" font-family="'Space Grotesk', sans-serif" font-size="12" fill="#FFD700" text-anchor="middle" opacity="0">✕
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.3;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="filter-symbol-2" x="256" y="306" font-family="'Space Grotesk', sans-serif" font-size="12" fill="#FFD700" text-anchor="middle" opacity="0">✓
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.4;0.5;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "MASCA DE GAZ" -->
+  <text x="256" y="416" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">MASCA DE GAZ</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Masca de gaz</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al filtrării și protecției. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

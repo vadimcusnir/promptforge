@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge - Triumph Lines Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .logo-bg {
+            width: 100%;
+            height: 100%;
+            background: #F4B001;
+            border-radius: 30px;
+            position: absolute;
+        }
+
+        .glyph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+        }
+
+        .glyph-path {
+            fill: #000000;
+            stroke: none;
+        }
+
+        .triumph-line {
+            position: absolute;
+            width: 3px;
+            background: linear-gradient(to top, #FFD700, #FFFFFF, #FFD700);
+            border-radius: 2px;
+            opacity: 0;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .line-1 {
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%) scaleY(0);
+            height: 50px;
+        }
+
+        .line-2 {
+            top: -80px;
+            left: 40%;
+            transform: translateX(-50%) scaleY(0);
+            height: 70px;
+        }
+
+        .line-3 {
+            top: -80px;
+            left: 60%;
+            transform: translateX(-50%) scaleY(0);
+            height: 70px;
+        }
+
+        .logo-container:hover .line-1 {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+            transition-delay: 0.1s;
+        }
+
+        .logo-container:hover .line-2 {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+            transition-delay: 0.2s;
+        }
+
+        .logo-container:hover .line-3 {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+            transition-delay: 0.3s;
+        }
+
+        .crown-glow {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 40px;
+            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            transition-delay: 0.4s;
+        }
+
+        .logo-container:hover .crown-glow {
+            opacity: 1;
+        }
+
+        .victory-sparks {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 8px #FFD700;
+        }
+
+        .spark-1 { top: -30px; left: 30%; }
+        .spark-2 { top: -50px; left: 70%; }
+        .spark-3 { top: -40px; left: 50%; }
+        .spark-4 { top: -60px; left: 45%; }
+        .spark-5 { top: -60px; left: 55%; }
+
+        .logo-container:hover .victory-sparks {
+            opacity: 1;
+            animation: victorySpark 1.5s ease-out infinite;
+        }
+
+        @keyframes victorySpark {
+            0%, 100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5) translateY(-10px);
+                opacity: 0.5;
+            }
+        }
+
+        .triumph-rays {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            transition-delay: 0.5s;
+        }
+
+        .logo-container:hover .triumph-rays {
+            opacity: 1;
+            animation: rayRotation 4s linear infinite;
+        }
+
+        @keyframes rayRotation {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .ray {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to top, transparent, rgba(255, 215, 0, 0.3), transparent);
+            transform-origin: bottom;
+        }
+
+        .ray-1 { transform: translate(-50%, -100%) rotate(0deg); }
+        .ray-2 { transform: translate(-50%, -100%) rotate(45deg); }
+        .ray-3 { transform: translate(-50%, -100%) rotate(90deg); }
+        .ray-4 { transform: translate(-50%, -100%) rotate(135deg); }
+        .ray-5 { transform: translate(-50%, -100%) rotate(180deg); }
+        .ray-6 { transform: translate(-50%, -100%) rotate(225deg); }
+        .ray-7 { transform: translate(-50%, -100%) rotate(270deg); }
+        .ray-8 { transform: translate(-50%, -100%) rotate(315deg); }
+
+        .title {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .triumph-indicator {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 0 10px #FFD700;
+        }
+
+        .logo-container:hover .triumph-indicator {
+            opacity: 1;
+            animation: triumphText 2s ease-in-out infinite;
+        }
+
+        @keyframes triumphText {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="triumph-indicator">👑 TRIUMPH ACHIEVED 👑</div>
+        
+        <div class="triumph-rays">
+            <div class="ray ray-1"></div>
+            <div class="ray ray-2"></div>
+            <div class="ray ray-3"></div>
+            <div class="ray ray-4"></div>
+            <div class="ray ray-5"></div>
+            <div class="ray ray-6"></div>
+            <div class="ray ray-7"></div>
+            <div class="ray ray-8"></div>
+        </div>
+        
+        <div class="triumph-line line-1"></div>
+        <div class="triumph-line line-2"></div>
+        <div class="triumph-line line-3"></div>
+        
+        <div class="crown-glow"></div>
+        
+        <div class="victory-sparks spark-1"></div>
+        <div class="victory-sparks spark-2"></div>
+        <div class="victory-sparks spark-3"></div>
+        <div class="victory-sparks spark-4"></div>
+        <div class="victory-sparks spark-5"></div>
+        
+        <div class="logo-bg"></div>
+        <svg class="glyph" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Central vertical line -->
+            <rect class="glyph-path" x="55" y="20" width="10" height="80" />
+            
+            <!-- Top diamond -->
+            <path class="glyph-path" d="M60 10 L80 30 L60 50 L40 30 Z" />
+            <rect class="glyph-path" x="55" y="25" width="10" height="20" />
+            
+            <!-- Left zigzag -->
+            <path class="glyph-path" d="M35 50 L15 70 L35 90 L25 100 L0 70 L25 40 Z" />
+            
+            <!-- Right zigzag -->
+            <path class="glyph-path" d="M85 50 L105 70 L85 90 L95 100 L120 70 L95 40 Z" />
+            
+            <!-- Bottom triangle -->
+            <path class="glyph-path" d="M60 100 L85 110 L35 110 Z" />
+            
+            <!-- Face elements -->
+            <path class="glyph-path" d="M45 75 Q60 85 75 75" stroke="#000000" stroke-width="3" fill="none" />
+            <rect class="glyph-path" x="55" y="90" width="10" height="8" />
+        </svg>
+        
+        <div class="title">Triumph Lines</div>
+    </div>
+</body>
+</html>
+

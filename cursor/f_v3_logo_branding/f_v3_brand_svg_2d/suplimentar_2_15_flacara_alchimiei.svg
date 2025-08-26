@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Flacăra Alchimiei - un simbol al transformării și purificării -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru flacără -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Vasul alchimic (baza) -->
+  <path id="vessel-base" d="M196 336 L316 336 L306 316 L206 316 Z" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="300" stroke-dashoffset="300">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="300;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vasul alchimic (corpul) -->
+  <path id="vessel-body" d="M206 316 L226 256 L286 256 L306 316" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="300" stroke-dashoffset="300">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="300;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="2s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Flacăra principală -->
+  <path id="main-flame" d="M256 256 Q246 226 256 196 Q266 226 256 256" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="300" stroke-dashoffset="300">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="300;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="d"
+      values="M256 256 Q246 226 256 196 Q266 226 256 256;M256 256 Q246 216 256 176 Q266 216 256 256;M256 256 Q246 226 256 196 Q266 226 256 256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Flacăra secundară (stânga) -->
+  <path id="left-flame" d="M246 256 Q241 236 246 216 Q251 236 246 256" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="200" stroke-dashoffset="200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="200;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="d"
+      values="M246 256 Q241 236 246 216 Q251 236 246 256;M246 256 Q241 226 246 196 Q251 226 246 256;M246 256 Q241 236 246 216 Q251 236 246 256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Flacăra secundară (dreapta) -->
+  <path id="right-flame" d="M266 256 Q261 236 266 216 Q271 236 266 256" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="200" stroke-dashoffset="200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="200;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="5.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="7s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="d"
+      values="M266 256 Q271 236 266 216 Q261 236 266 256;M266 256 Q271 226 266 196 Q261 226 266 256;M266 256 Q271 236 266 216 Q261 236 266 256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Particule de flacără -->
+  <!-- Particula 1 -->
+  <circle id="flame-particle-1" cx="256" cy="196" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="196;176;156"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0.4;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 2 -->
+  <circle id="flame-particle-2" cx="246" cy="216" r="2" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="216;196;176"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="0.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0.4;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="0.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 3 -->
+  <circle id="flame-particle-3" cx="266" cy="216" r="2" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="216;196;176"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="1s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0.4;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="1s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 4 -->
+  <circle id="flame-particle-4" cx="251" cy="206" r="2" fill="#FF0000" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="206;186;166"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0.4;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 5 -->
+  <circle id="flame-particle-5" cx="261" cy="206" r="2" fill="#FF0000" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="206;186;166"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="0.75s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0.4;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="0.75s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri alchimice -->
+  <!-- Simbolul aerului -->
+  <path id="air-symbol" d="M236 176 L276 176 L256 156 Z" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="9s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Simbolul focului -->
+  <path id="fire-symbol" d="M236 196 L276 196 L256 216 Z" fill="none" stroke="#FF0000" stroke-width="1.5" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="10s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="11s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Simbolul apei -->
+  <path id="water-symbol" d="M236 236 L276 236 L256 216 Z" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="12s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="13s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Simbolul pământului -->
+  <path id="earth-symbol" d="M236 256 L276 256 L256 276 Z" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="14s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="15s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Simbolul quintessenței -->
+  <circle id="quintessence-symbol" cx="256" cy="216" r="30" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="188" stroke-dashoffset="188" opacity="0">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="188;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="16s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="17.5s"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru flacără -->
+  <path id="pulse-flame" d="M256 256 Q246 216 256 176 Q266 216 256 256" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de glitch pentru flacără -->
+  <path id="glitch-flame" d="M256 256 Q246 216 256 176 Q266 216 256 256" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Text pentru fazele alchimice -->
+  <!-- Nigredo (înnegrire) -->
+  <text id="nigredo-text" x="256" y="296" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">NIGREDO
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="8s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Albedo (albire) -->
+  <text id="albedo-text" x="256" y="296" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">ALBEDO
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="11s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Citrinitas (îngălbenire) -->
+  <text id="citrinitas-text" x="256" y="296" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">CITRINITAS
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="14s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Rubedo (înroșire) -->
+  <text id="rubedo-text" x="256" y="296" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FF0000" text-anchor="middle" opacity="0">RUBEDO
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.4;0.7;0.95;1"
+      dur="3s"
+      begin="17s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "FLACĂRA ALCHIMIEI" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">FLACĂRA ALCHIMIEI</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Flacăra Alchimiei</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al transformării și purificării. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

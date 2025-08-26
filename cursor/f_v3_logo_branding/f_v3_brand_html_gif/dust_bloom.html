@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge - Dust Bloom Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .logo-bg {
+            width: 100%;
+            height: 100%;
+            background: #F4B001;
+            border-radius: 30px;
+            position: absolute;
+        }
+
+        .glyph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+        }
+
+        .glyph-path {
+            fill: #000000;
+            stroke: none;
+        }
+
+        .dust-particle {
+            position: absolute;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .dust-small {
+            width: 2px;
+            height: 2px;
+        }
+
+        .dust-medium {
+            width: 4px;
+            height: 4px;
+        }
+
+        .dust-large {
+            width: 6px;
+            height: 6px;
+        }
+
+        .logo-container:hover .dust-particle {
+            animation: dustBloom 2s ease-out forwards;
+        }
+
+        @keyframes dustBloom {
+            0% {
+                opacity: 0;
+                transform: scale(0) translate(0, 0);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(1) translate(0, 0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5) translate(var(--drift-x), var(--drift-y));
+            }
+        }
+
+        .dust-1 { top: 50%; left: 50%; --drift-x: -30px; --drift-y: -40px; animation-delay: 0s; }
+        .dust-2 { top: 45%; left: 55%; --drift-x: 25px; --drift-y: -35px; animation-delay: 0.1s; }
+        .dust-3 { top: 55%; left: 45%; --drift-x: -20px; --drift-y: 30px; animation-delay: 0.2s; }
+        .dust-4 { top: 40%; left: 60%; --drift-x: 35px; --drift-y: -20px; animation-delay: 0.15s; }
+        .dust-5 { top: 60%; left: 40%; --drift-x: -25px; --drift-y: 25px; animation-delay: 0.25s; }
+        .dust-6 { top: 35%; left: 50%; --drift-x: 0px; --drift-y: -45px; animation-delay: 0.3s; }
+        .dust-7 { top: 65%; left: 50%; --drift-x: 0px; --drift-y: 40px; animation-delay: 0.35s; }
+        .dust-8 { top: 50%; left: 35%; --drift-x: -40px; --drift-y: 0px; animation-delay: 0.4s; }
+        .dust-9 { top: 50%; left: 65%; --drift-x: 40px; --drift-y: 0px; animation-delay: 0.45s; }
+        .dust-10 { top: 42%; left: 42%; --drift-x: -30px; --drift-y: -30px; animation-delay: 0.5s; }
+        .dust-11 { top: 58%; left: 58%; --drift-x: 30px; --drift-y: 30px; animation-delay: 0.55s; }
+        .dust-12 { top: 42%; left: 58%; --drift-x: 30px; --drift-y: -30px; animation-delay: 0.6s; }
+
+        .bloom-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #FFD700, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .logo-container:hover .bloom-center {
+            animation: centerBloom 1.5s ease-out;
+        }
+
+        @keyframes centerBloom {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            30% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(4);
+            }
+        }
+
+        .title {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .bloom-indicator {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover .bloom-indicator {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="bloom-indicator">✨ DUST BLOOM ACTIVE ✨</div>
+        
+        <div class="bloom-center"></div>
+        
+        <div class="dust-particle dust-small dust-1"></div>
+        <div class="dust-particle dust-medium dust-2"></div>
+        <div class="dust-particle dust-small dust-3"></div>
+        <div class="dust-particle dust-large dust-4"></div>
+        <div class="dust-particle dust-medium dust-5"></div>
+        <div class="dust-particle dust-small dust-6"></div>
+        <div class="dust-particle dust-medium dust-7"></div>
+        <div class="dust-particle dust-large dust-8"></div>
+        <div class="dust-particle dust-small dust-9"></div>
+        <div class="dust-particle dust-medium dust-10"></div>
+        <div class="dust-particle dust-small dust-11"></div>
+        <div class="dust-particle dust-large dust-12"></div>
+        
+        <div class="logo-bg"></div>
+        <svg class="glyph" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Central vertical line -->
+            <rect class="glyph-path" x="55" y="20" width="10" height="80" />
+            
+            <!-- Top diamond -->
+            <path class="glyph-path" d="M60 10 L80 30 L60 50 L40 30 Z" />
+            <rect class="glyph-path" x="55" y="25" width="10" height="20" />
+            
+            <!-- Left zigzag -->
+            <path class="glyph-path" d="M35 50 L15 70 L35 90 L25 100 L0 70 L25 40 Z" />
+            
+            <!-- Right zigzag -->
+            <path class="glyph-path" d="M85 50 L105 70 L85 90 L95 100 L120 70 L95 40 Z" />
+            
+            <!-- Bottom triangle -->
+            <path class="glyph-path" d="M60 100 L85 110 L35 110 Z" />
+            
+            <!-- Face elements -->
+            <path class="glyph-path" d="M45 75 Q60 85 75 75" stroke="#000000" stroke-width="3" fill="none" />
+            <rect class="glyph-path" x="55" y="90" width="10" height="8" />
+        </svg>
+        <div class="title">Dust Bloom</div>
+    </div>
+</body>
+</html>
+

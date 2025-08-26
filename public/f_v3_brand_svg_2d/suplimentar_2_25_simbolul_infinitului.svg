@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simbolul Infinitului - un simbol al continuității și al ciclurilor eterne -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru simbol -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Simbolul infinitului (conturul) -->
+  <path id="infinity-path" d="M196 256 C196 226 226 196 256 196 C286 196 316 226 316 256 C316 286 286 316 256 316 C226 316 196 286 196 256 Z" fill="none" stroke="#E0E0E0" stroke-width="0" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="d"
+      values="M196 256 C196 226 226 196 256 196 C286 196 316 226 316 256 C316 286 286 316 256 316 C226 316 196 286 196 256 Z;M176 256 C176 226 206 196 236 196 C266 196 296 226 296 256 C296 286 266 316 236 316 C206 316 176 286 176 256 Z M216 256 C216 226 246 196 276 196 C306 196 336 226 336 256 C336 286 306 316 276 316 C246 316 216 286 216 256 Z;M176 256 C176 226 206 196 236 196 C266 196 296 226 296 256 C296 286 266 316 236 316 C206 316 176 286 176 256 Z M216 256 C216 226 246 196 276 196 C306 196 336 226 336 256 C336 286 306 316 276 316 C246 316 216 286 216 256 Z"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="0;3"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Particula care circulă pe traiectoria infinitului (stânga) -->
+  <circle id="infinity-particle-left" cx="176" cy="256" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="3.5s"
+      fill="freeze"/>
+    
+    <animateMotion
+      path="M0 0 C0 -30 30 -60 60 -60 C90 -60 120 -30 120 0 C120 30 90 60 60 60 C30 60 0 30 0 0 Z"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;7;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula care circulă pe traiectoria infinitului (dreapta) -->
+  <circle id="infinity-particle-right" cx="336" cy="256" r="5" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animateMotion
+      path="M120 0 C120 -30 90 -60 60 -60 C30 -60 0 -30 0 0 C0 30 30 60 60 60 C90 60 120 30 120 0 Z"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;7;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Centrul simbolului infinitului (intersecția) -->
+  <circle id="infinity-center" cx="256" cy="256" r="6" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Linii de energie care radiază din centrul simbolului -->
+  <!-- Linia 1 (sus) -->
+  <line id="energy-line-1" x1="256" y1="256" x2="256" y2="216" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (dreapta) -->
+  <line id="energy-line-2" x1="256" y1="256" x2="296" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="2s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (jos) -->
+  <line id="energy-line-3" x1="256" y1="256" x2="256" y2="296" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (stânga) -->
+  <line id="energy-line-4" x1="256" y1="256" x2="216" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="2s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Particule secundare care circulă pe traiectoria infinitului -->
+  <!-- Particula secundară 1 -->
+  <circle id="secondary-particle-1" cx="176" cy="256" r="3" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animateMotion
+      path="M0 0 C0 -30 30 -60 60 -60 C90 -60 120 -30 120 0 C120 30 90 60 60 60 C30 60 0 30 0 0 Z"
+      dur="6s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula secundară 2 -->
+  <circle id="secondary-particle-2" cx="336" cy="256" r="3" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animateMotion
+      path="M120 0 C120 -30 90 -60 60 -60 C30 -60 0 -30 0 0 C0 30 30 60 60 60 C90 60 120 30 120 0 Z"
+      dur="6s"
+      begin="9.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula secundară 3 -->
+  <circle id="secondary-particle-3" cx="176" cy="256" r="3" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="10s"
+      fill="freeze"/>
+    
+    <animateMotion
+      path="M0 0 C0 -30 30 -60 60 -60 C90 -60 120 -30 120 0 C120 30 90 60 60 60 C30 60 0 30 0 0 Z"
+      dur="8s"
+      begin="10.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula secundară 4 -->
+  <circle id="secondary-particle-4" cx="336" cy="256" r="3" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="11s"
+      fill="freeze"/>
+    
+    <animateMotion
+      path="M120 0 C120 -30 90 -60 60 -60 C30 -60 0 -30 0 0 C0 30 30 60 60 60 C90 60 120 30 120 0 Z"
+      dur="8s"
+      begin="11.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru simbolul infinitului -->
+  <path id="pulse-infinity" d="M176 256 C176 226 206 196 236 196 C266 196 296 226 296 256 C296 286 266 316 236 316 C206 316 176 286 176 256 Z M216 256 C216 226 246 196 276 196 C306 196 336 226 336 256 C336 286 306 316 276 316 C246 316 216 286 216 256 Z" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de glitch pentru simbolul infinitului -->
+  <path id="glitch-infinity" d="M176 256 C176 226 206 196 236 196 C266 196 296 226 296 256 C296 286 266 316 236 316 C206 316 176 286 176 256 Z M216 256 C216 226 246 196 276 196 C306 196 336 226 336 256 C336 286 306 316 276 316 C246 316 216 286 216 256 Z" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Simboluri pentru conceptele infinitului -->
+  <!-- Simbol 1 (Continuitate) -->
+  <text id="infinity-symbol-1" x="256" y="196" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">CONTINUITATE
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 (Eternitate) -->
+  <text id="infinity-symbol-2" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">ETERNITATE
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 (Ciclu) -->
+  <text id="infinity-symbol-3" x="256" y="316" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">CICLU
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="18s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "SIMBOLUL INFINITULUI" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">SIMBOLUL INFINITULUI</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Simbolul Infinitului</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al continuității și al ciclurilor eterne. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

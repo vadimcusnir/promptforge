@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Portalul Cunoașterii - un simbol al accesului la informație și înțelepciune -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru portal -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Portalul (arcul exterior) -->
+  <path id="portal-arch-outer" d="M176 336 A80 120 0 0 1 336 336" fill="none" stroke="#E0E0E0" stroke-width="3" stroke-dasharray="300" stroke-dashoffset="300">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="300;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Portalul (arcul interior) -->
+  <path id="portal-arch-inner" d="M196 336 A60 100 0 0 1 316 336" fill="none" stroke="#E0E0E0" stroke-width="3" stroke-dasharray="250" stroke-dashoffset="250">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="250;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="2s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Portalul (baza stânga) -->
+  <line id="portal-base-left" x1="176" y1="336" x2="196" y2="336" stroke="#E0E0E0" stroke-width="3" stroke-dasharray="20" stroke-dashoffset="20">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="20;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Portalul (baza dreapta) -->
+  <line id="portal-base-right" x1="316" y1="336" x2="336" y2="336" stroke="#E0E0E0" stroke-width="3" stroke-dasharray="20" stroke-dashoffset="20">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="20;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="4.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Portalul (pragul) -->
+  <line id="portal-threshold" x1="196" y1="336" x2="316" y2="336" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="120" stroke-dashoffset="120">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="120;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Interiorul portalului (vortexul) -->
+  <ellipse id="portal-vortex-1" cx="256" cy="256" rx="60" ry="30" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="300" stroke-dashoffset="300">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="300;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="6s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="8s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Interiorul portalului (vortexul 2) -->
+  <ellipse id="portal-vortex-2" cx="256" cy="256" rx="40" ry="20" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="200" stroke-dashoffset="200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="200;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="9.5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="-360 256 256"
+      dur="18s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Interiorul portalului (vortexul 3) -->
+  <ellipse id="portal-vortex-3" cx="256" cy="256" rx="20" ry="10" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="9.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="10.5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Centrul portalului -->
+  <circle id="portal-center" cx="256" cy="256" r="5" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="5;8;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri care ies din portal -->
+  <!-- Simbol 1 (0) -->
+  <text id="symbol-1" x="256" y="256" font-family="'JetBrains Mono', monospace" font-size="12" fill="#FFD700" text-anchor="middle" opacity="0">0
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="10.5s"
+      repeatCount="1"/>
+    
+    <animate
+      attributeName="y"
+      values="256;216;176"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="10.5s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 (1) -->
+  <text id="symbol-2" x="256" y="256" font-family="'JetBrains Mono', monospace" font-size="12" fill="#FFD700" text-anchor="middle" opacity="0">1
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11s"
+      repeatCount="1"/>
+    
+    <animate
+      attributeName="x"
+      values="256;296;336"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 (α) -->
+  <text id="symbol-3" x="256" y="256" font-family="'JetBrains Mono', monospace" font-size="12" fill="#FF0000" text-anchor="middle" opacity="0">α
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.5s"
+      repeatCount="1"/>
+    
+    <animate
+      attributeName="y"
+      values="256;296;336"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.5s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 4 (Ω) -->
+  <text id="symbol-4" x="256" y="256" font-family="'JetBrains Mono', monospace" font-size="12" fill="#FF0000" text-anchor="middle" opacity="0">Ω
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12s"
+      repeatCount="1"/>
+    
+    <animate
+      attributeName="x"
+      values="256;216;176"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Particule care intră în portal -->
+  <!-- Particula 1 -->
+  <circle id="portal-particle-1" cx="176" cy="216" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="176;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="216;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 2 -->
+  <circle id="portal-particle-2" cx="336" cy="216" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="336;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="216;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 3 -->
+  <circle id="portal-particle-3" cx="216" cy="336" r="3" fill="#FF0000" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="216;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="336;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 4 -->
+  <circle id="portal-particle-4" cx="296" cy="336" r="3" fill="#FF0000" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="296;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="14s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="336;256;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="14s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="14s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru portal -->
+  <path id="pulse-portal" d="M176 336 A80 120 0 0 1 336 336" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de glitch pentru portal -->
+  <path id="glitch-portal" d="M176 336 A80 120 0 0 1 336 336" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Simboluri pentru cunoaștere -->
+  <!-- Simbol 1 (Cunoaștere) -->
+  <text id="knowledge-symbol-1" x="256" y="196" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">CUNOAȘTERE
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 (Înțelepciune) -->
+  <text id="knowledge-symbol-2" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">ÎNȚELEPCIUNE
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="18s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 (Iluminare) -->
+  <text id="knowledge-symbol-3" x="256" y="316" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">ILUMINARE
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="21s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "PORTALUL CUNOAȘTERII" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">PORTALUL CUNOAȘTERII</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Portalul Cunoașterii</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al accesului la informație și înțelepciune. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

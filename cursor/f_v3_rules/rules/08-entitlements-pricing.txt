@@ -1,0 +1,5 @@
+TITLE: Entitlements & Pricing
+TYPE: Auto-Attached
+
+PLANS: pilot, pro, enterprise. Enforcement pe server; UI doar paywall.
+Export & GPT* verifică entitlement; nu se acceptă bypass via client hooks.

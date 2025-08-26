@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+      --green: #00FF00;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .circle {
+      fill: none;
+      stroke: var(--gray);
+      stroke-width: 2;
+    }
+
+    .success {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+
+    .error {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+
+    /* Animații pentru succes/eroare */
+    @keyframes drawSuccess {
+      0% { stroke-dashoffset: 100; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    @keyframes drawError {
+      0% { stroke-dashoffset: 100; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    @keyframes toggleVisibility {
+      0%, 49.9% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* Aplicarea animațiilor */
+    #success-path {
+      animation: drawSuccess 0.5s forwards, toggleVisibility 3s infinite;
+    }
+
+    #error-path {
+      animation: drawError 0.5s forwards, toggleVisibility 3s infinite 1.5s;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #success-path, #error-path {
+        animation: none;
+        stroke-dashoffset: 0;
+      }
+      #success-path {
+        opacity: 1;
+      }
+      #error-path {
+        opacity: 0;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #success-path,
+    .container:hover #error-path {
+      animation-duration: 0.5s, 1.5s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Cerc -->
+    <circle class="circle" cx="128" cy="128" r="50" />
+    
+    <!-- Bifă (succes) -->
+    <path id="success-path" class="success" d="M98 128 L118 148 L158 108" />
+    
+    <!-- X (eroare) -->
+    <path id="error-path" class="error" d="M98 98 L158 158 M158 98 L98 158" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">04</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

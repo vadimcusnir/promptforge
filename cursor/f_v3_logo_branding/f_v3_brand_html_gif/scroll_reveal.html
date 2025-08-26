@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge - Scroll Reveal Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: 'Space Grotesk', sans-serif;
+            height: 300vh; /* Make page scrollable */
+        }
+
+        .scroll-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            z-index: 100;
+        }
+
+        .logo-bg {
+            width: 100%;
+            height: 100%;
+            background: #F4B001;
+            border-radius: 30px;
+            position: absolute;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .glyph-part {
+            position: absolute;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .glyph-part path,
+        .glyph-part rect {
+            fill: #000000;
+            stroke: none;
+        }
+
+        /* Individual glyph parts */
+        .part-center {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+        }
+
+        .part-top {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+        }
+
+        .part-left {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+        }
+
+        .part-right {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+        }
+
+        .part-bottom {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+        }
+
+        /* Scroll states */
+        .scroll-state-1 .part-center {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .scroll-state-1 .part-top {
+            transform: translate(-50%, -150%) rotate(-15deg);
+        }
+
+        .scroll-state-1 .part-left {
+            transform: translate(-150%, -50%) rotate(-30deg);
+        }
+
+        .scroll-state-1 .part-right {
+            transform: translate(50%, -50%) rotate(30deg);
+        }
+
+        .scroll-state-1 .part-bottom {
+            transform: translate(-50%, 50%) rotate(15deg);
+        }
+
+        .scroll-state-1 .logo-bg {
+            transform: scale(0.8) rotate(45deg);
+            opacity: 0.7;
+        }
+
+        .scroll-state-2 .part-center {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        .scroll-state-2 .part-top {
+            transform: translate(-50%, -200%) rotate(180deg);
+        }
+
+        .scroll-state-2 .part-left {
+            transform: translate(-200%, -50%) rotate(-90deg);
+        }
+
+        .scroll-state-2 .part-right {
+            transform: translate(100%, -50%) rotate(90deg);
+        }
+
+        .scroll-state-2 .part-bottom {
+            transform: translate(-50%, 100%) rotate(180deg);
+        }
+
+        .scroll-state-2 .logo-bg {
+            transform: scale(1.3) rotate(-45deg);
+            opacity: 0.5;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 101;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(to right, #FFD700, #FF6B00);
+            z-index: 102;
+            transition: width 0.1s ease;
+        }
+
+        .scroll-particles {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .particle-1 { top: 20%; left: 20%; }
+        .particle-2 { top: 30%; right: 25%; }
+        .particle-3 { bottom: 25%; left: 30%; }
+        .particle-4 { top: 70%; left: 15%; }
+        .particle-5 { bottom: 30%; right: 20%; }
+
+        .scroll-state-1 .scroll-particles,
+        .scroll-state-2 .scroll-particles {
+            opacity: 1;
+            animation: scrollParticle 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollParticle {
+            0%, 100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(2) translateY(-20px);
+                opacity: 0.3;
+            }
+        }
+
+        .content-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .section-1 {
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+        }
+
+        .section-2 {
+            background: linear-gradient(135deg, #1a1a1a, #333333);
+        }
+
+        .section-3 {
+            background: linear-gradient(135deg, #333333, #000000);
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="scroll-indicator">
+        <div>SCROLL TO REVEAL</div>
+        <div style="font-size: 12px; margin-top: 5px;">↓ FORGE DECOMPOSITION ↓</div>
+    </div>
+
+    <div class="scroll-particles particle-1"></div>
+    <div class="scroll-particles particle-2"></div>
+    <div class="scroll-particles particle-3"></div>
+    <div class="scroll-particles particle-4"></div>
+    <div class="scroll-particles particle-5"></div>
+
+    <div class="scroll-container">
+        <div class="logo-bg"></div>
+        
+        <!-- Central vertical line -->
+        <svg class="glyph-part part-center" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="55" y="20" width="10" height="80" />
+            <rect x="55" y="25" width="10" height="20" />
+        </svg>
+        
+        <!-- Top diamond -->
+        <svg class="glyph-part part-top" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 10 L80 30 L60 50 L40 30 Z" />
+        </svg>
+        
+        <!-- Left zigzag -->
+        <svg class="glyph-part part-left" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M35 50 L15 70 L35 90 L25 100 L0 70 L25 40 Z" />
+        </svg>
+        
+        <!-- Right zigzag -->
+        <svg class="glyph-part part-right" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M85 50 L105 70 L85 90 L95 100 L120 70 L95 40 Z" />
+        </svg>
+        
+        <!-- Bottom triangle and face -->
+        <svg class="glyph-part part-bottom" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 100 L85 110 L35 110 Z" />
+            <path d="M45 75 Q60 85 75 75" stroke="#000000" stroke-width="3" fill="none" />
+            <rect x="55" y="90" width="10" height="8" />
+        </svg>
+    </div>
+
+    <div class="content-section section-1">
+        <div>SCROLL DOWN TO DECOMPOSE THE FORGE SIGIL</div>
+    </div>
+    
+    <div class="content-section section-2">
+        <div>WITNESS THE FRACTAL SEPARATION</div>
+    </div>
+    
+    <div class="content-section section-3">
+        <div>SCROLL UP TO REFORGE THE SYMBOL</div>
+    </div>
+
+    <script>
+        const scrollContainer = document.querySelector('.scroll-container');
+        const scrollProgress = document.querySelector('.scroll-progress');
+        const body = document.body;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            
+            // Update progress bar
+            scrollProgress.style.width = scrollPercent + '%';
+            
+            // Remove all scroll states
+            body.classList.remove('scroll-state-1', 'scroll-state-2');
+            
+            // Add appropriate scroll state based on position
+            if (scrollPercent > 20 && scrollPercent < 60) {
+                body.classList.add('scroll-state-1');
+            } else if (scrollPercent >= 60) {
+                body.classList.add('scroll-state-2');
+            }
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+</html>
+

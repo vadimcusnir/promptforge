@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .loader {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 280;
+      transform-origin: center;
+    }
+
+    /* Animații pentru loader */
+    @keyframes rotateLoader {
+      0% { 
+        transform: rotate(0deg);
+        stroke-dashoffset: 280;
+      }
+      50% {
+        stroke-dashoffset: 100;
+      }
+      100% { 
+        transform: rotate(360deg);
+        stroke-dashoffset: 280;
+      }
+    }
+
+    /* Aplicarea animațiilor */
+    #loader-circle {
+      animation: rotateLoader 2s infinite linear;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #loader-circle {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #loader-circle {
+      animation: rotateLoader 1s infinite linear;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Loader -->
+    <circle id="loader-circle" class="loader" cx="128" cy="128" r="45" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">02</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

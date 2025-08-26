@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="512" viewBox="0 0 1024 512" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @font-face {
+      font-family: 'SpaceGrotesk';
+      font-style: normal;
+      font-weight: 700;
+      src: url('data:font/woff2;base64,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');
+    }
+
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .text-path {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 1;
+    }
+
+    .text {
+      font-family: 'SpaceGrotesk', sans-serif;
+      font-weight: 700;
+      font-size: 72px;
+      text-transform: uppercase;
+      fill: var(--white);
+    }
+
+    .drip {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 2;
+      opacity: 0;
+    }
+
+    /* Animații pentru text și stroke */
+    @keyframes fadeStroke {
+      0%, 100% { stroke-width: 0; stroke-opacity: 0; }
+      50% { stroke-width: 2; stroke-opacity: 1; }
+    }
+
+    @keyframes bleedDrip {
+      0% { opacity: 0; stroke-dashoffset: 100; }
+      20% { opacity: 1; }
+      100% { opacity: 0; stroke-dashoffset: 0; }
+    }
+
+    /* Aplicarea animațiilor */
+    .text-path {
+      animation: fadeStroke 3s infinite;
+    }
+
+    #drip1 {
+      animation: bleedDrip 3s infinite;
+      animation-delay: 0.2s;
+    }
+
+    #drip2 {
+      animation: bleedDrip 3s infinite;
+      animation-delay: 0.5s;
+    }
+
+    #drip3 {
+      animation: bleedDrip 3s infinite;
+      animation-delay: 0.8s;
+    }
+
+    #drip4 {
+      animation: bleedDrip 3s infinite;
+      animation-delay: 1.1s;
+    }
+
+    #drip5 {
+      animation: bleedDrip 3s infinite;
+      animation-delay: 1.4s;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .text-path, .drip {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover .text-path {
+      animation: fadeStroke 1.5s infinite;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Text principal -->
+    <text class="text" x="512" y="256" text-anchor="middle">YOU'RE BLEEDING HOURS</text>
+    <text class="text-path" x="512" y="256" text-anchor="middle">YOU'RE BLEEDING HOURS</text>
+    
+    <!-- Picături de sânge (drips) -->
+    <path id="drip1" class="drip" d="M400 280 C400 330, 400 380, 380 430" stroke-dasharray="100" stroke-dashoffset="100" />
+    <path id="drip2" class="drip" d="M500 280 C500 350, 500 400, 520 450" stroke-dasharray="100" stroke-dashoffset="100" />
+    <path id="drip3" class="drip" d="M600 280 C600 320, 600 360, 580 410" stroke-dasharray="100" stroke-dashoffset="100" />
+    <path id="drip4" class="drip" d="M700 280 C700 340, 700 380, 710 430" stroke-dasharray="100" stroke-dashoffset="100" />
+    <path id="drip5" class="drip" d="M450 280 C450 310, 450 340, 430 390" stroke-dasharray="100" stroke-dashoffset="100" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="'SpaceGrotesk', sans-serif" font-size="16" fill="var(--gold)">02</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="1020" height="508" fill="none" stroke="var(--gold)" stroke-width="2" />
+  </g>
+</svg>
+

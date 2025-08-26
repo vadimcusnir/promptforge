@@ -1,0 +1,2189 @@
+
+
+
+
+
+
+01 — /dashboard: IA/UX & Neuron Explorer (livrabil: 01_dashboard_ia_ux.md)
+0) Principii de proiectare (păstrează-le ca lege)
+
+Un singur creier. Ai UN layout persistent (header + sidebar) și UN context de sesiune (org, plan, entitlements, semnătură 7-D). Nu dubla stări în componente.
+
+Enum-only. 7-D acceptă DOAR valori din nomenclator. Orice text liber = invalid.
+
+Defense-in-depth. Gating în UI (ascunzi/educi) + în API (blochezi ferm).
+
+Determinism. Promptul generat are structură fixă; exportul are ordine canonică + checksum; scorul PASS la ≥80.
+
+Fără PII. Telemetria nu loghează textul promptului; doar hash, scoruri, timpi, flags.
+
+Reduce-motion first. Animațiile sunt un strat opțional; experiența rămâne clară și la prefers-reduced-motion.
+
+1) Structura paginilor (Next.js App Router)
+1.1 Layout & rute
+
+app/dashboard/layout.tsx — conține Header fix + Sidebar fix + <Outlet/>.
+
+app/dashboard/page.tsx — Welcome/Start Here (dacă n-ai configurat nimic, afișezi turul).
+
+Rute copil:
+
+/dashboard/generator — 7-D + module grid + editor + test engine + export
+
+/dashboard/my-prompts — Neuron Library cu istoricul tău (cloud + local)
+
+/dashboard/library — Neuron Explorer (toată librăria, filtre avansate)
+
+/dashboard/start-here — onboarding, scurt demo, link spre Generator
+
+/dashboard/docs — API & examples (gated dacă plan < Pro pentru secțiuni)
+
+/dashboard/resources — cărți/papers/videos/decks (pack-gated)
+
+/dashboard/ai-tools — index unelte (pack-gated)
+
+/dashboard/assistants — chat multi-assistant (gated per pack/plan)
+
+/dashboard/client — Client Hub (profil/org, seats, billing, API keys)
+
+SSR/CSR: Layout + Sidebar + Header se randă cu Server Components (date stable: org, plan, entitlements). Conținutul central e Client (editor, test, export) pentru interactivitate fină. Suspense boundaries pe fiecare tab.
+
+1.2 Sidebar (fix, 280px)
+
+Ordine finală:
+
+Generator
+
+My Prompts
+
+Library (Neuron Explorer)
+
+Start here
+
+Docs (API)
+
+Resources
+
+AI Tools
+
+Assistants
+
+Community (link-out)
+
+Client (Setări/Plăți/Keys)
+
+Gating vizual:
+
+Itemele blocate au icon de lacăt + tooltip „Upgrade to unlock”.
+
+La click → PaywallInline (nu părăsești contextul), CTA „Vezi planuri”.
+
+1.3 Header (fix, 64px)
+
+Breadcrumbs: /dashboard › generator (auto).
+
+Environment badge: dev/stage/prod.
+
+Search global (neuroni + resurse): /dashboard/library?query=….
+
+User/org switcher: vezi org curent, schimbă rapid.
+
+Quick actions: „New run”, „Export bundle”.
+
+2) Generator 7-D (dropdown enum-only + editor + test + export)
+2.1 Panoul de configurare 7-D (stânga)
+
+Domain (CORE 25)
+
+Scale (solo, team, org, market)
+
+Urgency (low, normal, high, crisis)
+
+Complexity (low, medium, high)
+
+Resources (minimal, standard, extended)
+
+Application (content_ops, research, sales_ops, product_ops, crisis_ops…)
+
+Output (text, sop, plan, bundle)
+
+Reguli:
+
+Enum-only. Orice altă valoare → invalid + mesaj sub control.
+
+Semnătură 7-D live: SIG-7D = hash(enumValues + overrides). Arată-i utilizatorului semnătura.
+
+Auto-defaults per Domain (ex. Healthcare → compliance notes în editor).
+
+Diversity slider (0..1) pentru mică variație la wording; ascuns la planurile care nu au „experimente”.
+
+2.2 Module Grid (dreapta-sus)
+
+Filtre: M01–M50, vector (1–7), căutare pe nume/descriere.
+
+Card modul: nume, scurt spec, vectors, KPI & guardrails tags.
+
+CTA: „Use module”. Confirmarea setează moduleId în sesiune.
+
+2.3 Editorul de prompt (dreapta-jos)
+
+Structură fixă, neremovabilă (buton „Copy section link” pe fiecare):
+
+ROLE & GOAL (persona + rezultat măsurabil)
+
+CONTEXT (7-D) (serializat din panou + notele domain)
+
+OUTPUT SPEC (format clar; ex. JSON schema/Markdown template)
+
+PROCESS (pași executabili, numerotați)
+
+GUARDRAILS (interdicții, limite, compliance)
+
+EVAL HOOKS (KPI ce vor fi verificate de Test Engine)
+
+TELEMETRY KEYS (run_id, module_id, signature_7D, success_criteria)
+
+Comportament:
+
+Dacă nu ai ales modul → disable editor.
+
+Editorul sincronizează fiecare secțiune într-un object de sesiune (fără PII în log).
+
+validatePromptStructure() → PASS numai dacă toate secțiunile esențiale există + non-goale.
+
+2.4 Test Engine
+
+Simulate test (toți): rulează evaluator determinist (funcție locală), dă scoruri pe rubrică: clarity, execution, ambiguity (scor invers), business_fit.
+
+Run Real Test (Pro+): cheamă modelul live; persistă în runs + prompt_scores.
+
+Verdict: PASS la scor global ≥ 80. Dacă FAIL, afișezi 2 recomandări de „tighten once” (întărește guardrails sau claritatea).
+
+Live-regions: anunță „Testing…”, „PASS/FAIL” pentru cititoare de ecran.
+
+2.5 Export (gated by plan)
+
+.txt (Free), .md (Creator+), .pdf /.json (Pro+), bundle.zip (Enterprise).
+
+Export determinist: scrii fișierele în ordine canonică, adaugi manifest.json + checksum.txt, fără prompt raw în telemetrie.
+
+Pe trial Pro → watermark în PDF/JSON.
+
+La export eşuat → ToastError + „Copy debug info”.
+
+2.6 UX: stări & calitate
+
+Empty: indicii vizuale (skeletons).
+
+Loading: shimmer pe carduri; spinners minimali.
+
+Error: card roșu concis, nu arunci stack-trace în UI.
+
+Success: toast verde cu acțiuni (Open in Library / Download).
+
+Keyboard:
+
+Ctrl+G Generate, Ctrl+T Test, Ctrl+E Export, Ctrl+K Search
+
+? overlay scurtături.
+
+3) Neuron Explorer (Library globală + resurse, filtre, sinapse)
+3.1 Filtrare & căutare
+
+Facets:
+
+Module (M01–M50)
+
+Vector (1–7)
+
+Domain, Scale, Output
+
+Score (slider 0..100, default ≥80)
+
+Date (interval)
+
+Query bar: full-text (titlu, tags, scurt rezumat).
+
+Chipuri active: arată filtrul aplicat; x pentru remove.
+
+Persist filters: parametrii în URL; se pot share-ui.
+
+3.2 Card „Neuron”
+
+Titlu (auto din modul + context), hash scurt (ex. pf_9A3C), signature_7D (icon), scor global + breakdown mini-badges.
+
+2 butoane: Open in Generator (rehidratează editorul) și Export (respectă drepturile).
+
+Meta: module_id, created_at, author (user/org anonymizat), run_id (trunchiat).
+
+Favorit (stea), Tags (user curat).
+
+Sinapse (dreapta, la hover/expand): PDF/Video/Tools asociate (gated).
+
+A11y: aria-describedby spre un div “score summary”.
+
+3.3 Pagină detaliu
+
+Secțiune „Prompt snapshot” (read-only).
+
+Timeline: versiuni, scoruri la iterații, exporturi făcute.
+
+CTA: „Re-Run test” (gated), „Open in Generator”, „Export”.
+
+Ownership: vezi org + plan; dacă e altă org publicată în marketplace (viitor), etichetă clară.
+
+4) Fundal pe 4 straturi (motion stratificat, sigur, controlabil)
+
+Rule of calm. Animația nu concurează cu conținutul. Fără jank, fără flicker obositor.
+
+4.1 Straturi
+
+Grid: linii fine, parallax discret, luminanță puls 60–90s.
+
+Tokens: 80–100 puncte “verzi” (desktop), 50–60 (mobil); micro-oscilații ±2–6px, opacity 0.25–0.6, glitch rar.
+
+Figuri/axe: traiectorii lente; folosește will-change: transform.
+
+Citate: tipărire 40–60ms/char; afișare 4–6s; fade-out 0.8–1.2s. Când intră un citat, redu temporar opacitatea la tokens.
+
+4.2 Reduce-motion
+
+Dezactivezi 2–4; păstrezi Grid static.
+
+Menții performanță: eviti timers agresivi, animezi via CSS GPU.
+
+5) Accesibilitate (A11y) & SEO
+5.1 A11y
+
+Contrast minim 4.5:1 (gri pe obsidian + accente verzi/aurii).
+
+Focus ring vizibil pe toate controalele (nu îl ascunde niciodată).
+
+ARIA pentru:
+
+panel 7-D (role="form" + aria-describedby spre help text)
+
+scoruri (aria-live="polite")
+
+paywalls (role="dialog", focus trap)
+
+Keyboard: totul tab-able; ordinea logică.
+
+Labels: fiecare dropdown 7-D are label clar + aria-invalid când greșit.
+
+5.2 SEO
+
+H1 clar pe /dashboard (ex. „PromptForge — Dashboard”).
+
+Meta-description ≤155; OG title/img pentru „/dashboard” și pentru „/dashboard/library”.
+
+Noindex pe rutele care cer login (dar OG pentru share intern, dacă e cazul).
+
+6) Telemetrie & Paywalls
+6.1 Evenimente UI (fără text brut)
+
+ui.nav.sidebar_click({section})
+
+ui.generator.generate_click({moduleId, signature7d})
+
+ui.generator.test_simulate_done({scores})
+
+ui.generator.test_live_done({scores, tokens, cost})
+
+ui.export.success({formats})
+
+ui.library.filter_apply({facets})
+
+ui.library.open_in_generator({neuronId})
+
+ui.paywall.view({feature}) / ui.paywall.checkout_click({feature})
+
+6.2 Paywall
+
+PaywallInline (în locul butonului), PaywallModal (dialog cu comparație planuri).
+
+Nu promite acțiuni indisponibile (ex. buton „Run Real Test” devine CTA de upgrade).
+
+7) Performanță & calitate
+7.1 Bugete
+
+Timp la interacțiune generator: < 300ms
+
+Test simulation: < 1.5s
+
+Export .json: < 400ms (client), bundle server < 2s
+
+Lighthouse: ≥95 (desktop), ≥90 (mobil)
+
+7.2 Strategie de date
+
+Loader server pentru org/plan/entitlements (cache 30s, revalidate tag-based).
+
+Lista din Library paginată + virtualizare (peste 200 neuroni).
+
+Toate filtrele intră în query string (shareable, restorable).
+
+8) Componente & tipuri (schemă de implementare)
+8.1 Arbore
+
+<DashboardLayout>
+
+<Header>
+
+<Sidebar>
+
+<ContentOutlet> (children routes)
+
+/generator
+
+<SevenDPanel /> — dropdownuri + signature badge
+
+<ModuleGrid /> — filtre + carduri
+
+<PromptEditor /> — secțiuni fixe
+
+<TestEngine /> — simulate/live + verdict + live-region
+
+<ExportBar /> — butoane gated
+
+/library
+
+<LibraryFilters /> — facets
+
+<NeuronList virtualized /> — carduri
+
+<NeuronCard /> — meta, scor, sinapse
+
+<NeuronDetailDrawer /> — snapshot + timeline + CTA
+
+8.2 Tipuri (TS)
+type SevenD = {
+  domain: Domain; scale: Scale; urgency: Urgency;
+  complexity: Complexity; resources: Resources;
+  application: Application; output: OutputFormat;
+  signature: string; // hash determinist
+}
+
+type GeneratedPrompt = {
+  id: string; moduleId: string; sevenD: SevenD;
+  content: { roleGoal: string; context: string; outputSpec: string; process: string[]; guardrails: string[]; evalHooks: string[]; telemetry: Record<string,string> };
+  hash: string; timestamp: string;
+}
+
+type TestScores = { clarity:number; execution:number; ambiguity:number; business_fit:number; verdict: 'PASS'|'FAIL'|'PARTIAL' }
+
+type NeuronCard = { id:string; title:string; hash:string; sevenD:SevenD; scores:TestScores; runId?:string; createdAt:string; tags:string[] }
+
+9) Gating (UI) — mapare clară
+Feature	Flag entitlement	Vizibil UI	Acțiune la click (fără flag)
+Run Real Test	canUseGptTestReal	Buton vizibil dacă on	PaywallModal('Run Real Test')
+Export .pdf	canExportPDF	Buton show/hide	Inline CTA „Upgrade Pro”
+Export .json	canExportJSON	Buton show/hide	Inline CTA „Upgrade Pro”
+Bundle .zip	canExportBundleZip	Buton show/hide	CTA „Upgrade Enterprise”
+Cloud History/Library	hasCloudHistory	Tab activ	CTA „Activate Cloud History”
+Public API	hasAPI	Badge/API Keys în Client	CTA „Enterprise Contact”
+10) QA — scenarii minime (verifică manual)
+
+Route Guards: utilizator Pilot nu poate vedea .pdf/.json/ZIP/Run Real Test; vede paywalls corecte.
+
+Generate: setezi 7-D, alegi modul, primești prompt complet cu toate secțiunile; validatePromptStructure() = true.
+
+Test (Simulate): primești 4 scoruri + verdict; live-region anunță „Testing…” + rezultat; PASS/FAIL logic.
+
+Test (Live, Pro): apare buton; la click vezi Run în istoric + scoruri; telemetrie fără text prompt.
+
+Export: .txt/.md la Pilot, .pdf/.json la Pro, .zip la Enterprise; exportul include manifest + checksum.
+
+Library: filtrele funcționează, query în URL; „Open in Generator” rehidratează editorul corect.
+
+A11y: totul tab-able, focus ring vizibil, aria labels pe dropdownuri, live-regions pe scoruri.
+
+Reduce-motion: animațiile se opresc/îmblânzesc, fără “jank”.
+
+11) Done (UI)
+
+Route-guards + paywalls implementate și testate.
+
+Generator + Test + Export funcționale, scor PASS la ≥80, export determinist.
+
+Library (Neuron Explorer) online: liste, filtre, carduri, sinapse, „Open in Generator”, export.
+
+Fundal stratificat cu fallback reduce-motion.
+
+A11y: contrast 4.5:1, aria-labels, focus vizibil, live-regions.
+
+Lighthouse ≥95 (desktop), ≥90 (mobil).
+
+Telemetrie: evenimente minime, fără PII; rapoarte zilnice.
+
+SEO: H1, meta, OG corecte pentru /dashboard și /dashboard/library.
+
+Notă de implementare rapidă (cod esențial)
+// app/dashboard/layout.tsx
+export default function DashboardLayout({ children }) {
+  return (
+    <div className="min-h-screen bg-obsidian text-white grid grid-cols-[280px_1fr] grid-rows-[64px_1fr]">
+      <Header className="col-span-2 row-[1]" />
+      <Sidebar className="row-[2] col-[1]" />
+      <main className="row-[2] col-[2] overflow-auto">{children}</main>
+      <BackgroundRoot reduceMotionQuery="(prefers-reduced-motion: reduce)" />
+    </div>
+  )
+}
+
+// components/generator/TestEngine.tsx (schemă)
+const PASS_THRESHOLD = 80;
+export function TestEngine({ prompt }: { prompt: GeneratedPrompt }) {
+  const [scores, setScores] = useState<TestScores | null>(null);
+  const canLive = useEntitlement('canUseGptTestReal');
+  const runSimulate = async () => setScores(await simulate(prompt));
+  const runLive = async () => {
+    if (!canLive) return openPaywall('Run Real Test');
+    setScores(await runLiveTest(prompt));
+  };
+  return (
+    <section aria-live="polite">
+      <div className="flex gap-2">
+        <Button onClick={runSimulate}>Simulate Test</Button>
+        <Button onClick={runLive} disabled={!canLive}>Run Real Test</Button>
+      </div>
+      {scores && <Verdict scores={scores} passAt={PASS_THRESHOLD} />}
+    </section>
+  );
+}
+
+
+Acesta este blueprintul complet pentru /dashboard — IA/UX & Neuron Explorer. Îl poți copia integral în 01_dashboard_ia_ux.md și începi implementarea în ordinea: layout → sidebar/header → generator (7-D + editor) → test → export → library → background → a11y/seo → QA.
+
+
+
+
+
+
+02 — Supabase: schema & RLS (livrabil: 02_supabase_schema_rls.sql)
+
+Mai jos ai un fișier SQL complet, comentat, “prod-ready”, care creează schema de bază, politicile RLS, indici, seed-uri minime și utilități pentru entitlements + bundles. Îl rulezi în SQL editor la proiectul tău Supabase (PostgreSQL 15+). Folosește gen_random_uuid() (ext. pgcrypto), respectă multi-tenancy pe org_id și role-based pe org_members.role.
+
+NOTE
+– Niciun text integral de prompt nu este persistat în telemetrie.
+– Orice “acces” se verifică UI + API; serverul are adevărul (RLS + funcții).
+– Exporturile (bundles) sunt canonice: prompt.txt/.md/.json/.pdf + manifest.json + checksum.txt (sha256).
+
+-- ============================================================
+-- 02_supabase_schema_rls.sql
+-- PromptForge v3 — schema de bază + RLS + seed + utilități
+-- ============================================================
+
+-- 0) EXTENSII & PRAGME
+create extension if not exists pgcrypto;               -- gen_random_uuid(), digest()
+create extension if not exists pg_stat_statements;     -- tuning/observabilitate (opțional)
+
+-- 1) ENUMS & LOOKUPS (strict acolo unde e rezonabil)
+-- Planurile pot evolua, dar tratăm codurile ca enum să evităm typo-uri.
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'plan_code_t') then
+    create type plan_code_t as enum ('pilot','pro','enterprise');
+  end if;
+end$$;
+
+-- 2) TABELE CANONICE (multi-tenant prin org_id)
+-- ------------------------------------------------------------
+
+-- 2.1 Orgs (workspaces) & membership
+create table if not exists orgs(
+  id          uuid primary key default gen_random_uuid(),
+  name        text not null,
+  slug        text unique check (slug ~ '^[a-z0-9-]{3,40}$'),
+  created_at  timestamptz not null default now()
+);
+
+create table if not exists org_members(
+  org_id      uuid not null references orgs(id) on delete cascade,
+  user_id     uuid not null references auth.users(id) on delete cascade,
+  role        text not null check (role in ('owner','admin','member')),
+  created_at  timestamptz not null default now(),
+  primary key (org_id, user_id)
+);
+
+-- 2.2 Plans / subscriptions / entitlements (gating central)
+create table if not exists plans(
+  code        plan_code_t primary key,
+  name        text not null,
+  flags       jsonb not null,             -- ex: {"canExportPDF":true,"hasAPI":false,...}
+  retention_days int not null default 90, -- câte zile păstrăm history/bundles pentru planul curent
+  created_at  timestamptz not null default now()
+);
+
+create table if not exists subscriptions(
+  id                     uuid primary key default gen_random_uuid(),
+  org_id                 uuid not null references orgs(id) on delete cascade,
+  stripe_customer_id     text,
+  stripe_subscription_id text,
+  plan_code              plan_code_t not null,
+  status                 text not null,   -- trialing|active|past_due|canceled|incomplete etc.
+  seats                  int not null default 1,
+  current_period_start   timestamptz,
+  current_period_end     timestamptz,
+  trial_end              timestamptz,
+  created_at             timestamptz not null default now()
+);
+
+-- Entitlements: abilități efective la nivel de org (și opțional user),
+-- provenite din: plan, addon, pack (industry), licență, grant manual etc.
+create table if not exists entitlements(
+  id          bigserial primary key,
+  org_id      uuid not null references orgs(id) on delete cascade,
+  user_id     uuid,                                        -- null = org-wide
+  flag        text not null,                               -- ex: canExportPDF
+  value       boolean not null default true,
+  source      text not null,                               -- plan|addon|pack|license|manual|webhook
+  source_ref  text,                                        -- id-ul artefactului sursă (price_id, pack_id...)
+  meta        jsonb,                                       -- orice payload explicativ
+  expires_at  timestamptz,
+  created_at  timestamptz not null default now(),
+  unique (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+);
+
+comment on column entitlements.flag is
+  'Flags uzuale: canExportPDF, canExportJSON, canExportBundleZip, canUseGptTestReal, hasCloudHistory, hasAPI';
+
+-- 2.3 Catalog module (M01..M50)
+create table if not exists modules(
+  module_id     text primary key,                 -- 'M01'...'M50'
+  name          text not null,
+  vectors       smallint[] not null,              -- 1..7
+  spec          text,                             -- scurtă descriere procedurală
+  output_schema jsonb,                            -- dacă e JSON/MD ai schema/șablon
+  kpi           text,                             -- indicator cheie (verificat de evaluator)
+  guardrails    text,                             -- constrângeri/ce să nu facă
+  enabled       boolean not null default true,
+  created_at    timestamptz not null default now()
+);
+
+-- 2.4 7-D Parameter Engine (snapshoturile configurărilor 7-D)
+create table if not exists parameter_sets(
+  id            uuid primary key default gen_random_uuid(),
+  domain        text not null,
+  scale         text not null,
+  urgency       text not null,
+  complexity    text not null,
+  resources     text not null,
+  application   text not null,
+  output_formats text[] not null,                 -- ex: {txt,md,json,pdf}
+  overrides     jsonb,                            -- bias-uri locale, fallback-uri
+  signature_7d  text generated always as (
+                 md5(domain||'|'||scale||'|'||urgency||'|'||complexity||'|'||resources||'|'||application||'|'||coalesce(array_to_string(output_formats,','),''))
+               ) stored,
+  created_at    timestamptz not null default now()
+);
+
+-- 2.5 Runs (telemetrie unificată)
+create table if not exists runs(
+  id            uuid primary key default gen_random_uuid(),
+  org_id        uuid not null references orgs(id) on delete cascade,
+  user_id       uuid references auth.users(id) on delete set null,
+  module_id     text not null references modules(module_id),
+  parameter_set_id uuid references parameter_sets(id),
+  type          text not null check (type in ('generation','test','agent_execution')),
+  status        text not null check (status in ('queued','running','success','error')),
+  model         text,             -- ex: gpt-4o, claude-3, etc.
+  tokens_used   int,
+  cost_usd      numeric(10,4),
+  duration_ms   int,
+  telemetry     jsonb,            -- fără text prompt (doar chei / valori agregate)
+  started_at    timestamptz not null default now(),
+  finished_at   timestamptz
+);
+
+-- 2.6 Scoruri (1:1 cu runs) + Bundles (1:N)
+create table if not exists prompt_scores(
+  run_id       uuid primary key references runs(id) on delete cascade,
+  clarity      int,          -- 0..100
+  execution    int,          -- 0..100
+  ambiguity    int,          -- 0..100 (interpretat invers în UI)
+  business_fit int,          -- 0..100
+  feedback     jsonb,        -- recomandări (listă)
+  created_at   timestamptz not null default now()
+);
+
+create table if not exists bundles(
+  id          uuid primary key default gen_random_uuid(),
+  run_id      uuid not null references runs(id) on delete cascade,
+  formats     text[] not null,                          -- ex: {md,json,pdf,zip}
+  paths       jsonb not null,                           -- {"md":"/storage/.../prompt.md",...}
+  manifest    jsonb not null,                           -- semnătură 7D, versiunile, scoruri, etc.
+  checksum    text not null,                            -- sha256 global (manifest + conținut)
+  license_notice text not null default 'PromptForge v3 — non-transferable export unless licensed.',
+  exported_at timestamptz not null default now(),
+  version     text not null default '1.0.0'             -- versiunea pipeline-ului de export
+);
+
+-- 2.7 Neuroni (istoric prompturi) — cu preview minimal (fără PII)
+create table if not exists prompt_history(
+  id           uuid primary key default gen_random_uuid(),
+  org_id       uuid not null references orgs(id) on delete cascade,
+  user_id      uuid references auth.users(id) on delete set null,
+  module_id    text not null references modules(module_id),
+  parameter_set jsonb not null,                          -- snapshot 7D
+  prompt_hash  text not null,                            -- hash prompt complet; nu stocăm textul integral
+  output_preview text,                                   -- 1-2 fraze non-PII (ex. titlu / obiectiv)
+  created_at   timestamptz not null default now()
+);
+
+-- 3) INDEXARE (performanță liste/filtre)
+-- ------------------------------------------------------------
+create index if not exists idx_members_user on org_members(user_id);
+create index if not exists idx_runs_org_started on runs(org_id, started_at desc);
+create index if not exists idx_runs_module on runs(module_id);
+create index if not exists idx_entitlements_key on entitlements(org_id, flag, value) where value is true;
+create index if not exists idx_bundles_run on bundles(run_id);
+create index if not exists idx_prompthist_org_created on prompt_history(org_id, created_at desc);
+create index if not exists idx_params_signature on parameter_sets(signature_7d);
+
+-- 4) RLS — POLITICI DE ACCES (multi-tenant strict pe org)
+-- ------------------------------------------------------------
+alter table orgs           enable row level security;
+alter table org_members    enable row level security;
+alter table plans          enable row level security;       -- doar admins pot citi în interfețe interne
+alter table subscriptions  enable row level security;
+alter table entitlements   enable row level security;
+alter table modules        enable row level security;       -- citire pentru toți membrii (nu public)
+alter table parameter_sets enable row level security;
+alter table runs           enable row level security;
+alter table prompt_scores  enable row level security;
+alter table bundles        enable row level security;
+alter table prompt_history enable row level security;
+
+-- Helpers RLS (funcții booleene)
+create or replace function is_org_member(p_org uuid)
+returns boolean language sql stable as $$
+  select exists (
+    select 1 from org_members m
+    where m.org_id = p_org and m.user_id = auth.uid()
+  )
+$$;
+
+create or replace function is_org_admin(p_org uuid)
+returns boolean language sql stable as $$
+  select exists (
+    select 1 from org_members m
+    where m.org_id = p_org and m.user_id = auth.uid()
+      and m.role in ('owner','admin')
+  )
+$$;
+
+-- orgs/org_members
+create policy orgs_select on orgs for select using (is_org_member(id));
+create policy org_members_select on org_members for select using (is_org_member(org_id));
+-- update/delete doar admin
+create policy org_members_ud on org_members for update using (is_org_admin(org_id));
+create policy org_members_del on org_members for delete using (is_org_admin(org_id));
+-- insert: owner/admin
+create policy org_members_ins on org_members for insert with check (is_org_admin(org_id));
+
+-- plans: read-only pentru admins (e util în Admin UI)
+create policy plans_admin_read on plans for select using (
+  exists(select 1 from org_members m where m.user_id = auth.uid() and m.role in ('owner','admin'))
+);
+
+-- subscriptions: vizibile doar membrilor org
+create policy subs_select on subscriptions for select using (is_org_member(org_id));
+create policy subs_update on subscriptions for update using (is_org_admin(org_id));
+create policy subs_insert on subscriptions for insert with check (is_org_admin(org_id));
+
+-- entitlements: vizibile la nivel de org; update doar admin
+create policy ents_select on entitlements for select using (is_org_member(org_id));
+create policy ents_modify on entitlements for all using (is_org_admin(org_id)) with check (is_org_admin(org_id));
+
+-- modules: citire pentru oricine e membru în orice org (poți restrânge pe pachete dacă vrei)
+create policy modules_select on modules for select using (
+  exists(select 1 from org_members m where m.user_id = auth.uid())
+);
+
+-- parameter_sets
+create policy params_select on parameter_sets for select using (true);        -- snapshots pot fi share-uibile (nu conțin PII)
+create policy params_insert on parameter_sets for insert with check (true);
+
+-- runs/prompt_scores/bundles/prompt_history — strict pe org
+create policy runs_rw on runs for all using (is_org_member(org_id)) with check (is_org_member(org_id));
+create policy ps_rw   on prompt_scores for all using (
+  exists(select 1 from runs r where r.id = prompt_scores.run_id and is_org_member(r.org_id))
+) with check (
+  exists(select 1 from runs r where r.id = prompt_scores.run_id and is_org_member(r.org_id))
+);
+create policy bndl_rw on bundles for all using (
+  exists(select 1 from runs r where r.id = bundles.run_id and is_org_member(r.org_id))
+) with check (
+  exists(select 1 from runs r where r.id = bundles.run_id and is_org_member(r.org_id))
+);
+create policy ph_rw on prompt_history for all using (is_org_member(org_id)) with check (is_org_member(org_id));
+
+-- 5) VEDERI & FUNCȚII UTILE
+-- ------------------------------------------------------------
+
+-- 5.1 View: v_all_neurons (pentru Library/Explorer)
+create or replace view v_all_neurons as
+select
+  h.id                           as neuron_id,
+  h.org_id,
+  h.module_id,
+  h.parameter_set                as parameter_set,
+  h.prompt_hash                  as prompt_hash,
+  r.id                           as run_id,
+  r.started_at, r.finished_at, r.type, r.status,
+  jsonb_build_object(
+    'clarity',      s.clarity,
+    'execution',    s.execution,
+    'ambiguity',    s.ambiguity,
+    'business_fit', s.business_fit
+  )                              as scores,
+  h.output_preview,
+  h.created_at
+from prompt_history h
+left join runs r on r.parameter_set_id = (h.parameter_set->>'id')::uuid
+                  and r.module_id = h.module_id
+                  and r.org_id = h.org_id
+left join prompt_scores s on s.run_id = r.id;
+
+grant select on v_all_neurons to anon, authenticated;  -- rls se aplică prin tabele (view e securizat implicit)
+
+-- 5.2 Funcție: calculează entitlement efectiv (org + optional user)
+create or replace function effective_entitlement(p_org uuid, p_user uuid, p_flag text)
+returns boolean language sql stable as $$
+  -- TRUE dacă există un rând (org-wide eller user-specific) cu value=true și ne-expirat
+  select coalesce( bool_or(e.value) filter (where e.expires_at is null or e.expires_at > now()), false )
+  from entitlements e
+  where e.org_id = p_org
+    and (e.user_id is null or e.user_id = p_user)
+    and e.flag = p_flag
+$$;
+
+-- 5.3 Utilitar: verifică planul curent (pentru UI/Paywall)
+create or replace function current_plan_flags(p_org uuid)
+returns jsonb language sql stable as $$
+  select p.flags
+  from subscriptions s
+  join plans p on p.code = s.plan_code
+  where s.org_id = p_org and s.status in ('trialing','active')
+  order by s.current_period_end desc nulls last
+  limit 1
+$$;
+
+-- 5.4 Verificator checksum bundles (sanity)
+create or replace function verify_bundle_checksum(p_bundle uuid)
+returns boolean language plpgsql stable as $$
+declare v_ck text; v_calc text;
+begin
+  select checksum into v_ck from bundles where id = p_bundle;
+  -- demonstrativ; în practică, calculezi pe fișierele scrise în storage din worker
+  select encode(digest(coalesce(cast((select manifest from bundles where id=p_bundle) as text),'')::bytea,'sha256'),'hex') into v_calc;
+  return v_ck = v_calc;
+end$$;
+
+-- 6) STORAGE (Supabase Storage) pentru bundles (opțional, dar recomandat)
+-- ------------------------------------------------------------
+-- Creează bucket „bundles” din UI (Storage) sau:
+--   select storage.create_bucket('bundles', public=>false);
+-- RLS pentru căi: org/{org_id}/run/{run_id}/*
+-- În worker/server, scrii fișierele și setezi `paths` în tabel.
+-- Politici de read pe storage se fac în modul Storage (securizat prin JWT + claims custom).
+
+-- 7) SEED MINIM (planuri + flags) — adaptează după nevoi
+-- ------------------------------------------------------------
+insert into plans(code,name,flags,retention_days) values
+  ('pilot','Pilot (Free)'     ,'{"canExportPDF":false,"canExportJSON":false,"canExportBundleZip":false,"canUseGptTestReal":false,"hasCloudHistory":false,"hasAPI":false}', 30),
+  ('pro'  ,'Pro'              ,'{"canExportPDF":true ,"canExportJSON":true ,"canExportBundleZip":false,"canUseGptTestReal":true ,"hasCloudHistory":true ,"hasAPI":false}', 180),
+  ('enterprise','Enterprise'  ,'{"canExportPDF":true ,"canExportJSON":true ,"canExportBundleZip":true ,"canUseGptTestReal":true ,"hasCloudHistory":true ,"hasAPI":true }', 365)
+on conflict (code) do update set name=excluded.name, flags=excluded.flags, retention_days=excluded.retention_days;
+
+-- 8) TRIGGERS (updated_at) — dacă vei adăuga coloane updated_at ulterior
+-- ------------------------------------------------------------
+-- exemplu:
+-- alter table runs add column updated_at timestamptz;
+-- create trigger t_runs_updated before update on runs
+-- for each row execute procedure moddatetime (updated_at);
+-- (necesită ext. moddatetime sau implementare custom)
+
+-- 9) CLEANUP & SAFETY
+-- ------------------------------------------------------------
+-- Politicile sunt setate strict; adminii pot vedea/edita plan/subs/entitlements,
+-- membrii pot citi resursele org-ului, nimeni nu vede alt org datorită RLS.
+-- Telemetria nu stochează prompt text; doar hash + scoruri + timpi.
+
+Explicații rapide (mapare cu cerințele tale)
+
+Tabele cheie: orgs, org_members, plans, subscriptions, entitlements, modules, parameter_sets, runs, prompt_scores (1:1), bundles (1:N), prompt_history – exact cum ai cerut; fiecare are FK-uri/indici utili.
+
+RLS by-membership: politici is_org_member/is_org_admin aplicate pe toate tabelele sensibile; membership decide vizibilitatea și drepturile de scriere.
+
+Entitlements/flags: canExportPDF, canExportJSON, canExportBundleZip, canUseGptTestReal, hasCloudHistory, hasAPI — stocate în plans.flags și/sau entitlements. Funcția effective_entitlement() calculează valoarea reală (org-wide + optional user).
+
+Bundles: export canonic — paths (rute în Storage), manifest (metadate, semnătură 7-D, scoruri), checksum (sha256); funcția verify_bundle_checksum() e un sanity check.
+
+View v_all_neurons: agregă prompt_history + ultimele runs/scores; UI-ul „Neuron Explorer” poate consuma direct această vedere, rămânând protejat de RLS.
+
+SEO/PII: promptul nu e salvat integral; output_preview e scurt, non-sensibil; telemetria din runs.telemetry nu conține textul promptului.
+
+Dacă vrei, îți pot livra și un script companion pentru webhook-urile Stripe (upsert subscriptions + populare entitlements), plus o migrate pentru crearea bucket-ului bundles și politici Storage.
+
+
+
+
+
+03_api_routes_gating.md — API editor/test/export/run + gating (prod-ready)
+0) Obiectiv
+
+Definiști, implementezi și gate-uiești rutele server (Next.js App Router) pentru editor → test (live) → export → run (Enterprise API). Respecți SSOT (ruleset.yml), 7-D enum-only + fallback per domain, semnătura 7-D, scor ≥80 cu o singură auto-corecție (“tighten-once”), fără PII în telemetrie.
+
+1) Gating & entitlement flags (canon)
+
+canUseGptTestReal → permite /api/gpt-test (Pro+).
+
+canExportPDF, canExportJSON → permite export .pdf/.json (Pro+).
+
+canExportBundleZip → permite zip (Enterprise).
+
+hasAPI → permite /api/run/{moduleId} (Enterprise + API key).
+
+Flags sunt gestionate în Supabase (tabele plans, entitlements, view-uri effective), consumate în FE/BE ca booleani.
+
+2) Concepte comune (aplicate în toate rutele)
+
+2.1 7-D normalize + validate (enum-only)
+
+Câmpuri: domain, scale, urgency, complexity, resources, application, output_format.
+
+Reguli: enum-only, raise-on-invalid; fallback by-domain când lipsesc valori; semnătură 7-D = sha256(domain|…|output_format).
+
+2.2 Scor & auto-fix (“tighten-once”)
+
+Praguri: Clarity ≥80, Execution ≥80, Ambiguity ≤20, Business-Fit ≥75; total ≥80.
+
+Dacă sub prag: rulezi o singură iterație de tighten și reevaluezi; dacă tot <80 → FAIL.
+
+2.3 Telemetrie & PII
+
+Nu loghezi conținut brut client. Chei minime: run_id, model, tokens_in/out, cost_usd, tta_seconds, score_total, scores, policy_hits, ruleset_version.
+
+Persistență în runs (+ prompt_scores la test).
+
+2.4 Export bundle + manifest + checksum
+
+Artefacte canonice: prompt.txt, prompt.md, prompt.json, prompt.pdf, telemetry.json, manifest.json, checksum.txt (ordine canonică pentru checksum).
+
+Zip doar Enterprise. Persisti în bundles cu hash SHA256 validat.
+
+3) Endpoints (contract + flux + erori)
+3.1 POST /api/gpt-editor (optimizare prompt — fără gating)
+
+Scop: Strângi promptul (claritate + structură), păstrând secțiunile standard. Fără costuri de gating.
+
+Request (JSON)
+
+{
+  "orgId": "uuid",
+  "userId": "uuid",
+  "moduleId": "M12",
+  "sevenD": { "domain": "saas", "output_format": "md", "...": "optional" },
+  "promptDraft": "<raw prompt>"
+}
+
+
+Validări
+
+7-D: enum-only + fallback domain; calculezi signature_7d.
+
+Blochezi termeni & promisiuni interzise (linter de brand, opțional).
+
+Response (200)
+
+{
+  "promptEdited": "<optimized prompt>",
+  "usage": { "total_tokens": 1234, "duration_ms": 850 }
+}
+
+
+Erori:
+400 INVALID_7D_ENUM, 422 RULESET_DEFAULT_MISSING, 500 INTERNAL.
+
+3.2 POST /api/gpt-test (live + scor rubrică — gated canUseGptTestReal)
+
+Scop: Rulezi promptul pe model live, evaluezi rubric score, aplici tighten-once dacă e sub prag, persiști run + scores.
+
+Gating: verify canUseGptTestReal === true pentru org → altfel 403 + cod upsell.
+
+Request (JSON)
+
+{
+  "orgId":"uuid",
+  "userId":"uuid",
+  "moduleId":"M12",
+  "sevenD": { "domain":"saas","output_format":"spec","...": "optional" },
+  "prompt":"<optimized prompt from editor>"
+}
+
+
+Flux
+
+Normalizezi 7-D, calculezi signature_7d.
+
+Creezi run (status queued).
+
+Execuți modelul live; măsori duration_ms.
+
+Evaluezi (clarity/execution/ambiguity/business_fit) + composite.
+
+Dacă verdict ≠ PASS → tighten 1× → reevaluezi.
+
+Actualizezi runs (status success|error), inserezi prompt_scores.
+
+Response (200)
+
+{
+  "runId":"uuid",
+  "verdict":"pass|partial_pass|fail",
+  "score": 84,
+  "breakdown": {
+    "clarity": 88, "execution": 83, "ambiguity": 12, "business_fit": 79, "composite": 84
+  },
+  "prompt": "<possibly tightened>",
+  "usage": { "total_tokens": 2312, "duration_ms": 1740 }
+}
+
+
+Erori:
+403 ENTITLEMENT_REQUIRED, 400 INVALID_7D_ENUM, 429 RATE_LIMITED, 500 INTERNAL.
+
+3.3 POST /api/export/bundle (export artefacte — gated Pro/Enterprise)
+
+Scop: Generezi artefactele canonice, scrii manifest.json, calculezi checksum.txt, creezi (opțional) .zip pentru Enterprise, persiști în bundles.
+
+Gating
+
+Pro: permite .pdf + .json;
+
+Enterprise: + .zip (flag canExportBundleZip).
+
+Request (JSON)
+
+{
+  "orgId":"uuid",
+  "runId":"uuid",
+  "formats":["md","pdf","json","zip"]
+}
+
+
+Validări & flux
+
+Verifici entitlements per format.
+
+Construiești fișierele în ordinea canonică; calculezi SHA256 per fișier și checksum bundle.
+
+Scrii manifest (bundle_id, run_id, module_id, score, files[], license_notice).
+
+Persisti row în bundles (formats[], paths, checksum, version, license_notice).
+
+Response (201)
+
+{
+  "bundleId":"uuid",
+  "paths":{
+    "md":"/storage/.../prompt.md",
+    "pdf":"/storage/.../prompt.pdf",
+    "json":"/storage/.../prompt.json",
+    "zip":"/storage/.../bundle.zip"
+  },
+  "checksum":"sha256:…",
+  "manifest":"/storage/.../manifest.json"
+}
+
+
+Erori:
+403 ENTITLEMENT_REQUIRED, 409 CHECKSUM_MISMATCH, 404 RUN_NOT_FOUND, 500 INTERNAL.
+
+3.4 POST /api/run/{moduleId} (Enterprise API — gated hasAPI + rate-limit per org)
+
+Scop: Endpoint unificat (public API) care execută modulul, aplică 7-D, scor ≥80 (tighten-once), face export conform planului, întoarce artefactele/manifestul.
+
+Security
+
+Header Authorization: Bearer <api_key> → verifici api_keys.key_hash, active, rate_limit per org.
+
+429 dacă depășești cota (ex: default 60 req/min/org). (Cota se citește din api_keys.rate_limit.)
+
+Request (JSON)
+
+{
+  "orgId":"uuid",
+  "sevenD": { "domain":"fintech","output_format":"spec","...": "optional" },
+  "inputs": { "...": "module-specific" },
+  "export": { "formats": ["md","pdf","json","zip"] }
+}
+
+
+Flux
+
+Verify hasAPI + rate-limit.
+
+Normalizezi 7-D (enum-only + fallback), calculezi signature_7d.
+
+Rulezi modulul → generezi prompt + output (intern).
+
+Test Engine (scor + tighten-once).
+
+Export bundle (în funcție de entitlements) + persist în bundles.
+
+Returnezi manifest + path-uri artefacte.
+
+Response (201)
+
+{
+  "runId": "uuid",
+  "bundleId": "uuid",
+  "score": 86,
+  "verdict": "pass",
+  "manifest": { "...": "see storage path" },
+  "paths": { "md": "...", "pdf": "...", "json": "...", "zip": "..." }
+}
+
+
+Erori:
+401 UNAUTHENTICATED, 403 ENTITLEMENT_REQUIRED, 429 RATE_LIMITED, 400 INVALID_7D_ENUM, 422 INPUT_SCHEMA_MISMATCH, 409 RULESET_CONFLICT.
+
+4) OpenAPI (fragment) — sumar rute
+
+Păstrezi contractele de mai jos în /app/api/openapi.json și le publici în Docs.
+
+paths:
+  /api/gpt-editor:
+    post:
+      summary: Tighten prompt (no gating)
+  /api/gpt-test:
+    post:
+      summary: Live test + rubric scoring (gated)
+  /api/export/bundle:
+    post:
+      summary: Export artifacts + manifest + checksum (gated per plan)
+  /api/run/{moduleId}:
+    post:
+      summary: Unified Enterprise run (API key + org rate-limit)
+
+5) Middleware & utilitare (schelet TypeScript)
+
+withEntitlementGate(flag) — verifică flag-ul pentru org; 403 dacă absent.
+normalize7D(input, ruleset) — aplică enum-only + fallback + signature.
+evaluateAndTightenOnce(prompt, sevenD) — aplică rubric + o iterație de tighten.
+exportBundle(runId, formats) — scrie artefacte, manifest, checksum, row în bundles.
+
+6) Rate-limit & error codes
+
+Default: 60 req/min/org pentru /api/run/* (override per cheie în api_keys.rate_limit). Răspunzi cu 429 + Retry-After.
+
+Coduri standardizate: INVALID_7D_ENUM, RULESET_DEFAULT_MISSING, ENTITLEMENT_REQUIRED, RATE_LIMITED, INPUT_SCHEMA_MISMATCH, RULESET_CONFLICT.
+
+7) Persistență (tabele implicate)
+
+runs (start/finish, tokens, cost, telemetry) + prompt_scores.
+
+bundles (formats, paths, checksum, license_notice).
+
+api_keys (key_hash, active, rate_limit).
+
+8) Exemple curl
+
+/api/gpt-editor
+
+curl -X POST https://site.com/api/gpt-editor \
+ -H 'Content-Type: application/json' \
+ -d '{"orgId":"...","userId":"...","moduleId":"M12","sevenD":{"domain":"saas","output_format":"md"},"promptDraft":"..."}'
+
+
+/api/gpt-test
+
+curl -X POST https://site.com/api/gpt-test \
+ -H 'Content-Type: application/json' \
+ -d '{"orgId":"...","userId":"...","moduleId":"M12","sevenD":{"domain":"saas","output_format":"spec"},"prompt":"..."}'
+
+
+/api/export/bundle
+
+curl -X POST https://site.com/api/export/bundle \
+ -H 'Content-Type: application/json' \
+ -d '{"orgId":"...","runId":"...","formats":["md","pdf","json"]}'
+
+
+/api/run/{moduleId}
+
+curl -X POST https://site.com/api/run/M12 \
+ -H 'Authorization: Bearer <API_KEY>' -H 'Content-Type: application/json' \
+ -d '{"orgId":"...","sevenD":{"domain":"fintech","output_format":"spec"},"inputs":{},"export":{"formats":["md","pdf","json","zip"]}}'
+
+9) Teste de acceptanță (minim)
+
+Editor: 7-D invalid → 400; valid → promptEdited returnat.
+
+Test (gating): fără canUseGptTestReal → 403; cu flag → verdict & scores persistate.
+
+Scor ≥80: prompt sub prag → tighten-once → PASS sau FAIL; telemetrie fără PII.
+
+Export: Pro cere .pdf/.json, Enterprise permite .zip; bundles.checksum valid.
+
+Run (API): API key inactiv → 401; peste cotă → 429; returnezi manifest + paths.
+
+10) Notă de conformitate (SSOT)
+
+SSOT ruleset guvernează 7-D, scor, export, telemetrie (nu loghezi conținut brut). Orice override → refuzi cu 409 RULESET_CONFLICT.
+
+Anexe — referințe interne
+
+Ruleset.yml (SSOT): enums 7-D, fallback, test thresholds, export bundle, telemetry keys.
+
+Rubrică Test Engine + praguri (tighten-once).
+
+DB model & entitlements/API keys/bundles.
+
+Brand/Gating FE (naming flags, paywall).
+
+A54_txt_line — linii text, scrolling 8s
+
+A55_api_key — cheie cu stea, issue
+
+A56_rate_limit — bară prog. 60s
+
+A57_retry — arc dublu, retry
+
+A58_backoff — timp dublare, tick
+
+A59_score_meter — semicerc 0–100, onTest
+
+A60_pass_badge — PASS ribbon, success
+
+A61_fail_badge — FAIL corner, error
+
+A62_partial_badge — ~PASS, warn
+
+A63_entropy — puncte aleatoare, auto
+
+A64_vector_db — noduri + muchii, pulse
+
+A65_chunk — blocuri apar pe rând
+
+A66_overlap — ferestre glisante
+
+A67_search — lupă cu sweep
+
+A68_compare — <> flip, hover
+
+A69_diff — Δ flash, compare
+
+A70_guard — stop barieră 1s
+
+A71_mask — mască dezvăluire, hover
+
+A72_clip — clipPath reveal, auto
+
+A73_pathfinder — săgeți multiple, auto
+
+A74_glitch — mic glitch 120ms
+
+A75_signal — 5 bare semnal, onIdle
+
+6) Accesibilitate & Performanță (audit final)
+
+a11y: role="img" + aria-label doar pentru iconuri informative; altfel aria-hidden="true"
+
+Contrast: ≥ 4.5:1 pe textul citatelor; tokens max opacity:.55 când apare citat
+
+CLS: rezervă spațiul pentru citate; nu schimba layout pe apariție
+
+CPU/GPU: < 8% la 60fps pe desktop mediu; pe mobil limitezi tokens la densitatea “sm”
+
+Sprite: grupează iconuri statice frecvente într-un singur sprite (<symbol>)
+
+Stop în reduce-motion: tokens/figuri/citate fără keyframes; numai fade mic pentru lizibilitate
+
+z-index: păstrează ordinea definită; nu depăși z-50 pentru elemente non-UI
+
+7) Exemple scurte (CSS/JS)
+
+Typing (reduce-motion aware):
+
+@media (prefers-reduced-motion: no-preference){
+  .typing span::after{content:"|";animation:blink 600ms steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+}
+
+
+Token onQuote:
+
+if (state.quoteActive) {
+  tokens.forEach(t => t.style.opacity = String(BG_CONFIG.tokenOnQuote.opacity));
+} else {
+  tokens.forEach(t => t.style.opacity = "");
+}
+
+8) Fișiere livrabile
+
+components/background/* (Root + 4 layere)
+
+public/anim/A01…A75.svg + .meta.json per SVG
+
+data/tokens.json, data/quotes.json
+
+docs/04_animations_backgrounds.md (acest fișier)
+
+
+
+
+
+
+05_pricing_stripe_entitlements.md — Pricing, Stripe, Entitlements & Packs (prod-ready)
+0) Obiectiv & principii
+
+Implementezi un sistem clar de monetizare și gating pe 3 planuri (Pilot/Free, Pro, Enterprise) cu:
+
+creștere graduală pe capabilități cheie: Run Live, Export PDF/JSON, ZIP bundle, API, Librărie cloud;
+
+entitlements la nivel de organizație (și opțional per user/seat);
+
+Stripe ca sursă de adevăr pentru abonamente + webhooks deterministe cu idempotency;
+
+trial Pro cu watermark pe exporturi;
+
+packs verticale (FinTech / Edu / E-commerce) care activează compliance lints + presets;
+
+governance & privacy-by-design (DPA, PII-safe, retenție controlată).
+
+1) Planuri & feature matrix (gating)
+Capability	Pilot (Free)	Pro	Enterprise
+Run Live (/api/gpt-test)	✗ (demo/sim)	✓ (rate-limit standard)	✓ (rate-limit extins + SLO)
+Export PDF/JSON	✗	✓ (cu watermark în trial)	✓ (fără watermark)
+Export ZIP (bundle.zip)	✗	✗	✓
+API public /api/run/{moduleId}	✗	✗	✓ (API key + per-org rate-limit)
+Librărie cloud (istoric + bundles)	local only	✓	✓ (cu retention policy extins)
+Packs (FinTech/Edu/E-com)	✗	✓ (add-on plătit)	✓ (incluse)
+SSO/Seats	✗	1 seat	✓ (5 seats incl. + add seats)
+SLA/Support	community	email	priority (24–72h)
+
+Prețuri (recomandate; ajustabile în .env):
+Pro: 49€/lună | 490€/an (10× lunar).
+Enterprise: 299€/lună (include 5 seats) | 2990€/an; +59€/seat/lună peste 5.
+Packs: 19€/lună/pack (Pro), incluse în Enterprise.
+
+2) Entitlements (flags) — contract canonic
+
+La nivel de org, păstrezi flags string→boolean/JSON. Minim necesar:
+
+canUseGptTestReal (Pro/Ent)
+
+canExportPDF, canExportJSON (Pro/Ent)
+
+canExportBundleZip (Ent)
+
+hasAPI (Ent)
+
+hasCloudLibrary (Pro/Ent)
+
+pack.fintech, pack.edu, pack.ecom (Pro dacă e cumpărat; Ent: true)
+
+seats.included (int), seats.extra (int)
+
+trial.active (bool), trial.ends_at (ISO), trial.watermark_exports (bool=true)
+
+rate_limit.org_per_min (int; ex. Pro=30, Ent=60/120 custom)
+
+Regula de fier: UI & API NU verifică planul textual, verifică flags. Planul mapează în flags prin webhooks.
+
+3) Stripe — produse, prețuri, env mapping
+
+Definești următoarele ID-uri în .env:
+
+# Plans
+STRIPE_PRICE_PRO_MONTH=
+STRIPE_PRICE_PRO_YEAR=
+STRIPE_PRICE_ENT_MONTH=
+STRIPE_PRICE_ENT_YEAR=
+
+# Seats (Enterprise, add-on)
+STRIPE_PRICE_ENT_SEAT_MONTH=
+STRIPE_PRICE_ENT_SEAT_YEAR=
+
+# Packs (add-ons pe org)
+STRIPE_PRICE_PACK_FINTECH_MONTH=
+STRIPE_PRICE_PACK_FINTECH_YEAR=
+STRIPE_PRICE_PACK_EDU_MONTH=
+STRIPE_PRICE_PACK_EDU_YEAR=
+STRIPE_PRICE_PACK_ECOM_MONTH=
+STRIPE_PRICE_PACK_ECOM_YEAR=
+
+# Webhook
+STRIPE_WEBHOOK_SECRET=
+
+
+Metadata recomandată pe Price/Product
+{ "plan":"pro|enterprise|pack", "period":"month|year", "pack":"fintech|edu|ecom|none", "seats_included":"5" }
+
+4) Checkout & Portal — fluxuri
+
+Checkout Pro: creezi subscription → setezi entitlements Pro; dacă trial_days=7, setezi trial.* și watermark on.
+
+Checkout Enterprise: creezi subscription → setezi entitlements Ent + seats.included=5, hasAPI=true, canExportBundleZip=true, rate_limit.org_per_min=60 (override dacă <custom>).
+
+Add-on Packs (Pro): subscription secundar (sau multiple) cu metadata pack=* → setezi pack.*=true.
+
+Add seats (Ent): subscription pentru seats → incrementezi seats.extra.
+
+Customer Portal: upgrade/downgrade/cancel → webhook-urile re-scriu flags în 1:1 cu noul status.
+
+5) Webhooks — mapping detaliat (idempotent)
+
+Route: /api/stripe/webhook (App Router, POST)
+
+Events critice
+
+checkout.session.completed → creezi/atașezi org_id la customer, scrii subscriptions + setezi flags inițiale.
+
+customer.subscription.created|updated → sincronizezi: status, current_period, trial, items (plan + add-ons). Recalculezi toate flags.
+
+invoice.paid → notezi ultima plată, ridici eventuale soft-locks.
+
+invoice.payment_failed → marchezi past_due → poți soft-degrada (ex: limite mai mici).
+
+customer.subscription.deleted → ștergi flags de plan (păstrezi doar local history), revoci API key.
+
+customer.subscription.trial_will_end → trimite email in-product; la trial.ends_at setezi trial.active=false (și scoți watermark doar după prima plată).
+
+Idempotency
+
+Păstrezi stripe_event_id într-un tabel stripe_events(id, type, created_at); refuzi re-execuția.
+
+Toate update-urile în tranzacții; re-calculezi flags pornind DOAR din line items active.
+
+Transformare → Entitlements (pseudocod):
+
+const flags = baseFreeFlags();
+
+for (const item of subscription.items) {
+  switch (item.metadata.plan) {
+    case 'pro':
+      enable(flags, ['canUseGptTestReal','canExportPDF','canExportJSON','hasCloudLibrary']);
+      set(flags, 'rate_limit.org_per_min', 30);
+      if (subscription.trial_end && now < trial_end) {
+        set(flags, 'trial.active', true);
+        set(flags, 'trial.watermark_exports', true);
+        set(flags, 'trial.ends_at', toISO(trial_end));
+      }
+      break;
+    case 'enterprise':
+      enable(flags, ['canUseGptTestReal','canExportPDF','canExportJSON','canExportBundleZip','hasAPI','hasCloudLibrary']);
+      set(flags, 'rate_limit.org_per_min', 60);
+      set(flags, 'seats.included', item.metadata?.seats_included ?? 5);
+      disable(flags, 'trial.active'); disable(flags, 'trial.watermark_exports');
+      break;
+    case 'pack':
+      enable(flags, [`pack.${item.metadata.pack}`]);
+      break;
+    case 'ent_seat':
+      inc(flags, 'seats.extra', item.quantity);
+      break;
+  }
+}
+persistEntitlements(orgId, flags);
+
+6) Trial Pro + Watermark (PDF/JSON)
+
+Regulă: în trial.active=true → toate exporturile pdf/json includ watermark & license_notice: "TRIAL — NOT FOR REDISTRIBUTION".
+
+PDF: layer diagonal (text subțire, 20% opacitate) pe fiecare pagină; metadată X-Forge-Watermark: Trial.
+
+JSON: câmp suplimentar în rădăcină:
+
+{ "_watermark": { "trial": true, "notice": "Trial — Not for redistribution", "org_id": "..." } }
+
+
+UI badge: “Trial active — exporturile includ watermark” + CTA “Activează Pro complet”.
+
+Scoți watermark la primul invoice.paid (și setezi trial.active=false).
+
+7) Packs verticale (FinTech / Edu / E-commerce)
+
+Ce oferă un Pack (se aplică în modulul Editor/Test):
+
+Compliance lints — reguli suplimentare care blochează/promt-corectează:
+
+FinTech: interdicții la promisiuni de randament garantat, mențiuni licențiere (MiCA/PSD2) dacă faci referință la plăți/crypto, PII scrub pe IBAN/card, disclaimere “nu e sfat financiar”.
+
+Edu: COPPA/FERPA vibes (nu colectezi date minori), disclaimere performanță (“rezultatele pot varia”), anti-plagiat, citare surse.
+
+E-commerce: preț total transparent (inclusiv taxe), drept de retur, anti-dark-patterns (confirmare clară la upsell), conformitate cookie/consimțământ.
+
+Presets — 10–20 șabloane calibrate: structuri de prompt, rubrici de scoring pre-setate, hooks & copy blocks.
+
+Guardrails runtime — reguli de generare (flaguri) care ajustează tone/claims și activează post-generation checks înainte de export.
+
+Gating:
+
+Pro: poți adăuga oricare Pack (19€/lună/pack).
+
+Enterprise: toate Packs incluse → setezi pack.fintech=pack.edu=pack.ecom=true.
+
+8) Paywalls în UI (momente “aha”)
+
+Trigger exact + mesaj:
+
+Run Live (buton pe Generator): dacă !canUseGptTestReal → deschizi paywall Pro (“Vezi scorul real + rubrică. Activează Pro.”).
+
+Export PDF/JSON (bara de Export): dacă !canExportPDF/JSON → paywall Pro; dacă trial.active → tooltip “Exporturile tale au watermark până finalizezi plata.”
+
+Export ZIP: dacă !canExportBundleZip → paywall Enterprise (“Bundle complet + manifest + checksum + zip”).
+
+API: dacă !hasAPI → paywall Enterprise (“Rulezi module via API. Cheie per org. Rate-limit dedicat.”).
+
+Librărie cloud: dacă !hasCloudLibrary → paywall Pro (“Istoric în cloud + bundles + re-run rapid.”).
+
+UX
+
+Paywall modal afisează direct diferența de capabilitate + CTA către Checkout (Stripe) sau Pricing (ancoră).
+
+Păstrezi data-gate="..." pe butoane pentru telemetrie.
+
+9) Supabase — tabele & model minim
+-- orgs, users, org_members (standard)
+create table subscriptions(
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null,
+  stripe_customer_id text not null,
+  stripe_subscription_id text not null,
+  plan text not null,              -- 'pro' | 'enterprise'
+  status text not null,            -- 'active' | 'trialing' | 'past_due' | 'canceled' | ...
+  current_period_end timestamptz,
+  trial_end timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table entitlements(
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null,
+  flag text not null,
+  value jsonb not null,
+  source text not null,            -- 'stripe' | 'admin' | 'seed'
+  expires_at timestamptz,
+  created_at timestamptz default now(),
+  unique(org_id, flag)
+);
+
+create table api_keys(
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null,
+  key_hash text not null unique,
+  label text,
+  rate_limit_per_min int default 60,
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+create table stripe_events(
+  id text primary key,             -- event.id
+  type text not null,
+  created_at timestamptz default now()
+);
+
+
+RLS: entitlements readable by org members; write doar de service role (webhook) + admin.
+
+10) Seats (Enterprise)
+
+seats.included=5 by default; seats.extra crește cu add-on seat product.
+
+În UI, afișezi Seats used / Seats allowed; dacă depășești, blochezi invitațiile și marchezi soft-overage (grace 7 zile).
+
+La downgrade Ent→Pro: invalidezi extra seats, păstrezi 1 seat (owner).
+
+11) Rate-limit per org
+
+Default: Pro=30 req/min, Enterprise=60 req/min (custom până la 120+).
+
+Aplicație: middleware pentru /api/run/* + antet Retry-After.
+
+Telemetrie: loghezi hit/miss per org, ca să detectezi nevoia de upgrade.
+
+12) Governance & Compliance
+
+DPA: livrezi DPA standard la Enterprise; procesare doar în regiuni aprobate; sub-procesatori listați.
+
+Privacy-by-Design: nu stochezi conținut brut al clientului în telemetrie; PII scrub.
+
+Retention: Pilot (local only), Pro (180 zile), Enterprise (365+ configurabil).
+
+Right-to-be-forgotten: endpoint intern care șterge artefacte/bundles/telemetrie la cerere.
+
+Watermark policy: clar în ToS (trial).
+
+Audit trail: păstrezi mapping webhook → entitlements (who/when/what).
+
+13) Handlers — schelete (TypeScript, Next.js)
+
+/api/stripe/webhook
+
+export async function POST(req: Request) {
+  const sig = req.headers.get('stripe-signature')!;
+  const body = await req.text();
+
+  const event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+  if (await seen(event.id)) return new Response('OK'); // idempotent
+
+  switch (event.type) {
+    case 'checkout.session.completed': await onCheckoutCompleted(event); break;
+    case 'customer.subscription.created':
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted': await onSubChange(event); break;
+    case 'invoice.paid': await onInvoicePaid(event); break;
+    case 'invoice.payment_failed': await onInvoiceFailed(event); break;
+    case 'customer.subscription.trial_will_end': await onTrialWillEnd(event); break;
+  }
+  await markSeen(event.id, event.type);
+  return new Response('OK');
+}
+
+
+Watermark toggle în export
+
+const trial = await getEntitlement(orgId,'trial.active');
+const wm = await getEntitlement(orgId,'trial.watermark_exports');
+
+if (trial && wm) {
+  pdf = applyDiagonalWatermark(pdf, 'TRIAL — NOT FOR REDISTRIBUTION', {opacity:0.2, step:180});
+  json._watermark = { trial:true, notice:'Trial — Not for redistribution', org_id:orgId };
+}
+
+14) Edge cases & erori
+
+Downgrade Ent→Pro: invalidezi API key, ZIP export, packs rămân active doar dacă sunt plătite separat.
+
+Anulare în perioada plătită: menții flags până la current_period_end; setezi expires_at pe entitlements.
+
+Plată eșuată: past_due → limitezi rate-limit la jumătate, blochezi export PDF/JSON după 7 zile.
+
+Trial fără plată: la trial.ends_at → scoți trial.active, păstrezi Pro cu capabilități limitate? Recomandare: revocă Pro dacă nu e confirmată plata.
+
+15) Acceptanță (blockers dacă NU trec)
+
+Paywalls apar exact pe: Run Live, Export PDF/JSON, ZIP, API, Librărie cloud.
+
+Webhook-urile setează exclusiv flags; UI/API citesc doar flags.
+
+Trial Pro adaugă watermark pe toate PDF/JSON.
+
+Packs adaugă lints + presets vizibile în Editor (badge activ).
+
+Downgrade/Cancel curăță API key și ZIP entitlement.
+
+Telemetrie nu include PII; retention respectat per plan.
+
+16) QA checklist (scurt)
+
+Pro trial: export PDF → watermark prezent; după plată → watermark dispare.
+
+Packs: cu pack.fintech=true, prompt ce promite randament → linter blochează cu mesaj util.
+
+Enterprise: /api/run/* cu 70 req/min → primești 429 + Retry-After.
+
+Downgrade Ent→Pro: ZIP dispare, API key revocat, history rămâne.
+
+Invoice failed: după 7 zile → export PDF/JSON blocat.
+
+Portal upgrade Pro→Ent: flags re-scrise instant, UI afișează API tab.
+
+
+
+
+
+
+
+06_launch_ops_ci_qa.md — Launch, QA, Observabilitate, SEO (prod-ready)
+0) Obiectiv & SLA
+
+Livrezi lansarea PromptForge v3 cu un ciclu CI/CD sigur (GitHub→Vercel), migrații Supabase fără drift, QA automat + manual, observabilitate minimă dar utilă și SEO corect. Ținte ne-negociabile:
+
+Lighthouse ≥95 (Performance ≥90, rest ≥95) pe /, /generator, /pricing, /docs/api.
+
+60fps pe animații (jank-free), prefers-reduced-motion respectat strict.
+
+Export determinist (manifest + checksum valid, ordonare canonică).
+
+TTA_text ≤60s, SOP ≤300s, pass-rate ≥99% săptămânal pe fluxul Generate → Test → Export.
+
+Fără PII în telemetrie și GTM (whitelist de evenimente).
+
+1) CI/CD — GitHub → Vercel, Supabase, PR Previews, Drift Check
+1.1 Ramuri & protecții
+
+main: protejat; cere Passing CI, Drift = 0, Lighthouse ≥95, Playwright OK.
+
+feat/*: PR cu preview Vercel automat; comentariu cu URL de preview.
+
+Template PR obligatoriu: scop, checklist (QA & SEO), link la preview, dif migrații.
+
+1.2 Workflows cheie (GitHub Actions — schelete)
+
+(A) pr.yml — Build + Lint + Typecheck + Drift + E2E (headless)
+
+name: PR CI
+on: pull_request
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with: { version: 9 }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm lint && pnpm typecheck
+      - name: Supabase drift (dry-run)
+        run: |
+          pnpm supabase db diff --use-migra --schema public --local > /tmp/diff.sql || true
+          test ! -s /tmp/diff.sql # fail dacă există drift
+      - name: Build
+        run: pnpm build
+      - name: Playwright
+        run: pnpm exec playwright install --with-deps && pnpm test:e2e
+
+
+(B) lighthouse-ci.yml — pe Preview URL (comentariu cu scoruri)
+
+name: Lighthouse CI
+on: pull_request
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for Vercel Preview
+        uses: patrickedqvist/wait-for-vercel-preview@v1.4.0
+        id: vercel
+        with: { token: ${{ secrets.VERCEL_TOKEN }} }
+      - run: |
+          npx @lhci/cli autorun \
+            --collect.url=${{ steps.vercel.outputs.url }}/ \
+            --collect.url=${{ steps.vercel.outputs.url }}/generator \
+            --collect.url=${{ steps.vercel.outputs.url }}/pricing \
+            --collect.url=${{ steps.vercel.outputs.url }}/docs/api \
+            --assert.assertions.performance>=0.90 \
+            --assert.assertions['categories:accessibility']>=0.95 \
+            --assert.assertions['categories:best-practices']>=0.95 \
+            --assert.assertions['categories:seo']>=0.95
+
+
+(C) release.yml — Deploy Prod + Migrations gating
+
+name: Release
+on:
+  push:
+    branches: [main]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm i --frozen-lockfile
+      - name: Apply migrations
+        run: pnpm supabase db push --use-migra --linked
+      - name: Production deploy (Vercel)
+        run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+
+1.3 Supabase — migrații & drift
+
+Lucrezi doar cu migrații versionate (db/migrations/*.sql).
+
+În PR: rulezi supabase db diff --use-migra (dry-run). PR nu se aprobă dacă diff.sql are conținut.
+
+În Release: supabase db push (idempotent). Dacă eșuează → rollback către buildul precedent Vercel.
+
+1.4 Environments
+
+Vercel: preview, staging (opțional), production.
+
+Supabase: un singur proiect prod; pe PR faci doar drift check (dry-run). Optional: proiect staging separat pentru testarea efectivă a migrațiilor.
+
+1.5 Secrete & config (minim)
+
+NEXT_PUBLIC_SITE_URL, SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE (Actions only), VERCEL_TOKEN.
+
+2) QA — Performanță, A11y, Determinism Export
+2.1 Bugete de performanță (per pagină)
+
+LCP ≤ 2.0s (simulat 4G throttling), CLS ≤ 0.02, TBT ≤ 150ms (lab).
+
+FPS: 60fps pe animații (observă “Jank ≤ 1 frame/10s” în timeline).
+
+Imagini: next/image cu sizes corect; prefetch doar pentru rute critice.
+
+2.2 Respectă prefers-reduced-motion
+
+Toate keyframes oprite în reduce; menții doar fade ≤120ms.
+
+Test Playwright:
+
+test('reduce-motion honored', async ({ context, page }) => {
+  await context.grantPermissions([]);
+  await context.addInitScript(() => {
+    Object.defineProperty(window, 'matchMedia', { value: q => ({ matches: q.includes('reduce') })});
+  });
+  await page.goto('/generator');
+  await expect(page.locator('.animated')).toHaveCSS('animation-name','none');
+});
+
+2.3 Lighthouse CI + Axe
+
+Rulezi LHCI pe Preview; eșuezi PR sub prag.
+
+Rulezi axe în Playwright pentru A11y error-free (role, aria, contrast ≥ 4.5).
+
+2.4 Determinism export (manifest + checksum)
+
+Ordine canonică fișiere:
+prompt.txt → prompt.json → prompt.md → prompt.pdf → telemetry.json → manifest.json → checksum.txt
+
+Hash SHA256 pe conținut normalizat (EOL LF, fără timestampuri în PDF meta; setezi CreationDate fix în trial).
+
+Test Jest:
+
+it('bundle is deterministic', async () => {
+  const a = await buildBundle(runId,'md,pdf,json');
+  const b = await buildBundle(runId,'md,pdf,json');
+  expect(a.checksum).toBe(b.checksum);
+});
+
+2.5 E2E (scenarii minime)
+
+/generator: Generate → (gated) Run Live → paywall apare.
+
+Pro: Run Live → Score ≥80 → Export PDF/JSON (trial: watermark prezent).
+
+Ent: Export ZIP → manifest + checksum valide; download OK.
+
+Reduce-motion: animații oprite, layout stabil (fără CLS spike).
+
+3) Observabilitate — metri, loguri, alerte
+3.1 Definiții KPI
+
+TTA_text: ms dintre POST /api/gpt-editor (acceptat) și răspuns (200). Țintă ≤60s P95.
+
+SOP_time: ms dintre Generate și artefactul prompt.md finit (pipeline complet) — ≤300s P95.
+
+pass_rate: % rulari /api/gpt-test cu score ≥80 (după tighten-once) / total. Țintă ≥99% / săptămână.
+
+error_rate_api: 5xx per 1k requests < 1.
+
+3.2 Instrumentare (ușoară, fără PII)
+
+Wrapper logEvent(name, attrs) → scrie în telemetry.events (Supabase) cu:
+
+run_id, org_id, module_id, duration_ms, score, status, route, fără prompt/output.
+
+Web-Vitals în runtime (Next): FID/INP, LCP, CLS, TTFB → trimite la /api/telemetry/vitals.
+
+NU salvezi raw input prompt sau exporturi în loguri.
+
+3.3 Dashboards & alerte
+
+Panouri minime (Supabase SQL + Grafana/Metabase dacă disponibil):
+
+Ops: TTA_text P50/P95, SOP_time P50/P95, error_rate_api.
+
+Scoring: distribuția scorurilor, pass_rate daily/weekly.
+
+Alerte (cron/Edge Function la 5 min):
+
+TTA_text P95 > 60s sau SOP_time P95 > 300s → Slack #ops.
+
+pass_rate 7-day < 99% → Slack #quality.
+
+Error rate > 0.1% în 30 min → Pager/Slack.
+
+4) GTM — whitelist evenimente (minim, fără PII)
+
+Injectezi GTM doar după consimțământ. Evenimente permise:
+
+Event	Când	Params (fără PII)
+view_home_above_fold	la 500ms după FCP pe /	{ url, ab_test, ver }
+cta_primary_click	click pe CTA principal (Try Generator)	{ url, cta_id }
+cta_secondary_click	click pe („Pricing”, „Docs”)	{ url, cta_id }
+scroll_75	când user trece de 75% pe pagină	{ url }
+open_nav	deschidere meniu	{ url }
+
+Snippet:
+
+window.dataLayer = window.dataLayer || [];
+function ff(evt,p){ dataLayer.push({ event:evt, ...p }); }
+ff('view_home_above_fold',{ url:location.pathname, ver:'v3' });
+
+5) SEO — titluri, meta, OG, copy clar
+5.1 Reguli
+
+Title ≤60 caractere; meta description ≤155.
+
+Include explicit: „50 module”, „7-D Parameter Engine”, „bundle export” pe /.
+
+OG tags pe toate rutele strategice; imagine 1200×630 (dinamică).
+
+5.2 Exemple (Next 14 Metadata)
+// app/layout.tsx
+export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+  title: "PromptForge v3 — 50 module, 7-D Parameter Engine, bundle export",
+  description: "Optimizezi, testezi și exporți prompturi industrial în 30 de minute. 50 module. 7-D Parameter Engine. Export bundle cu manifest și checksum.",
+  openGraph: {
+    title: "PromptForge v3",
+    description: "50 module. 7-D Parameter Engine. Export bundle.",
+    url: "/",
+    siteName: "PromptForge",
+    images: [{ url: "/og/landing.png", width: 1200, height: 630 }],
+    type: "website"
+  },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true }
+};
+
+5.3 Sitemap & robots
+// app/sitemap.ts
+export default async function sitemap() {
+  const base = process.env.NEXT_PUBLIC_SITE_URL!;
+  return [
+    { url: `${base}/`, priority: 1.0 },
+    { url: `${base}/generator`, priority: .9 },
+    { url: `${base}/pricing`, priority: .8 },
+    { url: `${base}/docs/api`, priority: .7 }
+  ];
+}
+// app/robots.ts
+export default function robots(){ return { rules:{ userAgent:'*', allow:'/' }, sitemap:`${process.env.NEXT_PUBLIC_SITE_URL}/sitemap.xml` } }
+
+5.4 Copy validat (hero /)
+
+H1: „PromptForge v3 — 50 module. 7-D Parameter Engine. Export bundle.”
+
+Sub: „Treci de la prompt la scor și export în 30 de minute. Manifest, checksum, zip (Enterprise).”
+
+CTA: „Try Generator” / „Pricing”.
+
+6) Runbook de lansare (detaliat)
+6.1 Pre-flight (cu 24–2h înainte)
+
+Rulează PR final → Preview OK, LHCI ≥95, Playwright verde, Drift=0.
+
+Verifică mediile: NEXT_PUBLIC_SITE_URL, chei Stripe/Supabase setate în Vercel.
+
+Verifică OG images generate, sitemap accesibil, robots corect.
+
+Testează reduce-motion manual (Chrome DevTools → Rendering → Emulate).
+
+6.2 Deploy & verificări (T-0)
+
+main → Actions Release: migrații aplicate; Vercel --prod.
+
+Smoke test:
+
+/ se încarcă < 2s pe 4G simulat, CLS < .02
+
+/generator: Generate OK; test live → paywall (Free) / scor (Pro).
+
+Export PDF/JSON (Pro trial → watermark); ZIP (Ent) → manifest + checksum.
+
+Verifică GTM: doar evenimente albe listate.
+
+6.3 Post-launch (T+1h / T+24h)
+
+T+1h: panou Ops → TTA_text P95 ≤60s, error_rate_api <0.1%.
+
+T+24h: pass_rate 24h ≥99%; SEO: indexare corectă în GSC; LHCI pe Prod ≥95.
+
+Activează înregistrarea incidentelor (rulare cron alerte).
+
+6.4 Rollback
+
+Dacă migrația e problematică: vercel rollback la buildul precedent; rulezi script de down migration dacă e definit; altfel blochezi rutele afectate (feature flag) până la remediere.
+
+7) Checklist de acceptanță (must-pass)
+
+ PR-uri: LHCI ≥95 pe toate rutele testate.
+
+ Playwright: E2E trece pe Free/Pro/Ent (scenarii gating + export).
+
+ Reduce-motion: animațiile se opresc; fără spike de CLS.
+
+ Export: două rulări consecutive → același checksum.
+
+ Telemetrie: TTA_text & SOP colectate; niciun câmp PII în events.
+
+ GTM: doar 5 evenimente whitelisted, fără payload sensibil.
+
+ SEO: title ≤60, meta ≤155, OG complet, sitemap/robots OK.
+
+ Drift: supabase db diff gol pe PR; db push reușit în Release.
+
+8) Anexe — fișiere recomandate
+
+.github/workflows/pr.yml, lighthouse-ci.yml, release.yml
+
+lighthouserc.json (config autorun)
+
+playwright.config.ts + teste E2E gates/export
+
+app/sitemap.ts, app/robots.ts, app/opengraph-image.tsx (dinamic)
+
+lib/telemetry.ts (wrapper), pages/api/telemetry/vitals.ts
+
+lib/export/checksum.ts (normalizare + SHA256)
+
+
+
+
+
+
+Note rapide – implementezi imediat, fără ambiguități.
+
+1) 7-D Domains (CORE-25) + fallback per domain
+
+Definești enumul domain (CORE-25) în SSOT și UI. Aplici fallback per domain când lipsesc alte 7-D.
+
+// lib/sevenD.ts
+export const SEVEND = {
+  domain: [
+    'saas','fintech','ecommerce','education','healthcare','legal','marketing','media','real_estate',
+    'government','energy','transportation','logistics','manufacturing','retail','travel','hospitality',
+    'gaming','entertainment','telecom','insurance','banking','crypto_web3','nonprofit','agriculture'
+  ] as const,
+  scale: ['personal_brand','solo','startup','boutique_agency','smb','corporate','enterprise'] as const,
+  urgency: ['low','planned','sprint','pilot','crisis'] as const,
+  complexity: ['foundational','standard','advanced','expert'] as const,
+  resources: ['minimal','solo','lean_team','agency_stack','full_stack_org','enterprise_budget'] as const,
+  application: ['training','audit','implementation','strategy_design','crisis_response','experimentation','documentation'] as const,
+  output_format: ['txt','md','json','pdf','bundle'] as const
+} as const;
+
+export type SevenD = {
+  domain: typeof SEVEND.domain[number]; scale: typeof SEVEND.scale[number];
+  urgency: typeof SEVEND.urgency[number]; complexity: typeof SEVEND.complexity[number];
+  resources: typeof SEVEND.resources[number]; application: typeof SEVEND.application[number];
+  output_format: typeof SEVEND.output_format[number];
+};
+
+
+Fallback-uri canonice (unice per domain, override-ui interzise în runtime; doar SSOT poate schimba):
+
+# ruleset.yml → sevenD_fallbacks (enum-only)
+sevenD_fallbacks:
+  saas:          { scale: startup,       urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+  fintech:       { scale: startup,       urgency: pilot,   complexity: advanced, resources: lean_team,      application: audit,          output_format: pdf }
+  ecommerce:     { scale: smb,           urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+  education:     { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: training,       output_format: md }
+  healthcare:    { scale: corporate,     urgency: planned, complexity: advanced, resources: full_stack_org, application: audit,          output_format: pdf }
+  legal:         { scale: corporate,     urgency: planned, complexity: advanced, resources: full_stack_org, application: documentation,  output_format: pdf }
+  marketing:     { scale: boutique_agency,urgency: sprint, complexity: standard, resources: agency_stack,   application: strategy_design, output_format: md }
+  media:         { scale: corporate,     urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+  real_estate:   { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+  government:    { scale: enterprise,    urgency: planned, complexity: expert,   resources: full_stack_org, application: documentation,  output_format: pdf }
+  energy:        { scale: enterprise,    urgency: planned, complexity: expert,   resources: full_stack_org, application: audit,          output_format: pdf }
+  transportation:{ scale: corporate,     urgency: planned, complexity: advanced, resources: full_stack_org, application: implementation, output_format: pdf }
+  logistics:     { scale: corporate,     urgency: sprint,  complexity: advanced, resources: full_stack_org, application: implementation, output_format: json }
+  manufacturing: { scale: corporate,     urgency: planned, complexity: advanced, resources: full_stack_org, application: implementation, output_format: pdf }
+  retail:        { scale: smb,           urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+  travel:        { scale: smb,           urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+  hospitality:   { scale: smb,           urgency: sprint,  complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+  gaming:        { scale: startup,       urgency: sprint,  complexity: advanced, resources: lean_team,      application: experimentation, output_format: md }
+  entertainment: { scale: corporate,     urgency: planned, complexity: standard, resources: agency_stack,   application: strategy_design, output_format: md }
+  telecom:       { scale: enterprise,    urgency: planned, complexity: expert,   resources: full_stack_org, application: audit,          output_format: pdf }
+  insurance:     { scale: enterprise,    urgency: planned, complexity: expert,   resources: full_stack_org, application: audit,          output_format: pdf }
+  banking:       { scale: enterprise,    urgency: planned, complexity: expert,   resources: full_stack_org, application: audit,          output_format: pdf }
+  crypto_web3:   { scale: startup,       urgency: pilot,   complexity: advanced, resources: lean_team,      application: experimentation, output_format: md }
+  nonprofit:     { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: documentation,  output_format: md }
+  agriculture:   { scale: smb,           urgency: planned, complexity: standard, resources: lean_team,      application: implementation, output_format: md }
+
+
+Aplica fallback în cod (enum-only + semnătură 7-D):
+
+export function normalize7D(input: Partial<SevenD>): SevenD {
+  const d = input.domain!;
+  const fb = RULESET.sevenD_fallbacks[d];
+  const v = <T extends string>(k:keyof SevenD, val?:T) => {
+    const allow = (SEVEND as any)[k] as readonly string[];
+    const chosen = (val ?? (fb as any)[k]) as string;
+    if (!allow.includes(chosen)) throw new Error(`INVALID_7D_ENUM:${k}`);
+    return chosen as T;
+  };
+  const out: SevenD = {
+    domain: v('domain', d as any),
+    scale: v('scale', input.scale),
+    urgency: v('urgency', input.urgency),
+    complexity: v('complexity', input.complexity),
+    resources: v('resources', input.resources),
+    application: v('application', input.application),
+    output_format: v('output_format', input.output_format),
+  };
+  (out as any).signature_7d = sha256(Object.values(out).join('|'));
+  return out;
+}
+
+2) SSOT & Rulebook — hard-guardrails
+
+Nu permiți override pe secțiunile standard. Validezi cu schemă strictă.
+
+// lib/rulebook.ts
+export const STANDARD_SECTIONS = ['objective','inputs','constraints','algorithm','rubric','telemetry','export','safety'] as const;
+
+export const RulebookSchema = z.object({
+  version: z.string(),
+  sections: z.object(Object.fromEntries(STANDARD_SECTIONS.map(s=>[s,z.any()]))).strict(), // .strict() → respinge chei extra
+  dor: z.array(z.enum(['sevenD.valid','entitlement.valid','output_spec.loaded','tests.defined'])),
+  dod: z.object({
+    score_min: z.literal(80),
+    manifest_required: z.literal(true),
+    checksum_required: z.literal(true),
+    pii_in_telemetry: z.literal(false)
+  })
+});
+
+export function assertDoRDoD(ctx:{sevenDValid:boolean; entitlements:boolean; outputLoaded:boolean; testsDefined:boolean; score:number; manifest:boolean; checksum:boolean; telemetryPII:boolean;}){
+  if (!ctx.sevenDValid || !ctx.entitlements || !ctx.outputLoaded || !ctx.testsDefined) throw new Error('DOR_NOT_MET');
+  if (!(ctx.score>=80 && ctx.manifest && ctx.checksum && !ctx.telemetryPII)) throw new Error('DOD_NOT_MET');
+}
+
+
+Blocare UI/API când cineva încearcă să introducă secțiuni non-standard → 409 RULESET_CONFLICT.
+
+3) Bundles/ERD — relații, indecși, constrângeri
+
+Relații:
+
+runs → prompt_scores = 1:1 (PK = run_id)
+
+runs → bundles = 1:N (un run poate genera mai multe exporturi)
+
+DDL minim (Supabase/Postgres):
+
+-- runs
+create table runs (
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null,
+  user_id uuid,
+  module_id text not null,
+  started_at timestamptz not null default now(),
+  finished_at timestamptz,
+  status text not null check (status in ('queued','success','error')),
+  seven_d jsonb not null,
+  signature_7d text not null,
+  tokens_in int default 0,
+  tokens_out int default 0,
+  cost_usd numeric(10,4) default 0,
+  score_total int,
+  version int default 1
+);
+create index runs_org_started_desc on runs (org_id, started_at desc);
+create index runs_by_id on runs (id);
+
+-- prompt_scores (1:1)
+create table prompt_scores (
+  run_id uuid primary key references runs(id) on delete cascade,
+  clarity int not null,
+  execution int not null,
+  ambiguity int not null,
+  business_fit int not null,
+  composite int not null
+);
+
+-- bundles (1:N)
+create table bundles (
+  id uuid primary key default gen_random_uuid(),
+  run_id uuid not null references runs(id) on delete cascade,
+  org_id uuid not null,
+  formats text[] not null,                   -- ex: {'md','pdf','json','zip'}
+  paths jsonb not null,                      -- {md:'...',pdf:'...',...}
+  manifest_path text not null,
+  checksum text not null,                    -- sha256:...
+  license_notice text,
+  created_at timestamptz default now()
+);
+create index bundles_by_run on bundles (run_id);
+create index bundles_org_created_desc on bundles (org_id, created_at desc);
+
+
+Ordine canonică pentru calcul checksum (determinism export):
+prompt.txt → prompt.json → prompt.md → prompt.pdf → telemetry.json → manifest.json → checksum.txt
+
+Generator checksum (normalizare LF, meta PDF deterministă, fără timestamps variabile).
+
+4) UI & API — puncte de integrare
+
+UI: folosești enumurile SSOT pentru dropdown-uri 7-D (niciun text liber). Pe schimbarea domain, aplici normalize7D (fallback per domain) și rehidratezi restul câmpurilor.
+
+API: la toate rutele (/api/gpt-editor, /api/gpt-test, /api/export/bundle, /api/run/{moduleId}) rulezi normalize7D + assertDoRDoD înainte de a marca run-ul success.
+
+Telemetrie: nu salvezi conținut prompt/output; doar run_id, org_id, module_id, durations, tokens, score, version.
+
+5) Checklist “gata de cod”
+
+Adaugi CORE-25 în ruleset.yml + sevenD_fallbacks complet.
+
+UI citește enumurile din SSOT; la domain aplică fallback.
+
+Validezi Rulebook strict (chei standard only).
+
+Enforce DoR/DoD: score≥80, manifest, checksum, PII=false.
+
+Creezi tabele + indecși exact ca mai sus; rulezi migrațiile.
+
+Calculezi signature_7d = sha256(join('|')) și o persiști în runs.
+
+Teste determinism export: două exporturi → același checksum.
+
+Indexări verificate: (org_id, started_at desc) și (id) pe runs; (run_id) pe bundles.
+
+Vrei să-ți export „Note rapide – implementare 7-D, SSOT, ERD” în fișier .txt?
+
+
+
+
+Gating doar client‑side
+lib/premium-features.ts stochează entitlement‑uri în localStorage. Nu e enforce‑uit pe API.
+➡ Leagă Stripe (prices & webhooks) + Supabase entitlements și verifică la nivel de API route (nu doar UI).
+Istoric & scoruri nepersistate
+lib/history-manager.ts este in‑memory.
+➡ Creează tabele runs, prompt_history, prompt_scores în Supabase + salvează în API la fiecare run.
+Build guardrails dezactivate în producție
+next.config.mjs ignoră ESLint/TS build errors—bun temporar, rău în prod.
+➡ Activează la primul build “verde” ca să prinzi regresiile.
+SEO de bază incomplet
+Nu ai robots.txt, sitemap.xml, canonical.
+➡ Adaugă rapid /robots.txt și /sitemap.xml (rute app sau fișiere statice), plus metadata.alternates.canonical pe paginile principale.
+Observații de performanță/UX
+Multe pagini sunt client components ("use client"). E ok pentru animații, dar mută cât poți în server components (copii neinteractive), ca să reduci JS trimis.
+Backgroundurile folosesc deja PRM/FPS—bine. Ține densitatea sub control la ecrane low‑FPS (useFpsTier("mid"/"low") → redu numărul de token‑uri).
+app/loading.tsx returnează null. Adaugă skeleton ca să elimini micro-LS.
+Exit‑intent modal (pricing) – menține focus‑trap și aria-modal, vezi că le ai parțial; verifică trap complet când apare.
+Ce e bine (păstrează)
+Estetica “Cyber‑Poetic” stabilă, fără flicker; MatrixTokens + CSS global coerent.
+Catalog module (lib/modules.ts) cu descrieri utile, bun pentru demo.
+UI generator (SevenDPanel, PromptEditor, TestEngine, ExportBar) – clar, cu “aha moments” bune pentru PLG.
+Roadmap de 1 zi (doar ce te apropie de acceptance)
+Adaugă /docs/api și /api/run/[moduleId] (simulat, dar cu artefacte coerente + telemetry).
+OG image + icons reale în public/images și referințe corecte în metadata.
+Headers de securitate la nivel de răspuns (config/middleware).
+robots.txt, sitemap.xml, canonical.
+În ExportBar, generează efectiv fișierele .txt/.md/.json client‑side și descarcă; marchează pdf/.zip ca PRO/ENT fără implementare.
+Scoate ignore TS/ESLint la build dacă nu mai ai erori critice.
+Roadmap Sprint (3–5 zile)
+Supabase schema + Auth + orgs/workspaces + RLS.
+Stripe prices + webhook → entitlements în DB; gate pe API.
+Cloud history + scores + dashboard real.
+3 demo bundles servite din storage cu checksum.
+CI/CD: build, lint, typecheck, Lighthouse ≥ 90, preview per PR.
+
+
+
+
+
+
+

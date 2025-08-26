@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Triangle Cascade - trei triunghiuri aliniate, fiecare cade ca un domino și pulsează -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Linie de bază -->
+  <line x1="106" y1="336" x2="406" y2="336" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Primul triunghi (stânga) -->
+  <polygon id="triangle1" points="136,236 176,336 96,336" fill="#5a5a5a">
+    <!-- Animație de rotație pentru cădere -->
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      values="0 136 336;90 136 336;90 136 336;0 136 336"
+      keyTimes="0;0.2;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație de culoare pentru pulsație -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.2;0.3;0.4"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </polygon>
+  
+  <!-- Al doilea triunghi (mijloc) -->
+  <polygon id="triangle2" points="256,236 296,336 216,336" fill="#5a5a5a">
+    <!-- Animație de rotație pentru cădere -->
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      values="0 256 336;0 256 336;90 256 336;90 256 336;0 256 336"
+      keyTimes="0;0.2;0.4;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație de culoare pentru pulsație -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.2;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </polygon>
+  
+  <!-- Al treilea triunghi (dreapta) -->
+  <polygon id="triangle3" points="376,236 416,336 336,336" fill="#5a5a5a">
+    <!-- Animație de rotație pentru cădere -->
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      values="0 376 336;0 376 336;0 376 336;90 376 336;90 376 336;0 376 336"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație de culoare pentru pulsație -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.4;0.6;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </polygon>
+  
+  <!-- Efecte de undă pentru impactul fiecărui triunghi -->
+  <!-- Undă pentru primul triunghi -->
+  <circle id="wave1" cx="136" cy="336" r="0" fill="none" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;50"
+      keyTimes="0;1"
+      dur="1s"
+      begin="0.6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.5;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="0.6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Undă pentru al doilea triunghi -->
+  <circle id="wave2" cx="256" cy="336" r="0" fill="none" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;50"
+      keyTimes="0;1"
+      dur="1s"
+      begin="1.2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.5;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="1.2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Undă pentru al treilea triunghi -->
+  <circle id="wave3" cx="376" cy="336" r="0" fill="none" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;50"
+      keyTimes="0;1"
+      dur="1s"
+      begin="1.8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.5;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="1.8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de flash pentru impactul fiecărui triunghi -->
+  <!-- Flash pentru primul triunghi -->
+  <circle id="flash1" cx="136" cy="336" r="10" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="10;15;10"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Flash pentru al doilea triunghi -->
+  <circle id="flash2" cx="256" cy="336" r="10" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.4;0.5"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="10;10;15;10"
+      keyTimes="0;0.3;0.4;0.5"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Flash pentru al treilea triunghi -->
+  <circle id="flash3" cx="376" cy="336" r="10" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.5;0.5;0.6;0.7"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="10;10;10;15;10"
+      keyTimes="0;0.5;0.5;0.6;0.7"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Text "CASCADE" -->
+  <text x="256" y="400" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">CASCADE</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Triangle Cascade</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Trei triunghiuri aliniate, fiecare cade ca un domino și pulsează. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

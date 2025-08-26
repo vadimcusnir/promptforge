@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Nodul Gordian - un simbol al complexității și soluțiilor neconvenționale -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru nod -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Nodul Gordian (linii întortocheate) -->
+  <!-- Linia 1 -->
+  <path id="knot-line-1" d="M176 256 C196 216 316 216 336 256 C356 296 216 296 196 256 C176 216 316 216 336 256" fill="none" stroke="#E0E0E0" stroke-width="3" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Linia 2 -->
+  <path id="knot-line-2" d="M256 176 C216 196 216 316 256 336 C296 356 296 216 256 196 C216 176 216 316 256 336" fill="none" stroke="#E0E0E0" stroke-width="3" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="1s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Linia 3 -->
+  <path id="knot-line-3" d="M196 196 C236 216 316 216 336 196 C356 176 296 296 256 296 C216 296 156 176 196 196" fill="none" stroke="#E0E0E0" stroke-width="3" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="2s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Linia 4 -->
+  <path id="knot-line-4" d="M196 316 C216 296 316 296 336 316 C356 336 296 216 256 216 C216 216 156 336 196 316" fill="none" stroke="#E0E0E0" stroke-width="3" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Puncte de intersecție -->
+  <!-- Punctul central -->
+  <circle id="center-point" cx="256" cy="256" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 1 -->
+  <circle id="intersection-1" cx="196" cy="256" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 2 -->
+  <circle id="intersection-2" cx="316" cy="256" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="3.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 3 -->
+  <circle id="intersection-3" cx="256" cy="196" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 4 -->
+  <circle id="intersection-4" cx="256" cy="316" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 5 -->
+  <circle id="intersection-5" cx="226" cy="226" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 6 -->
+  <circle id="intersection-6" cx="286" cy="226" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 7 -->
+  <circle id="intersection-7" cx="226" cy="286" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul de intersecție 8 -->
+  <circle id="intersection-8" cx="286" cy="286" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru nod -->
+  <circle id="pulse-effect" cx="256" cy="256" r="0" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;140;0"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de tăiere a nodului -->
+  <line id="cut-line" x1="176" y1="256" x2="336" y2="256" stroke="#FF0000" stroke-width="4" stroke-linecap="round" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="176;156;176"
+      keyTimes="0;0.8;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="336;356;336"
+      keyTimes="0;0.8;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Simboluri pentru soluții -->
+  <text id="symbol-1" x="196" y="196" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle" opacity="0">⚔️
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-2" x="316" y="196" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle" opacity="0">⚔️
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-3" x="196" y="316" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle" opacity="0">⚔️
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.95;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-4" x="316" y="316" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle" opacity="0">⚔️
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.95;0.975;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text explicativ -->
+  <text id="text-1" x="256" y="376" font-family="'JetBrains Mono', monospace" font-size="12" fill="#E0E0E0" text-anchor="middle" opacity="0">COMPLEXITY
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0.8;0;0"
+      keyTimes="0;0.2;0.4;0.6;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="text-2" x="256" y="376" font-family="'JetBrains Mono', monospace" font-size="12" fill="#E0E0E0" text-anchor="middle" opacity="0">SOLUTION
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0.8;0"
+      keyTimes="0;0.4;0.5;0.6;0.8;0.9;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "NODUL GORDIAN" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">NODUL GORDIAN</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Nodul Gordian</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al complexității și soluțiilor neconvenționale. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

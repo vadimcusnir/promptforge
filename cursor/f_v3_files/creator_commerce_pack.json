@@ -1,0 +1,73 @@
+{
+  "name": "Creator Commerce Pack",
+  "slug": "creator_commerce",
+  "scope": "activarea creșterii virale și a retenției post-achiziție în e-commerce DTC",
+  "audience": [
+    "creatori independenți",
+    "branduri DTC",
+    "agenții creator economy"
+  ],
+  "modules": [
+    {
+      "id": "M35",
+      "name": "Content Heatmap",
+      "purpose": "prioritizează subiectele și sloturile cu conversie"
+    },
+    {
+      "id": "M34",
+      "name": "K-Factors",
+      "purpose": "construiește loops virale & referral"
+    },
+    {
+      "id": "M09",
+      "name": "Post-Purchase Subscription Engine",
+      "purpose": "onboarding/activation/winback"
+    }
+  ],
+  "kpi_targets": [
+    {
+      "metric": "CR Uplift",
+      "op": "≥",
+      "target": "+15%"
+    },
+    {
+      "metric": "K-Factor",
+      "op": ">",
+      "target": "1.0"
+    },
+    {
+      "metric": "Retention D30",
+      "op": "≥",
+      "target": "35%"
+    }
+  ],
+  "integrations": [
+    "Shopify",
+    "VTEX",
+    "Klaviyo",
+    "Mailchimp"
+  ],
+  "cases": [
+    {
+      "title": "Fashion DTC",
+      "metric": "CR",
+      "baseline": "2.8%",
+      "actual": "3.3%",
+      "uplift": "+18%"
+    },
+    {
+      "title": "Newsletter Creator",
+      "metric": "K-Factor",
+      "baseline": "0.92",
+      "actual": "1.08",
+      "uplift": "+17.4%"
+    },
+    {
+      "title": "App EdTech",
+      "metric": "Retention D30",
+      "baseline": "28%",
+      "actual": "36%",
+      "uplift": "+28%"
+    }
+  ]
+}

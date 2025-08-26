@@ -1,0 +1,98 @@
+cusnir_brand_forge_variatii_logo_animatii_svg_video_v1.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🔰 BRAND IDENTITY STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━
+
+🔲 LOGO PRIMAR (Core Identity)
+– Formă: pătrat cu colțuri rotunjite
+– Fundal: auriu #F4B001
+– Simbol: glyph fractalic, negru #000000
+– Stil: flat, fără efecte, fără glow
+– Fără text
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🅵 VARIAȚIE CU TEXT: "Forge™"
+━━━━━━━━━━━━━━━━━━━━━━━
+
+– Format: [semn] + Forge™ (cu ™ sus, fără spațiu)
+– Font: Space Grotesk Bold / Geist SemiBold
+– Culoare: #000000
+– Spațiere: Forge™ la 0.75x înălțimea semnului
+– Utilizare: header, footer, splash screen, prezentări
+
+━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ EXPORTURI NECESARE
+━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ MASTER FILES:
+– .AI, .SVG, .EPS (vector, print/web)
+
+✅ PNG TRANSPARENT:
+– 2048x2048px
+– 1024x1024px
+– 512x512px
+– 256x256px
+
+✅ ICO (favicon):
+– 16x16, 32x32, 48x48
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🌀 20 IDEI ANIMAȚIE SVG (site interactive)
+━━━━━━━━━━━━━━━━━━━━━━━
+
+🔁 A. INTERACȚIUNI SIMBOLICE
+1. Glyph Reveal – se „taie” cu o linie verticală
+2. Golden Pulse – fundal pulsează discret 1/sec
+3. Sigiliu Magnetic – glyph e atras în centru la hover
+4. Click Ignition – colțuri pătrat rotesc în sens opus
+5. Neon Trail – contur glyph animat electric
+6. Dust Bloom – fum auriu dispare la hover
+7. Outline ↔ Fill – glyph pornește gol, se umple rapid
+8. Ink Spread – apare ca pată de cerneală
+9. Hover Breathing – fundal respiră ușor
+10. Triumph Lines – 3 linii ca o coroană se ridică
+
+🔁 B. REACȚII UI-NATIVE
+11. Scroll Reveal – glyph se descompune + recompune
+12. Time Pulse – bate o dată pe minut
+13. SVG Masking – fundal „trece” peste glyph
+14. Auto-coloring – glyph devine auriu la margini
+15. Drag Echo – urmă luminoasă la drag
+
+🔁 C. SIMBOLISM RITUALIC
+16. Rune Vibration – glyph vibrează subtil
+17. Solar Flare – rază aurie trece în diagonală
+18. Fractal Bloom – glyph se divide 0.3s
+19. Shadow Echo – umbră mișcătoare independent
+20. AI Awakening – glyph „iese” dintr-un pixel negru
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🎥 5 ANIMAȚII VIDEO (Intro Hero Section)
+━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fractal Forge Ritual
+– Particule aurii → glyph → pătrat complet
+– Sound design: puls AI + metal
+
+2. Sigiliul Digital
+– Glyph = circuit fractal → *Forge™* la final
+
+3. Runic Impact
+– Glyph cade pe pătrat → efect crăpături elegante
+
+4. Forging Light
+– Linii aurii trasează glyphul ca fier încins
+
+5. Neural Transmission
+– Glyph ca nod → activează trasee → apare *Forge™*
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🏁 VERDICT
+━━━━━━━━━━━━━━━━━━━━━━━
+
+→ Semn pur = identitate simbolică
+→ Semn + Forge™ = brand recognoscibil + defensibil legal
+→ SVG + video = interactivitate + statut de ecosistem viu
+
+━━━━━━━━━━━━━━━━━━━━━━━

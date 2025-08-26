@@ -1,0 +1,6 @@
+TITLE: UI Standards (Hub-first)
+TYPE: Always
+
+Un layout & background; tabs: Tools, Analytics, QA, History, Resources.
+shadcn/ui + Tailwind tokens; reduce motion on prefers-reduced-motion.
+Fără CLS; focus vizibil; contrast ≥ 4.5:1.

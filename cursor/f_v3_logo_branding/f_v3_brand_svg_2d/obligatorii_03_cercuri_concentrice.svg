@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .circle {
+      fill: none;
+      stroke: var(--gray);
+      stroke-width: 1;
+    }
+
+    .led {
+      fill: var(--gold);
+      r: 4;
+    }
+
+    /* Animații pentru LED-uri */
+    @keyframes pulseLed {
+      0%, 100% { r: 2; fill: var(--gold); }
+      50% { r: 4; fill: var(--white); }
+    }
+
+    /* Aplicarea animațiilor cu întârzieri diferite */
+    #led1-1, #led1-2, #led1-3, #led1-4 {
+      animation: pulseLed 2s infinite;
+    }
+
+    #led2-1, #led2-2, #led2-3, #led2-4 {
+      animation: pulseLed 2s infinite;
+      animation-delay: 0.2s;
+    }
+
+    #led3-1, #led3-2, #led3-3, #led3-4 {
+      animation: pulseLed 2s infinite;
+      animation-delay: 0.4s;
+    }
+
+    #led4-1, #led4-2, #led4-3, #led4-4 {
+      animation: pulseLed 2s infinite;
+      animation-delay: 0.6s;
+    }
+
+    #led5-1, #led5-2, #led5-3, #led5-4 {
+      animation: pulseLed 2s infinite;
+      animation-delay: 0.8s;
+    }
+
+    #led6-1, #led6-2, #led6-3, #led6-4 {
+      animation: pulseLed 2s infinite;
+      animation-delay: 1.0s;
+    }
+
+    #led7-1, #led7-2, #led7-3, #led7-4 {
+      animation: pulseLed 2s infinite;
+      animation-delay: 1.2s;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .led {
+        animation: none !important;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover .led {
+      animation-duration: 1s !important;
+    }
+
+    /* Etichetă 7D */
+    .label {
+      font-family: monospace;
+      font-size: 14px;
+      fill: var(--white);
+    }
+
+    .dimension-label {
+      font-family: monospace;
+      font-size: 10px;
+      fill: var(--gray);
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container" transform="translate(256, 256)">
+    <!-- Cercuri concentrice -->
+    <circle class="circle" cx="0" cy="0" r="40" />
+    <circle class="circle" cx="0" cy="0" r="70" />
+    <circle class="circle" cx="0" cy="0" r="100" />
+    <circle class="circle" cx="0" cy="0" r="130" />
+    <circle class="circle" cx="0" cy="0" r="160" />
+    <circle class="circle" cx="0" cy="0" r="190" />
+    <circle class="circle" cx="0" cy="0" r="220" />
+    
+    <!-- LED-uri pentru cercul 1 (interior) -->
+    <circle id="led1-1" class="led" cx="0" cy="-40" r="3" />
+    <circle id="led1-2" class="led" cx="40" cy="0" r="3" />
+    <circle id="led1-3" class="led" cx="0" cy="40" r="3" />
+    <circle id="led1-4" class="led" cx="-40" cy="0" r="3" />
+    
+    <!-- LED-uri pentru cercul 2 -->
+    <circle id="led2-1" class="led" cx="0" cy="-70" r="3" />
+    <circle id="led2-2" class="led" cx="70" cy="0" r="3" />
+    <circle id="led2-3" class="led" cx="0" cy="70" r="3" />
+    <circle id="led2-4" class="led" cx="-70" cy="0" r="3" />
+    
+    <!-- LED-uri pentru cercul 3 -->
+    <circle id="led3-1" class="led" cx="0" cy="-100" r="3" />
+    <circle id="led3-2" class="led" cx="100" cy="0" r="3" />
+    <circle id="led3-3" class="led" cx="0" cy="100" r="3" />
+    <circle id="led3-4" class="led" cx="-100" cy="0" r="3" />
+    
+    <!-- LED-uri pentru cercul 4 -->
+    <circle id="led4-1" class="led" cx="0" cy="-130" r="3" />
+    <circle id="led4-2" class="led" cx="130" cy="0" r="3" />
+    <circle id="led4-3" class="led" cx="0" cy="130" r="3" />
+    <circle id="led4-4" class="led" cx="-130" cy="0" r="3" />
+    
+    <!-- LED-uri pentru cercul 5 -->
+    <circle id="led5-1" class="led" cx="0" cy="-160" r="3" />
+    <circle id="led5-2" class="led" cx="160" cy="0" r="3" />
+    <circle id="led5-3" class="led" cx="0" cy="160" r="3" />
+    <circle id="led5-4" class="led" cx="-160" cy="0" r="3" />
+    
+    <!-- LED-uri pentru cercul 6 -->
+    <circle id="led6-1" class="led" cx="0" cy="-190" r="3" />
+    <circle id="led6-2" class="led" cx="190" cy="0" r="3" />
+    <circle id="led6-3" class="led" cx="0" cy="190" r="3" />
+    <circle id="led6-4" class="led" cx="-190" cy="0" r="3" />
+    
+    <!-- LED-uri pentru cercul 7 (exterior) -->
+    <circle id="led7-1" class="led" cx="0" cy="-220" r="3" />
+    <circle id="led7-2" class="led" cx="220" cy="0" r="3" />
+    <circle id="led7-3" class="led" cx="0" cy="220" r="3" />
+    <circle id="led7-4" class="led" cx="-220" cy="0" r="3" />
+    
+    <!-- Etichete pentru dimensiuni -->
+    <text class="dimension-label" x="-15" y="-25">1D</text>
+    <text class="dimension-label" x="-15" y="-55">2D</text>
+    <text class="dimension-label" x="-15" y="-85">3D</text>
+    <text class="dimension-label" x="-15" y="-115">4D</text>
+    <text class="dimension-label" x="-15" y="-145">5D</text>
+    <text class="dimension-label" x="-15" y="-175">6D</text>
+    <text class="dimension-label" x="-15" y="-205">7D</text>
+    
+    <!-- Etichetă principală -->
+    <text class="label" x="-30" y="0">7D PULSE</text>
+  </g>
+  
+  <!-- Etichetă -->
+  <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">03</text>
+  
+  <!-- Border -->
+  <rect x="2" y="2" width="508" height="508" fill="none" stroke="var(--gold)" stroke-width="2" />
+</svg>
+

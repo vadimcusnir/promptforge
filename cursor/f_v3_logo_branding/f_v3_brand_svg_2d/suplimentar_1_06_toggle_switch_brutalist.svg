@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Toggle Switch - un comutator brutalist (pătrat) care trece din OFF (roșu) în ON (auriu) -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru switch -->
+  <rect x="156" y="216" width="200" height="80" rx="0" ry="0" fill="none" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie de separare în mijloc -->
+  <line x1="256" y1="216" x2="256" y2="296" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Text OFF -->
+  <text id="text-off" x="206" y="266" font-family="'JetBrains Mono', monospace" font-size="24" fill="#FF0000" text-anchor="middle" dominant-baseline="middle">OFF</text>
+  
+  <!-- Text ON -->
+  <text id="text-on" x="306" y="266" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" text-anchor="middle" dominant-baseline="middle">ON</text>
+  
+  <!-- Switch pătrat (buton) -->
+  <rect id="switch-button" x="166" y="226" width="60" height="60" fill="#FF0000">
+    <!-- Animație pentru mișcarea switch-ului -->
+    <animate
+      id="move-animation"
+      attributeName="x"
+      values="166;166;286;286;166"
+      keyTimes="0;0.4;0.6;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație pentru culoarea switch-ului -->
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FF0000;#FFD700;#FFD700;#FF0000"
+      keyTimes="0;0.4;0.6;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Animație pentru textul OFF -->
+  <animate
+    xlink:href="#text-off"
+    attributeName="fill"
+    values="#FF0000;#FF0000;#5a5a5a;#5a5a5a;#FF0000"
+    keyTimes="0;0.4;0.6;0.9;1"
+    dur="3s"
+    repeatCount="indefinite"/>
+  
+  <!-- Animație pentru textul ON -->
+  <animate
+    xlink:href="#text-on"
+    attributeName="fill"
+    values="#5a5a5a;#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+    keyTimes="0;0.4;0.6;0.9;1"
+    dur="3s"
+    repeatCount="indefinite"/>
+  
+  <!-- Efect de flash când switch-ul este activat -->
+  <rect id="flash-effect" x="156" y="216" width="200" height="80" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.3;0"
+      keyTimes="0;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Efect de umbră pentru switch când se mișcă -->
+  <rect id="shadow-effect" x="166" y="226" width="60" height="60" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="x"
+      values="166;166;226;286;286;166"
+      keyTimes="0;0.4;0.5;0.6;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0;0.2;0;0;0"
+      keyTimes="0;0.4;0.5;0.6;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Etichetă pentru switch -->
+  <text x="256" y="180" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">TOGGLE SWITCH</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Toggle Switch Brutalist</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un comutator brutalist (pătrat) care trece din OFF (roșu) în ON (auriu). Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

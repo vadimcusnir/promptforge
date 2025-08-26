@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Arborele Evoluției - un simbol al creșterii, ramificării și dezvoltării -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru arbore -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Trunchiul arborelui -->
+  <line id="tree-trunk" x1="256" y1="336" x2="256" y2="256" stroke="#E0E0E0" stroke-width="3" stroke-dasharray="80" stroke-dashoffset="80">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="80;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura principală 1 (stânga) -->
+  <line id="branch-main-1" x1="256" y1="256" x2="216" y2="216" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="60" stroke-dashoffset="60">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="60;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="1.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="2.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura principală 2 (dreapta) -->
+  <line id="branch-main-2" x1="256" y1="256" x2="296" y2="216" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="60" stroke-dashoffset="60">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="60;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="2.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura secundară 1 (stânga-stânga) -->
+  <line id="branch-secondary-1" x1="216" y1="216" x2="196" y2="186" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="40" stroke-dashoffset="40">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="40;0"
+      keyTimes="0;1"
+      dur="0.75s"
+      begin="3.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4.25s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura secundară 2 (stânga-dreapta) -->
+  <line id="branch-secondary-2" x1="216" y1="216" x2="236" y2="186" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="40" stroke-dashoffset="40">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="40;0"
+      keyTimes="0;1"
+      dur="0.75s"
+      begin="4.25s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura secundară 3 (dreapta-stânga) -->
+  <line id="branch-secondary-3" x1="296" y1="216" x2="276" y2="186" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="40" stroke-dashoffset="40">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="40;0"
+      keyTimes="0;1"
+      dur="0.75s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5.75s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura secundară 4 (dreapta-dreapta) -->
+  <line id="branch-secondary-4" x1="296" y1="216" x2="316" y2="186" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="40" stroke-dashoffset="40">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="40;0"
+      keyTimes="0;1"
+      dur="0.75s"
+      begin="5.75s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 1 (stânga-stânga-stânga) -->
+  <line id="branch-tertiary-1" x1="196" y1="186" x2="186" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="6.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 2 (stânga-stânga-dreapta) -->
+  <line id="branch-tertiary-2" x1="196" y1="186" x2="206" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="7s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 3 (stânga-dreapta-stânga) -->
+  <line id="branch-tertiary-3" x1="236" y1="186" x2="226" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="7.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 4 (stânga-dreapta-dreapta) -->
+  <line id="branch-tertiary-4" x1="236" y1="186" x2="246" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 5 (dreapta-stânga-stânga) -->
+  <line id="branch-tertiary-5" x1="276" y1="186" x2="266" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="8.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 6 (dreapta-stânga-dreapta) -->
+  <line id="branch-tertiary-6" x1="276" y1="186" x2="286" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="9.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 7 (dreapta-dreapta-stânga) -->
+  <line id="branch-tertiary-7" x1="316" y1="186" x2="306" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="9.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Ramura terțiară 8 (dreapta-dreapta-dreapta) -->
+  <line id="branch-tertiary-8" x1="316" y1="186" x2="326" y2="156" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="10s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="10.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Nodurile arborelui (punctele de ramificare) -->
+  <!-- Nodul principal -->
+  <circle id="node-main" cx="256" cy="256" r="4" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="4;6;4"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nodurile secundare -->
+  <!-- Nodul secundar 1 -->
+  <circle id="node-secondary-1" cx="216" cy="216" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="2.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nodul secundar 2 -->
+  <circle id="node-secondary-2" cx="296" cy="216" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="3.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nodurile terțiare -->
+  <!-- Nodul terțiar 1 -->
+  <circle id="node-tertiary-1" cx="196" cy="186" r="2" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="4.25s"
+      fill="freeze"/>
+  </circle>
+  
+  <!-- Nodul terțiar 2 -->
+  <circle id="node-tertiary-2" cx="236" cy="186" r="2" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="5s"
+      fill="freeze"/>
+  </circle>
+  
+  <!-- Nodul terțiar 3 -->
+  <circle id="node-tertiary-3" cx="276" cy="186" r="2" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="5.75s"
+      fill="freeze"/>
+  </circle>
+  
+  <!-- Nodul terțiar 4 -->
+  <circle id="node-tertiary-4" cx="316" cy="186" r="2" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="6.5s"
+      fill="freeze"/>
+  </circle>
+  
+  <!-- Frunzele arborelui (nodurile finale) -->
+  <!-- Frunza 1 -->
+  <circle id="leaf-1" cx="186" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="7s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Frunza 2 -->
+  <circle id="leaf-2" cx="206" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="7.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Frunza 3 -->
+  <circle id="leaf-3" cx="226" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Frunza 4 -->
+  <circle id="leaf-4" cx="246" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="8.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Frunza 5 -->
+  <circle id="leaf-5" cx="266" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="9.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Frunza 6 -->
+  <circle id="leaf-6" cx="286" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="9.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Frunza 7 -->
+  <circle id="leaf-7" cx="306" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="10s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="10.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Frunza 8 -->
+  <circle id="leaf-8" cx="326" cy="156" r="3" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="10.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="3;4;3"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="11s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Rădăcinile arborelui -->
+  <!-- Rădăcina 1 (stânga) -->
+  <path id="root-1" d="M256 336 L236 356" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.75s"
+      begin="11s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="11.75s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Rădăcina 2 (dreapta) -->
+  <path id="root-2" d="M256 336 L276 356" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.75s"
+      begin="11.75s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Rădăcina 3 (stânga-stânga) -->
+  <path id="root-3" d="M236 356 L216 366" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="25" stroke-dashoffset="25">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="25;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="12.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="13s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Rădăcina 4 (stânga-dreapta) -->
+  <path id="root-4" d="M236 356 L246 376" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="25" stroke-dashoffset="25">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="25;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="13s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="13.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Rădăcina 5 (dreapta-stânga) -->
+  <path id="root-5" d="M276 356 L266 376" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="25" stroke-dashoffset="25">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="25;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="13.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="14s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Rădăcina 6 (dreapta-dreapta) -->
+  <path id="root-6" d="M276 356 L296 366" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="25" stroke-dashoffset="25">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="25;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="14s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="14.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de pulsație pentru arbore -->
+  <circle id="pulse-tree" cx="256" cy="256" r="0" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;140;0"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de glitch pentru arbore -->
+  <circle id="glitch-tree" cx="256" cy="256" r="60" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Simboluri pentru evoluție -->
+  <!-- Simbol 1 (Origine) -->
+  <text id="evolution-symbol-1" x="256" y="356" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">ORIGINE
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 (Evoluție) -->
+  <text id="evolution-symbol-2" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">EVOLUȚIE
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="18s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 (Diversificare) -->
+  <text id="evolution-symbol-3" x="256" y="156" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">DIVERSIFICARE
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="21s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "ARBORELE EVOLUȚIEI" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">ARBORELE EVOLUȚIEI</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Arborele Evoluției</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al creșterii, ramificării și dezvoltării. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

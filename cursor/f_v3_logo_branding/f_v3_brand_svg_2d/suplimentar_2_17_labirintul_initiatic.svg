@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Labirintul Inițiatic - un simbol al călătoriei interioare și al căutării cunoașterii -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru labirint -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Labirintul (structura de bază) -->
+  <!-- Nivel 1 (exterior) -->
+  <path id="labyrinth-level-1" d="M256 116 L256 136 L376 136 L376 376 L136 376 L136 136 L236 136" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="1200" stroke-dashoffset="1200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="1200;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Nivel 2 -->
+  <path id="labyrinth-level-2" d="M156 156 L356 156 L356 356 L156 356 L156 156" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="1000;0"
+      keyTimes="0;1"
+      dur="2.5s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Nivel 3 -->
+  <path id="labyrinth-level-3" d="M176 176 L336 176 L336 336 L176 336 L176 176" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="800" stroke-dashoffset="800">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="800;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="5.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Nivel 4 -->
+  <path id="labyrinth-level-4" d="M196 196 L316 196 L316 316 L196 316 L196 196" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="7.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Nivel 5 -->
+  <path id="labyrinth-level-5" d="M216 216 L296 216 L296 296 L216 296 L216 216" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="400;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Nivel 6 (centru) -->
+  <path id="labyrinth-level-6" d="M236 236 L276 236 L276 276 L236 276 L236 236" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="200;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="10s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="10.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Calea prin labirint -->
+  <path id="labyrinth-path" d="M256 116 L256 136 L176 136 L176 316 L196 316 L196 196 L296 196 L296 296 L236 296 L236 256 L256 256" fill="none" stroke="#FF0000" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="1000;0"
+      keyTimes="0;1"
+      dur="5s"
+      begin="10.5s"
+      fill="freeze"/>
+  </path>
+  
+  <!-- Puncte de reper în labirint -->
+  <!-- Punctul de intrare -->
+  <circle id="entrance-point" cx="256" cy="116" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul central -->
+  <circle id="center-point" cx="256" cy="256" r="8" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="1s"
+      begin="15.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="8;10;8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="16.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="16.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Călătorul prin labirint -->
+  <circle id="traveler" cx="256" cy="116" r="4" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.1s"
+      begin="10.5s"
+      fill="freeze"/>
+    
+    <animateMotion
+      path="M0 0 L0 20 L-80 0 L0 180 L20 0 L0 -120 L100 0 L0 100 L-60 0 L0 -40 L20 0"
+      dur="5s"
+      begin="10.5s"
+      fill="freeze"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru centrul labirintului -->
+  <circle id="pulse-center" cx="256" cy="256" r="0" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;40;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="15.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="15.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de glitch pentru labirint -->
+  <rect id="glitch-effect" x="156" y="156" width="200" height="200" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </rect>
+  
+  <!-- Simboluri pentru etapele inițiatice -->
+  <!-- Etapa 1 (Intrarea) -->
+  <text id="stage-1" x="256" y="156" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">INTRARE
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="16s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Etapa 2 (Încercarea) -->
+  <text id="stage-2" x="196" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">ÎNCERCARE
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="19s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Etapa 3 (Iluminarea) -->
+  <text id="stage-3" x="256" y="236" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">ILUMINARE
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="22s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Linii de energie care radiază din centru -->
+  <!-- Linia 1 -->
+  <line id="energy-line-1" x1="256" y1="256" x2="256" y2="216" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="16s"
+      repeatCount="1"/>
+  </line>
+  
+  <!-- Linia 2 -->
+  <line id="energy-line-2" x1="256" y1="256" x2="296" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="2s"
+      begin="18s"
+      repeatCount="1"/>
+  </line>
+  
+  <!-- Linia 3 -->
+  <line id="energy-line-3" x1="256" y1="256" x2="256" y2="296" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="2s"
+      begin="20s"
+      repeatCount="1"/>
+  </line>
+  
+  <!-- Linia 4 -->
+  <line id="energy-line-4" x1="256" y1="256" x2="216" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.4;0.7;0.95;1"
+      dur="2s"
+      begin="22s"
+      repeatCount="1"/>
+  </line>
+  
+  <!-- Text "LABIRINTUL INIȚIATIC" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">LABIRINTUL INIȚIATIC</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Labirintul Inițiatic</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al călătoriei interioare și al căutării cunoașterii. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

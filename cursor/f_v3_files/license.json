@@ -1,0 +1,23 @@
+{
+  "license_id": "LIC-2025-000123",
+  "customer_id": "CUST-DEMO-001",
+  "pack": "Sales Accelerator Pack",
+  "modules": [
+    "M06",
+    "M03",
+    "M22",
+    "M11",
+    "M14",
+    "M18"
+  ],
+  "seats": 5,
+  "type": "Team",
+  "issued_at": "2025-08-25T15:42:10Z",
+  "expires_at": "2026-08-25T23:59:59Z",
+  "features": {
+    "updates": true,
+    "export": true,
+    "audit_required": true
+  },
+  "signature": "MOCK"
+}

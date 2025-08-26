@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cristalul Memoriei - un simbol al stocării și accesării informației -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru cristal -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Cristalul (formă hexagonală) -->
+  <path id="crystal-shape" d="M256 136 L336 196 L336 316 L256 376 L176 316 L176 196 Z" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="800" stroke-dashoffset="800">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="800;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Linii interioare ale cristalului -->
+  <!-- Linia 1 (verticală) -->
+  <line id="crystal-line-1" x1="256" y1="136" x2="256" y2="376" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="240" stroke-dashoffset="240">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="240;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (orizontală sus) -->
+  <line id="crystal-line-2" x1="176" y1="196" x2="336" y2="196" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="160;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="3.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (orizontală mijloc) -->
+  <line id="crystal-line-3" x1="176" y1="256" x2="336" y2="256" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="160;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (orizontală jos) -->
+  <line id="crystal-line-4" x1="176" y1="316" x2="336" y2="316" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="160;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="4.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Puncte de intersecție -->
+  <!-- Punctul central -->
+  <circle id="center-point" cx="256" cy="256" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctele de intersecție verticală -->
+  <circle id="intersection-1" cx="256" cy="196" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="intersection-2" cx="256" cy="316" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctele de vârf -->
+  <circle id="vertex-1" cx="256" cy="136" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-2" cx="336" cy="196" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-3" cx="336" cy="316" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-4" cx="256" cy="376" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-5" cx="176" cy="316" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-6" cx="176" cy="196" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru cristal -->
+  <path id="pulse-crystal" d="M256 136 L336 196 L336 316 L256 376 L176 316 L176 196 Z" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de date care circulă în cristal -->
+  <!-- Particula 1 (sus-jos) -->
+  <circle id="data-particle-1" cx="256" cy="136" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="136;376;136"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 2 (stânga-dreapta sus) -->
+  <circle id="data-particle-2" cx="176" cy="196" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="7s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="176;336;176"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 3 (stânga-dreapta mijloc) -->
+  <circle id="data-particle-3" cx="176" cy="256" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="176;336;176"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 4 (stânga-dreapta jos) -->
+  <circle id="data-particle-4" cx="176" cy="316" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="9s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="176;336;176"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de scanare -->
+  <rect id="scan-line" x="176" y="196" width="160" height="2" fill="#FF0000" opacity="0.7">
+    <animate
+      attributeName="y"
+      values="196;316;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.7;0.9;0.7"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Simboluri pentru memorie -->
+  <!-- Simbol 1 (sus) -->
+  <text id="memory-symbol-1" x="256" y="176" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">STORE
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="10s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 (mijloc) -->
+  <text id="memory-symbol-2" x="256" y="236" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">PROCESS
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="13s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 (jos) -->
+  <text id="memory-symbol-3" x="256" y="296" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">RETRIEVE
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="16s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Efecte de glitch pentru cristal -->
+  <path id="glitch-crystal" d="M256 136 L336 196 L336 316 L256 376 L176 316 L176 196 Z" fill="none" stroke="#FF0000" stroke-width="4" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;11s;17s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Cod binar în jurul cristalului -->
+  <!-- Rândul 1 (sus) -->
+  <text id="binary-row-1" x="256" y="116" font-family="'JetBrains Mono', monospace" font-size="8" fill="#E0E0E0" text-anchor="middle" opacity="0">01001101 01000101 01001101 01001111 01010010 01011001
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0.8;0"
+      keyTimes="0;0.2;0.8;1"
+      dur="8s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Rândul 2 (jos) -->
+  <text id="binary-row-2" x="256" y="396" font-family="'JetBrains Mono', monospace" font-size="8" fill="#E0E0E0" text-anchor="middle" opacity="0">01000011 01010010 01011001 01010011 01010100 01000001 01001100
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0.8;0"
+      keyTimes="0;0.2;0.4;0.8;1"
+      dur="8s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "CRISTALUL MEMORIEI" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">CRISTALUL MEMORIEI</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Cristalul Memoriei</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al stocării și accesării informației. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

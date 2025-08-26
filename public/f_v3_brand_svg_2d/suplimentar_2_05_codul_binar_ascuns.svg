@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Codul Binar Ascuns - un model de cod binar cu mesaje ascunse -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru cod -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Linii de cod binar (10 rânduri) -->
+  <!-- Rândul 1 -->
+  <text id="binary-row-1" x="116" y="136" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">01001111 01010010 01000001 01001011 01001111 01001110</text>
+  
+  <!-- Rândul 2 -->
+  <text id="binary-row-2" x="116" y="156" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">10110000 10111001 10110101 10111100 10110111 10111010</text>
+  
+  <!-- Rândul 3 -->
+  <text id="binary-row-3" x="116" y="176" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">01010000 01010010 01001111 01010100 01001111 01000011</text>
+  
+  <!-- Rândul 4 -->
+  <text id="binary-row-4" x="116" y="196" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">10101010 10101010 10101010 10101010 10101010 10101010</text>
+  
+  <!-- Rândul 5 -->
+  <text id="binary-row-5" x="116" y="216" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">01000011 01010101 01010011 01001110 01001001 01010010</text>
+  
+  <!-- Rândul 6 -->
+  <text id="binary-row-6" x="116" y="236" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">10011001 10011000 10011101 10011110 10011011 10011010</text>
+  
+  <!-- Rândul 7 -->
+  <text id="binary-row-7" x="116" y="256" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">01000110 01001111 01010010 01000111 01000101 00100000</text>
+  
+  <!-- Rândul 8 -->
+  <text id="binary-row-8" x="116" y="276" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">10110011 10110010 10110111 10110110 10110101 10110100</text>
+  
+  <!-- Rândul 9 -->
+  <text id="binary-row-9" x="116" y="296" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">01010000 01010010 01001111 01001101 01010000 01010100</text>
+  
+  <!-- Rândul 10 -->
+  <text id="binary-row-10" x="116" y="316" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">10101010 10101010 10101010 10101010 10101010 10101010</text>
+  
+  <!-- Rândul 11 -->
+  <text id="binary-row-11" x="116" y="336" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">01000001 01001110 01010100 01001001 01010011 01000011</text>
+  
+  <!-- Rândul 12 -->
+  <text id="binary-row-12" x="116" y="356" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">10110000 10111001 10110101 10111100 10110111 10111010</text>
+  
+  <!-- Efecte de highlight pentru mesaje ascunse -->
+  <!-- Highlight pentru "ORAKON" -->
+  <rect id="highlight-1" x="116" y="122" width="330" height="18" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Highlight pentru "PROTOCOL" -->
+  <rect id="highlight-2" x="116" y="162" width="330" height="18" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.3;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Highlight pentru "CUSNIR" -->
+  <rect id="highlight-3" x="116" y="202" width="330" height="18" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.3;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Highlight pentru "FORGE" -->
+  <rect id="highlight-4" x="116" y="242" width="330" height="18" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.3;0"
+      keyTimes="0;0.1;0.4;0.7;0.95;1"
+      dur="3s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Highlight pentru "PROMPT" -->
+  <rect id="highlight-5" x="116" y="282" width="330" height="18" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.3;0"
+      keyTimes="0;0.1;0.3;0.5;0.7;0.95;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Highlight pentru "ANTISC" -->
+  <rect id="highlight-6" x="116" y="322" width="330" height="18" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0.3;0"
+      keyTimes="0;0.1;0.2;0.4;0.6;0.8;0.95;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Efecte de scanare verticală -->
+  <rect id="scan-line" x="106" y="106" width="300" height="2" fill="#FF0000" opacity="0.7">
+    <animate
+      attributeName="y"
+      values="106;406;106"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.7;0.9;0.7"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Efecte de decodificare -->
+  <!-- Decodificare "ORAKON" -->
+  <text id="decode-1" x="256" y="136" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">ORAKON
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Decodificare "PROTOCOL" -->
+  <text id="decode-2" x="256" y="176" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">PROTOCOL
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Decodificare "CUSNIR" -->
+  <text id="decode-3" x="256" y="216" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">CUSNIR
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Decodificare "FORGE" -->
+  <text id="decode-4" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">FORGE
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.4;0.7;0.95;1"
+      dur="3s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Decodificare "PROMPT" -->
+  <text id="decode-5" x="256" y="296" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">PROMPT
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.3;0.5;0.7;0.95;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Decodificare "ANTISC" -->
+  <text id="decode-6" x="256" y="336" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">ANTISC
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.4;0.6;0.8;0.95;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Efecte de glitch pentru cod binar -->
+  <!-- Glitch pentru rândul 4 -->
+  <text id="glitch-1" x="116" y="196" font-family="'JetBrains Mono', monospace" font-size="14" fill="#FF0000" opacity="0">10101010 10101010 10101010 10101010 10101010 10101010
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="1s"
+      begin="2s;7s;13s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Glitch pentru rândul 10 -->
+  <text id="glitch-2" x="116" y="316" font-family="'JetBrains Mono', monospace" font-size="14" fill="#FF0000" opacity="0">10101010 10101010 10101010 10101010 10101010 10101010
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="1s"
+      begin="4s;9s;15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Efecte de cursor -->
+  <text id="cursor" x="116" y="376" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">_
+    <animate
+      attributeName="opacity"
+      values="1;0;1"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "CODUL BINAR ASCUNS" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">CODUL BINAR ASCUNS</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Codul Binar Ascuns</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un model de cod binar cu mesaje ascunse. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

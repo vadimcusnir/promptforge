@@ -1,0 +1,5 @@
+import { ExportBundleManager } from "@/lib/export-bundle"
+export async function exportBundleForRun({ prompt, testResults, editResults, userPlan }) {
+  const bundle = await ExportBundleManager.generateBundle({ prompt, testResults, editResults, userPlan })
+  return bundle
+}

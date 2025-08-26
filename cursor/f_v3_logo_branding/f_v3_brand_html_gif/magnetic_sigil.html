@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge - Magnetic Sigil Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+        }
+
+        .logo-bg {
+            width: 200px;
+            height: 200px;
+            background: #F4B001;
+            border-radius: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glyph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glyph-path {
+            fill: #000000;
+            stroke: none;
+        }
+
+        .magnetic-field {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border: 1px dashed #FFD700;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover .magnetic-field {
+            opacity: 0.3;
+        }
+
+        .magnetic-particles {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .particle-1 { top: 20%; left: 20%; }
+        .particle-2 { top: 20%; right: 20%; }
+        .particle-3 { bottom: 20%; left: 20%; }
+        .particle-4 { bottom: 20%; right: 20%; }
+        .particle-5 { top: 50%; left: 10%; }
+        .particle-6 { top: 50%; right: 10%; }
+        .particle-7 { top: 10%; left: 50%; }
+        .particle-8 { bottom: 10%; left: 50%; }
+
+        .logo-container:hover .magnetic-particles {
+            opacity: 1;
+            transform: translate(0, 0) scale(1.5);
+        }
+
+        .logo-container:hover .particle-1,
+        .logo-container:hover .particle-2,
+        .logo-container:hover .particle-3,
+        .logo-container:hover .particle-4,
+        .logo-container:hover .particle-5,
+        .logo-container:hover .particle-6,
+        .logo-container:hover .particle-7,
+        .logo-container:hover .particle-8 {
+            transform: translate(50px, 50px);
+        }
+
+        .title {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .attraction-indicator {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00FF84;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover .attraction-indicator {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="attraction-indicator">MAGNETIC FIELD ACTIVE</div>
+        <div class="magnetic-field"></div>
+        
+        <div class="magnetic-particles particle-1"></div>
+        <div class="magnetic-particles particle-2"></div>
+        <div class="magnetic-particles particle-3"></div>
+        <div class="magnetic-particles particle-4"></div>
+        <div class="magnetic-particles particle-5"></div>
+        <div class="magnetic-particles particle-6"></div>
+        <div class="magnetic-particles particle-7"></div>
+        <div class="magnetic-particles particle-8"></div>
+        
+        <div class="logo-bg"></div>
+        <svg class="glyph" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Central vertical line -->
+            <rect class="glyph-path" x="55" y="20" width="10" height="80" />
+            
+            <!-- Top diamond -->
+            <path class="glyph-path" d="M60 10 L80 30 L60 50 L40 30 Z" />
+            <rect class="glyph-path" x="55" y="25" width="10" height="20" />
+            
+            <!-- Left zigzag -->
+            <path class="glyph-path" d="M35 50 L15 70 L35 90 L25 100 L0 70 L25 40 Z" />
+            
+            <!-- Right zigzag -->
+            <path class="glyph-path" d="M85 50 L105 70 L85 90 L95 100 L120 70 L95 40 Z" />
+            
+            <!-- Bottom triangle -->
+            <path class="glyph-path" d="M60 100 L85 110 L35 110 Z" />
+            
+            <!-- Face elements -->
+            <path class="glyph-path" d="M45 75 Q60 85 75 75" stroke="#000000" stroke-width="3" fill="none" />
+            <rect class="glyph-path" x="55" y="90" width="10" height="8" />
+        </svg>
+        <div class="title">Magnetic Sigil</div>
+    </div>
+
+    <script>
+        const container = document.querySelector('.logo-container');
+        const glyph = document.querySelector('.glyph');
+        const logoBg = document.querySelector('.logo-bg');
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            const deltaX = (mouseX - centerX) * 0.1;
+            const deltaY = (mouseY - centerY) * 0.1;
+            
+            glyph.style.transform = `translate(calc(-50% + ${deltaX}px), calc(-50% + ${deltaY}px))`;
+            logoBg.style.transform = `translate(calc(-50% + ${deltaX * 0.5}px), calc(-50% + ${deltaY * 0.5}px))`;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            glyph.style.transform = 'translate(-50%, -50%)';
+            logoBg.style.transform = 'translate(-50%, -50%)';
+        });
+    </script>
+</body>
+</html>
+

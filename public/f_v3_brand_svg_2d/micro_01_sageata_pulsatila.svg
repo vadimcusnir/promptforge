@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .arrow {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Animații pentru săgeată */
+    @keyframes pulseArrow {
+      0%, 100% { 
+        stroke-width: 2; 
+        transform: scale(1);
+        stroke: var(--gold);
+      }
+      50% { 
+        stroke-width: 3; 
+        transform: scale(1.1);
+        stroke: var(--white);
+      }
+    }
+
+    /* Aplicarea animațiilor */
+    #arrow-path {
+      animation: pulseArrow 1.5s infinite;
+      transform-origin: center;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #arrow-path {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #arrow-path {
+      animation: pulseArrow 0.75s infinite;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Săgeată -->
+    <path id="arrow-path" class="arrow" d="M128 56 L128 200 M128 56 L88 96 M128 56 L168 96" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">01</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

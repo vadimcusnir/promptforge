@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Glitch Line Divider - o linie orizontală care „tremură" și se rupe 1–2 frame-uri, apoi revine stabilă -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Linia de bază (auriu neon) -->
+  <line x1="96" y1="256" x2="416" y2="256" stroke="#FFD700" stroke-width="4">
+    <!-- Animație de glitch pentru linia principală -->
+    <animate
+      attributeName="opacity"
+      values="1;1;1;0;1"
+      keyTimes="0;0.4;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Segmente de linie pentru efectul de glitch -->
+  <!-- Segment 1 (stânga) -->
+  <line x1="96" y1="256" x2="200" y2="256" stroke="#FFD700" stroke-width="4">
+    <animate
+      attributeName="y1"
+      values="256;256;248;256"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y2"
+      values="256;256;248;256"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Segment 2 (mijloc) -->
+  <line x1="200" y1="256" x2="300" y2="256" stroke="#FF0000" stroke-width="4">
+    <animate
+      attributeName="y1"
+      values="256;256;264;256"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y2"
+      values="256;256;264;256"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="x1"
+      values="200;200;210;200"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="x2"
+      values="300;300;290;300"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Segment 3 (dreapta) -->
+  <line x1="300" y1="256" x2="416" y2="256" stroke="#FFD700" stroke-width="4">
+    <animate
+      attributeName="y1"
+      values="256;256;252;256"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y2"
+      values="256;256;252;256"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0"
+      keyTimes="0;0.45;0.5;0.55"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efect de zgomot static (puncte albe care apar și dispar rapid) -->
+  <g>
+    <!-- Puncte de zgomot static -->
+    <circle cx="150" cy="256" r="2" fill="#E0E0E0">
+      <animate
+        attributeName="opacity"
+        values="0;0;1;0"
+        keyTimes="0;0.45;0.5;0.55"
+        dur="2s"
+        repeatCount="indefinite"/>
+      <animate
+        attributeName="cy"
+        values="256;256;248;256"
+        keyTimes="0;0.45;0.5;0.55"
+        dur="2s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <circle cx="250" cy="256" r="2" fill="#E0E0E0">
+      <animate
+        attributeName="opacity"
+        values="0;0;1;0"
+        keyTimes="0;0.45;0.5;0.55"
+        dur="2s"
+        repeatCount="indefinite"/>
+      <animate
+        attributeName="cy"
+        values="256;256;264;256"
+        keyTimes="0;0.45;0.5;0.55"
+        dur="2s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <circle cx="350" cy="256" r="2" fill="#E0E0E0">
+      <animate
+        attributeName="opacity"
+        values="0;0;1;0"
+        keyTimes="0;0.45;0.5;0.55"
+        dur="2s"
+        repeatCount="indefinite"/>
+      <animate
+        attributeName="cy"
+        values="256;256;252;256"
+        keyTimes="0;0.45;0.5;0.55"
+        dur="2s"
+        repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Efect de pulsație subtilă pentru linia principală -->
+  <animate
+    xlink:href="line"
+    attributeName="stroke-width"
+    values="4;4;5;4"
+    keyTimes="0;0.4;0.6;1"
+    dur="2s"
+    repeatCount="indefinite"/>
+    
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Glitch Line Divider</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>O linie orizontală care „tremură" și se rupe 1–2 frame-uri, apoi revine stabilă. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

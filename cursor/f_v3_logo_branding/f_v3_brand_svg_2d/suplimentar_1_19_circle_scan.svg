@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circle Scan - un cerc cu linie de scanare care trece 360° și lasă highlight neon -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Cerc exterior (contur) -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Cerc interior (contur) -->
+  <circle cx="256" cy="256" r="120" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Linii de grid (decorative) -->
+  <line x1="96" y1="256" x2="416" y2="256" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="256" y1="96" x2="256" y2="416" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cerc de scanare (highlight) care se umple treptat -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="0 1005" stroke-dashoffset="0">
+    <animate
+      attributeName="stroke-dasharray"
+      values="0 1005;1005 0;1005 0"
+      keyTimes="0;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Linie de scanare care se rotește -->
+  <line id="scan-line" x1="256" y1="256" x2="256" y2="96" stroke="#FF0000" stroke-width="2">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Punct la capătul liniei de scanare -->
+  <circle id="scan-point" cx="256" cy="96" r="4" fill="#FF0000">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de highlight pentru scanare -->
+  <!-- Highlight 1 (la 90 de grade) -->
+  <circle id="highlight-90" cx="256" cy="256" r="160" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="0 753.6 251.2 0" stroke-dashoffset="0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.25;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Highlight 2 (la 180 de grade) -->
+  <circle id="highlight-180" cx="256" cy="256" r="160" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="0 502.4 502.4 0" stroke-dashoffset="0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.5;0.5;0"
+      keyTimes="0;0.45;0.5;0.55;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Highlight 3 (la 270 de grade) -->
+  <circle id="highlight-270" cx="256" cy="256" r="160" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="0 251.2 753.6 0" stroke-dashoffset="0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.5;0.5;0"
+      keyTimes="0;0.7;0.7;0.7;0.75;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru puncte de interes -->
+  <!-- Punct de interes la 90 de grade -->
+  <circle id="point-90" cx="416" cy="256" r="6" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0.5;0.5;0"
+      keyTimes="0;0.2;0.25;0.3;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;8;6;6;6"
+      keyTimes="0;0.2;0.25;0.3;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct de interes la 180 de grade -->
+  <circle id="point-180" cx="256" cy="416" r="6" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;1;0.5;0.5;0"
+      keyTimes="0;0.45;0.45;0.45;0.5;0.55;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;6;8;6;6;6"
+      keyTimes="0;0.45;0.45;0.45;0.5;0.55;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punct de interes la 270 de grade -->
+  <circle id="point-270" cx="96" cy="256" r="6" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;1;0.5;0.5;0"
+      keyTimes="0;0.7;0.7;0.7;0.7;0.7;0.75;0.8;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="6;6;6;6;6;6;8;6;6;6"
+      keyTimes="0;0.7;0.7;0.7;0.7;0.7;0.75;0.8;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Centrul cercului -->
+  <circle cx="256" cy="256" r="8" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Text "SCANNING" care pulsează -->
+  <text id="scanning-text" x="256" y="256" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" text-anchor="middle" dominant-baseline="middle">SCANNING
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "CIRCLE SCAN" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">CIRCLE SCAN</text>
+  
+  <!-- Procentaj de scanare -->
+  <text id="scan-percent" x="256" y="76" font-family="'JetBrains Mono', monospace" font-size="16" fill="#FFD700" text-anchor="middle">0%
+    <animate
+      attributeName="textContent"
+      values="0%;25%;50%;75%;100%;COMPLETE"
+      keyTimes="0;0.25;0.5;0.75;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Circle Scan</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un cerc cu linie de scanare care trece 360° și lasă highlight neon. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

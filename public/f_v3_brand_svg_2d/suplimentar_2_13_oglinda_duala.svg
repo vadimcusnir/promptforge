@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Oglinda Duală - un simbol al reflecției și dualității -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru oglindă -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Linia de separare (oglinda) -->
+  <line id="mirror-line" x1="256" y1="116" x2="256" y2="396" stroke="#E0E0E0" stroke-width="3" stroke-dasharray="280" stroke-dashoffset="280">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="280;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Rama oglinzii (stânga) -->
+  <path id="frame-left" d="M256 116 L216 136 L216 376 L256 396" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="2s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Rama oglinzii (dreapta) -->
+  <path id="frame-right" d="M256 116 L296 136 L296 376 L256 396" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="2s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Forme în partea stângă a oglinzii -->
+  <!-- Cerc stânga -->
+  <circle id="left-circle" cx="236" cy="216" r="20" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="126" stroke-dashoffset="126">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="126;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pătrat stânga -->
+  <rect id="left-square" x="216" y="256" width="20" height="20" fill="none" stroke="#FF0000" stroke-width="2" stroke-dasharray="80" stroke-dashoffset="80">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="80;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#E0E0E0;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Triunghi stânga -->
+  <path id="left-triangle" d="M236 316 L216 336 L256 336 Z" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="6.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Forme în partea dreaptă a oglinzii (reflecții) -->
+  <!-- Cerc dreapta (reflecție) -->
+  <circle id="right-circle" cx="276" cy="216" r="20" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="126" stroke-dashoffset="126">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="126;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pătrat dreapta (reflecție) -->
+  <rect id="right-square" x="276" y="256" width="20" height="20" fill="none" stroke="#FF0000" stroke-width="2" stroke-dasharray="80" stroke-dashoffset="80">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="80;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#E0E0E0;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6.5s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Triunghi dreapta (reflecție) -->
+  <path id="right-triangle" d="M276 316 L296 336 L256 336 Z" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="6.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Puncte de intersecție -->
+  <!-- Punctul central sus -->
+  <circle id="center-top" cx="256" cy="116" r="4" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul central jos -->
+  <circle id="center-bottom" cx="256" cy="396" r="4" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="0.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul stânga sus -->
+  <circle id="left-top" cx="216" cy="136" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="1s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul dreapta sus -->
+  <circle id="right-top" cx="296" cy="136" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul stânga jos -->
+  <circle id="left-bottom" cx="216" cy="376" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul dreapta jos -->
+  <circle id="right-bottom" cx="296" cy="376" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="2.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de reflecție -->
+  <!-- Reflecție pentru cerc -->
+  <line id="reflection-line-1" x1="236" y1="216" x2="276" y2="216" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.5;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Reflecție pentru pătrat -->
+  <line id="reflection-line-2" x1="236" y1="266" x2="276" y2="266" stroke="#FF0000" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="2s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Reflecție pentru triunghi -->
+  <line id="reflection-line-3" x1="236" y1="326" x2="276" y2="326" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.5;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efecte de pulsație pentru oglindă -->
+  <rect id="pulse-mirror" x="254" y="116" width="4" height="280" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Efecte de glitch pentru oglindă -->
+  <rect id="glitch-mirror" x="254" y="116" width="4" height="280" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="3s;7s;11s"
+      repeatCount="1"/>
+  </rect>
+  
+  <!-- Simboluri pentru dualitate -->
+  <!-- Simbol stânga (yin) -->
+  <text id="yin-symbol" x="236" cy="176" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#E0E0E0" text-anchor="middle" opacity="0">YIN
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol dreapta (yang) -->
+  <text id="yang-symbol" x="276" cy="176" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#E0E0E0" text-anchor="middle" opacity="0">YANG
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Efecte de scanare -->
+  <rect id="scan-line" x="256" y="116" width="2" height="280" fill="#FF0000" opacity="0.7">
+    <animate
+      attributeName="x"
+      values="256;216;296;256"
+      keyTimes="0;0.33;0.66;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.7;0.9;0.9;0.7"
+      keyTimes="0;0.33;0.66;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Text "OGLINDA DUALĂ" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">OGLINDA DUALĂ</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Oglinda Duală</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al reflecției și dualității. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

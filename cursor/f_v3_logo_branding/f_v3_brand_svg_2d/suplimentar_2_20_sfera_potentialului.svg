@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sfera Potențialului - un simbol al posibilităților nelimitate și al potențialului latent -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru sferă -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Sfera (conturul exterior) -->
+  <circle id="sphere-outline" cx="256" cy="256" r="120" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="754" stroke-dashoffset="754">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="754;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Elipsa orizontală (pentru efect 3D) -->
+  <ellipse id="sphere-horizontal" cx="256" cy="256" rx="120" ry="40" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="500" stroke-dashoffset="500">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="500;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Elipsa verticală (pentru efect 3D) -->
+  <ellipse id="sphere-vertical" cx="256" cy="256" rx="40" ry="120" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="500" stroke-dashoffset="500">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="500;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="90 256 256"
+      to="450 256 256"
+      dur="30s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Elipsa diagonală 1 (pentru efect 3D) -->
+  <ellipse id="sphere-diagonal-1" cx="256" cy="256" rx="120" ry="40" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="500" stroke-dashoffset="500">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="500;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="7s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="9s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="45 256 256"
+      to="405 256 256"
+      dur="36s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Elipsa diagonală 2 (pentru efect 3D) -->
+  <ellipse id="sphere-diagonal-2" cx="256" cy="256" rx="120" ry="40" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="500" stroke-dashoffset="500">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="500;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="11s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="135 256 256"
+      to="495 256 256"
+      dur="42s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Centrul sferei -->
+  <circle id="sphere-center" cx="256" cy="256" r="8" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="8;10;8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particule de energie în interiorul sferei -->
+  <!-- Particula 1 -->
+  <circle id="energy-particle-1" cx="256" cy="256" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="256;356;256;156;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;256;356;256;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 2 -->
+  <circle id="energy-particle-2" cx="256" cy="256" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="256;326;256;186;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="6s"
+      begin="1s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;186;256;326;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="6s"
+      begin="1s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="1s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 3 -->
+  <circle id="energy-particle-3" cx="256" cy="256" r="3" fill="#FF0000" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="256;336;256;176;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="7s"
+      begin="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;216;256;296;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="7s"
+      begin="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 4 -->
+  <circle id="energy-particle-4" cx="256" cy="256" r="3" fill="#FF0000" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="256;296;256;216;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="5s"
+      begin="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;296;256;216;256"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="5s"
+      begin="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Linii de energie care radiază din centru -->
+  <!-- Linia 1 -->
+  <line id="energy-line-1" x1="256" y1="256" x2="256" y2="136" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 -->
+  <line id="energy-line-2" x1="256" y1="256" x2="376" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="2s"
+      begin="11.5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 -->
+  <line id="energy-line-3" x1="256" y1="256" x2="256" y2="376" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      begin="12s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 -->
+  <line id="energy-line-4" x1="256" y1="256" x2="136" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="2s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efecte de pulsație pentru sferă -->
+  <circle id="pulse-sphere" cx="256" cy="256" r="0" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;120;0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de glitch pentru sferă -->
+  <circle id="glitch-sphere" cx="256" cy="256" r="60" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Simboluri pentru potențial -->
+  <!-- Simbol 1 (Potențial) -->
+  <text id="potential-symbol-1" x="256" y="216" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">POTENȚIAL
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 (Posibilitate) -->
+  <text id="potential-symbol-2" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">POSIBILITATE
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="16s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 (Manifestare) -->
+  <text id="potential-symbol-3" x="256" y="296" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">MANIFESTARE
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="19s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "SFERA POTENȚIALULUI" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">SFERA POTENȚIALULUI</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Sfera Potențialului</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al posibilităților nelimitate și al potențialului latent. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

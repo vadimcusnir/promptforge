@@ -1,0 +1,23 @@
+pf_rules_v3/
+  ruleset.yml                         # SSOT (7D, gates, API contracte, DoR/DoD, export, telemetry, rate limits, Hub)
+  README_rules.txt
+  rules/
+    00-foundation.txt
+    01-parameters-7d.txt
+    03-api-run-modules.txt
+    04-gpt-live-editor-test.txt
+    05-export-bundle.txt
+    06-telemetry-observability.txt
+    07-versioning-modules.txt
+    08-entitlements-pricing.txt
+    09-security-guardrails.txt
+    frontend/
+      30-ui-standards.txt
+      31-hub-ux-tabs.txt
+    backend/
+      20-supabase.txt
+      21-stripe.txt
+  templates/
+    @api-route-template.txt
+    @bundle-exporter-template.txt
+    @evaluator-prompt-template.txt

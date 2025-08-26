@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Binary Flip - cifre 0 și 1 care se inversează rapid, până apare un cuvânt („Forge") -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru text binar -->
+  <rect x="106" y="216" width="300" height="80" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Caractere binare care se schimbă -->
+  <!-- Caracter 1 (F) -->
+  <text id="char1" x="146" y="266" font-family="'JetBrains Mono', monospace" font-size="32" fill="#5a5a5a" text-anchor="middle">0
+    <animate
+      attributeName="textContent"
+      values="0;1;0;1;0;1;F"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 2 (O) -->
+  <text id="char2" x="186" y="266" font-family="'JetBrains Mono', monospace" font-size="32" fill="#5a5a5a" text-anchor="middle">1
+    <animate
+      attributeName="textContent"
+      values="1;0;1;0;1;0;O"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 3 (R) -->
+  <text id="char3" x="226" y="266" font-family="'JetBrains Mono', monospace" font-size="32" fill="#5a5a5a" text-anchor="middle">0
+    <animate
+      attributeName="textContent"
+      values="0;1;0;1;0;1;R"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 4 (G) -->
+  <text id="char4" x="266" y="266" font-family="'JetBrains Mono', monospace" font-size="32" fill="#5a5a5a" text-anchor="middle">1
+    <animate
+      attributeName="textContent"
+      values="1;0;1;0;1;0;G"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 5 (E) -->
+  <text id="char5" x="306" y="266" font-family="'JetBrains Mono', monospace" font-size="32" fill="#5a5a5a" text-anchor="middle">0
+    <animate
+      attributeName="textContent"
+      values="0;1;0;1;0;1;E"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700"
+      keyTimes="0;0.14;0.28;0.42;0.56;0.7;0.84"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Efecte de glitch pentru tranziția către cuvânt -->
+  <!-- Glitch pentru caracter 1 -->
+  <rect id="glitch1" x="136" y="246" width="20" height="40" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0.3;0"
+      keyTimes="0;0.7;0.72;0.74;0.76;0.78;0.8;0.82"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Glitch pentru caracter 2 -->
+  <rect id="glitch2" x="176" y="246" width="20" height="40" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0.3;0"
+      keyTimes="0;0.72;0.74;0.76;0.78;0.8;0.82;0.84;0.86"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Glitch pentru caracter 3 -->
+  <rect id="glitch3" x="216" y="246" width="20" height="40" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0.3;0"
+      keyTimes="0;0.74;0.76;0.78;0.8;0.82;0.84;0.86;0.88;0.9"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Glitch pentru caracter 4 -->
+  <rect id="glitch4" x="256" y="246" width="20" height="40" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0.3;0"
+      keyTimes="0;0.76;0.78;0.8;0.82;0.84;0.86;0.88;0.9;0.92;0.94"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Glitch pentru caracter 5 -->
+  <rect id="glitch5" x="296" y="246" width="20" height="40" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0;0.3;0"
+      keyTimes="0;0.78;0.8;0.82;0.84;0.86;0.88;0.9;0.92;0.94;0.96;0.98"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Linii de zgomot care apar în timpul tranziției -->
+  <line id="noise-line-1" x1="106" y1="236" x2="406" y2="236" stroke="#FF0000" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0.5;0"
+      keyTimes="0;0.7;0.72;0.74;0.76;0.78;0.8;0.82"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="noise-line-2" x1="106" y1="276" x2="406" y2="276" stroke="#FF0000" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0.5;0"
+      keyTimes="0;0.72;0.74;0.76;0.78;0.8;0.82;0.84;0.86"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Flash de lumină când apare cuvântul -->
+  <rect id="flash" x="106" y="216" width="300" height="80" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0;0.2;0"
+      keyTimes="0;0.78;0.8;0.82;0.84;0.86;0.88;0.9;0.92;0.94;0.96;0.98"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Text "BINARY FLIP" -->
+  <text x="256" y="176" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">BINARY FLIP</text>
+  
+  <!-- Linii de cod binar în fundal (decorative) -->
+  <text x="256" y="336" font-family="'JetBrains Mono', monospace" font-size="12" fill="#5a5a5a" text-anchor="middle">01001100 01001111 01000001 01000100 01001001 01001110 01000111</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Binary Flip</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Cifre 0 și 1 care se inversează rapid, până apare un cuvânt („Forge"). Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

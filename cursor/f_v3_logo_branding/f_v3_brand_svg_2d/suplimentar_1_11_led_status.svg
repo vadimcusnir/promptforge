@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- LED Status - un cerc mic care clipește: verde (OK) → roșu (Error) → galben (Processing) -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru LED-uri -->
+  <rect x="156" y="216" width="200" height="80" rx="8" ry="8" fill="none" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- LED-uri de status -->
+  <!-- LED OK (verde) -->
+  <g id="led-ok">
+    <!-- Cercul LED-ului -->
+    <circle cx="196" cy="256" r="20" fill="#5a5a5a">
+      <animate
+        attributeName="fill"
+        values="#5a5a5a;#00FF00;#5a5a5a"
+        keyTimes="0;0.1;0.33"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Efect de strălucire pentru LED -->
+    <circle cx="196" cy="256" r="24" fill="none" stroke="#00FF00" stroke-width="2" opacity="0">
+      <animate
+        attributeName="opacity"
+        values="0;0.5;0"
+        keyTimes="0;0.1;0.33"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Text "OK" -->
+    <text x="196" y="256" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" text-anchor="middle" dominant-baseline="middle">OK
+      <animate
+        attributeName="fill"
+        values="#E0E0E0;#00FF00;#E0E0E0"
+        keyTimes="0;0.1;0.33"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </text>
+  </g>
+  
+  <!-- LED Error (roșu) -->
+  <g id="led-error">
+    <!-- Cercul LED-ului -->
+    <circle cx="256" cy="256" r="20" fill="#5a5a5a">
+      <animate
+        attributeName="fill"
+        values="#5a5a5a;#5a5a5a;#FF0000;#5a5a5a"
+        keyTimes="0;0.33;0.43;0.66"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Efect de strălucire pentru LED -->
+    <circle cx="256" cy="256" r="24" fill="none" stroke="#FF0000" stroke-width="2" opacity="0">
+      <animate
+        attributeName="opacity"
+        values="0;0;0.5;0"
+        keyTimes="0;0.33;0.43;0.66"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Text "ERR" -->
+    <text x="256" y="256" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" text-anchor="middle" dominant-baseline="middle">ERR
+      <animate
+        attributeName="fill"
+        values="#E0E0E0;#E0E0E0;#FF0000;#E0E0E0"
+        keyTimes="0;0.33;0.43;0.66"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </text>
+  </g>
+  
+  <!-- LED Processing (galben) -->
+  <g id="led-processing">
+    <!-- Cercul LED-ului -->
+    <circle cx="316" cy="256" r="20" fill="#5a5a5a">
+      <animate
+        attributeName="fill"
+        values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+        keyTimes="0;0.66;0.66;0.76;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Efect de strălucire pentru LED -->
+    <circle cx="316" cy="256" r="24" fill="none" stroke="#FFD700" stroke-width="2" opacity="0">
+      <animate
+        attributeName="opacity"
+        values="0;0;0;0.5;0"
+        keyTimes="0;0.66;0.66;0.76;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Text "PRC" -->
+    <text x="316" y="256" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" text-anchor="middle" dominant-baseline="middle">PRC
+      <animate
+        attributeName="fill"
+        values="#E0E0E0;#E0E0E0;#E0E0E0;#FFD700;#E0E0E0"
+        keyTimes="0;0.66;0.66;0.76;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </text>
+  </g>
+  
+  <!-- Indicator de status activ -->
+  <rect id="status-indicator" x="156" y="196" width="200" height="10" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#00FF00;#5a5a5a;#FF0000;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.33;0.43;0.66;0.76;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Text "LED STATUS" -->
+  <text x="256" y="180" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">LED STATUS</text>
+  
+  <!-- Text de status care se schimbă -->
+  <text id="status-text" x="256" y="320" font-family="'JetBrains Mono', monospace" font-size="16" fill="#E0E0E0" text-anchor="middle">STATUS: OK
+    <animate
+      attributeName="textContent"
+      values="STATUS: OK;STATUS: ERROR;STATUS: PROCESSING;STATUS: OK"
+      keyTimes="0;0.33;0.66;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#00FF00;#FF0000;#FFD700;#00FF00"
+      keyTimes="0;0.33;0.66;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>LED Status</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un cerc mic care clipește: verde (OK) → roșu (Error) → galben (Processing). Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

@@ -1,0 +1,1812 @@
+
+📁 ROOT STRUCTURE
+
+promptforge/
+├── 📁 app/                          # Next.js App Router
+├── 📁 components/                   # React Components
+├── 📁 lib/                         # Utility Libraries
+├── 📁 public/                      # Static Assets
+├── 📁 hooks/                       # Custom React Hooks
+├── 📁 styles/                      # Global Styles
+├── 📁 cursor/                      # Project Documentation
+├── 📁 scripts/                     # Build & Deploy Scripts
+├── 📁 tests/                       # Test Files
+├── 📁 supabase/                    # Database & Backend
+├── 📁 config/                      # Configuration Files
+└── 📁 types/                       # TypeScript Types
+
+
+
+🚀 APP ROUTER STRUCTURE (/app)
+
+app/
+├── 📄 layout.tsx                   # Root Layout
+├── 📄 page.tsx                     # Homepage (/)
+├── 📄 globals.css                  # Global Styles
+├── 📄 not-found.tsx               # 404 Page
+├── 📄 loading.tsx                  # Loading States
+├── 📄 robots.ts                    # SEO Robots
+├── 📄 sitemap.ts                   # SEO Sitemap
+│
+├── 📁 about/                       # About Pages
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── 📁 auth/                        # Authentication
+│   ├── login/page.tsx
+│   └── register/page.tsx
+│
+├── 📁 blog/                        # Blog System
+│   ├── page.tsx                    # Blog Index
+│   └── [slug]/page.tsx            # Individual Posts
+│
+├── 📁 coming-soon/                 # Coming Soon
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── 📁 contact/                     # Contact Pages
+│   └── page.tsx
+│
+├── 📁 dashboard/                   # User Dashboard
+│   ├── loading.tsx
+│   └── page.tsx
+│
+├── 📁 docs/                        # Documentation
+│   └── page.tsx
+│
+├── 📁 generator/                    # Prompt Generator
+│   └── page.tsx
+│
+├── 📁 guides/                      # User Guides
+│
+├── 📁 legal/                       # Legal Pages
+│   ├── privacy/page.tsx
+│   └── terms/page.tsx
+│
+├── 📁 login/                       # Login Pages
+│   └── page.tsx
+│
+├── 📁 modules/                     # Module System
+│   ├── loading.tsx
+│   ├── page.tsx                    # Module Index
+│   └── [id]/page.tsx              # Individual Modules
+│
+├── 📁 pricing/                     # Pricing Pages
+│   └── page.tsx
+│
+├── 📁 signup/                      # Signup Pages
+│   └── page.tsx
+│
+├── 📁 thankyou/                    # Thank You Pages
+│   └── page.tsx
+│
+├── 📁 test-ambient/                # Test Pages
+├── 📁 test-motion/                 # Motion Testing
+├── 📁 test-tactical/               # Tactical Testing
+│
+└── 📁 api/                         # API Routes
+    ├── run/[moduleId]/route.ts     # Module Execution
+    ├── toggle-coming-soon/route.ts # Coming Soon Toggle
+    └── waitlist/route.ts           # Waitlist Management
+
+
+
+🧩 COMPONENTS STRUCTURE (/components)
+
+components/
+├── 📄 coming-soon-wrapper.tsx      # Coming Soon Logic
+├── 📄 entitlement-gate.tsx         # Feature Gating
+├── 📄 footer.tsx                   # Site Footer
+├── 📄 header.tsx                   # Site Header
+├── 📄 paywall-modal.tsx            # Paywall System
+├── �� theme-provider.tsx           # Theme Management
+│
+├── 📁 home/                        # Homepage Components
+│   └── LiveGenerationDemo.tsx     # Live Demo Component
+│
+├── 📁 modules/                     # Module Components
+│   └── ModuleOverlay.tsx          # Module Overlay
+│
+└── 📁 ui/                          # UI Component Library
+    ├── 📄 accordion.tsx            # Accordion Component
+    ├── 📄 alert-dialog.tsx         # Alert Dialogs
+    ├── 📄 alert.tsx                # Alert Components
+    ├── 📄 avatar.tsx               # Avatar Component
+    ├── 📄 badge.tsx                # Badge Component
+    ├── 📄 button.tsx               # Button Component
+    ├── 📄 card.tsx                 # Card Component
+    ├── 📄 carousel.tsx             # Carousel Component
+    ├── 📄 chart.tsx                # Chart Components
+    ├── 📄 checkbox.tsx             # Checkbox Component
+    ├── 📄 collapsible.tsx          # Collapsible Component
+    ├── 📄 command.tsx              # Command Component
+    ├── 📄 context-menu.tsx         # Context Menu
+    ├── 📄 dialog.tsx               # Dialog Component
+    ├── 📄 drawer.tsx               # Drawer Component
+    ├── 📄 dropdown-menu.tsx        # Dropdown Menu
+    ├── 📄 form.tsx                 # Form Components
+    ├── 📄 hover-card.tsx           # Hover Card
+    ├── 📄 input.tsx                # Input Components
+    ├── 📄 label.tsx                # Label Component
+    ├── 📄 menubar.tsx              # Menu Bar
+    ├── �� navigation-menu.tsx      # Navigation Menu
+    ├── 📄 pagination.tsx           # Pagination
+    ├── 📄 popover.tsx              # Popover Component
+    ├── 📄 progress.tsx             # Progress Bar
+    ├── 📄 radio-group.tsx          # Radio Group
+    ├── 📄 resizable.tsx            # Resizable Component
+    ├── 📄 scroll-area.tsx          # Scroll Area
+    ├── 📄 select.tsx               # Select Component
+    ├── 📄 separator.tsx            # Separator
+    ├── 📄 sheet.tsx                # Sheet Component
+    ├── 📄 sidebar.tsx              # Sidebar Component
+    ├── 📄 skeleton.tsx             # Skeleton Loading
+    ├── 📄 slider.tsx               # Slider Component
+    ├── 📄 sonner.tsx               # Toast Notifications
+    ├── 📄 switch.tsx               # Switch Component
+    ├── 📄 table.tsx                # Table Component
+    ├── 📄 tabs.tsx                 # Tabs Component
+    ├── 📄 textarea.tsx             # Textarea Component
+    ├── 📄 toast.tsx                # Toast System
+    ├── 📄 toaster.tsx              # Toaster Component
+    ├── 📄 toggle.tsx               # Toggle Component
+    ├── 📄 toggle-group.tsx         # Toggle Group
+    ├── 📄 tooltip.tsx              # Tooltip Component
+    ├── 📄 use-mobile.tsx           # Mobile Hook
+    └── 📄 use-toast.ts             # Toast Hook
+
+
+
+LIBRARY STRUCTURE
+
+lib/
+├── 📄 default-params.ts            # 7D Parameters System
+├── 📄 entitlements.ts              # Entitlements & Plans
+└── 📄 utils.ts                     # Utility Functions
+
+
+PUBLIC ASSETS
+
+public/
+├── 📁 f_v3_brand_html_gif/        # Brand GIF Assets
+├── �� f_v3_brand_svg_2d/          # Brand SVG Assets
+├── �� f_v3_brand_images/          # Brand Image Assets
+├── �� f_v3_brand_videos/          # Brand Video Assets
+├── 📄 digital-audit-compliance.png
+├── 📄 digital-audit-trail-compliance-dashboard.png
+├── �� industrial-factory-automation-systems.png
+├── �� industrial-factory-automation.png
+├── �� industrial-prompt-engineering-dashboard.png
+├── 📄 organized-industrial-tool-library.png
+├── 📄 organized-tool-library.png
+├── 📄 placeholder-logo.png
+├── 📄 placeholder-logo.svg
+├── 📄 placeholder-user.jpg
+├── 📄 placeholder.jpg
+├── 📄 placeholder.svg
+├── 📄 professional-engineer.png
+├── 📄 professional-man-portrait.png
+├── �� professional-woman-portrait.png
+└── �� professional-woman-scientist.png
+
+
+CONFIGURATION FILES
+
+📄 package.json                     # Dependencies & Scripts
+📄 next.config.mjs                  # Next.js Configuration
+📄 tsconfig.json                    # TypeScript Configuration
+�� postcss.config.mjs               # PostCSS Configuration
+📄 components.json                  # UI Components Config
+📄 eslint.config.js                 # ESLint Configuration
+�� tailwind.config.ts               # Tailwind CSS Configuration
+📄 middleware.ts                    # Next.js Middleware
+📄 agent.ts                         # Agent Configuration
+📄 stripe-config.env                # Stripe Configuration
+
+
+
+
+/docs/
+├── overview/                    # Overview complet
+│   ├── introduction.md
+│   ├── architecture.md
+│   └── benefits.md
+├── 7d-parameters/              # 7D Parameters
+│   ├── domain.md
+│   ├── scale.md
+│   ├── urgency.md
+│   ├── complexity.md
+│   ├── resources.md
+│   ├── application.md
+│   └── output.md
+├── test-engine/                 # Test Engine
+│   ├── how-it-works.md
+│   ├── scoring.md
+│   └── optimization.md
+├── export-pipeline/             # Export System
+│   ├── formats.md
+│   ├── process.md
+│   └── manifest.md
+└── api-reference/               # API Documentation
+    ├── authentication.md
+    ├── endpoints.md
+    └── examples.md
+
+
+
+🎯 KEY FEATURES BY ROUTE
+Homepage (/)
+Hero section with industrial prompt engineering
+Live generation demo
+7D parameters explanation
+Feature showcase
+Generator (/generator)
+7D parameter configuration
+Module selection system
+Live prompt generation
+Export functionality
+Modules (/modules)
+Module library (M01-M50)
+Module specifications
+Execution interface
+Results display
+Dashboard (/dashboard)
+User activity tracking
+Prompt history
+Performance metrics
+Export management
+Documentation (/docs)
+API reference
+Usage examples
+Best practices
+Integration guides
+�� DEPLOYMENT READY STRUCTURE
+This site tree shows a production-ready Next.js application with:
+✅ Complete routing structure
+✅ Comprehensive UI component library
+✅ Professional design system
+✅ API infrastructure
+✅ Authentication system
+✅ Content management
+✅ Performance optimization
+Ready for immediate Vercel deployment! 🎯
+
+
+
+
+
+ordinea de execuție (P0→P2), „definition of done” și cum centralizăm fișierele ca să rămânem aliniați.
+
+1) Ce lăsăm după lansare (Level‑Up)
+
+Aceste elemente arată excelent în artefactele tale (KPI Pack, Marketplace graph, „Executive KPI Report”) dar nu sunt critice pentru „go‑live”:
+
+Marketplace & Packs (relații între module, KPI templates, case studies, bundle designer).
+
+Executive KPI Report + grafice comparative auto‑generate.
+
+Test Engine Live complet (cu cost, tokens, latencies) și Export Designer PDF avansat.
+
+Admin Workspace (kill‑switches, reconciliere Stripe ↔ entitlements, DLQ webhooks).
+Acestea există deja ca direcții în blueprint & audit și pot forma Milestone „Level‑Up”.
+
+2) P0 – Pre‑Launch (obligatoriu înainte de anunț)
+
+„Hardening” UI/UX + completarea site‑tree + fix‑uri critice.
+
+Routing & gate
+
+Middleware Coming‑Soon: blocare rută globală când NEXT_PUBLIC_COMING_SOON=true (allowlist doar: /coming-soon, /thankyou, assets, /api).
+
+Wrapper‑ul de Coming‑Soon ascunde header/footer; în mod ON, niciun link nu e activ.
+
+Site‑tree complet (MVP)
+
+/docs (sidebar + content), /guides (tutoriale cu CTA spre generator), /about, /contact, /privacy, /terms, 404 custom.
+
+Header/Footer unic (fără dubluri pe homepage), toate linkurile funcționale.
+
+Generator
+
+Remediere SSR/render + sincronizare state client/server.
+
+Fluxul canonic: selectezi modul → configurezi 7D → generezi prompt → (simulate test) → export.
+
+Historic local (localStorage) pentru sesiuni + badge cu run_id.
+(Acestea sunt deja descrise în auditul de cod – folosim SHA‑256 ca run_id, PromptLint determinist, export .md/.json de bază).
+
+Dashboard (MVP)
+
+Înlătură „loading perpetuu” → listează run‑uri din persistență locală pentru toți; dacă user e plătit → Supabase.
+
+Filtre: modul, domain, dată; acțiuni: re‑run (simulate), export.
+
+Gating & entitlements
+
+Free: M01, M10, M18; export .txt/.md.
+
+Creator: toate modulele; .md.
+
+Pro: + .pdf/.json; Run Real Test = paywall.
+
+Enterprise: bundle.zip + API.
+(Paywall‑urile la „aha actions”: Run Real Test, Export PDF/JSON, Bundle ZIP).
+
+Homepage – „Live Generation Demo”
+
+Secțiune imediat sub Hero; simulate (fără cost), limită recomandată: 3 rulari / IP / zi; la epuizare → CTA „Sign up to keep generating”.
+
+UI/UX & A11y
+
+Paletă SKRE cu auriu ca accent (tokeni Tailwind dedicați), skeletons reale, prefers‑reduced‑motion, focus rings vizibile, aria-current în nav, „Skip to content”.
+
+SEO/OG/Twitter meta + sitemap & robots.
+(Recomandările și patch‑urile pentru paletă, loading, a11y, metadata sunt în auditul UI/UX).
+
+Definition of Done (P0)
+
+Nicio eroare în console pe rutele principale.
+
+Toate link‑urile din header/footer funcționează (în afara Coming‑Soon).
+
+Lighthouse ≥90 (mobile & desktop).
+
+Gating verificat pe toate acțiunile.
+
+/docs are minimum: Overview, 7D, Test Engine, Export, Entitlements, API stub, Examples.
+
+3) P1 – Pre‑Launch+ (puternic dorit, dar nu blochează)
+
+/blog (index + articol) cu design „readability first” (max‑width 65ch, ToC sticky, author box).
+
+Module Overlay bogat (specs, KPIs, guardrails, „Use in Generator”).
+
+Pricing polish (toggle planuri, badge „Popular”, note de gating).
+
+QA mobil & desktop + cross‑browser + încă un pas de a11y (ARIA la modale/tooltips).
+
+4) P2 – Level‑Up imediat după launch
+
+Test Engine LIVE (Pro/Ent) + log cost/latency/tokens; degrade‑to‑simulate on fail.
+
+Export PDF avansat (layout executive) + bundle.zip cu manifest & checksum.
+
+Admin Workspace (overview, runs, exports, entitlements, webhooks reconcile).
+
+Marketplace & KPI Packs (asset‑izarea graficelor și rapoartelor din materialele tale).
+
+5) Cum colectăm toate fișierele și le transformăm în backlog
+
+Ținta: o singură sursă de adevăr + etichetare clară pe „Scope Now” vs „Level‑Up”.
+
+Manifest (livrabil imediat în repo):
+/docs/manifest.json
+
+{
+  "version": "v3",
+  "tracks": ["uiux","generator","dashboard","docs","legal","growth"],
+  "assets": [
+    {"id":"forge_v3_00_plan.txt","track":"planning","scope":"now"},
+    {"id":"forge_v3_03_front_end_design.txt","track":"uiux","scope":"now"},
+    {"id":"forge_v3_AUDIT.txt","track":"qa","scope":"now"},
+    {"id":"forge_v3_01_marketplace.txt","track":"marketplace","scope":"levelup"},
+    {"id":"forge_v3_02_artefacts.txt","track":"exports","scope":"levelup"}
+  ]
+}
+
+
+Issue templates (GitHub)
+
+feature.yml (scop, DoD, routes, a11y checks)
+
+bug.yml (steps, expected, actual, console/network)
+
+page.yml (wireframe, content, links, acceptance)
+
+Etichete
+P0, P1, P2, UX, A11y, Gating, Export, Docs, Debt.
+
+Board
+Coloane: Backlog → In Progress → Review → Ready → Done; regula „WIP limit 2”.
+
+6) Backlog inițial (titluri de issue gata de creat)
+
+P0
+
+fix: middleware coming-soon (hard gate + allowlist)
+
+feat: /docs MVP (Overview, 7D, Test Engine, Export, Entitlements, Examples, API stub)
+
+feat: /guides MVP (3 tutoriale cu CTA spre /generator)
+
+fix: generator SSR + client/server sync + local history
+
+feat: dashboard MVP (runs din localStorage + filtre)
+
+feat: entitlements gates (Free/Creator/Pro/Ent) + paywalls la aha-actions
+
+feat: homepage LiveGenerationDemo (simulate, 3 runs/IP/day)
+
+fix: header/footer unic + navigație completă
+
+chore: SEO/OG/Twitter + sitemap/robots
+
+feat: a11y kit (focus ring, skip link, aria-current)
+
+P1
+
+feat: modules overlay (specs + KPIs + guardrails + CTA)
+
+feat: pricing polish (toggle, badges, matrix clar)
+
+feat: blog index + article template
+
+test: full QA mobile/desktop + cross-browser
+
+P2 (Level‑Up)
+
+feat: Test Engine LIVE + degrade-to-simulate + logging
+
+feat: export PDF (executive) + bundle.zip + manifest & checksum
+
+feat: Admin Workspace (overview, runs, exports, entitlements)
+
+feat: Marketplace & KPI Packs
+
+(Toate aceste puncte sunt extrase/sincronizate din blueprint + audit – detalii tehnice și patch‑uri gata de lipit sunt în materialele deja analizate.)
+
+7) „Definition of Done” general (pentru orice task UI/UX)
+
+Respectă paleta SKRE (70/20/10, auriu doar accent), tipografie Montserrat/Open Sans.
+
+A11y: contrast ≥4.5:1, Tab navigabil, focus vizibil, prefers-reduced-motion.
+
+Loading state + error state prezente.
+
+Tests manuale: mobil (≤375px), tablet, desktop; Chrome/Safari/Firefox.
+
+Analytics: eveniment minimal (ex: cta_click, run_simulate, export_attempt).
+
+Docs: secțiune scurtă în /docs sau comentariu în PR cu „how it works”.
+
+Concluzie
+
+Da, păstrăm „nivelul 2” (Marketplace, Executive KPI, Admin, Live Engine complet) după lansare. Pentru lansare, ne concentrăm pe P0 (gating, generator stabil, dashboard MVP, docs/guides, legal, homepage demo, a11y/SEO).
+Dacă ești de acord, creez acum lista de issue‑uri (titluri + checklists) și un manifest cu toate fișierele, astfel încât să putem începe implementarea pe un board unic.
+
+
+=====================================
+
+AUDIT CODE
+
+=====================================
+
+
+Mai jos ai un audit tehnic & produs al generatorului PROMPTFORGE v3 (din fișierul tău HTML+JS) — concentrat pe: cum îmbunătățești procesul de generare a prompturilor, puncte forte, puncte slabe, know‑how și pentru ce vor plăti clienții.
+
+1) Rezumat executiv (diagnostic în 7 puncte)
+
+Arhitectură bună la nivel de conținut: ai un catalog de 50 module, fiecare cu description/requirements/spec/output/kpi/guardrails – schemă consecventă, ușor de exploatat programatic.
+
+Motor 7D prezent dar nerefractat complet în runtime: UI pentru domain/scale/urgency/resources/complexity/application/output_format, însă colectarea cerințelor specifice modulului nu este încă interactivă.
+
+Promptul este asamblat corect ca secțiuni (Context, Obiectiv, Cerințe, Spec, Output, KPI, Guardrails, Telemetrie, Fail‑safes, Next actions), dar fără validare semantică a datelor și fără examples/few‑shot contextuale.
+
+Editor/Test Engine sunt simulate, scorurile sunt aleatorii; există risc de mismatch față de promisiunea “Editor GPT integrat / Test Engine real‑time”.
+
+Istoric doar în memorie, export doar .txt; nu există checksum, versionare, gating pe planuri sau telemetrie persistență.
+
+Bug‑uri & datorie tehnică: hashing slab, eveniment DOM folosește event global, CSS cu bloc eronat, scripturi externe accidentale.
+
+Monetizabil clar: know‑how = biblioteca de module + motorul 7D + standardul de prompt industrial. Clienții plătesc pentru consistență, timp câștigat, evaluare și auditabilitate, nu pentru “încă un template”.
+
+2) Puncte forte (de păstrat & dublat miza)
+
+Catalogul de 50 module, bogat și coerent (MODULES cu chei standard: requirements/spec/output/kpi/guardrails/vectors). Este un “DSL light” pentru prompt‑engineering aplicat. Diferă de generatoarele generice prin KPI și guardrails la nivel de modul.
+
+Panou 7D – parametrizezi promptul pe domain/scale/urgency/resources/complexity/application/output_format; acesta este nucleul engine‑ului tău de variații controlate.
+
+Structură de prompt industrial: inserții standard pentru Telemetrie/Fail‑safes/Next actions → orientare spre execuție, nu “text frumos”.
+
+UI de selecție pe vectori semantici (V1–V7) și grilă de module; curba de învățare mică pentru utilizator.
+
+3) Puncte slabe (ce te ține pe loc azi)
+
+Colectarea cerințelor modulului lipsește
+module.requirements sunt text liber (“[SUBIECT], [NIVEL]…”), dar nu există Requirements Resolver care să extragă [SLOT]‑urile, să ceară user‑ului valori și să le insereze în prompt + să valideze că nu rămân placeholder‑e.
+
+Validare și scoring artificiale
+validateStructure() verifică doar cuvinte cheie, performValidation() dă scoruri random; Test Engine “execută” prin simulateGptResponse. Percepție de demo, nu de instrument de lucru.
+
+Hash/telemetrie improvizate
+generateSessionHash() folosește un hash simplist (bitwise), nepotrivit ca run_id consistent sau checksum export.
+
+Persistență/istoric
+sessionHistory este in‑memory; pierzi runs, nu poți afișa trenduri, scoruri, comparații, diff între versiuni.
+
+Export minim
+Doar .txt; lipsesc .md/.json/.pdf cu watermark + bundle.zip + checksum — exact ce monetizezi pe planuri superioare.
+
+Bug‑uri & UX
+
+selectModule folosește event.currentTarget fără a primi event → fragil în strict mode.
+
+Stil CSS cu un bloc corupt ({ body { … } }) — poate strica stiluri la print.
+
+Scripturi externe injectate (ex. monica, genspark) rămase în HTML — zgomot, risc de conflicte.
+
+Promisiune vs implementare
+Header-ul vinde “Editor GPT integrat / Test Engine real-time”, dar codul folosește simulate și setTimeout. Necesită gating clar (“Simulate” pentru Free; “Run real” pentru Pro/Ent).
+
+4) Cum îmbunătățești procesul de generare a prompturilor (plan de implementare)
+A) Requirements Resolver (slot‑filling automat)
+
+Ce face: parsează module.requirements, generează dinamic câmpuri, colectează valori, validează, compune un context.inputs.
+
+De ce contează: transformă modulele din “texte” în “contracte de date”. Fără asta, 7D nu e suficient.
+
+Schiță de cod (drop‑in în JS actual):
+
+// 1) Extrage sloturile: [SUBIECT], [NIVEL], [CONTEXT:json], [DEADLINE?], [BUGET=0]
+function parseSlots(reqStr) {
+  const rx = /\[([^\]]+)\]/g; let m, slots=[];
+  while ((m = rx.exec(reqStr))){ 
+    const raw = m[1].trim();
+    const [name, meta] = raw.split(':');
+    const opt = name.endsWith('?'); 
+    const key = name.replace('?','').toUpperCase();
+    let type='string', def=null;
+    if (meta) { 
+      const [t,defRaw] = meta.split('=');
+      type = (t||'string').trim(); 
+      def = defRaw? defRaw.trim(): null; 
+    }
+    slots.push({ key, optional: opt, type, def });
+  }
+  return slots;
+}
+
+// 2) Generează UI (+ salvează în state)
+function buildRequirementsForm(moduleId){
+  const req = MODULES[moduleId].requirements;
+  const slots = parseSlots(req);
+  // Randează inputuri per slot; la submit -> validate & save
+}
+
+// 3) Validează & injectează în generateDynamicPrompt()
+function gatherInputs(slots){
+  const data = {}; const errs=[];
+  for(const s of slots){
+    const v = getValueFromForm(s.key) ?? s.def;
+    if(!s.optional && (v===null || v==='')) errs.push(s.key);
+    data[s.key]= coerce(v, s.type); // ex: json/number/date
+  }
+  if(errs.length) throw new Error("Lipsesc: "+errs.join(', '));
+  return data;
+}
+
+
+Integrezi inputs în config și le inserezi în prompt (și în secțiunea Telemetrie).
+
+B) Templating & “Prompt Blocks”
+
+Extrage secțiunile repetabile (Context/Objective/Spec/KPI/Guardrails/Telemetry/Fail‑safes/Next) ca blocuri reutilizabile și compilează cu un micro‑templater (ex. {{var}}).
+
+Permite “few‑shot by module”: array examples[] atașat modulului → crește stabilitatea output‑ului.
+
+C) PromptLint (reguli, nu doar cuvinte)
+
+Lint pe 4 axe: Structură (toate secțiunile), Sloturi (nicio [ETICHETA] necompletată), Ton (imperativ, anti‑fluff), Guardrails (dacă modul cere “citează oficial”, să existe secțiunea “Surse”).
+
+Scoruri deterministe (0–100) pe criterii explicite (nu random). Înlocuiești performValidation().
+
+D) Test Engine real & gating pe planuri
+
+Free/Creator: simulateGptResponse() (clar etichetat Simulated).
+
+Pro/Enterprise: “Run Real Test” → apel API furnizor + logging (tokens/duration/status), salvare scor via PromptLint + Evaluare KPI specifică modulului.
+
+UI: butoane separate “Simulate Test” / “Run Real Test” + badge de telemetrie (run_id, scor).
+
+E) Telemetrie, istoric & versionare
+
+Persistă runs în localStorage (MVP) + cheie promptforge:runs. Salvezi {run_id, module_id, params7D, inputs, prompt_hash_sha256, scores, status, ts}.
+
+Adaugă diff între “Original” și “Optimizat GPT” (vizual – linii adăugate/șterse).
+
+Schiță hashing robust:
+
+async function sha256(str){
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,16);
+}
+
+
+Înlocuiește generateSessionHash(); folosește run_id = sha256(JSON.stringify(config)+Date.now()).
+
+F) Exporturi & artefacte
+
+Free: .txt (fără watermark).
+
+Creator: .md.
+
+Pro: .json (config+telemetrie) + .pdf (watermark în trial).
+
+Enterprise: bundle.zip (toate + checksum.txt).
+
+În export, include prompt.md (objective/KPI/excerpt) și prompt.json (config7D+inputs+telemetrie).
+
+G) Remedieri rapide (bugfix/UX)
+
+selectModule: primește ev sau folosește this — nu te baza pe global event.
+
+function createModuleCard(id, module){
+  const card = document.createElement('div');
+  card.onclick = (ev)=> selectModule(id, ev.currentTarget);
+  // ...
+}
+function selectModule(id, el){
+  selectedModule = id;
+  document.querySelectorAll('.module-card').forEach(c=>c.classList.remove('ring-2','ring-blue-500'));
+  el.classList.add('ring-2','ring-blue-500');
+  updateSessionConfig();
+}
+
+
+CSS: elimină blocul corupt { body { … } } și separă stilul de print corect (ex. @media print { ... }).
+
+Scripturi străine: scoate din build final elementele injectate (monica/genspark/etc.). Landing curat = încredere.
+
+5) Know‑how (ce te diferențiază)
+
+Biblioteca de 50 module “canonizate” cu spec/KPI/guardrails — este un model operațional de generare, nu doar text.
+
+Motorul 7D care produce variații controlate pe domeniu/scară/urgență/complexitate/resurse/aplicație/output — design parametrizat, replicabil.
+
+Standardul de prompt industrial (secțiuni fixe + telemetrie + fail‑safes) → închide bucla dintre brief → execuție → măsurare.
+
+6) Pentru ce vor plăti clienții (propunere de valoare)
+
+Timp → certitudine: prompturi gata de producție, cu KPI & guardrails în ADN.
+
+Evaluare & trasabilitate: PromptLint + Telemetrie + Istoric + Diff + Export bundle — audit trail real.
+
+Scalabilitate: motor 7D + module specializate → consistență la volum, nu loterie.
+
+Acces la “cunoaștere codificată”: cele 50 module + examples + playbook‑uri (nu le găsești în generatoare generice).
+
+7) Plan de execuție (fără dependențe externe, iterații scurte)
+
+Săptămâna 0–1 (MVP pro‑tare):
+
+Implementă Requirements Resolver, PromptLint (determinist), hash SHA‑256, istoric localStorage, export .md/.json cu checksum, fix bug‑uri.
+
+Săptămâna 2:
+
+“Simulate Test” vs “Run Real Test” (buton separat, gated), scoruri salvate; Diff vizual; few‑shot per modul.
+
+Săptămâna 3+:
+
+bundle.zip + watermark PDF; scorecards pe run‑uri; search în module și istoric; opțional i18n.
+
+8) Checklist ultra‑concis (astăzi)
+
+ Parser pentru [SLOTURI] + form dinamic + validare.
+
+ sha256() pentru run_id + prompt_hash.
+
+ PromptLint (fără random). Înlocuiește performValidation().
+
+ Export .md + .json + checksum.txt.
+
+ Istoric în localStorage + badge telemetrie.
+
+ Fix selectModule(event) + curățenie CSS/scripturi.
+
+
+
+
+
+
+
+
+
+
+
+
+=====================================
+
+AUDIT SITE FORGE
+
+=====================================
+
+
+
+Super—am deschis arhiva forge-homepage.zip, am inspectat codul (Next.js App Router + Tailwind v4 + shadcn/ui) și iată exact ce mai e de făcut pe front‑end (UI/UX & design), cu patch‑uri concrete gata de lipit.
+
+🧭 Rezumat rapid (ce e bine / ce doare)
+
+Bine:
+
+Layout curat, pattern‑bg, glass cards, secțiune LiveGenerationDemo gata.
+
+/generator are 7D + Test Engine + Export gating (simulat) ✔️
+
+/modules include ModuleOverlay cu specificații ✔️
+
+Header sticky + nav complet, Footer cu linkuri esențiale ✔️
+
+/docs, /guides, /about, /contact, /blog, /privacy, /terms, /login, /signup există în arbore.
+
+De reparat/optimizat:
+
+Culori “gold-*”**: clasele text-gold-400, bg-gold-500 etc. NU există în Tailwind implicit → uneori nu se aplică stilurile.
+
+Middleware Coming Soon e trunchiat și nu citește ENV; wrapperul doar ascunde header/footer, însă rutele rămân deschise.
+
+Dubluri/ambiguități:
+
+Există două pagini de login: app/login/page.tsx și app/auth/login/page.tsx.
+
+Două fișiere globals.css: app/globals.css și styles/globals.css (conținut duplicat).
+
+Loading states lipsă: app/generator/loading.tsx și app/modules/loading.tsx returnează null.
+
+Accesibilitate: lipsesc câteva micro‑detalii – aria-current, aria-disabled, ESC pentru închiderea overlay‑ului, “skip to content”.
+
+Motion & a11y: nu există tratament prefers-reduced-motion.
+
+SEO: metadata (Open Graph/Twitter/Json‑LD) nu e configurată complet.
+
+Consistența fonturilor: în cod apare font-montserrat ca utility, dar clasa nu e definită; folosești font-serif mapat la Montserrat în @theme, dar rămâne inconsistență între pagini.
+
+✅ Task‑list prioritar (UI/UX)
+P0 — Fixuri critice
+
+ Definire paletă “gold” (Tailwind v4 @theme) sau înlocuire cu yellow-* (dacă nu vrei custom).
+
+ Middleware Coming Soon: blocare rute când NEXT_PUBLIC_COMING_SOON="true", exceptând /coming-soon, /thankyou, assets/API.
+
+ Unificare login: păstrează /login; șterge app/auth/login.
+
+ Unifică styles: păstrează app/globals.css; elimină styles/globals.css.
+
+P1 — UX / accesibilitate / polish
+
+ Loading skeletons realiste pentru /generator și /modules.
+
+ Focus‑trap + Esc în ModuleOverlay și aria labels la controale.
+
+ prefers-reduced-motion pentru animații.
+
+ aria-current="page" în nav + aria-disabled în Coming Soon.
+
+ “Skip to content” link în layout (util pe mobil/tastatură).
+
+ Metadata/SEO complet: OG/Twitter/Json‑LD + metadataBase.
+
+P2 — Design & consistență
+
+ Standardizează fonturile: folosește font-serif (Montserrat) și font-sans (Open Sans); dacă vrei font-montserrat utility, definește clasa explicit.
+
+ Header underline: păstrează accentul aurit, dar aliniază grosimea/opacity între desktop și mobil.
+
+ Buttons: radius, paddings, stări hover/focus/disabled consistente (tokens Tailwind).
+
+ Blog: ToC sticky + “estimated read time” + “copy link” la headings.
+
+🩹 Patch‑uri recomandate (gata de lipit)
+1) Paletă GOLD în Tailwind v4 (activează bg-gold-500, text-gold-400, etc.)
+
+app/globals.css – în blocul @theme inline { ... } adaugă:
+
+@theme inline {
+  /* ...existente... */
+
+  /* GOLD – nuanțe consistente high-ticket */
+  --color-gold-300: oklch(0.86 0.10 85);   /* ~#EACC6B */
+  --color-gold-400: oklch(0.82 0.12 85);   /* ~#D1A954 */
+  --color-gold-500: oklch(0.78 0.14 85);   /* ~#BF8F2B */
+  --color-gold-600: oklch(0.72 0.16 85);   /* ~#A8771E */
+
+  /* Alias dacă vrei să mapezi accentul implicit */
+  --color-primary: var(--color-gold-500);
+  --color-primary-foreground: oklch(0.15 0 0);
+}
+
+
+Apoi nu mai trebuie să înlocuiești fiecare gold-*; clasele vor funcționa.
+
+Alternativ (mai puțin elegant): înlocuiești toate text-gold-400 / bg-gold-500 / border-gold-400 cu echivalente yellow-400/500 și menții o singură nuanță aurie în UI.
+
+2) Utility classes pentru fonturi (dacă vrei font-montserrat în markup)
+
+Tot în app/globals.css:
+
+.font-montserrat { font-family: var(--font-montserrat), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+.font-open-sans  { font-family: var(--font-open-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+
+
+Recomand totuși să folosești font-serif (mapped la Montserrat în @theme) și font-sans (Open Sans) pentru consistență.
+
+3) Middleware Coming Soon corect
+
+middleware.ts (înlocuiește conținutul existent, care e trunchiat):
+
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+
+const ALLOW_LIST = [
+  "/coming-soon",
+  "/thankyou",
+  "/_next",        // assets next
+  "/favicon",      // favicon assets
+  "/api",          // allow waitlist api
+  "/robots.txt",
+  "/sitemap.xml",
+  "/public",       // static files
+]
+
+export function middleware(req: NextRequest) {
+  const url = req.nextUrl
+  const path = url.pathname
+
+  const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === "true"
+
+  // allowlist
+  if (ALLOW_LIST.some(p => path.startsWith(p))) {
+    return NextResponse.next()
+  }
+
+  if (comingSoon && path !== "/coming-soon") {
+    url.pathname = "/coming-soon"
+    return NextResponse.redirect(url)
+  }
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+}
+
+
+Opțional: poți sincroniza flag‑ul din DB (Supabase) într‑un edge config sau într‑un cookie; dar pentru UI/UX e suficient ENV public.
+
+4) Loading states reale
+
+app/generator/loading.tsx:
+
+export default function Loading() {
+  return (
+    <div className="min-h-[60vh] p-6">
+      <div className="grid lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1 space-y-4">
+          <div className="h-10 rounded-lg bg-white/5 animate-pulse" />
+          <div className="h-28 rounded-lg bg-white/5 animate-pulse" />
+          <div className="h-80 rounded-lg bg-white/5 animate-pulse" />
+        </div>
+        <div className="lg:col-span-3 space-y-4">
+          <div className="h-12 rounded-lg bg-white/5 animate-pulse" />
+          <div className="h-64 rounded-lg bg-white/5 animate-pulse" />
+          <div className="h-48 rounded-lg bg-white/5 animate-pulse" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+app/modules/loading.tsx similar (grid de carduri cu skeleton).
+
+5) Focus‑trap + ESC pentru ModuleOverlay
+
+components/modules/ModuleOverlay.tsx – adaugă gestionare tastatură și focus lock:
+
+"use client"
+import { useEffect, useRef } from "react"
+// ...
+
+export default function ModuleOverlay({ module, onClose }: Props) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    document.addEventListener("keydown", onKey)
+    const active = document.activeElement as HTMLElement | null
+    dialogRef.current?.focus()
+    document.body.style.overflow = "hidden"
+
+    return () => {
+      document.removeEventListener("keydown", onKey)
+      document.body.style.overflow = ""
+      active?.focus()
+    }
+  }, [onClose])
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${module.id} • ${module.name}`}
+      tabIndex={-1}
+      ref={dialogRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      {/* backdrop + card existente */}
+    </div>
+  )
+}
+
+6) Respect prefers-reduced-motion
+
+În app/globals.css:
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+7) Nav a11y – aria-current & aria-disabled
+
+În components/header.tsx, la linkul activ:
+
+<Link
+  aria-current={isActive(item.href) ? "page" : undefined}
+  // ...
+/>
+
+
+Pentru Coming Soon items dezactivate:
+
+<span aria-disabled="true" className="cursor-not-allowed opacity-60">Launching Soon</span>
+
+8) “Skip to content” (util pe tastatură)
+
+În app/layout.tsx (în <body>):
+
+<a
+  href="#main"
+  className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-black text-white px-3 py-2 rounded"
+>
+  Skip to content
+</a>
+<ComingSoonWrapper>
+  <main id="main" className="flex-1">{children}</main>
+</ComingSoonWrapper>
+
+
+(Și în ComingSoonWrapper scoate <main> duplicat, ca să nu ajungi la două containere.)
+
+9) Metadata/SEO complet
+
+În app/layout.tsx:
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://chatgpt-prompting.com"),
+  title: { default: "PromptForge™", template: "%s • PromptForge™" },
+  description: "50 Operational Modules. 7D Parameter Engine. Export Bundle.",
+  openGraph: {
+    type: "website",
+    url: "https://chatgpt-prompting.com",
+    title: "PromptForge™",
+    description: "Industrial prompt engineering platform.",
+    images: ["/og-cover.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PromptForge™",
+    description: "Industrial prompt engineering platform.",
+    images: ["/og-cover.png"],
+  },
+  icons: { icon: "/favicon.ico" },
+}
+
+10) Curățenie & consistență
+
+ Elimină styles/globals.css (rămâne doar app/globals.css).
+
+ Înlocuiește font-montserrat din markup cu font-serif sau păstrează utilitățile din patch‑ul #2.
+
+ Header/Footer: confirmă că nu sunt randate în Coming Soon (Wrapper deja gestionează).
+
+ În Header, underline animat: aliniază height la 2px, rounded-full, opacity-75 pentru un aspect high‑end constant.
+
+🧪 QA final (ce să verifici după patch‑uri)
+
+Culori: toate aparițiile gold-* randate corect (căutare globală ✅).
+
+Coming Soon: când NEXT_PUBLIC_COMING_SOON=true, orice rută → redirect /coming-soon; header/footer nu apar.
+
+Overlay: ESC închide; focus rămâne pe cardul de unde s‑a deschis.
+
+Loading: /generator & /modules au skeleton vizibil sub 300–800ms.
+
+A11y: Tab navighează coerent; aria-current pe ruta activă; skip‑link funcțional.
+
+SEO: OG/Twitter valabile (verifică în DevTools → Elements / <head>).
+
+Lighthouse: Performance/Best Practices/SEO/Accessibility ≥ 90 (mobile/desktop).
+
+
+
+
+
+
+
+
+=====================================
+
+PAGINA ADMIN
+
+=====================================
+
+
+
+Mai jos ai un blueprint operațional pentru Admin Workspace (PromptForge) — concentrat pe control, observabilitate și remediere rapidă. L-am structurat pe principii, roluri, IA (sitemap), vederi-cheie, fluxuri, indicatori, guardrails, date/RLS și checklist de acceptare.
+
+Obiectiv (North Star)
+
+Controlezi tot ciclul de valoare: utilizatori → planuri/entitlements → rulări (simulate/live) → scorare → exporturi/bundle → API. Totul observabil, reconciliabil, reversibil.
+
+Principii de proiectare
+
+Global vs Org scope: switch persistent (Superadmin vede global; Admin org vede doar workspace-ul propriu).
+
+Kill‑switch-uri la 1 clic: Live GPT, API public, export PDF/JSON.
+
+Diagnostica întâi: fiecare pagină are “Last 24h incidents”, “Recovery actions”.
+
+Reconciliere hard: Stripe ↔ Supabase entitlements; Export pipeline ↔ Bundles; Webhooks retry.
+
+Totul are run_id: fiecare acțiune admin generează un eveniment auditat + corelat cu utilizator/org.
+
+Roluri & permisiuni (RBAC)
+
+Superadmin: global read/write, impersonare, flags, seed/demo, schema guard.
+
+Org Admin: org‑scoped, utilizatori/entitlements locale, re‑run, exporturi, chei API org.
+
+Support: read‑only + acțiuni sigure (retry webhook, regenerate export).
+
+Finance: read Stripe/billing + reconcilieri; fără acces la date sensibile conținut.
+
+Observer: read‑only metri/telemetrie (audit, investigații).
+
+IA / Sitemap (navigare stângă)
+
+Overview
+
+Orgs & Users
+
+Entitlements & Gating
+
+Modules (M01–M50)
+
+Runs & Telemetry
+
+Test Engine (Simulate/Live)
+
+Exports & Bundles
+
+Billing & Stripe
+
+API Keys & Rate Limits
+
+Webhooks & Reconciliation
+
+Audit Log & Security
+
+System Health
+
+Settings (feature flags, seed, demo bundles)
+
+Vederi-cheie (UI & acțiuni)
+1) Overview
+
+Cards: Active users (24h), Runs (simulate/live), Degraded rate, Export success, Revenue (Stripe).
+
+Incident ticker + buton “View playbook”.
+
+Kill‑switch bar (Live GPT / API / Exports) + confirm modal.
+
+2) Orgs & Users
+
+Tabel cu: org_id, plan, seats, status, MRR, live_runs_24h, export_count, last_incident.
+
+Drawer org: Members, Entitlements, Usage, Recent runs, Billing.
+
+Acțiuni: add/remove member, reset seats, grant/revoke entitlement, impersonate (scoped, auditat).
+
+3) Entitlements & Gating
+
+Matrice plan → capabilități:
+
+Free: allowlist M01,M10,M18; export txt; local history.
+
+Creator: toate modulele; export md; fără live test.
+
+Pro: pdf/json, Live Test Engine, cloud history, Evaluator.
+
+Enterprise: API, white‑label, bundle.zip, seats, rate‑limits.
+
+Add‑ons: evaluator_advanced, export_designer.
+
+UI: toggle per flag + TTL/expire + sursă (Stripe/manual).
+
+Acțiuni în vrac: migrare plan, remediere “trial watermark”.
+
+4) Modules (M01–M50)
+
+Catalog: id, name, vector, spec tags, usage heat (7d), error rate.
+
+Drawer: versiuni, change‑log, test quick run (simulate), gates afectate.
+
+Acțiuni: publish/unpublish, pin ca demo, set default params7D.
+
+5) Runs & Telemetry
+
+Filtre: org/user/module/plan/status (success/degraded/failed)/date.
+
+Tabel: run_id, module_id, params7D hash, score (clarity/execution/ambiguity/alignment/business_fit), tokens, cost, duration, export status.
+
+Drawer run: input/output preview, logs, buttons: Re-run (simulate/live), Generate exports, Open bundle.
+
+6) Test Engine
+
+Tabs:
+
+Simulate: simulateGptResponse(prompt, params7D, {seed}) (deterministic).
+
+Live (Pro+): liveGptTest (token/duration/status logged) + rate limits setabile per plan/org.
+
+Grafice: success vs degraded, P95 latency, top failures (model/provider).
+
+Kill‑switch live + degrade‑to‑simulate rule editor.
+
+7) Exports & Bundles
+
+Pipeline vizual: txt → md → json → pdf → checksum → bundle.zip.
+
+Status per artifact + watermark indicator (trial/not entitled).
+
+Acțiuni: regenerate, force watermark off/on (doar dacă entitled), download link, purge.
+
+Validări: checksum comparat, versions/retention policy.
+
+8) Billing & Stripe
+
+Vedere pe org: plan actual, seats, trial_end, status, stripe_ids.
+
+Acțiuni: resend invoice, fix prindere webhooks, Reconcile (Stripe→Supabase).
+
+Metrici: ARPU, churn indicativ (last invoice fail), upgrade intents.
+
+9) API Keys & Rate Limits (Enterprise)
+
+Generare/revocare chei; scope per module; IP allowlist.
+
+Rate limits per plan/org; burst/sustained; counters reset.
+
+Loguri: requests, status, payload hash, cost, errors.
+
+10) Webhooks & Reconciliation
+
+Timeline: Stripe events (checkout/subscription), export pipeline events, scoring ingests.
+
+Queue cu retries și “dead letters”; acțiuni: replay, merge duplicate, mark resolved.
+
+Diferențe detectate: “Stripe says Pro, DB says Creator” → Fix.
+
+11) Audit Log & Security
+
+Toate acțiunile admin + impersonări + changes de entitlements.
+
+Filtre pe actor, resursă, org, severitate.
+
+Export audit (CSV/JSON) cu checksum.
+
+12) System Health
+
+Sonde: DB latency, webhook backlog, export workers, storage quota, Stripe latency.
+
+Praguri + alerte (slack/webhook) configurabile.
+
+13) Settings
+
+Feature flags globale (white‑label toggle, demo bundles on landing).
+
+Seed 3 demo bundles + verificare “telemetry rows exist”.
+
+Localization, timezones, data retention.
+
+Fluxuri critice (SOP)
+
+Upgrade plan → Pro
+Stripe checkout → webhook → entitlements upsert → UI gate flips → Live Test enable → Export pdf/json unlocked. Fallback: webhook down → cache optimistic + job de re‑sync; nu acorda API access până la confirmare.
+
+Run live eșuează
+Auto‑degrade to simulate (marcat degraded=true) → log + alert → admin vede top cauze, poate „Force retry live”.
+
+Export pdf eșuează
+Livrează txt/md/json + checksum; setează pdf_status=failed; buton “Retry render”; dacă trial → watermark.
+
+Indicatori (Overview)
+
+Degraded rate (24h) = degraded_runs / live_runs.
+
+Export success = exports_ok / exports_total.
+
+Time‑to‑reconcile (Stripe↔DB) median.
+
+Score median (5 dimensiuni) pe modul.
+
+Cost/run (live) și P95 latency.
+
+Guardrails (runtime)
+
+Niciodată live GPT pentru Free/Creator.
+
+Dacă live fail → simulate (etichetat clar).
+
+Niciodată PDF/JSON fără drepturi; watermark în trial.
+
+Persistă fiecare run + erori.
+
+Afișează erori acționabile (copy‑for‑support).
+
+Date & RLS (Supabase – minim)
+
+Tabele: orgs, org_members, users, subscriptions, entitlements, prompt_history, prompt_scores, bundles.
+RLS: org‑scoped (user ∈ org_members), Superadmin bypass; read strict pe org; write doar prin funcții securizate.
+Chei: prompt_history.run_id ca pivot pentru scoruri, exports, telemetrie.
+
+Detalii UI (Next.js + Tailwind)
+
+Layout admin dedicat (/admin/*), breadcrumb + environment badge (dev/preview/prod).
+
+Tabele cu coloane rezumative + drawers pentru detaliu (evită pagini inutile).
+
+Fiecare drawer are “Recovery actions” list (retry, reconcile, regenerate).
+
+Badge Telemetry (run_id + score) vizibil în Runs, Bundles, Webhooks.
+
+Checklist de acceptare (blochează release dacă nu)
+
+ Free limitat la M01/M10/M18; export txt only.
+
+ Creator fără pdf/json & fără live.
+
+ Pro cu pdf/json, Live Test, cloud history, Evaluator.
+
+ Enterprise cu API, white‑label, bundle.zip.
+
+ 3 demo bundles descărcabile de pe landing.
+
+ Telemetry rows pentru cele 3 demo run‑uri cu params7D distincte.
+
+MCP‑Σ (blueprint comprimat)
+
+CORE.ADMIN:: Unifică control global/org; totul auditat. #sistem [Σ][€] +90d
+
+RULE.KILL:: Adaugă kill‑switch Live/API/Export. #siguranță [Ψ] +90d
+
+SOP.RECON:: Stripe↔DB reconcile + retry webhooks. #billing [€] +30d
+
+SOP.DEGRADE:: Live fail→simulate, marchează degraded=true. #runtime [Ψ] +30d
+
+KPI.DEG:: <3% degraded/24h. #calitate [€] +90d
+
+KPI.EXPORT:: >98% export success. #calitate [€] +90d
+
+SOP.SEED:: Seed 3 demo bundles + telemetrie. #growth [€] +30d
+
+GATE.FREE:: M01/M10/M18 + txt only. #plan [€] +90d
+
+GATE.CREATOR:: All modules + md only. #plan [€] +90d
+
+GATE.PRO:: pdf/json + Live + Evaluator. #plan [€] +90d
+
+GATE.ENT:: API + white‑label + bundle.zip. #plan [€] +90d
+
+DATA.RLS:: RLS org‑scoped, Superadmin bypass. #securitate [Ψ] +90d
+
+VIEW.OVERVIEW:: Cards + incidents + kill‑bar. #ux [Σ] +90d
+
+VIEW.RUNS:: run_id, score, tokens, cost, duration. #telemetrie [€] +90d
+
+VIEW.EXPORT:: txt→md→json→pdf→zip + watermark. #artefacte [€] +90d
+
+VIEW.TEST:: Simulate/Live cu rate limits. #calitate [Ψ] +90d
+
+VIEW.API:: Keys, scopes, IP allowlist, rate limits. #enterprise [€] +90d
+
+VIEW.WEBHOOKS:: Timeline + DLQ + replay. #fiabil [Ψ] +90d
+
+VIEW.AUDIT:: Actor, resursă, severitate, export. #compliance [Σ] +90d
+
+METRIC.LAT:: P95 latency sub 3s simulate, 8s live. #performanță [€] +90d
+
+SOP.RETRY.PDF:: Fallback txt/md/json + checksum. #fiabil [Ψ] +30d
+
+SOP.IMPERSON:: Impersonare cu justificare & TTL. #support [Σ] +30d
+
+RULE.WATERMARK:: Trial → watermark obligatoriu. #integritate [Σ] +90d
+
+VIS.BADGES:: Telemetry badge peste tot. #claritate [Σ] +90d
+
+Dacă vrei, îți export acum blueprint‑ul ca .txt (stil MCP‑Σ + checklists) pentru a-l lipi în repo/Confluence. Spune „Exportă .txt Admin Workspace” și îl livrez imediat.
+
+
+
+
+
+
+
+Blueprint‑ul e bun ca “hartă”, dar ca să fie executabil ai nevoie de detaliu în ~10 zone cu risc (date, gates, webhooks, pipeline export, rate‑limit, kill‑switch, audit, SLO, copy de erori, seed). Ți le dau mai jos, „minimul suficient” pe care îl pui direct în repo.
+
+0) Ce e deja suficient
+
+Principii, roluri, sitemap, vederi‑cheie, guardrails, KPI, checklist de acceptare → OK ca direcție de produs și design.
+
+Unde NU mai detalia: marketing copy în admin, stiluri vizuale, animații.
+
+1) Model de date + RLS (executabil)
+
+db/schema.sql (fragment „minimul viu”)
+
+-- Extensii
+create extension if not exists pgcrypto;
+
+-- Orgs & membri
+create table if not exists orgs (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  created_at timestamptz default now()
+);
+
+create table if not exists org_members (
+  org_id uuid references orgs(id) on delete cascade,
+  user_id uuid references auth.users(id) on delete cascade,
+  role text check (role in ('owner','admin','member')) not null default 'member',
+  primary key (org_id, user_id),
+  created_at timestamptz default now()
+);
+
+-- Abonamente & drepturi
+create table if not exists subscriptions (
+  org_id uuid primary key references orgs(id) on delete cascade,
+  plan text not null check (plan in ('free','creator','pro','enterprise')),
+  seats int not null default 1,
+  status text not null default 'active',
+  trial_end timestamptz,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  updated_at timestamptz default now()
+);
+
+create table if not exists entitlements (
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid references orgs(id) on delete cascade,
+  user_id uuid references auth.users(id),
+  flag text not null,              -- ex: 'api_access','export_pdf'
+  value jsonb,                     -- ex: {"enabled":true}
+  source text not null,            -- 'stripe' | 'manual' | 'trial'
+  expires_at timestamptz,
+  created_at timestamptz default now()
+);
+
+-- Rulări & scoruri
+create table if not exists prompt_history (
+  run_id uuid primary key default gen_random_uuid(),
+  org_id uuid not null references orgs(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  module_id text not null,                     -- 'M01'..'M50'
+  params7d jsonb not null,
+  input text,
+  output text,
+  status text not null default 'success',      -- success|failed|degraded
+  tokens int default 0,
+  cost_cents int default 0,
+  duration_ms int default 0,
+  created_at timestamptz default now()
+);
+create index on prompt_history (org_id, created_at desc);
+
+create table if not exists prompt_scores (
+  run_id uuid primary key references prompt_history(run_id) on delete cascade,
+  clarity int check (clarity between 0 and 100),
+  execution int check (execution between 0 and 100),
+  ambiguity int check (ambiguity between 0 and 100),
+  alignment int check (alignment between 0 and 100),
+  business_fit int check (business_fit between 0 and 100),
+  ts timestamptz default now()
+);
+
+-- Exporturi & bundle
+create table if not exists exports (
+  id bigserial primary key,
+  run_id uuid references prompt_history(run_id) on delete cascade,
+  artifact text check (artifact in ('txt','md','json','pdf','checksum','bundle')),
+  status text not null default 'pending',  -- pending|ok|failed
+  watermark boolean default false,
+  path text,
+  checksum text,
+  error text,
+  created_at timestamptz default now()
+);
+create index on exports (run_id);
+
+-- API keys & rate limits
+create table if not exists api_keys (
+  id bigserial primary key,
+  org_id uuid references orgs(id) on delete cascade,
+  hashed_key text unique not null,
+  scope jsonb,            -- ex: {"modules":["M01","M10"],"rate":{"rps":5}}
+  status text not null default 'active',
+  created_at timestamptz default now()
+);
+
+create table if not exists rate_limits (
+  org_id uuid references orgs(id) on delete cascade,
+  window text not null,         -- '1m','1h'
+  used int not null default 0,
+  limit int not null,
+  reset_at timestamptz not null,
+  primary key (org_id, window)
+);
+
+-- Webhooks & audit
+create table if not exists webhooks_log (
+  id bigserial primary key,
+  source text not null,                       -- 'stripe'
+  event_id text unique not null,
+  status text not null default 'received',    -- received|processed|failed
+  payload jsonb not null,
+  received_at timestamptz default now(),
+  processed_at timestamptz,
+  error text
+);
+
+create table if not exists audit_log (
+  id bigserial primary key,
+  org_id uuid,
+  actor_id uuid,               -- auth.users.id
+  action text not null,        -- 'impersonate','grant_entitlement',...
+  target text,                 -- 'org:xxx','run:yyy'
+  details jsonb,
+  severity int default 1,      -- 1=info,2=warn,3=crit
+  created_at timestamptz default now()
+);
+
+-- Funcții RLS
+create or replace function is_org_member(p_org uuid)
+returns boolean language sql stable as
+$$ select exists (select 1 from org_members where org_id = p_org and user_id = auth.uid()) $$;
+
+create or replace function is_super_admin()
+returns boolean language sql stable as
+$$ 
+  select exists (
+    select 1 from entitlements 
+    where user_id = auth.uid() and flag = 'superadmin' 
+      and (expires_at is null or expires_at > now())
+  );
+$$;
+
+-- RLS
+alter table orgs enable row level security;
+create policy orgs_select on orgs for select using (is_super_admin() or is_org_member(id));
+
+alter table org_members enable row level security;
+create policy org_members_rw on org_members
+  using (is_super_admin() or is_org_member(org_id))
+  with check (is_super_admin() or is_org_member(org_id));
+
+alter table subscriptions enable row level security;
+create policy subs_rw on subscriptions using (is_super_admin() or is_org_member(org_id));
+
+alter table entitlements enable row level security;
+create policy ent_rw on entitlements using (is_super_admin() or is_org_member(org_id));
+
+alter table prompt_history enable row level security;
+create policy runs_rw on prompt_history using (is_super_admin() or is_org_member(org_id));
+
+alter table prompt_scores enable row level security;
+create policy scores_rw on prompt_scores using (
+  is_super_admin() or exists (select 1 from prompt_history ph where ph.run_id = prompt_scores.run_id and is_org_member(ph.org_id))
+);
+
+alter table exports enable row level security;
+create policy exports_rw on exports using (
+  is_super_admin() or exists (select 1 from prompt_history ph where ph.run_id = exports.run_id and is_org_member(ph.org_id))
+);
+
+alter table api_keys enable row level security;
+create policy keys_rw on api_keys using (is_super_admin() or is_org_member(org_id));
+
+alter table rate_limits enable row level security;
+create policy rl_rw on rate_limits using (is_super_admin() or is_org_member(org_id));
+
+alter table webhooks_log enable row level security;
+create policy wh_ro on webhooks_log for select using (is_super_admin());
+create policy wh_w_service on webhooks_log for insert to service_role using (true) with check (true);
+
+alter table audit_log enable row level security;
+create policy audit_ro on audit_log for select using (is_super_admin());
+
+2) Gates per plan (FE+API+DB) — cod concret
+
+lib/gating.ts
+
+export type Plan = 'free'|'creator'|'pro'|'enterprise';
+export type Flag =
+  | 'modules_allowlist' | 'export_txt' | 'export_md' | 'export_pdf'
+  | 'export_json' | 'live_test' | 'cloud_history' | 'evaluator'
+  | 'api_access' | 'white_label' | 'bundle_zip';
+
+type Flags = Record<Exclude<Flag,'modules_allowlist'>, boolean> & {
+  modules_allowlist: string[];
+};
+
+export const planFlags: Record<Plan, Flags> = {
+  free: { modules_allowlist:['M01','M10','M18'], export_txt:true, export_md:false, export_pdf:false, export_json:false, live_test:false, cloud_history:false, evaluator:false, api_access:false, white_label:false, bundle_zip:false },
+  creator: { modules_allowlist:['*'], export_txt:true, export_md:true, export_pdf:false, export_json:false, live_test:false, cloud_history:false, evaluator:false, api_access:false, white_label:false, bundle_zip:false },
+  pro: { modules_allowlist:['*'], export_txt:true, export_md:true, export_pdf:true, export_json:true, live_test:true, cloud_history:true, evaluator:true, api_access:false, white_label:false, bundle_zip:false },
+  enterprise: { modules_allowlist:['*'], export_txt:true, export_md:true, export_pdf:true, export_json:true, live_test:true, cloud_history:true, evaluator:true, api_access:true, white_label:true, bundle_zip:true }
+};
+
+export function gateModule(plan: Plan, moduleId: string) {
+  const a = planFlags[plan].modules_allowlist;
+  return a.includes('*') || a.includes(moduleId);
+}
+
+
+Aplică gates în 3 straturi (obligatoriu simultan):
+
+FE (Next.js): ascunde butoane (Run Live, Export PDF/JSON, Bundle) și blochează action handlers.
+
+API: validează plan + entitlements pe fiecare endpoint (403 cu cod E_GATE_DENIED).
+
+DB/RLS: nu crea artefacte pe care planul nu le permite (ex: exports pentru pdf/json la Free/Creator).
+
+3) Kill‑switch & precedențe
+
+feature flags globale (în DB sau KV): kill.live_gpt, kill.api_public, kill.export_heavy.
+
+Ordine de decizie (se oprește la primul care lovește):
+
+kill.* global → blochează (Return 503 E_KILL_SWITCH).
+
+Rate‑limit depășit → 429 E_RATE_LIMIT.
+
+Entitlement lipsește → 403 E_GATE_DENIED.
+
+Live fail → degrade la simulate (status=degraded, banner UI).
+
+4) Webhooks Stripe — idempotent + reconcilieri
+
+app/api/stripe/webhook/route.ts (schelet)
+
+import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET!, { apiVersion: '2024-06-20' });
+
+export async function POST(req: NextRequest) {
+  const sig = req.headers.get('stripe-signature')!;
+  const buf = Buffer.from(await req.arrayBuffer());
+  let event: Stripe.Event;
+  try {
+    event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+  } catch (err:any) {
+    // log + reject
+    return NextResponse.json({ error: 'E_WEBHOOK_SIG' }, { status: 400 });
+  }
+
+  // Idempotent guard (webhooks_log.event_id unique)
+  // 1) insert received; if conflict -> 200 OK
+  // 2) process by type -> upsert subscriptions + entitlements
+  // 3) mark processed or failed
+  switch (event.type) {
+    case 'checkout.session.completed':
+    case 'customer.subscription.created':
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted':
+    case 'invoice.payment_failed':
+      // TODO: map plan → flags; write subscriptions row; upsert entitlements
+      break;
+  }
+  return NextResponse.json({ ok: true });
+}
+
+
+Regulă critică: când checkout reușește dar webhook întârzie → setezi entitlement optimist doar pentru UI (Pro trial unlock), dar NU pornești api_access până nu ai confirmare din webhook.
+
+5) Export Pipeline (determinist + watermark)
+
+lib/exports.ts (schelet)
+
+type Artifact = 'txt'|'md'|'json'|'pdf'|'checksum'|'bundle';
+export async function generateExports(runId: string, ctx:{plan:'free'|'creator'|'pro'|'enterprise', entitled:{pdf:boolean,json:boolean,bundle:boolean}, trial:boolean}) {
+  // txt → md → json → (pdf?) → checksum → (bundle?)
+  await make('txt'); await make('md'); await make('json');
+  if (ctx.entitled.pdf) await make('pdf', { watermark: ctx.trial }); // watermark dacă trial
+  await make('checksum');
+  if (ctx.entitled.bundle) await make('bundle'); // zip: txt,md,json,(pdf),checksum
+}
+
+
+Fallback: dacă PDF eșuează → marchează pdf_status=failed, livrează restul + checksum; buton „Retry render”.
+
+6) Test Engine (simulate vs live + degrade)
+
+lib/simulate.ts
+
+export function simulateGptResponse(prompt:string, params7D:any, seed:number){
+  // deterministic: hash(prompt+seed) → „output” + meta (tokens, duration)
+  return { output: `[Simulated] ${prompt.slice(0,160)}…`, tokens: 256, duration_ms: 1200 };
+}
+
+
+lib/live.ts
+
+export async function liveGptTest(prompt:string, plan:'pro'|'enterprise'){
+  // check kill→rate→gate
+  // call provider; if throw → bubble 'E_LIVE_PROVIDER'
+  return { output, tokens, duration_ms, cost_cents };
+}
+
+
+Degrade rule: try live → catch → log error → mark degraded=true → call simulate → persist ambele (error & simulated).
+
+7) Rate‑limits (plan‑defaults)
+
+Pro: burst 10 / sustained 60/min per org.
+
+Enterprise: burst 30 / sustained 300/min per org; chei cu scope pe module.
+
+Implementare simplă: tabel rate_limits + „token bucket” în tranzacție; 429 cu Retry-After.
+
+8) Audit & Impersonare (cu TTL)
+
+Evenimente minime: impersonate.start, impersonate.end, grant_entitlement, kill_switch.toggle, reconcile.ok/fail, export.retry, run.rerun.
+
+Impersonare: cere motiv, setează TTL 15 min; badge UI persistent; încheie automat la TTL; log de severitate 2.
+
+9) SLO + alerte
+
+Degraded rate (24h) < 3%.
+
+Export success > 98%.
+
+P95 latency: simulate ≤ 3s; live ≤ 8s.
+
+Time‑to‑reconcile Stripe↔DB median ≤ 2 min.
+Alerte: dacă depășești pragul 2× în 15 min → ridică severitate 3, afișează banner în Admin → link „Playbook”.
+
+10) Erori & microcopy (UI)
+
+E_GATE_DENIED: „Planul tău nu permite această acțiune. Vezi Pricing sau conectează un admin.”
+
+E_KILL_SWITCH: „Funcția e oprită temporar pentru stabilitate. Încerci Simulate?”
+
+E_RATE_LIMIT: „Ai atins limita. Reîncearcă după {{retry_after}}.”
+
+E_LIVE_PROVIDER: „Test Live a eșuat. Ți-am rulat o simulare și am logat incidentul.”
+
+E_EXPORT_FAIL: „PDF indisponibil acum. Ai exporturile .txt/.md/.json + checksum.”
+
+11) Seed: 3 demo bundles (obligatoriu pe landing)
+
+M12/M13/M01 cu params7D distincte; prompt_history + exports + bundles create la deploy; verifici că apar în „Overview” + badge Telemetry.
+
+12) QA/Acceptanță — probe rapide
+
+Gating: user Free → buton PDF/JSON ascuns; API /api/run/live returnă 403.
+
+Kill: setezi kill.live_gpt=true → toate Run Live 503; simulate rămâne OK.
+
+Stripe reconcile: simulezi subscription.updated(plan=pro) → subscriptions.plan='pro' + entitlements create; api_access rămâne false până la confirmare.
+
+Degrade path: forțezi eroare provider → prompt_history.status='degraded' + output [Simulated].
+
+Verdict la întrebare
+
+Ca „instructiune”, textul actual e suficient pentru aliniere (vision → SOP → KPI).
+
+Ca „spec de implementare”, mai trebuia detaliu în zonele 1–12 de mai sus. Ți le-am completat acum în formă „lipibilă în repo”.
+
+MCP‑Σ (add‑on comprimat pentru dif)
+
+DATA.RLS++:: Adaugă funcții is_org_member, is_super_admin; aplică RLS pe toate tabelele. +90d
+
+GATE.MAP:: Plan→flags în lib/gating.ts; verifică FE+API+DB. +90d
+
+RULE.KILL.PRIO:: Precedențe: kill→rate→gate→degrade. +90d
+
+SOP.STRIPE:: Webhook idempotent + optimistic UI; fără api_access până la confirmare. +30d
+
+PIPE.EXPORT:: txt→md→json→(pdf?)→checksum→(bundle?); watermark trial; retry pdf. +90d
+
+SOP.DEGRADE:: Dacă live fail → simulate, marchează degraded=true, log incident. +30d
+
+RLIMIT.PLAN:: Pro 60/min; Ent 300/min; token bucket. +90d
+
+AUDIT.TTL:: Impersonare TTL 15m, severitate 2, badge UI. +30d
+
+SLO.SET:: Deg<3%, Export>98%, P95 Sim≤3s Live≤8s, Reconcile≤2m. +90d
+
+COPY.ERROR:: Definește 5 mesaje standardizate + coduri. +90d
+
+SEED.DEMO:: 3 bundles pe landing + Telemetry validat. +30d
+
+QA.PROBES:: 4 probe rapide pe gates/kill/reconcile/degrade. +7d
+
+
+
+
+
+
+Pe baza noii direcții de lansare (MVP cu landing, generator, modules, pricing, docs/guides, dashboard, about/contact/legal, login/signup, coming‑soon) și a priorităților stabilite (gating, 7‑D engine, entitlements, UX SKRE), am analizat toate fișierele din proiect și le‑am grupat astfel:
+
+📂 Fișiere esențiale – păstrate
+
+forge_v3_03_front_end_design.txt – definește structura finală de pagini (landing, generator, modules, pricing, docs, dashboard, guides, about, contact, legal, auth, coming‑soon) și reguli de UI/UX SKRE
+; este fundamentul site‑ului.
+
+forge_v3_front_end.txt – descrierea tehnică a stivei (Next.js, Tailwind, shadcn/ui) și a componentelor (PromptGenerator, TestEngine, ExportManager)
+.
+
+forge_v3_standard_entitlements.txt – lista drepturilor (module, exporturi, test live) pentru planurile Free/Creator/Pro/Enterprise; necesar pentru gating.
+
+forge_v3_standard_prompt.txt – scheletul oficial al promptului în 7 secțiuni (Context, Cerință, Spec, KPI, Guardrails, Fallback, Output) și regulile stilistice.
+
+forge_v3_dor_dod_temp.txt – definiții de Ready/Done (condiții de validare 7‑D, entitlements, output, testcases etc.), utile pentru acceptance.
+
+forge_v3_branding_web_design.txt – paleta SKRE (70 % fundal întunecat, 20 % gri, 10 % auriu) și ghid de culori/iconografie, suplimentar designului
+.
+
+forge_v3_homepage-fundal.txt și forge_v3_homepage-setari.txt – instrucțiuni pentru fundalul multi‑layer al paginii de start și setările de animații; necesare pentru recrearea efectelor din demo.
+
+forge_v3_logo.txt, forge_v3_logo_01.png, forge_v3_logo_02.png, forge_v3_animatii_2d.zip – fișiere de identitate vizuală și animații folosite pe site.
+
+forge_v3_02_artefacts.txt, forge_v3_01_marketplace.txt, forge_v3_01_kpi_packCreator_Commerce_Executive_KPI_Report.png, forge_v3_01_marketplace_case_k_factor_2.png, forge_v3_01_marketplace_modules.png – documentație și imagini pentru pachetele de module, rapoarte KPI și marketplace (se vor folosi în faza „level‑up” după lansare).
+
+package.json, package-lock.json, node_modules, answer.js – cod sursă și dependențe (nu se şterg).
+
+🗑️ Fișiere redundante sau depășite – pot fi eliminate
+
+Toate fișierele cursor_*.md – sunt task-uri intermediare pentru asistent; nu fac parte din produsul final.
+
+forge-homepage.zip – arhivă cu versiuni anterioare ale homepage; depășită de noul design.
+
+forge_v3_00_plan.txt, forge_v3_00_Vadim_STRATEGIC.txt, forge_v3_new_plan_0.txt – planuri strategice vechi; au fost înlocuite de noul roadmap.
+
+forge_v3_documentation.txt, forge_v3_semio_sens.txt, forge_v3_matrix_prompts.txt, forge_v3_matrix_tokens.txt, forge_v3_matrix_tokens_narrative.txt – documente narative sau marketing care nu mai reflectă MVP-ul; pot fi păstrate într-un folder de arhivă dacă se dorește, dar nu sunt necesare pentru cod.
+
+forge_v3_standard.txt – structura .cursor rules (nu se folosește în implementarea actuală).
+
+forge_v3_standard_domenii.txt – listă extinsă de domenii și jargon; se va folosi doar în viitoare “packs”, deci poate fi mutată în backlog.
+
+forge_v3_homepage-setari.txt dacă toate setările sunt deja integrate în front_end_design (opțional).
+
+forge_v3_workflows.txt – blueprint pentru 11 workflow-uri CI/CD; CI complet poate fi configurat ulterior.
+
+images Screenshot 2025-08-22 at … și alte imagini vechi – capturi de ecran folosite la audit, nu fac parte din produs.
+
+forge_v3_01_kpi_packCreator_Commerce_Executive_KPI_Report.png, forge_v3_01_marketplace_case_k_factor_2.png – dacă nu sunt necesare imediat, pot fi arhivate alături de fișierele de marketplace.
+
+📝 Recomandare organizare
+
+Creează un folder /docs/reference în care să păstrezi fișierele de planificare și strategii vechi; acestea pot fi consultate ulterior fără a încărca proiectul.
+
+Mută fișierele pentru marketplace/KPI packs și domenii într-un subfolder /level_up_assets, marcate pentru dezvoltări viitoare.
+
+Păstrează în rădăcină doar fișierele esențiale (guidelines, entitlements, logo-uri, animații, codul front-end) pentru a simplifica repo-ul și a reduce confuzia.
+
+Pe scurt, pentru lansarea MVP, concentrează-te pe fișierele de design, tehnice și de entitlements menționate mai sus; restul pot fi arhivate sau eliminate.

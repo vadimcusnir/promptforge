@@ -1,0 +1,65 @@
+cusnir_storyboard_forge5_avantgarde_motion_scenarii_v3.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🎥 3. APARATUL DE VIZUALIZARE
+━━━━━━━━━━━━━━━━━━━━━━━
+> “Nu glyphul e vizibil, ci retina ta e calibrată să-l vadă.”
+
+🔲 DURATĂ TOTALĂ: ~6.5 secunde
+
+[0.00s] Ecran albăstrui difuz, cu un strat dens de puncte/grilaj fin (ca un scanner vechi)  
+[0.40s] O lentilă rotundă (ca un HUD de AI) intră în cadru de sus → începe să scaneze zona  
+[1.20s] Se mișcă încet pe X/Y, afectând doar zona prin care trece  
+[1.90s] Într-un cadru anume, lentila detectează „ceva” → glyphul începe să apară doar în zona vizată  
+[2.50s] Glyphul este vizibil doar *înăuntrul* cercului, restul e haotic/blurat  
+[3.20s] Lentila se stabilizează → zona completă a glyphului devine vizibilă  
+[4.00s] Apare pătratul auriu ca o interfață UI care fixează compoziția  
+[4.80s] Lentila dispare treptat → glyphul rămâne permanent  
+[5.50s] “Forge™” apare scris ca și cum ar fi HUD text  
+[6.50s] Fade out complet
+
+🎧 SOUND DESIGN: clickuri optice, loop ușor sonar, pulsație finală ca „lock target”
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🎥 4. FĂRĂ GLYPH
+━━━━━━━━━━━━━━━━━━━━━━━
+> “Ce-ar fi dacă logo-ul ar fi absent în toată animația?”
+
+🔲 DURATĂ TOTALĂ: ~7 secunde
+
+[0.00s] Fundal auriu mat #F4B001 | compoziție statică  
+[0.50s] Linii circulare concentrice încep să se miște subtil înspre centru  
+[1.20s] Apare un punct întunecat care NU are contur, doar absență de culoare  
+[2.00s] Acest punct se extinde și formează o umbră negativă  
+[3.00s] Într-o fracțiune de secundă → forma glyphului este “sculptată” prin lipsa de aur  
+[3.80s] Nu apare nimic nou, doar fundalul se “degradează” exact în acea formă  
+[4.50s] Se adaugă o aură slabă în jurul conturului invizibil  
+[5.20s] Forge™ apare în colț dreapta jos, foarte mic  
+[6.50s] Liniile circulare se opresc → freeze frame total
+
+🎧 SOUND DESIGN: silențiu aurit, sunet de absorbție, la final un “ping” sec
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🎥 5. CONTAMINARE
+━━━━━━━━━━━━━━━━━━━━━━━
+> “Glyphul nu apare. Se răspândește ca un virus în imagine.”
+
+🔲 DURATĂ TOTALĂ: ~6.8 secunde
+
+[0.00s] Fundal negru mat | puncte luminoase apar în colțul stânga jos  
+[0.60s] Una dintre zone începe să “infecteze” pixelii în jur → lumină inteligentă  
+[1.40s] Rețeaua se extinde în formă haotică, dar controlată | glitchuri localizate  
+[2.20s] Zonele „infectate” se aliniează în forme geometrice  
+[3.00s] Formele se unesc într-o rețea din ce în ce mai coerentă  
+[3.80s] Apare silueta fractalică a glyphului în mijlocul haosului  
+[4.30s] Glyphul devine complet → pătratul auriu pulsează pe fundal  
+[5.20s] Rețeaua se stinge → rămâne doar glyphul + pătratul  
+[6.00s] Forge™ pulsează o dată în partea stângă jos  
+[6.80s] Cut to black
+
+🎧 SOUND DESIGN: glitch digital, loop organic, pulsație sonoră ca respirație
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+Fiecare storyboard este construit ca o sinteză între simbol, percepție și tensionare a realității.  
+Nu apariția glyphului este importantă, ci **modul în care universul devine capabil să-l accepte**.

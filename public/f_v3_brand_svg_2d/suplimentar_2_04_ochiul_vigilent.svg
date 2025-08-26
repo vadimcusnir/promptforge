@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ochiul Vigilent - un simbol de supraveghere și conștientizare -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru ochi -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Forma exterioară a ochiului -->
+  <path id="eye-shape" d="M106 256 C106 256 181 156 256 156 C331 156 406 256 406 256 C406 256 331 356 256 356 C181 356 106 256 106 256 Z" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Irisul ochiului -->
+  <circle id="iris" cx="256" cy="256" r="60" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="60;50;60"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pupila ochiului -->
+  <circle id="pupil" cx="256" cy="256" r="30" fill="#FF0000">
+    <animate
+      attributeName="r"
+      values="30;20;30"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Reflexia în ochi (highlight) -->
+  <circle id="highlight" cx="236" cy="236" r="10" fill="#E0E0E0" opacity="0.8">
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Linii de scanare care radiază din ochi -->
+  <!-- Linia de scanare 1 (dreapta) -->
+  <line id="scan-line-1" x1="316" y1="256" x2="406" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="316;406;316"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia de scanare 2 (stânga) -->
+  <line id="scan-line-2" x1="196" y1="256" x2="106" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="196;106;196"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia de scanare 3 (sus) -->
+  <line id="scan-line-3" x1="256" y1="196" x2="256" y2="106" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;1;0"
+      keyTimes="0;0.2;0.4;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="196;106;196"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia de scanare 4 (jos) -->
+  <line id="scan-line-4" x1="256" y1="316" x2="256" y2="406" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;1;0"
+      keyTimes="0;0.1;0.3;0.5;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="316;406;316"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia de scanare 5 (diagonală dreapta-sus) -->
+  <line id="scan-line-5" x1="292" y1="220" x2="356" y2="156" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;1;0"
+      keyTimes="0;0.1;0.2;0.4;0.6;0.97;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="292;356;292"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="220;156;220"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia de scanare 6 (diagonală stânga-sus) -->
+  <line id="scan-line-6" x1="220" y1="220" x2="156" y2="156" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;1;0"
+      keyTimes="0;0.1;0.2;0.3;0.5;0.7;0.98;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="220;156;220"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="220;156;220"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia de scanare 7 (diagonală stânga-jos) -->
+  <line id="scan-line-7" x1="220" y1="292" x2="156" y2="356" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;1;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.6;0.8;0.99;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="220;156;220"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="292;356;292"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia de scanare 8 (diagonală dreapta-jos) -->
+  <line id="scan-line-8" x1="292" y1="292" x2="356" y2="356" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;1;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.7;0.9;0.995;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="292;356;292"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="292;356;292"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efecte de pulsație pentru ochi -->
+  <path id="eye-pulse" d="M106 256 C106 256 181 156 256 156 C331 156 406 256 406 256 C406 256 331 356 256 356 C181 356 106 256 106 256 Z" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de scanare circulară -->
+  <circle id="scan-circle" cx="256" cy="256" r="60" fill="none" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.5;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="60;140;60"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;0.5;1"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri de supraveghere -->
+  <text id="symbol-1" x="256" y="196" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">SCANNING
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-2" x="256" y="316" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">MONITORING
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.4;0.9;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "OCHIUL VIGILENT" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">OCHIUL VIGILENT</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Ochiul Vigilent</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol de supraveghere și conștientizare. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

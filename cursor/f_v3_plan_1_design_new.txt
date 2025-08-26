@@ -1,0 +1,101 @@
+Pentru a aduce site‑ul PromptForge™ la un standard profesional, predictibil și coerent, front‑end‑ul trebuie să urmeze un set de reguli tehnice și de design. Aceste reguli derivă din structura actuală a proiectului, din documentația SKRE și din verificarea codului:
+
+1. Structură și tehnologie
+
+Framework: folosește Next.js cu App Router în modul app/, scris în TypeScript. Organizează paginile conform structurii: landing (page.tsx), generator (/generator), modules (/modules), pricing (/pricing), docs (/docs), dashboard (/dashboard), guides (/guides), about, contact, privacy, terms, login, signup, coming‑soon.
+
+Arhitectură: separă componentele comune în components/ (Header, Footer, Cards, Modals), logica în lib/ (modules.ts, params.ts, gating.ts etc.) și rutele API în app/api/….
+
+Stilizare: utilizează Tailwind CSS v4 cu variabile CSS declarate în globals.css; definește tokenii --background, --card, --border, --primary, --accent și creează utilități pentru efecte glass și glow.
+
+2. Paletă și tipografie (SKRE)
+
+Respectă raportul 70/20/10: 70 % fundaluri întunecate (ex. #000, #0e0e0e, #1a1a1a), 20 % gri funcțional pentru elemente secundare, 10 % auriu industrial pentru accente.
+
+Folosește Montserrat pentru titluri și Open Sans pentru corpul textului. Declară-le în layout.tsx și creează utilități Tailwind sau clase (font-serif/font-sans) pentru consistență.
+
+Logo: afișează doar runa digitală; aplică un glow discret pe accentul auriu. Evită combinarea simbolului cu text.
+
+3. Layout & navigație
+
+Header sticky: un antet fix, cu fundal întunecat și border auriu subțire; în stânga logo, în dreapta linkuri spre Generator, Modules, Pricing, Docs, Dashboard, About și buton de autentificare. Linkul activ se evidențiază în aur.
+
+Footer: fundal negru cu un top border aurit; conține trei coloane (Product, Company, Legal) și mențiuni legale; un watermark cu runa.
+
+Responsive: la <768px, antetul se transformă într-un meniu burger; sidebar-urile din Docs/Guides devin sertare; butoanele au dimensiune minimă 44 px pentru touch.
+
+4. Componente reutilizabile
+
+Buttons: definește buton primar (fundal aurit, text negru) și secundar (transparent cu border aurit) cu stări hover/focus/disabled consistente.
+
+Cards: folosește efect glass (backdrop blur + transparență) pentru module, pachete și planuri.
+
+Filtre: creează VectorFilter și SearchBar pentru modulul /modules.
+
+Tabs & accordions: pentru generator (Config 7D / Generator / Editor / Test / History), docs, guides.
+
+Paywall: componentă modală și inline; declanșată când funcțiile “aha” (Real Test, Export PDF/JSON/BUNDLE) nu sunt permise.
+
+5. Fluxuri și pagini
+
+Landing: implementare single‑screen cu hero (tagline + CTA “Start Generator” și “Pricing”), LiveGenerationDemo (input + simulare prompt), bară de statistici (TTA, scor, exporturi), secțiune Social Proof și teaser de prețuri.
+
+Generator:
+
+Select modul dintr‑o grilă cu filtre pe vectori; afișează doar modulele permise de plan (M01, M10, M18 pentru Free).
+
+Configurează 7‑D: form drop‑down cu domain, scale, urgency, complexity, resources, application, output.
+
+Generate: afișează promptul structurat și run_id + timestamp; oferă buton de copiere.
+
+Editor: vizibil doar pentru planurile care permit editare live (Pro+); altfel, read‑only.
+
+Test Engine: modul Simulat (toți) și Live GPT (Pro/Enterprise); scorurile apar într-o grilă.
+
+History & Export: lista ultimelor runuri; posibilitatea de a exporta .txt/.md (Free/Creator), .pdf/.json (Pro), bundle.zip (Enterprise). Persistența locală (Free/Creator) vs. cloud (Pro/Enterprise).
+
+Modules: grid cu carduri modul; filtre vectoriale; buton “Specifications” deschide un overlay cu detaliile modulului (requirements, output, KPIs, guardrails). Gating vizibil la planuri.
+
+Pricing: afișează planurile și entitlements (module accesibile, formate de export, test engine live, API, bundle). Include toggle lunar/anual.
+
+Dashboard: tabel cu istoricul rulărilor; filtre pe modul, domeniu, dată; butoane de re-run şi export; badge‑uri colorate pentru scoruri.
+
+Docs: portal cu sidebar fix; secțiuni: Overview, 7D Parameters, Test Engine, Export Pipeline, Entitlements, Examples, API Reference. Folosește code blocks pe fundal negru cu accent aurit.
+
+Guides: tutoriale pas cu pas; fiecare ghid are titlu, introducere, etape numerotate, imagini, butoane “Try this in Generator”. Progresul este salvat local.
+
+About/Contact: storytelling (“Transformăm limbajul în cod ritualizat”); pentru contact, folosește un formular cu câmpuri “Nume”, “Domeniu”, “Intenție”, “Mesaj” și un buton aurit; răspuns vizual ritualic (runa ~ care pulsează).
+
+Legal: pagini minimaliste pentru privacy şi terms; text alb‑gri pe fundal negru, margini generoase, rună watermark; linkuri rapide la secțiuni.
+
+6. Gating și entitlements
+
+Planuri: Free (acces la M01, M10, M18; export .txt/.md), Creator (acces la toate modulele, export .md), Pro (export .pdf/.json, test GPT live, cloud history), Enterprise (API, export bundle.zip + white‑label).
+
+Funcții “aha”: Real Test, Export PDF/JSON, Export bundle; acestea declanşează paywall la planuri inferioare.
+
+Persistență: salvează fiecare run în localStorage (Free/Creator) sau în Supabase (Pro/Enterprise), incluzând run_id, module, config 7‑D, scoruri şi timestamp.
+
+7. Accesibilitate și performanță
+
+Contrast: toate texte și butoane trebuie să asigure raport minim 4.5:1.
+
+Navigation: aria-current pe linkul activ, aria-disabled când elementele sunt indisponibile; “Skip to content” în layout.
+
+Loading: adaugă skeleton loaders și spinners; evită ecranele goale.
+
+Motion: detectează prefers-reduced-motion și oprește animațiile în exces.
+
+Lighthouse: optimizează imagini (lazy‑load), minifică CSS/JS și urmărește scor ≥90 la Performance & Accessibility.
+
+8. Implementare și best practices
+
+Un singur header/footer: randat în layout.tsx; nu duplicat în pagini.
+
+Configurare Coming‑Soon: middleware care redirecţionează toate rutele la /coming-soon când NEXT_PUBLIC_COMING_SOON=true; ascunde header/footer.
+
+Refactorizare: evită dublurile (două pagini login, două globals.css); folosește un singur formular pentru autentificare şi înregistrare, extrăgând validările în hooks.
+
+Testare end-to-end: creează conturi pentru fiecare plan şi parcurge fluxurile (generator, export, paywall, dashboard) pentru a valida gating‑ul şi persistenta.
+
+Prin respectarea acestor reguli tehnice de front‑end şi UI/UX, proiectul PromptForge™ va oferi o experienţă consistentă, accesibilă şi premium, aliniată cu brandingul industrial SKRE şi cu cerinţele de gating şi modularitate.

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Loading Bar ASCII - o bară de progres cu caractere [■■■■□□□□] care se umple în loop -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru bara de progres -->
+  <rect x="106" y="236" width="300" height="40" rx="0" ry="0" fill="none" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Caractere ASCII pentru bara de progres -->
+  <text font-family="'JetBrains Mono', monospace" font-size="24" fill="#E0E0E0" x="256" y="264" text-anchor="middle">[
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#E0E0E0"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 1 -->
+  <text id="char1" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="138" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.1;0.9;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 2 -->
+  <text id="char2" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="162" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.2;0.3;0.9;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 3 -->
+  <text id="char3" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="186" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.3;0.4;0.5;0.9;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 4 -->
+  <text id="char4" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="210" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.4;0.5;0.6;0.7;0.9;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 5 -->
+  <text id="char5" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="234" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#FFD700;#5a5a5a"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9;0.9;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 6 -->
+  <text id="char6" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="258" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.6;0.7;0.8;0.9;0.9;0.95;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 7 -->
+  <text id="char7" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="282" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.7;0.8;0.9;0.9;0.9;0.95;0.975;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter 8 -->
+  <text id="char8" font-family="'JetBrains Mono', monospace" font-size="24" fill="#5a5a5a" x="306" y="264" text-anchor="middle">■
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.8;0.9;0.9;0.9;0.95;0.95;0.975;0.99;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Caracter de închidere -->
+  <text font-family="'JetBrains Mono', monospace" font-size="24" fill="#E0E0E0" x="330" y="264" text-anchor="middle">]
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#E0E0E0"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "LOADING" -->
+  <text id="loading-text" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" x="256" y="200" text-anchor="middle">LOADING
+    <animate
+      attributeName="opacity"
+      values="1;0.5;1"
+      keyTimes="0;0.5;1"
+      dur="1.2s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Procentaj de încărcare -->
+  <text id="percent-text" font-family="'JetBrains Mono', monospace" font-size="16" fill="#FFD700" x="256" y="310" text-anchor="middle">0%
+    <animate
+      attributeName="textContent"
+      values="0%;12%;25%;37%;50%;62%;75%;87%;100%;0%"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;0.99;1"
+      dur="2.4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Loading Bar ASCII</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>O bară de progres cu caractere [■■■■□□□□] care se umple în loop. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

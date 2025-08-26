@@ -1,0 +1,19 @@
+
+"use client";
+
+interface ToastOptions {
+  title: string;
+  description?: string;
+  variant?: "default" | "destructive";
+}
+
+/**
+ * Minimal toast hook. In a real application this would display UI notifications.
+ */
+export function useToast() {
+  const toast = ({ title, description }: ToastOptions) => {
+    // eslint-disable-next-line no-console
+    console.log(`${title}: ${description ?? ""}`);
+  };
+  return { toast };
+}

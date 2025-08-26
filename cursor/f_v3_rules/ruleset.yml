@@ -1,0 +1,115 @@
+# PROMPTFORGE™ v3 — ruleset.yml (SSOT)
+version: 1.0.0
+generated_at: 2025-08-23T00:00:00Z
+project: PROMPTFORGE_v3
+description: >
+  Single Source of Truth for PromptForge v3. Governs 7D validation (enum_only & raise_on_invalid),
+  API contracts, quality gates (DoR/DoD), export artifacts, telemetry schema, rate limiting and plan gating.
+  Designed to continue from the CURRENT repository state (Next.js App Router, Supabase, OpenAI, Analytics & QA dashboards).
+
+stack:
+  frontend: Next.js (App Router) + TypeScript + Tailwind + shadcn/ui
+  backend: Next.js API routes + Supabase (Postgres, RLS)
+  ai: OpenAI GPT-4o family
+  observability: Telemetry (Supabase), Analytics dashboard
+  qa: Testing API + Testing dashboard
+
+sevenD:
+  enforcement: { enum_only: true, raise_on_invalid: true }
+  domain:
+    codes: [FIN, ECOM, EDU, SAAS, HEALTH, LEGAL, GOV, MEDIA]
+    defaults_by_code:
+      FIN:    { scale: team, urgency: normal,  complexity: medium, resources: standard, application: content_ops, output: bundle }
+      ECOM:   { scale: team, urgency: normal,  complexity: medium, resources: standard, application: sales_ops,   output: bundle }
+      EDU:    { scale: team, urgency: normal,  complexity: medium, resources: standard, application: research,    output: bundle }
+      SAAS:   { scale: team, urgency: normal,  complexity: medium, resources: standard, application: product_ops, output: bundle }
+      HEALTH: { scale: org,  urgency: high,    complexity: high,   resources: extended, application: research,   output: bundle }
+      LEGAL:  { scale: org,  urgency: normal,  complexity: high,   resources: extended, application: crisis_ops, output: bundle }
+      GOV:    { scale: org,  urgency: high,    complexity: high,   resources: extended, application: research,   output: bundle }
+      MEDIA:  { scale: team, urgency: normal,  complexity: medium, resources: standard, application: content_ops, output: bundle }
+  scale:       [solo, team, org, market]
+  urgency:     [low, normal, high, crisis]
+  complexity:  [low, medium, high]
+  resources:   [minimal, standard, extended]
+  application: [content_ops, sales_ops, product_ops, research, crisis_ops]
+  output:      [text, sop, plan, bundle]
+
+plans:
+  pilot:
+    label: Pilot
+    features: { canUseAllModules: false, canExportMD: true,  canExportPDF: false, canExportJSON: false,
+                canUseGptTestReal: false, hasCloudHistory: false, hasEvaluatorAI: true,
+                hasAPI: false, hasWhiteLabel: false, canExportBundleZip: false, hasSeatsGT1: false }
+    module_allowlist: ["M01","M02","M03","M04","M05","M06","M07","M08","M09","M10","M11","M12"]
+    exports_allowed: [txt, md]
+    retention_days: 7
+  pro:
+    label: Pro
+    features: { canUseAllModules: true, canExportMD: true,  canExportPDF: true,  canExportJSON: true,
+                canUseGptTestReal: true, hasCloudHistory: true, hasEvaluatorAI: true,
+                hasAPI: false, hasWhiteLabel: false, canExportBundleZip: false, hasSeatsGT1: false }
+    module_allowlist: ALL
+    exports_allowed: [txt, md, json, pdf]
+    retention_days: 90
+  enterprise:
+    label: Enterprise
+    features: { canUseAllModules: true, canExportMD: true,  canExportPDF: true,  canExportJSON: true,
+                canUseGptTestReal: true, hasCloudHistory: true, hasEvaluatorAI: true,
+                hasAPI: true,  hasWhiteLabel: true,  canExportBundleZip: true,  hasSeatsGT1: true }
+    module_allowlist: ALL
+    exports_allowed: [txt, md, json, pdf, bundle]
+    retention_days: -1
+
+gates:
+  gpt_editor:        { min_plan: pro }
+  gpt_test_live:     { min_plan: pro }
+  export_pdf:        { min_plan: pro }
+  export_json:       { min_plan: pro }
+  export_zip_bundle: { min_plan: enterprise }
+  api_access:        { min_plan: enterprise }
+
+api:
+  - { method: POST, path: /api/gpt-editor,
+      input: { prompt: "string(min_bytes:64)", sevenD: SevenD }, gating: gpt_editor,
+      responses: { "200": "{editedPrompt, improvements[], confidence:int, overallScore:int, scores{clarity,execution,ambiguity,business_fit}, runId, timestamp, sevenD}",
+                   "400": "{error: 7D_VALIDATION_ERROR|INSUFFICIENT_INPUT|SCORE_THRESHOLD_FAILED}",
+                   "403": "{error: ENTITLEMENT_REQUIRED}" } }
+  - { method: POST, path: /api/gpt-test,
+      input: "{prompt, testType:[clarity|execution|ambiguity|business_fit], sevenD}", gating: gpt_test_live,
+      responses: { "200": "{testType, score:int, feedback, suggestions[], processingTime:int}",
+                   "400": "{error}", "403": "{error: ENTITLEMENT_REQUIRED}" } }
+  - { method: GET, path: /api/analytics/user,      responses: { "200": "user_metrics", "404": "ANALYTICS_NOT_FOUND" } }
+  - { method: GET, path: /api/analytics/business,  responses: { "200": "business_metrics", "403": "UNAUTHORIZED" } }
+  - { method: GET, path: /api/analytics/export?format={json|csv}, responses: { "200": "file_download" } }
+  - { method: GET, path: /api/entitlements, responses: { "200": "effective_entitlements" } }
+  - { method: POST, path: /api/testing/run-tests, responses: { "200": "{summary, results[]}" } }
+  - { method: POST, path: /api/run/{moduleId}, note: "Validate SevenD, check gates, run module, export artifacts; return telemetry & artifacts." }
+
+quality:
+  dor: { checks: [sevenD_valid, entitlements_valid, output_spec_loaded, tests_defined, input_minimum], input_minimum_bytes: 64 }
+  dod: { threshold_score: 80, checks: [score_threshold, output_complete, checksum_valid, manifest_written, telemetry_saved] }
+
+export:
+  artifacts_order: [prompt.txt, prompt.json, prompt.md, prompt.pdf, manifest.json, telemetry.json, checksum.txt]
+  watermark_on_trial: true
+  license_notice_required: true
+
+telemetry:
+  events:
+    run_start:     { fields: [runId, moduleId, userId, sessionId, planId, sevenD, startTime] }
+    run_finish:    { fields: [runId, success, duration, tokenCount] }
+    score_eval:    { fields: [runId, promptId, scores, overallScore, threshold, passed] }
+    bundle_export: { fields: [exportId, runId, planId, artifacts[], format, size, checksum, quality] }
+    gate_hit:      { fields: [gateId, gateType, passed, reason, userId, planId] }
+
+rate_limits:
+  pilot:      { hourly: 10,  monthly: 50 }
+  pro:        { hourly: 50,  monthly: 1000 }
+  enterprise: { hourly: 100, monthly: 50000 }
+
+hub:
+  route: /dashboard
+  tabs: [tools, analytics, qa, history, resources]
+  notes:
+    - Single layout/background. Montezi Analytics & Testing ca taburi.
+    - Continuă din codul existent: docs pentru API, pagini /dashboard și /test sunt deja în repo.

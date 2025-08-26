@@ -1,0 +1,20 @@
+
+"use client";
+
+import type { ReactNode } from "react";
+
+interface BadgeProps {
+  children: ReactNode;
+  className?: string;
+}
+
+/**
+ * Simple badge component for labels and highlights.
+ */
+export function Badge({ children, className = "" }: BadgeProps) {
+  return (
+    <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${className}`}>
+      {children}
+    </span>
+  );
+}

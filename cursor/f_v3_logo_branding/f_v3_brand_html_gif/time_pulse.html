@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge - Time Pulse Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .logo-bg {
+            width: 100%;
+            height: 100%;
+            background: #F4B001;
+            border-radius: 30px;
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        .glyph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+        }
+
+        .glyph-path {
+            fill: #000000;
+            stroke: none;
+        }
+
+        /* Time pulse animation - triggers every 60 seconds */
+        .time-pulse {
+            animation: timePulse 60s linear infinite;
+        }
+
+        @keyframes timePulse {
+            0%, 98% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(244, 176, 1, 0);
+            }
+            99% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(244, 176, 1, 0.7);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 30px rgba(244, 176, 1, 0);
+            }
+        }
+
+        .time-indicator {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .clock-face {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .clock-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: #FFD700;
+            transform-origin: bottom;
+            transform: translate(-50%, -100%);
+            animation: clockTick 60s linear infinite;
+        }
+
+        @keyframes clockTick {
+            0% {
+                transform: translate(-50%, -100%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -100%) rotate(360deg);
+            }
+        }
+
+        .time-display {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 2px solid transparent;
+            border-radius: 30px;
+            opacity: 0;
+        }
+
+        .pulse-ring.active {
+            animation: pulseRingEffect 2s ease-out;
+        }
+
+        @keyframes pulseRingEffect {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                border-color: #FFD700;
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                border-color: transparent;
+                opacity: 0;
+            }
+        }
+
+        .chronometer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .next-pulse-indicator {
+            position: absolute;
+            top: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 215, 0, 0.6);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .temporal-particles {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .particle-t1 { top: 15%; left: 85%; }
+        .particle-t2 { top: 85%; left: 15%; }
+        .particle-t3 { top: 15%; left: 15%; }
+        .particle-t4 { top: 85%; left: 85%; }
+
+        .temporal-particles.active {
+            opacity: 1;
+            animation: temporalFloat 2s ease-out;
+        }
+
+        @keyframes temporalFloat {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3) translateY(-30px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="time-indicator">
+            <div>⏰ TIME PULSE ACTIVE</div>
+        </div>
+        
+        <div class="next-pulse-indicator">
+            <div>Next pulse in: <span id="countdown">60</span>s</div>
+        </div>
+        
+        <div class="clock-face">
+            <div class="clock-hand"></div>
+        </div>
+        
+        <div class="chronometer">
+            <span id="pulseCount">0</span>
+        </div>
+        
+        <div class="pulse-ring" id="pulseRing"></div>
+        
+        <div class="temporal-particles particle-t1"></div>
+        <div class="temporal-particles particle-t2"></div>
+        <div class="temporal-particles particle-t3"></div>
+        <div class="temporal-particles particle-t4"></div>
+        
+        <div class="logo-bg time-pulse"></div>
+        <svg class="glyph" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Central vertical line -->
+            <rect class="glyph-path" x="55" y="20" width="10" height="80" />
+            
+            <!-- Top diamond -->
+            <path class="glyph-path" d="M60 10 L80 30 L60 50 L40 30 Z" />
+            <rect class="glyph-path" x="55" y="25" width="10" height="20" />
+            
+            <!-- Left zigzag -->
+            <path class="glyph-path" d="M35 50 L15 70 L35 90 L25 100 L0 70 L25 40 Z" />
+            
+            <!-- Right zigzag -->
+            <path class="glyph-path" d="M85 50 L105 70 L85 90 L95 100 L120 70 L95 40 Z" />
+            
+            <!-- Bottom triangle -->
+            <path class="glyph-path" d="M60 100 L85 110 L35 110 Z" />
+            
+            <!-- Face elements -->
+            <path class="glyph-path" d="M45 75 Q60 85 75 75" stroke="#000000" stroke-width="3" fill="none" />
+            <rect class="glyph-path" x="55" y="90" width="10" height="8" />
+        </svg>
+        
+        <div class="time-display">
+            <div id="currentTime">00:00:00</div>
+            <div style="font-size: 12px; margin-top: 5px;">FORGE CHRONOMETER</div>
+        </div>
+    </div>
+
+    <script>
+        let pulseCount = 0;
+        let countdown = 60;
+        
+        const pulseRing = document.getElementById('pulseRing');
+        const pulseCountElement = document.getElementById('pulseCount');
+        const countdownElement = document.getElementById('countdown');
+        const currentTimeElement = document.getElementById('currentTime');
+        const particles = document.querySelectorAll('.temporal-particles');
+
+        // Update current time display
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ro-RO', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            currentTimeElement.textContent = timeString;
+        }
+
+        // Trigger pulse effect
+        function triggerPulse() {
+            pulseCount++;
+            pulseCountElement.textContent = pulseCount;
+            
+            // Activate pulse ring
+            pulseRing.classList.add('active');
+            setTimeout(() => {
+                pulseRing.classList.remove('active');
+            }, 2000);
+            
+            // Activate temporal particles
+            particles.forEach((particle, index) => {
+                setTimeout(() => {
+                    particle.classList.add('active');
+                    setTimeout(() => {
+                        particle.classList.remove('active');
+                    }, 2000);
+                }, index * 100);
+            });
+            
+            console.log(`Forge Time Pulse #${pulseCount} at ${new Date().toLocaleTimeString()}`);
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                triggerPulse();
+                countdown = 60; // Reset countdown
+            }
+        }
+
+        // Initialize
+        updateTime();
+        
+        // Update time every second
+        setInterval(updateTime, 1000);
+        
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        
+        // Trigger pulse every 60 seconds (synchronized with CSS animation)
+        setInterval(triggerPulse, 60000);
+        
+        // Initial pulse after 1 second for demo purposes
+        setTimeout(triggerPulse, 1000);
+    </script>
+</body>
+</html>
+

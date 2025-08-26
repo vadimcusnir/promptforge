@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .hamburger-line {
+      fill: none;
+      stroke: var(--white);
+      stroke-width: 4;
+      stroke-linecap: round;
+      transition: all 0.3s;
+    }
+
+    /* Animații pentru hamburger */
+    @keyframes toggleHamburger {
+      0%, 100% {
+        transform: translateY(0) rotate(0);
+      }
+      50% {
+        transform: translateY(0) rotate(0);
+      }
+      51% {
+        transform: translateY(20px) rotate(45deg);
+      }
+      99% {
+        transform: translateY(20px) rotate(45deg);
+      }
+    }
+
+    @keyframes toggleMiddle {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 1;
+      }
+      51% {
+        opacity: 0;
+      }
+      99% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes toggleBottom {
+      0%, 100% {
+        transform: translateY(0) rotate(0);
+      }
+      50% {
+        transform: translateY(0) rotate(0);
+      }
+      51% {
+        transform: translateY(-20px) rotate(-45deg);
+      }
+      99% {
+        transform: translateY(-20px) rotate(-45deg);
+      }
+    }
+
+    /* Aplicarea animațiilor */
+    #line-top {
+      animation: toggleHamburger 4s infinite;
+      transform-origin: center;
+    }
+
+    #line-middle {
+      animation: toggleMiddle 4s infinite;
+    }
+
+    #line-bottom {
+      animation: toggleBottom 4s infinite;
+      transform-origin: center;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #line-top, #line-middle, #line-bottom {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #line-top,
+    .container:hover #line-middle,
+    .container:hover #line-bottom {
+      animation-duration: 2s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Meniu hamburger -->
+    <line id="line-top" class="hamburger-line" x1="88" y1="108" x2="168" y2="108" />
+    <line id="line-middle" class="hamburger-line" x1="88" y1="128" x2="168" y2="128" />
+    <line id="line-bottom" class="hamburger-line" x1="88" y1="148" x2="168" y2="148" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">05</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

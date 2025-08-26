@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sigiliul Timpului - un simbol care reprezintă trecerea și controlul timpului -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru sigiliu -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior al sigiliului -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Cercul interior al sigiliului -->
+  <circle id="inner-circle" cx="256" cy="256" r="100" fill="none" stroke="#E0E0E0" stroke-width="1.5">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Cercul central al sigiliului -->
+  <circle id="center-circle" cx="256" cy="256" r="20" fill="none" stroke="#FFD700" stroke-width="1.5">
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="20;22;20"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri de timp în jurul cercului (12 poziții ca pe un ceas) -->
+  <!-- Poziția 12 -->
+  <text id="symbol-12" x="256" y="136" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle">XII
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="0s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 1 -->
+  <text id="symbol-1" x="316" y="156" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">I
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="1s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 2 -->
+  <text id="symbol-2" x="356" y="196" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">II
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 3 -->
+  <text id="symbol-3" x="376" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle">III
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 4 -->
+  <text id="symbol-4" x="356" y="316" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">IV
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 5 -->
+  <text id="symbol-5" x="316" y="356" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">V
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 6 -->
+  <text id="symbol-6" x="256" y="376" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle">VI
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 7 -->
+  <text id="symbol-7" x="196" y="356" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">VII
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 8 -->
+  <text id="symbol-8" x="156" y="316" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">VIII
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 9 -->
+  <text id="symbol-9" x="136" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle">IX
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 10 -->
+  <text id="symbol-10" x="156" y="196" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">X
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Poziția 11 -->
+  <text id="symbol-11" x="196" y="156" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#E0E0E0" text-anchor="middle">XI
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      begin="11s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Simboluri ezoterice în interiorul cercului -->
+  <!-- Simbol 1 (sus) -->
+  <text id="esoteric-symbol-1" x="256" y="186" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle">⌛
+    <animate
+      attributeName="fill"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Simbol 2 (dreapta) -->
+  <text id="esoteric-symbol-2" x="326" y="256" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle">⧗
+    <animate
+      attributeName="fill"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Simbol 3 (jos) -->
+  <text id="esoteric-symbol-3" x="256" y="326" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle">⧖
+    <animate
+      attributeName="fill"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Simbol 4 (stânga) -->
+  <text id="esoteric-symbol-4" x="186" y="256" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#FFD700" text-anchor="middle">∞
+    <animate
+      attributeName="fill"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Limbile ceasului -->
+  <!-- Limba pentru ore -->
+  <line id="hour-hand" x1="256" y1="256" x2="256" y2="206" stroke="#FFD700" stroke-width="3" stroke-linecap="round">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="60s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Limba pentru minute -->
+  <line id="minute-hand" x1="256" y1="256" x2="256" y2="176" stroke="#E0E0E0" stroke-width="2" stroke-linecap="round">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Limba pentru secunde -->
+  <line id="second-hand" x1="256" y1="256" x2="256" y2="156" stroke="#FF0000" stroke-width="1" stroke-linecap="round">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="1s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Centrul ceasului -->
+  <circle id="clock-center" cx="256" cy="256" r="5" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Marcaje pentru ore -->
+  <!-- Marcaj pentru ora 12 -->
+  <line id="hour-mark-12" x1="256" y1="136" x2="256" y2="146" stroke="#E0E0E0" stroke-width="2"/>
+  
+  <!-- Marcaj pentru ora 3 -->
+  <line id="hour-mark-3" x1="366" y1="256" x2="356" y2="256" stroke="#E0E0E0" stroke-width="2"/>
+  
+  <!-- Marcaj pentru ora 6 -->
+  <line id="hour-mark-6" x1="256" y1="376" x2="256" y2="366" stroke="#E0E0E0" stroke-width="2"/>
+  
+  <!-- Marcaj pentru ora 9 -->
+  <line id="hour-mark-9" x1="146" y1="256" x2="156" y2="256" stroke="#E0E0E0" stroke-width="2"/>
+  
+  <!-- Efecte de pulsație pentru sigiliu -->
+  <circle id="pulse-effect" cx="256" cy="256" r="0" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;140;0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri temporale care apar și dispar -->
+  <g id="temporal-symbols">
+    <!-- Simbol 1 -->
+    <text id="temp-symbol-1" x="256" y="216" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">PAST
+      <animate
+        attributeName="opacity"
+        values="0;0.8;0"
+        keyTimes="0;0.5;1"
+        dur="6s"
+        begin="0s"
+        repeatCount="indefinite"/>
+    </text>
+    
+    <!-- Simbol 2 -->
+    <text id="temp-symbol-2" x="256" y="256" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">PRESENT
+      <animate
+        attributeName="opacity"
+        values="0;0;0.8;0"
+        keyTimes="0;0.3;0.8;1"
+        dur="6s"
+        begin="2s"
+        repeatCount="indefinite"/>
+    </text>
+    
+    <!-- Simbol 3 -->
+    <text id="temp-symbol-3" x="256" y="296" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">FUTURE
+      <animate
+        attributeName="opacity"
+        values="0;0;0;0.8;0"
+        keyTimes="0;0.2;0.6;0.9;1"
+        dur="6s"
+        begin="4s"
+        repeatCount="indefinite"/>
+    </text>
+  </g>
+  
+  <!-- Linii radiale care marchează diviziunile timpului -->
+  <g id="time-divisions">
+    <!-- 12 linii pentru ore -->
+    <line id="division-1" x1="256" y1="146" x2="256" y2="136" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-2" x1="301" y1="166" x2="306" y2="156" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-3" x1="336" y1="211" x2="346" y2="206" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-4" x1="356" y1="256" x2="366" y2="256" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-5" x1="336" y1="301" x2="346" y2="306" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-6" x1="301" y1="346" x2="306" y2="356" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-7" x1="256" y1="366" x2="256" y2="376" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-8" x1="211" y1="346" x2="206" y2="356" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-9" x1="176" y1="301" x2="166" y2="306" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-10" x1="156" y1="256" x2="146" y2="256" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-11" x1="176" y1="211" x2="166" y2="206" stroke="#5a5a5a" stroke-width="1"/>
+    <line id="division-12" x1="211" y1="166" x2="206" y2="156" stroke="#5a5a5a" stroke-width="1"/>
+  </g>
+  
+  <!-- Efecte de glitch pentru timp -->
+  <g id="time-glitch">
+    <rect id="glitch-rect" x="246" y="246" width="20" height="20" fill="#FF0000" opacity="0">
+      <animate
+        attributeName="opacity"
+        values="0;0.8;0"
+        keyTimes="0;0.1;0.2"
+        dur="0.5s"
+        begin="3s;9s;15s"
+        repeatCount="1"/>
+    </rect>
+  </g>
+  
+  <!-- Text "SIGILIUL TIMPULUI" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">SIGILIUL TIMPULUI</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Sigiliul Timpului</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol care reprezintă trecerea și controlul timpului. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="256" viewBox="0 0 512 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @font-face {
+      font-family: 'JetBrainsMono';
+      font-style: normal;
+      font-weight: 300;
+      src: url('data:font/woff2;base64,d09GMgABAAAAAAqYAA4AAAAAEwQAAApAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbIByCIgZgADQKkkCQFAuBQAABNgIkA4FYBCAFhGIHIAyBGxsrEFGUb1aQ/eUBN4bqDdYQUZKiLImKqJhYxMIiFhaxsPAQPcTMQ/AQD4/9/P3a59z7ZvZNIpFINBnJJOJJJGiQTifUCpVC8ky6WZP5P9v+b1FKLIrpKMrwKNJVhEcZwrMcVYsyRdlSdCk6lRalS5cu3bqWdS/r7pZ1L8qyrMvHw/Nw+P9aa++5c+/8mZl/ZvJNvkAKqQJVQqYQMoVQKIRKITQKoVMIg0JYFEKQCdJEPgzxyOQAuxroE9uh9hTQGLV2mhFdxXYsuZJZlVoTXaOxY8cYYDxIAAEEgBCCEIYIxCCBFDLIoYASKqihhgZa6KCHAUaYYIYFVthghwNOuOCGB1744IcEAYQQQRQxxJFACmmkkUEWOeRRQBEllFFBFTXU0UALHfQwwAgTzLDAChvscMAJF9zwwAs/AgghjAiiiCGOBFJII4Ms8iigiBLKqKCKGupoooM+BhhhhgVW2GCXN+CFD34EEEIYEUQRQxwJpJBGBlnkUUARJZRRQRU11NFEC10MMMIMCxZssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKmDcMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTB1UUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiJI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkLcMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTF1UUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkbcMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTN1UUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKk7cMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTN1VUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkHcMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTD1UUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkncMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTD1VUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkXcMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTL1UUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKk3cMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTL1VUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkPcMMDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTH1UUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkvuOGBFz74EUAIYUQQRQxxJJBCGhlkkUcBRZRQpn6qqKGOJjroY4ARZlhghQ12OOCEi/oBL3zwI4AQwoggihjiSCCFNDLIIo8CiiihTANUUUMdTXTQxwAjzLDAChvscMAJF9zwwAsfVQghjAiiiCGOBFJII4Ms8iigiBI6qKKGOproUAcDjDDDAitssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkfuOGBFz74EUAIYUQQRQxxJJBCGhlkkUcBRZRQpv6qqKGOJjroY4ARZlhghQ12OOCEi/oDL3zwI4AQwoggihjiSCCFNDLIIo8CiiihgypqqKOJDnUwwAgzLLDCBjsccMIFNzzwwgc/AgghTANEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkBbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUaYAqaqijiQ76GGCEGRZYYYMdDjjhghseeOGjCiGEEUEUMcSRQAppZJBFHgUUUUIHVdRQRxMd6mCAEWZYYIUNdjjghAtueOCFD34EEEIYEUQRQxwJpJBGBlnkUUARJZRRQRU11NFEB30MMMIMCxZssMMBJ1xwwwMvfPAjgBDCiCCKGOJIIIU0MsgijwKKKKGMCqqooY4mOuhjgBFmWGCFDXY44IQLbnjghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUUUEVNdTRRAd9DDDCDAussKkhuOGBFz74EUAIYUQQRQxxJJBCGhlkkUcBRZRQpoGqqKGOJjroY4ARZlhghQ12OOCEi4bghQ9+BBBCGBFEEUMcCaSQRgZZ5FFAESWUaZAqaqijiQ76GGCEGRZYYYMdDjjhghseeOGDHwGEEEYEUcQQRwIppJFBFnkUUEQJZVRQRQ11NNFBH4P/AYWkJUw=');
+    }
+
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .console {
+      fill: var(--gray);
+      stroke: var(--white);
+      stroke-width: 1;
+    }
+
+    .console-text {
+      font-family: 'JetBrainsMono', monospace;
+      font-size: 16px;
+      fill: var(--white);
+    }
+
+    .cursor {
+      fill: var(--gold);
+      opacity: 1;
+    }
+
+    /* Animații pentru typing și cursor */
+    @keyframes typing {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Aplicarea animațiilor */
+    #text-container {
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      animation: typing 3s steps(30) forwards;
+    }
+
+    #cursor {
+      animation: blink 0.7s infinite;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #text-container, #cursor {
+        animation: none;
+      }
+      #text-container {
+        width: 100%;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #text-container {
+      animation: typing 1.5s steps(30) forwards;
+    }
+
+    .container:hover #cursor {
+      animation: blink 0.35s infinite;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Console -->
+    <rect class="console" x="56" y="78" width="400" height="100" rx="4" ry="4" />
+    
+    <!-- Text și cursor -->
+    <foreignObject x="76" y="98" width="360" height="60">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'JetBrainsMono', monospace; font-size: 16px; color: #E0E0E0;">
+        <span style="color: #FFD700;">prompt@forge:~$</span> 
+        <span id="text-container">initialize_ai_system --mode=creative</span>
+        <span id="cursor" style="display: inline-block; width: 8px; height: 16px; background-color: #FFD700; margin-left: 2px;"></span>
+      </div>
+    </foreignObject>
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">16</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="508" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

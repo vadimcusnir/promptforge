@@ -1,0 +1,16 @@
+
+"use client";
+
+import type { InputHTMLAttributes } from "react";
+
+/**
+ * Simple Input component that forwards all props to a native input element.
+ */
+export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      {...props}
+      className={`px-3 py-2 rounded bg-pf-black border border-pf-text-muted/30 text-pf-text outline-none ${props.className ?? ""}`}
+    />
+  );
+}

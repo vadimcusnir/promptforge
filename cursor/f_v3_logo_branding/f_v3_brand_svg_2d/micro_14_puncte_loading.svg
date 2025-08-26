@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="128" viewBox="0 0 256 128" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .dot {
+      fill: var(--white);
+    }
+
+    .label {
+      font-family: monospace;
+      font-size: 14px;
+      fill: var(--white);
+      text-anchor: middle;
+    }
+
+    /* Animații pentru puncte */
+    @keyframes pulseDot {
+      0%, 100% { 
+        fill: var(--gray);
+        transform: translateY(0);
+      }
+      50% { 
+        fill: var(--gold);
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Aplicarea animațiilor */
+    #dot1 {
+      animation: pulseDot 1.5s infinite;
+    }
+
+    #dot2 {
+      animation: pulseDot 1.5s infinite 0.5s;
+    }
+
+    #dot3 {
+      animation: pulseDot 1.5s infinite 1s;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #dot1, #dot2, #dot3 {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #dot1,
+    .container:hover #dot2,
+    .container:hover #dot3 {
+      animation-duration: 0.75s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Puncte loading -->
+    <circle id="dot1" class="dot" cx="108" cy="64" r="8" />
+    <circle id="dot2" class="dot" cx="128" cy="64" r="8" />
+    <circle id="dot3" class="dot" cx="148" cy="64" r="8" />
+    
+    <!-- Etichetă -->
+    <text class="label" x="128" y="94">LOADING</text>
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">14</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="124" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

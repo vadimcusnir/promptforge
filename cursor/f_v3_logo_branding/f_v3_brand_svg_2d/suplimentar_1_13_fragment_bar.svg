@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fragment Bar - bare verticale care se umplu în succesiune, ca un equalizer -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru bare -->
+  <rect x="106" y="156" width="300" height="200" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Linii de ghidaj orizontale -->
+  <line x1="106" y1="196" x2="406" y2="196" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="106" y1="236" x2="406" y2="236" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="106" y1="276" x2="406" y2="276" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="106" y1="316" x2="406" y2="316" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Bara 1 -->
+  <rect id="bar1" x="126" y="316" width="20" height="0" fill="#FFD700">
+    <animate
+      attributeName="height"
+      values="0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 2 -->
+  <rect id="bar2" x="156" y="316" width="20" height="0" fill="#FFD700">
+    <animate
+      attributeName="height"
+      values="0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.0625;0.1875;0.3125;0.4375;0.5625;0.6875;0.8125;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.0625;0.1875;0.3125;0.4375;0.5625;0.6875;0.8125;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 3 -->
+  <rect id="bar3" x="186" y="316" width="20" height="0" fill="#FFD700">
+    <animate
+      attributeName="height"
+      values="0;0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.125;0.1875;0.3125;0.4375;0.5625;0.6875;0.8125;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.125;0.1875;0.3125;0.4375;0.5625;0.6875;0.8125;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 4 -->
+  <rect id="bar4" x="216" y="316" width="20" height="0" fill="#FF0000">
+    <animate
+      attributeName="height"
+      values="0;0;0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.1875;0.1875;0.25;0.375;0.5;0.625;0.75;0.875;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.1875;0.1875;0.25;0.375;0.5;0.625;0.75;0.875;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 5 -->
+  <rect id="bar5" x="246" y="316" width="20" height="0" fill="#FF0000">
+    <animate
+      attributeName="height"
+      values="0;0;0;0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.25;0.25;0.25;0.3125;0.4375;0.5625;0.6875;0.8125;0.875;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;316;316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.25;0.25;0.25;0.3125;0.4375;0.5625;0.6875;0.8125;0.875;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 6 -->
+  <rect id="bar6" x="276" y="316" width="20" height="0" fill="#FF0000">
+    <animate
+      attributeName="height"
+      values="0;0;0;0;0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.3125;0.3125;0.3125;0.3125;0.375;0.5;0.625;0.75;0.875;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;316;316;316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.3125;0.3125;0.3125;0.3125;0.375;0.5;0.625;0.75;0.875;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 7 -->
+  <rect id="bar7" x="306" y="316" width="20" height="0" fill="#E0E0E0">
+    <animate
+      attributeName="height"
+      values="0;0;0;0;0;0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.375;0.375;0.375;0.375;0.375;0.4375;0.5625;0.6875;0.8125;0.875;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;316;316;316;316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.375;0.375;0.375;0.375;0.375;0.4375;0.5625;0.6875;0.8125;0.875;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 8 -->
+  <rect id="bar8" x="336" y="316" width="20" height="0" fill="#E0E0E0">
+    <animate
+      attributeName="height"
+      values="0;0;0;0;0;0;0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.4375;0.4375;0.4375;0.4375;0.4375;0.4375;0.5;0.625;0.75;0.875;0.9375;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;316;316;316;316;316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.4375;0.4375;0.4375;0.4375;0.4375;0.4375;0.5;0.625;0.75;0.875;0.9375;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Bara 9 -->
+  <rect id="bar9" x="366" y="316" width="20" height="0" fill="#E0E0E0">
+    <animate
+      attributeName="height"
+      values="0;0;0;0;0;0;0;0;0;40;80;120;160;120;80;40;0"
+      keyTimes="0;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5625;0.6875;0.8125;0.875;0.9375;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="y"
+      values="316;316;316;316;316;316;316;316;316;276;236;196;156;196;236;276;316"
+      keyTimes="0;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5625;0.6875;0.8125;0.875;0.9375;0.9375;0.9375;0.9375;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Linii de nivel -->
+  <text x="96" y="156" font-family="'JetBrains Mono', monospace" font-size="10" fill="#5a5a5a" text-anchor="end">100%</text>
+  <text x="96" y="196" font-family="'JetBrains Mono', monospace" font-size="10" fill="#5a5a5a" text-anchor="end">75%</text>
+  <text x="96" y="236" font-family="'JetBrains Mono', monospace" font-size="10" fill="#5a5a5a" text-anchor="end">50%</text>
+  <text x="96" y="276" font-family="'JetBrains Mono', monospace" font-size="10" fill="#5a5a5a" text-anchor="end">25%</text>
+  <text x="96" y="316" font-family="'JetBrains Mono', monospace" font-size="10" fill="#5a5a5a" text-anchor="end">0%</text>
+  
+  <!-- Text "FRAGMENT BAR" -->
+  <text x="256" y="376" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">FRAGMENT BAR</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Fragment Bar</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Bare verticale care se umplu în succesiune, ca un equalizer. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .radio-outer {
+      fill: none;
+      stroke: var(--white);
+      stroke-width: 2;
+    }
+
+    .radio-inner {
+      fill: var(--gold);
+      opacity: 0;
+    }
+
+    .label {
+      font-family: monospace;
+      font-size: 14px;
+      fill: var(--white);
+    }
+
+    /* Animații pentru radio button */
+    @keyframes pulseRadio {
+      0%, 100% { 
+        opacity: 0;
+        transform: scale(0);
+      }
+      25% { 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+      50% { 
+        opacity: 1;
+        transform: scale(1);
+      }
+      75% { 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+    }
+
+    @keyframes pulseOuter {
+      0%, 100% { 
+        stroke: var(--white);
+        stroke-width: 2;
+      }
+      50% { 
+        stroke: var(--gold);
+        stroke-width: 3;
+      }
+    }
+
+    /* Aplicarea animațiilor */
+    #radio-inner {
+      animation: pulseRadio 2s infinite;
+      transform-origin: center;
+    }
+
+    #radio-outer {
+      animation: pulseOuter 2s infinite;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #radio-inner, #radio-outer {
+        animation: none;
+      }
+      #radio-inner {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #radio-inner,
+    .container:hover #radio-outer {
+      animation-duration: 1s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Radio button -->
+    <circle id="radio-outer" class="radio-outer" cx="64" cy="64" r="20" />
+    <circle id="radio-inner" class="radio-inner" cx="64" cy="64" r="10" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">09</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="124" height="124" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

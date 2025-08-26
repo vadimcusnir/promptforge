@@ -1,0 +1,53 @@
+{
+  "run_id": "gtm-2025-0817-001",
+  "parameter_set_id": "7d-promptforge-v3",
+  "timestamp": "2025-08-17T00:00:00Z",
+  "context": {
+    "goal": "GTM rapid pentru PromptForge v3",
+    "deadline": "2025-08-24",
+    "source_files": [
+      "prompt-forge-v3-arbore.txt",
+      "prompt-forge-v3-code-html.txt", 
+      "prompt-forge-v3-descriere.txt",
+      "prompt-forge-v3-mvp-1.txt",
+      "prompt-forge-v3-mvp-growth.txt",
+      "prompt-forge-v3-mvp-tasks-functional.txt",
+      "prompt-forge-v3-mvp-tasks-preturi.txt",
+      "prompt-forge-v3-mvp-tasks.txt"
+    ]
+  },
+  "params": {
+    "domain": "SaaS",
+    "scale": "Startup", 
+    "urgency": "Sprint",
+    "complexity": "Advanced",
+    "resources": "Lean Team",
+    "application": "Implementation",
+    "output_format": ["playbook", "json", "bundle"]
+  },
+  "inputs": {
+    "brand_assets": ["promptforge.zip"],
+    "analytics_access": [],
+    "competitors": ["ChatGPT", "Claude", "Gemini", "Perplexity"]
+  },
+  "constraints": {
+    "budget_eur": 5000,
+    "legal": ["GDPR"],
+    "timeline_days": 7
+  },
+  "resources": {
+    "links": [],
+    "apis": []
+  },
+  "policies": {
+    "allow": ["research", "analysis", "synthesis"],
+    "refuse": ["speculation", "unverified_claims"],
+    "redirect": ["legal_advice", "financial_advice"]
+  },
+  "telemetry": {
+    "trace": true,
+    "level": "full",
+    "start_time": "2025-08-17T00:00:00Z"
+  }
+}
+

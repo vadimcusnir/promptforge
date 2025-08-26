@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge - Hover Breathing Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .logo-bg {
+            width: 100%;
+            height: 100%;
+            background: #F4B001;
+            border-radius: 30px;
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        .logo-container:hover .logo-bg {
+            animation: breathing 3s ease-in-out infinite;
+        }
+
+        @keyframes breathing {
+            0%, 100% {
+                transform: scale(0.98);
+                box-shadow: 0 0 0 0 rgba(244, 176, 1, 0.4);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(244, 176, 1, 0);
+            }
+        }
+
+        .glyph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .logo-container:hover .glyph {
+            animation: glyphBreathing 3s ease-in-out infinite;
+        }
+
+        @keyframes glyphBreathing {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.03);
+            }
+        }
+
+        .glyph-path {
+            fill: #000000;
+            stroke: none;
+        }
+
+        .breath-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 240px;
+            height: 240px;
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover .breath-indicator {
+            opacity: 1;
+            animation: breathIndicator 3s ease-in-out infinite;
+        }
+
+        @keyframes breathIndicator {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(0.95);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                opacity: 0.6;
+            }
+        }
+
+        .life-pulse {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            background: #00FF84;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover .life-pulse {
+            opacity: 1;
+            animation: lifePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes lifePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+        }
+
+        .breath-waves {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .logo-container:hover .breath-waves {
+            opacity: 1;
+        }
+
+        .wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(0, 255, 132, 0.2);
+            border-radius: 50%;
+            animation: breathWave 3s ease-in-out infinite;
+        }
+
+        .wave-1 {
+            width: 180px;
+            height: 180px;
+            animation-delay: 0s;
+        }
+
+        .wave-2 {
+            width: 220px;
+            height: 220px;
+            animation-delay: 0.5s;
+        }
+
+        .wave-3 {
+            width: 260px;
+            height: 260px;
+            animation-delay: 1s;
+        }
+
+        @keyframes breathWave {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.3;
+            }
+        }
+
+        .title {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00FF84;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .breathing-indicator {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00FF84;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover .breathing-indicator {
+            opacity: 1;
+            animation: breathingText 3s ease-in-out infinite;
+        }
+
+        @keyframes breathingText {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="breathing-indicator">💨 BREATHING ACTIVE</div>
+        
+        <div class="breath-indicator"></div>
+        <div class="life-pulse"></div>
+        
+        <div class="breath-waves">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+        </div>
+        
+        <div class="logo-bg"></div>
+        <svg class="glyph" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Central vertical line -->
+            <rect class="glyph-path" x="55" y="20" width="10" height="80" />
+            
+            <!-- Top diamond -->
+            <path class="glyph-path" d="M60 10 L80 30 L60 50 L40 30 Z" />
+            <rect class="glyph-path" x="55" y="25" width="10" height="20" />
+            
+            <!-- Left zigzag -->
+            <path class="glyph-path" d="M35 50 L15 70 L35 90 L25 100 L0 70 L25 40 Z" />
+            
+            <!-- Right zigzag -->
+            <path class="glyph-path" d="M85 50 L105 70 L85 90 L95 100 L120 70 L95 40 Z" />
+            
+            <!-- Bottom triangle -->
+            <path class="glyph-path" d="M60 100 L85 110 L35 110 Z" />
+            
+            <!-- Face elements -->
+            <path class="glyph-path" d="M45 75 Q60 85 75 75" stroke="#000000" stroke-width="3" fill="none" />
+            <rect class="glyph-path" x="55" y="90" width="10" height="8" />
+        </svg>
+        
+        <div class="title">Hover Breathing</div>
+    </div>
+</body>
+</html>
+

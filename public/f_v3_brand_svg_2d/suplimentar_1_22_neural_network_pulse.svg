@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Neural Network Pulse - Noduri interconectate care pulsează secvențial, cu linii de conexiune care se aprind -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Linii de conexiune între noduri (stratul de intrare și stratul ascuns) -->
+  <!-- Conexiune 1-4 -->
+  <line id="conn-1-4" x1="136" y1="156" x2="256" y2="216" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 1-5 -->
+  <line id="conn-1-5" x1="136" y1="156" x2="256" y2="256" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.1;0.2;0.3"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 1-6 -->
+  <line id="conn-1-6" x1="136" y1="156" x2="256" y2="296" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.2;0.2;0.3;0.4"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 2-4 -->
+  <line id="conn-2-4" x1="136" y1="256" x2="256" y2="216" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.3;0.3;0.3;0.4;0.5"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 2-5 -->
+  <line id="conn-2-5" x1="136" y1="256" x2="256" y2="256" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.4;0.4;0.4;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 2-6 -->
+  <line id="conn-2-6" x1="136" y1="256" x2="256" y2="296" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.5;0.5;0.5;0.5;0.5;0.6;0.7"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 3-4 -->
+  <line id="conn-3-4" x1="136" y1="356" x2="256" y2="216" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.6;0.6;0.6;0.6;0.6;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 3-5 -->
+  <line id="conn-3-5" x1="136" y1="356" x2="256" y2="256" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.7;0.7;0.7;0.7;0.7;0.7;0.7;0.8;0.9"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 3-6 -->
+  <line id="conn-3-6" x1="136" y1="356" x2="256" y2="296" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linii de conexiune între noduri (stratul ascuns și stratul de ieșire) -->
+  <!-- Conexiune 4-7 -->
+  <line id="conn-4-7" x1="256" y1="216" x2="376" y2="216" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 4-8 -->
+  <line id="conn-4-8" x1="256" y1="216" x2="376" y2="296" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 5-7 -->
+  <line id="conn-5-7" x1="256" y1="256" x2="376" y2="216" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;0.985;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 5-8 -->
+  <line id="conn-5-8" x1="256" y1="256" x2="376" y2="296" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;0.985;0.99;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 6-7 -->
+  <line id="conn-6-7" x1="256" y1="296" x2="376" y2="216" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;0.985;0.99;0.995;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Conexiune 6-8 -->
+  <line id="conn-6-8" x1="256" y1="296" x2="376" y2="296" stroke="#5a5a5a" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;0.985;0.99;0.995;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Noduri de rețea neuronală -->
+  <!-- Stratul de intrare -->
+  <!-- Nod 1 -->
+  <circle id="node1" cx="136" cy="156" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.05;0.15"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;18;16"
+      keyTimes="0;0.05;0.15"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 2 -->
+  <circle id="node2" cx="136" cy="256" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.3;0.35;0.45"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;16;18;16"
+      keyTimes="0;0.3;0.35;0.45"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 3 -->
+  <circle id="node3" cx="136" cy="356" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.6;0.6;0.65;0.75"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;16;16;18;16"
+      keyTimes="0;0.6;0.6;0.65;0.75"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Stratul ascuns -->
+  <!-- Nod 4 -->
+  <circle id="node4" cx="256" cy="216" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.1;0.15;0.25;0.4;0.45;0.55;0.7;0.75;0.85"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;16;18;16;16;18;16;16;18;16"
+      keyTimes="0;0.1;0.15;0.25;0.4;0.45;0.55;0.7;0.75;0.85"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 5 -->
+  <circle id="node5" cx="256" cy="256" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.2;0.2;0.25;0.35;0.5;0.55;0.65;0.8;0.85;0.95"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;16;16;18;16;16;18;16;16;18;16"
+      keyTimes="0;0.2;0.2;0.25;0.35;0.5;0.55;0.65;0.8;0.85;0.95"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 6 -->
+  <circle id="node6" cx="256" cy="296" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.3;0.3;0.3;0.35;0.45;0.6;0.65;0.75;0.9;0.95;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;16;16;16;18;16;16;18;16;16;18;16"
+      keyTimes="0;0.3;0.3;0.3;0.35;0.45;0.6;0.65;0.75;0.9;0.95;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Stratul de ieșire -->
+  <!-- Nod 7 -->
+  <circle id="node7" cx="376" cy="216" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;16;16;16;16;16;16;16;16;16;16;18;16"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 8 -->
+  <circle id="node8" cx="376" cy="296" r="16" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;0.99;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="16;16;16;16;16;16;16;16;16;16;16;16;18;16"
+      keyTimes="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.9;0.95;0.975;0.99;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Etichete pentru straturi -->
+  <text x="136" y="416" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" text-anchor="middle">INPUT</text>
+  <text x="256" y="416" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" text-anchor="middle">HIDDEN</text>
+  <text x="376" y="416" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" text-anchor="middle">OUTPUT</text>
+  
+  <!-- Text "NEURAL NETWORK" -->
+  <text x="256" y="96" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">NEURAL NETWORK</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Neural Network Pulse</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Noduri interconectate care pulsează secvențial, cu linii de conexiune care se aprind pe măsură ce "informația" călătorește. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

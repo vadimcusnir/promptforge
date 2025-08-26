@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Coroana Gnostică - un simbol al cunoașterii superioare și al iluminării interioare -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru coroană -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Baza coroanei (cerc) -->
+  <circle id="crown-base" cx="256" cy="256" r="80" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="503" stroke-dashoffset="503">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="503;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Vârfurile coroanei -->
+  <!-- Vârful 1 -->
+  <path id="crown-peak-1" d="M256 176 L256 176 L256 176" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M256 176 L256 176 L256 176;M256 176 L256 136 L256 176;M256 176 L256 136 L256 176"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vârful 2 -->
+  <path id="crown-peak-2" d="M296 196 L296 196 L296 196" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M296 196 L296 196 L296 196;M296 196 L316 166 L296 196;M296 196 L316 166 L296 196"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vârful 3 -->
+  <path id="crown-peak-3" d="M316 256 L316 256 L316 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M316 256 L316 256 L316 256;M316 256 L356 256 L316 256;M316 256 L356 256 L316 256"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vârful 4 -->
+  <path id="crown-peak-4" d="M296 316 L296 316 L296 316" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M296 316 L296 316 L296 316;M296 316 L316 346 L296 316;M296 316 L316 346 L296 316"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="6s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="6s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vârful 5 -->
+  <path id="crown-peak-5" d="M256 336 L256 336 L256 336" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M256 336 L256 336 L256 336;M256 336 L256 376 L256 336;M256 336 L256 376 L256 336"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="7s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="7s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vârful 6 -->
+  <path id="crown-peak-6" d="M216 316 L216 316 L216 316" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M216 316 L216 316 L216 316;M216 316 L196 346 L216 316;M216 316 L196 346 L216 316"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vârful 7 -->
+  <path id="crown-peak-7" d="M196 256 L196 256 L196 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M196 256 L196 256 L196 256;M196 256 L156 256 L196 256;M196 256 L156 256 L196 256"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Vârful 8 -->
+  <path id="crown-peak-8" d="M216 196 L216 196 L216 196" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100">
+    <animate
+      attributeName="d"
+      values="M216 196 L216 196 L216 196;M216 196 L196 166 L216 196;M216 196 L196 166 L216 196"
+      keyTimes="0;0.5;1"
+      dur="1s"
+      begin="10s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="100;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="10s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="11s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Pietrele prețioase ale coroanei -->
+  <!-- Piatra 1 (sus) -->
+  <circle id="crown-gem-1" cx="256" cy="136" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Piatra 2 (dreapta sus) -->
+  <circle id="crown-gem-2" cx="316" cy="166" r="6" fill="#FF0000">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.25s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.25s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Piatra 3 (dreapta) -->
+  <circle id="crown-gem-3" cx="356" cy="256" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Piatra 4 (dreapta jos) -->
+  <circle id="crown-gem-4" cx="316" cy="346" r="6" fill="#FF0000">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.75s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="11.75s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Piatra 5 (jos) -->
+  <circle id="crown-gem-5" cx="256" cy="376" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Piatra 6 (stânga jos) -->
+  <circle id="crown-gem-6" cx="196" cy="346" r="6" fill="#FF0000">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12.25s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12.25s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Piatra 7 (stânga) -->
+  <circle id="crown-gem-7" cx="156" cy="256" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Piatra 8 (stânga sus) -->
+  <circle id="crown-gem-8" cx="196" cy="166" r="6" fill="#FF0000">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12.75s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12.75s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Centrul coroanei (ochiul gnostic) -->
+  <circle id="crown-center" cx="256" cy="256" r="20" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="126" stroke-dashoffset="126">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="126;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="13s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="14s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Ochiul interior -->
+  <ellipse id="eye-iris" cx="256" cy="256" rx="10" ry="15" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="80" stroke-dashoffset="80">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="80;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="14s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="15s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="ry"
+      values="15;10;15"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Pupila ochiului -->
+  <circle id="eye-pupil" cx="256" cy="256" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="15s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="r"
+      values="5;7;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="15.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="15.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Raze de lumină din centrul coroanei -->
+  <!-- Raza 1 -->
+  <line id="light-ray-1" x1="256" y1="256" x2="256" y2="216" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="16s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Raza 2 -->
+  <line id="light-ray-2" x1="256" y1="256" x2="296" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="2s"
+      begin="16.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Raza 3 -->
+  <line id="light-ray-3" x1="256" y1="256" x2="256" y2="296" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      begin="17s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Raza 4 -->
+  <line id="light-ray-4" x1="256" y1="256" x2="216" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="2s"
+      begin="17.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efecte de pulsație pentru coroană -->
+  <circle id="pulse-crown" cx="256" cy="256" r="80" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de glitch pentru coroană -->
+  <circle id="glitch-crown" cx="256" cy="256" r="80" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Simboluri pentru cunoașterea gnostică -->
+  <!-- Simbol 1 (Gnosis) -->
+  <text id="gnosis-symbol-1" x="256" y="216" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">GNOSIS
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="18s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 (Sophia) -->
+  <text id="gnosis-symbol-2" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">SOPHIA
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="21s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 (Pleroma) -->
+  <text id="gnosis-symbol-3" x="256" y="296" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">PLEROMA
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="24s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "COROANA GNOSTICĂ" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">COROANA GNOSTICĂ</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Coroana Gnostică</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al cunoașterii superioare și al iluminării interioare. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

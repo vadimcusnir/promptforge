@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="128" viewBox="0 0 512 128" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .line {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 500;
+      stroke-dashoffset: 500;
+    }
+
+    /* Animații pentru linie */
+    @keyframes drawLine {
+      0% { stroke-dashoffset: 500; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    @keyframes colorChange {
+      0%, 100% { stroke: var(--gold); }
+      50% { stroke: var(--red); }
+    }
+
+    /* Aplicarea animațiilor */
+    #line-path {
+      animation: drawLine 2s forwards, colorChange 4s infinite 2s;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #line-path {
+        animation: none;
+        stroke-dashoffset: 0;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #line-path {
+      animation: drawLine 1s forwards, colorChange 2s infinite 1s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Linie care se desenează -->
+    <path id="line-path" class="line" d="M56 64 C106 24, 156 104, 206 64 C256 24, 306 104, 356 64 C406 24, 456 104, 506 64" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">19</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="508" height="124" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+
