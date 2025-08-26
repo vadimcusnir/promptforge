@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Only create client if environment variables are available
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null
 
 // ============================================================================
 // TYPED SUPABASE CLIENT
@@ -166,4 +169,6 @@ export interface Database {
   }
 }
 
-export const typedSupabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+export const typedSupabase = supabaseUrl && supabaseAnonKey 
+  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
+  : null
