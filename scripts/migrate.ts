@@ -89,36 +89,37 @@ async function seedModules() {
   
   try {
     // Import modules catalog
-    const { MODULES_CATALOG } = await import('../lib/modules')
+    const { COMPLETE_MODULES_CATALOG } = await import('../lib/modules')
     
     let successCount = 0
     let errorCount = 0
     
-    for (const [moduleId, module] of Object.entries(MODULES_CATALOG)) {
+    for (const [moduleId, module] of Object.entries(COMPLETE_MODULES_CATALOG)) {
       try {
+        const moduleData = module as any; // Type assertion for now
         const { error } = await supabase
           .from('modules')
           .upsert({
-            id: module.id,
-            title: module.name,
-            description: module.description,
-            vector: module.vectors[0] as any,
-            difficulty: module.difficulty,
-            estimated_tokens: module.estimated_tokens,
-            input_schema: module.input_schema,
-            output_template: module.output_template,
-            guardrails: module.guardrails.policy,
-            kpi_target: JSON.stringify(module.kpi),
-            sample_output: module.sample_output,
-            is_active: module.is_active,
-            requires_plan: module.requires_plan
+            id: moduleData.id,
+            title: moduleData.name,
+            description: moduleData.description,
+            vector: moduleData.vectors[0] as any,
+            difficulty: moduleData.difficulty,
+            estimated_tokens: moduleData.estimated_tokens,
+            input_schema: moduleData.input_schema,
+            output_template: moduleData.output_template,
+            guardrails: moduleData.guardrails.policy,
+            kpi_target: JSON.stringify(moduleData.kpi),
+            sample_output: moduleData.sample_output,
+            is_active: moduleData.is_active,
+            requires_plan: moduleData.requires_plan
           }, { onConflict: 'id' })
         
         if (error) {
           console.error(`❌ Error seeding ${moduleId}:`, error.message)
           errorCount++
         } else {
-          console.log(`✅ Seeded ${moduleId}: ${module.name}`)
+          console.log(`✅ Seeded ${moduleId}: ${moduleData.name}`)
           successCount++
         }
       } catch (err) {

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://promptforge.dev/schemas/cursor-init-v1.json",
+  "meta": {
+    "project": "PROMPTFORGE™ v3.0",
+    "source_of_truth": "/cursor/init",
+    "description": "Inițializator canonic pentru agentul Cursor. Enumeră fișierele forge_v3_* și regulile de interacțiune.",
+    "last_updated": "2025-01-26"
+  },
+  "directories": {
+    "root": "/cursor",
+    "docs_root": "/cursor/docs",
+    "docs_subfolders": [
+      "/cursor/docs/coming_soon",
+      "/cursor/docs/industry_packs_bundle",
+      "/cursor/docs/licensing",
+      "/cursor/docs/supabase_migrations"
+    ]
+  },
+  "precedence": {
+    "note": "Număr mai mic = prioritate mai mare.",
+    "order": [
+      { "id": "init", "path": "/cursor/init", "level": 0 },
+      { "id": "supabase", "path": "/cursor/f_v3_plan_1_supabase.txt", "level": 1 },
+      { "id": "audit", "path": "/cursor/f_v3_plan_1_audit.txt", "level": 2 },
+      { "id": "agent", "path": "/agent.ts", "level": 3 },
+      { "id": "ruleset", "path": "/cursor/ruleset.yml", "level": 4 }
+    ]
+  },
+  "instruction_files": [
+    {
+      "path": "/cursor/f_v3_plan_1_supabase.txt",
+      "role": "backend_supabase",
+      "interaction": "reference_generate",
+      "description": "Arhitectura backend Supabase: tabele, RPC, policies, storage."
+    },
+    {
+      "path": "/cursor/f_v3_plan_1_audit.txt",
+      "role": "audit_structure",
+      "interaction": "reference_apply",
+      "description": "Structura proiectului și audit-ul componentelor."
+    },
+    {
+      "path": "/agent.ts",
+      "role": "core_agent",
+      "interaction": "read_write",
+      "description": "Agentul principal pentru execuția prompt-urilor și gating."
+    },
+    {
+      "path": "/cursor/ruleset.yml",
+      "role": "ruleset",
+      "interaction": "read_only",
+      "description": "Regulile de proiect și configurația sistemului."
+    }
+  ],
+  "current_implementation": {
+    "status": "active_development",
+    "phase": "backend_infrastructure",
+    "completed": [
+      "supabase_schema",
+      "module_catalog",
+      "agent_core",
+      "environment_config"
+    ],
+    "next_steps": [
+      "database_migration",
+      "api_endpoints",
+      "ui_integration",
+      "testing_suite"
+    ]
+  },
+  "agent_rules": {
+    "can_modify": [
+      "/agent.ts",
+      "/lib/modules.ts",
+      "/lib/supabase/client.ts",
+      "/scripts/migrate.ts"
+    ],
+    "read_only": [
+      "/cursor/*",
+      "/supabase/migrations/*",
+      "/.env*"
+    ],
+    "protected": [
+      "/app/layout.tsx",
+      "/app/page.tsx",
+      "/components/ui/*"
+    ]
+  }
+}
