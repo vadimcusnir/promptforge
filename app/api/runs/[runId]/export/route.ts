@@ -5,8 +5,12 @@ import { requireAuth } from '@/lib/auth'
 import { validateOrgMembership } from '@/lib/auth'
 import { getEffectiveEntitlements } from '@/lib/entitlements'
 
-// Force dynamic rendering
+// Force dynamic rendering and prevent static generation
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
+export const fetchCache = 'force-no-store'
+export const runtime = 'nodejs'
+export const preferredRegion = 'auto'
 
 // Query schema
 const querySchema = z.object({

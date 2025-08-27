@@ -18,13 +18,8 @@ const nextConfig = {
   },
   // Force dynamic rendering for all pages to avoid useSearchParams issues
   output: 'standalone',
-  // Prevent static generation of API routes
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
-    // Disable static generation
-    isrMemoryCacheSize: 0,
-    workerThreads: false,
-    cpus: 1
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
