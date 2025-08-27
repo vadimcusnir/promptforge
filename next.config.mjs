@@ -20,7 +20,7 @@ const nextConfig = {
   output: 'standalone',
   // Prevent static generation of API routes
   experimental: {
-    ...nextConfig.experimental,
+    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
     // Disable static generation
     isrMemoryCacheSize: 0,
     workerThreads: false,
