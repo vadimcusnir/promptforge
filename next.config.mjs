@@ -18,9 +18,14 @@ const nextConfig = {
   },
   // Force dynamic rendering for all pages to avoid useSearchParams issues
   output: 'standalone',
-  // Completely disable static generation
-  trailingSlash: false,
-  generateStaticParams: () => [],
+  // Prevent static generation of API routes
+  experimental: {
+    ...nextConfig.experimental,
+    // Disable static generation
+    isrMemoryCacheSize: 0,
+    workerThreads: false,
+    cpus: 1
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
