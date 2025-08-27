@@ -16,6 +16,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
   },
+  // Force dynamic rendering for all pages to avoid useSearchParams issues
+  output: 'standalone',
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

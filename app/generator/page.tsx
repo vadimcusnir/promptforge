@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -59,7 +59,7 @@ interface GeneratedPrompt {
   }
 }
 
-export default function GeneratorPage() {
+function GeneratorPage() {
   const { hasEntitlement } = useEntitlements()
   const { toast } = useToast()
   const analytics = useAnalytics()
@@ -827,3 +827,20 @@ export default function GeneratorPage() {
     </div>
   )
 }
+
+function GeneratorPageWrapper() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          <p className="text-slate-400 mt-4">Loading generator...</p>
+        </div>
+      </div>
+    }>
+      <GeneratorPage />
+    </Suspense>
+  );
+}
+
+export default GeneratorPageWrapper;

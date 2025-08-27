@@ -5,6 +5,9 @@ import { requireAuth } from '@/lib/auth'
 import { validateOrgMembership } from '@/lib/auth'
 import { getEffectiveEntitlements } from '@/lib/entitlements'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // Query schema
 const querySchema = z.object({
   orgId: z.string().uuid(),
