@@ -35,8 +35,7 @@ coverage/
 *.md
 !README.md
 
-# Scripts
-scripts/
+# Testing
 tests/
 __tests__/
 
