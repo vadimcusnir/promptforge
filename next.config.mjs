@@ -18,8 +18,17 @@ const nextConfig = {
   },
   // Force dynamic rendering for all pages to avoid useSearchParams issues
   output: 'standalone',
-  experimental: {
-    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+  // Skip API routes during build to prevent static generation errors
+  async rewrites() {
+    if (process.env.NODE_ENV === 'production') {
+      return [
+        {
+          source: '/api/:path*',
+          destination: '/api/:path*',
+        },
+      ]
+    }
+    return []
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
