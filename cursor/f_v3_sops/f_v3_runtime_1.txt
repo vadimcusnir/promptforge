@@ -1087,7 +1087,7 @@ create table public.entitlements(
   source text not null,                           -- 'plan'|'addon'|'pack'|'license'
   meta jsonb,
   expires_at timestamptz,
-  primary key (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag)
+  primary key (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag)
 );
 
 -- INDUSTRY PACKS (catalog) & activări pe organizație

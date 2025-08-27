@@ -1,146 +1,176 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { requireAuth } from '@/lib/auth/server-auth'
+import { validateOrgMembership } from '@/lib/billing/entitlements'
+import { getEffectiveEntitlements } from '@/lib/billing/entitlements'
+import { ENTITLEMENT_ERROR_CODES } from '@/lib/entitlements/types'
 
-// Mock function to simulate prompt generation
-interface PromptParams {
-  domain?: string
-  scale?: string
-  urgency?: string
-  application?: string
-  complexity?: string
-  resources?: string
-}
+// Run request schema
+const runRequestSchema = z.object({
+  moduleId: z.string().min(1, 'Module ID is required'),
+  orgId: z.string().uuid('Valid organization ID required'),
+  parameters: z.record(z.any()).optional(),
+  options: z.object({
+    validateOnly: z.boolean().optional(),
+    dryRun: z.boolean().optional()
+  }).optional()
+})
 
-function generatePrompt(moduleId: string, params: PromptParams) {
-  const prompts = {
-    M01: `# Standard Operating Procedure Generator
-
-Based on your parameters:
-- Domain: ${params.domain || "Business"}
-- Scale: ${params.scale || "Team"}
-- Urgency: ${params.urgency || "Medium"}
-
-## Generated SOP Framework:
-
-1. **Objective Definition**
-   - Clear, measurable outcomes
-   - Success criteria alignment
-   - Stakeholder identification
-
-2. **Process Breakdown**
-   - Step-by-step workflow
-   - Decision points and escalation
-   - Quality checkpoints
-
-3. **Resource Allocation**
-   - Required tools and systems
-   - Personnel responsibilities
-   - Timeline and milestones
-
-4. **Monitoring & Optimization**
-   - KPI tracking mechanisms
-   - Feedback loops
-   - Continuous improvement protocols
-
-This SOP framework is designed for ${params.scale} implementation with ${params.urgency} priority level.`,
-
-    M10: `# Funnel Analysis & Optimization
-
-Configuration Applied:
-- Application: ${params.application || "Analysis"}
-- Complexity: ${params.complexity || "Moderate"}
-- Resources: ${params.resources || "Standard"}
-
-## Funnel Diagnostic Framework:
-
-### 1. Traffic Analysis
-- Source quality assessment
-- Conversion path mapping
-- Drop-off point identification
-
-### 2. User Experience Audit
-- Navigation flow optimization
-- Content relevance scoring
-- Technical performance review
-
-### 3. Conversion Optimization
-- A/B testing protocols
-- Messaging alignment
-- Call-to-action effectiveness
-
-### 4. Revenue Impact Projection
-- Conversion rate improvements
-- Customer lifetime value
-- ROI calculations
-
-Optimized for ${params.complexity} analysis with ${params.resources} resource allocation.`,
-  }
-
-  return (
-    prompts[moduleId as keyof typeof prompts] || `Generated prompt for module ${moduleId} with provided parameters.`
-  )
-}
-
-export async function POST(request: NextRequest, { params }: { params: { moduleId: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { moduleId: string } }
+) {
   try {
-    const { moduleId } = params
+    // Require authentication
+    const user = await requireAuth(request)
+    
+    // Parse request body
     const body = await request.json()
-
-    // In a real implementation, this would check user entitlements
-    // For now, we'll simulate Enterprise access
-    const userPlan = request.headers.get("x-user-plan") || "free"
-
-    if (userPlan !== "enterprise") {
-      return NextResponse.json({ error: "API access requires Enterprise plan" }, { status: 403 })
-    }
-
-    // Validate module ID
-    if (!moduleId.match(/^M\d{2}$/)) {
-      return NextResponse.json({ error: "Invalid module ID format" }, { status: 400 })
-    }
-
-    const startTime = Date.now()
-
-    // Generate the prompt
-    const promptText = generatePrompt(moduleId, body.params7D || {})
-
-    const endTime = Date.now()
-    const runId = `run_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-
-    // Simulate telemetry data
-    const telemetry = {
-      run_id: runId,
-      start_ts: new Date(startTime).toISOString(),
-      end_ts: new Date(endTime).toISOString(),
-      duration_ms: endTime - startTime,
-      tokens: promptText.length / 4, // Rough token estimate
-      cost: 0.002, // Mock cost
-      status: "success",
-    }
-
-    // Generate artifacts
-    const artifacts = {
-      txt: promptText,
-      md: `# Module ${moduleId} Output\n\n${promptText}`,
-      json: {
-        module_id: moduleId,
-        generated_at: new Date().toISOString(),
-        parameters: body.params7D,
-        content: promptText,
-        metadata: {
-          version: "3.0",
-          format: "structured",
+    const validation = runRequestSchema.safeParse(body)
+    
+    if (!validation.success) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Invalid request data', 
+          details: validation.error.errors 
         },
-      },
+        { status: 400 }
+      )
     }
 
+    const { orgId, parameters, options } = validation.data
+    const moduleId = params.moduleId
+    
+    // Validate organization membership
+    const isMember = await validateOrgMembership(user.id, orgId)
+    if (!isMember) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Access denied to organization',
+          code: 'ACCESS_DENIED'
+        },
+        { status: 403 }
+      )
+    }
+
+    // Get organization entitlements
+    const entitlements = await getEffectiveEntitlements(orgId)
+    
+    // Check if user can access modules
+    if (!entitlements.canAccessModule) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'ENTITLEMENT_REQUIRED', 
+          message: 'Module access requires Pilot plan or higher',
+          code: ENTITLEMENT_ERROR_CODES.ENTITLEMENT_REQUIRED,
+          requiredPlan: 'pilot',
+          currentPlan: 'pilot' // This would come from user's actual plan
+        },
+        { status: 403 }
+      )
+    }
+
+    // Check if user can access advanced modules (if applicable)
+    if (moduleId.startsWith('ADV_') && !entitlements.canAccessAdvancedModules) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'ENTITLEMENT_REQUIRED', 
+          message: 'Advanced modules require Pro plan or higher',
+          code: ENTITLEMENT_ERROR_CODES.ENTITLEMENT_REQUIRED,
+          requiredPlan: 'pro',
+          currentPlan: 'pilot' // This would come from user's actual plan
+        },
+        { status: 403 }
+      )
+    }
+
+    // Process the module execution
+    const result = await processModuleExecution(moduleId, parameters, options)
+    
     return NextResponse.json({
       success: true,
-      hash: `hash_${runId}`,
-      artifacts,
-      telemetry,
+      result: {
+        moduleId,
+        output: result.output,
+        executionTime: result.executionTime,
+        metadata: result.metadata
+      }
     })
+
   } catch (error) {
-    console.error("API Error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error('Module execution API error:', error)
+    
+    if (error instanceof Error && error.message.includes('Authentication required')) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid request parameters', details: error.errors },
+        { status: 400 }
+      )
+    }
+    
+    return NextResponse.json(
+      { success: false, error: 'Failed to execute module' },
+      { status: 500 }
+    )
   }
+}
+
+// Process module execution
+async function processModuleExecution(
+  moduleId: string,
+  parameters?: Record<string, unknown>,
+  options?: {
+    validateOnly?: boolean;
+    dryRun?: boolean;
+  }
+): Promise<{
+  output: string;
+  executionTime: number;
+  metadata: Record<string, unknown>;
+}> {
+  const startTime = Date.now()
+  
+  // Simulate module execution
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  
+  const executionTime = Date.now() - startTime
+  
+  // Generate mock output based on module ID
+  const output = generateMockOutput(moduleId, parameters)
+  
+  return {
+    output,
+    executionTime,
+    metadata: {
+      moduleId,
+      parameters: parameters || {},
+      options: options || {},
+      executedAt: new Date().toISOString()
+    }
+  }
+}
+
+// Generate mock output for development
+function generateMockOutput(moduleId: string, parameters?: Record<string, unknown>): string {
+  const baseOutput = `Module ${moduleId} executed successfully with parameters: ${JSON.stringify(parameters || {})}`
+  
+  if (moduleId.startsWith('M01')) {
+    return `Business Plan Generated:\n\n${baseOutput}\n\nThis is a simulated business plan output. In production, this would generate actual business plan content based on the provided parameters.`
+  } else if (moduleId.startsWith('M02')) {
+    return `Marketing Campaign Created:\n\n${baseOutput}\n\nThis is a simulated marketing campaign output. In production, this would create actual marketing strategies and content.`
+  } else if (moduleId.startsWith('ADV_')) {
+    return `Advanced Module Output:\n\n${baseOutput}\n\nThis is a simulated advanced module output. In production, this would provide sophisticated analysis and recommendations.`
+  }
+  
+  return baseOutput
 }

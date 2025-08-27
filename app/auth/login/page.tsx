@@ -31,7 +31,9 @@ export default function LoginPage() {
       if (formData.email && formData.password) {
         setSuccess("Login successful! Redirecting...")
         setTimeout(() => {
-          window.location.href = "/dashboard"
+          if (typeof window !== 'undefined') {
+            window.location.href = "/dashboard"
+          }
         }, 1500)
       } else {
         setError("Please fill in all fields")
@@ -54,7 +56,7 @@ export default function LoginPage() {
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        <Card className="bg-black/40 backdrop-blur-sm border border-gray-800/50 shadow-2xl">
+        <Card className="bg-black/40 backdrop-blur-sm border border-gray-800/50 shadow-md">
           <CardHeader className="text-center space-y-2">
             <CardTitle className="text-2xl font-bold text-white font-montserrat">Welcome Back</CardTitle>
             <p className="text-gray-400 font-open-sans">Sign in to your PromptForge account</p>
@@ -139,7 +141,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-gray-700"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-black/40 text-gray-400 font-open-sans">Don't have an account?</span>
+                <span className="px-2 bg-black/40 text-gray-400 font-open-sans">Don&apos;t have an account?</span>
               </div>
             </div>
 

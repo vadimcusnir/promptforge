@@ -431,7 +431,7 @@ create table if not exists public.entitlements (
   updated_at   timestamptz not null default now(),
   constraint ck_flag_not_empty check (length(trim(flag))>0),
   constraint ck_meta_is_object  check (meta is null or jsonb_typeof(meta)='object'),
-  unique (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+  unique (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag, source, coalesce(source_ref,''))
 );
 create index if not exists ent_org_idx     on public.entitlements(org_id);
 create index if not exists ent_user_idx    on public.entitlements(user_id);
@@ -811,7 +811,7 @@ create table if not exists public.entitlements (
   source entitlement_source not null, source_ref text,
   meta jsonb, expires_at timestamptz,
   created_at timestamptz default now(), updated_at timestamptz default now(),
-  unique (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+  unique (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag, source, coalesce(source_ref,''))
 );
 
 -- Funcția care aplică capsul planului în entitlements (chemată de webhook)
@@ -821,7 +821,7 @@ returns void language sql as $$
   select p_org, null, key, (p.flags ->> key)::boolean, 'plan', p_plan::text
   from public.plans p, jsonb_object_keys(p.flags) as key
   where p.code = p_plan
-  on conflict (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+  on conflict (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag, source, coalesce(source_ref,''))
   do update set value = excluded.value, updated_at = now();
 $$;
 

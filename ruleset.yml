@@ -1,0 +1,554 @@
+# PromptForge v3 Ruleset - Single Source of Truth
+version: "1.0.0"
+# Last Updated: 2024-12-19
+# Purpose: Centralized configuration for 7D Parameter Engine, validation, and entitlements
+
+schema_version: "2024.12.19"
+environment: "production"
+
+# Core 7D Parameter Engine Configuration
+sevenD:
+  # Domain enumeration - CORE 25 domains with fallbacks
+  domain:
+    enum_only: true
+    raise_on_invalid: true
+    fallback: "general"
+    values:
+      # Core Business Domains
+      - "business_strategy"
+      - "marketing"
+      - "sales"
+      - "customer_service"
+      - "product_development"
+      - "operations"
+      - "finance"
+      - "hr"
+      - "legal"
+      - "compliance"
+      
+      # Technical Domains
+      - "software_development"
+      - "data_science"
+      - "ai_ml"
+      - "cybersecurity"
+      - "devops"
+      - "cloud_computing"
+      - "blockchain"
+      - "iot"
+      
+      # Creative & Content
+      - "content_creation"
+      - "design"
+      - "copywriting"
+      - "translation"
+      - "education"
+      - "research"
+      - "general"
+  
+  # Scale enumeration - project scope and impact
+  scale:
+    enum_only: true
+    raise_on_invalid: true
+    fallback: "medium"
+    values:
+      - "micro"      # Single task, <1 day
+      - "small"      # Simple project, 1-3 days
+      - "medium"     # Standard project, 1-2 weeks
+      - "large"      # Complex project, 2-4 weeks
+      - "enterprise" # Multi-team, >1 month
+  
+  # Urgency enumeration - time sensitivity
+  urgency:
+    enum_only: true
+    raise_on_invalid: true
+    fallback: "normal"
+    values:
+      - "critical"   # Immediate, <1 hour
+      - "urgent"     # Same day
+      - "high"       # 1-2 days
+      - "normal"     # 3-7 days
+      - "low"        # >1 week
+  
+  # Complexity enumeration - technical difficulty
+  complexity:
+    enum_only: true
+    raise_on_invalid: true
+    fallback: "moderate"
+    values:
+      - "trivial"    # Basic task, no expertise needed
+      - "simple"     # Standard procedure
+      - "moderate"   # Some expertise required
+      - "complex"    # Advanced knowledge needed
+      - "expert"     # Specialist-level complexity
+  
+  # Resources enumeration - available tools and access
+  resources:
+    enum_only: true
+    raise_on_invalid: true
+    fallback: "standard"
+    values:
+      - "minimal"    # Basic tools only
+      - "limited"    # Some specialized tools
+      - "standard"   # Full tool suite
+      - "advanced"   # Premium tools + APIs
+      - "enterprise" # Full enterprise stack
+  
+  # Application enumeration - use case context
+  application:
+    enum_only: true
+    raise_on_invalid: true
+    fallback: "general"
+    values:
+      - "personal"   # Individual use
+      - "team"       # Small team collaboration
+      - "department" # Cross-functional team
+      - "organization" # Company-wide
+      - "external"   # Client/customer facing
+  
+  # Output format enumeration - deliverable type
+  output_format:
+    enum_only: true
+    raise_on_invalid: true
+    fallback: "text"
+    values:
+      - "text"       # Plain text output
+      - "markdown"   # Formatted markdown
+      - "json"       # Structured data
+      - "csv"        # Tabular data
+      - "xml"        # Structured markup
+      - "yaml"       # Configuration format
+      - "code"       # Executable code
+      - "documentation" # Technical docs
+
+# Prompt Standard Configuration
+prompt_standard:
+  # Minimum requirements for prompt generation
+  min_length: 10
+  max_length: 10000
+  required_fields: ["domain", "scale", "urgency", "complexity", "resources", "application", "output_format"]
+  
+  # Validation rules
+  validation:
+    strict_mode: true
+    allow_unknown_fields: false
+    validate_enum_values: true
+
+# Test and Score Engine Configuration
+test_and_score:
+  # Score thresholds and gating
+  score_gate: 80
+  max_score: 100
+  
+  # Scoring rubric with weights
+  rubric:
+    clarity:
+      weight: 25
+      description: "Prompt clarity and understandability"
+      criteria:
+        - "Clear instructions"
+        - "Unambiguous language"
+        - "Logical structure"
+    
+    execution:
+      weight: 25
+      description: "Ability to execute the task"
+      criteria:
+        - "Actionable steps"
+        - "Complete information"
+        - "Proper context"
+    
+    ambiguity_inverse:
+      weight: 20
+      description: "Minimization of ambiguity"
+      criteria:
+        - "Specific requirements"
+        - "Clear constraints"
+        - "Defined boundaries"
+    
+    business_fit:
+      weight: 20
+      description: "Alignment with business objectives"
+      criteria:
+        - "Goal alignment"
+        - "Value delivery"
+        - "ROI consideration"
+    
+    pragmatism:
+      weight: 10
+      description: "Practical feasibility"
+      criteria:
+        - "Resource availability"
+        - "Time constraints"
+        - "Technical feasibility"
+  
+  # Score calculation
+  calculation:
+    algorithm: "weighted_average"
+    rounding: "nearest_integer"
+    minimum_passing: 80
+
+# Definition of Ready (DoR) - Criteria before prompt processing
+definition_of_ready:
+  required:
+    - "All 7D parameters defined"
+    - "Score threshold met (≥80)"
+    - "Valid domain enumeration"
+    - "Resource availability confirmed"
+    - "Output format specified"
+  
+  optional:
+    - "Additional context"
+    - "Reference materials"
+    - "Success criteria"
+    - "Quality metrics"
+  
+  validation:
+    strict: true
+    auto_reject: true
+    require_approval: false
+
+# Definition of Done (DoD) - Criteria for prompt completion
+definition_of_done:
+  required:
+    - "Score ≥80 achieved"
+    - "All export formats generated"
+    - "Manifest file created"
+    - "Checksum verification passed"
+    - "Telemetry data saved"
+    - "Quality gates passed"
+  
+  optional:
+    - "User feedback collected"
+    - "Performance metrics recorded"
+    - "Optimization suggestions"
+  
+  validation:
+    strict: true
+    auto_approve: false
+    require_verification: true
+
+# Export Configuration - Standardized bundle structure
+export:
+  # Bundle structure and order
+  bundle_structure:
+    order:
+      - "prompt.txt"
+      - "prompt.md"
+      - "prompt.json"
+      - "prompt.pdf"
+      - "manifest.json"
+      - "checksum.sha256"
+  
+  # File specifications
+  files:
+    prompt_txt:
+      format: "plain_text"
+      encoding: "utf-8"
+      required: true
+    
+    prompt_md:
+      format: "markdown"
+      encoding: "utf-8"
+      required: true
+    
+    prompt_json:
+      format: "json"
+      encoding: "utf-8"
+      required: true
+      schema: "prompt_schema_v1"
+    
+    prompt_pdf:
+      format: "pdf"
+      required: false
+      entitlements: ["pro", "enterprise"]
+    
+    manifest_json:
+      format: "json"
+      encoding: "utf-8"
+      required: true
+      schema: "manifest_schema_v1"
+    
+    checksum_sha256:
+      format: "sha256"
+      encoding: "hex"
+      required: true
+      algorithm: "sha256"
+  
+  # Manifest schema
+  manifest_schema:
+    version: "1.0.0"
+    required_fields:
+      - "prompt_id"
+      - "created_at"
+      - "seven_d_params"
+      - "score"
+      - "export_format"
+      - "checksum"
+      - "license"
+      - "telemetry_id"
+  
+  # Checksum verification
+  checksum:
+    algorithm: "sha256"
+    verify_on_export: true
+    verify_on_import: true
+    fail_on_mismatch: true
+
+# Entitlements Configuration - Plan-based access control
+entitlements:
+  # Plan definitions
+  plans:
+    free:
+      name: "Free"
+      max_prompts_per_month: 10
+      export_formats: ["txt", "md", "json"]
+      features:
+        - "basic_prompt_generation"
+        - "score_calculation"
+        - "limited_export"
+      restrictions:
+        - "no_pdf_export"
+        - "no_bundle_export"
+        - "no_api_access"
+    
+    creator:
+      name: "Creator"
+      max_prompts_per_month: 100
+      export_formats: ["txt", "md", "json", "pdf"]
+      features:
+        - "advanced_prompt_generation"
+        - "full_score_analysis"
+        - "pdf_export"
+        - "basic_analytics"
+      restrictions:
+        - "no_bundle_export"
+        - "no_api_access"
+    
+    pro:
+      name: "Pro"
+      max_prompts_per_month: 1000
+      export_formats: ["txt", "md", "json", "pdf", "bundle"]
+      features:
+        - "enterprise_prompt_generation"
+        - "advanced_analytics"
+        - "bundle_export"
+        - "api_access"
+        - "priority_support"
+      restrictions:
+        - "no_enterprise_features"
+    
+    enterprise:
+      name: "Enterprise"
+      max_prompts_per_month: -1  # Unlimited
+      export_formats: ["txt", "md", "json", "pdf", "bundle", "custom"]
+      features:
+        - "unlimited_prompts"
+        - "custom_export_formats"
+        - "advanced_api_access"
+        - "dedicated_support"
+        - "custom_integrations"
+        - "white_label"
+      restrictions: []
+  
+  # Feature flags
+  features:
+    canExportPDF:
+      plans: ["creator", "pro", "enterprise"]
+      default: false
+    
+    canExportJSON:
+      plans: ["free", "creator", "pro", "enterprise"]
+      default: true
+    
+    canExportBundleZip:
+      plans: ["pro", "enterprise"]
+      default: false
+    
+    canUseGptTestReal:
+      plans: ["pro", "enterprise"]
+      default: false
+    
+    canUseAPI:
+      plans: ["pro", "enterprise"]
+      default: false
+
+# Telemetry Configuration - Data collection and privacy
+telemetry:
+  # Data collection scope
+  collection:
+    enabled: true
+    anonymize: true
+    retention_days: 90
+  
+  # Collected metrics
+  metrics:
+    - "prompt_generation_count"
+    - "score_distribution"
+    - "export_format_usage"
+    - "domain_distribution"
+    - "performance_metrics"
+    - "error_rates"
+  
+  # Privacy compliance
+  privacy:
+    gdpr_compliant: true
+    pii_filtering: true
+    data_encryption: true
+    user_consent_required: true
+  
+  # Storage and retention
+  storage:
+    database: "supabase"
+    backup_frequency: "daily"
+    encryption_at_rest: true
+    access_logging: true
+
+# License Configuration - Plan-based licensing
+license:
+  # License types per plan
+  plan_licenses:
+    free:
+      type: "MIT"
+      commercial_use: false
+      redistribution: false
+      modification: false
+    
+    creator:
+      type: "Creator License"
+      commercial_use: true
+      redistribution: false
+      modification: true
+    
+    pro:
+      type: "Pro License"
+      commercial_use: true
+      redistribution: true
+      modification: true
+      attribution_required: true
+    
+    enterprise:
+      type: "Enterprise License"
+      commercial_use: true
+      redistribution: true
+      modification: true
+      attribution_required: false
+      custom_terms: true
+  
+  # License validation
+  validation:
+    enforce_plan_limits: true
+    check_expiration: true
+    validate_usage_rights: true
+    fail_on_invalid: true
+
+# Security Configuration
+security:
+  # Authentication and authorization
+  auth:
+    required: true
+    session_timeout: 3600  # 1 hour
+    max_login_attempts: 5
+    lockout_duration: 900  # 15 minutes
+  
+  # Rate limiting
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 60
+    burst_limit: 100
+  
+  # Input validation
+  input_validation:
+    sanitize_html: true
+    max_input_size: 1048576  # 1MB
+    block_sql_injection: true
+    block_xss: true
+
+# Monitoring and Alerting
+monitoring:
+  # Health checks
+  health_checks:
+    enabled: true
+    interval_seconds: 30
+    timeout_seconds: 10
+  
+  # Alerting thresholds
+  alerts:
+    score_below_threshold:
+      enabled: true
+      threshold: 80
+      notification: "email"
+    
+    export_failure:
+      enabled: true
+      notification: "email"
+    
+    system_error:
+      enabled: true
+      notification: "email"
+      threshold: 5  # errors per minute
+
+# Compliance and Audit
+compliance:
+  # Audit logging
+  audit:
+    enabled: true
+    log_all_actions: true
+    retention_years: 7
+  
+  # Data protection
+  data_protection:
+    encryption_in_transit: true
+    encryption_at_rest: true
+    key_rotation_days: 90
+  
+  # Regulatory compliance
+  regulatory:
+    gdpr: true
+    ccpa: true
+    sox: false  # If applicable
+    hipaa: false  # If applicable
+
+# Performance Configuration
+performance:
+  # Caching
+  caching:
+    enabled: true
+    ttl_seconds: 3600
+    max_size_mb: 100
+  
+  # Database optimization
+  database:
+    connection_pool_size: 10
+    query_timeout_seconds: 30
+    enable_query_logging: false
+  
+  # Export optimization
+  export:
+    parallel_processing: true
+    max_concurrent_exports: 5
+    timeout_seconds: 300  # 5 minutes
+
+# Development and Testing
+development:
+  # Environment-specific overrides
+  environments:
+    development:
+      score_gate: 60
+      strict_validation: false
+      debug_mode: true
+    
+    staging:
+      score_gate: 75
+      strict_validation: true
+      debug_mode: false
+    
+    production:
+      score_gate: 80
+      strict_validation: true
+      debug_mode: false
+  
+  # Testing configuration
+  testing:
+    mock_external_services: true
+    test_data_retention: false
+    performance_testing: true

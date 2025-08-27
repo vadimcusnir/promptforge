@@ -2,8 +2,9 @@ import Link from "next/link"
 
 export function Footer() {
   const legalLinks = [
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms", href: "/terms" },
+    { name: "Legal Center", href: "/legal" },
+    { name: "Privacy Policy", href: "/legal/privacy" },
+    { name: "Terms of Use", href: "/legal/terms" },
     { name: "Contact", href: "/contact" },
   ]
 

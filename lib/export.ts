@@ -28,7 +28,8 @@ export function canExportFormat(format: string, plan: string): boolean {
 export function exportPrompt(
   promptRun: PromptRun, 
   options: ExportOptions,
-  plan: string
+  plan: string,
+  isTrialUser: boolean = false
 ): ExportResult {
   if (!canExportFormat(options.format, plan)) {
     return {
@@ -62,7 +63,7 @@ export function exportPrompt(
       case 'pdf':
         // For PDF, we'd typically use a library like jsPDF
         // For now, return HTML content that can be converted
-        content = generateHtmlExport(promptRun, options)
+        content = generateHtmlExport(promptRun, options, isTrialUser)
         filename += '.html'
         break
       
@@ -202,7 +203,7 @@ function generateJsonExport(promptRun: PromptRun, options: ExportOptions): strin
   return JSON.stringify(exportData, null, 2)
 }
 
-function generateHtmlExport(promptRun: PromptRun, options: ExportOptions): string {
+function generateHtmlExport(promptRun: PromptRun, options: ExportOptions, isTrialUser: boolean = false): string {
   let content = `<!DOCTYPE html>
 <html>
 <head>
@@ -214,9 +215,11 @@ function generateHtmlExport(promptRun: PromptRun, options: ExportOptions): strin
     .scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
     .score-card { background: #d1a954; color: white; padding: 20px; border-radius: 8px; text-align: center; }
     .prompt { background: #f9f9f9; padding: 20px; border-radius: 8px; white-space: pre-wrap; font-family: monospace; }
+    .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 48px; color: rgba(209, 169, 84, 0.3); pointer-events: none; z-index: 1000; font-weight: bold; }
   </style>
 </head>
 <body>
+  ${isTrialUser ? '<div class="watermark">TRIAL — Not for Redistribution</div>' : ''}
   <div class="header">
     <h1>Prompt Forge Export</h1>
     <p><strong>Generated:</strong> ${new Date(promptRun.timestamp).toLocaleString()}</p>

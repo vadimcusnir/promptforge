@@ -1,12 +1,25 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Zap, Settings, Download, Check, ArrowUpRight } from "lucide-react"
 import LiveGenerationDemo from "@/components/home/LiveGenerationDemo"
+import { useAnalytics } from "@/hooks/use-analytics"
 
 export default function HomePage() {
+  const analytics = useAnalytics()
+
+  const handleStartForgeClick = () => {
+    analytics.landingCtaClick('start_forge', 'hero_primary')
+  }
+
+  const handleViewDemoClick = () => {
+    analytics.landingCtaClick('view_demo', 'hero_secondary')
+  }
+  
   return (
-    <div className="min-h-screen pattern-bg text-white">
+    <div id="main-content" className="min-h-screen text-white relative z-10">
       {/* Hero Section */}
       <section className="relative py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -27,11 +40,22 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6">
+            <Button 
+              size="lg" 
+              className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6" 
+              ariaLabel="Start using PromptForge generator"
+              onClick={handleStartForgeClick}
+            >
               Start the Forge
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-zinc-700 text-lg px-8 py-6 bg-transparent">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-zinc-700 text-lg px-8 py-6 bg-transparent" 
+              ariaLabel="View a live demonstration"
+              onClick={handleViewDemoClick}
+            >
               View Demo
             </Button>
           </div>
@@ -65,7 +89,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="glass-card">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
                 <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
                   <Settings className="w-6 h-6 text-yellow-500" />
@@ -77,7 +101,7 @@ export default function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="glass-card">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
                 <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
                   <Zap className="w-6 h-6 text-yellow-500" />
@@ -89,7 +113,7 @@ export default function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="glass-card">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
                 <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
                   <Download className="w-6 h-6 text-yellow-500" />
@@ -129,7 +153,10 @@ export default function HomePage() {
             ].map((module) => (
               <Card
                 key={module.id}
-                className="glass-card hover:border-yellow-600/50 transition-colors cursor-pointer group"
+                className="bg-zinc-900/80 border border-zinc-700 hover:border-yellow-600/50 transition-colors cursor-pointer group"
+                role="button"
+                tabIndex={0}
+                aria-label={`${module.name} module - ${module.vector} vector`}
               >
                 <CardContent className="p-4">
                   <div className="text-yellow-500 font-mono text-sm mb-1">{module.id}</div>
@@ -143,7 +170,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center">
-            <Button variant="outline" className="border-zinc-700 bg-transparent">
+            <Button variant="outline" className="border-zinc-700 bg-transparent" ariaLabel="View all 50 industrial modules">
               View All 50 Modules
               <ArrowUpRight className="ml-2 w-4 h-4" />
             </Button>
@@ -161,7 +188,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Pilot Plan */}
-            <Card className="glass-card">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
                 <CardTitle className="font-serif">Pilot</CardTitle>
                 <CardDescription className="text-zinc-500">Perfect for getting started</CardDescription>
@@ -186,14 +213,19 @@ export default function HomePage() {
                     <span className="text-sm">Community support</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-transparent" variant="outline">
+                <Button 
+                  className="w-full bg-transparent" 
+                  variant="outline" 
+                  ariaLabel="Start free pilot plan"
+                  onClick={() => analytics.landingCtaClick('start_free_plan', 'pricing_free')}
+                >
                   Start Free
                 </Button>
               </CardContent>
             </Card>
 
             {/* Pro Plan */}
-            <Card className="glass-card border-yellow-600 relative">
+            <Card className="bg-zinc-900/80 border border-yellow-600 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <Badge className="bg-yellow-600 text-white">Most Popular</Badge>
               </div>
@@ -227,12 +259,18 @@ export default function HomePage() {
                     <span className="text-sm">Advanced Evaluator</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-yellow-600 hover:bg-yellow-700">Start Pro Trial</Button>
+                <Button 
+                  className="w-full bg-yellow-600 hover:bg-yellow-700" 
+                  ariaLabel="Start Pro plan trial"
+                  onClick={() => analytics.landingCtaClick('start_pro_trial', 'pricing_pro')}
+                >
+                  Start Pro Trial
+                </Button>
               </CardContent>
             </Card>
 
             {/* Enterprise Plan */}
-            <Card className="glass-card">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
                 <CardTitle className="font-serif">Enterprise</CardTitle>
                 <CardDescription className="text-zinc-500">For organizations at scale</CardDescription>

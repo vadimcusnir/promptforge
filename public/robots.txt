@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /cursor/
+Disallow: /supabase/
+Disallow: /db/
+Disallow: /scripts/
+Disallow: /tests/
+Disallow: /node_modules/
+Disallow: /.env*
+
+# Sitemap
+Sitemap: https://promptforge.ai/sitemap.xml 

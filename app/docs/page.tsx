@@ -1,16 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Book, Code, Zap, ArrowRight, Search } from "lucide-react"
+import { Search, Code, Book, ArrowRight } from "lucide-react"
 import Link from "next/link"
+
+// Force dynamic rendering to prevent build issues
+export const dynamic = 'force-dynamic'
 
 export default function DocsPage() {
   const sections = [
     {
       title: "Getting Started",
-      description: "Learn the basics of PromptForge and create your first prompt",
-      icon: Zap,
+      description: "Learn the basics and get up and running efficiently",
+      icon: Book,
       articles: [
-        "Quick Start Guide",
+        "Essential Start Guide",
         "Understanding the 7D Parameter Engine",
         "Your First Prompt Generation",
         "Module Selection Guide",
@@ -31,12 +34,12 @@ export default function DocsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-white">
+    <div className="min-h-screen text-white relative z-10">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4 font-montserrat">Documentation</h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-open-sans">
+          <h1 className="text-4xl font-bold text-white mb-4 font-serif">Documentation</h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Everything you need to master PromptForge and build better prompts
           </p>
         </div>
@@ -48,7 +51,7 @@ export default function DocsPage() {
             <input
               type="text"
               placeholder="Search documentation..."
-              className="w-full pl-12 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-gold-400 focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-yellow-500 focus:outline-none focus:ring-yellow-500/20"
             />
           </div>
         </div>
@@ -58,13 +61,13 @@ export default function DocsPage() {
           {sections.map((section, index) => {
             const Icon = section.icon
             return (
-              <Card key={index} className="bg-gray-900/30 border-gray-800 hover:border-gold-400/30 transition-colors">
+              <Card key={index} className="bg-zinc-900/80 border border-zinc-700 hover:border-yellow-500/30 transition-colors">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-gold-400 font-montserrat">
+                  <CardTitle className="flex items-center gap-3 text-yellow-500">
                     <Icon className="w-6 h-6" />
                     {section.title}
                   </CardTitle>
-                  <p className="text-gray-400 font-open-sans">{section.description}</p>
+                  <p className="text-gray-400">{section.description}</p>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -72,7 +75,7 @@ export default function DocsPage() {
                       <li key={articleIndex}>
                         <Link
                           href={`/docs/${article.toLowerCase().replace(/\s+/g, "-")}`}
-                          className="text-gray-300 hover:text-gold-400 transition-colors flex items-center gap-2 font-open-sans"
+                          className="text-gray-300 hover:text-yellow-500 transition-colors flex items-center gap-2"
                         >
                           <ArrowRight className="w-3 h-3" />
                           {article}
@@ -86,14 +89,14 @@ export default function DocsPage() {
           })}
         </div>
 
-        {/* Quick Links */}
-        <div className="bg-gray-900/20 border border-gray-800 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-4 font-montserrat">Need Help?</h2>
-          <p className="text-gray-400 mb-6 font-open-sans">
-            Can't find what you're looking for? Our support team is here to help.
+        {/* Essential Links */}
+        <div className="bg-zinc-900/80 border border-zinc-700 p-8 rounded-lg text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">Need Help?</h2>
+          <p className="text-gray-400 mb-6">
+            Can&apos;t find what you&apos;re looking for? Our support team is here to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gold-400 hover:bg-gold-500 text-black font-semibold">
+            <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
               <Link href="/contact">Contact Support</Link>
             </Button>
             <Button

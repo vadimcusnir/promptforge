@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -72,7 +72,14 @@ export function ExportModal({ promptRun, userPlan, trigger }: ExportModalProps) 
   const [isExporting, setIsExporting] = useState(false)
   const { toast } = useToast()
 
-  const handleExport = async () => {
+  const handleExport = async (formats: Array<{
+    id: string;
+    name: string;
+    description: string;
+    icon: any;
+    plans: string[];
+    color: string;
+  }>) => {
     if (!canExportFormat(selectedFormat, userPlan)) {
       toast({
         title: "Export Not Available",
@@ -108,6 +115,15 @@ export function ExportModal({ promptRun, userPlan, trigger }: ExportModalProps) 
     } finally {
       setIsExporting(false)
     }
+  }
+
+  const handleFormatChange = (format: {
+    format: string;
+    label: string;
+    description: string;
+    requiresPlan: string;
+  }, checked: boolean) => {
+
   }
 
   const canExport = canExportFormat(selectedFormat, userPlan)
@@ -251,21 +267,11 @@ export function ExportModal({ promptRun, userPlan, trigger }: ExportModalProps) 
               Cancel
             </Button>
             <Button
-              onClick={handleExport}
-              disabled={!canExport || isExporting}
-              className="bg-yellow-600 hover:bg-yellow-700"
+              onClick={() => handleExport(exportFormats)}
+              disabled={isExporting}
+              className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
             >
-              {isExporting ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                  Exporting...
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4 mr-2" />
-                  Export {selectedFormat.toUpperCase()}
-                </>
-              )}
+              Export Selected Formats
             </Button>
           </div>
         </div>

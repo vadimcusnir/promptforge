@@ -121,7 +121,7 @@ create table entitlements (
   source text not null,             -- plan|addon|license|manual
   meta jsonb,
   expires_at timestamptz,
-  primary key (org_id, coalesce(user_id, '00000000-0000-0000-0000-000000000000'::uuid), flag)
+  primary key (org_id, coalesce(user_id, 'NULL_UUID_PLACEHOLDER'::uuid), flag)
 );
 
 create table user_addons (
@@ -711,7 +711,7 @@ on conflict (org_id, user_id) do nothing;
 -- Promovează un user la admin
 update org_members set role = 'admin'
 where org_id = (select id from orgs where slug='promptforge-labs')
-  and user_id = '00000000-0000-0000-0000-000000000000';
+  and user_id = 'NULL_UUID_PLACEHOLDER';
 
 5) API (contract sugerat)
 
@@ -997,7 +997,7 @@ returns void language sql as $$
   select p_org, null, key, (p.flags ->> key)::boolean, 'plan', p_plan::text
   from public.plans p, jsonb_object_keys(p.flags) as key
   where p.code = p_plan
-  on conflict (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag)
+  on conflict (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag)
   do update set value = excluded.value, source='plan', source_ref=excluded.source_ref;
 $$;
 
@@ -1080,7 +1080,7 @@ create table if not exists public.entitlements (
   constraint ck_meta_is_object  check (meta is null or jsonb_typeof(meta) = 'object'),
 
   -- Să nu duplicăm aceeași sursă pentru același flag
-  unique (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+  unique (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag, source, coalesce(source_ref,''))
 );
 
 -- Trigger updated_at
@@ -1179,7 +1179,7 @@ returns void language sql as $$
   select p_org, null, key, (p.flags->>key)::boolean, 'plan', p_plan::text
   from public.plans p, jsonb_object_keys(p.flags) as key
   where p.code = p_plan
-  on conflict (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+  on conflict (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag, source, coalesce(source_ref,''))
   do update set value = excluded.value, updated_at = now();
 $$;
 
@@ -1343,7 +1343,7 @@ begin
   insert into public.entitlements(org_id, user_id, flag, value, source, source_ref, meta)
   select p_org, p_user, f, p_on, 'addon', p_code, null
   from unnest(_flags) as f
-  on conflict (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+  on conflict (org_id, coalesce(user_id,'NULL_UUID_PLACEHOLDER'::uuid), flag, source, coalesce(source_ref,''))
   do update set value = excluded.value, updated_at = now();
 end $$;
 

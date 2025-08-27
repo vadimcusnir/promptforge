@@ -1,162 +1,175 @@
-"use client"
+'use client';
 
-import type React from "react"
-
-import { useState } from "react"
-import Link from "next/link"
-import { Eye, EyeOff, Mail, Lock, AlertCircle, CheckCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/hooks/use-auth';
+import { Loader2, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  const { login } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/dashboard';
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setSuccess("")
-    setIsLoading(true)
-
-    // Basic validation
-    if (!formData.email || !formData.password) {
-      setError("Please fill in all fields")
-      setIsLoading(false)
-      return
-    }
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
 
     try {
-      // Simulate login process
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      setSuccess("Login successful! Redirecting to dashboard...")
-
-      // Redirect after 2 seconds
-      setTimeout(() => {
-        window.location.href = "/dashboard"
-      }, 2000)
+      const success = await login(email, password);
+      if (success) {
+        router.push(redirectTo);
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
     } catch (err) {
-      setError("Invalid email or password")
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Login error:', err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,215,0,0.15) 1px, transparent 0)`,
-            backgroundSize: "20px 20px",
-          }}
-        />
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
-        {/* Error Banner */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
-            <p className="text-red-200 text-sm">{error}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className="w-full max-w-md">
+        {/* Logo/Brand */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-2xl mb-4">
+            <Lock className="w-8 h-8 text-white" />
           </div>
-        )}
+          <h1 className="text-3xl font-bold text-white mb-2">PromptForge</h1>
+          <p className="text-slate-400">Sign in to your account</p>
+        </div>
 
-        {/* Success Banner */}
-        {success && (
-          <div className="mb-6 p-4 bg-green-900/20 border border-green-500/30 rounded-lg flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-            <p className="text-green-200 text-sm">{success}</p>
-          </div>
-        )}
-
-        <Card className="bg-black/40 backdrop-blur-sm border-gray-700/50 shadow-2xl">
+        {/* Login Form */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 shadow-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-montserrat text-white">Welcome Back</CardTitle>
-            <CardDescription className="text-gray-400">Sign in to your PromptForge account</CardDescription>
+            <CardTitle className="text-2xl text-white">Welcome Back</CardTitle>
+            <CardDescription className="text-slate-300">
+              Enter your credentials to access your dashboard
+            </CardDescription>
           </CardHeader>
+          
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email Field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-300 font-medium">
+                <Label htmlFor="email" className="text-white">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                   <Input
                     id="email"
                     type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="pl-10 bg-gray-900/50 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-yellow-400/20"
                     placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/20 focus:border-amber-500"
                     required
                   />
                 </div>
               </div>
 
+              {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-300 font-medium">
+                <Label htmlFor="password" className="text-white">
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                   <Input
                     id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="pl-10 pr-10 bg-gray-900/50 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-yellow-400/20"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 pr-10 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/20 focus:border-amber-500"
                     required
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10 text-slate-400"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-400 transition-colors"
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
                 </div>
               </div>
 
+              {/* Error Display */}
+              {error && (
+                <Alert variant="destructive" className="bg-red-500/20 border-red-500/30">
+                  <AlertDescription className="text-red-200">{error}</AlertDescription>
+                </Alert>
+              )}
+
+              {/* Submit Button */}
               <Button
                 type="submit"
+                className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold py-3"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-500 hover:to-amber-600 font-medium py-3 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
               </Button>
-            </form>
 
-            <div className="mt-6 text-center">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-700" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-black/40 text-gray-400">Don't have an account?</span>
-                </div>
+              {/* Additional Links */}
+              <div className="text-center space-y-2">
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-slate-400 hover:text-amber-400 p-0 h-auto"
+                  onClick={() => router.push('/signup')}
+                >
+                  Don't have an account? Sign up
+                </Button>
+                <br />
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-slate-400 hover:text-amber-400 p-0 h-auto"
+                  onClick={() => router.push('/forgot-password')}
+                >
+                  Forgot your password?
+                </Button>
               </div>
-              <Link
-                href="/signup"
-                className="mt-4 inline-block text-yellow-400 hover:text-yellow-300 font-medium transition-colors"
-              >
-                Create your account
-              </Link>
-            </div>
+            </form>
           </CardContent>
         </Card>
+
+        {/* Footer */}
+        <div className="text-center mt-8">
+          <p className="text-slate-500 text-sm">
+            © 2024 PromptForge. All rights reserved.
+          </p>
+        </div>
       </div>
     </div>
-  )
+  );
 }

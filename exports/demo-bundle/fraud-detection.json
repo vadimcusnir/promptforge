@@ -1,0 +1,13 @@
+{
+  "module": "M02",
+  "domain": "fintech",
+  "title": "AI-Powered Fraud Detection System",
+  "description": "Demo fraud detection system for payment processing",
+  "features": [
+    "Real-time monitoring",
+    "ML models",
+    "Alert system"
+  ],
+  "demo": true,
+  "generated_at": "2025-08-26T20:15:54.355Z"
+}

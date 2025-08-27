@@ -10,7 +10,7 @@ export default function ThankYouPage() {
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md">
-          <Card className="bg-black/40 backdrop-blur-sm border-gray-800/50 shadow-2xl">
+          <Card className="bg-black/40 backdrop-blur-sm border-gray-800/50 shadow-md">
             <CardHeader className="text-center space-y-4">
               <div className="flex justify-center">
                 <CheckCircle className="w-16 h-16 text-green-500" />

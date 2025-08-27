@@ -1,13 +1,12 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { User, Mail, AlertCircle, Loader2 } from "lucide-react"
+import { User, Mail, AlertCircle, Loader2, CheckCircle } from "lucide-react"
 
 export default function ComingSoonPage() {
   const [formData, setFormData] = useState({
@@ -72,16 +71,19 @@ export default function ComingSoonPage() {
 
   return (
     <div className="min-h-screen bg-[#0e0e0e] relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.05)_1px,transparent_0)] bg-[length:20px_20px]" />
+      {/* Fixed two-layer background */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.05)_1px,transparent_0)] bg-[length:20px_20px]" />
+      <div className="fixed inset-0 bg-gradient-to-br from-[#0e0e0e] via-[#1a1a1a] to-[#0e0e0e]" />
 
+      {/* Animated grid elements */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-500/30 rounded-full animate-pulse" />
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-500/30 rounded-full " />
         <div
           className="absolute top-1/3 right-1/3 w-1 h-1 bg-yellow-400/40 rounded-full animate-ping"
           style={{ animationDelay: "1s" }}
         />
         <div
-          className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-yellow-300/30 rounded-full animate-pulse"
+          className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-yellow-300/30 rounded-full "
           style={{ animationDelay: "2s" }}
         />
         <div
@@ -92,10 +94,10 @@ export default function ComingSoonPage() {
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md">
-          <Card className="bg-black/40 backdrop-blur-sm border-gray-800/50 shadow-2xl">
+          <Card className="bg-black/40 backdrop-blur-sm border-gray-800/50 shadow-md border border-yellow-500/20">
             <CardHeader className="text-center space-y-4">
               <CardTitle className="text-3xl font-bold text-white font-serif">
-                We're forging something powerful.
+                We&apos;re forging something powerful.
               </CardTitle>
               <p className="text-gray-400 font-sans">Join the waitlist to be among the first</p>
             </CardHeader>
@@ -158,10 +160,28 @@ export default function ComingSoonPage() {
                       Joining Waitlist...
                     </>
                   ) : (
-                    "Join Waitlist"
+                    "Join the Waitlist"
                   )}
                 </Button>
               </form>
+
+              {/* Proof Bar */}
+              <div className="pt-6 border-t border-gray-800/50">
+                <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    TTA &lt; 60s
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    Score ≥ 80
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    Export .md/.json/.pdf
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

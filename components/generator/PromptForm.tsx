@@ -1,246 +1,134 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { FormField, FormData, parseInputSchema, validateFormData, formatFormData } from "@/utils/parseInputSchema"
-import { ModuleDefinition } from "@/lib/modules"
-import { AlertCircle, CheckCircle, Info } from "lucide-react"
+import { CheckCircle, XCircle, AlertCircle } from "lucide-react"
 
 interface PromptFormProps {
-  module: ModuleDefinition
-  onSubmit: (data: FormData) => void
+  module: string
+  onSubmit?: (prompt: string) => void
   isSubmitting?: boolean
 }
 
 export function PromptForm({ module, onSubmit, isSubmitting = false }: PromptFormProps) {
-  const [formData, setFormData] = useState<FormData>({})
+  const [prompt, setPrompt] = useState("")
   const [errors, setErrors] = useState<string[]>([])
-  const [touched, setTouched] = useState<Set<string>>(new Set())
+  const [generatedPrompt, setGeneratedPrompt] = useState("")
+  const [score, setScore] = useState(0)
+  const [verdict, setVerdict] = useState<"pass" | "fail">("fail")
+  const [showResults, setShowResults] = useState(false)
 
-  const fields = parseInputSchema(module)
-
-  const handleInputChange = (fieldId: string, value: any) => {
-    setFormData(prev => ({ ...prev, [fieldId]: value }))
-    
-    // Mark field as touched
-    setTouched(prev => new Set(prev).add(fieldId))
-    
-    // Clear errors for this field
-    if (errors.length > 0) {
-      setErrors([])
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Validate form data
-    const validation = validateFormData(formData, fields)
-    
-    if (!validation.isValid) {
-      setErrors(validation.errors)
+    if (!prompt.trim()) {
+      setErrors(['Please enter a prompt'])
       return
     }
-    
-    // Format and submit data
-    const formattedData = formatFormData(formData, fields)
-    onSubmit(formattedData)
-  }
 
-  const renderField = (field: FormField) => {
-    const value = formData[field.id] || ""
-    const hasError = errors.some(error => error.includes(field.label))
-    const isTouched = touched.has(field.id)
+    try {
+      // Mock API call for now since we're in coming-soon mode
+      const mockResponse = {
+        data: {
+          output: `Generated prompt for module ${module}:\n\n${prompt}\n\nThis is a mock response while the site is in coming-soon mode.`,
+          score: 85,
+          verdict: "pass" as const
+        }
+      }
 
-    switch (field.type) {
-      case "select":
-        return (
-          <Select value={value} onValueChange={(val) => handleInputChange(field.id, val)}>
-            <SelectTrigger className={`bg-black/50 border-gray-700 ${hasError ? 'border-red-500' : ''}`}>
-              <SelectValue placeholder={field.placeholder} />
-            </SelectTrigger>
-            <SelectContent>
-              {field.options?.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
-      case "array":
-        return (
-          <Input
-            type="text"
-            value={value}
-            onChange={(e) => handleInputChange(field.id, e.target.value)}
-            placeholder={field.placeholder}
-            className={`bg-black/50 border-gray-700 ${hasError ? 'border-red-500' : ''}`}
-          />
-        )
+      setGeneratedPrompt(mockResponse.data.output)
+      setScore(mockResponse.data.score)
+      setVerdict(mockResponse.data.verdict)
+      setShowResults(true)
+      setErrors([])
 
-      case "object":
-        return (
-          <Textarea
-            value={value}
-            onChange={(e) => handleInputChange(field.id, e.target.value)}
-            placeholder={field.placeholder}
-            className={`bg-black/50 border-gray-700 min-h-[80px] ${hasError ? 'border-red-500' : ''}`}
-          />
-        )
-
-      case "number":
-        return (
-          <Input
-            type="number"
-            value={value}
-            onChange={(e) => handleInputChange(field.id, e.target.value)}
-            placeholder={field.placeholder}
-            className={`bg-black/50 border-gray-700 ${hasError ? 'border-red-500' : ''}`}
-          />
-        )
-
-      default: // string
-        return (
-          <Input
-            type="text"
-            value={value}
-            onChange={(e) => handleInputChange(field.id, e.target.value)}
-            placeholder={field.placeholder}
-            className={`bg-black/50 border-gray-700 ${hasError ? 'border-red-500' : ''}`}
-          />
-        )
+      if (onSubmit) {
+        onSubmit(prompt)
+      }
+    } catch (error) {
+      setErrors(['An error occurred while generating the prompt'])
     }
   }
 
   return (
-    <Card className="glass-card">
-      <CardHeader>
-        <CardTitle className="font-serif flex items-center gap-2">
-          <Info className="w-5 h-5 text-yellow-400" />
-          Module Configuration
-        </CardTitle>
-        <CardDescription>
-          Configure {module.name} parameters for prompt generation
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Module Info */}
-          <div className="bg-black/30 border border-gray-700 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-lg">{module.name}</h3>
-              <Badge variant="outline" className="text-yellow-400">
-                {module.vectors.join(", ")}
-              </Badge>
-            </div>
-            <p className="text-sm text-gray-400 mb-3">{module.description}</p>
-            <div className="grid grid-cols-3 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500">Difficulty:</span>
-                <div className="flex gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((level) => (
-                    <div
-                      key={level}
-                      className={`w-3 h-3 rounded-full ${
-                        level <= module.difficulty ? 'bg-yellow-400' : 'bg-gray-600'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div>
-                <span className="text-gray-500">Tokens:</span>
-                <div className="font-medium">{module.estimated_tokens.toLocaleString()}</div>
-              </div>
-              <div>
-                <span className="text-gray-500">Plan:</span>
-                <Badge variant="secondary" className="ml-2">
-                  {module.requires_plan === 'pilot' ? 'Creator+' : 
-                   module.requires_plan === 'pro' ? 'Pro+' : 'Enterprise'}
-                </Badge>
-              </div>
-            </div>
-          </div>
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="prompt" className="text-white">
+            Enter your prompt
+          </Label>
+          <Textarea
+            id="prompt"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="Describe what you want to generate..."
+            className="min-h-32 bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-yellow-500 focus:ring-yellow-500/20"
+            required
+          />
+        </div>
 
-          {/* Form Fields */}
-          <div className="space-y-4">
-            {fields.map((field) => (
-              <div key={field.id} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor={field.id} className="text-sm font-medium">
-                    {field.label}
-                    {field.required && <span className="text-red-400 ml-1">*</span>}
-                  </Label>
-                  {field.validation && (
-                    <Badge variant="outline" className="text-xs text-gray-400">
-                      {field.validation}
-                    </Badge>
-                  )}
-                </div>
-                
-                {renderField(field)}
-                
-                {field.description && (
-                  <p className="text-xs text-gray-500">{field.description}</p>
-                )}
-                
-                {field.example && (
-                  <p className="text-xs text-gray-600">
-                    Example: <code className="bg-gray-800 px-1 rounded">{field.example}</code>
-                  </p>
-                )}
+        {errors.length > 0 && (
+          <div className="space-y-2">
+            {errors.map((error, index) => (
+              <div key={index} className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <AlertCircle className="w-4 h-4 text-red-400" />
+                <span className="text-red-400 text-sm">{error}</span>
               </div>
             ))}
           </div>
+        )}
 
-          {/* Validation Errors */}
-          {errors.length > 0 && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                <ul className="list-disc list-inside space-y-1">
-                  {errors.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              </AlertDescription>
-            </Alert>
-          )}
+        <Button
+          type="submit"
+          disabled={isSubmitting || !prompt.trim()}
+          className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
+        >
+          {isSubmitting ? "Generating..." : "Generate Prompt"}
+        </Button>
+      </form>
 
-          {/* Submit Button */}
-          <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-            <div className="text-sm text-gray-400">
-              {fields.filter(f => f.required).length} required fields
+      {showResults && (
+        <Card className="glass-card">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-white">Generated Prompt</CardTitle>
+              <div className="flex items-center gap-2">
+                <Badge variant={verdict === "pass" ? "default" : "destructive"}>
+                  {verdict === "pass" ? "PASS" : "FAIL"}
+                </Badge>
+                <Badge variant="outline">Score: {score}</Badge>
+              </div>
             </div>
-            <Button
-              type="submit"
-              disabled={isSubmitting || fields.filter(f => f.required).some(f => !formData[f.id])}
-              className="bg-yellow-600 hover:bg-yellow-700"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Generate Prompt
-                </>
-              )}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                {verdict === "pass" ? (
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                ) : (
+                  <XCircle className="w-5 h-5 text-red-500" />
+                )}
+                <span className="text-gray-300">
+                  {verdict === "pass" 
+                    ? "Prompt meets quality standards" 
+                    : "Prompt needs improvement"
+                  }
+                </span>
+              </div>
+              <div className="bg-gray-900/50 p-4 rounded-lg">
+                <pre className="text-white whitespace-pre-wrap text-sm">{generatedPrompt}</pre>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   )
 }

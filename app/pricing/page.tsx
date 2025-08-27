@@ -1,35 +1,64 @@
+"use client"
+
+import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Check, X } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Check, X, Globe, User, CreditCard, TrendingUp, Zap, Crown, Star } from "lucide-react"
+import { useStripeCheckout } from "@/hooks/use-stripe-checkout"
+import { useAuth } from "@/hooks/use-auth"
+import { useAnalytics } from "@/hooks/use-analytics"
+import { useABTesting } from "@/hooks/use-ab-testing"
+import { useLocalization } from "@/hooks/use-localization"
+import { monitoringService, trackBusinessEvent, trackMetric } from "@/lib/monitoring"
+
+// Performance optimizations will be added in the component
+
+interface PlanFeature {
+  name: string
+  included: boolean
+}
+
+interface Plan {
+  id: string
+  name: string
+  price_monthly: number
+  price_annual: number
+  description: string
+  features: PlanFeature[]
+  cta: string
+  popular: boolean
+}
 
 export default function PricingPage() {
-  const plans = [
+  const [isAnnual, setIsAnnual] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
+  
+  // Hooks
+  const { createCheckoutSession, isLoading: isCheckoutLoading } = useStripeCheckout()
+  const { user, isLoading: isAuthLoading, login, logout } = useAuth()
+  const analytics = useAnalytics()
+  const { currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA, trackVariantConversion } = useABTesting()
+  const { currentLocale, changeLocale, t, getFeatures, getCurrencySymbol } = useLocalization()
+
+  // Track pricing page view
+  useEffect(() => {
+    analytics.pricingView('pricing_page')
+  }, [analytics])
+
+  // Plans with A/B testing integration
+  const plans: Plan[] = [
     {
+      id: "free",
       name: "Free",
-      price: "$0",
-      period: "forever",
+      price_monthly: 0,
+      price_annual: 0,
       description: "Perfect for getting started",
       features: [
         { name: "Modules M01, M10, M18", included: true },
-        { name: "Export txt", included: true },
-        { name: "Local history", included: true },
-        { name: "Community support", included: true },
-        { name: "Export md", included: false },
-        { name: "Live Test Engine", included: false },
-        { name: "Cloud history", included: false },
-        { name: "API access", included: false },
-      ],
-      cta: "Start Free",
-      popular: false,
-    },
-    {
-      name: "Creator",
-      price: "$19",
-      period: "month",
-      description: "For content creators and solopreneurs",
-      features: [
-        { name: "All modules", included: true },
         { name: "Export txt, md", included: true },
         { name: "Local history", included: true },
         { name: "Community support", included: true },
@@ -38,170 +67,465 @@ export default function PricingPage() {
         { name: "Cloud history", included: false },
         { name: "API access", included: false },
       ],
-      cta: "Start Creator",
+      cta: "Start Free",
       popular: false,
     },
     {
+      id: "creator",
+      name: "Creator",
+      price_monthly: currentVariant ? (getVariantPricing("creator", false) || 19) : 19,
+      price_annual: currentVariant ? (getVariantPricing("creator", true) || 190) : 190,
+      description: "For content creators and solopreneurs",
+      features: currentVariant 
+        ? getVariantFeatures("creator").map(f => ({ name: f, included: true }))
+        : [
+            { name: "All modules (M01-M40)", included: true },
+            { name: "Export txt, md, pdf", included: true },
+            { name: "Local history", included: true },
+            { name: "Community support", included: true },
+            { name: "Export json", included: false },
+            { name: "Live Test Engine", included: false },
+            { name: "Cloud history", included: false },
+            { name: "API access", included: false },
+          ],
+      cta: currentVariant ? getVariantCTA("creator") : "Start Creator",
+      popular: false,
+    },
+    {
+      id: "pro",
       name: "Pro",
-      price: "$49",
-      period: "month",
+      price_monthly: currentVariant ? (getVariantPricing("pro", false) || 49) : 49,
+      price_annual: currentVariant ? (getVariantPricing("pro", true) || 490) : 490,
       description: "For professionals and teams",
-      features: [
-        { name: "All modules", included: true },
-        { name: "Export pdf, json", included: true },
-        { name: "Live Test Engine", included: true },
-        { name: "Cloud history", included: true },
-        { name: "Evaluator", included: true },
-        { name: "Priority support", included: true },
-        { name: "API access", included: false },
-        { name: "White-label", included: false },
-      ],
-      cta: "Start Pro Trial",
+      features: currentVariant 
+        ? getVariantFeatures("pro").map(f => ({ name: f, included: true }))
+        : [
+            { name: "All modules (M01-M50)", included: true },
+            { name: "Export txt, md, pdf, json", included: true },
+            { name: "Live Test Engine", included: true },
+            { name: "Cloud history", included: true },
+            { name: "Advanced analytics", included: true },
+            { name: "Priority support", included: true },
+            { name: "API access", included: false },
+            { name: "White-label", included: false },
+          ],
+      cta: currentVariant ? getVariantCTA("pro") : "Start Pro Trial",
       popular: true,
     },
     {
+      id: "enterprise",
       name: "Enterprise",
-      price: "$299",
-      period: "month",
+      price_monthly: currentVariant ? (getVariantPricing("enterprise", false) || 299) : 299,
+      price_annual: currentVariant ? (getVariantPricing("enterprise", true) || 2990) : 2990,
       description: "For organizations at scale",
-      features: [
-        { name: "Everything in Pro", included: true },
-        { name: "API access", included: true },
-        { name: "Bundle.zip exports", included: true },
-        { name: "White-label options", included: true },
-        { name: "5 seats included", included: true },
-        { name: "Custom integrations", included: true },
-        { name: "Dedicated support", included: true },
-        { name: "SLA guarantee", included: true },
-      ],
-      cta: "Contact Sales",
+      features: currentVariant 
+        ? getVariantFeatures("enterprise").map(f => ({ name: f, included: true }))
+        : [
+            { name: "Everything in Pro", included: true },
+            { name: "API access", included: true },
+            { name: "Bundle.zip exports", included: true },
+            { name: "White-label options", included: true },
+            { name: "5 seats included", included: true },
+            { name: "Custom integrations", included: true },
+            { name: "Dedicated support", included: true },
+            { name: "SLA guarantee", included: true },
+          ],
+      cta: currentVariant ? getVariantCTA("enterprise") : "Contact Sales",
       popular: false,
     },
   ]
 
+  // Performance optimizations
+  const memoizedPlans = useMemo(() => plans, [currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA])
+  const memoizedFeatures = useMemo(() => getFeatures("creator"), [])
+  const memoizedCurrencySymbol = useMemo(() => getCurrencySymbol(), [])
+  
+  // Memoized callbacks for better performance
+  const handleCheckout = useCallback(async (planId: string) => {
+    if (planId === "free") return
+    
+    analytics.checkoutStart(planId, isAnnual, user?.id)
+    
+    if (currentVariant) {
+      trackVariantConversion(currentVariant.id, "pricing_v1", planId, isAnnual)
+    }
+
+    if (!user) {
+      setShowLoginModal(true)
+      return
+    }
+
+    // Track business event for monitoring
+    trackBusinessEvent('checkout_start', { planId, isAnnual, userId: user.id })
+    
+    // Track performance metric
+    const startTime = performance.now()
+    
+    try {
+      await createCheckoutSession({
+        planId,
+        isAnnual,
+        userId: user.id,
+      })
+      
+      // Track successful checkout completion time
+      const completionTime = performance.now() - startTime
+      trackMetric('checkout_completion_time', completionTime)
+      
+      // Track successful conversion
+      trackBusinessEvent('checkout_complete', { 
+        planId, 
+        isAnnual, 
+        userId: user.id,
+        completionTime 
+      })
+      
+    } catch (error) {
+      // Track checkout errors
+      trackBusinessEvent('checkout_error', { 
+        planId, 
+        isAnnual, 
+        userId: user.id,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      })
+      throw error
+    }
+  }, [analytics, currentVariant, trackVariantConversion, user, isAnnual, createCheckoutSession])
+
+  const handlePlanClick = useCallback((planId: string, position: number) => {
+    analytics.planClick(planId, isAnnual, position)
+    
+    // Track business event for monitoring
+    trackBusinessEvent('plan_click', { 
+      planId, 
+      isAnnual, 
+      position,
+      userId: user?.id 
+    })
+  }, [analytics, isAnnual, user?.id])
+
+  const handleToggleBilling = useCallback(() => {
+    setIsAnnual(!isAnnual)
+    analytics.toggleBilling(!isAnnual)
+    
+    // Track business event for monitoring
+    trackBusinessEvent('billing_toggle', { 
+      newValue: !isAnnual,
+      userId: user?.id 
+    })
+  }, [isAnnual, analytics, user?.id])
+
+  // Initialize monitoring service
+  useEffect(() => {
+    monitoringService.initialize()
+  }, [])
+
+  // Analytics tracking
+  useEffect(() => {
+    analytics.planView("pricing_overview", isAnnual)
+    
+    // Track business event for monitoring
+    trackBusinessEvent('plan_view', { 
+      viewType: "pricing_overview", 
+      isAnnual,
+      userId: user?.id 
+    })
+  }, [isAnnual, analytics, user?.id])
+
+  // Functions are now memoized above
+
+  const getPrice = (plan: Plan): string => {
+    if (plan.price_monthly === 0) return `${memoizedCurrencySymbol}0`
+    const price = isAnnual ? plan.price_annual : plan.price_monthly
+    return `${memoizedCurrencySymbol}${price}`
+  }
+
+  const getPeriod = (plan: Plan): string => {
+    if (plan.price_monthly === 0) return "forever"
+    return isAnnual ? "year" : "month"
+  }
+
+  const getSavings = (plan: Plan): number | null => {
+    if (plan.price_monthly === 0 || !isAnnual) return null
+    const monthlyTotal = plan.price_monthly * 12
+    const annualPrice = plan.price_annual
+    const savings = monthlyTotal - annualPrice
+    const savingsPercent = Math.round((savings / monthlyTotal) * 100)
+    return savingsPercent
+  }
+
   return (
     <div className="min-h-screen pattern-bg text-white">
+      {/* Header with language selector and user status */}
+      <div className="absolute top-4 right-4 flex items-center gap-4 z-10">
+        {/* Language Selector */}
+        <div className="relative group">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-2 text-gray-300 hover:text-white"
+            onClick={() => setShowLoginModal(false)}
+          >
+            <Globe className="w-4 h-4" />
+            {currentLocale.toUpperCase()}
+          </Button>
+          <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+            {["en", "ro", "es", "fr", "de"].map((locale) => (
+              <button
+                key={locale}
+                className={`block w-full px-4 py-2 text-left hover:bg-gray-700 rounded-lg ${
+                  currentLocale === locale ? "text-yellow-400" : "text-gray-300"
+                }`}
+                onClick={() => changeLocale(locale as any)}
+              >
+                {locale === "en" && "English"}
+                {locale === "ro" && "Română"}
+                {locale === "es" && "Español"}
+                {locale === "fr" && "Français"}
+                {locale === "de" && "Deutsch"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* User Status */}
+        {user ? (
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4 text-green-400" />
+            <span className="text-sm text-gray-300">{user.email}</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={logout}
+              className="text-gray-400 hover:text-white"
+            >
+              Logout
+            </Button>
+          </div>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowLoginModal(true)}
+            className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+          >
+            Login
+          </Button>
+        )}
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold font-serif mb-4">Choose Your Plan</h1>
-          <p className="text-xl text-gray-400 mb-8">Scale from pilot to enterprise with clear upgrade paths</p>
+          <h1 className="text-4xl font-bold font-serif mb-4">{t("pricing.title")}</h1>
+          <p className="text-xl text-gray-400 mb-8">{t("pricing.subtitle")}</p>
 
           <div className="flex items-center justify-center gap-4 mb-8">
-            <span className="text-gray-400">Monthly</span>
+            <span className={`${!isAnnual ? 'text-white' : 'text-gray-400'}`}>
+              {t("pricing.monthly")}
+            </span>
             <div className="relative">
-              <input type="checkbox" className="sr-only" />
-              <div className="w-12 h-6 bg-gray-700 rounded-full cursor-pointer"></div>
-              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform"></div>
+              <input 
+                type="checkbox" 
+                className="sr-only" 
+                checked={isAnnual}
+                onChange={(e) => handleToggleBilling()}
+              />
+              <div className={`w-12 h-6 rounded-full cursor-pointer transition-colors ${
+                isAnnual ? 'bg-yellow-600' : 'bg-gray-700'
+              }`}></div>
+              <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                isAnnual ? 'translate-x-7' : 'translate-x-1'
+              }`}></div>
             </div>
-            <span className="text-white">Annual</span>
-            <Badge className="bg-yellow-600 text-black">Save 20%</Badge>
+            <span className={`${isAnnual ? 'text-white' : 'text-gray-400'}`}>
+              {t("pricing.annual")}
+            </span>
+            {isAnnual && (
+              <Badge className="bg-yellow-600 text-black">{t("pricing.save")}</Badge>
+            )}
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {plans.map((plan) => (
-            <Card
-              key={plan.name}
-              className={`glass-card relative ${plan.popular ? "border-yellow-400 scale-105" : ""}`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-yellow-600 text-black">Most Popular</Badge>
+          {plans.map((plan, index) => {
+            const savings = getSavings(plan)
+            return (
+              <Card
+                key={plan.id}
+                className={`bg-zinc-900/80 border border-zinc-700 relative ${plan.popular ? "border-yellow-400 scale-105" : ""}`}
+                onClick={() => handlePlanClick(plan.id, index + 1)}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-yellow-600 text-black">{t("pricing.mostPopular")}</Badge>
+                  </div>
+                )}
+
+                {savings && (
+                  <div className="absolute -top-3 right-4">
+                    <Badge className="bg-green-600 text-white">Save {savings}%</Badge>
+                  </div>
+                )}
+
+                <CardHeader className="text-center">
+                  <CardTitle className="font-serif text-2xl">{plan.name}</CardTitle>
+                  <CardDescription className="text-gray-400">{plan.description}</CardDescription>
+                  <div className="mt-4">
+                    <span className="text-4xl font-bold font-serif">{getPrice(plan)}</span>
+                                      <span className="text-gray-400">/{getPeriod(plan)}</span>
                 </div>
-              )}
+                {isAnnual && plan.price_monthly > 0 && (
+                  <p className="text-sm text-gray-500 mt-2">
+                    {memoizedCurrencySymbol}{plan.price_monthly}/month when billed monthly
+                  </p>
+                )}
+                </CardHeader>
 
-              <CardHeader className="text-center">
-                <CardTitle className="font-serif text-2xl">{plan.name}</CardTitle>
-                <CardDescription className="text-gray-400">{plan.description}</CardDescription>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold font-serif">{plan.price}</span>
-                  <span className="text-gray-400">/{plan.period}</span>
-                </div>
-              </CardHeader>
+                <CardContent className="space-y-6">
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li 
+                        key={featureIndex} 
+                        className="flex items-center gap-3"
+                        onMouseEnter={() => analytics.featureHover(feature.name, plan.id)}
+                      >
+                        {feature.included ? (
+                          <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+                        ) : (
+                          <X className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                        )}
+                        <span className={`text-sm ${feature.included ? "text-white" : "text-gray-500"}`}>
+                          {feature.name}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
 
-              <CardContent className="space-y-6">
-                <ul className="space-y-3">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-3">
-                      {feature.included ? (
-                        <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                      ) : (
-                        <X className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                      )}
-                      <span className={`text-sm ${feature.included ? "text-white" : "text-gray-500"}`}>
-                        {feature.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  className={`w-full ${
-                    plan.popular
-                      ? "bg-yellow-600 hover:bg-yellow-700 text-black"
-                      : "bg-transparent border border-gray-700 hover:border-yellow-400"
-                  }`}
-                >
-                  {plan.cta}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                  <Button
+                    className={`w-full ${
+                      plan.popular
+                        ? "bg-yellow-600 hover:bg-yellow-700 text-black"
+                        : "bg-transparent border border-gray-700 hover:border-yellow-400"
+                    }`}
+                    onClick={() => handleCheckout(plan.id)}
+                    disabled={isCheckoutLoading}
+                  >
+                    {isCheckoutLoading ? (
+                      <div className="flex items-center gap-2">
+                        <CreditCard className="w-4 h-4 " />
+                        Processing...
+                      </div>
+                    ) : (
+                      plan.cta
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
 
         <div className="mt-16 text-center">
-          <h2 className="text-2xl font-bold font-serif mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-bold font-serif mb-8">{t("pricing.faq.title")}</h2>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <Card className="glass-card text-left">
+            <Card 
+              className="bg-zinc-900/80 border border-zinc-700 text-left"
+              onMouseEnter={() => analytics.faqView(t("pricing.faq.freePlan"))}
+            >
               <CardHeader>
-                <CardTitle className="font-serif text-lg">What's included in the free plan?</CardTitle>
+                <CardTitle className="font-serif text-lg">{t("pricing.faq.freePlan")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">
-                  The free plan includes access to 3 core modules (M01, M10, M18), basic text exports, and local history
-                  storage. Perfect for trying out the platform.
-                </p>
+                <p className="text-gray-400">{t("pricing.faq.freePlanAnswer")}</p>
               </CardContent>
             </Card>
 
-            <Card className="glass-card text-left">
+            <Card 
+              className="bg-zinc-900/80 border border-zinc-700 text-left"
+              onMouseEnter={() => analytics.faqView(t("pricing.faq.upgradeDowngrade"))}
+            >
               <CardHeader>
-                <CardTitle className="font-serif text-lg">Can I upgrade or downgrade anytime?</CardTitle>
+                <CardTitle className="font-serif text-lg">{t("pricing.faq.upgradeDowngrade")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">
-                  Yes, you can change your plan at any time. Upgrades take effect immediately, while downgrades take
-                  effect at the next billing cycle.
-                </p>
+                <p className="text-gray-400">{t("pricing.faq.upgradeDowngradeAnswer")}</p>
               </CardContent>
             </Card>
 
-            <Card className="glass-card text-left">
+            <Card 
+              className="bg-zinc-900/80 border border-zinc-700 text-left"
+              onMouseEnter={() => analytics.faqView(t("pricing.faq.testing"))}
+            >
               <CardHeader>
-                <CardTitle className="font-serif text-lg">
-                  What's the difference between simulated and live testing?
-                </CardTitle>
+                <CardTitle className="font-serif text-lg">{t("pricing.faq.testing")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">
-                  Simulated testing uses our internal algorithms to score prompts. Live testing uses actual GPT models
-                  for more accurate evaluation (Pro+ only).
-                </p>
+                <p className="text-gray-400">{t("pricing.faq.testingAnswer")}</p>
               </CardContent>
             </Card>
 
-            <Card className="glass-card text-left">
+            <Card 
+              className="bg-zinc-900/80 border border-zinc-700 text-left"
+              onMouseEnter={() => analytics.faqView(t("pricing.faq.enterprise"))}
+            >
               <CardHeader>
-                <CardTitle className="font-serif text-lg">Do you offer enterprise discounts?</CardTitle>
+                <CardTitle className="font-serif text-lg">{t("pricing.faq.enterprise")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">
-                  Yes, we offer volume discounts for teams of 10+ users and custom pricing for large organizations.
-                  Contact our sales team for details.
-                </p>
+                <p className="text-gray-400">{t("pricing.faq.enterpriseAnswer")}</p>
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Legal Links */}
+        <div className="mt-16 text-center">
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
+              <Link href="/legal" className="hover:text-gold-400 transition-colors">
+                Legal Center
+              </Link>
+              <Link href="/legal/privacy" className="hover:text-gold-400 transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/legal/terms" className="hover:text-gold-400 transition-colors">
+                Terms of Use
+              </Link>
+              <a href="mailto:legal@promptforge.com" className="hover:text-gold-400 transition-colors">
+                legal@promptforge.com
+              </a>
+            </div>
+            <p className="text-xs text-gray-500 mt-4">
+              All exports include appropriate license notices and watermarks based on your plan
+            </p>
+          </div>
+        </div>
+
+        {/* A/B Testing Indicator (Development only) */}
+        {process.env.NODE_ENV === "development" && currentVariant && (
+          <div className="mt-8 text-center">
+            <Badge variant="outline" className="border-yellow-400 text-yellow-400">
+              A/B Test: {currentVariant.name} (ID: {currentVariant.id})
+            </Badge>
+          </div>
+        )}
+      </div>
+
+      {/* Sticky CTA Bar for Mobile */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 p-4 z-50 md:hidden">
+        <div className="flex items-center justify-between max-w-4xl mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 bg-yellow-400 rounded-full "></div>
+            <span className="text-white font-medium">
+              Start Pro – {getPrice(plans.find(p => p.id === 'pro')!)}
+            </span>
+          </div>
+          <Button 
+            onClick={() => handlePlanClick('pro', 2)}
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6"
+          >
+            Start Now
+          </Button>
         </div>
       </div>
     </div>

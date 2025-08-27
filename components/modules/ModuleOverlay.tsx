@@ -6,10 +6,21 @@ import { X, ArrowRight, Lock, Zap, Target, Settings, FileText, BarChart3, Shield
 
 interface Module {
   id: string
+  module_code: string
   name: string
-  vector: string
   description: string
-  locked: boolean
+  category: string
+  domain_slug: string
+  complexity: string
+  estimated_time_minutes: number
+  tags: string[]
+  template_prompt: string
+  example_output: string
+  best_practices: string[]
+  domain_info?: {
+    name: string
+    industry: string
+  }
   fullDescription?: string
   purpose?: string
   inputSchema?: string
@@ -73,11 +84,10 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className="font-mono text-lg text-yellow-400">{module.id}</span>
+                <span className="font-mono text-lg text-yellow-400">{module.module_code}</span>
                 <Badge variant="outline" className="border-yellow-400/50 text-yellow-400">
-                  V{Math.floor(Math.random() * 7) + 1} • {module.vector}
+                  {module.complexity} • {module.domain_slug}
                 </Badge>
-                {module.locked && <Lock className="w-5 h-5 text-gray-400" />}
               </div>
               <CardTitle className="text-2xl font-serif text-white">{module.name}</CardTitle>
             </div>
@@ -182,23 +192,13 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
 
           {/* Action Buttons */}
           <div className="flex gap-4 pt-4 border-t border-gray-700">
-            {module.locked ? (
-              <Button
-                onClick={handleUpgrade}
-                className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
-              >
-                <Lock className="w-4 h-4 mr-2" />
-                Upgrade to unlock this module
-              </Button>
-            ) : (
-              <Button
-                onClick={handleUseInGenerator}
-                className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
-              >
-                Use in Generator
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            )}
+            <Button
+              onClick={handleUseInGenerator}
+              className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
+            >
+              Use in Generator
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
             <Button
               variant="outline"
               onClick={onClose}

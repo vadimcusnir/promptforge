@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-08-27T00:27:20.075Z",
+  "summary": {
+    "totalFiles": 65,
+    "glassTokensReduced": "6 → 2 per file",
+    "performanceImpact": {}
+  },
+  "recommendations": [
+    "Replace glass-card with bg-zinc-900/80 border border-zinc-700",
+    "Remove animate-pulse where not essential",
+    "Limit backdrop-blur effects to critical UI elements",
+    "Use simple shadows instead of complex glow effects"
+  ],
+  "metrics": {
+    "withGlass": {
+      "loadTime": 0,
+      "domContentLoaded": 0.09999999403953552,
+      "firstPaint": 480,
+      "firstContentfulPaint": 480,
+      "largestContentfulPaint": 0,
+      "cumulativeLayoutShift": 0,
+      "memoryUsage": {
+        "usedJSHeapSize": 49626726,
+        "totalJSHeapSize": 64262474,
+        "jsHeapSizeLimit": "512MB"
+      },
+      "cpuUsage": 0
+    },
+    "withoutGlass": {
+      "loadTime": 0,
+      "domContentLoaded": 0,
+      "firstPaint": 208,
+      "firstContentfulPaint": 208,
+      "largestContentfulPaint": 0,
+      "cumulativeLayoutShift": 0,
+      "memoryUsage": {
+        "usedJSHeapSize": 49632713,
+        "totalJSHeapSize": 65047573,
+        "jsHeapSizeLimit": "512MB"
+      },
+      "cpuUsage": 0
+    },
+    "improvements": {}
+  }
+}

@@ -33,7 +33,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Glitch Background Pattern */}
       <div className="absolute inset-0 opacity-10">
-        <svg width="100%" height="100%" className="animate-pulse">
+        <svg width="100%" height="100%" className="">
           <defs>
             <pattern id="glitch" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
               <rect width="2" height="100" fill="#FFD700" opacity="0.1" />
@@ -48,7 +48,7 @@ export default function NotFound() {
 
       {/* Pulsar in corner */}
       <div className="absolute top-8 right-8">
-        <div className="w-4 h-4 bg-gold-400 rounded-full animate-pulse">
+        <div className="w-4 h-4 bg-gold-400 rounded-full ">
           <div className="absolute inset-0 bg-gold-400 rounded-full animate-ping opacity-75" />
         </div>
       </div>
@@ -59,16 +59,16 @@ export default function NotFound() {
           <defs>
             <mask id="disintegrate">
               <rect width="200" height="200" fill="white" />
-              <circle cx="50" cy="50" r="5" fill="black" className="animate-pulse" />
+              <circle cx="50" cy="50" r="5" fill="black" className="" />
               <circle
                 cx="150"
                 cy="80"
                 r="3"
                 fill="black"
-                className="animate-pulse"
+                className=""
                 style={{ animationDelay: "0.5s" }}
               />
-              <circle cx="100" cy="150" r="4" fill="black" className="animate-pulse" style={{ animationDelay: "1s" }} />
+              <circle cx="100" cy="150" r="4" fill="black" className="" style={{ animationDelay: "1s" }} />
             </mask>
           </defs>
           <rect width="200" height="200" fill="#FFD700" mask="url(#disintegrate)" opacity="0.3" />
@@ -83,7 +83,7 @@ export default function NotFound() {
             <h1 className="text-6xl md:text-8xl font-bold font-montserrat text-white mb-4 relative">
               <span className="relative inline-block">
                 <span
-                  className="absolute inset-0 text-red-500 animate-pulse"
+                  className="absolute inset-0 text-red-500 "
                   style={{
                     clipPath: "polygon(0 0, 100% 0, 100% 45%, 0 45%)",
                     transform: "translateX(-2px)",
@@ -92,7 +92,7 @@ export default function NotFound() {
                   RITUAL FAILED
                 </span>
                 <span
-                  className="absolute inset-0 text-blue-500 animate-pulse"
+                  className="absolute inset-0 text-blue-500 "
                   style={{
                     clipPath: "polygon(0 55%, 100% 55%, 100% 100%, 0 100%)",
                     transform: "translateX(2px)",
@@ -118,7 +118,7 @@ export default function NotFound() {
           <div className="space-y-4 mb-8">
             <Link
               href="/generator"
-              className="inline-flex items-center px-8 py-4 bg-gold-400 text-black font-bold text-lg rounded-lg hover:bg-gold-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-gold-400/25"
+              className="inline-flex items-center px-8 py-4 bg-gold-400 text-black font-bold text-lg rounded-lg hover:bg-gold-300 transition-all duration-300 transform hover:scale-105"
             >
               <Home className="w-6 h-6 mr-3" />
               Return to Generator
@@ -151,8 +151,8 @@ export default function NotFound() {
       {/* Fractured Code Animation */}
       <div className="absolute bottom-0 left-0 right-0 h-32 overflow-hidden opacity-20">
         <div className="absolute inset-0 bg-gradient-to-t from-gold-400/10 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gold-400 animate-pulse" />
-        <div className="absolute bottom-2 left-0 right-0 text-xs font-mono text-gold-400/50 text-center animate-pulse">
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gold-400" />
+        <div className="absolute bottom-2 left-0 right-0 text-xs font-mono text-gold-400/50 text-center">
           {"> SYSTEM.FORGE.REBUILD() // INITIALIZING..."}
         </div>
       </div>

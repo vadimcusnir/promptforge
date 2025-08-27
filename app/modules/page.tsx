@@ -1,78 +1,117 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Filter, Lock, ArrowRight, Info } from "lucide-react"
+import { Search, Filter, Lock, ArrowRight, Info, Clock, Tag, Building } from "lucide-react"
 import ModuleOverlay from "@/components/modules/ModuleOverlay"
+import { useEntitlements } from "@/hooks/use-entitlements"
 
 interface Module {
   id: string
+  module_code: string
   name: string
-  vector: string
   description: string
-  locked: boolean
+  category: string
+  domain_slug: string
+  complexity: string
+  estimated_time_minutes: number
+  tags: string[]
+  template_prompt: string
+  example_output: string
+  best_practices: string[]
+  domain_info?: {
+    name: string
+    industry: string
+  }
 }
 
 export default function ModulesPage() {
   const [activeModule, setActiveModule] = useState<Module | null>(null)
+  const [modules, setModules] = useState<Module[]>([])
+  const [filteredModules, setFilteredModules] = useState<Module[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedDomain, setSelectedDomain] = useState("")
+  const [selectedComplexity, setSelectedComplexity] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("")
+  
+  const { hasEntitlement } = useEntitlements()
 
-  const modules = [
-    {
-      id: "M01",
-      name: "SOP Forge",
-      vector: "Strategic",
-      description: "Generate comprehensive standard operating procedures",
-      locked: false,
-    },
-    {
-      id: "M07",
-      name: "Risk Reversal",
-      vector: "Strategic",
-      description: "Identify and mitigate potential risks",
-      locked: false,
-    },
-    { id: "M11", name: "Funnel Nota", vector: "Rhetoric", description: "Optimize conversion funnels", locked: true },
-    {
-      id: "M12",
-      name: "Visibility Diag",
-      vector: "Strategic",
-      description: "Analyze market visibility strategies",
-      locked: false,
-    },
-    {
-      id: "M13",
-      name: "Pricing Psych",
-      vector: "Rhetoric",
-      description: "Psychological pricing strategies",
-      locked: true,
-    },
-    { id: "M22", name: "Lead Gen", vector: "Content", description: "Generate high-quality leads", locked: true },
-    { id: "M24", name: "Personal PR", vector: "Content", description: "Personal brand public relations", locked: true },
-    { id: "M32", name: "Cohort Test", vector: "Analytics", description: "Analyze user cohort behavior", locked: true },
-    { id: "M35", name: "Content Heat", vector: "Branding", description: "Content performance analysis", locked: true },
-    { id: "M40", name: "Crisis Mgmt", vector: "Crisis", description: "Crisis management protocols", locked: true },
-    { id: "M45", name: "Learning Path", vector: "Cognitive", description: "Educational pathway design", locked: true },
-    {
-      id: "M50",
-      name: "Brand Voice",
-      vector: "Branding",
-      description: "Consistent brand voice development",
-      locked: true,
-    },
-  ]
+  // Fetch modules from API
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await fetch('/api/modules?limit=100')
+        if (response.ok) {
+          const data = await response.json()
+          setModules(data.data.modules || [])
+          setFilteredModules(data.data.modules || [])
+        }
+      } catch (error) {
+        console.error('Error fetching modules:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  const vectors = ["Strategic", "Rhetoric", "Content", "Analytics", "Branding", "Crisis", "Cognitive"]
+    fetchModules()
+  }, [])
 
-  const handleSpecificationClick = (module: Module) => {
-    setActiveModule(module)
+  // Filter modules based on search and filters
+  useEffect(() => {
+    let filtered = modules
+
+    if (searchTerm) {
+      filtered = filtered.filter(module =>
+        module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        module.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        module.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+      )
+    }
+
+    if (selectedDomain) {
+      filtered = filtered.filter(module => module.domain_slug === selectedDomain)
+    }
+
+    if (selectedComplexity) {
+      filtered = filtered.filter(module => module.complexity === selectedComplexity)
+    }
+
+    if (selectedCategory) {
+      filtered = filtered.filter(module => module.category === selectedCategory)
+    }
+
+    setFilteredModules(filtered)
+  }, [modules, searchTerm, selectedDomain, selectedComplexity, selectedCategory])
+
+  // Get unique values for filters
+  const domains = [...new Set(modules.map(m => m.domain_slug))]
+  const categories = [...new Set(modules.map(m => m.category))]
+  const complexities = ['beginner', 'intermediate', 'advanced', 'expert']
+
+  const getComplexityColor = (complexity: string) => {
+    switch (complexity) {
+      case 'beginner': return 'bg-green-500'
+      case 'intermediate': return 'bg-blue-500'
+      case 'advanced': return 'bg-orange-500'
+      case 'expert': return 'bg-red-500'
+      default: return 'bg-gray-500'
+    }
   }
 
-  const handleUseInGenerator = (moduleId: string) => {
-    window.location.href = `/generator?module=${moduleId}`
+  const getDomainColor = (domain: string) => {
+    switch (domain) {
+      case 'fintech': return 'bg-blue-600'
+      case 'edutech': return 'bg-green-600'
+      case 'saas': return 'bg-purple-600'
+      case 'healthtech': return 'bg-red-600'
+      case 'manufacturing': return 'bg-yellow-600'
+      default: return 'bg-gray-600'
+    }
   }
 
   return (
@@ -86,7 +125,7 @@ export default function ModulesPage() {
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Filters */}
           <div className="lg:col-span-1">
-            <Card className="glass-card">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
                 <CardTitle className="font-serif flex items-center gap-2">
                   <Filter className="w-5 h-5 text-yellow-400" />
@@ -96,116 +135,162 @@ export default function ModulesPage() {
               <CardContent className="space-y-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                  <Input placeholder="Search modules..." className="pl-10 bg-black/50 border-gray-700" />
+                  <Input 
+                    placeholder="Search modules..." 
+                    className="pl-10 bg-black/50 border-gray-700"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Vector</label>
-                  <Select>
+                <div>
+                  <label className="text-sm font-medium text-gray-300 mb-2 block">Domain</label>
+                  <Select value={selectedDomain} onValueChange={setSelectedDomain}>
                     <SelectTrigger className="bg-black/50 border-gray-700">
-                      <SelectValue placeholder="All vectors" />
+                      <SelectValue placeholder="All domains" />
                     </SelectTrigger>
                     <SelectContent>
-                      {vectors.map((vector) => (
-                        <SelectItem key={vector} value={vector.toLowerCase()}>
-                          {vector}
+                      <SelectItem value="">All domains</SelectItem>
+                      {domains.map(domain => (
+                        <SelectItem key={domain} value={domain}>
+                          {domain.charAt(0).toUpperCase() + domain.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Access Level</label>
-                  <Select>
+                <div>
+                  <label className="text-sm font-medium text-gray-300 mb-2 block">Category</label>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger className="bg-black/50 border-gray-700">
-                      <SelectValue placeholder="All modules" />
+                      <SelectValue placeholder="All categories" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="available">Available</SelectItem>
-                      <SelectItem value="locked">Locked</SelectItem>
+                      <SelectItem value="">All categories</SelectItem>
+                      {categories.map(category => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="pt-4 border-t border-gray-700">
-                  <h4 className="font-medium mb-2">Vector Distribution</h4>
-                  <div className="space-y-1 text-sm">
-                    {vectors.map((vector) => {
-                      const count = modules.filter((m) => m.vector === vector).length
-                      return (
-                        <div key={vector} className="flex justify-between">
-                          <span className="text-gray-400">{vector}</span>
-                          <span className="text-yellow-400">{count}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-300 mb-2 block">Complexity</label>
+                  <Select value={selectedComplexity} onValueChange={setSelectedComplexity}>
+                    <SelectTrigger className="bg-black/50 border-gray-700">
+                      <SelectValue placeholder="All complexities" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">All complexities</SelectItem>
+                      {complexities.map(complexity => (
+                        <SelectItem key={complexity} value={complexity}>
+                          {complexity.charAt(0).toUpperCase() + complexity.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+
               </CardContent>
             </Card>
           </div>
 
-          {/* Module Grid */}
+          {/* Modules Grid */}
           <div className="lg:col-span-3">
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {modules.map((module) => (
-                <Card
-                  key={module.id}
-                  className={`glass-card transition-all duration-200 ${
-                    module.locked ? "opacity-75" : "hover:border-yellow-400/50"
-                  }`}
-                >
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-mono text-sm text-yellow-400">{module.id}</span>
-                      <div className="flex items-center gap-2">
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
+              </div>
+            ) : (
+              <>
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="text-gray-400">
+                    Showing {filteredModules.length} of {modules.length} modules
+                  </p>
+                  {filteredModules.length === 0 && (
+                    <p className="text-orange-400">No modules match your filters</p>
+                  )}
+                </div>
+                
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {filteredModules.map((module) => (
+                    <Card
+                      key={module.id}
+                      className="bg-zinc-900/80 border border-zinc-700 transition-all duration-200 hover:border-yellow-400/50"
+                    >
+                      <CardHeader>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-mono text-sm text-yellow-400">{module.module_code}</span>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setActiveModule(module)}
+                              className="text-xs text-gray-400 hover:text-yellow-400 p-1"
+                              title="Module specifications"
+                            >
+                              <Info className="w-3 h-3 mr-1" />
+                              Details →
+                            </Button>
+                          </div>
+                        </div>
+                        <CardTitle className="font-serif text-lg">{module.name}</CardTitle>
+                        <div className="flex items-center gap-2">
+                          <Badge className={`${getComplexityColor(module.complexity)} text-white text-xs`}>
+                            {module.complexity}
+                          </Badge>
+                          <Badge className={`${getDomainColor(module.domain_slug)} text-white text-xs`}>
+                            {module.domain_slug}
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="text-gray-400 mb-3">{module.description}</CardDescription>
+                        
+                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {module.estimated_time_minutes} min
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Tag className="w-3 h-3" />
+                            {module.category}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {module.tags.slice(0, 3).map((tag, index) => (
+                            <Badge 
+                              key={index} 
+                              variant="outline" 
+                              className="text-xs border-gray-600 text-gray-300"
+                            >
+                              {tag}
+                            </Badge>
+                          ))}
+                          {module.tags.length > 3 && (
+                            <Badge variant="outline" className="text-xs border-gray-600 text-gray-300">
+                              +{module.tags.length - 3}
+                            </Badge>
+                          )}
+                        </div>
+
                         <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleSpecificationClick(module)}
-                          className="text-xs text-gray-400 hover:text-yellow-400 p-1"
-                          title="Detalii modul complet"
+                          className="w-full bg-yellow-600 hover:bg-yellow-700"
+                          onClick={() => window.location.href = `/generator?module=${module.module_code}`}
                         >
-                          <Info className="w-3 h-3 mr-1" />
-                          Specifications →
+                          Use in Generator
+                          <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
-                        {module.locked && <Lock className="w-4 h-4 text-gray-400" />}
-                      </div>
-                    </div>
-                    <CardTitle className="font-serif text-lg">{module.name}</CardTitle>
-                    <Badge variant="outline" className="w-fit">
-                      {module.vector}
-                    </Badge>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-gray-400 mb-4">{module.description}</CardDescription>
-
-                    {module.locked ? (
-                      <Button variant="outline" className="w-full bg-transparent" disabled>
-                        <Lock className="w-4 h-4 mr-2" />
-                        Upgrade Required
-                      </Button>
-                    ) : (
-                      <Button
-                        className="w-full bg-yellow-600 hover:bg-yellow-700"
-                        onClick={() => handleUseInGenerator(module.id)}
-                      >
-                        Use in Generator
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="mt-8 text-center">
-              <p className="text-gray-400 mb-4">Showing 12 of 50 modules</p>
-              <Button variant="outline" className="border-gray-700 bg-transparent">
-                Load More Modules
-              </Button>
-            </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

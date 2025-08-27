@@ -1,34 +1,88 @@
 "use client"
 
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useState, useEffect } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Check, Crown, Zap, Building } from "lucide-react"
-import { PLANS } from "@/lib/entitlements"
+import { Check, Crown, Zap, Building, Lock } from "lucide-react"
+import { useAnalytics } from "@/hooks/use-analytics"
+import type { PlanType } from "@/lib/entitlements/types"
 
 interface PaywallModalProps {
-  isOpen: boolean
-  onClose: () => void
-  feature: string
-  requiredPlan: string
-  onUpgrade: (plan: string) => void
+  trigger: React.ReactNode
+  featureName?: string
+  planRequired?: PlanType
+  onUpgrade?: (plan: string) => void
 }
 
-export function PaywallModal({ isOpen, onClose, feature, requiredPlan, onUpgrade }: PaywallModalProps) {
-  const [selectedPlan, setSelectedPlan] = useState(requiredPlan)
+const PLANS = {
+  pilot: {
+    name: 'Pilot',
+    price_monthly: 0,
+    price_yearly: 0,
+    features: [
+      'Basic Prompt Generation',
+      'Score Calculation',
+      'Markdown Export'
+    ]
+  },
+  pro: {
+    name: 'Pro',
+    price_monthly: 49,
+    price_yearly: 490,
+    features: [
+      'PDF & JSON Export',
+      'Real GPT Testing',
+      'Cloud History',
+      'AI Evaluator',
+      'Advanced Analytics'
+    ]
+  },
+  enterprise: {
+    name: 'Enterprise',
+    price_monthly: 299,
+    price_yearly: 2990,
+    features: [
+      'Bundle Export (ZIP)',
+      'API Access',
+      'White Labeling',
+      'Team Management',
+      'Priority Support'
+    ]
+  }
+}
+
+export function PaywallModal({ trigger, featureName = 'This feature', planRequired = 'pro', onUpgrade }: PaywallModalProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState(planRequired)
   const plan = PLANS[selectedPlan]
+  const analytics = useAnalytics()
+
+  // Track paywall view when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      analytics.paywallViewed(featureName, planRequired)
+    }
+  }, [isOpen, featureName, planRequired, analytics])
 
   const planIcons = {
-    creator: Crown,
+    pilot: Crown,
     pro: Zap,
     enterprise: Building,
   }
 
-  const Icon = planIcons[selectedPlan as keyof typeof planIcons] || Crown
+  const Icon = planIcons[selectedPlan as keyof typeof planIcons] || Zap
+
+  // Don't show paywall for pilot plans
+  if (planRequired === 'pilot') {
+    return <>{trigger}</>
+  }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        {trigger}
+      </DialogTrigger>
       <DialogContent className="max-w-md bg-black/95 border border-gray-800 text-white">
         <DialogHeader>
           <DialogTitle className="text-center text-xl font-bold text-gold-400 flex items-center justify-center gap-2">
@@ -40,7 +94,7 @@ export function PaywallModal({ isOpen, onClose, feature, requiredPlan, onUpgrade
         <div className="space-y-6">
           <div className="text-center">
             <p className="text-gray-300 mb-2">
-              <span className="font-semibold text-gold-400">{feature}</span> requires a {plan.name} plan
+              <span className="font-semibold text-gold-400">{featureName}</span> requires a {plan.name} plan
             </p>
             <p className="text-sm text-gray-400">Unlock this feature and more with an upgrade</p>
           </div>
@@ -53,8 +107,12 @@ export function PaywallModal({ isOpen, onClose, feature, requiredPlan, onUpgrade
                   {plan.name}
                 </h3>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-white">${plan.price_monthly}</div>
-                  <div className="text-sm text-gray-400">per month</div>
+                  <div className="text-2xl font-bold text-white">
+                    {plan.price_monthly === 0 ? 'Free' : `$${plan.price_monthly}`}
+                  </div>
+                  <div className="text-sm text-gray-400">
+                    {plan.price_monthly === 0 ? 'forever' : 'per month'}
+                  </div>
                 </div>
               </div>
 
@@ -72,17 +130,37 @@ export function PaywallModal({ isOpen, onClose, feature, requiredPlan, onUpgrade
           <div className="flex gap-3">
             <Button
               variant="outline"
-              onClick={onClose}
+              onClick={() => {
+                analytics.paywallCtaClick(featureName, planRequired, 'close')
+                setIsOpen(false)
+              }}
               className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-transparent"
             >
               Maybe Later
             </Button>
-            <Button
-              onClick={() => onUpgrade(selectedPlan)}
-              className="flex-1 bg-gold-400 hover:bg-gold-500 text-black font-semibold"
-            >
-              Upgrade Now
-            </Button>
+            {plan.price_monthly === 0 ? (
+              <Button
+                onClick={() => {
+                  analytics.paywallCtaClick(featureName, planRequired, 'upgrade')
+                  onUpgrade?.(selectedPlan)
+                  setIsOpen(false)
+                }}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold"
+              >
+                Get Started
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  analytics.paywallCtaClick(featureName, planRequired, 'upgrade')
+                  onUpgrade?.(selectedPlan)
+                  setIsOpen(false)
+                }}
+                className="flex-1 bg-gold-400 hover:bg-gold-500 text-black font-semibold"
+              >
+                Upgrade Now
+              </Button>
+            )}
           </div>
         </div>
       </DialogContent>

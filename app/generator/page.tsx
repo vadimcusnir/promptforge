@@ -23,15 +23,25 @@ import {
   CheckCircle,
   AlertCircle,
   Info,
+  RefreshCw,
 } from "lucide-react"
 import { EntitlementGate } from "@/components/entitlement-gate"
 import { useEntitlements } from "@/hooks/use-entitlements"
+import { useAnalytics } from "@/hooks/use-analytics"
 import { default7D, paramOptions, type Params7D } from "@/lib/default-params"
 import { COMPLETE_MODULES_CATALOG } from "@/lib/modules"
 import { PromptForm } from "@/components/generator/PromptForm"
 import { ExportModal } from "@/components/export-modal"
 import { generatePrompt, createPromptRun, simulateGptResponse, PromptRun } from "@/utils/promptCompiler"
 import { FormData } from "@/utils/parseInputSchema"
+import { LoadingSpinner, LoadingState } from "@/components/loading-spinner"
+import { 
+  NoPromptsEmptyState, 
+  NoTestsEmptyState, 
+  NoHistoryEmptyState,
+  ErrorEmptyState 
+} from "@/components/ui/empty-state"
+import { Skeleton, SkeletonCard, SkeletonButton, SkeletonInput } from "@/components/ui/skeleton"
 
 // Legacy interface for backward compatibility
 interface GeneratedPrompt {
@@ -50,8 +60,9 @@ interface GeneratedPrompt {
 }
 
 export default function GeneratorPage() {
-  const { getEntitlement } = useEntitlements()
+  const { hasEntitlement } = useEntitlements()
   const { toast } = useToast()
+  const analytics = useAnalytics()
   const searchParams = useSearchParams()
   const [selectedModule, setSelectedModule] = useState("M01")
   const [params7D, setParams7D] = useState<Params7D>(default7D)
@@ -61,6 +72,8 @@ export default function GeneratorPage() {
   const [generatedPrompt, setGeneratedPrompt] = useState<GeneratedPrompt | null>(null)
   const [history, setHistory] = useState<GeneratedPrompt[]>([])
   const [currentPromptRun, setCurrentPromptRun] = useState<PromptRun | null>(null)
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true)
+  const [historyError, setHistoryError] = useState<string | null>(null)
   
   interface TestResults {
     type: "live" | "simulation"
@@ -76,11 +89,30 @@ export default function GeneratorPage() {
   const [testResults, setTestResults] = useState<TestResults | null>(null)
 
   useEffect(() => {
-    const savedHistory = localStorage.getItem("promptforge_history")
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory))
+    const loadHistory = async () => {
+      try {
+        setIsLoadingHistory(true)
+        setHistoryError(null)
+        
+        const savedHistory = localStorage.getItem("promptforge_history")
+        if (savedHistory) {
+          setHistory(JSON.parse(savedHistory))
+        }
+      } catch (error) {
+        console.error('Failed to load history:', error)
+        setHistoryError('Failed to load generation history')
+        toast({
+          title: "History Load Error",
+          description: "Could not load your generation history",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoadingHistory(false)
+      }
     }
-  }, [])
+
+    loadHistory()
+  }, [toast])
 
   useEffect(() => {
     const urlParams: Partial<Params7D> = {}
@@ -106,8 +138,6 @@ export default function GeneratorPage() {
   const updateParam = (key: keyof Params7D, value: string) => {
     setParams7D((prev) => ({ ...prev, [key]: value }))
   }
-
-  // Legacy handler removed - using new dynamic form system
 
   // New handler for dynamic form submission
   const handleFormSubmit = async (formData: FormData) => {
@@ -144,7 +174,8 @@ export default function GeneratorPage() {
         description: `Run ID: ${promptRun.id}`,
         duration: 3000,
       })
-    } catch {
+    } catch (error) {
+      console.error('Generation error:', error)
       toast({
         title: "Generation Failed",
         description: "Please try again",
@@ -217,7 +248,8 @@ export default function GeneratorPage() {
           description: `Average score: ${Math.round(Object.values(scores).reduce((a, b) => a + b, 0) / 4)}`,
         })
       }
-    } catch {
+    } catch (error) {
+      console.error('Test error:', error)
       toast({
         title: "Test Failed",
         description: "Please try again",
@@ -228,8 +260,6 @@ export default function GeneratorPage() {
     }
   }
 
-    // Legacy export handler removed - using new ExportModal component
-
   const handleCopy = async () => {
     if (!generatedPrompt) return
 
@@ -239,13 +269,29 @@ export default function GeneratorPage() {
         title: "Copied to Clipboard",
         description: "Prompt copied successfully",
       })
-    } catch {
+    } catch (error) {
+      console.error('Copy error:', error)
       toast({
         title: "Copy Failed",
         description: "Please try again",
         variant: "destructive",
       })
     }
+  }
+
+  const retryHistoryLoad = () => {
+    setHistoryError(null)
+    setIsLoadingHistory(true)
+    // Reload history
+    const savedHistory = localStorage.getItem("promptforge_history")
+    if (savedHistory) {
+      try {
+        setHistory(JSON.parse(savedHistory))
+      } catch (error) {
+        setHistoryError('Failed to parse history data')
+      }
+    }
+    setIsLoadingHistory(false)
   }
 
   // Get available modules from the catalog
@@ -264,12 +310,41 @@ export default function GeneratorPage() {
     { id: "M45", name: "Analytics Deep", vector: "Analytics", moduleNumber: 45, plan: "creator" },
   ]
 
-  const rawPlan = getEntitlement("plan")
-  const userPlan = typeof rawPlan === "string" ? rawPlan : "free"
+  const userPlan = "free" // Default plan for now
   const freeModules = ["M01", "M10", "M18"]
   
   // Get current selected module definition
   const currentModule = availableModules.find(m => m.id === selectedModule) || availableModules[0]
+
+  // Loading skeleton for module selection
+  const ModuleSelectionSkeleton = () => (
+    <Card className="bg-zinc-900/80 border border-zinc-700">
+      <CardHeader>
+        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-4 w-48" />
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <SkeletonInput />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="space-y-2 max-h-96">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} className="p-3" />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  )
+
+  // Loading skeleton for main content
+  const MainContentSkeleton = () => (
+    <div className="space-y-6">
+      <SkeletonCard />
+      <SkeletonCard />
+    </div>
+  )
 
   return (
     <div className="min-h-screen pattern-bg text-white">
@@ -282,7 +357,7 @@ export default function GeneratorPage() {
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Left Panel - Module Selection */}
           <div className="lg:col-span-1">
-            <Card className="glass-card">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
                 <CardTitle className="font-serif flex items-center gap-2">
                   <Filter className="w-5 h-5 text-yellow-400" />
@@ -323,10 +398,9 @@ export default function GeneratorPage() {
                       <div key={module.id}>
                         {isLocked ? (
                           <EntitlementGate
-                            flag="canAccessModule"
-                            requiredPlan={requiredPlan}
-                            feature={`Module ${module.id}`}
-                            showLock={true}
+                            flag="canUseAllModules"
+                            featureName={`Module ${module.id}`}
+                            planRequired="pro"
                           >
                             <Card className="cursor-not-allowed opacity-50 border-gray-600">
                               <CardContent className="p-3">
@@ -407,7 +481,7 @@ export default function GeneratorPage() {
               </TabsList>
 
               <TabsContent value="config">
-                <Card className="glass-card">
+                <Card className="bg-zinc-900/80 border border-zinc-700">
                   <CardHeader>
                     <CardTitle className="font-serif">7D Parameter Configuration</CardTitle>
                     <CardDescription>Configure the seven dimensions for optimal prompt generation</CardDescription>
@@ -441,14 +515,22 @@ export default function GeneratorPage() {
                 <div className="space-y-6">
                   {/* Dynamic Form */}
                   <PromptForm 
-                    module={currentModule}
-                    onSubmit={handleFormSubmit}
+                    module={currentModule.id}
+                    onSubmit={(prompt: string) => {
+                      // Convert string prompt to FormData for the new system
+                      const formData: FormData = {
+                        prompt,
+                        moduleId: currentModule.id,
+                        // Add other required fields as needed
+                      }
+                      handleFormSubmit(formData)
+                    }}
                     isSubmitting={isGenerating}
                   />
 
                   {/* Generated Prompt Display */}
                   {generatedPrompt && (
-                    <Card className="glass-card">
+                    <Card className="bg-zinc-900/80 border border-zinc-700">
                       <CardHeader>
                         <CardTitle className="font-serif">Generated Prompt</CardTitle>
                         <CardDescription>
@@ -507,7 +589,7 @@ export default function GeneratorPage() {
               </TabsContent>
 
               <TabsContent value="test">
-                <Card className="glass-card">
+                <Card className="bg-zinc-900/80 border border-zinc-700">
                   <CardHeader>
                     <CardTitle className="font-serif">Test Engine</CardTitle>
                     <CardDescription>Validate prompt quality with simulated or live testing</CardDescription>
@@ -520,18 +602,33 @@ export default function GeneratorPage() {
                         onClick={() => handleTest("simulation")}
                         disabled={isTesting || !generatedPrompt}
                       >
-                        <TestTube className="w-6 h-6 mb-2" />
+                        {isTesting ? (
+                          <LoadingSpinner size="sm" />
+                        ) : (
+                          <TestTube className="w-6 h-6 mb-2" />
+                        )}
                         <span>{isTesting ? "Testing..." : "Simulate Test"}</span>
                         <span className="text-xs text-gray-400">Available on all plans</span>
                       </Button>
-                      <EntitlementGate flag="canUseGptTestReal" requiredPlan="pro" feature="Live GPT Testing">
+                      <EntitlementGate flag="canUseGptTestReal" featureName="Live GPT Testing" planRequired="pro">
                         <Button
                           variant="outline"
                           className="h-20 flex-col bg-transparent"
-                          onClick={() => handleTest("live")}
+                          onClick={() => {
+                            analytics.gptTestReal(selectedModule || 'unknown', { 
+                              testType: 'live',
+                              moduleId: selectedModule,
+                              hasPrompt: !!generatedPrompt
+                            })
+                            handleTest("live")
+                          }}
                           disabled={isTesting || !generatedPrompt}
                         >
-                          <Zap className="w-6 h-6 mb-2" />
+                          {isTesting ? (
+                            <LoadingSpinner size="sm" />
+                          ) : (
+                            <Zap className="w-6 h-6 mb-2" />
+                          )}
                           <span>{isTesting ? "Testing..." : "Live GPT Test"}</span>
                           <span className="text-xs text-gray-400">Real AI validation</span>
                         </Button>
@@ -607,11 +704,18 @@ export default function GeneratorPage() {
                           )}
                         </div>
                       ) : (
-                        <div className="text-center py-8 text-gray-400">
-                          <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                          <p>No test results yet</p>
-                          <p className="text-sm">Generate a prompt and run a test to see results</p>
-                        </div>
+                        <NoTestsEmptyState
+                          title="No test results yet"
+                          description="Generate a prompt and run a test to see results"
+                          action={{
+                            label: "Generate Prompt",
+                            onClick: () => {
+                              const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
+                              if (generatorTab) generatorTab.click()
+                            },
+                            variant: "outline"
+                          }}
+                        />
                       )}
                     </div>
                   </CardContent>
@@ -619,13 +723,29 @@ export default function GeneratorPage() {
               </TabsContent>
 
               <TabsContent value="history">
-                <Card className="glass-card">
+                <Card className="bg-zinc-900/80 border border-zinc-700">
                   <CardHeader>
                     <CardTitle className="font-serif">Generation History</CardTitle>
                     <CardDescription>View and manage your previous prompt generations</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {history.length > 0 ? (
+                    {isLoadingHistory ? (
+                      <div className="space-y-4">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                          <SkeletonCard key={i} className="bg-black/30 border-gray-700" />
+                        ))}
+                      </div>
+                    ) : historyError ? (
+                      <ErrorEmptyState
+                        title="Failed to Load History"
+                        description={historyError}
+                        action={{
+                          label: "Retry",
+                          onClick: retryHistoryLoad,
+                          icon: RefreshCw
+                        }}
+                      />
+                    ) : history.length > 0 ? (
                       <div className="space-y-4">
                         {history.map((prompt) => (
                           <Card key={prompt.id} className="bg-black/30 border-gray-700">
@@ -684,11 +804,18 @@ export default function GeneratorPage() {
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-12 text-gray-400">
-                        <History className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p>No generation history yet</p>
-                        <p className="text-sm">Start generating prompts to see your history here</p>
-                      </div>
+                                              <NoHistoryEmptyState
+                          title="No generation history yet"
+                          description="Start generating prompts to see your history here"
+                          action={{
+                            label: "Generate First Prompt",
+                            onClick: () => {
+                              const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
+                              if (generatorTab) generatorTab.click()
+                            },
+                            variant: "outline"
+                          }}
+                        />
                     )}
                   </CardContent>
                 </Card>

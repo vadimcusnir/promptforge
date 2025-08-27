@@ -1,0 +1,330 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+import { z } from 'zod'
+import { requireAuth } from '@/lib/auth'
+import { validateOrgMembership } from '@/lib/auth'
+import { getEffectiveEntitlements } from '@/lib/entitlements'
+
+// Query schema
+const querySchema = z.object({
+  format: z.enum(['pdf', 'json', 'txt', 'md']),
+  orgId: z.string().uuid()
+})
+
+// Params schema
+const paramsSchema = z.object({
+  runId: z.string().uuid()
+})
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { runId: string } }
+) {
+  try {
+    // Validate authentication
+    const user = await requireAuth(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // Parse and validate parameters
+    const { searchParams } = new URL(request.url)
+    const query = Object.fromEntries(searchParams.entries())
+    const queryValidation = querySchema.safeParse(query)
+    const paramsValidation = paramsSchema.safeParse(params)
+    
+    if (!queryValidation.success) {
+      return NextResponse.json(
+        { error: 'Invalid query parameters', details: queryValidation.error },
+        { status: 400 }
+      )
+    }
+
+    if (!paramsValidation.success) {
+      return NextResponse.json(
+        { error: 'Invalid run ID' },
+        { status: 400 }
+      )
+    }
+
+    const { format, orgId } = queryValidation.data
+    const { runId } = paramsValidation.data
+
+    // Validate organization membership
+    await validateOrgMembership(user.id, orgId)
+
+    // Check entitlements based on format
+    const entitlements = await getEffectiveEntitlements(orgId)
+    
+    if (format === 'pdf' && !entitlements.canExportPDF) {
+      return NextResponse.json(
+        { 
+          error: 'ENTITLEMENT_REQUIRED',
+          message: 'PDF export requires Pro plan or higher',
+          upsell: 'pro_needed',
+          code: 'PDF_EXPORT_REQUIRED'
+        },
+        { status: 403 }
+      )
+    }
+
+    if (format === 'json' && !entitlements.canExportJSON) {
+      return NextResponse.json(
+        { 
+          error: 'ENTITLEMENT_REQUIRED',
+          message: 'JSON export requires Pro plan or higher',
+          upsell: 'pro_needed',
+          code: 'JSON_EXPORT_REQUIRED'
+        },
+        { status: 403 }
+      )
+    }
+
+    // Initialize Supabase client
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    // Fetch run data with related information
+    const { data: run, error: runError } = await supabase
+      .from('runs')
+      .select(`
+        id,
+        org_id,
+        user_id,
+        module_id,
+        status,
+        started_at,
+        completed_at,
+        duration_ms,
+        input_data,
+        output_data,
+        error_message,
+        metadata,
+        created_at,
+        updated_at,
+        modules!inner(
+          id,
+          name,
+          description,
+          domain
+        ),
+        parameter_sets!inner(
+          id,
+          domain,
+          scale,
+          urgency,
+          complexity,
+          resources,
+          application,
+          output_format
+        ),
+        prompt_history!inner(
+          id,
+          prompt_text,
+          prompt_hash,
+          seven_d_params
+        )
+      `)
+      .eq('id', runId)
+      .eq('org_id', orgId)
+      .single()
+
+    if (runError || !run) {
+      return NextResponse.json(
+        { error: 'Run not found' },
+        { status: 404 }
+      )
+    }
+
+    // Prepare export data
+    const exportData = {
+      run: {
+        id: run.id,
+        moduleName: run.modules?.name || 'Unknown Module',
+        domain: run.parameter_sets?.domain || 'unknown',
+        scale: run.parameter_sets?.scale || 'unknown',
+        urgency: run.parameter_sets?.urgency || 'unknown',
+        complexity: run.parameter_sets?.complexity || 'unknown',
+        resources: run.parameter_sets?.resources || 'unknown',
+        application: run.parameter_sets?.application || 'unknown',
+        outputFormat: run.parameter_sets?.output_format || 'unknown',
+        status: run.status,
+        startedAt: run.started_at,
+        completedAt: run.completed_at,
+        durationMs: run.duration_ms,
+        promptText: run.prompt_history?.prompt_text || '',
+        outputText: run.output_data?.output || run.output_data?.result || '',
+        score: run.output_data?.score,
+        metadata: run.metadata || {}
+      },
+      exportInfo: {
+        format,
+        exportedAt: new Date().toISOString(),
+        exportedBy: user.id,
+        organization: orgId
+      }
+    }
+
+    // Generate export content based on format
+    let content: string
+    let contentType: string
+    let filename: string
+
+    switch (format) {
+      case 'json':
+        content = JSON.stringify(exportData, null, 2)
+        contentType = 'application/json'
+        filename = `${run.modules?.name || 'run'}_${runId}.json`
+        break
+
+      case 'txt':
+        content = generateTextExport(exportData)
+        contentType = 'text/plain'
+        filename = `${run.modules?.name || 'run'}_${runId}.txt`
+        break
+
+      case 'md':
+        content = generateMarkdownExport(exportData)
+        contentType = 'text/markdown'
+        filename = `${run.modules?.name || 'run'}_${runId}.md`
+        break
+
+      case 'pdf':
+        // For PDF, we'll return a JSON response with instructions
+        // In production, you'd use a PDF generation library like puppeteer or jsPDF
+        return NextResponse.json({
+          message: 'PDF export requires client-side generation',
+          data: exportData,
+          instructions: 'Use the data to generate PDF on the client side'
+        })
+
+      default:
+        return NextResponse.json(
+          { error: 'Unsupported export format' },
+          { status: 400 }
+        )
+    }
+
+    // Return file download
+    return new NextResponse(content, {
+      status: 200,
+      headers: {
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Cache-Control': 'no-cache'
+      }
+    })
+
+  } catch (error) {
+    console.error('Run export API error:', error)
+    
+    if (error instanceof Error && error.message.includes('ENTITLEMENT_REQUIRED')) {
+      return NextResponse.json(
+        { 
+          error: 'ENTITLEMENT_REQUIRED',
+          message: 'Export requires appropriate plan level',
+          upsell: 'pro_needed'
+        },
+        { status: 403 }
+      )
+    }
+
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+function generateTextExport(data: any): string {
+  const { run, exportInfo } = data
+  
+  return `PROMPTFORGE RUN EXPORT
+Generated: ${exportInfo.exportedAt}
+Format: ${exportInfo.format.toUpperCase()}
+
+RUN DETAILS
+===========
+Module: ${run.moduleName}
+Domain: ${run.domain}
+Scale: ${run.scale}
+Urgency: ${run.urgency}
+Complexity: ${run.complexity}
+Resources: ${run.resources}
+Application: ${run.application}
+Output Format: ${run.outputFormat}
+
+Status: ${run.status}
+Started: ${run.startedAt}
+Completed: ${run.completedAt || 'N/A'}
+Duration: ${run.durationMs ? `${(run.durationMs / 1000).toFixed(1)}s` : 'N/A'}
+Score: ${run.score || 'N/A'}
+
+PROMPT
+======
+${run.promptText}
+
+OUTPUT
+======
+${run.outputText}
+
+METADATA
+========
+${JSON.stringify(run.metadata, null, 2)}
+`
+}
+
+function generateMarkdownExport(data: any): string {
+  const { run, exportInfo } = data
+  
+  return `# PromptForge Run Export
+
+**Generated:** ${exportInfo.exportedAt}  
+**Format:** ${exportInfo.format.toUpperCase()}
+
+## Run Details
+
+| Field | Value |
+|-------|-------|
+| **Module** | ${run.moduleName} |
+| **Domain** | ${run.domain} |
+| **Scale** | ${run.scale} |
+| **Urgency** | ${run.urgency} |
+| **Complexity** | ${run.complexity} |
+| **Resources** | ${run.resources} |
+| **Application** | ${run.application} |
+| **Output Format** | ${run.outputFormat} |
+| **Status** | ${run.status} |
+| **Started** | ${run.startedAt} |
+| **Completed** | ${run.completedAt || 'N/A'} |
+| **Duration** | ${run.durationMs ? `${(run.durationMs / 1000).toFixed(1)}s` : 'N/A'} |
+| **Score** | ${run.score || 'N/A'} |
+
+## Prompt
+
+\`\`\`
+${run.promptText}
+\`\`\`
+
+## Output
+
+\`\`\`
+${run.outputText}
+\`\`\`
+
+## Metadata
+
+\`\`\`json
+${JSON.stringify(run.metadata, null, 2)}
+\`\`\`
+
+---
+
+*Exported from PromptForge v3*
+`
+}
