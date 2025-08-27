@@ -18,8 +18,6 @@ const nextConfig = {
   },
   // Force dynamic rendering for all pages to avoid useSearchParams issues
   output: 'standalone',
-  // Force all routes to be dynamic to prevent build-time static generation
-  generateStaticParams: () => [],
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

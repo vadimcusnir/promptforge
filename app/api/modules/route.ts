@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@supabase/supabase-js'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // Supabase client
 const supabase = createClient(
   process.env.SUPABASE_URL!,
