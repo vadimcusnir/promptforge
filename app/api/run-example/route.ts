@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { executeGuarded } from "@/agent";
 import { Params7D } from "@/lib/default-params";
 
 export async function POST(req: NextRequest) {
@@ -15,7 +14,7 @@ export async function POST(req: NextRequest) {
     } = await req.json();
     const { moduleId, params7d, plan, intent } = body;
 
-    // Exemplu basic fără executeGuarded
+    // Basic example without executeGuarded
     return NextResponse.json({
       success: true,
       data: {

@@ -25,7 +25,7 @@ const paramsSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { runId: string } }
+  { params }: { params: Promise<{ runId: string }> }
 ) {
   try {
     // Validate authentication
@@ -41,7 +41,8 @@ export async function GET(
     const { searchParams } = new URL(request.url)
     const query = Object.fromEntries(searchParams.entries())
     const queryValidation = querySchema.safeParse(query)
-    const paramsValidation = paramsSchema.safeParse(params)
+    const { runId } = await params
+    const paramsValidation = paramsSchema.safeParse({ runId })
     
     if (!queryValidation.success) {
       return NextResponse.json(
@@ -58,7 +59,6 @@ export async function GET(
     }
 
     const { format, orgId } = queryValidation.data
-    const { runId } = paramsValidation.data
 
     // Validate organization membership
     await validateOrgMembership(user.id, orgId)

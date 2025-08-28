@@ -18,7 +18,7 @@ const runRequestSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { moduleId: string } }
+  { params }: { params: Promise<{ moduleId: string }> }
 ) {
   try {
     // Require authentication
@@ -40,7 +40,7 @@ export async function POST(
     }
 
     const { orgId, parameters, options } = validation.data
-    const moduleId = params.moduleId
+    const { moduleId } = await params
     
     // Validate organization membership
     const isMember = await validateOrgMembership(user.id, orgId)
