@@ -40,11 +40,13 @@ This will automatically:
 
 ```bash
 # Copy environment template
-cp env.template .env.local
+cp env.example .env.local
 
 # Edit with your actual values
 nano .env.local
 ```
+
+**Important:** The `.env.local` file contains sensitive information and should never be committed to version control. Use `env.example` as a template and create your local `.env.local` file.
 
 **Required Variables:**
 ```bash
@@ -208,7 +210,7 @@ curl -X POST http://localhost:3000/api/webhooks/stripe \
 
 1. Go to [SendGrid Sender Authentication](https://app.sendgrid.com/settings/sender_auth)
 2. Click "Authenticate Your Domain"
-3. Enter your domain (e.g., `promptforge.com`)
+3. Enter your domain (e.g., `[EXAMPLE_DOMAIN_yourdomain.com]`)
 4. Add DNS records:
    - SPF record
    - DKIM record

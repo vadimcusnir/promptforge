@@ -159,7 +159,7 @@ for i in {1..15}; do
   curl -X POST http://localhost:3000/api/gpt-editor \
     -H "Content-Type: application/json" \
     -H "x-user-id: test-user" \
-    -d '{"content":"test","instruction":"test","orgId":"00000000-0000-0000-0000-000000000000","userId":"test-user"}'
+    -d '{"content":"test","instruction":"test","orgId":"00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]00","userId":"test-user"}'
 done
 
 # Test CORS

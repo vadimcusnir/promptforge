@@ -4414,11 +4414,11 @@ Low Customization
 ### 10.1 Asset Deployment Strategy
 
 **Digital Asset Platform:**
-- **Interactive website**: promptforge.com/proof
-- **Demo environment**: demo.promptforge.com
-- **ROI calculator**: calculator.promptforge.com
-- **Case study library**: success.promptforge.com
-- **Video testimonials**: testimonials.promptforge.com
+- **Interactive website**: [EXAMPLE_DOMAIN_yourdomain.com]/proof
+- **Demo environment**: demo.[EXAMPLE_DOMAIN_yourdomain.com]
+- **ROI calculator**: calculator.[EXAMPLE_DOMAIN_yourdomain.com]
+- **Case study library**: success.[EXAMPLE_DOMAIN_yourdomain.com]
+- **Video testimonials**: testimonials.[EXAMPLE_DOMAIN_yourdomain.com]
 
 **Sales Enablement:**
 - **Sales deck integration**: Embedded assets

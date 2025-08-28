@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const DATABASE_URL = process.env.DATABASE_URL;
+const DATABASE_URL = process.env.DATABASE_URL || '[EXAMPLE_DB_URL_postgresql://username:password@localhost:5432/promptforge]';
 
 if (!DATABASE_URL) {
   console.error('❌ DATABASE_URL environment variable is required');
@@ -36,7 +36,7 @@ const client = new Client({
 const MIGRATIONS = [
   {
     name: 'Create User Management Tables',
-    file: 'supabase/migrations/[PHONE_REDACTED]0000_create_user_management_tables.sql'
+    file: 'supabase/migrations/20241220000000_create_user_management_tables.sql'
   }
 ];
 
@@ -95,7 +95,7 @@ async function createInitialData() {
       VALUES 
         (gen_random_uuid(), '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'page_view', '{"page": "pricing"}', 'pricing', NOW() - INTERVAL '1 hour'),
         (gen_random_uuid(), '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'plan_click', '{"plan": "pro", "billing": "monthly"}', 'pricing', NOW() - INTERVAL '30 minutes'),
-        (gen_random_uuid(), '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'checkout_start', '{"plan": "pro", "amount": 4900}', 'checkout', NOW() - INTERVAL '15 minutes');
+        (gen_random_uuid(), '00[phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]}', 'checkout', NOW() - INTERVAL '15 minutes');
     `);
     
     console.log('   ✅ Sample analytics data created');
@@ -105,7 +105,7 @@ async function createInitialData() {
       INSERT INTO ab_test_events (id, test_id, variant_id, user_id, event_type, event_properties, timestamp)
       VALUES 
         (gen_random_uuid(), 'pricing_v1', 'control', '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'view', '{"page": "pricing"}', NOW() - INTERVAL '1 hour'),
-        (gen_random_uuid(), 'pricing_v1', 'control', '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'conversion', '{"plan": "pro", "amount": 4900}', NOW() - INTERVAL '15 minutes');
+        (gen_random_uuid(), 'pricing_v1', 'control', '00[phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]}', NOW() - INTERVAL '15 minutes');
     `);
     
     console.log('   ✅ Sample A/B test data created');
@@ -116,7 +116,7 @@ async function createInitialData() {
 }
 
 async function verifyTables() {
-  console.log('\n🔍 Verifying database tables...\n');
+  console.log('\n�� Verifying database tables...\n');
   
   try {
     const tables = [

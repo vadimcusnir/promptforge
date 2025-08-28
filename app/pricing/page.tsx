@@ -491,8 +491,8 @@ export default function PricingPage() {
               <Link href="/legal/terms" className="hover:text-gold-400 transition-colors">
                 Terms of Use
               </Link>
-              <a href="mailto:legal@promptforge.com" className="hover:text-gold-400 transition-colors">
-                legal@promptforge.com
+              <a href="mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]" className="hover:text-gold-400 transition-colors">
+                legal@[EXAMPLE_DOMAIN_yourdomain.com]
               </a>
             </div>
             <p className="text-xs text-gray-500 mt-4">

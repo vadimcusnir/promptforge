@@ -27,7 +27,7 @@ interface SubscriptionUpdateData {
 }
 
 export class EmailService {
-  private static fromEmail = process.env.SENDGRID_FROM_EMAIL || "noreply@promptforge.com"
+  private static fromEmail = process.env.SENDGRID_FROM_EMAIL || "[EXAMPLE_EMAIL_noreply@yourdomain.com]"
   private static fromName = process.env.SENDGRID_FROM_NAME || "PromptForge"
 
   static async sendPaymentConfirmation(data: PaymentConfirmationData): Promise<boolean> {

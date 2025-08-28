@@ -71,7 +71,7 @@ node scripts/supabase-backup.js test-restore # Test restore procedures
 ### Ruleset Versioning Commands
 ```typescript
 // Create new version
-createRulesetVersion('patch', 'Bug fix for validation', 'dev@promptforge.com');
+createRulesetVersion('patch', 'Bug fix for validation', 'dev@[EXAMPLE_DOMAIN_yourdomain.com]');
 
 // Activate version
 activateRulesetVersion('1.0.1');
@@ -290,7 +290,7 @@ tail -f /var/log/promptforge-backup.log
 ## 📞 SUPPORT & MAINTENANCE
 
 ### Contact Information
-- **DevOps Team**: devops@promptforge.com
+- **DevOps Team**: devops@[EXAMPLE_DOMAIN_yourdomain.com]
 - **Emergency**: 24/7 on-call rotation
 - **Documentation**: `BACKUP_RECOVERY_RUNBOOK.md`
 - **Monitoring**: Automated alerts

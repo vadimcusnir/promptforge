@@ -150,6 +150,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check Configuration
+        run: |
+          if [ -f "scripts/check-config.js" ]; then
+            echo "Checking configuration..."
+            node scripts/check-config.js
+          fi
+
       - name: Build application
         run: pnpm build
 
@@ -276,6 +283,13 @@ jobs:
           if [ -f "scripts/quick-security-check.sh" ]; then
             echo "Running quick security check..."
             bash scripts/quick-security-check.sh
+          fi
+
+      - name: Run Enhanced PII Analysis
+        run: |
+          if [ -f "scripts/enhanced-pii-report.js" ]; then
+            echo "Running Enhanced PII Analysis..."
+            node scripts/enhanced-pii-report.js --ci
           fi
 
       - name: Check for known vulnerabilities

@@ -77,7 +77,7 @@ async function checkDomainAuthentication() {
         console.log('   📋 To authenticate a domain:');
         console.log('      1. Go to: https://app.sendgrid.com/settings/sender_auth');
         console.log('      2. Click "Authenticate Your Domain"');
-        console.log('      3. Enter your domain (e.g., promptforge.com)');
+        console.log('      3. Enter your domain (e.g., [EXAMPLE_DOMAIN_yourdomain.com])');
         console.log('      4. Add the provided DNS records');
         console.log('      5. Wait for verification (can take up to 48 hours)');
         return false;
@@ -104,9 +104,9 @@ async function testEmailDelivery() {
   
   try {
     const testEmail = {
-      to: 'test@example.com', // This will fail, but we can test the API
+      to: '[EXAMPLE_EMAIL_test@example.com]', // This will fail, but we can test the API
       from: {
-        email: 'noreply@promptforge.com',
+        email: '[EXAMPLE_EMAIL_noreply@yourdomain.com]',
         name: 'PromptForge Test'
       },
       subject: 'SendGrid Test Email',
@@ -120,7 +120,7 @@ async function testEmailDelivery() {
       console.log('   ✅ Email sent successfully (if using real email)');
       return true;
     } catch (error) {
-      if (error.response?.body?.errors?.[0]?.message?.includes('test@example.com')) {
+      if (error.response?.body?.errors?.[0]?.message?.includes('[EXAMPLE_EMAIL_test@example.com]')) {
         console.log('   ✅ API is working (expected failure for test email)');
         return true;
       } else {

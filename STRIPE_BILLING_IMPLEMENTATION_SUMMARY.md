@@ -505,7 +505,7 @@ console.log(`✅ Entitlements applied for org ${orgId}, plan: ${planCode}`)
 ### File Locations
 - **Webhook API**: `app/api/webhooks/stripe/route.ts`
 - **Test Script**: `scripts/test-stripe-webhook.js`
-- **SQL Function**: `supabase/migrations/20241220000001_stripe_billing.sql`
+- **SQL Function**: `supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_stripe_billing.sql`
 - **Billing Logic**: `lib/billing/entitlements.ts`
 
 ### Common Operations

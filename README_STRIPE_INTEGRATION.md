@@ -1,5 +1,14 @@
 # 🚀 PromptForge v3 - Integrare Completă Stripe & Analytics
 
+## ⚠️ IMPORTANT SECURITY NOTICE
+
+**NEVER commit real API keys, secrets, or sensitive configuration to version control!**
+
+- Use `.env.local` for actual values (already in `.gitignore`)
+- This README contains ONLY example patterns for documentation
+- All sensitive values use `[EXAMPLE_PLACEHOLDER_...]` format
+- Run security scans before committing: `pnpm run security-scan`
+
 ## 📋 Prezentare Generală
 
 Am implementat cu succes un sistem complet de pricing cu integrare Stripe, analytics, A/B testing, și suport multi-limbă pentru PromptForge v3.
@@ -42,34 +51,34 @@ Am implementat cu succes un sistem complet de pricing cu integrare Stripe, analy
 
 ```bash
 # Stripe Configuration
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
-STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+STRIPE_SECRET_KEY=[EXAMPLE_PLACEHOLDER_sk_test_...]
+STRIPE_PUBLISHABLE_KEY=[EXAMPLE_PLACEHOLDER_pk_test_...]
+STRIPE_WEBHOOK_SECRET=[EXAMPLE_PLACEHOLDER_whsec_...]
 
 # Database Configuration
-DATABASE_URL=postgresql://username:password@localhost:5432/promptforge
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+DATABASE_URL=[EXAMPLE_PLACEHOLDER_postgresql://username:password@localhost:5432/promptforge]
+SUPABASE_URL=[EXAMPLE_PLACEHOLDER_https://your-project.supabase.co]
+SUPABASE_ANON_KEY=[EXAMPLE_PLACEHOLDER_eyJ...]
+SUPABASE_SERVICE_ROLE_KEY=[EXAMPLE_PLACEHOLDER_eyJ...]
 
 # Email Configuration (SendGrid)
-SENDGRID_API_KEY=your_sendgrid_api_key
-SENDGRID_FROM_EMAIL=noreply@promptforge.com
-SENDGRID_FROM_NAME=PromptForge
+SENDGRID_API_KEY=[EXAMPLE_PLACEHOLDER_SG...]
+SENDGRID_FROM_EMAIL=[EXAMPLE_PLACEHOLDER_noreply@yourdomain.com]
+SENDGRID_FROM_NAME=[EXAMPLE_PLACEHOLDER_PromptForge]
 
 # Application Configuration
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_nextauth_secret_here
-NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BASE_URL=[EXAMPLE_PLACEHOLDER_http://localhost:3000]
+NEXTAUTH_SECRET=[EXAMPLE_PLACEHOLDER_generate_random_32_char_string]
+NEXTAUTH_URL=[EXAMPLE_PLACEHOLDER_http://localhost:3000]
 
 # Analytics Configuration
-GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
-MIXPANEL_TOKEN=your_mixpanel_token
+GOOGLE_ANALYTICS_ID=[EXAMPLE_PLACEHOLDER_G-XXXXXXXXXX]
+MIXPANEL_TOKEN=[EXAMPLE_PLACEHOLDER_mp_...]
 
 # Feature Flags
-ENABLE_AB_TESTING=true
-ENABLE_ANALYTICS=true
-ENABLE_EMAIL_NOTIFICATIONS=true
+ENABLE_AB_TESTING=[EXAMPLE_PLACEHOLDER_true]
+ENABLE_ANALYTICS=[EXAMPLE_PLACEHOLDER_true]
+ENABLE_EMAIL_NOTIFICATIONS=[EXAMPLE_PLACEHOLDER_true]
 ```
 
 ### 2. Configurare Stripe Dashboard
@@ -123,7 +132,7 @@ https://yourdomain.com/api/webhooks/stripe
 pnpm run migrate
 
 # Sau manual:
-psql -d promptforge -f supabase/migrations/20241220000000_create_user_management_tables.sql
+psql -d promptforge -f supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_create_user_management_tables.sql
 ```
 
 #### 3.2. Verificarea Tabelelor
@@ -299,10 +308,10 @@ const pricingTests: ABTest[] = [
 
 ### 1. Environment Variables
 ```bash
-# Production
-STRIPE_SECRET_KEY=sk_live_xxx
-STRIPE_PUBLISHABLE_KEY=pk_live_xxx
-NEXT_PUBLIC_BASE_URL=https://yourdomain.com
+# Production - NEVER commit these values!
+STRIPE_SECRET_KEY=[EXAMPLE_PLACEHOLDER_sk_live_...]
+STRIPE_PUBLISHABLE_KEY=[EXAMPLE_PLACEHOLDER_pk_live_...]
+NEXT_PUBLIC_BASE_URL=[EXAMPLE_PLACEHOLDER_https://yourdomain.com]
 ```
 
 ### 2. Database Migration

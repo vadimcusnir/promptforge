@@ -734,7 +734,7 @@ create table entitlements (
   source text not null,                          -- plan|addon|license|manual
   meta jsonb,
   expires_at timestamptz,
-  primary key (org_id, coalesce(user_id, '00000000-0000-0000-0000-000000000000'::uuid), flag)
+  primary key (org_id, coalesce(user_id, '00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]00'::uuid), flag)
 );
 
 -- add-ons per user (ex: Evaluator AI Advanced)

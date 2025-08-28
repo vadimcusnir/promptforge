@@ -234,10 +234,10 @@ export default function PrivacyPage() {
                   This policy complies with GDPR, CCPA, and other privacy regulations. For questions or data requests,
                   contact us at{" "}
                   <a
-                    href="mailto:legal@promptforge.com"
+                    href="mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]"
                     className="text-gold-400 hover:text-gold-300 transition-colors"
                   >
-                    legal@promptforge.com
+                    legal@[EXAMPLE_DOMAIN_yourdomain.com]
                   </a>
                 </p>
                 <div className="flex items-center space-x-4 text-sm">

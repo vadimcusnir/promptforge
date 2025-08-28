@@ -542,7 +542,7 @@ create table if not exists entitlements(
   meta        jsonb,                                       -- orice payload explicativ
   expires_at  timestamptz,
   created_at  timestamptz not null default now(),
-  unique (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
+  unique (org_id, coalesce(user_id,'00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]00'::uuid), flag, source, coalesce(source_ref,''))
 );
 
 comment on column entitlements.flag is

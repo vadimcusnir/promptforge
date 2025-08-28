@@ -75,7 +75,7 @@ const loadLocalRuns = () => {
 ### Storage Key Format
 ```typescript
 const storageKey = `runHistory_${orgId}`
-// Example: runHistory_123e4567-e89b-12d3-a456-426614174000
+// Example: runHistory_123e4567-e89b-12d3-a456-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]00
 ```
 
 ---

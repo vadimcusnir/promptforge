@@ -115,7 +115,7 @@ async function runDatabaseSeeding() {
       console.log('   🔄 Using Supabase migration system...')
       
       // Copy seed file to migrations if needed
-      const migrationFile = path.join(__dirname, '../supabase/migrations/20241220000002_demo_seed.sql')
+      const migrationFile = path.join(__dirname, '../supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_demo_seed.sql')
       fs.copyFileSync(config.seedFile, migrationFile)
       console.log('   ✅ Seed file copied to migrations')
       

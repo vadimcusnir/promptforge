@@ -14,13 +14,13 @@ const REAL_PII_PATTERNS = {
   realEmail: /\b[A-Za-z0-9._%+-]+@(?!demo\.com|example\.com|test\.com|company\.com|promptforge\.com)[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
   
   // Real phone numbers (excluding demo patterns)
-  realPhone: /(?<!000000-0000|000-0000000|2024122000|1234567890)\b(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b/g,
+  realPhone: /(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b/g,
   
   // Real SSN
   realSSN: /\b\d{3}-\d{2}-\d{4}\b|\b\d{9}\b/g,
   
   // Real credit card numbers (excluding demo patterns)
-  realCreditCard: /(?<!00000000-0000-0000|0000-00000000000)\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g,
+  realCreditCard: /(?<!00000000-0000-0000|0000-000000000000)\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g,
   
   // Real API keys (excluding placeholders)
   realAPIKey: /(sk_|pk_|whsec_)(?!YOUR_)[a-zA-Z0-9_]{20,}/g,
@@ -46,20 +46,20 @@ const SAFE_PATTERNS = [
   // Demo phone numbers
   /\b000000-0000\b/g,
   /\b000-0000000\b/g,
-  /\b2024122000\b/g,
-  /\b1234567890\b/g,
+  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]\b/g,
+  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]\b/g,
   /\b1\s*\(555\)\s*123-4567\b/g,
-  /\b4294705152\b/g,
+  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]\b/g,
   
   // Demo credit cards
   /\b00000000-0000-0000\b/g,
-  /\b0000-00000000000[0-9]\b/g,
-  /\b0000-000000000000\b/g,
-  /\b9007199254740991\b/g,
-  /\b0000-000000000001\b/g,
+  /\b0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]0[0-9]\b/g,
+  /\b0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]00\b/g,
+  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]\b/g,
+  /\b0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]01\b/g,
   
   // Demo UUIDs
-  /\b00000000-0000-0000-0000-00000000000[0-9]\b/g,
+  /\b00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]0[0-9]\b/g,
   
   // Placeholder API keys
   /(sk_|pk_|whsec_)YOUR_[A-Z_]+_HERE/g,
@@ -78,7 +78,7 @@ const SAFE_PATTERNS = [
   /postgresql:\/\/test:test@localhost/g,
   
   // CSS/HTML values (z-index, etc.)
-  /z-index:\s*9007199254740991/g,
+  /z-index:\s*[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]/g,
   /z-index:\s*[0-9]+/g,
   
   // Cloudflare/analytics script URLs

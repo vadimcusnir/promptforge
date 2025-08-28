@@ -20,7 +20,7 @@ const fetch = require('node-fetch');
 
 // Configuration
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-const TEST_EMAIL = 'test@promptforge.com';
+const TEST_EMAIL = 'test@[EXAMPLE_DOMAIN_yourdomain.com]';
 
 // Test results
 const testResults = {
@@ -297,7 +297,7 @@ async function testDatabaseConnection() {
     
     // Test migration file exists
     const fs = require('fs');
-    const migrationPath = 'supabase/migrations/20241220000000_create_user_management_tables.sql';
+    const migrationPath = 'supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_create_user_management_tables.sql';
     
     if (fs.existsSync(migrationPath)) {
       logTest('Migration file exists', true);

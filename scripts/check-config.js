@@ -173,7 +173,7 @@ function checkFileStructure() {
     'app/api/billing/checkout/route.ts',
     'app/api/billing/portal/route.ts',
     'app/api/entitlements/route.ts',
-    'supabase/migrations/20241220000001_stripe_billing.sql',
+    'supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_stripe_billing.sql',
     'scripts/create-stripe-products.js',
     'scripts/setup-billing.js'
   ]
@@ -197,7 +197,7 @@ function checkFileStructure() {
 function checkDatabaseMigration() {
   console.log('\n🗄️  Checking database migration...')
   
-  const migrationPath = path.join(__dirname, '../supabase/migrations/20241220000001_stripe_billing.sql')
+  const migrationPath = path.join(__dirname, '../supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_stripe_billing.sql')
   
   if (!fs.existsSync(migrationPath)) {
     console.log('   ❌ Database migration file not found')

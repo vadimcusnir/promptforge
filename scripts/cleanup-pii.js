@@ -18,12 +18,12 @@ const PII_PATTERNS = {
   realAPIKey: /(sk_|pk_|whsec_)[a-zA-Z0-9_]{20,}/g,
   
   // Demo/placeholder patterns (lower priority)
-  demoUUID: /\b00000000-0000-0000-0000-00000000000[0-9]\b/g,
-  demoPhone: /\b000000-0000\b|\b000-0000000\b/g,
-  demoCreditCard: /\b00000000-0000-0000\b|\b0000-00000000000[0-9]\b/g,
+  demoUUID: /\b00000000-0000-0000-0000-000000000000\b/g,
+  demoPhone: /\b000000-0000\b/g,
+  demoCreditCard: /\b00000000-0000-0000\b|\b0000-000000000000\b/g,
   placeholderAPIKey: /(sk_|pk_|whsec_)YOUR_[A-Z_]+_HERE/g,
   placeholderEmail: /[a-z]+@[a-z]+\.com/g,
-  placeholderPhone: /\b2024122000\b/g
+  placeholderPhone: /\b000-000-0000\b/g
 };
 
   // Files to clean up (priority order)
@@ -35,24 +35,24 @@ const PII_PATTERNS = {
     'supabase/migrations' // Directory to scan
   ];
 
-// Safe demo data patterns (don't remove)
-const SAFE_DEMO_PATTERNS = [
-  /\b00000000-0000-0000-0000-00000000000[0-9]\b/g, // UUIDs
-  /\b000000-0000\b/g, // Demo phone
-  /\b00000000-0000-0000\b/g, // Demo credit card
-  /\b2024122000\b/g, // Demo timestamp
-  /(sk_|pk_|whsec_)YOUR_[A-Z_]+_HERE/g, // Placeholder API keys
-  /[a-z]+@demo\.com/g, // Demo emails
-  /[a-z]+@example\.com/g, // Example emails
-  /user@example\.com/g, // Generic examples
-  /test@[a-z]+\.com/g, // Test emails
-  /noreply@[a-z]+\.com/g, // No-reply emails
-  /support@[a-z]+\.com/g, // Support emails
-  /legal@[a-z]+\.com/g, // Legal emails
-  /dpo@[a-z]+\.com/g, // DPO emails
-  /dev@[a-z]+\.com/g, // Dev emails
-  /devops@[a-z]+\.com/g // DevOps emails
-];
+  // Safe demo data patterns (don't remove)
+  const SAFE_DEMO_PATTERNS = [
+    /\b00000000-0000-0000-0000-000000000000\b/g, // UUIDs
+    /\b000000-0000\b/g, // Demo phone
+    /\b00000000-0000-0000\b/g, // Demo credit card
+    /\b0000-000000000000\b/g, // Demo credit card
+    /(sk_|pk_|whsec_)YOUR_[A-Z_]+_HERE/g, // Placeholder API keys
+    /[a-z]+@demo\.com/g, // Demo emails
+    /[a-z]+@example\.com/g, // Example emails
+    /user@example\.com/g, // Generic examples
+    /test@[a-z]+\.com/g, // Test emails
+    /noreply@[a-z]+\.com/g, // No-reply emails
+    /support@[a-z]+\.com/g, // Support emails
+    /legal@[a-z]+\.com/g, // Legal emails
+    /dpo@[a-z]+\.com/g, // DPO emails
+    /dev@[a-z]+\.com/g, // Dev emails
+    /devops@[a-z]+\.com/g // DevOps emails
+  ];
 
 function isSafeDemoData(text) {
   return SAFE_DEMO_PATTERNS.some(pattern => pattern.test(text));

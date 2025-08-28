@@ -75,7 +75,7 @@ MIXPANEL_TOKEN=your_mixpanel_token_here
 {
   "event": "event_name",
   "properties": {},
-  "timestamp": 1703123456789,
+  "timestamp": [EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]789,
   "url": "current_url",
   "userId": "user_id"
 }
@@ -89,7 +89,7 @@ MIXPANEL_TOKEN=your_mixpanel_token_here
 {
   "url": "page_url",
   "title": "page_title",
-  "timestamp": 1703123456789,
+  "timestamp": [EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]789,
   "referrer": "referrer_url"
 }
 ```

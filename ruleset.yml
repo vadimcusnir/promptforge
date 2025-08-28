@@ -7,6 +7,12 @@ schema_version: "2024.12.19"
 environment: "production"
 
 # Core 7D Parameter Engine Configuration
+# CRITICAL: These files are protected from agent modification
+# - app/layout.tsx (root layout)
+# - components/header.tsx (main header)
+# - components/footer.tsx (main footer)
+# - app/coming-soon/layout.tsx (coming soon layout)
+
 sevenD:
   # Domain enumeration - CORE 25 domains with fallbacks
   domain:

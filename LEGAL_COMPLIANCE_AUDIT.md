@@ -150,10 +150,10 @@ cursor/f_v3_* - Development artifacts
 
 ## 📞 COMPLIANCE CONTACTS
 
-- **Data Protection Officer**: dpo@promptforge.com
-- **Legal Team**: legal@promptforge.com
-- **Security Team**: security@promptforge.com
-- **Compliance**: compliance@promptforge.com
+- **Data Protection Officer**: dpo@[EXAMPLE_DOMAIN_yourdomain.com]
+- **Legal Team**: legal@[EXAMPLE_DOMAIN_yourdomain.com]
+- **Security Team**: security@[EXAMPLE_DOMAIN_yourdomain.com]
+- **Compliance**: compliance@[EXAMPLE_DOMAIN_yourdomain.com]
 
 ## 🚀 NEXT STEPS
 

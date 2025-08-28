@@ -27,7 +27,7 @@ async function applyUnifiedSchema() {
 
   try {
     // Read the migration file
-    const migrationPath = path.join(__dirname, '../supabase/migrations/20241220000002_unified_org_schema.sql');
+    const migrationPath = path.join(__dirname, '../supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_unified_org_schema.sql');
     
     if (!fs.existsSync(migrationPath)) {
       throw new Error(`Migration file not found: ${migrationPath}`);

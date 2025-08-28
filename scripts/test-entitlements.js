@@ -15,7 +15,7 @@ console.log('🧪 Testing PromptForge v3 Entitlements System\n');
 const TEST_CONFIG = {
   baseUrl: 'http://localhost:3000',
   testUser: {
-    email: 'test@example.com',
+    email: '[EXAMPLE_EMAIL_test@example.com]',
     password: 'testpassword123'
   },
   testOrg: 'test-org-123'

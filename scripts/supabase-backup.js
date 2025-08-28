@@ -659,6 +659,7 @@ if (require.main === module) {
   main();
 }
 
+// Export functions for external use
 module.exports = {
   performBackup,
   performRestore,

@@ -128,11 +128,11 @@ export default function LegalPage() {
               Questions about our legal documents or need clarification?
             </p>
             <a
-              href="mailto:legal@promptforge.com"
+              href="mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]"
               className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors"
             >
               <Mail className="w-4 h-4 mr-2" />
-              legal@promptforge.com
+              legal@[EXAMPLE_DOMAIN_yourdomain.com]
             </a>
           </div>
         </div>

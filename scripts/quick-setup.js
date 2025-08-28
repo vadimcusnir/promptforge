@@ -15,7 +15,7 @@ const defaultConfig = {
   SUPABASE_URL: 'https://your-project-id.supabase.co',
   NEXT_PUBLIC_BASE_URL: 'http://localhost:3000',
   STRIPE_PORTAL_CONFIGURATION_ID: 'bpc_test_portal_config_id_here',
-  SENDGRID_API_KEY: 'SG.your_sendgrid_api_key_here',
+  SENDGRID_API_KEY: '[EXAMPLE_SENDGRID_KEY_SG.your_sendgrid_api_key_here]',
   DEBUG: 'stripe:*,billing:*,webhook:*'
 }
 

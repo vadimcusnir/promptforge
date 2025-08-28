@@ -8,21 +8,22 @@ interface ComingSoonWrapperProps {
   children: React.ReactNode
 }
 
-export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
-  const isComingSoon = process.env.NEXT_PUBLIC_COMING_SOON === "true"
+"use client"
 
-  if (isComingSoon) {
-    // In coming soon mode, show only the coming soon page
-    // Middleware will redirect all routes to /coming-soon
+import { usePathname } from "next/navigation"
+
+export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
+  const pathname = usePathname()
+  const isComingSoon = process.env.NEXT_PUBLIC_COMING_SOON === "true"
+  const isComingSoonPage = pathname === "/coming-soon"
+
+  if (isComingSoon || isComingSoonPage) {
+    // In coming soon mode or on coming soon page, show only the content
+    // No header/footer for these cases
     return <>{children}</>
   }
 
-  // When not in coming soon mode, include Header and Footer
-  return (
-    <>
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </>
-  )
+  // For all other pages, just wrap children
+  // Header and Footer are handled by the root layout
+  return <main className="flex-1">{children}</main>
 }

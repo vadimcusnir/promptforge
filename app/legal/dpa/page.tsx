@@ -305,7 +305,7 @@ export default function DPAPage() {
                   For questions about this DPA or data protection matters:
                 </p>
                 <div className="space-y-2 text-sm">
-                  <p><strong>Email:</strong> dpo@promptforge.com</p>
+                  <p><strong>Email:</strong> dpo@[EXAMPLE_DOMAIN_yourdomain.com]</p>
                   <p><strong>Address:</strong> [Company Address]</p>
                   <p><strong>Phone:</strong> [Contact Number]</p>
                 </div>

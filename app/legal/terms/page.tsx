@@ -214,8 +214,8 @@ export default function TermsPage() {
               </div>
               <p>
                 For support requests, billing issues, or refunds, contact us at{" "}
-                <a href="mailto:legal@promptforge.com" className="text-gold-400 hover:text-gold-300 transition-colors">
-                  legal@promptforge.com
+                <a href="mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]" className="text-gold-400 hover:text-gold-300 transition-colors">
+                  legal@[EXAMPLE_DOMAIN_yourdomain.com]
                 </a>
               </p>
             </div>
@@ -255,11 +255,11 @@ export default function TermsPage() {
                   Legal Center
                 </Link>
                 <a
-                  href="mailto:legal@promptforge.com"
+                  href="mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]"
                   className="text-gold-400 hover:text-gold-300 transition-colors flex items-center"
                 >
                   <Mail className="w-4 h-4 mr-1" />
-                  legal@promptforge.com
+                  legal@[EXAMPLE_DOMAIN_yourdomain.com]
                 </a>
               </div>
               <button

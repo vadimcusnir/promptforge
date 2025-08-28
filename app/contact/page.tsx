@@ -76,7 +76,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="font-medium">Email Support</div>
-                    <div className="text-gray-400">support@promptforge.com</div>
+                    <div className="text-gray-400">[EXAMPLE_EMAIL_support@yourdomain.com]</div>
                     <div className="text-sm text-gray-500">24/7 technical support</div>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="font-medium">Enterprise Sales</div>
-                    <div className="text-gray-400">enterprise@promptforge.com</div>
+                    <div className="text-gray-400">[EXAMPLE_EMAIL_enterprise@yourdomain.com]</div>
                     <div className="text-sm text-gray-500">Custom pricing & features</div>
                   </div>
                 </div>
@@ -98,7 +98,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="font-medium">Phone Support</div>
-                    <div className="text-gray-400">+1 (555) 123-4567</div>
+                    <div className="text-gray-400">[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]]]]</div>
                     <div className="text-sm text-gray-500">Mon-Fri 9AM-6PM EST</div>
                   </div>
                 </div>
@@ -109,7 +109,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="font-medium">Office</div>
-                    <div className="text-gray-400">123 AI Street, Tech City</div>
+                    <div className="text-gray-400">[EXAMPLE_ADDRESS_[EXAMPLE_ADDRESS_123 AI Street, Tech City]]</div>
                     <div className="text-sm text-gray-500">United States</div>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export default function ContactPage() {
                 <Button
                   variant="outline"
                   className="w-full border-gray-700 text-gray-300 hover:border-yellow-400 hover:text-yellow-400"
-                  onClick={() => window.open('https://docs.promptforge.com', '_blank')}
+                  onClick={() => window.open('https://docs.[EXAMPLE_DOMAIN_yourdomain.com]', '_blank')}
                 >
                   <Star className="w-4 h-4 mr-2" />
                   View Documentation

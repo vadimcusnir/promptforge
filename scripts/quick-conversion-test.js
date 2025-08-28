@@ -44,7 +44,7 @@ async function testConversionFlow() {
     console.log('\n4️⃣ Testing enterprise contact API...');
     const apiResponse = await makePostRequest(`${baseUrl}/api/enterprise-contact`, {
       company: 'Test Company',
-      email: 'test@company.com',
+      email: '[EXAMPLE_EMAIL_[EXAMPLE_EMAIL_test@company.com]]',
       plan: 'enterprise',
       source: 'test'
     });

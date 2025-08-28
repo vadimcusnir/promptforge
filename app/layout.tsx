@@ -132,9 +132,11 @@ export default function RootLayout({
         <SkipLink href="#main-content">Skip to main content</SkipLink>
         <ErrorBoundary>
           <AnalyticsProvider>
+            <Header />
             <ComingSoonWrapper>
               {children}
             </ComingSoonWrapper>
+            <Footer />
           </AnalyticsProvider>
         </ErrorBoundary>
         <Toaster />

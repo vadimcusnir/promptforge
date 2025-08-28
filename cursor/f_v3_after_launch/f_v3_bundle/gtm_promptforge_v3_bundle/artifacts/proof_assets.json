@@ -688,11 +688,11 @@
   
   "deployment_strategy": {
     "digital_platforms": {
-      "interactive_website": "promptforge.com/proof",
-      "demo_environment": "demo.promptforge.com",
-      "roi_calculator": "calculator.promptforge.com",
-      "case_study_library": "success.promptforge.com",
-      "video_testimonials": "testimonials.promptforge.com"
+      "interactive_website": "[EXAMPLE_DOMAIN_yourdomain.com]/proof",
+      "demo_environment": "demo.[EXAMPLE_DOMAIN_yourdomain.com]",
+      "roi_calculator": "calculator.[EXAMPLE_DOMAIN_yourdomain.com]",
+      "case_study_library": "success.[EXAMPLE_DOMAIN_yourdomain.com]",
+      "video_testimonials": "testimonials.[EXAMPLE_DOMAIN_yourdomain.com]"
     },
     "sales_enablement": [
       "Sales deck integration: Embedded assets",
