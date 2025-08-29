@@ -16,13 +16,64 @@
 
 const sgMail = require('@sendgrid/mail');
 
+// Input validation function
+function validateInputs() {
+  const errors = [];
+  
+  // Check required environment variables
+  if (!process.env.SENDGRID_API_KEY) {
+    errors.push('SENDGRID_API_KEY environment variable is required');
+  }
+  
+  // Validate SENDGRID_API_KEY format
+  if (process.env.SENDGRID_API_KEY) {
+    const apiKey = process.env.SENDGRID_API_KEY;
+    if (!apiKey.startsWith('SG.')) {
+      errors.push('SENDGRID_API_KEY must start with "SG."');
+    }
+    
+    if (apiKey.length < 25) {
+      errors.push('SENDGRID_API_KEY appears to be too short (should be ~70 characters)');
+    }
+    
+    // Check for placeholder values
+    if (apiKey.includes('YOUR_') || apiKey.includes('EXAMPLE_') || apiKey.includes('PLACEHOLDER')) {
+      errors.push('SENDGRID_API_KEY contains placeholder values - please use actual API key');
+    }
+  }
+  
+  // Check for optional environment variables
+  const optionalVars = ['SENDGRID_FROM_EMAIL', 'SENDGRID_FROM_NAME', 'SENDGRID_DOMAIN'];
+  optionalVars.forEach(varName => {
+    if (process.env[varName] && process.env[varName].includes('EXAMPLE_')) {
+      errors.push(`${varName} contains placeholder values - please use actual values or remove`);
+    }
+  });
+  
+  return errors;
+}
+
+// Display validation errors and exit
+function displayValidationErrors(errors) {
+  console.error('❌ Configuration validation failed:');
+  errors.forEach(error => {
+    console.error(`   - ${error}`);
+  });
+  console.error('\n💡 To fix these issues:');
+  console.error('   1. Set SENDGRID_API_KEY with actual API key from SendGrid dashboard');
+  console.error('   2. Run: export SENDGRID_API_KEY=SG.your_actual_key_here');
+  console.error('   3. Get your API key from: https://app.sendgrid.com/settings/api_keys');
+  console.error('   4. Ensure you have SendGrid account access');
+  process.exit(1);
+}
+
 // Configuration
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 
-if (!SENDGRID_API_KEY) {
-  console.error('❌ SENDGRID_API_KEY environment variable is required');
-  console.log('Set it with: export SENDGRID_API_KEY=SG.xxx');
-  process.exit(1);
+// Validate inputs before proceeding
+const validationErrors = validateInputs();
+if (validationErrors.length > 0) {
+  displayValidationErrors(validationErrors);
 }
 
 sgMail.setApiKey(SENDGRID_API_KEY);

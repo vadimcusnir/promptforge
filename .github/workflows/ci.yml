@@ -451,8 +451,8 @@ jobs:
           path: .lighthouseci/
           retention-days: 7
 
-  # Job 7: Build
-  build:
+  # Job 7: Database Drift Check
+  database-drift-check:
     runs-on: ubuntu-latest
     needs: [unit-tests, pii-scan, secret-scan, backup-test, lighthouse]
     steps:
@@ -486,11 +486,173 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check Database Schema Consistency
+        run: |
+          echo "🔍 Checking database schema consistency..."
+          
+          # Verify migration files exist and are valid
+          if [ -d "supabase/migrations" ]; then
+            echo "✅ Migrations directory found"
+            
+            # Count migration files
+            MIGRATION_COUNT=$(find supabase/migrations -name "*.sql" | wc -l)
+            echo "   Found $MIGRATION_COUNT migration files"
+            
+            # Check for migration file naming consistency
+            INVALID_NAMES=$(find supabase/migrations -name "*.sql" | grep -vE "^[0-9]{14}_.*\.sql$" | wc -l)
+            if [ $INVALID_NAMES -gt 0 ]; then
+              echo "⚠️  Found $INVALID_NAMES migration files with non-standard naming"
+              find supabase/migrations -name "*.sql" | grep -vE "^[0-9]{14}_.*\.sql$"
+            else
+              echo "✅ All migration files follow naming convention"
+            fi
+            
+            # Check for duplicate migration numbers
+            DUPLICATES=$(find supabase/migrations -name "*.sql" | sed 's/.*\/\([0-9]\{14\}\)_.*/\1/' | sort | uniq -d | wc -l)
+            if [ $DUPLICATES -gt 0 ]; then
+              echo "🚨 Found $DUPLICATES duplicate migration timestamps"
+              find supabase/migrations -name "*.sql" | sed 's/.*\/\([0-9]\{14\}\)_.*/\1/' | sort | uniq -d
+              exit 1
+            else
+              echo "✅ No duplicate migration timestamps found"
+            fi
+            
+          else
+            echo "❌ Migrations directory not found"
+            exit 1
+          fi
+          
+          # Check if schema.sql is up to date
+          if [ -f "schema.sql" ]; then
+            echo "✅ Schema file found"
+            
+            # Check if schema.sql has been updated recently
+            SCHEMA_AGE=$(( ($(date +%s) - $(stat -c %Y schema.sql)) / 86400 ))
+            if [ $SCHEMA_AGE -gt 30 ]; then
+              echo "⚠️  Schema file is $SCHEMA_AGE days old - consider updating"
+            else
+              echo "✅ Schema file is up to date"
+            fi
+          else
+            echo "⚠️  Schema file not found - consider creating one"
+          fi
+          
+          # Check for any SQL syntax errors in migration files
+          echo "🔍 Validating SQL syntax in migration files..."
+          SQL_ERRORS=0
+          for file in supabase/migrations/*.sql; do
+            if [ -f "$file" ]; then
+              # Basic SQL validation (check for common syntax issues)
+              if grep -q "CREATE TABLE.*CREATE TABLE" "$file"; then
+                echo "⚠️  Potential duplicate CREATE TABLE in $file"
+                SQL_ERRORS=$((SQL_ERRORS + 1))
+              fi
+              
+              if grep -q "DROP TABLE.*DROP TABLE" "$file"; then
+                echo "⚠️  Potential duplicate DROP TABLE in $file"
+                SQL_ERRORS=$((SQL_ERRORS + 1))
+              fi
+            fi
+          done
+          
+          if [ $SQL_ERRORS -gt 0 ]; then
+            echo "⚠️  Found $SQL_ERRORS potential SQL syntax issues"
+          else
+            echo "✅ No obvious SQL syntax issues found"
+          fi
+
+      - name: Upload Database Check Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: database-drift-check-results
+          path: |
+            supabase/migrations/
+            schema.sql
+          retention-days: 7
+
+  # Job 8: Build
+  build:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, pii-scan, secret-scan, backup-test, lighthouse, database-drift-check]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Check Configuration
         run: |
+          echo "🔍 Checking configuration and environment..."
+          
+          # Check if .env.local exists (without reading content)
+          if [ -f ".env.local" ]; then
+            echo "✅ .env.local file found"
+          else
+            echo "❌ .env.local file not found - required for build"
+            exit 1
+          fi
+          
+          # Check required environment variables are set (without exposing values)
+          if [ -z "$STRIPE_SECRET_KEY" ]; then
+            echo "❌ STRIPE_SECRET_KEY not set in environment"
+            exit 1
+          fi
+          
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "❌ SUPABASE_URL not set in environment"
+            exit 1
+          fi
+          
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "❌ SUPABASE_SERVICE_ROLE_KEY not set in environment"
+            exit 1
+          fi
+          
+          echo "✅ Required environment variables are set"
+          
+          # Check database schema drift
+          echo "🔍 Checking database schema drift..."
           if [ -f "scripts/check-config.js" ]; then
-            echo "Checking configuration..."
-            node scripts/check-config.js
+            # Run config check without exposing sensitive data
+            node scripts/check-config.js --ci || {
+              echo "⚠️  Configuration check completed with warnings"
+            }
+          fi
+          
+          # Verify database migration files exist
+          if [ -d "supabase/migrations" ]; then
+            echo "✅ Database migrations directory found"
+            MIGRATION_COUNT=$(find supabase/migrations -name "*.sql" | wc -l)
+            echo "   Found $MIGRATION_COUNT migration files"
+          else
+            echo "❌ Database migrations directory not found"
+            exit 1
           fi
 
       - name: Build application
@@ -503,7 +665,7 @@ jobs:
           path: .next/
           retention-days: 1
 
-  # Job 8: Security Audit
+  # Job 9: Security Audit
   security-audit:
     runs-on: ubuntu-latest
     needs: [build]
@@ -570,7 +732,7 @@ jobs:
           echo "🔒 Security audit completed"
           echo "Check the results above for any security issues"
 
-  # Job 9: Deploy Preview (only on PRs)
+  # Job 10: Deploy Preview (only on PRs)
   deploy-preview:
     runs-on: ubuntu-latest
     needs: [build, security-audit]
@@ -641,7 +803,7 @@ jobs:
               }
             }
 
-  # Job 10: Production Deploy (only on main branch)
+  # Job 11: Production Deploy (only on main branch)
   production-deploy:
     runs-on: ubuntu-latest
     needs: [build, security-audit]

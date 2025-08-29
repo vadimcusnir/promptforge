@@ -35,6 +35,9 @@ next-env.d.ts
 # Supabase
 .supabase/
 
+# Database backups
+db/backups/
+
 # IDE
 .vscode/
 .idea/

@@ -12,14 +12,14 @@ const crypto = require('crypto');
 
 // Configuration
 const CONFIG = {
-  backupDir: './backups',
+  backupDir: './db/backups',
   retentionDays: 30,
   maxBackups: 100,
-  backupPrefix: 'promptforge-backup',
+  backupPrefix: 'promptforge',
   rulesetFile: './ruleset.yml',
   modulesFile: './lib/modules.ts',
   versionFile: './VERSION',
-  logFile: './backups/backup.log'
+  logFile: './db/backups/backup.log'
 };
 
 // Backup metadata
@@ -73,6 +73,16 @@ async function main() {
       case 'test-restore':
         await testRestore();
         break;
+      case 'test-restore-env':
+        const testBackupFile = args[1];
+        const testDbUrl = args[2];
+        if (!testBackupFile || !testDbUrl) {
+          console.error('❌ Please specify backup file and test database URL');
+          console.error('Usage: node supabase-backup.js test-restore-env <backup-file> <test-db-url>');
+          process.exit(1);
+        }
+        await testEnvironmentRestore(path.join(CONFIG.backupDir, testBackupFile), testDbUrl);
+        break;
       default:
         console.log(`
 🔧 Supabase Backup & Recovery Tool
@@ -87,11 +97,13 @@ Commands:
   verify <file>    - Verify backup integrity
   cleanup          - Remove old backups
   test-restore     - Test restore on dummy project
+  test-restore-env - Test restore in a specific environment (requires backup file and test DB URL)
 
 Examples:
   node supabase-backup.js backup
   node supabase-backup.js restore promptforge-backup-2025-01-15.sql
   node supabase-backup.js list
+  node supabase-backup.js test-restore-env 20250115_1430-promptforge-v100.sql postgresql://test:test@localhost:5432/test_db
         `);
         process.exit(0);
     }
@@ -435,9 +447,10 @@ async function testRestore() {
     console.log('   Creating dummy database...');
     const dummyDbUrl = `postgresql://test:test@localhost:5432/promptforge_test`;
     
-    // Test restore (this would require a test database setup)
+    // Test restore using test environment restore
     console.log('   Testing restore process...');
-    console.log('   ✅ Restore test completed (dummy environment)');
+    await testEnvironmentRestore(testBackupPath, dummyDbUrl);
+    console.log('   ✅ Restore test completed successfully');
 
     // Cleanup
     fs.rmSync(dummyDir, { recursive: true, force: true });
@@ -451,6 +464,45 @@ async function testRestore() {
       fs.rmSync(dummyDir, { recursive: true, force: true });
     }
     throw error;
+  }
+}
+
+/**
+ * Test environment restore with pg_restore -C option
+ * This creates the database if it doesn't exist
+ */
+async function testEnvironmentRestore(backupPath, testDbUrl) {
+  try {
+    console.log('   Using pg_restore with -C option for test environment...');
+    
+    // Extract database name from URL
+    const dbName = testDbUrl.split('/').pop();
+    const baseUrl = testDbUrl.replace(`/${dbName}`, '');
+    
+    // First, try to connect to postgres database to create test database
+    try {
+      execSync(`psql "${baseUrl}/postgres" -c "CREATE DATABASE ${dbName};"`, {
+        stdio: 'pipe',
+        shell: true
+      });
+      console.log(`   ✅ Created test database: ${dbName}`);
+    } catch (error) {
+      // Database might already exist, which is fine
+      console.log(`   ℹ️  Test database ${dbName} already exists or creation failed`);
+    }
+    
+    // Now restore using pg_restore with -C option
+    // -C creates the database if it doesn't exist
+    // -d specifies the database to restore to
+    execSync(`pg_restore -C -d "${testDbUrl}" "${backupPath}"`, {
+      stdio: 'pipe',
+      shell: true
+    });
+    
+    console.log(`   ✅ Successfully restored to test database: ${dbName}`);
+    
+  } catch (error) {
+    throw new Error(`Test environment restore failed: ${error.message}`);
   }
 }
 
@@ -582,8 +634,17 @@ function ensureBackupDirectory() {
 }
 
 function generateBackupFileName() {
-  const timestamp = new Date().toISOString().split('T')[0];
-  return `${CONFIG.backupPrefix}-${timestamp}.sql`;
+  const now = new Date();
+  const timestamp = now.toISOString()
+    .replace(/T/, '_')
+    .replace(/\..+/, '')
+    .replace(/:/g, '')
+    .replace(/-/g, '');
+  
+  const schemaVersion = getAppVersion();
+  const version = schemaVersion.replace(/\./g, '');
+  
+  return `${timestamp}-${CONFIG.backupPrefix}-v${version}.sql`;
 }
 
 function checkSupabaseCLI() {
@@ -666,5 +727,7 @@ module.exports = {
   listBackups,
   verifyBackup,
   cleanupOldBackups,
-  testRestore
+  testRestore,
+  testEnvironmentRestore,
+  generateBackupFileName
 };

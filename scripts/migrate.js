@@ -18,13 +18,64 @@ const { Client } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
+// Input validation function
+function validateInputs() {
+  const errors = [];
+  
+  // Check required environment variables
+  if (!process.env.DATABASE_URL) {
+    errors.push('DATABASE_URL environment variable is required');
+  }
+  
+  // Validate DATABASE_URL format
+  if (process.env.DATABASE_URL) {
+    const dbUrl = process.env.DATABASE_URL;
+    if (!dbUrl.match(/^postgresql:\/\/[^:]+:[^@]+@[^:]+:\d+\/[^?]+/)) {
+      errors.push('DATABASE_URL must be in format: postgresql://username:password@host:port/database');
+    }
+    
+    // Check for placeholder values
+    if (dbUrl.includes('username:password') || dbUrl.includes('localhost:5432')) {
+      errors.push('DATABASE_URL contains placeholder values - please use actual database credentials');
+    }
+  }
+  
+  // Check if migration files exist
+  const migrationFiles = [
+    'supabase/migrations/20241220000000_create_user_management_tables.sql'
+  ];
+  
+  migrationFiles.forEach(file => {
+    const filePath = path.join(process.cwd(), file);
+    if (!fs.existsSync(filePath)) {
+      errors.push(`Migration file not found: ${file}`);
+    }
+  });
+  
+  return errors;
+}
+
+// Display validation errors and exit
+function displayValidationErrors(errors) {
+  console.error('❌ Configuration validation failed:');
+  errors.forEach(error => {
+    console.error(`   - ${error}`);
+  });
+  console.error('\n💡 To fix these issues:');
+  console.error('   1. Set DATABASE_URL with actual database credentials');
+  console.error('   2. Run: export DATABASE_URL=postgresql://user:pass@host:port/db');
+  console.error('   3. Ensure migration files exist in supabase/migrations/');
+  console.error('   4. Verify database is accessible from this machine');
+  process.exit(1);
+}
+
 // Configuration
 const DATABASE_URL = process.env.DATABASE_URL || '[EXAMPLE_DB_URL_postgresql://username:password@localhost:5432/promptforge]';
 
-if (!DATABASE_URL) {
-  console.error('❌ DATABASE_URL environment variable is required');
-  console.log('Set it with: export DATABASE_URL=postgresql://username:password@localhost:5432/promptforge');
-  process.exit(1);
+// Validate inputs before proceeding
+const validationErrors = validateInputs();
+if (validationErrors.length > 0) {
+  displayValidationErrors(validationErrors);
 }
 
 const client = new Client({

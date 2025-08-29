@@ -3,6 +3,7 @@
 /**
  * Intelligent PII Scanner for PromptForge
  * Distinguishes between real PII and legitimate demo/placeholder data
+ * Produces structured JSON reports for CI integration
  */
 
 const fs = require('fs');
@@ -11,25 +12,53 @@ const path = require('path');
 // Real PII patterns (high confidence)
 const REAL_PII_PATTERNS = {
   // Real email addresses (excluding demo/example domains)
-  realEmail: /\b[A-Za-z0-9._%+-]+@(?!demo\.com|example\.com|test\.com|company\.com|promptforge\.com)[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+  realEmail: {
+    pattern: /\b[A-Za-z0-9._%+-]+@(?!demo\.com|example\.com|test\.com|company\.com|promptforge\.com|yourcompany\.com)[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+    severity: 'critical',
+    description: 'Real email addresses (excluding safe demo domains)'
+  },
   
   // Real phone numbers (excluding demo patterns)
-  realPhone: /(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b/g,
+  realPhone: {
+    pattern: /(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b/g,
+    severity: 'critical',
+    description: 'Real phone numbers (excluding demo patterns)'
+  },
   
   // Real SSN
-  realSSN: /\b\d{3}-\d{2}-\d{4}\b|\b\d{9}\b/g,
+  realSSN: {
+    pattern: /\b\d{3}-\d{2}-\d{4}\b|\b\d{9}\b/g,
+    severity: 'critical',
+    description: 'Social Security Numbers'
+  },
   
   // Real credit card numbers (excluding demo patterns)
-  realCreditCard: /(?<!00000000-0000-0000|0000-000000000000)\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g,
+  realCreditCard: {
+    pattern: /(?<!00000000-0000-0000|0000-000000000000)\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g,
+    severity: 'critical',
+    description: 'Real credit card numbers (excluding demo patterns)'
+  },
   
   // Real API keys (excluding placeholders)
-  realAPIKey: /(sk_|pk_|whsec_)(?!YOUR_)[a-zA-Z0-9_]{20,}/g,
+  realAPIKey: {
+    pattern: /(sk_|pk_|whsec_)(?!YOUR_|test_|example_)[a-zA-Z0-9_]{20,}/g,
+    severity: 'critical',
+    description: 'Real API keys (excluding placeholders)'
+  },
   
   // Real database connections (excluding placeholders)
-  realDBConnection: /postgresql:\/\/(?!username:password|test:test)[^\/\s]+:[^@\s]+@[^\/\s]+/g,
+  realDBConnection: {
+    pattern: /postgresql:\/\/(?!username:password|test:test|USER:PASSWORD)[^\/\s]+:[^@\s]+@[^\/\s]+/g,
+    severity: 'medium',
+    description: 'Real database connection strings'
+  },
   
   // Real IP addresses (excluding private/local ranges)
-  realIPAddress: /\b(?!10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|169\.254\.|127\.|0\.|255\.255\.255\.255)\b(?:\d{1,3}\.){3}\d{1,3}\b/g
+  realIPAddress: {
+    pattern: /\b(?!10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|169\.254\.|127\.|0\.|255\.255\.255\.255)\b(?:\d{1,3}\.){3}\d{1,3}\b/g,
+    severity: 'medium',
+    description: 'Real public IP addresses'
+  }
 };
 
 // Safe demo/placeholder patterns (don't flag)
@@ -42,15 +71,19 @@ const SAFE_PATTERNS = [
   /\b[a-z]+@promptforge\.com\b/g,
   /\b[a-z]+@yourcompany\.com\b/g,
   /\b[a-z]+@chatgpt-prompting\.com\b/g,
+  
   // Safe placeholder patterns
   /\[EXAMPLE_EMAIL_[^]]+\]/g,
   /\[EXAMPLE_PHONE_[^]]+\]/g,
   /\[EXAMPLE_PLACEHOLDER_[^]]+\]/g,
+  /\[EXAMPLE_DB_URL_[^]]+\]/g,
+  
   // Safe phone patterns
   /phone:\s*\[EXAMPLE_PHONE_[^]]+\]/g,
   /tel:\s*\[EXAMPLE_PHONE_[^]]+\]/g,
   /\[EXAMPLE_PHONE_\+1\s*\(555\)\s*123-4567\]/g,
   /\[EXAMPLE_PHONE_\(555\)\s*123-4567\]/g,
+  
   // Safe demo patterns
   /\b1234567890\b/g,
   /\b123-456-7890\b/g,
@@ -137,19 +170,23 @@ function scanFile(filePath) {
       file: filePath,
       realPII: {},
       safeData: {},
-      totalIssues: 0
+      totalIssues: 0,
+      scanTime: new Date().toISOString()
     };
     
     // Check for real PII
-    Object.entries(REAL_PII_PATTERNS).forEach(([type, pattern]) => {
-      const matches = content.match(pattern);
+    Object.entries(REAL_PII_PATTERNS).forEach(([type, config]) => {
+      const matches = content.match(config.pattern);
       if (matches) {
         // Filter out safe demo data
         const realMatches = matches.filter(match => !isSafeDemoData(match));
         if (realMatches.length > 0) {
           results.realPII[type] = {
             count: realMatches.length,
-            examples: realMatches.slice(0, 3) // Show first 3 examples
+            severity: config.severity,
+            description: config.description,
+            examples: realMatches.slice(0, 3), // Show first 3 examples
+            allMatches: realMatches
           };
           results.totalIssues += realMatches.length;
         }
@@ -163,7 +200,8 @@ function scanFile(filePath) {
       error: error.message,
       realPII: {},
       safeData: {},
-      totalIssues: 0
+      totalIssues: 0,
+      scanTime: new Date().toISOString()
     };
   }
 }
@@ -204,7 +242,34 @@ function scanDirectory(dirPath, excludeDirs = ['node_modules', '.git', '.next', 
   return results;
 }
 
-function generateReport(results) {
+function generateJSONReport(results, targetPath) {
+  const report = {
+    timestamp: new Date().toISOString(),
+    script: 'intelligent-pii-scan.js',
+    targetPath: targetPath,
+    summary: {
+      totalFiles: results.length,
+      filesWithIssues: results.filter(r => r.totalIssues > 0).length,
+      totalIssues: results.reduce((sum, r) => sum + r.totalIssues, 0),
+      criticalIssues: results.reduce((sum, r) => {
+        return sum + Object.values(r.realPII).filter(issue => issue.severity === 'critical').reduce((s, i) => s + i.count, 0);
+      }, 0),
+      mediumIssues: results.reduce((sum, r) => {
+        return sum + Object.values(r.realPII).filter(issue => issue.severity === 'medium').reduce((s, i) => s + i.count, 0);
+      }, 0)
+    },
+    results: results,
+    metadata: {
+      patterns: Object.keys(REAL_PII_PATTERNS),
+      safePatterns: SAFE_PATTERNS.length,
+      version: '2.0.0'
+    }
+  };
+  
+  return report;
+}
+
+function generateConsoleReport(results) {
   console.log('🔍 Intelligent PII Detection Report');
   console.log('====================================\n');
   
@@ -222,7 +287,7 @@ function generateReport(results) {
   results.forEach(result => {
     Object.entries(result.realPII).forEach(([type, data]) => {
       if (!piiByType[type]) {
-        piiByType[type] = { count: 0, files: [] };
+        piiByType[type] = { count: 0, files: [], severity: data.severity };
       }
       piiByType[type].count += data.count;
       piiByType[type].files.push({
@@ -235,7 +300,8 @@ function generateReport(results) {
   
   console.log(`\n📁 PII Issues by Type:`);
   Object.entries(piiByType).forEach(([type, data]) => {
-    console.log(`   ${type}: ${data.count} items in ${data.files.length} files`);
+    const severityIcon = data.severity === 'critical' ? '🚨' : '⚠️';
+    console.log(`   ${severityIcon} ${type} (${data.severity}): ${data.count} items in ${data.files.length} files`);
   });
   
   console.log(`\n📄 Detailed Results:`);
@@ -243,7 +309,8 @@ function generateReport(results) {
     if (result.totalIssues > 0) {
       console.log(`\n   ${result.file}:`);
       Object.entries(result.realPII).forEach(([type, data]) => {
-        console.log(`     ${type}: ${data.count} items`);
+        const severityIcon = data.severity === 'critical' ? '🚨' : '⚠️';
+        console.log(`     ${severityIcon} ${type}: ${data.count} items`);
         if (data.examples.length > 0) {
           console.log(`       Examples: ${data.examples.join(', ')}`);
         }
@@ -260,17 +327,25 @@ function main() {
   const args = process.argv.slice(2);
   const targetPath = args[0] || '.';
   
-  console.log('🧠 Starting Intelligent PII Scan...\n');
+  console.log('🧠 Starting Intelligent PII Scan v2.0...\n');
   
   const startTime = Date.now();
   const results = scanDirectory(targetPath);
   const duration = (Date.now() - startTime) / 1000;
   
-  generateReport(results);
+  // Generate JSON report
+  const jsonReport = generateJSONReport(results, targetPath);
+  const reportPath = 'pii-scan-report.json';
+  fs.writeFileSync(reportPath, JSON.stringify(jsonReport, null, 2));
+  
+  // Generate console report
+  generateConsoleReport(results);
   
   console.log(`\n⏱️  Scan completed in ${duration.toFixed(2)}s`);
+  console.log(`📄 Detailed JSON report saved to: ${reportPath}`);
   
   if (results.length > 0) {
+    console.log('\n💡 To fix PII issues, run: node scripts/cleanup-pii.js');
     process.exit(1);
   }
 }
@@ -279,4 +354,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scanFile, scanDirectory, isSafeDemoData };
+module.exports = { scanFile, scanDirectory, isSafeDemoData, generateJSONReport };

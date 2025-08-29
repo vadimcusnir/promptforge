@@ -10,14 +10,61 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: '.env.local' });
 
+// Input validation function
+function validateInputs() {
+  const errors = [];
+  
+  // Check required environment variables
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    errors.push('NEXT_PUBLIC_SUPABASE_URL is required');
+  }
+  
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    errors.push('SUPABASE_SERVICE_ROLE_KEY is required');
+  }
+  
+  // Validate Supabase URL format
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && 
+      !process.env.NEXT_PUBLIC_SUPABASE_URL.match(/^https:\/\/.*\.supabase\.co$/)) {
+    errors.push('NEXT_PUBLIC_SUPABASE_URL must be a valid Supabase URL (https://project-id.supabase.co)');
+  }
+  
+  // Validate service role key format
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY && 
+      !process.env.SUPABASE_SERVICE_ROLE_KEY.startsWith('eyJ')) {
+    errors.push('SUPABASE_SERVICE_ROLE_KEY must be a valid JWT token starting with "eyJ"');
+  }
+  
+  // Check if migration file exists
+  const migrationPath = path.join(__dirname, '../supabase/migrations/20241220000000_unified_org_schema.sql');
+  if (!fs.existsSync(migrationPath)) {
+    errors.push(`Migration file not found: ${migrationPath}`);
+  }
+  
+  return errors;
+}
+
+// Display validation errors and exit
+function displayValidationErrors(errors) {
+  console.error('❌ Configuration validation failed:');
+  errors.forEach(error => {
+    console.error(`   - ${error}`);
+  });
+  console.error('\n💡 To fix these issues:');
+  console.error('   1. Ensure .env.local file exists and contains required variables');
+  console.error('   2. Run: cp env.example .env.local');
+  console.error('   3. Update .env.local with your actual Supabase credentials');
+  console.error('   4. Verify the migration file exists in supabase/migrations/');
+  process.exit(1);
+}
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !serviceRoleKey) {
-  console.error('❌ Missing required environment variables');
-  console.error('NEXT_PUBLIC_SUPABASE_URL:', supabaseUrl ? '✅' : '❌');
-  console.error('SUPABASE_SERVICE_ROLE_KEY:', serviceRoleKey ? '✅' : '❌');
-  process.exit(1);
+// Validate inputs before proceeding
+const validationErrors = validateInputs();
+if (validationErrors.length > 0) {
+  displayValidationErrors(validationErrors);
 }
 
 const supabase = createClient(supabaseUrl, serviceRoleKey);

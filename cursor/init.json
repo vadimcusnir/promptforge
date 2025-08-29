@@ -80,12 +80,25 @@
         "components/header.tsx",
         "components/footer.tsx"
       ],
+      "navigation_components_forbidden": [
+        "components/header.tsx",
+        "components/footer.tsx",
+        "components/nav.tsx",
+        "components/navigation.tsx"
+      ],
       "local_layouts_allowed": [
         "app/coming-soon/layout.tsx",
         "app/dashboard/layout.tsx",
         "app/generator/layout.tsx"
       ],
-      "note": "Global layout files are protected. Only local layout modifications are allowed."
+      "write_forbidden": [
+        "app/layout.tsx",
+        "components/header.tsx",
+        "components/footer.tsx",
+        "components/nav.tsx",
+        "components/navigation.tsx"
+      ],
+      "note": "Global layout files are protected. Only local layout modifications are allowed. Header and Footer components cannot be modified directly - changes must go through the root layout system."
     },
     "migrations_target": "/cursor/docs/supabase_migrations",
     "licensing_target":  "/cursor/docs/licensing",
