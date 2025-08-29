@@ -1,3 +1,10 @@
+<!-- 
+⚠️ SECURITY WARNING: This file contains EXAMPLE data only!
+   - Phone numbers: [EXAMPLE_PHONE_000-000-0000] format
+   - All sensitive data has been anonymized
+   - DO NOT use in production without proper sanitization
+   - This is documentation/example code only
+-->
 <html lang="ro"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1482,7 +1489,7 @@ ${module.guardrails}
         // Initialize
         initializeInterface();
     </script>
-<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c[EXAMPLE_PHONE_555-123-4567]b80a79&quot;}" crossorigin="anonymous"></script>
+<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c[EXAMPLE_PHONE_000-000-0000]b80a79&quot;}" crossorigin="anonymous"></script>
 
 
     <script id="html_badge_script1">

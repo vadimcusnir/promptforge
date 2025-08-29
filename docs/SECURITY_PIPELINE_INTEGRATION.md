@@ -1,5 +1,10 @@
 # 🔒 Security Pipeline Integration
 
+⚠️ **SECURITY WARNING**: This documentation contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 ## Overview
 
 The Security Pipeline Integration automates security checks, PII detection, secret scanning, and performance testing in the CI/CD process. This ensures that all code changes are thoroughly vetted for security vulnerabilities before deployment.

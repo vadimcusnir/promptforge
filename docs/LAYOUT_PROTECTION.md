@@ -1,5 +1,10 @@
 # 🛡️ Layout Protection System
 
+⚠️ **SECURITY WARNING**: This documentation contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 ## Overview
 
 The Layout Protection System ensures that the global navigation structure (Header and Footer) is never duplicated across the application. This prevents navigation inconsistencies, accessibility issues, and maintains a clean, maintainable codebase.

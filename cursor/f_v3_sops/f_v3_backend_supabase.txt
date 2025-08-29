@@ -1,6 +1,11 @@
 
 
 
+⚠️ SECURITY WARNING: This file contains EXAMPLE data only!
+   - All sensitive data has been anonymized
+   - DO NOT use in production without proper sanitization
+   - This is documentation/example code only
+
 0) Premisă de modelare (ancore)
 Engine-ul are 50 module reale + 7 vectori; UI‑ul curent deja standardizează config 7D și transformă fiecare generare în artefact executabil. Calibrează schema pe: module → param set 7D → run → bundle → entitlements. 
 Pentru PROD, treci de la simulare la GPT live, history în cloud, export bundle și licențe pe planuri & industrii. Schema de mai jos reflectă exact aceste extensii.
