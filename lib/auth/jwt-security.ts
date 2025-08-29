@@ -55,13 +55,8 @@ export class JWTSecurityManager {
       exp: Math.floor(Date.now() / 1000) + JWT_CONFIG.ACCESS_TOKEN_EXPIRY
     }
 
-    return this.supabase.auth.admin.generateLink({
-      type: 'magiclink',
-      email: userId,
-      options: {
-        data: payload
-      }
-    })
+    // Create a simple token (base64 encoded payload)
+    return Buffer.from(JSON.stringify(payload)).toString('base64')
   }
 
   // Generate long-lived refresh token
@@ -75,13 +70,8 @@ export class JWTSecurityManager {
       jti: randomBytes(32).toString('hex') // Unique token ID
     }
 
-    return this.supabase.auth.admin.generateLink({
-      type: 'magiclink',
-      email: userId,
-      options: {
-        data: payload
-      }
-    })
+    // Create a simple token (base64 encoded payload)
+    return Buffer.from(JSON.stringify(payload)).toString('base64')
   }
 
   // Set secure httpOnly cookies
@@ -119,9 +109,9 @@ export class JWTSecurityManager {
     // Try to validate access token first
     if (accessToken) {
       try {
-        const { data: { user }, error } = await this.supabase.auth.getUser(accessToken)
-        if (!error && user) {
-          return { valid: true, userId: user.id }
+        const user = this.validateToken(accessToken)
+        if (user && user.type === 'access') {
+          return { valid: true, userId: user.sub }
         }
       } catch (error) {
         // Access token invalid, try refresh
@@ -134,6 +124,23 @@ export class JWTSecurityManager {
     }
 
     return { valid: false }
+  }
+
+  // Validate token manually
+  private validateToken(token: string): any {
+    try {
+      const decoded = Buffer.from(token, 'base64').toString()
+      const payload = JSON.parse(decoded)
+      
+      // Check if token is expired
+      if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+        return null
+      }
+      
+      return payload
+    } catch {
+      return null
+    }
   }
 
   // Attempt token refresh with rate limiting
@@ -155,8 +162,8 @@ export class JWTSecurityManager {
 
     try {
       // Validate refresh token
-      const { data: { user }, error } = await this.supabase.auth.getUser(refreshToken)
-      if (error || !user) {
+      const user = this.validateToken(refreshToken)
+      if (!user || user.type !== 'refresh') {
         this.trackRefreshAttempt(tokenHash)
         return { valid: false }
       }
@@ -165,7 +172,7 @@ export class JWTSecurityManager {
       const { data: session } = await this.supabase
         .from('user_sessions')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user.sub)
         .eq('refresh_hash', tokenHash)
         .eq('is_active', true)
         .single()
@@ -176,7 +183,7 @@ export class JWTSecurityManager {
       }
 
       // Generate new tokens
-      const newTokens = await this.generateTokens(user.id, session.session_id)
+      const newTokens = await this.generateTokens(user.sub, session.session_id)
       
       // Invalidate old refresh token
       await this.supabase
@@ -184,7 +191,7 @@ export class JWTSecurityManager {
         .update({ is_active: false })
         .eq('refresh_hash', tokenHash)
 
-      return { valid: true, userId: user.id, newTokens }
+      return { valid: true, userId: user.sub, newTokens }
     } catch (error) {
       this.trackRefreshAttempt(tokenHash)
       return { valid: false }

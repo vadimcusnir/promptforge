@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useEffect, ReactNode, Suspense } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
 interface AnalyticsContextType {
@@ -22,7 +22,8 @@ interface AnalyticsProviderProps {
   children: ReactNode
 }
 
-export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+// Inner component that uses navigation hooks
+function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -101,14 +102,25 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     trackPageView(url)
   }, [pathname, searchParams])
 
-  const value: AnalyticsContextType = {
+  const contextValue: AnalyticsContextType = {
     trackEvent,
     trackPageView
   }
 
   return (
-    <AnalyticsContext.Provider value={value}>
+    <AnalyticsContext.Provider value={contextValue}>
       {children}
     </AnalyticsContext.Provider>
+  )
+}
+
+// Main provider with Suspense boundary
+export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+  return (
+    <Suspense fallback={null}>
+      <AnalyticsProviderInner>
+        {children}
+      </AnalyticsProviderInner>
+    </Suspense>
   )
 }

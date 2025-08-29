@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { ChevronRight, Shield, FileText, CheckCircle, AlertTriangle, Users, Database, Lock } from "lucide-react"
 
