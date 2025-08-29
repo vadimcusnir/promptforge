@@ -1,26 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
+// Signup schema
 const signupSchema = z.object({
   email: z.string().email('Invalid email format'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  acceptMarketing: z.boolean().optional()
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  organizationName: z.string().min(1, 'Organization name is required'),
+  plan: z.enum(['pilot', 'pro', 'enterprise']).default('pilot')
 })
+
+// Lazy Supabase client creation
+async function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase not configured')
+  }
+  
+  const { createClient } = await import('@supabase/supabase-js')
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
     // Validate request body
-    const { email, password, fullName, acceptMarketing } = signupSchema.parse(body)
+    const { email, password, firstName, lastName, organizationName, plan } = signupSchema.parse(body)
 
     // Create Supabase client with service role for user creation
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = await getSupabase()
 
     // Check if user already exists
     const { data: existingUser, error: checkError } = await supabase
@@ -42,8 +57,9 @@ export async function POST(request: NextRequest) {
       password,
       email_confirm: true, // Auto-confirm email for now
       user_metadata: {
-        full_name: fullName,
-        accept_marketing: acceptMarketing || false
+        full_name: `${firstName} ${lastName}`,
+        organization_name: organizationName,
+        plan: plan
       }
     })
 
@@ -61,8 +77,9 @@ export async function POST(request: NextRequest) {
       .insert({
         id: user.id,
         email: user.email,
-        full_name: fullName,
-        plan: 'pilot', // Default to pilot plan
+        full_name: `${firstName} ${lastName}`,
+        organization_name: organizationName,
+        plan: plan,
         credits_remaining: 10, // Default credits
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()

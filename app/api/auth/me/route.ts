@@ -1,5 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { cookies } from 'next/headers'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
+// Lazy Supabase client creation
+async function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    throw new Error('Supabase not configured')
+  }
+  
+  const { createClient } = await import('@supabase/supabase-js')
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  )
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,10 +31,7 @@ export async function GET(request: NextRequest) {
     const token = authHeader.substring(7)
 
     // Create Supabase client with service role for token validation
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = await getSupabase()
 
     // Verify JWT token
     const { data: { user }, error: authError } = await supabase.auth.getUser(token)

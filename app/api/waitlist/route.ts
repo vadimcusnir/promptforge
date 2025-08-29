@@ -1,19 +1,34 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-// Only create client if environment variables are available
-const supabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
-  : null
+// Waitlist schema
+const waitlistSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  name: z.string().min(1, 'Name is required'),
+  company: z.string().optional(),
+  role: z.string().optional(),
+  source: z.string().optional()
+})
+
+// Lazy Supabase client creation
+async function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase not configured')
+  }
+  
+  const { createClient } = await import('@supabase/supabase-js')
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
-    if (!supabase) {
-      return NextResponse.json({ error: "Service temporarily unavailable" }, { status: 503 })
-    }
+    const supabase = await getSupabase()
 
     const { name, email } = await request.json()
 

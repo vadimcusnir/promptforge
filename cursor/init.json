@@ -3,9 +3,11 @@
   "meta": {
     "project": "PROMPTFORGE™ v3.0",
     "source_of_truth": "/cursor/init",
-    "description": "Inițializator canonic pentru agentul Cursor. Enumeră fișierele forge_v3_* și regulile de interacțiune.",
-    "last_updated": "2025-01-26"
+    "description": "Inițializator canonic: ierarhie, rute permise, comenzi, legi non-deviation. Orice abatere este blocată.",
+    "last_updated": "2025-08-27",
+    "semver": "1.0.0"
   },
+
   "directories": {
     "root": "/cursor",
     "docs_root": "/cursor/docs",
@@ -16,74 +18,110 @@
       "/cursor/docs/supabase_migrations"
     ]
   },
+
   "precedence": {
-    "note": "Număr mai mic = prioritate mai mare.",
+    "note": "Număr mai mic = prioritate mai mare. În conflict câștigă nivelul inferior numeric.",
     "order": [
-      { "id": "init", "path": "/cursor/init", "level": 0 },
-      { "id": "supabase", "path": "/cursor/f_v3_plan_1_supabase.txt", "level": 1 },
-      { "id": "audit", "path": "/cursor/f_v3_plan_1_audit.txt", "level": 2 },
-      { "id": "agent", "path": "/agent.ts", "level": 3 },
-      { "id": "ruleset", "path": "/cursor/ruleset.yml", "level": 4 }
+      { "id": "init",        "path": "/cursor/init",                         "level": 0  },
+      { "id": "rulebook",    "path": "/cursor/forge_v3_rulebook_v1.txt",     "level": 1  },
+      { "id": "standard",    "path": "/cursor/forge_v3_standard.txt",        "level": 2  },
+      { "id": "runtime",     "paths": ["/cursor/forge_v3_runtime_1.txt", "/cursor/forge_v3_runtime_2.txt"], "level": 3 },
+      { "id": "domains",     "path": "/cursor/forge_v3_standard_domenii.txt","level": 4  },
+      { "id": "entitlements","path": "/cursor/forge_v3_standard_entitlements.txt","level": 5 },
+      { "id": "prompts",     "path": "/cursor/forge_v3_standard_prompt.txt", "level": 6  },
+      { "id": "backend",     "paths": ["/cursor/forge_v3_backend_supabase.txt", "/cursor/forge_v3_backend_supabase_2.txt"], "level": 7 },
+      { "id": "frontend",    "path": "/cursor/forge_v3_front_end.txt",       "level": 8  },
+      { "id": "branding",    "path": "/cursor/forge_v3_branding.txt",        "level": 9  },
+      { "id": "templates",   "path": "/cursor/forge_v3_dor_dod_temp.txt",    "level": 10 }
     ]
   },
+
   "instruction_files": [
-    {
-      "path": "/cursor/f_v3_plan_1_supabase.txt",
-      "role": "backend_supabase",
-      "interaction": "reference_generate",
-      "description": "Arhitectura backend Supabase: tabele, RPC, policies, storage."
-    },
-    {
-      "path": "/cursor/f_v3_plan_1_audit.txt",
-      "role": "audit_structure",
-      "interaction": "reference_apply",
-      "description": "Structura proiectului și audit-ul componentelor."
-    },
-    {
-      "path": "/agent.ts",
-      "role": "core_agent",
-      "interaction": "read_write",
-      "description": "Agentul principal pentru execuția prompt-urilor și gating."
-    },
-    {
-      "path": "/cursor/ruleset.yml",
-      "role": "ruleset",
-      "interaction": "read_only",
-      "description": "Regulile de proiect și configurația sistemului."
-    }
+    { "path": "/cursor/forge_v3_rulebook_v1.txt",       "role": "rulebook",            "interaction": "read_only" },
+    { "path": "/cursor/forge_v3_standard.txt",          "role": "standard_protocol",   "interaction": "read_only" },
+    { "path": "/cursor/forge_v3_standard_prompt.txt",   "role": "prompt_skeletons",    "interaction": "compile_apply" },
+    { "path": "/cursor/forge_v3_standard_domenii.txt",  "role": "domain_taxonomy",     "interaction": "reference_apply" },
+    { "path": "/cursor/forge_v3_standard_entitlements.txt","role":"entitlements",      "interaction": "reference_apply" },
+    { "path": "/cursor/forge_v3_runtime_1.txt",         "role": "runtime",             "interaction": "read_only" },
+    { "path": "/cursor/forge_v3_runtime_2.txt",         "role": "runtime",             "interaction": "read_only" },
+    { "path": "/cursor/forge_v3_backend_supabase.txt",  "role": "backend_supabase",    "interaction": "reference_generate" },
+    { "path": "/cursor/forge_v3_backend_supabase_2.txt","role":"backend_supabase_ext", "interaction": "reference_generate" },
+    { "path": "/cursor/forge_v3_front_end.txt",         "role": "frontend_spec",       "interaction": "reference_generate" },
+    { "path": "/cursor/forge_v3_branding.txt",          "role": "branding",            "interaction": "reference_apply" },
+    { "path": "/cursor/forge_v3_dor_dod_temp.txt",      "role": "templates",           "interaction": "reference_apply" }
   ],
-  "current_implementation": {
-    "status": "active_development",
-    "phase": "backend_infrastructure",
-    "completed": [
-      "supabase_schema",
-      "module_catalog",
-      "agent_core",
-      "environment_config"
+
+  "docs_routing": {
+    "write_allowed": [
+      "/cursor/docs/coming_soon",
+      "/cursor/docs/industry_packs_bundle",
+      "/cursor/docs/licensing",
+      "/cursor/docs/supabase_migrations"
     ],
-    "next_steps": [
-      "database_migration",
-      "api_endpoints",
-      "ui_integration",
-      "testing_suite"
-    ]
+    "write_forbidden": [
+      "/cursor",
+      "/cursor/init",
+      "/cursor/forge_v3_rulebook_v1.txt",
+      "/cursor/forge_v3_standard.txt",
+      "/cursor/forge_v3_runtime_1.txt",
+      "/cursor/forge_v3_runtime_2.txt",
+      "/cursor/forge_v3_standard_domenii.txt",
+      "/cursor/forge_v3_standard_entitlements.txt",
+      "/cursor/forge_v3_standard_prompt.txt",
+      "/cursor/forge_v3_front_end.txt",
+      "/cursor/forge_v3_backend_supabase.txt",
+      "/cursor/forge_v3_backend_supabase_2.txt",
+      "/cursor/forge_v3_branding.txt",
+      "/cursor/forge_v3_dor_dod_temp.txt"
+    ],
+    "migrations_target": "/cursor/docs/supabase_migrations",
+    "licensing_target":  "/cursor/docs/licensing",
+    "bundles_target":    "/cursor/docs/industry_packs_bundle"
   },
-  "agent_rules": {
-    "can_modify": [
-      "/agent.ts",
-      "/lib/modules.ts",
-      "/lib/supabase/client.ts",
-      "/scripts/migrate.ts"
-    ],
-    "read_only": [
-      "/cursor/*",
-      "/supabase/migrations/*",
-      "/.env*"
-    ],
-    "protected": [
-      "/app/layout.tsx",
-      "/app/page.tsx",
-      "/components/ui/*"
-    ]
-  }
+
+  "sevenD_defaults": {
+    "domain": "generic",
+    "scale": "team",
+    "urgency": "normal",
+    "complexity": "medium",
+    "resources": "standard",
+    "application": "prompt_engineering",
+    "output": "bundle"
+  },
+
+  "commands": {
+    "generateArtifact": {
+      "uses": ["/cursor/forge_v3_standard_prompt.txt", "/cursor/forge_v3_standard.txt", "/cursor/forge_v3_branding.txt"],
+      "writes_to": ["/cursor/docs/coming_soon", "/cursor/docs/industry_packs_bundle"]
+    },
+    "evaluatePrompt": {
+      "uses": ["/cursor/forge_v3_standard.txt", "/cursor/forge_v3_runtime_1.txt", "/cursor/forge_v3_runtime_2.txt"],
+      "writes_to": ["/cursor/docs/coming_soon"]
+    },
+    "exportBundle": {
+      "uses": ["*"],
+      "writes_to": ["/cursor/docs/industry_packs_bundle"]
+    },
+    "licenseCheck": {
+      "uses": ["/cursor/forge_v3_standard_entitlements.txt"],
+      "writes_to": ["/cursor/docs/licensing"]
+    },
+    "supabaseMigrate": {
+      "uses": ["/cursor/forge_v3_backend_supabase.txt", "/cursor/forge_v3_backend_supabase_2.txt"],
+      "writes_to": ["/cursor/docs/supabase_migrations"]
+    }
+  },
+
+  "non_deviation_laws": [
+    { "id": 1,  "text": "SSOT absolut: /cursor/init prevalează. Orice conflict se soluționează după precedence.level." },
+    { "id": 2,  "text": "Read-only inviolabil: fișierele din precedence.order NU pot fi modificate/șterse." },
+    { "id": 3,  "text": "Scriere doar sub /cursor/docs și DOAR în write_allowed; orice altă destinație este interzisă." },
+    { "id": 4,  "text": "Fără execuții viitoare: livrează în aceeași rulare. Nu promite work async sau ulterior." },
+    { "id": 5,  "text": "Nu inventa resurse/API: folosește EXCLUSIV fișierele/endpointurile declarate în init." },
+    { "id": 6,  "text": "La conflict între fișiere, câștigă nivelul cu precedence.level mai mic; loghează motivul." },
+    { "id": 7,  "text": "Orice funcție gated necesită entitlements valide; fără entitlement → blocat cu motiv." },
+    { "id": 8,  "text": "Migrațiile sunt permise doar în /cursor/docs/supabase_migrations; altă rută → blocat." },
+    { "id": 9,  "text": "Branding obligatoriu: exporturile respectă forge_v3_branding.txt; încălcarea blochează exportul." },
+    { "id": 10, "text": "7D obligatoriu la generare: fără 7D valid → INVALID. Export sub score 80 → BLOK." }
+  ]
 }

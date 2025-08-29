@@ -1,8 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { z } from 'zod'
 import { executeExportPipeline, validateExportRequest, ExportFormat } from '@/lib/export-pipeline'
 import { join } from 'path'
 import { randomUUID } from 'crypto'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
+// Export request schema
+const exportRequestSchema = z.object({
+  runId: z.string().uuid('Invalid run ID'),
+  format: z.enum(['pdf', 'json', 'txt', 'md']),
+  orgId: z.string().uuid('Invalid organization ID'),
+  includeMetadata: z.boolean().default(true),
+  includeHistory: z.boolean().default(false)
+})
+
+// Lazy Supabase client creation
+async function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase not configured')
+  }
+  
+  const { createClient } = await import('@supabase/supabase-js')
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,10 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Supabase client
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = await getSupabase()
 
     // Get user entitlements
     const { data: entitlements, error: entitlementsError } = await supabase
@@ -184,10 +206,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Create Supabase client
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = await getSupabase()
 
     // Get export record
     const { data: exportRecord, error: dbError } = await supabase

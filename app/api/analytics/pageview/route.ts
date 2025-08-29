@@ -1,8 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { z } from 'zod'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
+
+// Pageview schema
+const pageviewSchema = z.object({
+  url: z.string().url('Invalid URL'),
+  title: z.string().optional(),
+  referrer: z.string().optional(),
+  userId: z.string().optional(),
+  sessionId: z.string().optional(),
+  timestamp: z.number().optional()
+})
+
+// Lazy Supabase client creation
+async function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase not configured')
+  }
+  
+  const { createClient } = await import('@supabase/supabase-js')
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,10 +42,7 @@ export async function POST(request: NextRequest) {
 
     // Create Supabase client with anon key for client requests
     // Service role should only be used for server-side operations
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const supabase = await getSupabase()
 
     // Store pageview in analytics table
     const { error: insertError } = await supabase

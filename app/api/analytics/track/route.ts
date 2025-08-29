@@ -1,8 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { z } from 'zod'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
+
+// Event tracking schema
+const eventSchema = z.object({
+  event: z.string().min(1, 'Event name is required'),
+  properties: z.record(z.any()).optional(),
+  userId: z.string().optional(),
+  sessionId: z.string().optional(),
+  timestamp: z.number().optional()
+})
+
+// Lazy Supabase client creation
+async function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase not configured')
+  }
+  
+  const { createClient } = await import('@supabase/supabase-js')
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,10 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Supabase client
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = await getSupabase()
 
     // Store event in analytics table
     const { error: insertError } = await supabase

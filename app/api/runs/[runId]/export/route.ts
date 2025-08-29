@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { requireAuth } from '@/lib/auth'
 import { validateOrgMembership } from '@/lib/auth'
@@ -22,6 +21,19 @@ const querySchema = z.object({
 const paramsSchema = z.object({
   runId: z.string().uuid()
 })
+
+// Lazy Supabase client creation
+async function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase not configured')
+  }
+  
+  const { createClient } = await import('@supabase/supabase-js')
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 export async function GET(
   request: NextRequest,
@@ -91,10 +103,7 @@ export async function GET(
     }
 
     // Initialize Supabase client
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = await getSupabase()
 
     // Fetch run data with related information
     const { data: run, error: runError } = await supabase
