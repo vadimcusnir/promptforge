@@ -26,19 +26,41 @@ export interface SecurityMetrics {
 }
 
 export class SecurityMonitor {
-  private supabase: any
+  private supabase: any | null = null
   private eventBuffer: SecurityEvent[] = []
   private bufferSize = 100
   private flushInterval = 30000 // 30 seconds
 
   constructor() {
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
-    
     // Start periodic flushing
     setInterval(() => this.flushEvents(), this.flushInterval)
+  }
+
+  private getSupabase() {
+    if (!this.supabase) {
+      // Only create client when needed and environment variables are available
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        this.supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL,
+          process.env.SUPABASE_SERVICE_ROLE_KEY
+        )
+      } else {
+        // Return a mock client for build time
+        this.supabase = {
+          from: () => ({
+            insert: async () => ({ data: null, error: null }),
+            select: () => ({
+              gte: () => ({
+                order: () => ({
+                  limit: async () => ({ data: [], error: null })
+                })
+              })
+            })
+          })
+        }
+      }
+    }
+    return this.supabase
   }
 
   // Log security event
@@ -141,7 +163,8 @@ export class SecurityMonitor {
   async getSecurityMetrics(hours: number = 24): Promise<SecurityMetrics> {
     const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString()
     
-    const { data: events, error } = await this.supabase
+    const supabase = this.getSupabase()
+    const { data: events, error } = await supabase
       .from('security_events')
       .select('*')
       .gte('timestamp', since)
@@ -203,7 +226,8 @@ export class SecurityMonitor {
       const eventsToFlush = [...this.eventBuffer]
       this.eventBuffer = []
 
-      const { error } = await this.supabase
+      const supabase = this.getSupabase()
+      const { error } = await supabase
         .from('security_events')
         .insert(eventsToFlush)
 
@@ -248,7 +272,8 @@ export class SecurityMonitor {
   async getThreatAlerts(): Promise<SecurityEvent[]> {
     const since = new Date(Date.now() - 5 * 60 * 1000).toISOString() // Last 5 minutes
     
-    const { data: events, error } = await this.supabase
+    const supabase = this.getSupabase()
+    const { data: events, error } = await supabase
       .from('security_events')
       .select('*')
       .gte('timestamp', since)
@@ -268,7 +293,8 @@ export class SecurityMonitor {
   async shouldBlockIP(ip: string): Promise<boolean> {
     const since = new Date(Date.now() - 60 * 60 * 1000).toISOString() // Last hour
     
-    const { data: events, error } = await this.supabase
+    const supabase = this.getSupabase()
+    const { data: events, error } = await supabase
       .from('security_events')
       .select('*')
       .eq('ip_address', ip)
