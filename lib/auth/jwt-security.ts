@@ -16,13 +16,38 @@ const JWT_CONFIG = {
 const refreshAttempts = new Map<string, { count: number; lastAttempt: number }>()
 
 export class JWTSecurityManager {
-  private supabase: any
+  private supabase: any | null = null
 
-  constructor() {
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+  private getSupabase() {
+    if (!this.supabase) {
+      // Only create client when needed and environment variables are available
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        this.supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL,
+          process.env.SUPABASE_SERVICE_ROLE_KEY
+        )
+      } else {
+        // Return a mock client for build time
+        this.supabase = {
+          from: () => ({
+            upsert: async () => ({ data: null, error: null }),
+            select: () => ({
+              eq: () => ({
+                eq: () => ({
+                  eq: () => ({
+                    single: async () => ({ data: null, error: null })
+                  })
+                })
+              })
+            }),
+            update: () => ({
+              eq: async () => ({ data: null, error: null })
+            })
+          })
+        }
+      }
+    }
+    return this.supabase
   }
 
   // Generate secure tokens with rotation
@@ -32,7 +57,7 @@ export class JWTSecurityManager {
     
     // Store refresh token hash in database
     const refreshHash = createHash('sha256').update(refreshToken).digest('hex')
-    await this.supabase
+    await this.getSupabase()
       .from('user_sessions')
       .upsert({
         user_id: userId,
@@ -169,7 +194,7 @@ export class JWTSecurityManager {
       }
 
       // Check if session is still active in database
-      const { data: session } = await this.supabase
+      const { data: session } = await this.getSupabase()
         .from('user_sessions')
         .select('*')
         .eq('user_id', user.sub)
@@ -186,7 +211,7 @@ export class JWTSecurityManager {
       const newTokens = await this.generateTokens(user.sub, session.session_id)
       
       // Invalidate old refresh token
-      await this.supabase
+      await this.getSupabase()
         .from('user_sessions')
         .update({ is_active: false })
         .eq('refresh_hash', tokenHash)
