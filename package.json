@@ -76,7 +76,13 @@
     "test:ci:comprehensive": "node scripts/test-ci-comprehensive.js",
     "test:ci:comprehensive:verbose": "node scripts/test-ci-comprehensive.js --verbose",
     "test:ci:comprehensive:fail-fast": "node scripts/test-ci-comprehensive.js --fail-fast",
-    "verify:fixes": "node scripts/verify-fixes.js"
+    "verify:fixes": "node scripts/verify-fixes.js",
+    "test:launch:start": "node scripts/launch-control.js --start-canary",
+    "test:launch:monitor": "node scripts/launch-control.js --monitor",
+    "test:launch:rollback": "bash scripts/emergency-rollback.sh",
+    "test:launch:traffic": "node scripts/launch-control.js --traffic",
+    "test:launch:validate": "node scripts/launch-control.js --validate",
+    "test:launch:complete": "node scripts/launch-control.js --complete"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

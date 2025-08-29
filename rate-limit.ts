@@ -1,158 +1,299 @@
-// rate-limit.ts — FINAL • STRICT • NON-DEVIATION
-// Next.js App Router middleware helper + adapters (Memory/Redis).
-// Enforce: required headers (x-org-id, x-run-id), endpoint RPM from ruleset.yml,
-// per_org option for /api/run, 429 with Retry-After. No future/async promises of leniency.
-//
-// Usage (route.ts):
-//   import { withRateLimit } from "@/lib/rate-limit";
-//   export const POST = withRateLimit({ endpoint: "test" }, async (req) => { ... });
-//
-// Notes:
-// - Headers required by ruleset.yml: x-org-id, x-run-id (for API):contentReference[oaicite:2]{index=2}.
-// - Default limits (read from ruleset.yml): editor:60 rpm, test:30 rpm, run:30 rpm (per_org):contentReference[oaicite:3]{index=3}.
+import { NextRequest, NextResponse } from 'next/server'
+import { Redis } from '@upstash/redis'
 
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Ruleset (SSOT) minimal loader: inject or import your parsed YAML at build.
-// Here we keep a minimal shape; in real app, import from a central ruleset.ts.
-type ApiLimits = { rpm: number; per_org?: boolean };
-type RuleSet = {
-  api: {
-    rate_limit: { editor: ApiLimits; test: ApiLimits; run: ApiLimits };
-    required_headers: string[];
-  };
-};
-const RULESET: RuleSet = {
-  api: {
-    rate_limit: {
-      editor: { rpm: 60 },
-      test:   { rpm: 30 },
-      run:    { rpm: 30, per_org: true }
-    },
-    required_headers: ["x-org-id","x-run-id"]
-  }
-}; // ← SSOT mirrors ruleset.yml:contentReference[oaicite:4]{index=4}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Storage adapter interface + Memory & Redis variants
-export interface RateStore {
-  incrAndGet(nowMs: number, key: string, windowMs: number): Promise<number>;
-  ttlMs(key: string, windowMs: number): Promise<number>;
+// Enhanced rate limiting for launch control
+interface RateLimitConfig {
+  requests: number
+  window: number // in seconds
+  burst?: number // allow burst requests
+  degrade?: boolean // enable graceful degradation
 }
 
-export class MemoryStore implements RateStore {
-  private buckets = new Map<string, { count: number; resetAt: number }>();
-  async incrAndGet(nowMs: number, key: string, windowMs: number) {
-    const b = this.buckets.get(key);
-    if (!b || nowMs >= b.resetAt) {
-      this.buckets.set(key, { count: 1, resetAt: nowMs + windowMs });
-      return 1;
+interface LaunchMode {
+  isCanary: boolean
+  trafficPercentage: number
+  emergencyMode: boolean
+}
+
+// Rate limit configurations for different endpoints
+const RATE_LIMITS: Record<string, RateLimitConfig> = {
+  '/api/gpt-test': {
+    requests: 60,
+    window: 60,
+    burst: 10,
+    degrade: true
+  },
+  '/api/run': {
+    requests: 60,
+    window: 60,
+    burst: 5,
+    degrade: true
+  },
+  '/api/analytics': {
+    requests: 120,
+    window: 60,
+    burst: 20
+  },
+  '/api/export': {
+    requests: 10,
+    window: 300, // 5 minutes
+    burst: 2,
+    degrade: true
+  },
+  '/api/webhooks': {
+    requests: 100,
+    window: 60,
+    burst: 15
+  }
+}
+
+// Launch mode configuration
+let launchMode: LaunchMode = {
+  isCanary: false,
+  trafficPercentage: 100,
+  emergencyMode: false
+}
+
+// Redis client for rate limiting
+let redis: Redis | null = null
+
+// Initialize Redis connection
+function getRedisClient(): Redis {
+  if (!redis) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    })
+  }
+  return redis
+}
+
+// Generate rate limit key
+function getRateLimitKey(pathname: string, identifier: string): string {
+  return `rate_limit:${pathname}:${identifier}`
+}
+
+// Check if request should be rate limited
+async function checkRateLimit(
+  pathname: string,
+  identifier: string,
+  config: RateLimitConfig
+): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
+  const redis = getRedisClient()
+  const key = getRateLimitKey(pathname, identifier)
+  
+  const now = Math.floor(Date.now() / 1000)
+  const windowStart = now - config.window
+  
+  try {
+    // Get current request count
+    const requests = await redis.zcount(key, windowStart, '+inf')
+    
+    // Check if within burst limit
+    const burstLimit = config.burst || 0
+    const isBurstAllowed = requests < burstLimit
+    
+    // Check if within regular limit
+    const isWithinLimit = requests < config.requests
+    
+    const allowed = isBurstAllowed || isWithinLimit
+    const remaining = Math.max(0, config.requests - requests)
+    
+    // Add current request to tracking
+    if (allowed) {
+      await redis.zadd(key, { score: now, member: `${now}-${Math.random()}` })
+      await redis.expire(key, config.window)
     }
-    b.count++;
-    return b.count;
-  }
-  async ttlMs(key: string, windowMs: number) {
-    const b = this.buckets.get(key);
-    if (!b) return windowMs;
-    const ttl = b.resetAt - Date.now();
-    return ttl > 0 ? ttl : 0;
+    
+    return {
+      allowed,
+      remaining,
+      resetTime: now + config.window
+    }
+  } catch (error) {
+    console.error('Rate limit check failed:', error)
+    // Fail open in case of Redis issues
+    return { allowed: true, remaining: config.requests, resetTime: now + config.window }
   }
 }
 
-// Optional Redis adapter (pseudo, plug your client)
-// export class RedisStore implements RateStore { ... }
-
-const DEFAULT_STORE: RateStore = new MemoryStore();
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Keys, windows & helpers
-const WINDOW_MS = 60_000;
-
-type EndpointKind = "editor" | "test" | "run";
-
-function getLimits(kind: EndpointKind): ApiLimits {
-  return RULESET.api.rate_limit[kind]; // editor/test/run from ruleset.yml:contentReference[oaicite:5]{index=5}
-}
-
-function requireHeaders(req: NextRequest) {
-  const missing: string[] = [];
-  for (const h of RULESET.api.required_headers) {           // x-org-id, x-run-id:contentReference[oaicite:6]{index=6}
-    if (!req.headers.get(h)) missing.push(h);
-  }
-  if (missing.length) {
+// Graceful degradation response
+function createDegradedResponse(request: NextRequest, reason: string): NextResponse {
+  const isApiRequest = request.nextUrl.pathname.startsWith('/api/')
+  
+  if (isApiRequest) {
     return NextResponse.json(
-      { error: "MISSING_REQUIRED_HEADERS", missing },
-      { status: 400 }
-    );
+      {
+        error: 'Service temporarily degraded',
+        message: reason,
+        retryAfter: 60,
+        degraded: true
+      },
+      { status: 503 }
+    )
   }
-  return null;
+  
+  // For non-API requests, return a degraded page
+  return NextResponse.rewrite(new URL('/degraded', request.url))
 }
 
-function keyFor(kind: EndpointKind, req: NextRequest, perOrg: boolean) {
-  const org = (req.headers.get("x-org-id") ?? "no-org").trim().toLowerCase();
-  const ip  = (req.headers.get("x-forwarded-for") ?? "0.0.0.0").split(",")[0].trim();
-  // If per_org: key couples org + endpoint; else: ip + endpoint
-  return perOrg ? `rl:${kind}:org:${org}` : `rl:${kind}:ip:${ip}`;
+// Set launch mode
+export function setLaunchMode(mode: Partial<LaunchMode>) {
+  launchMode = { ...launchMode, ...mode }
 }
 
-function toRetryAfterSeconds(ttlMs: number) {
-  return Math.max(1, Math.ceil(ttlMs / 1000));
+// Get current launch mode
+export function getLaunchMode(): LaunchMode {
+  return launchMode
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Main wrapper
-export function withRateLimit(
-  cfg: { endpoint: EndpointKind; store?: RateStore },
-  handler: (req: NextRequest) => Promise<Response> | Response
-) {
-  const store = cfg.store ?? DEFAULT_STORE;
-  const limits = getLimits(cfg.endpoint);
-  const max = limits.rpm;
-  const perOrg = !!limits.per_org;
-
-  return async (req: NextRequest) => {
-    // Enforce required headers first (hard fail):contentReference[oaicite:7]{index=7}
-    const bad = requireHeaders(req);
-    if (bad) return bad;
-
-    // Build key (per org for /run if per_org: true):contentReference[oaicite:8]{index=8}
-    const key = keyFor(cfg.endpoint, req, perOrg);
-
-    // Windowed counter
-    const now = Date.now();
-    const used = await store.incrAndGet(now, key, WINDOW_MS);
-
-    if (used > max) {
-      const ttl = await store.ttlMs(key, WINDOW_MS);
-      const retry = toRetryAfterSeconds(ttl);
-      const res = NextResponse.json(
-        {
-          error: "RATE_LIMITED",
-          endpoint: cfg.endpoint,
-          limit_rpm: max,
-          policy: perOrg ? "per_org" : "per_ip",
-          retry_after_seconds: retry
-        },
-        { status: 429 }
-      );
-      res.headers.set("Retry-After", String(retry));
-      return res;
+// Main rate limiting middleware
+export async function rateLimit(
+  request: NextRequest,
+  pathname: string = request.nextUrl.pathname
+): Promise<{ allowed: boolean; response?: NextResponse }> {
+  // Skip rate limiting for certain paths
+  if (pathname.startsWith('/_next/') || 
+      pathname.startsWith('/favicon') || 
+      pathname === '/health') {
+    return { allowed: true }
+  }
+  
+  // Get rate limit configuration
+  const config = RATE_LIMITS[pathname]
+  if (!config) {
+    return { allowed: true }
+  }
+  
+  // Get client identifier
+  const identifier = getClientIdentifier(request)
+  
+  // Check rate limit
+  const rateLimitResult = await checkRateLimit(pathname, identifier, config)
+  
+  if (!rateLimitResult.allowed) {
+    // Add rate limit headers
+    const response = NextResponse.json(
+      {
+        error: 'Rate limit exceeded',
+        retryAfter: rateLimitResult.resetTime - Math.floor(Date.now() / 1000),
+        remaining: rateLimitResult.remaining
+      },
+      { status: 429 }
+    )
+    
+    response.headers.set('X-RateLimit-Limit', config.requests.toString())
+    response.headers.set('X-RateLimit-Remaining', rateLimitResult.remaining.toString())
+    response.headers.set('X-RateLimit-Reset', rateLimitResult.resetTime.toString())
+    response.headers.set('Retry-After', (rateLimitResult.resetTime - Math.floor(Date.now() / 1000)).toString())
+    
+    return { allowed: false, response }
+  }
+  
+  // Check for graceful degradation during launch
+  if (launchMode.emergencyMode && config.degrade) {
+    const degradeProbability = 0.1 // 10% chance of degradation during emergency
+    if (Math.random() < degradeProbability) {
+      const degradedResponse = createDegradedResponse(
+        request,
+        'Service degraded during launch maintenance'
+      )
+      return { allowed: false, response: degradedResponse }
     }
-
-    // Pass through
-    return handler(req);
-  };
+  }
+  
+  // Add rate limit headers for successful requests
+  return { allowed: true }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Strict helpers for common endpoints (clar, fără ambiguități)
-export const withEditorRateLimit = (h: (r: NextRequest) => Promise<Response> | Response) =>
-  withRateLimit({ endpoint: "editor" }, h);
+// Get client identifier (IP, user ID, or organization ID)
+function getClientIdentifier(request: NextRequest): string {
+  // Try to get organization ID from headers or query params
+  const orgId = request.headers.get('x-organization-id') || 
+                request.nextUrl.searchParams.get('orgId')
+  
+  if (orgId) {
+    return `org:${orgId}`
+  }
+  
+  // Try to get user ID from headers
+  const userId = request.headers.get('x-user-id')
+  if (userId) {
+    return `user:${userId}`
+  }
+  
+  // Fall back to IP address
+  const ip = request.ip || 
+             request.headers.get('x-forwarded-for') || 
+             request.headers.get('x-real-ip') ||
+             'unknown'
+  
+  return `ip:${ip}`
+}
 
-export const withTestRateLimit = (h: (r: NextRequest) => Promise<Response> | Response) =>
-  withRateLimit({ endpoint: "test" }, h);
+// Enhanced rate limiting middleware with launch control
+export async function enhancedRateLimit(request: NextRequest): Promise<NextResponse | null> {
+  const pathname = request.nextUrl.pathname
+  
+  // Apply rate limiting
+  const rateLimitResult = await rateLimit(request, pathname)
+  
+  if (!rateLimitResult.allowed) {
+    return rateLimitResult.response!
+  }
+  
+  // Check launch mode restrictions
+  if (launchMode.isCanary && launchMode.trafficPercentage < 100) {
+    const shouldAllow = Math.random() * 100 < launchMode.trafficPercentage
+    
+    if (!shouldAllow) {
+      return NextResponse.json(
+        {
+          error: 'Service temporarily unavailable',
+          message: 'Canary deployment in progress',
+          retryAfter: 300
+        },
+        { status: 503 }
+      )
+    }
+  }
+  
+  // Add launch mode headers
+  const response = NextResponse.next()
+  response.headers.set('X-Launch-Mode', launchMode.isCanary ? 'canary' : 'stable')
+  response.headers.set('X-Traffic-Percentage', launchMode.trafficPercentage.toString())
+  
+  if (launchMode.emergencyMode) {
+    response.headers.set('X-Emergency-Mode', 'true')
+  }
+  
+  return null // Continue with normal processing
+}
 
-export const withRunRateLimit = (h: (r: NextRequest) => Promise<Response> | Response) =>
-  withRateLimit({ endpoint: "run" }, h);
+// Cleanup function for Redis connections
+export async function cleanupRateLimit(): Promise<void> {
+  if (redis) {
+    await redis.quit()
+    redis = null
+  }
+}
+
+// Export default middleware
+export default async function middleware(request: NextRequest): Promise<NextResponse | Response> {
+  // Apply enhanced rate limiting
+  const rateLimitResponse = await enhancedRateLimit(request)
+  if (rateLimitResponse) {
+    return rateLimitResponse
+  }
+  
+  // Continue with normal request processing
+  return NextResponse.next()
+}
+
+// Configure which paths to run middleware on
+export const config = {
+  matcher: [
+    '/api/:path*',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}

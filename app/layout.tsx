@@ -14,6 +14,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { CookieBanner } from "@/components/cookie-banner"
 import { PerformanceMonitor } from "@/components/performance-monitor"
 import { MobileOptimizer } from "@/components/mobile-optimizer"
+import { SentryProvider } from "@/components/sentry-provider"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -282,39 +283,34 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#d1a954" />
         
         {/* Google Analytics 4 - Only load if properly configured - defer for performance */}
-        {process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID && 
-         process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID !== 'G-XXXXXXXXXX' && (
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && 
+         process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX' && (
           <>
-            <script
-              async
-              defer
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}`}
-            />
-            <script
-              defer
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                    send_page_view: true
-                  });
-                `,
-              }}
-            />
+                          <script
+                async
+                defer
+                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              />
+              <script
+                defer
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
+                      page_title: document.title,
+                      page_location: window.location.href,
+                      send_page_view: true
+                    });
+                  `,
+                }}
+              />
           </>
         )}
         
-        {/* Sentry - defer for performance */}
-        <script
-          defer
-          src="https://browser.sentry-cdn.com/7.100.1/bundle.min.js"
-          integrity="sha384-7Qz0XHNbJZVu3HoYl+d8gKgBAO64h9/7Rq9DX5XqX3AdZ7TzPZgXw8M8l3X5yqb"
-          crossOrigin="anonymous"
-        />
+        {/* Sentry - Configuration files handle initialization */}
+        {/* sentry.client.config.ts, sentry.server.config.ts, sentry.edge.config.ts */}
       </head>
       <body className="font-sans antialiased min-h-screen flex flex-col">
         {/* Single background layer to prevent CLS */}
@@ -322,13 +318,15 @@ export default function RootLayout({
         
         <SkipLink href="#main-content">Skip to main content</SkipLink>
         <ErrorBoundary>
-          <AnalyticsProvider>
-            <Header />
-            <ComingSoonWrapper>
-              {children}
-            </ComingSoonWrapper>
-            <Footer />
-          </AnalyticsProvider>
+          <SentryProvider>
+            <AnalyticsProvider>
+              <Header />
+              <ComingSoonWrapper>
+                {children}
+              </ComingSoonWrapper>
+              <Footer />
+            </AnalyticsProvider>
+          </SentryProvider>
         </ErrorBoundary>
         <Toaster />
         <CookieBanner />

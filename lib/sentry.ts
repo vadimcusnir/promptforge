@@ -30,6 +30,24 @@ export const initSentry = () => {
   }
 }
 
+// Capture and report exceptions
+export const captureException = (error: Error, context?: Record<string, any>) => {
+  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    Sentry.captureException(error, {
+      contexts: context ? { custom: context } : undefined,
+      tags: {
+        location: 'client_side',
+        component: context?.component || 'unknown'
+      }
+    })
+  }
+  
+  // Log to console in development
+  if (process.env.NODE_ENV === 'development') {
+    console.error('🚨 Sentry Error:', error, context)
+  }
+}
+
 // Force a controlled error for testing
 export const forceTestError = (message: string = 'Test error for Sentry monitoring') => {
   if (process.env.NODE_ENV === 'development') {
@@ -39,12 +57,28 @@ export const forceTestError = (message: string = 'Test error for Sentry monitori
   }
 }
 
+// Capture and report messages
+export const captureMessage = (message: string, level: Sentry.SeverityLevel = 'info', context?: Record<string, any>) => {
+  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    Sentry.captureMessage(message, {
+      level,
+      contexts: context ? { custom: context } : undefined,
+      tags: {
+        location: 'client_side',
+        component: context?.component || 'unknown'
+      }
+    })
+  }
+  
+  // Log to console in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`📝 Sentry ${level.toUpperCase()}:`, message, context)
+  }
+}
+
 // Track custom events
 export const trackSentryEvent = (eventName: string, data: Record<string, any>) => {
-  Sentry.captureMessage(eventName, {
-    level: 'info',
-    tags: data,
-  })
+  captureMessage(eventName, 'info', data)
 }
 
 // Track performance metrics
