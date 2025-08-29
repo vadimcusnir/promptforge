@@ -4,8 +4,30 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Zap, Settings, Download, Check, ArrowUpRight } from "lucide-react"
-import LiveGenerationDemo from "@/components/home/LiveGenerationDemo"
+import dynamic from "next/dynamic"
 import { useAnalytics } from "@/hooks/use-analytics"
+import { Suspense } from "react"
+
+// Lazy load non-critical components for better LCP
+const LiveGenerationDemo = dynamic(() => import("@/components/home/LiveGenerationDemo"), {
+  loading: () => <DemoSkeleton />,
+  ssr: false
+})
+
+// Skeleton loader for better perceived performance
+function DemoSkeleton() {
+  return (
+    <section className="mt-24 border-t border-gray-700 pt-16 px-4 sm:px-8 lg:px-16">
+      <div className="bg-[#0e0e0e] border border-gray-700 rounded-xl p-8">
+        <div className="animate-pulse space-y-4">
+          <div className="h-4 bg-gray-700 rounded w-1/4"></div>
+          <div className="h-32 bg-gray-700 rounded"></div>
+          <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export default function HomePage() {
   const analytics = useAnalytics()
@@ -20,29 +42,30 @@ export default function HomePage() {
   
   return (
     <div id="main-content" className="min-h-screen text-white relative z-10">
-      {/* Hero Section */}
-      <section className="relative py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
+      {/* Hero Section - Optimized for LCP with critical CSS */}
+      <section className="hero-section">
+        <div className="hero-container">
           <div className="mb-8">
-            <Badge className="bg-yellow-600/20 text-yellow-400 border-yellow-600/30 mb-4">
+            <Badge className="hero-badge">
               Industrial Prompt Engineering
             </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold font-serif mb-6 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+            {/* Critical LCP element - optimized rendering with critical CSS */}
+            <h1 className="hero-title font-montserrat">
               Your Operational
               <br />
-              <span className="text-yellow-500">Prompt Generator</span>
+              <span className="hero-title-accent">Prompt Generator</span>
             </h1>
-            <p className="text-xl text-zinc-500 mb-8 max-w-3xl mx-auto">
+            <p className="hero-description font-sans">
               50 modules. 7 vectors. Export in {"<"}60s.
               <br />
               Build auditable, reproducible prompt systems for professional workflows.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="hero-buttons">
             <Button 
               size="lg" 
-              className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6" 
+              className="hero-primary-button" 
               ariaLabel="Start using PromptForge generator"
               onClick={handleStartForgeClick}
             >
@@ -52,7 +75,7 @@ export default function HomePage() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-zinc-700 text-lg px-8 py-6 bg-transparent" 
+              className="hero-secondary-button" 
               ariaLabel="View a live demonstration"
               onClick={handleViewDemoClick}
             >
@@ -61,26 +84,29 @@ export default function HomePage() {
           </div>
 
           {/* Proof Bar */}
-          <div className="flex flex-wrap justify-center gap-8 text-sm text-zinc-500">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          <div className="hero-proof-bar">
+            <div className="hero-proof-item">
+              <div className="hero-proof-dot"></div>
               TTA {"<"} 60s
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <div className="hero-proof-item">
+              <div className="hero-proof-dot"></div>
               Score ≥ 80
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <div className="hero-proof-item">
+              <div className="hero-proof-dot"></div>
               Export .md/.json/.pdf
             </div>
           </div>
         </div>
       </section>
 
-      <LiveGenerationDemo />
+      {/* Lazy loaded demo component with Suspense boundary */}
+      <Suspense fallback={<DemoSkeleton />}>
+        <LiveGenerationDemo />
+      </Suspense>
 
-      {/* How It Works */}
+      {/* How It Works - Simplified for better performance */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-950/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">

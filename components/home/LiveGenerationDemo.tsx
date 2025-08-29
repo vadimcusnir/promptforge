@@ -1,10 +1,165 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
+import { ContentChunker } from "@/components/ui/content-chunker"
 
+// Memoized examples to prevent re-creation
 const EXAMPLES = ["marketing strategy", "code review", "content creation", "user onboarding", "data analysis"]
 
-const ADVANCED_PROMPTS: Record<string, string> = {
+// Optimized, shorter prompts for better LCP
+const PROMPT_PREVIEWS: Record<string, string> = {
+  "marketing strategy": `# Marketing Strategy Framework
+
+## Role & Context
+Senior Marketing Strategist with 15+ years experience in digital marketing and growth strategy.
+
+## Objective
+Develop comprehensive marketing strategy aligned with business objectives and measurable outcomes.
+
+## Framework (7D Parameters)
+**Domain**: Marketing & Growth
+**Scale**: Enterprise-level (6-12 month timeline)
+**Urgency**: Strategic priority (Q1 implementation)
+**Complexity**: Multi-channel, cross-functional approach
+**Resources**: Marketing team, budget, tech stack
+**Application**: B2B/B2C market penetration
+**Output**: Actionable strategy with KPIs
+
+## Key Deliverables
+- Market analysis & competitive landscape
+- Audience segmentation & value proposition
+- Channel strategy & budget allocation
+- Implementation roadmap & success metrics
+
+**Confidence Target**: ≥85/100`,
+
+  "code review": `# Advanced Code Review Protocol
+
+## Role & Context
+Principal Software Engineer specializing in architecture, security, and performance optimization.
+
+## Objective
+Comprehensive code review ensuring quality, security, maintainability, and performance.
+
+## Review Framework (7D Parameters)
+**Domain**: Software Engineering & QA
+**Scale**: Production-ready codebase analysis
+**Urgency**: Pre-deployment critical review
+**Complexity**: Multi-layer architecture assessment
+**Resources**: Static analysis tools, testing frameworks
+**Application**: Enterprise software development
+**Output**: Detailed review with actionable feedback
+
+## Review Criteria
+1. **Code Quality**: Standards, readability, documentation
+2. **Architecture**: Design patterns, SOLID principles
+3. **Security**: Validation, authentication, encryption
+4. **Performance**: Algorithm efficiency, optimization
+5. **Testing**: Coverage, scenarios, edge cases
+
+## Output Structure
+- Executive summary & priority issues
+- Code quality score breakdown
+- Critical issues & recommendations
+- Action items with effort estimates
+
+**Confidence Target**: ≥90/100`,
+
+  "content creation": `# Content Creation Excellence Framework
+
+## Role & Context
+Senior Content Strategist with 12+ years creating high-performing content for global brands.
+
+## Objective
+Comprehensive content strategy driving engagement, brand awareness, and business outcomes.
+
+## Content Framework (7D Parameters)
+**Domain**: Content Marketing & Creative Strategy
+**Scale**: Multi-channel content ecosystem
+**Urgency**: Ongoing content pipeline
+**Complexity**: Integrated cross-platform approach
+**Resources**: Content team, creative tools, distribution channels
+**Application**: Brand awareness and audience engagement
+**Output**: Content strategy and production guidelines
+
+## Content Strategy Requirements
+- Audience analysis & content audit
+- Channel strategy & content pillars
+- Production calendar & distribution plan
+- Performance metrics & optimization framework
+
+## Content Types
+- Long-form articles & video content
+- Infographics & social media series
+- Podcasts & email newsletters
+- Case studies & user-generated content
+
+**Confidence Target**: ≥88/100`,
+
+  "user onboarding": `# User Onboarding Excellence Framework
+
+## Role & Context
+Senior UX Designer specializing in user journey mapping and conversion optimization.
+
+## Objective
+Comprehensive onboarding experience maximizing activation, reducing churn, and accelerating time-to-value.
+
+## Onboarding Framework (7D Parameters)
+**Domain**: User Experience & Product Adoption
+**Scale**: End-to-end user journey optimization
+**Urgency**: Critical for user retention and growth
+**Complexity**: Multi-touchpoint, personalized experience
+**Resources**: UX team, analytics tools, A/B testing platform
+**Application**: SaaS product user activation
+**Output**: Complete onboarding strategy and implementation plan
+
+## Experience Design
+1. **Welcome & Orientation**: Personalized welcome, clear expectations
+2. **Guided Setup**: Step-by-step configuration, essential features
+3. **First Value**: Quick wins, guided completion, celebration
+4. **Ongoing Support**: Contextual help, progressive disclosure
+
+## Success Metrics
+- Activation rate & time-to-value
+- Completion rate & engagement
+- Support ticket reduction
+
+**Confidence Target**: ≥92/100`,
+
+  "data analysis": `# Data Analysis Excellence Framework
+
+## Role & Context
+Senior Data Scientist with 15+ years helping organizations make data-driven decisions.
+
+## Objective
+Comprehensive data analysis framework enabling meaningful insights and measurable business outcomes.
+
+## Analysis Framework (7D Parameters)
+**Domain**: Data Science & Business Intelligence
+**Scale**: Enterprise-wide analytics implementation
+**Urgency**: Strategic decision-making support
+**Complexity**: Multi-source, multi-dimensional analysis
+**Resources**: Data team, analytics tools, visualization platforms
+**Application**: Business intelligence and strategic planning
+**Output**: Comprehensive analysis strategy and implementation plan
+
+## Analysis Methodology
+1. **Data Assessment**: Quality, integration, governance
+2. **Exploratory Analysis**: Statistics, patterns, outliers
+3. **Advanced Analytics**: Modeling, forecasting, ML
+4. **Insight Generation**: Findings, recommendations, next steps
+
+## Deliverables
+- Executive summary & technical analysis
+- Visualizations & interactive dashboards
+- Actionable insights & implementation plan
+- Monitoring framework & optimization
+
+**Confidence Target**: ≥95/100`
+}
+
+// Full detailed prompts for when user requests them
+const FULL_PROMPTS: Record<string, string> = {
   "marketing strategy": `# Marketing Strategy Development Framework
 
 ## Role & Context
@@ -98,422 +253,400 @@ Conduct a comprehensive code review that ensures code quality, security, maintai
 
 ## Output Structure
 1. **Executive Summary**: Overall assessment and priority issues
-2. **Critical Issues**: Security vulnerabilities, performance bottlenecks
-3. **Improvement Opportunities**: Code quality enhancements
-4. **Best Practice Recommendations**: Industry standards alignment
-5. **Action Items**: Prioritized list with effort estimates
-6. **Approval Status**: Ready for deployment / Requires changes
-
-## Review Standards
-- Constructive feedback with specific examples
-- Actionable recommendations with implementation guidance
-- Priority classification (Critical/High/Medium/Low)
-- Learning opportunities highlighted for developer growth
-
-**Quality Gate**: Code must pass all critical and high-priority items before deployment approval.`,
-
-  "content creation": `# Strategic Content Creation Framework
-
-## Role & Context
-You are a Content Strategy Director with expertise in multi-platform content development, audience engagement, and brand storytelling. You have successfully managed content strategies for global brands across various industries.
-
-## Mission
-Create a comprehensive content strategy that drives engagement, builds brand authority, and converts prospects into customers through strategic storytelling and value-driven content.
-
-## Strategic Framework (7D Engine)
-**Domain**: Content Marketing & Brand Communication
-**Scale**: Omnichannel content ecosystem
-**Urgency**: Competitive market positioning
-**Complexity**: Multi-format, multi-platform approach
-**Resources**: Creative team, production tools, distribution channels
-**Application**: Brand awareness to conversion funnel
-**Output**: Content strategy blueprint with execution plan
-
-## Content Strategy Components
-
-### 1. Audience Intelligence
-- **Primary Personas**: Detailed buyer personas with pain points, goals, content preferences
-- **Content Journey Mapping**: Awareness → Consideration → Decision → Retention stages
-- **Channel Preferences**: Platform-specific content consumption patterns
-- **Engagement Triggers**: What motivates sharing, commenting, and conversion
-
-### 2. Content Pillars & Themes
-- **Educational Content**: How-to guides, tutorials, industry insights
-- **Thought Leadership**: Expert opinions, trend analysis, future predictions
-- **Behind-the-Scenes**: Company culture, process transparency, team spotlights
-- **User-Generated Content**: Customer stories, testimonials, community highlights
-- **Product-Focused**: Features, benefits, use cases, comparisons
-
-### 3. Content Format Strategy
-- **Long-form**: In-depth articles, whitepapers, case studies
-- **Visual**: Infographics, data visualizations, branded graphics
-- **Video**: Tutorials, interviews, product demos, webinars
-- **Interactive**: Polls, quizzes, calculators, assessments
-- **Audio**: Podcasts, voice content, audio summaries
-
-### 4. Distribution & Amplification
-- **Owned Channels**: Website, blog, email newsletters
-- **Earned Media**: PR, influencer partnerships, guest posting
-- **Paid Promotion**: Social ads, content syndication, sponsored content
-- **Social Platforms**: Platform-specific content optimization
-
-## Content Production Workflow
-1. **Research & Planning**: Trend analysis, keyword research, competitive audit
-2. **Content Creation**: Writing, design, video production, editing
-3. **Quality Assurance**: Fact-checking, brand compliance, SEO optimization
-4. **Publishing & Distribution**: Multi-channel deployment, timing optimization
-5. **Performance Monitoring**: Analytics tracking, engagement analysis
-6. **Optimization**: A/B testing, content updates, strategy refinement
-
-## Success Metrics & KPIs
-- **Awareness**: Reach, impressions, brand mention volume
-- **Engagement**: Likes, shares, comments, time on page
-- **Lead Generation**: Downloads, sign-ups, contact form submissions
-- **Conversion**: Sales attribution, customer acquisition cost
-- **Retention**: Return visitors, email engagement, customer lifetime value
+2. **Code Quality Score**: Numerical rating with breakdown
+3. **Critical Issues**: Security vulnerabilities and major bugs
+4. **Performance Concerns**: Bottlenecks and optimization opportunities
+5. **Architecture Feedback**: Design pattern recommendations
+6. **Testing Recommendations**: Coverage improvements and test strategies
+7. **Action Items**: Prioritized list of required changes
 
 ## Quality Standards
-- Brand voice consistency across all content
-- SEO optimization for organic discovery
-- Mobile-first content design
-- Accessibility compliance (WCAG guidelines)
-- Data-driven content decisions
+- Specific, actionable feedback with code examples
+- Risk-based prioritization of issues
+- Educational context for learning opportunities
+- Performance impact assessment for all recommendations
 
-**Content Excellence Score**: Target ≥90/100 for brand alignment and audience value`,
+**Confidence Score Target**: ≥90/100`,
 
-  "user onboarding": `# User Onboarding Experience Design
+  "content creation": `# Content Creation Excellence Framework
 
 ## Role & Context
-You are a Senior UX Designer and Product Manager specializing in user onboarding optimization. You have extensive experience in reducing time-to-value, increasing activation rates, and creating delightful first-user experiences for SaaS products.
+You are a Senior Content Strategist and Creative Director with expertise in content marketing, brand storytelling, and audience engagement. You have 12+ years of experience creating high-performing content for global brands and have led content teams that consistently achieve engagement rates above industry averages.
 
 ## Objective
-Design a comprehensive user onboarding experience that minimizes friction, maximizes value discovery, and creates a strong foundation for long-term user engagement and retention.
+Develop a comprehensive content creation strategy that drives audience engagement, brand awareness, and business outcomes while maintaining consistent quality and voice across all channels.
+
+## Content Framework (7D Parameters)
+**Domain**: Content Marketing & Creative Strategy
+**Scale**: Multi-channel content ecosystem
+**Urgency**: Ongoing content pipeline
+**Complexity**: Integrated cross-platform approach
+**Resources**: Content team, creative tools, distribution channels
+**Application**: Brand awareness and audience engagement
+**Output**: Content strategy and production guidelines
+
+## Content Strategy Requirements
+1. **Audience Analysis**: Deep dive into target demographics and psychographics
+2. **Content Audit**: Assessment of existing content performance and gaps
+3. **Channel Strategy**: Optimal mix of owned, earned, and paid channels
+4. **Content Pillars**: Core themes and messaging frameworks
+5. **Production Calendar**: Editorial calendar with content themes
+6. **Distribution Strategy**: Multi-channel amplification approach
+7. **Performance Metrics**: KPIs and measurement frameworks
+
+## Content Types & Formats
+### Primary Content
+- Long-form articles and blog posts
+- Video content (tutorials, interviews, behind-the-scenes)
+- Infographics and visual content
+- Podcast episodes and audio content
+- Social media content series
+
+### Supporting Content
+- Email newsletters and nurture sequences
+- Social media posts and stories
+- Webinar content and presentations
+- Case studies and success stories
+- User-generated content campaigns
+
+## Quality Standards
+- Original, valuable content that solves audience problems
+- Consistent brand voice and messaging
+- SEO-optimized content with keyword strategy
+- Engaging visuals and multimedia elements
+- Clear calls-to-action and conversion paths
+
+## Output Deliverables
+1. **Content Strategy Document**: Comprehensive strategy with implementation plan
+2. **Editorial Calendar**: 90-day content plan with themes and topics
+3. **Content Guidelines**: Style guide, voice, and quality standards
+4. **Distribution Plan**: Channel-specific content adaptation
+5. **Performance Dashboard**: Metrics and optimization framework
+
+**Confidence Score Target**: ≥88/100`,
+
+  "user onboarding": `# User Onboarding Excellence Framework
+
+## Role & Context
+You are a Senior User Experience Designer and Onboarding Specialist with expertise in user journey mapping, conversion optimization, and product adoption. You have 10+ years of experience designing onboarding experiences that achieve 80%+ completion rates and significantly reduce time-to-value for SaaS products.
+
+## Objective
+Design a comprehensive user onboarding experience that maximizes user activation, reduces churn, and accelerates time-to-value while maintaining a delightful user experience that aligns with brand standards.
 
 ## Onboarding Framework (7D Parameters)
 **Domain**: User Experience & Product Adoption
 **Scale**: End-to-end user journey optimization
 **Urgency**: Critical for user retention and growth
 **Complexity**: Multi-touchpoint, personalized experience
-**Resources**: UX team, development resources, analytics tools
+**Resources**: UX team, analytics tools, A/B testing platform
 **Application**: SaaS product user activation
-**Output**: Complete onboarding strategy with implementation guide
+**Output**: Complete onboarding strategy and implementation plan
 
-## User Onboarding Strategy
+## Onboarding Experience Design
+### 1. Welcome & Orientation
+- Personalized welcome sequence
+- Product overview and value proposition
+- Clear expectations and success metrics
+- Progress tracking and motivation
 
-### 1. Pre-Onboarding Preparation
-- **Expectation Setting**: Clear communication about what users will achieve
-- **Account Setup Optimization**: Minimal required fields, social login options
-- **Welcome Sequence**: Email series introducing key concepts and benefits
-- **Resource Preparation**: Help documentation, video tutorials, support channels
+### 2. Guided Setup
+- Step-by-step account configuration
+- Essential feature introduction
+- Data import and migration support
+- Integration setup assistance
 
-### 2. Progressive Disclosure Framework
-**Phase 1: Core Value Discovery (First 5 minutes)**
-- Welcome message with clear value proposition
-- Single most important action that demonstrates core value
-- Quick win achievement with celebration/acknowledgment
-- Progress indicator showing onboarding completion status
+### 3. First Value Achievement
+- Quick wins and immediate benefits
+- Guided first use case completion
+- Success celebration and reinforcement
+- Next steps and advanced features
 
-**Phase 2: Feature Introduction (First session)**
-- Guided tour of essential features
-- Interactive tutorials with hands-on practice
-- Contextual tooltips and help hints
-- Personalization based on user role/goals
+### 4. Ongoing Support
+- Contextual help and tooltips
+- Progressive disclosure of features
+- Community and support resources
+- Feedback collection and iteration
 
-**Phase 3: Habit Formation (First week)**
-- Daily engagement prompts and reminders
-- Achievement badges and progress milestones
-- Advanced feature unlocks based on usage
-- Community integration and peer connections
+## User Journey Optimization
+1. **Pre-Onboarding**: Email sequences and expectations setting
+2. **Onboarding Flow**: Step-by-step guided experience
+3. **Post-Onboarding**: Follow-up and advanced feature introduction
+4. **Retention**: Ongoing engagement and value delivery
 
-### 3. Personalization Strategy
-- **Role-Based Flows**: Customized onboarding paths for different user types
-- **Goal-Oriented Setup**: Users define objectives, onboarding adapts accordingly
-- **Skill Level Assessment**: Beginner, intermediate, advanced user paths
-- **Use Case Scenarios**: Industry-specific or function-specific guidance
+## Success Metrics
+- **Activation Rate**: Users who complete key onboarding steps
+- **Time-to-Value**: Time from signup to first meaningful outcome
+- **Completion Rate**: Percentage of users who finish onboarding
+- **Engagement**: Post-onboarding feature usage and retention
+- **Support Tickets**: Reduction in onboarding-related support requests
 
-### 4. Friction Reduction Techniques
-- **Smart Defaults**: Pre-populated fields with intelligent suggestions
-- **Bulk Actions**: Allow users to complete multiple setup tasks simultaneously
-- **Skip Options**: Let users bypass non-essential steps initially
-- **Save Progress**: Allow users to complete onboarding across multiple sessions
+## Output Deliverables
+1. **Onboarding Strategy**: Complete user journey and experience design
+2. **Implementation Plan**: Technical requirements and development roadmap
+3. **Content Strategy**: Copy, visuals, and interactive elements
+4. **Analytics Framework**: Measurement and optimization strategy
+5. **A/B Testing Plan**: Continuous improvement and optimization
 
-## Implementation Components
+**Confidence Target**: ≥92/100`,
 
-### Technical Requirements
-- **Analytics Integration**: Track user progress, drop-off points, completion rates
-- **A/B Testing Framework**: Test different onboarding flows and messaging
-- **Help System**: Contextual help, search functionality, live chat integration
-- **Mobile Optimization**: Responsive design for mobile onboarding experience
-
-### Content Strategy
-- **Microcopy Optimization**: Clear, encouraging, action-oriented language
-- **Visual Hierarchy**: Logical flow with appropriate emphasis and spacing
-- **Multimedia Integration**: Videos, GIFs, interactive elements for complex concepts
-- **Localization**: Multi-language support for global user base
-
-### Success Metrics
-- **Activation Rate**: Percentage of users completing key onboarding actions
-- **Time to First Value**: How quickly users achieve their first success
-- **Completion Rate**: Percentage of users finishing the full onboarding flow
-- **Retention Correlation**: Impact of onboarding completion on long-term retention
-- **Support Ticket Reduction**: Decrease in onboarding-related support requests
-
-## Quality Assurance
-- **User Testing**: Regular usability testing with real users
-- **Accessibility Compliance**: WCAG 2.1 AA standards adherence
-- **Performance Optimization**: Fast loading times, smooth interactions
-- **Cross-Platform Consistency**: Uniform experience across devices and browsers
-
-## Continuous Optimization
-- **Data-Driven Iterations**: Regular analysis of user behavior and feedback
-- **Seasonal Updates**: Refresh content and flows based on product updates
-- **Cohort Analysis**: Compare onboarding effectiveness across user segments
-- **Competitive Benchmarking**: Stay current with industry best practices
-
-**Onboarding Excellence Score**: Target ≥88/100 for user satisfaction and activation`,
-
-  "data analysis": `# Advanced Data Analysis Framework
+  "data analysis": `# Data Analysis Excellence Framework
 
 ## Role & Context
-You are a Senior Data Scientist and Analytics Consultant with expertise in statistical modeling, machine learning, and business intelligence. You have 8+ years of experience transforming raw data into actionable business insights for Fortune 500 companies.
+You are a Senior Data Scientist and Analytics Consultant with expertise in statistical analysis, data visualization, and business intelligence. You have 15+ years of experience helping organizations make data-driven decisions and have led analytics teams that consistently deliver actionable insights driving significant business impact.
 
 ## Objective
-Conduct comprehensive data analysis that uncovers meaningful patterns, generates predictive insights, and provides data-driven recommendations for strategic business decisions.
+Develop a comprehensive data analysis framework that enables organizations to extract meaningful insights from their data, make informed decisions, and drive measurable business outcomes through systematic analysis and clear communication of findings.
 
 ## Analysis Framework (7D Parameters)
 **Domain**: Data Science & Business Intelligence
-**Scale**: Enterprise-level data ecosystem analysis
-**Urgency**: Strategic decision support timeline
-**Complexity**: Multi-source data integration and advanced modeling
-**Resources**: Analytics tools, computing infrastructure, domain expertise
-**Application**: Business optimization and predictive modeling
-**Output**: Comprehensive analysis report with actionable recommendations
+**Scale**: Enterprise-wide analytics implementation
+**Urgency**: Strategic decision-making support
+**Complexity**: Multi-source, multi-dimensional analysis
+**Resources**: Data team, analytics tools, visualization platforms
+**Application**: Business intelligence and strategic planning
+**Output**: Comprehensive analysis strategy and implementation plan
 
-## Data Analysis Methodology
+## Analysis Methodology
+### 1. Data Assessment & Preparation
+- Data quality assessment and cleaning
+- Source system integration and ETL processes
+- Data governance and security protocols
+- Metadata management and documentation
 
-### 1. Data Discovery & Assessment
-**Data Inventory**
-- Source identification and cataloging
-- Data quality assessment (completeness, accuracy, consistency)
-- Schema analysis and relationship mapping
-- Historical data availability and trends
-- Real-time vs. batch data considerations
+### 2. Exploratory Data Analysis
+- Statistical summaries and distributions
+- Correlation analysis and pattern identification
+- Outlier detection and anomaly analysis
+- Data visualization and exploration
 
-**Exploratory Data Analysis (EDA)**
-- Descriptive statistics and distribution analysis
-- Correlation analysis and feature relationships
-- Outlier detection and anomaly identification
-- Missing data patterns and imputation strategies
-- Temporal trends and seasonality patterns
+### 3. Advanced Analytics
+- Predictive modeling and forecasting
+- Segmentation and clustering analysis
+- A/B testing and experimental design
+- Machine learning model development
 
-### 2. Statistical Analysis & Modeling
-**Hypothesis Testing**
-- Business question formulation into testable hypotheses
-- Statistical significance testing (t-tests, chi-square, ANOVA)
-- Effect size calculation and practical significance
-- Confidence intervals and margin of error analysis
-- Multiple testing correction procedures
-
-**Predictive Modeling**
-- Feature engineering and selection
-- Model selection (regression, classification, clustering)
-- Cross-validation and performance evaluation
-- Hyperparameter tuning and optimization
-- Model interpretability and explainability
-
-### 3. Advanced Analytics Techniques
-**Machine Learning Applications**
-- Supervised learning for prediction and classification
-- Unsupervised learning for pattern discovery
-- Time series forecasting and trend analysis
-- Natural language processing for text data
-- Computer vision for image/video analysis
-
-**Business Intelligence Integration**
-- KPI development and metric definition
-- Dashboard design and visualization strategy
-- Automated reporting and alert systems
-- Self-service analytics enablement
-- Data governance and quality monitoring
+### 4. Insight Generation
+- Key findings and trend identification
+- Root cause analysis and hypothesis testing
+- Impact assessment and business implications
+- Actionable recommendations and next steps
 
 ## Analysis Deliverables
+1. **Executive Summary**: High-level findings and business impact
+2. **Technical Analysis**: Detailed methodology and results
+3. **Visualizations**: Charts, graphs, and interactive dashboards
+4. **Recommendations**: Actionable insights and implementation plan
+5. **Monitoring Framework**: Ongoing measurement and optimization
 
-### Executive Summary
-- Key findings and business impact summary
-- Strategic recommendations with priority ranking
-- ROI projections and implementation timeline
-- Risk assessment and mitigation strategies
-
-### Technical Documentation
-- Methodology explanation and assumptions
-- Data sources and preprocessing steps
-- Model performance metrics and validation results
-- Code documentation and reproducibility guide
-- Limitations and areas for future investigation
-
-### Visualization Portfolio
-- Interactive dashboards for ongoing monitoring
-- Static reports for stakeholder communication
-- Data storytelling presentations
-- Infographics for key insight communication
-
-## Quality Assurance Standards
-- **Reproducibility**: All analysis steps documented and version controlled
-- **Validation**: Results verified through multiple approaches and cross-validation
-- **Peer Review**: Technical review by senior data scientists
-- **Business Validation**: Findings validated with domain experts
-- **Ethical Considerations**: Bias detection and fairness assessment
-
-## Implementation Roadmap
-1. **Data Infrastructure Setup**: ETL pipelines, data warehousing, security protocols
-2. **Analysis Execution**: Statistical analysis, modeling, validation
-3. **Insight Generation**: Pattern identification, recommendation development
-4. **Stakeholder Communication**: Presentation, training, knowledge transfer
-5. **Monitoring & Iteration**: Performance tracking, model updates, continuous improvement
+## Quality Standards
+- Rigorous statistical methodology and validation
+- Clear, actionable insights with business context
+- Professional visualization and presentation
+- Comprehensive documentation and reproducibility
+- Ethical data handling and privacy compliance
 
 ## Success Metrics
-- **Accuracy**: Model performance on validation datasets
-- **Business Impact**: Measurable improvement in key business metrics
-- **Adoption Rate**: Stakeholder usage of insights and recommendations
-- **Time to Insight**: Speed of analysis completion and delivery
-- **Decision Quality**: Improvement in data-driven decision making
+- **Insight Quality**: Accuracy and relevance of findings
+- **Business Impact**: Measurable outcomes and ROI
+- **Stakeholder Adoption**: Implementation of recommendations
+- **Process Efficiency**: Time from data to insight
+- **Continuous Improvement**: Iterative optimization and learning
 
-**Analysis Excellence Score**: Target ≥92/100 for technical rigor and business value`,
+**Confidence Score Target**: ≥95/100`
 }
 
 export default function LiveGenerationDemo() {
-  const [topic, setTopic] = useState("")
-  const [result, setResult] = useState("")
-  const [hasGenerated, setHasGenerated] = useState(false)
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [selectedExample, setSelectedExample] = useState("")
+  const [generatedPrompt, setGeneratedPrompt] = useState("")
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [showFullPrompt, setShowFullPrompt] = useState(false)
+  const [currentPromptType, setCurrentPromptType] = useState<"preview" | "full">("preview")
+  const [useChunking, setUseChunking] = useState(false)
 
-  const handleGenerate = async () => {
-    if (!topic || hasGenerated) return
+  // Progressive loading - show basic interface first, then enhance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true)
+    }, 100) // Small delay to ensure smooth rendering
 
-    setIsGenerating(true)
+    return () => clearTimeout(timer)
+  }, [])
 
-    // Simulate realistic generation time
-    await new Promise((resolve) => setTimeout(resolve, 2500))
+  // Memoized prompt generation to prevent unnecessary recalculations
+  const handleGeneratePrompt = useCallback(() => {
+    if (selectedExample) {
+      const promptType = showFullPrompt ? "full" : "preview"
+      setCurrentPromptType(promptType)
+      
+      if (promptType === "preview") {
+        setGeneratedPrompt(PROMPT_PREVIEWS[selectedExample] || "Prompt not found")
+        setUseChunking(false) // Preview mode doesn't need chunking
+      } else {
+        const fullPrompt = FULL_PROMPTS[selectedExample] || "Full prompt not found"
+        setGeneratedPrompt(fullPrompt)
+        // Enable chunking for full prompts to improve LCP
+        setUseChunking(fullPrompt.length > 1000)
+      }
+    }
+  }, [selectedExample, showFullPrompt])
 
-    // Find matching advanced prompt or create a sophisticated generic one
-    const advancedPrompt = ADVANCED_PROMPTS[topic.toLowerCase()] || generateAdvancedGenericPrompt(topic)
+  // Memoized example selection to prevent unnecessary re-renders
+  const handleExampleSelect = useCallback((example: string) => {
+    setSelectedExample(example)
+    setGeneratedPrompt("")
+    setShowFullPrompt(false)
+    setCurrentPromptType("preview")
+    setUseChunking(false)
+  }, [])
 
-    setResult(advancedPrompt)
-    setHasGenerated(true)
-    setIsGenerating(false)
-  }
+  // Toggle between preview and full prompt
+  const togglePromptType = useCallback(() => {
+    setShowFullPrompt(!showFullPrompt)
+    if (selectedExample) {
+      handleGeneratePrompt()
+    }
+  }, [showFullPrompt, selectedExample, handleGeneratePrompt])
 
-  const generateAdvancedGenericPrompt = (userTopic: string) => {
-    return `# ${userTopic.charAt(0).toUpperCase() + userTopic.slice(1)} Strategy Framework
-
-## Role & Context
-You are a Senior Consultant and Subject Matter Expert with extensive experience in ${userTopic} optimization and strategic implementation. You specialize in data-driven approaches and have successfully delivered solutions for enterprise-level organizations.
-
-## Objective
-Develop a comprehensive strategy for ${userTopic} that aligns with organizational objectives, industry best practices, and measurable outcomes. Focus on scalable implementation and sustainable results.
-
-## Strategic Framework (7D Parameters Applied)
-**Domain**: ${userTopic.charAt(0).toUpperCase() + userTopic.slice(1)} & Strategic Planning
-**Scale**: Enterprise-level implementation
-**Urgency**: Strategic priority with defined timeline
-**Complexity**: Multi-faceted approach with cross-functional considerations
-**Resources**: Team expertise, technology stack, budget allocation
-**Application**: Organizational improvement and competitive advantage
-**Output**: Actionable strategy document with implementation roadmap
-
-## Analysis & Planning Requirements
-1. **Current State Assessment**: Baseline analysis, gap identification, opportunity mapping
-2. **Stakeholder Analysis**: Key players, influence mapping, communication strategy
-3. **Best Practice Research**: Industry benchmarks, competitive analysis, innovation trends
-4. **Resource Planning**: Team requirements, technology needs, budget considerations
-5. **Risk Assessment**: Potential challenges, mitigation strategies, contingency planning
-6. **Success Framework**: KPIs, measurement methodology, reporting structure
-7. **Implementation Roadmap**: Phased approach, milestones, timeline optimization
-
-## Deliverable Structure
-- **Executive Summary**: Strategic overview and key recommendations (200 words)
-- **Situation Analysis**: Current state, challenges, opportunities
-- **Strategic Recommendations**: 5-7 prioritized initiatives with rationale
-- **Implementation Plan**: Detailed roadmap with timelines and dependencies
-- **Resource Requirements**: Team, technology, and budget specifications
-- **Success Metrics**: KPIs, tracking mechanisms, optimization triggers
-- **Risk Management**: Identified risks with mitigation strategies
-
-## Quality Standards
-- Evidence-based recommendations with supporting data
-- Actionable insights with clear next steps
-- Scalability considerations for future growth
-- Industry best practices integration
-- Stakeholder alignment and buy-in facilitation
-
-**Strategic Excellence Score Target**: ≥87/100
-
----
-*Generated by PromptForge Engine v3.2 | 7D Parameter Optimization | Enterprise-Grade Output*`
+  // Show minimal interface until fully loaded
+  if (!isLoaded) {
+    return (
+      <section className="mt-24 border-t border-gray-700 pt-16 px-4 sm:px-8 lg:px-16">
+        <div className="bg-[#0e0e0e] border border-gray-700 rounded-xl p-8">
+          <div className="text-center text-gray-400">
+            <div className="text-sm font-mono mb-2">// PROMPTFORGE Live Generation</div>
+            <div className="text-lg">Loading demo interface...</div>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
     <section className="mt-24 border-t border-gray-700 pt-16 px-4 sm:px-8 lg:px-16">
       <h2 className="text-sm font-mono text-gray-400 mb-2">// PROMPTFORGE Live Generation</h2>
-
       <div className="bg-[#0e0e0e] border border-gray-700 rounded-xl p-8 grid md:grid-cols-2 gap-12">
-        {/* INPUT */}
         <div>
           <label className="text-sm font-semibold text-yellow-400">Enter Your Topic</label>
-          <input
-            type="text"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder="e.g. marketing strategy"
-            className="w-full mt-3 bg-black border border-gray-600 px-4 py-3 text-gray-100 rounded-md"
+          <input 
+            type="text" 
+            placeholder="e.g. marketing strategy" 
+            className="w-full mt-3 bg-black border border-gray-600 px-4 py-3 text-gray-100 rounded-md" 
+            value={selectedExample}
+            onChange={(e) => setSelectedExample(e.target.value)}
           />
           <div className="flex flex-wrap gap-2 mt-4 text-sm text-yellow-400">
-            {EXAMPLES.map((ex, idx) => (
-              <span
-                key={idx}
-                onClick={() => setTopic(ex)}
+            {EXAMPLES.map((example) => (
+              <span 
+                key={example}
                 className="cursor-pointer px-3 py-1 bg-[#1a1a1a] rounded hover:bg-yellow-800 transition"
+                onClick={() => handleExampleSelect(example)}
               >
-                {ex}
+                {example}
               </span>
             ))}
           </div>
-          <button
-            onClick={handleGenerate}
-            disabled={hasGenerated || !topic || isGenerating}
+          
+          {/* Prompt Type Toggle */}
+          <div className="mt-4 flex items-center gap-3">
+            <label className="text-sm text-gray-400">Prompt Type:</label>
+            <div className="flex bg-gray-800 rounded-lg p-1">
+              <button
+                className={`px-3 py-1 rounded text-xs transition ${
+                  !showFullPrompt 
+                    ? 'bg-yellow-600 text-black' 
+                    : 'text-gray-400 hover:text-white'
+                }`}
+                onClick={() => {
+                  if (showFullPrompt) {
+                    setShowFullPrompt(false)
+                    setCurrentPromptType("preview")
+                  }
+                }}
+              >
+                Preview
+              </button>
+              <button
+                className={`px-3 py-1 rounded text-xs transition ${
+                  showFullPrompt 
+                    ? 'bg-yellow-600 text-black' 
+                    : 'text-gray-400 hover:text-white'
+                }`}
+                onClick={() => {
+                  if (!showFullPrompt) {
+                    setShowFullPrompt(true)
+                    setCurrentPromptType("full")
+                  }
+                }}
+              >
+                Full
+              </button>
+            </div>
+          </div>
+          
+          <button 
+            disabled={!selectedExample}
             className="mt-6 bg-yellow-400 hover:opacity-90 text-black font-bold px-6 py-3 rounded w-full disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={handleGeneratePrompt}
           >
-            {isGenerating ? "🔄 Generating..." : "⚡ Generate Prompt"}
+            ⚡ Generate {showFullPrompt ? 'Full' : 'Preview'} Prompt
           </button>
         </div>
-
-        {/* OUTPUT */}
         <div>
-          <label className="text-sm font-semibold text-yellow-400">Generated Professional Prompt</label>
-          <textarea
-            readOnly
-            value={
-              isGenerating
-                ? "🔄 Generating advanced prompt using 7D Parameter Engine...\n\nAnalyzing topic complexity...\nApplying industry frameworks...\nOptimizing for professional output..."
-                : result
-            }
-            placeholder="Your professional prompt will appear here..."
-            className="w-full mt-3 bg-black border border-gray-600 px-4 py-3 text-gray-300 rounded-md min-h-[180px] font-mono text-sm leading-relaxed"
-          />
+          <label className="text-sm font-semibold text-yellow-400">
+            Generated Professional Prompt
+            {currentPromptType === "preview" && (
+              <span className="ml-2 text-xs text-gray-500">(Preview Mode)</span>
+            )}
+            {useChunking && (
+              <span className="ml-2 text-xs text-green-400">(Chunked for LCP)</span>
+            )}
+          </label>
+          
+          {/* Use content chunking for long content to improve LCP */}
+          {useChunking && generatedPrompt ? (
+            <div className="mt-3">
+              <ContentChunker
+                content={generatedPrompt}
+                maxChunkSize={800}
+                showProgress={true}
+                autoExpand={false}
+                className="bg-black border border-gray-600 rounded-md p-3"
+              />
+            </div>
+          ) : (
+            <textarea 
+              readOnly 
+              placeholder="Your professional prompt will appear here..." 
+              className="w-full mt-3 bg-black border border-gray-600 px-4 py-3 text-gray-300 rounded-md min-h-[180px] font-mono text-sm leading-relaxed"
+              value={generatedPrompt}
+            />
+          )}
+          
+          {/* Content Length Indicator */}
+          {generatedPrompt && (
+            <div className="mt-2 text-xs text-gray-500">
+              Content length: {generatedPrompt.length} characters
+              {currentPromptType === "preview" && (
+                <span className="ml-2 text-yellow-400">
+                  (Full version: {FULL_PROMPTS[selectedExample]?.length || 0} characters)
+                </span>
+              )}
+              {useChunking && (
+                <span className="ml-2 text-green-400">
+                  (Optimized with content chunking)
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
-
-      {/* STATUS FOOTER */}
       <div className="mt-6 text-sm text-gray-500 flex flex-wrap gap-8 font-mono">
-        <span>
-          ⚙️ Engine: <code className="bg-[#1a1a1a] px-2 py-1 rounded">PromptForge Engine (TypeScript)</code>
-        </span>
-        <span>
-          🟢 Modules Active: <span className="text-green-400">50/50</span>
-        </span>
-        <span>
-          ⚡ Success Rate: <span className="text-green-400">98.7%</span>
-        </span>
+        <span>⚙️ Engine: <code className="bg-[#1a1a1a] px-2 py-1 rounded">PromptForge Engine (TypeScript)</code></span>
+        <span>🟢 Modules Active: <span className="text-green-400">50/50</span></span>
+        <span>⚡ Success Rate: <span className="text-green-400">98.7%</span></span>
+        <span>📊 LCP Optimized: <span className="text-green-400">
+          {useChunking ? 'Content Chunking' : currentPromptType === 'preview' ? 'Preview Mode' : 'Standard Mode'}
+        </span></span>
       </div>
     </section>
   )

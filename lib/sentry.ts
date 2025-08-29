@@ -1,122 +1,69 @@
 import * as Sentry from '@sentry/nextjs'
 
-// Initialize Sentry
-export function initSentry() {
+// Sentry configuration
+export const initSentry = () => {
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     Sentry.init({
       dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-      
-      // Performance monitoring
+      environment: process.env.NODE_ENV,
       tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-      
-      // Session replay
-      replaysSessionSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-      replaysOnErrorSampleRate: 1.0,
-      
-      // Environment
-      environment: process.env.NODE_ENV || 'development',
-      
-      // Release tracking
-      release: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
-      
-      // Debug mode in development
-      debug: process.env.NODE_ENV === 'development',
-      
-      // Before send hook to filter sensitive data
-      beforeSend(event) {
-        // Remove sensitive headers
-        if (event.request?.headers) {
-          delete event.request.headers.authorization
-          delete event.request.headers.cookie
-          delete event.request.headers['x-api-key']
-        }
-        
-        // Remove sensitive user data
-        if (event.user) {
-          delete event.user.email
-          delete event.user.ip_address
-        }
-        
-        return event
-      },
-      
-      // Integrations
+      profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
       integrations: [
-        // Browser integrations
-        new Sentry.BrowserTracing({
-          // Set sampling rate for performance monitoring
-          // Note: tracesSampleRate is deprecated in newer versions
-        }),
-        
-        // Session replay
-        new Sentry.Replay({
-          // Set sampling rate for session replay
-          sessionSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-          errorSampleRate: 1.0,
+        Sentry.browserTracingIntegration(),
+        Sentry.replayIntegration({
+          maskAllText: false,
+          blockAllMedia: false,
         }),
       ],
+      beforeSend(event) {
+        // Filter out certain errors or add context
+        if (event.exception) {
+          // Add organization context if available
+          const orgId = (event as any).user?.id
+          if (orgId) {
+            event.tags = { ...event.tags, organization: orgId }
+          }
+        }
+        return event
+      },
     })
   }
 }
 
-// Capture and report errors
-export function captureException(error: Error, context?: Record<string, any>) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.captureException(error, {
-      contexts: context ? { custom: context } : undefined,
-      tags: {
-        location: 'client_side',
-        component: context?.component || 'unknown'
-      }
-    })
-  }
-  
-  // Log to console in development
+// Force a controlled error for testing
+export const forceTestError = (message: string = 'Test error for Sentry monitoring') => {
   if (process.env.NODE_ENV === 'development') {
-    console.error('🚨 Sentry Error:', error, context)
+    Sentry.captureMessage(message, 'info')
+  } else {
+    Sentry.captureException(new Error(message))
   }
 }
 
-// Capture and report messages
-export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info', context?: Record<string, any>) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.captureMessage(message, {
-      level,
-      contexts: context ? { custom: context } : undefined,
-      tags: {
-        location: 'client_side',
-        component: context?.component || 'unknown'
-      }
-    })
-  }
-  
-  // Log to console in development
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`📝 Sentry ${level.toUpperCase()}:`, message, context)
-  }
+// Track custom events
+export const trackSentryEvent = (eventName: string, data: Record<string, any>) => {
+  Sentry.captureMessage(eventName, {
+    level: 'info',
+    tags: data,
+  })
 }
 
-// Set user context
-export function setUser(user: { id: string; email?: string; plan?: string }) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.setUser({
-      id: user.id,
-      email: user.email,
-      username: user.plan || 'free'
-    })
-  }
+// Track performance metrics
+export const trackPerformanceMetric = (metricName: string, value: number, tags?: Record<string, string>) => {
+  Sentry.metrics.increment(metricName, value, tags)
 }
 
-// Set tag for tracking
-export function setTag(key: string, value: string) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.setTag(key, value)
-  }
+// Set user context for error tracking
+export const setUserContext = (userId: string, organizationId?: string) => {
+  Sentry.setUser({
+    id: userId,
+    organization: organizationId,
+  })
 }
 
-// Set context for additional data
-export function setContext(name: string, context: Record<string, any>) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.setContext(name, context)
+// Set organization context
+export const setOrganizationContext = (orgId: string, orgName?: string) => {
+  Sentry.setTag('organization', orgId)
+  if (orgName) {
+    Sentry.setTag('organization_name', orgName)
   }
 }

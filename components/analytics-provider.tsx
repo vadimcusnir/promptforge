@@ -27,6 +27,10 @@ function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
+  // Check if Google Analytics is properly configured
+  const isGAConfigured = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID && 
+                         process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID !== 'G-XXXXXXXXXX'
+
   // Generate or retrieve session ID
   const getSessionId = () => {
     if (typeof window === 'undefined') return null
@@ -40,8 +44,8 @@ function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
   }
 
   const trackEvent = (eventName: string, properties: Record<string, any> = {}) => {
-    // GA4 event tracking
-    if (typeof window !== 'undefined' && (window as any).gtag) {
+    // GA4 event tracking - only if properly configured
+    if (isGAConfigured && typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', eventName, {
         ...properties,
         event_category: 'user_interaction',
@@ -72,7 +76,8 @@ function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
   }
 
   const trackPageView = (url: string, title?: string) => {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
+    // GA4 pageview tracking - only if properly configured
+    if (isGAConfigured && typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('config', process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID, {
         page_title: title || document.title,
         page_location: url,

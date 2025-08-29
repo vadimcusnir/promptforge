@@ -37,12 +37,6 @@ max_client_conn = 100
 
 [realtime]
 enabled = true
-# Bind realtime via either IPv4 or IPv6. (default: 0.0.0.0)
-bind_address = "0.0.0.0"
-# Port to use for the local Realtime API.
-port = 54323
-# The maximum number of Realtime connections allowed per user.
-max_connections = 100
 
 [studio]
 enabled = true
