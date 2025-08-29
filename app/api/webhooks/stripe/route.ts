@@ -24,8 +24,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-07-30.basil'
 })
 
-// Initialize Supabase
-    const supabase = await getSupabase()
+// Initialize Supabase - will be created when needed
 
 // Webhook event schema
 const webhookEventSchema = z.object({
@@ -54,6 +53,9 @@ const subscriptionSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  // Initialize Supabase client
+  const supabase = await getSupabase()
+  
   try {
     const body = await request.text()
     const headersList = await headers()
@@ -110,27 +112,27 @@ export async function POST(request: NextRequest) {
     // Process webhook based on event type
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session)
+        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, supabase)
         break
       
       case 'customer.subscription.created':
-        await handleSubscriptionCreated(event.data.object as Stripe.Subscription)
+        await handleSubscriptionCreated(event.data.object as Stripe.Subscription, supabase)
         break
       
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription)
+        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription, supabase)
         break
       
       case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
+        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription, supabase)
         break
       
       case 'invoice.payment_succeeded':
-        await handlePaymentSucceeded(event.data.object as Stripe.Invoice)
+        await handlePaymentSucceeded(event.data.object as Stripe.Invoice, supabase)
         break
       
       case 'invoice.payment_failed':
-        await handlePaymentFailed(event.data.object as Stripe.Invoice)
+        await handlePaymentFailed(event.data.object as Stripe.Invoice, supabase)
         break
       
       default:
@@ -176,7 +178,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Handle checkout completion
-async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session, supabase: any) {
   console.log(`🛒 Processing checkout completion for session ${session.id}`)
   
   if (!session.subscription || !session.customer) {
@@ -189,33 +191,33 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   )
   
   const customerId = typeof session.customer === 'string' ? session.customer : session.customer.id
-  await processSubscription(subscription, customerId)
+  await processSubscription(subscription, customerId, supabase)
 }
 
 // Handle subscription creation
-async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+async function handleSubscriptionCreated(subscription: Stripe.Subscription, supabase: any) {
   console.log(`🆕 Processing subscription creation: ${subscription.id}`)
   
   if (typeof subscription.customer === 'string') {
-    await processSubscription(subscription, subscription.customer)
+    await processSubscription(subscription, subscription.customer, supabase)
   } else {
-    await processSubscription(subscription, subscription.customer.id)
+    await processSubscription(subscription, subscription.customer.id, supabase)
   }
 }
 
 // Handle subscription updates
-async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+async function handleSubscriptionUpdated(subscription: Stripe.Subscription, supabase: any) {
   console.log(`🔄 Processing subscription update: ${subscription.id}`)
   
   if (typeof subscription.customer === 'string') {
-    await processSubscription(subscription, subscription.customer)
+    await processSubscription(subscription, subscription.customer, supabase)
   } else {
-    await processSubscription(subscription, subscription.customer.id)
+    await processSubscription(subscription, subscription.customer.id, supabase)
   }
 }
 
 // Handle subscription deletion
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription, supabase: any) {
   console.log(`🗑️ Processing subscription deletion: ${subscription.id}`)
   
   // Update subscription status to canceled
@@ -235,13 +237,13 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     .single()
   
   if (sub?.org_id) {
-    await applyPlanEntitlements(sub.org_id, 'pilot')
+    await applyPlanEntitlements(sub.org_id, 'pilot', supabase)
     console.log(`✅ Downgraded org ${sub.org_id} to pilot plan`)
   }
 }
 
 // Handle successful payment
-async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+async function handlePaymentSucceeded(invoice: Stripe.Invoice, supabase: any) {
   console.log(`💳 Processing successful payment for invoice ${invoice.id}`)
   
   // Check if invoice has subscription ID
@@ -250,15 +252,15 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
     
     if (typeof subscription.customer === 'string') {
-      await processSubscription(subscription, subscription.customer)
+      await processSubscription(subscription, subscription.customer, supabase)
     } else {
-      await processSubscription(subscription, subscription.customer.id)
+      await processSubscription(subscription, subscription.customer.id, supabase)
     }
   }
 }
 
 // Handle failed payment
-async function handlePaymentFailed(invoice: Stripe.Invoice) {
+async function handlePaymentFailed(invoice: Stripe.Invoice, supabase: any) {
   console.log(`❌ Processing failed payment for invoice ${invoice.id}`)
   
   // Check if invoice has subscription ID
@@ -276,7 +278,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 }
 
 // Process subscription and apply entitlements
-async function processSubscription(subscription: Stripe.Subscription, customerId: string) {
+async function processSubscription(subscription: Stripe.Subscription, customerId: string, supabase: any) {
   try {
     // Get plan code from subscription
     const planCode = await getPlanCodeFromSubscription(subscription)
@@ -336,7 +338,7 @@ async function processSubscription(subscription: Stripe.Subscription, customerId
     console.log(`✅ Subscription upserted successfully for org ${orgId}`)
 
     // Apply plan entitlements using RPC function
-    await applyPlanEntitlements(orgId, planCode)
+    await applyPlanEntitlements(orgId, planCode, supabase)
     
     console.log(`✅ Entitlements applied for org ${orgId}, plan: ${planCode}`)
 
@@ -379,7 +381,7 @@ async function getPlanCodeFromSubscription(subscription: Stripe.Subscription): P
 }
 
 // Apply plan entitlements using RPC function
-async function applyPlanEntitlements(orgId: string, planCode: string): Promise<void> {
+async function applyPlanEntitlements(orgId: string, planCode: string, supabase: any): Promise<void> {
   try {
     console.log(`🔧 Applying entitlements for org ${orgId}, plan: ${planCode}`)
     
