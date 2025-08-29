@@ -14,7 +14,19 @@ const loginSchema = z.object({
 // Lazy Supabase client creation
 async function getSupabase() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
-    throw new Error('Supabase not configured')
+    // Return mock client for build-time operations
+    return {
+      auth: {
+        signInWithPassword: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Mock client' } })
+      },
+      from: () => ({
+        select: () => ({
+          eq: () => ({
+            single: () => Promise.resolve({ data: null, error: { message: 'Mock client' } })
+          })
+        })
+      })
+    } as any
   }
   
   const { createClient } = await import('@supabase/supabase-js')

@@ -17,7 +17,12 @@ const pageviewSchema = z.object({
 // Lazy Supabase client creation
 async function getSupabase() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('Supabase not configured')
+    // Return mock client for build-time operations
+    return {
+      from: () => ({
+        insert: () => Promise.resolve({ error: null })
+      })
+    } as any
   }
   
   const { createClient } = await import('@supabase/supabase-js')

@@ -57,6 +57,9 @@
     "backup:create": "node scripts/supabase-backup.js backup",
     "backup:verify": "node scripts/supabase-backup.js verify",
     "test:layout": "jest __tests__/layout-structure.test.tsx",
+    "test:unit": "jest",
+    "test:unit:watch": "jest --watch",
+    "test:unit:coverage": "jest --coverage",
     "verify:fixes": "node scripts/verify-fixes.js"
   },
   "dependencies": {

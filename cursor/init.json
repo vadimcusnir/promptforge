@@ -74,6 +74,19 @@
       "/cursor/forge_v3_branding.txt",
       "/cursor/forge_v3_dor_dod_temp.txt"
     ],
+    "layout_protection": {
+      "global_layout_forbidden": [
+        "app/layout.tsx",
+        "components/header.tsx",
+        "components/footer.tsx"
+      ],
+      "local_layouts_allowed": [
+        "app/coming-soon/layout.tsx",
+        "app/dashboard/layout.tsx",
+        "app/generator/layout.tsx"
+      ],
+      "note": "Global layout files are protected. Only local layout modifications are allowed."
+    },
     "migrations_target": "/cursor/docs/supabase_migrations",
     "licensing_target":  "/cursor/docs/licensing",
     "bundles_target":    "/cursor/docs/industry_packs_bundle"
