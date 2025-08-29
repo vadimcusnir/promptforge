@@ -16,14 +16,7 @@ const waitlistSchema = z.object({
 // Lazy Supabase client creation
 async function getSupabase() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    // Return mock client for build-time operations
-    return {
-      from: () => ({
-        insert: () => ({
-          select: () => Promise.resolve({ data: null, error: null })
-        })
-      })
-    } as any
+    throw new Error('Supabase not configured')
   }
   
   const { createClient } = await import('@supabase/supabase-js')
