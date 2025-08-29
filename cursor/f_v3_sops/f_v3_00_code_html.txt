@@ -1482,7 +1482,7 @@ ${module.guardrails}
         // Initialize
         initializeInterface();
     </script>
-<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]b80a79&quot;}" crossorigin="anonymous"></script>
+<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c[EXAMPLE_PHONE_555-123-4567]b80a79&quot;}" crossorigin="anonymous"></script>
 
 
     <script id="html_badge_script1">
@@ -1493,4 +1493,4 @@ ${module.guardrails}
     </script>
     
     <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
-    <div id="thunderbit-crx-side-bar" style="display:block;opacity:1;pointer-events:all;top:0;right:0;z-index:[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]];position:fixed;pointer-events:none;user-select:none;"></div><button id="open-side-panel" style="width:0;height:0;opacity:0;user-select:none;pointer-events:all;position:absolute;bottom:0;right:0;padding:0;border:0;outline:none;"></button><tldx-lmi-shadow-root data-wxt-shadow-root=""></tldx-lmi-shadow-root><div id="tldx-toast-container"></div><div id="monica-content-root" class="monica-widget" style="pointer-events: auto;"></div></body></html>
+    <div id="thunderbit-crx-side-bar" style="display:block;opacity:1;pointer-events:all;top:0;right:0;z-index:9999;position:fixed;pointer-events:none;user-select:none;"></div><button id="open-side-panel" style="width:0;height:0;opacity:0;user-select:none;pointer-events:all;position:absolute;bottom:0;right:0;padding:0;border:0;outline:none;"></button><tldx-lmi-shadow-root data-wxt-shadow-root=""></tldx-lmi-shadow-root><div id="tldx-toast-container"></div><div id="monica-content-root" class="monica-widget" style="pointer-events: auto;"></div></body></html>

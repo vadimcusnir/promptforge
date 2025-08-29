@@ -95,7 +95,7 @@ async function createInitialData() {
       VALUES 
         (gen_random_uuid(), '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'page_view', '{"page": "pricing"}', 'pricing', NOW() - INTERVAL '1 hour'),
         (gen_random_uuid(), '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'plan_click', '{"plan": "pro", "billing": "monthly"}', 'pricing', NOW() - INTERVAL '30 minutes'),
-        (gen_random_uuid(), '00[phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]}', 'checkout', NOW() - INTERVAL '15 minutes');
+        (gen_random_uuid(), '00[EXAMPLE_PHONE_555-123-4567]', 'checkout', NOW() - INTERVAL '15 minutes');
     `);
     
     console.log('   ✅ Sample analytics data created');
@@ -105,7 +105,7 @@ async function createInitialData() {
       INSERT INTO ab_test_events (id, test_id, variant_id, user_id, event_type, event_properties, timestamp)
       VALUES 
         (gen_random_uuid(), 'pricing_v1', 'control', '00[PHONE_REDACTED]-0000-0[PHONE_REDACTED]00002', 'view', '{"page": "pricing"}', NOW() - INTERVAL '1 hour'),
-        (gen_random_uuid(), 'pricing_v1', 'control', '00[phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]}', NOW() - INTERVAL '15 minutes');
+        (gen_random_uuid(), 'pricing_v1', 'control', '00[EXAMPLE_PHONE_555-123-4567]', NOW() - INTERVAL '15 minutes');
     `);
     
     console.log('   ✅ Sample A/B test data created');

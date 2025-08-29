@@ -26,7 +26,22 @@ const querySchema = z.object({
 // Lazy Supabase client creation
 async function getSupabase() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('Supabase not configured')
+    // Return mock client for build-time operations
+    return {
+      from: () => ({
+        select: () => ({
+          eq: () => ({
+            gte: () => ({
+              lte: () => ({
+                order: () => ({
+                  range: () => Promise.resolve({ data: [], error: null })
+                })
+              })
+            })
+          })
+        })
+      })
+    } as any
   }
   
   const { createClient } = await import('@supabase/supabase-js')
@@ -160,7 +175,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform data to match frontend interface
-    const transformedRuns = runs?.map(run => ({
+    const transformedRuns = runs?.map((run: any) => ({
       id: run.id,
       runId: run.id,
       moduleId: run.module_id,

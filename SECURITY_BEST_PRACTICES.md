@@ -17,8 +17,8 @@ This document outlines the security measures implemented to prevent PII and secr
 ### 2. API Key Patterns to Avoid
 ```bash
 # ❌ NEVER use these patterns in committed files:
-sk_live_1234567890abcdef...
-pk_live_1234567890abcdef...
+[EXAMPLE_PLACEHOLDER_sk_live_...]
+[EXAMPLE_PLACEHOLDER_pk_live_...]
 whsec_1234567890abcdef...
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
@@ -147,7 +147,7 @@ SUPABASE_URL=[EXAMPLE_PLACEHOLDER_https://your-project.supabase.co]
 SENDGRID_API_KEY=[EXAMPLE_PLACEHOLDER_SG...]
 
 # ❌ Never use real values
-STRIPE_SECRET_KEY=sk_live_1234567890abcdef...
+STRIPE_SECRET_KEY=[EXAMPLE_PLACEHOLDER_sk_live_...]
 SUPABASE_URL=https://real-project.supabase.co
 SENDGRID_API_KEY=SG.real_key_here
 ```

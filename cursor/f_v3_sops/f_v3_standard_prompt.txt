@@ -337,7 +337,7 @@ yaml_path.write_text(evaluator_yaml, encoding="utf-8")
 # 4) Example payload
 example_payload = {
   "version": "1.0.0",
-  "run_id": "00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]01",
+  "run_id": "00000000-0000-0000-0000-000000000001",
   "module_id": "M14",
   "parameter_set_7d": {
     "domain": "saas", "scale": "startup", "urgency": "sprint",

@@ -125,7 +125,7 @@ select public.bundle_insert(
   :run_id,
   array['md','pdf','json'],
   '{"md":"/storage/.../prompt.md","pdf":"/storage/.../prompt.pdf","json":"/storage/.../prompt.json"}'::jsonb,
-  'sha256:[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]abcdef',
+  'sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
   '1.0.0',
   '© PROMPTFORGE v3 — licensed to ORG X. Redistribution prohibited.'
 );
@@ -877,7 +877,7 @@ begin
     end if;
 
     -- safe block
-    perform pg_advisory_xact_lock([EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]); -- opțional: asigură exclusivitate
+    perform pg_advisory_xact_lock(12345); -- opțional: asigură exclusivitate
     savepoint mm_dry;
     execute v_script;
     -- postcheck (opțional)
@@ -930,7 +930,7 @@ begin
 
   -- exec
   begin
-    perform pg_advisory_xact_lock([EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]); -- lock global migrații
+    perform pg_advisory_xact_lock(67890); -- lock global migrații
     execute v_script;
 
     -- postcheck

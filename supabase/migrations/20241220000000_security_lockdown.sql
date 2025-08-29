@@ -144,17 +144,17 @@ $$ LANGUAGE plpgsql;
 -- SELECT cron.schedule('cleanup-rate-limits', '*/15 * * * *', 'SELECT cleanup_expired_rate_limits();');
 -- SELECT cron.schedule('cleanup-ip-blacklist', '0 */2 * * *', 'SELECT cleanup_expired_ip_blacklist();');
 
--- Insert initial admin user if not exists
-INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, created_at, updated_at, raw_user_meta_data)
-VALUES (
-  gen_random_uuid(),
-  'admin@promptforge.ai',
-  crypt('admin123', gen_salt('bf')),
-  NOW(),
-  NOW(),
-  NOW(),
-  '{"role": "admin", "name": "Security Admin"}'
-) ON CONFLICT (email) DO NOTHING;
+-- Insert initial admin user if not exists (EXAMPLE - replace with real values in production)
+-- INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, created_at, updated_at, raw_user_meta_data)
+-- VALUES (
+--   gen_random_uuid(),
+--   'admin@yourdomain.com',
+--   crypt('your_secure_password_here', gen_salt('bf')),
+--   NOW(),
+--   NOW(),
+--   NOW(),
+--   '{"role": "admin", "name": "Security Admin"}'
+-- ) ON CONFLICT (email) DO NOTHING;
 
 -- Grant necessary permissions
 GRANT USAGE ON SCHEMA public TO authenticated;

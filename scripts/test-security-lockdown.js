@@ -176,7 +176,7 @@ test('Security Dashboard Component', () => {
 }, 'monitoring')
 
 test('Database Migration Exists', () => {
-  return fs.existsSync(path.join(__dirname, '../supabase/migrations/[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]_security_lockdown.sql'))
+  return fs.existsSync(path.join(__dirname, '../supabase/migrations/20241220000000_security_lockdown.sql'))
 }, 'monitoring')
 
 // Integration Tests

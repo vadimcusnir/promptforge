@@ -537,7 +537,7 @@ returns void language sql as $$
   select p_org, null, key, (p.flags->>key)::boolean, 'plan', p_plan::text
   from public.plans p, jsonb_object_keys(p.flags) as key
   where p.code = p_plan
-  on conflict (org_id, coalesce(user_id,'00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]00'::uuid), flag, source, coalesce(source_ref,''))
+  on conflict (org_id, coalesce(user_id,'00000000-0000-0000-0000-000000000000'::uuid), flag, source, coalesce(source_ref,''))
   do update set value = excluded.value, updated_at = now();
 $$;
 
@@ -1701,7 +1701,7 @@ Această rota respectă DoD: export complet, checksum valid, manifest scris, tel
 5) Manifest (exemplu)
 {
   "bundle_id": "b7a9b6bc-2f3a-42b0-8b7f-7d2b2a82b730",
-  "run_id": "00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]01",
+  "run_id": "00000000-0000-0000-0000-000000000001",
   "module_id": "M07",
   "version": "1.0.0",
   "exported_at": "2025-08-19T10:20:00Z",

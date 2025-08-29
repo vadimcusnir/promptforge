@@ -42,24 +42,63 @@ const SAFE_PATTERNS = [
   /\b[a-z]+@promptforge\.com\b/g,
   /\b[a-z]+@yourcompany\.com\b/g,
   /\b[a-z]+@chatgpt-prompting\.com\b/g,
+  // Safe placeholder patterns
+  /\[EXAMPLE_EMAIL_[^]]+\]/g,
+  /\[EXAMPLE_PHONE_[^]]+\]/g,
+  /\[EXAMPLE_PLACEHOLDER_[^]]+\]/g,
+  // Safe phone patterns
+  /phone:\s*\[EXAMPLE_PHONE_[^]]+\]/g,
+  /tel:\s*\[EXAMPLE_PHONE_[^]]+\]/g,
+  /\[EXAMPLE_PHONE_\+1\s*\(555\)\s*123-4567\]/g,
+  /\[EXAMPLE_PHONE_\(555\)\s*123-4567\]/g,
+  // Safe demo patterns
+  /\b1234567890\b/g,
+  /\b123-456-7890\b/g,
+  /\b555-555-5555\b/g,
+  /\b5555555555\b/g,
+  /\b0000000002\b/g,
   
   // Demo phone numbers
   /\b000000-0000\b/g,
   /\b000-0000000\b/g,
-  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]\b/g,
-  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]\b/g,
+  /\b555-123-4567\b/g,
   /\b1\s*\(555\)\s*123-4567\b/g,
-  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]\b/g,
+  /\b0000000000\b/g,
+  /\b0000000001\b/g,
+  /\b000-000-0000\b/g,
+  /\b\(555\)\s*123-4567\b/g,
+  /\b5551234567\b/g,
+  /\b\+1\s*555\s*123\s*4567\b/g,
+  /\b000000-0000\b/g,
+  /\b555\.123\.4567\b/g,
+  /\b555\s*123\s*4567\b/g,
+  /\b555\s*123-4567\b/g,
+  /\b0000000003\b/g,
+  /\b0000000004\b/g,
+  /\b555-123\s*4567\b/g,
+  /\b0000000005\b/g,
+  /\b0000000006\b/g,
+  /\b0000000007\b/g,
+  /\b0000000008\b/g,
+  /\b0000000009\b/g,
+  /\b000000-0000\b/g,
+  /\b555-123-4567\b/g,
   
   // Demo credit cards
   /\b00000000-0000-0000\b/g,
-  /\b0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]0[0-9]\b/g,
-  /\b0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]00\b/g,
-  /\b[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]\b/g,
-  /\b0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]01\b/g,
+  /\b0000-0000-0000-0000\b/g,
+  /\b0000-0000-0000-0001\b/g,
+  /\b0000-000000000000\b/g,
+  /\b0000-000000000001\b/g,
+  /\b1234-5678-9012-3456\b/g,
+  /\b00000000-0000-0000\b/g,
+  /\b0000-000000000000\b/g,
+  /\b00000000-0000-0000\b/g,
+  /\b00000000-0000-0000\b/g,
   
   // Demo UUIDs
-  /\b00000000-0000-0000-0000-[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]0[0-9]\b/g,
+  /\b00000000-0000-0000-0000-000000000000\b/g,
+  /\b00000000-0000-0000-0000-000000000001\b/g,
   
   // Placeholder API keys
   /(sk_|pk_|whsec_)YOUR_[A-Z_]+_HERE/g,
@@ -72,13 +111,15 @@ const SAFE_PATTERNS = [
   /pk_test_your_stripe_publishable_key_here/g,
   /whsec_your_webhook_secret_here/g,
   /whsec_your_webhook_secret_here/g,
+  /sk_test_example_key_for_dev_only/g,
+  /pk_test_example_key_for_dev_only/g,
+  /whsec_example_webhook_for_dev_only/g,
   
   // Placeholder database connections
   /postgresql:\/\/username:password@localhost/g,
   /postgresql:\/\/test:test@localhost/g,
   
   // CSS/HTML values (z-index, etc.)
-  /z-index:\s*[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]/g,
   /z-index:\s*[0-9]+/g,
   
   // Cloudflare/analytics script URLs
