@@ -1,0 +1,177 @@
+name: Layout Structure Testing
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'app/layout.tsx'
+      - 'components/header.tsx'
+      - 'components/footer.tsx'
+      - 'app/**/layout.tsx'
+      - '__tests__/**'
+      - 'jest.config.js'
+      - 'jest.setup.js'
+      - 'package.json'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'app/layout.tsx'
+      - 'components/header.tsx'
+      - 'components/footer.tsx'
+      - 'app/**/layout.tsx'
+      - '__tests__/**'
+      - 'jest.config.js'
+      - 'jest.setup.js'
+      - 'package.json'
+
+jobs:
+  test-layout:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run layout structure tests
+      run: npm run test:layout
+      
+    - name: Run all unit tests
+      run: npm run test:unit
+      
+    - name: Check for duplicate navigation components
+      run: |
+        echo "🔍 Checking for duplicate Header/Footer imports..."
+        
+        # Check for Header imports outside of main layout
+        HEADER_IMPORTS=$(grep -r "import.*Header.*from" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx" | wc -l)
+        if [ $HEADER_IMPORTS -gt 0 ]; then
+          echo "❌ Found $HEADER_IMPORTS Header imports outside of main layout"
+          grep -r "import.*Header.*from" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx"
+          exit 1
+        fi
+        
+        # Check for Footer imports outside of main layout
+        FOOTER_IMPORTS=$(grep -r "import.*Footer.*from" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx" | wc -l)
+        if [ $FOOTER_IMPORTS -gt 0 ]; then
+          echo "❌ Found $FOOTER_IMPORTS Footer imports outside of main layout"
+          grep -r "import.*Footer.*from" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx"
+          exit 1
+        fi
+        
+        # Check for Header usage outside of main layout
+        HEADER_USAGE=$(grep -r "<Header" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx" | wc -l)
+        if [ $HEADER_USAGE -gt 0 ]; then
+          echo "❌ Found $HEADER_USAGE Header usage outside of main layout"
+          grep -r "<Header" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx"
+          exit 1
+        fi
+        
+        # Check for Footer usage outside of main layout
+        FOOTER_USAGE=$(grep -r "<Footer" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx" | wc -l)
+        if [ $FOOTER_USAGE -gt 0 ]; then
+          echo "❌ Found $FOOTER_USAGE Footer usage outside of main layout"
+          grep -r "<Footer" app/ --include="*.tsx" --include="*.ts" | grep -v "app/layout.tsx"
+          exit 1
+        fi
+        
+        echo "✅ No duplicate navigation components found"
+        
+    - name: Verify ARIA roles
+      run: |
+        echo "🔍 Verifying ARIA roles in Header and Footer..."
+        
+        # Check Header has role="banner"
+        if ! grep -q 'role="banner"' components/header.tsx; then
+          echo "❌ Header component missing role='banner'"
+          exit 1
+        fi
+        
+        # Check Footer has role="contentinfo"
+        if ! grep -q 'role="contentinfo"' components/footer.tsx; then
+          echo "❌ Footer component missing role='contentinfo'"
+          exit 1
+        fi
+        
+        echo "✅ ARIA roles properly configured"
+        
+    - name: Check layout file protection
+      run: |
+        echo "🔒 Verifying layout file protection..."
+        
+        # Check if cursor config has layout protection
+        if ! grep -q "global_layout_forbidden" cursor/init.json; then
+          echo "❌ Cursor configuration missing layout protection"
+          exit 1
+        fi
+        
+        # Check if critical layout files are protected
+        if ! grep -q "app/layout.tsx" cursor/init.json; then
+          echo "❌ Main layout.tsx not protected in cursor config"
+          exit 1
+        fi
+        
+        if ! grep -q "components/header.tsx" cursor/init.json; then
+          echo "❌ Header component not protected in cursor config"
+          exit 1
+        fi
+        
+        if ! grep -q "components/footer.tsx" cursor/init.json; then
+          echo "❌ Footer component not protected in cursor config"
+          exit 1
+        fi
+        
+        echo "✅ Layout file protection properly configured"
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.node-version }}
+        path: |
+          coverage/
+          .jest/
+          
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: test-layout
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run security scan
+      run: npm run security:scan-intelligent
+      
+    - name: Check for layout-related security issues
+      run: |
+        echo "🔒 Checking for layout-related security issues..."
+        
+        # Check for any hardcoded secrets in layout files
+        if grep -r "sk_live\|pk_live\|whsec_" app/layout.tsx components/header.tsx components/footer.tsx; then
+          echo "❌ Found hardcoded secrets in layout files"
+          exit 1
+        fi
+        
+        echo "✅ No security issues found in layout files"

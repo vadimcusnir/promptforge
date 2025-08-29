@@ -15,7 +15,7 @@ const customJestConfig = {
     '<rootDir>/scripts/',
     '<rootDir>/cursor/',
   ],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
   collectCoverageFrom: [
