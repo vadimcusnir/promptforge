@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Filter, Lock, ArrowRight, Info, Clock, Tag, Building } from "lucide-react"
+import { Search, Filter, Lock, ArrowRight, Info, Clock, Tag, Building, AlertCircle } from "lucide-react"
 import ModuleOverlay from "@/components/modules/ModuleOverlay"
 import { useEntitlements } from "@/hooks/use-entitlements"
 
@@ -34,6 +34,7 @@ export default function ModulesPage() {
   const [modules, setModules] = useState<Module[]>([])
   const [filteredModules, setFilteredModules] = useState<Module[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedDomain, setSelectedDomain] = useState("")
   const [selectedComplexity, setSelectedComplexity] = useState("")
@@ -45,14 +46,55 @@ export default function ModulesPage() {
   useEffect(() => {
     const fetchModules = async () => {
       try {
+        setError(null)
         const response = await fetch('/api/modules?limit=100')
         if (response.ok) {
           const data = await response.json()
-          setModules(data.data.modules || [])
-          setFilteredModules(data.data.modules || [])
+          if (data.success && data.data?.modules) {
+            setModules(data.data.modules)
+            setFilteredModules(data.data.modules)
+          } else {
+            throw new Error('Invalid response format from API')
+          }
+        } else {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
         }
       } catch (error) {
         console.error('Error fetching modules:', error)
+        setError(error instanceof Error ? error.message : 'Failed to fetch modules')
+        // Set fallback modules for demo purposes
+        setModules([
+          {
+            id: "demo-1",
+            module_code: "M01",
+            name: "Strategic Business Planning",
+            description: "Generate comprehensive business strategies using the 7D parameter engine",
+            category: "business",
+            domain_slug: "business",
+            complexity: "intermediate",
+            estimated_time_minutes: 15,
+            tags: ["strategy", "planning", "business"],
+            template_prompt: "Create a strategic business plan for...",
+            example_output: "Strategic business plan with clear objectives...",
+            best_practices: ["Define clear objectives", "Include measurable KPIs"]
+          }
+        ])
+        setFilteredModules([
+          {
+            id: "demo-1",
+            module_code: "M01",
+            name: "Strategic Business Planning",
+            description: "Generate comprehensive business strategies using the 7D parameter engine",
+            category: "business",
+            domain_slug: "business",
+            complexity: "intermediate",
+            estimated_time_minutes: 15,
+            tags: ["strategy", "planning", "business"],
+            template_prompt: "Create a strategic business plan for...",
+            example_output: "Strategic business plan with clear objectives...",
+            best_practices: ["Define clear objectives", "Include measurable KPIs"]
+          }
+        ])
       } finally {
         setLoading(false)
       }
@@ -203,6 +245,12 @@ export default function ModulesPage() {
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center text-gray-400">
+                <AlertCircle className="w-12 h-12 mb-4 text-red-500" />
+                <p className="text-lg mb-2">{error}</p>
+                <p>Please try again later or check your network connection.</p>
               </div>
             ) : (
               <>

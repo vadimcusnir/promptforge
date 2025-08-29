@@ -99,12 +99,8 @@ export default function DocsPage() {
             <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
               <Link href="/contact">Contact Support</Link>
             </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 bg-transparent"
-            >
-              <Link href="/guides">View Guides</Link>
+            <Button asChild variant="outline" className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black">
+              <Link href="/guides">Browse Guides</Link>
             </Button>
           </div>
         </div>

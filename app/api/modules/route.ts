@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createClient } from '@supabase/supabase-js'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
-
-// Supabase client
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 // Query parameters schema
 const querySchema = z.object({
@@ -39,6 +32,42 @@ const moduleSchema = z.object({
   updated_at: z.string()
 })
 
+// Fallback modules data for when database is not available
+const fallbackModules = [
+  {
+    id: "demo-1",
+    module_code: "M01",
+    name: "Strategic Business Planning",
+    description: "Generate comprehensive business strategies using the 7D parameter engine",
+    category: "business",
+    domain_slug: "business",
+    complexity: "intermediate",
+    estimated_time_minutes: 15,
+    tags: ["strategy", "planning", "business"],
+    template_prompt: "Create a strategic business plan for...",
+    example_output: "Strategic business plan with clear objectives...",
+    best_practices: ["Define clear objectives", "Include measurable KPIs"],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: "demo-2",
+    module_code: "M02",
+    name: "Marketing Campaign Creation",
+    description: "Design targeted marketing campaigns with precision",
+    category: "marketing",
+    domain_slug: "marketing",
+    complexity: "beginner",
+    estimated_time_minutes: 10,
+    tags: ["marketing", "campaign", "strategy"],
+    template_prompt: "Create a marketing campaign for...",
+    example_output: "Complete marketing campaign with messaging...",
+    best_practices: ["Define target audience", "Set clear objectives"],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+]
+
 export async function GET(request: NextRequest) {
   try {
     // Parse query parameters
@@ -51,6 +80,27 @@ export async function GET(request: NextRequest) {
       limit: searchParams.get('limit'),
       offset: searchParams.get('offset')
     })
+
+    // Check if Supabase is configured
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.warn('Supabase not configured, returning fallback modules')
+      return NextResponse.json({
+        success: true,
+        data: {
+          modules: fallbackModules,
+          total: fallbackModules.length,
+          limit: query.limit,
+          offset: query.offset
+        }
+      })
+    }
+
+    // Import Supabase client only when needed
+    const { createClient } = await import('@supabase/supabase-js')
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
     // Build query
     let queryBuilder = supabase
@@ -169,6 +219,30 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Check if Supabase is configured
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.warn('Supabase not configured, returning fallback module')
+      const fallbackModule = fallbackModules.find(m => m.module_code === module_code)
+      if (fallbackModule) {
+        return NextResponse.json({
+          success: true,
+          data: fallbackModule
+        })
+      } else {
+        return NextResponse.json(
+          { success: false, error: 'Module not found' },
+          { status: 404 }
+        )
+      }
+    }
+
+    // Import Supabase client only when needed
+    const { createClient } = await import('@supabase/supabase-js')
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
     // Fetch specific module
     const { data: module, error } = await supabase
