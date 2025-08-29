@@ -3,6 +3,11 @@
 
 
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 definițiile mecanice pentru DoR / DoD în PROMPTFORGE™, cu condiții de verificare executabile (poți transpune direct în cod/SQL/CI rules).
 
 ✅ Definition of Ready (DoR)

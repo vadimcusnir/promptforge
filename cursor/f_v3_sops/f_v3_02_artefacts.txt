@@ -3,6 +3,11 @@
 
 
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 📄 Executable Overviews – Completate pentru cele 3 Pack-uri
 
 Ți-am construit overview.md complet pentru fiecare dintre cele trei pack-uri pilot:

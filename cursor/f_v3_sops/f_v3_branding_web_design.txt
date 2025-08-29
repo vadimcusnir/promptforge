@@ -1,4 +1,9 @@
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 🔝 1. Phosphor Icons (phosphoricons.com)
 
 Set foarte mare (~7000+ iconuri).

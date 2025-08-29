@@ -8,6 +8,11 @@ Mai jos ai descrierea tehnică a front‑end‑ului și a UI/UX‑ului extrase �
 ────────────────────────────────────────────────────────
 
 I. Stack & setup (din package.json, app/layout.tsx, app/globals.css, components.json)
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 Framework: Next.js (App Router), React 18, TypeScript strict (tsconfig.json cu paths: "@/*").
 UI Kit: shadcn/ui + Radix primitives (directorul components/ui/*; components.json – stil “new-york”, aliasuri @/components, @/lib, etc).
 CSS: Tailwind v4 + PostCSS (postcss.config.mjs). Temă dark glassmorphic cu variabile CSS în app/globals.css (tokens: --background, --card, --border, --primary, --accent, etc.).

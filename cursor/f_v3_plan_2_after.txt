@@ -1,3 +1,8 @@
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 ordinea de execuție (P0→P2), „definition of done” și cum centralizăm fișierele ca să rămânem aliniați.
 
 1) Ce lăsăm după lansare (Level‑Up)

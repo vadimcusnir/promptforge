@@ -4,6 +4,11 @@
 
 Mai jos ai un ruleset.yml complet (SSOT) pentru PROMPTFORGE™ v3, care acoperă: 7D enums + defaults, DoR/DoD, export bundle, entitlements, telemetry, plus validarea „enum_only” și „raise_on_invalid”. Structura e aliniată cu standardele din documentație (prompt standard, rubrică de scor, bundle & checksum, gating pe planuri).
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 # PROMPTFORGE v3 — ruleset.yml (SSOT)
 project: PROMPTFORGE_v3
 schema_version: 1

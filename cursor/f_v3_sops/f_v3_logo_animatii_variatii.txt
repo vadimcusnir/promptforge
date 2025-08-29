@@ -1,3 +1,8 @@
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 cusnir_brand_forge_variatii_logo_animatii_svg_video_v1.txt
 
 ━━━━━━━━━━━━━━━━━━━━━━━

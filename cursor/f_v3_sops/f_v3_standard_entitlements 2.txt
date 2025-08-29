@@ -3,6 +3,11 @@
 
 
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 Licențe & Entitlements pentru PROMPTFORGE™, astfel încât fiecare capabilitate (feature flag) să fie mapată clar pe plan (SKU) și, unde e cazul, pe pachete de industrie. Totul e conform specificațiilor oficiale din standard și schema Supabase/Stripe.
 
 🗂 Entitlements Canonice (feature flags)

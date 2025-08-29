@@ -1,6 +1,11 @@
 
 
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 Ce informații de bază lipsesc ca să fie posibil să dezvolți ideea 5) Module Packs Marketplace (Direct-to-Expert) pornind din codul PROMPTFORGE™. Codul deja conține:
 
 Biblioteca de 50 module (MODULES) cu: requirements, spec, output, kpi, guardrails, vectors

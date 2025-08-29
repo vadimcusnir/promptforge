@@ -3,6 +3,11 @@
 
 
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 bundles cap‑coadă (DDL + RLS + indici + validări + utilitare + example), aliniat 1:1 cu blueprintul PROMPTFORGE™ v3 (export .md/.pdf/.json + .zip, checksum, manifest/licență, relație cu runs)【】【】.
 
 1) DDL (Postgres/Supabase)

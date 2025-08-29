@@ -55,7 +55,7 @@ STRIPE_SECRET_KEY=sk_test_...
 STRIPE_PUBLISHABLE_KEY=pk_test_...
 
 # Database (PostgreSQL connection string)
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/db
+DATABASE_URL=postgresql://username:password@localhost:5432/promptforge
 
 # SendGrid (get from https://app.sendgrid.com/settings/api_keys)
 SENDGRID_API_KEY=SG...
@@ -91,7 +91,7 @@ This will create:
 
 ```bash
 # Set your database URL
-export DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/db
+export DATABASE_URL=postgresql://username:password@localhost:5432/promptforge
 
 # Run migrations
 pnpm run migrate

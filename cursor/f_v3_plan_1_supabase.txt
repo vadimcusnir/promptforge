@@ -3,6 +3,11 @@
 
 
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 INFRASTRUCTURĂ CORE – PRIMUL VECTOR
 Începi cu backend-ul. Nu cu designul. Nu cu interfața.
 ORDIN EXECUTABIL:

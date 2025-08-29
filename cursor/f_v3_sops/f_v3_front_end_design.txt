@@ -5,6 +5,11 @@
 
 Below is a protocol detailing the order, rules and underlying logic for implementing the PromptForge™ web design. It synthesizes the SKRE visual system, the project’s architecture and the plan you’ve laid out so far.
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 1. Establish the foundation
 1.1. Set up global styles
 Paletă SKRE: Define colors gold-industrial, lead-gray, plus multiple blacks (e.g., #000, #0e0e0e, #1a1a1a) in Tailwind config. Stick to the 70/20/10 ratio: dark backgrounds (70 %), gray for secondary elements (20 %) and gold accents (10 %)

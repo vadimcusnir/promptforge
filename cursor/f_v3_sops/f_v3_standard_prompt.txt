@@ -1,4 +1,9 @@
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 standardul oficial pentru PROMPTFORGE™ v3 și îți dau acum modelul complet de Prompt Standard (structură, stil, guardrails, variabilitate controlată). Totul este deja formalizat în documentația ta și în schema de fișiere .cursor/rules + Param Engine 7D.
 
 📐 Standard Oficial de Prompt – PROMPTFORGE™ v3

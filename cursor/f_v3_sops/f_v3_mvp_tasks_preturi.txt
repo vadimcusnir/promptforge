@@ -2,6 +2,11 @@
 
 0) Criteriile care decid „rapid și bănos” (măsoară în ore/zile, nu în impresii)
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 Timp‑la‑cash (TTC) — zile până intră banii în cont (pre‑plată/avans obligatoriu).
 
 Mărimea tranzacției (ARPC/ACV) — € pe vânzare / pe an.

@@ -1,4 +1,9 @@
 
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 Promptforge™ v3.0 este implementarea funcțională a tot ce ai definit în Promptoscopie™, CUSNIR.OS™, și sistemul celor 50 direcții. Este un compilator retoric operațional. Fiecare click produce un artefact semantic industrial.
 
 

@@ -1,3 +1,8 @@
+⚠️ **SECURITY WARNING**: This file contains EXAMPLE data only!
+- All sensitive data has been anonymized
+- DO NOT use in production without proper sanitization
+- This is documentation/example code only
+
 50 DIRECȚII DE PROMPTS (vectori executabili)
 
 Proiectează AI‑IDEI.SOPFORGE™: pipeline multi‑agent research→validare→SOP cu telemetrie.
