@@ -57,30 +57,14 @@ jobs:
         run: |
           echo "📋 Running Contract Tests..."
           
-          # Test API contract schemas
-          if [ -f "schemas/api-contracts.json" ]; then
-            echo "✅ API contract schemas found"
-            # Validate schema structure
-            node -e "
-              const fs = require('fs');
-              const schema = JSON.parse(fs.readFileSync('schemas/api-contracts.json', 'utf8'));
-              console.log('Schema validation:', Object.keys(schema).length, 'endpoints defined');
-            "
-          else
-            echo "⚠️  No API contract schemas found - creating basic structure"
-            mkdir -p schemas
-            echo '{"endpoints": {}, "version": "1.0.0"}' > schemas/api-contracts.json
-          fi
+          # Install AJV for schema validation
+          npm install ajv ajv-formats
           
-          # Test entitlements schema
-          if [ -f "lib/entitlements/types.ts" ]; then
-            echo "✅ Entitlements schema found"
-            # Basic TypeScript compilation check
-            pnpm type-check
-          else
-            echo "❌ Entitlements schema missing"
+          # Run contract schema tests
+          pnpm test:contracts || {
+            echo "❌ Contract schema tests failed"
             exit 1
-          fi
+          }
 
       - name: Test Entitlements System
         run: |
