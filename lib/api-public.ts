@@ -19,6 +19,8 @@ export const publicAPIManager = {
     }
   }),
   revokeAPIKey: (keyId: string, orgId?: string) => ({ success: true, keyId }),
+  createResponse: (data: any) => ({ data }),
+  recordUsage: (params: any) => ({ success: true, usage: params }),
 };
 export type APIScope = 
   | "read" 

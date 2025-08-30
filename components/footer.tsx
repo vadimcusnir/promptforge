@@ -61,7 +61,7 @@ export function Footer() {
       <div className="max-w-screen-xl mx-auto px-4 pb-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Image
-            src="/forge_v3_logo/nav_static_03_loading.webp"
+            src="/f_v3_brand_images/forge_v3_logo_transparent.png"
             alt="PromptForge™ Logo"
             width={24}
             height={24}

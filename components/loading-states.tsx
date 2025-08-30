@@ -78,7 +78,7 @@ export function PromptForgeLoading({
     <div className="flex flex-col items-center gap-3 p-4">
       <div className={`${sizeClasses[size]} relative animate-pulse-glow`}>
         <Image
-          src="/forge_v3_logo/nav_static_03_loading.webp"
+          src="/f_v3_brand_images/forge_v3_logo_transparent.png"
           alt="Loading..."
           width={size === "sm" ? 32 : size === "md" ? 48 : 64}
           height={size === "sm" ? 32 : size === "md" ? 48 : 64}

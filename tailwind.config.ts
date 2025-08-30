@@ -60,6 +60,9 @@ const config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        // Additional border utilities
+        'border-hover': 'hsl(var(--border-hover))',
+        'glass-border': 'hsl(var(--glass-border))',
       },
       
       // Spacing system

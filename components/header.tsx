@@ -35,11 +35,11 @@ export function Header({
       <div className="container mx-auto max-w-[1240px] px-6">
         {/* Breadcrumbs */}
         {showBreadcrumbs && (
-          <div className="flex items-center py-2 text-xs text-foreground/60 border-b border-border/10">
+          <div className="flex items-center py-2 text-xs text-[#ECFEFF]/60 border-b border-[#ECFEFF]/10">
             <Home className="w-3 h-3 mr-1" />
             <span>{COPY.brand}</span>
             <ChevronRight className="w-3 h-3 mx-1" />
-            <span className="text-foreground">Cognitive OS</span>
+            <span className="text-[#0891B2]">Cognitive OS</span>
             <ChevronRight className="w-3 h-3 mx-1" />
             <span>{getBreadcrumbPage()}</span>
           </div>
@@ -48,10 +48,10 @@ export function Header({
         <div className="flex items-center justify-between h-16">
           {/* Logo (Rună Digitală) */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-150">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-150 focus-ring">
               <div className="w-8 h-8 flex items-center justify-center">
                 <Image
-                  src="/forge_v3_logo/nav_static_03_loading.webp"
+                  src="/f_v3_brand_images/forge_v3_logo_transparent.png"
                   alt="PromptForge™ Logo"
                   width={32}
                   height={32}
@@ -78,53 +78,41 @@ export function Header({
               <Link
                 href="/modules"
                 className="text-white transition-colors duration-150 hover:text-accent focus-ring"
-                
-                
                 aria-current={pathname === "/modules" ? "page" : undefined}
               >
                 Modules
               </Link>
               <Link
                 href="/generator"
-                className="text-white transition-colors duration-150"
-                
-                
+                className="text-white transition-colors duration-150 hover:text-accent focus-ring"
                 aria-current={pathname === "/generator" ? "page" : undefined}
               >
                 Generator
               </Link>
               <Link
                 href="/pricing"
-                className="text-white transition-colors duration-150"
-                
-                
+                className="text-white transition-colors duration-150 hover:text-accent focus-ring"
                 aria-current={pathname === "/pricing" ? "page" : undefined}
               >
                 Pricing
               </Link>
               <Link
                 href="/docs"
-                className="text-white transition-colors duration-150"
-                
-                
+                className="text-white transition-colors duration-150 hover:text-accent focus-ring"
                 aria-current={pathname === "/docs" ? "page" : undefined}
               >
                 Docs
               </Link>
               <Link
                 href="/contact"
-                className="text-white transition-colors duration-150"
-                
-                
+                className="text-white transition-colors duration-150 hover:text-accent focus-ring"
                 aria-current={pathname === "/contact" ? "page" : undefined}
               >
                 Contact
               </Link>
               <Link
                 href="/login"
-                className="text-white transition-colors duration-150"
-                
-                
+                className="text-white transition-colors duration-150 hover:text-accent focus-ring"
                 aria-current={pathname === "/login" ? "page" : undefined}
               >
                 Login
@@ -133,7 +121,7 @@ export function Header({
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-3 text-white hover:text-accent focus-ring transition-colors duration-150 min-w-[44px] min-h-[44px] focus-ring flex items-center justify-center"
+              className="md:hidden p-3 text-white hover:text-accent transition-colors duration-150 min-w-[44px] min-h-[44px] flex items-center justify-center focus-ring"
               onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
               aria-expanded={isMobileNavOpen}
               aria-controls="mobile-nav"
@@ -177,7 +165,7 @@ export function Header({
               <li>
                 <Link
                   href="/generator"
-                  className="block text-white hover:text-accent focus-ring transition-colors duration-150 py-2 w-full text-left"
+                  className="block text-white hover:text-accent transition-colors duration-150 py-2 w-full text-left focus-ring"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
                   Generator
@@ -186,7 +174,7 @@ export function Header({
               <li>
                 <Link
                   href="/modules"
-                  className="block text-white hover:text-accent focus-ring transition-colors duration-150 py-2 w-full text-left"
+                  className="block text-white hover:text-accent transition-colors duration-150 py-2 w-full text-left focus-ring"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
                   Modules
@@ -195,7 +183,7 @@ export function Header({
               <li>
                 <Link
                   href="/pricing"
-                  className="block text-white hover:text-accent focus-ring transition-colors duration-150 py-2 w-full text-left"
+                  className="block text-white hover:text-accent transition-colors duration-150 py-2 w-full text-left focus-ring"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
                   Pricing
@@ -204,7 +192,7 @@ export function Header({
               <li>
                 <Link
                   href="/docs"
-                  className="block text-white hover:text-accent focus-ring transition-colors duration-150 py-2 w-full text-left"
+                  className="block text-white hover:text-accent transition-colors duration-150 py-2 w-full text-left focus-ring"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
                   Docs
@@ -213,7 +201,7 @@ export function Header({
               <li>
                 <Link
                   href="/contact"
-                  className="block text-white hover:text-accent focus-ring transition-colors duration-150 py-2 w-full text-left"
+                  className="block text-white hover:text-accent transition-colors duration-150 py-2 w-full text-left focus-ring"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
                   Contact
@@ -222,7 +210,7 @@ export function Header({
               <li>
                 <Link
                   href="/login"
-                  className="block text-white hover:text-accent focus-ring transition-colors duration-150 py-2 w-full text-left"
+                  className="block text-white hover:text-accent transition-colors duration-150 py-2 w-full text-left focus-ring"
                   onClick={() => setIsMobileNavOpen(false)}
                 >
                   Login

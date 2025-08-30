@@ -18,6 +18,36 @@
 
   /* Performance Variables */
   --reduced-motion: 0;
+
+  /* Design System Colors */
+  --background: 0 0% 0%; /* Black background */
+  --foreground: 0 0% 100%; /* White text */
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 45 93% 47%; /* Gold accent color */
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
+  --success: 142 76% 36%;
+  --warning: 38 92% 50%;
+  --error: 0 84% 60%;
+  --info: 199 89% 48%;
+
+  /* Glass effect variables */
+  --glass: 0 0% 3.9% / 0.8;
+  --glass-border: 0 0% 14.9% / 0.5;
+  --border-hover: 0 0% 20% / 0.8;
 }
 
 /* Improved reduced motion support - tokens remain visible */
