@@ -44,16 +44,24 @@ async function getSupabase() {
 
 export async function GET(request: NextRequest) {
   try {
-    // Get authorization header
+    // Get token from authorization header or cookies
+    let token: string | null = null
+    
+    // First try authorization header
     const authHeader = request.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7)
+    } else {
+      // Fall back to cookies
+      token = request.cookies.get('access_token')?.value || null
+    }
+
+    if (!token) {
       return NextResponse.json(
-        { error: 'Authorization header required' },
+        { error: 'Authentication required' },
         { status: 401 }
       )
     }
-
-    const token = authHeader.substring(7)
 
     // Create Supabase client with service role for token validation
     const supabase = await getSupabase()

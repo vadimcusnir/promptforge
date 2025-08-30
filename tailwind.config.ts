@@ -20,56 +20,36 @@ const config = {
     extend: {
       // Design tokens integration
       colors: {
+        // Base colors
+        bg: {
+          primary: tokens.colors.bg,
+          secondary: tokens.colors.card,
+          glass: tokens.colors.glass,
+        },
+        
         // Foreground colors
         fg: {
-          primary: tokens.colors.fg.primary,
-          secondary: tokens.colors.fg.secondary,
-          tertiary: tokens.colors.fg.tertiary,
-          accent: tokens.colors.fg.accent,
-        },
-        
-        // Background colors
-        bg: {
-          primary: tokens.colors.bg.primary,
-          secondary: tokens.colors.bg.secondary,
-          tertiary: tokens.colors.bg.tertiary,
-          glass: tokens.colors.bg.glass,
-          'glass-hover': tokens.colors.bg.glassHover,
-        },
-        
-        // Muted colors
-        muted: {
-          primary: tokens.colors.muted.primary,
-          secondary: tokens.colors.muted.secondary,
-          accent: tokens.colors.muted.accent,
+          primary: tokens.colors.fg,
+          secondary: tokens.colors.muted,
         },
         
         // Accent colors (Gold theme)
         accent: {
-          primary: tokens.colors.accent.primary,
-          secondary: tokens.colors.accent.secondary,
-          tertiary: tokens.colors.accent.tertiary,
-          contrast: tokens.colors.accent.contrast,
+          DEFAULT: tokens.colors.accent,
+          hover: tokens.colors.accentHover,
+          contrast: tokens.colors.accentContrast,
         },
         
         // State colors
-        state: {
-          success: tokens.colors.state.success,
-          warning: tokens.colors.state.warning,
-          error: tokens.colors.state.error,
-          info: tokens.colors.state.info,
-          'success-bg': tokens.colors.state.successBg,
-          'warning-bg': tokens.colors.state.warningBg,
-          'error-bg': tokens.colors.state.errorBg,
-          'info-bg': tokens.colors.state.infoBg,
-        },
+        success: tokens.colors.success,
+        warning: tokens.colors.warning,
+        error: tokens.colors.error,
+        info: tokens.colors.info,
         
         // Border colors
         border: {
-          primary: tokens.colors.border.primary,
-          secondary: tokens.colors.border.secondary,
-          accent: tokens.colors.border.accent,
-          glass: tokens.colors.border.glass,
+          DEFAULT: tokens.colors.border,
+          hover: tokens.colors.borderHover,
         },
         
         // Legacy shadcn/ui colors for compatibility
@@ -103,7 +83,7 @@ const config = {
       spacing: tokens.spacing,
       
       // Border radius system
-      borderRadius: tokens.radii,
+      borderRadius: tokens.radius,
       
       // Z-index system
       zIndex: tokens.zIndex,
@@ -190,27 +170,27 @@ const config = {
     function({ addUtilities }: any) {
       const glassUtilities = {
         '.glass': {
-          background: tokens.glass.background,
-          backdropFilter: `blur(${tokens.glass.backdrop})`,
-          border: tokens.glass.border,
+          background: tokens.colors.glass,
+          backdropFilter: 'blur(10px)',
+          border: `1px solid ${tokens.colors.glassBorder}`,
         },
         '.glass-hover': {
           '&:hover': {
-            background: tokens.glass.hover.background,
-            border: tokens.glass.hover.border,
+            background: tokens.colors.glass,
+            border: `1px solid ${tokens.colors.borderHover}`,
           },
         },
         '.glass-card': {
-          background: tokens.glass.background,
-          backdropFilter: `blur(${tokens.glass.backdrop})`,
-          border: tokens.glass.border,
-          borderRadius: tokens.radii.lg,
+          background: tokens.colors.glass,
+          backdropFilter: 'blur(10px)',
+          border: `1px solid ${tokens.colors.glassBorder}`,
+          borderRadius: tokens.radius.lg,
           boxShadow: tokens.shadow.glass,
         },
         '.glass-card-hover': {
           '&:hover': {
-            background: tokens.glass.hover.background,
-            border: tokens.glass.hover.border,
+            background: tokens.colors.glass,
+            border: `1px solid ${tokens.colors.borderHover}`,
             transform: 'translateY(-2px)',
             boxShadow: tokens.shadow.lg,
           },
@@ -232,46 +212,21 @@ const config = {
         // Focus ring utilities - WCAG 2.1 AA compliant
         '.focus-ring': {
           '&:focus-visible': {
-            outline: tokens.a11y.focus.outline,
+            outline: 'none',
             ring: '2px',
-            ringColor: tokens.a11y.focus.ring,
-            ringOffset: tokens.a11y.focus.ringOffset,
-            ringOffsetColor: tokens.a11y.focus.ringOffsetColor,
+            ringColor: tokens.colors.accent,
+            ringOffset: '2px',
+            ringOffsetColor: tokens.colors.bg,
           },
         },
         '.focus-ring-inset': {
           '&:focus-visible': {
-            outline: tokens.a11y.focus.outline,
+            outline: 'none',
             ring: '2px',
-            ringColor: tokens.a11y.focus.ring,
+            ringColor: tokens.colors.accent,
             ringOffset: '-2px',
-            ringOffsetColor: tokens.a11y.focus.ringOffsetColor,
+            ringOffsetColor: tokens.colors.bg,
           },
-        },
-        // Skip link utility
-        '.skip-link': {
-          position: tokens.a11y.skipLink.position,
-          top: tokens.a11y.skipLink.top,
-          left: tokens.a11y.skipLink.left,
-          background: tokens.a11y.skipLink.background,
-          color: tokens.a11y.skipLink.color,
-          padding: tokens.a11y.skipLink.padding,
-          borderRadius: tokens.a11y.skipLink.borderRadius,
-          zIndex: tokens.a11y.skipLink.zIndex,
-          textDecoration: tokens.a11y.skipLink.textDecoration,
-          fontWeight: tokens.a11y.skipLink.fontWeight,
-          '&:focus': tokens.a11y.skipLink['&:focus'],
-        },
-        // High contrast mode support
-        '.high-contrast': {
-          border: tokens.a11y.highContrast.border,
-          background: tokens.a11y.highContrast.background,
-          color: tokens.a11y.highContrast.color,
-        },
-        // Reduced motion support
-        '.reduced-motion': {
-          transition: tokens.a11y.reducedMotion.transition,
-          animation: tokens.a11y.reducedMotion.animation,
         },
       };
       

@@ -25,30 +25,23 @@ export function useAuth() {
 
   const checkAuthStatus = async () => {
     try {
-      // Check for stored token
-      const storedToken = localStorage.getItem('accessToken')
-      if (storedToken) {
-        setAccessToken(storedToken)
-        
-        const response = await fetch("/api/auth/me", {
-          headers: {
-            'Authorization': `Bearer ${storedToken}`
-          }
-        })
-        
-        if (response.ok) {
-          const userData = await response.json()
-          setUser(userData)
-        } else {
-          // Token expired or invalid
-          localStorage.removeItem('accessToken')
-          setAccessToken(null)
-          setUser(null)
-        }
+      // Check authentication status via /api/auth/me
+      // This will use httpOnly cookies automatically
+      const response = await fetch("/api/auth/me", {
+        credentials: 'include' // Include cookies in request
+      })
+      
+      if (response.ok) {
+        const userData = await response.json()
+        setUser(userData)
+        setAccessToken('authenticated') // Indicate we're authenticated
+      } else {
+        // Not authenticated
+        setAccessToken(null)
+        setUser(null)
       }
     } catch (error) {
       console.error("Auth check failed:", error)
-      localStorage.removeItem('accessToken')
       setAccessToken(null)
       setUser(null)
     } finally {
@@ -61,16 +54,14 @@ export function useAuth() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include', // Include cookies in request
         body: JSON.stringify({ email, password }),
       })
 
       if (response.ok) {
         const userData = await response.json()
         setUser(userData)
-        setAccessToken(userData.accessToken)
-        
-        // Store token securely
-        localStorage.setItem('accessToken', userData.accessToken)
+        setAccessToken('authenticated') // Indicate we're authenticated
         
         toast({
           title: "Login Successful",
@@ -93,18 +84,14 @@ export function useAuth() {
 
   const logout = async () => {
     try {
-      if (accessToken) {
-        await fetch("/api/auth/logout", { 
-          method: "POST",
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        })
-      }
+      // Call logout API to clear server-side session and cookies
+      await fetch("/api/auth/logout", { 
+        method: "POST",
+        credentials: 'include' // Include cookies in request
+      })
       
       setUser(null)
       setAccessToken(null)
-      localStorage.removeItem('accessToken')
       
       toast({
         title: "Logged Out",
@@ -115,7 +102,6 @@ export function useAuth() {
       // Still clear local state even if server logout fails
       setUser(null)
       setAccessToken(null)
-      localStorage.removeItem('accessToken')
     }
   }
 
@@ -133,9 +119,9 @@ export function useAuth() {
       const response = await fetch("/api/subscriptions/upgrade", {
         method: "POST",
         headers: { 
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${accessToken}`
+          "Content-Type": "application/json"
         },
+        credentials: 'include', // Include cookies in request
         body: JSON.stringify({
           userId: user.id,
           planId,
@@ -179,9 +165,9 @@ export function useAuth() {
       const response = await fetch("/api/subscriptions/cancel", {
         method: "POST",
         headers: { 
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${accessToken}`
+          "Content-Type": "application/json"
         },
+        credentials: 'include', // Include cookies in request
         body: JSON.stringify({
           userId: user.id,
           subscriptionId: user.subscriptionId,

@@ -8,10 +8,8 @@ export const dynamic = 'force-dynamic'
 const signupSchema = z.object({
   email: z.string().email('Invalid email format'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  organizationName: z.string().min(1, 'Organization name is required'),
-  plan: z.enum(['pilot', 'pro', 'enterprise']).default('pilot')
+  fullName: z.string().min(1, 'Full name is required'),
+  acceptMarketing: z.boolean().optional().default(false)
 })
 
 // Lazy Supabase client creation
@@ -68,7 +66,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     // Validate request body
-    const { email, password, firstName, lastName, organizationName, plan } = signupSchema.parse(body)
+    const { email, password, fullName, acceptMarketing } = signupSchema.parse(body)
 
     // Create Supabase client with service role for user creation
     const supabase = await getSupabase()
@@ -93,9 +91,8 @@ export async function POST(request: NextRequest) {
       password,
       email_confirm: true, // Auto-confirm email for now
       user_metadata: {
-        full_name: `${firstName} ${lastName}`,
-        organization_name: organizationName,
-        plan: plan
+        full_name: fullName,
+        accept_marketing: acceptMarketing
       }
     })
 
@@ -113,10 +110,10 @@ export async function POST(request: NextRequest) {
       .insert({
         id: user.id,
         email: user.email,
-        full_name: `${firstName} ${lastName}`,
-        organization_name: organizationName,
-        plan: plan,
+        full_name: fullName,
+        plan: 'pilot', // Default to pilot plan
         credits_remaining: 10, // Default credits
+        accept_marketing: acceptMarketing,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
@@ -137,22 +134,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create user preferences
-    const { error: preferencesError } = await supabase
-      .from('user_preferences')
-      .insert({
-        user_id: user.id,
-        default_vectors: ['strategic', 'content'],
-        export_preferences: { default_format: 'md' },
-        ui_preferences: { theme: 'dark' },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      })
-
-    if (preferencesError) {
-      console.error('Preferences creation error:', preferencesError)
-      // Don't fail the signup for preferences error
+    // Create user preferences (optional - don't fail signup if this fails)
+    try {
+      await supabase
+        .from('user_preferences')
+        .insert({
+          user_id: user.id,
+          default_vectors: ['strategic', 'content'],
+          export_preferences: { default_format: 'md' },
+          ui_preferences: { theme: 'dark' },
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+    } catch (preferencesError) {
+      console.warn('Failed to create user preferences:', preferencesError)
+      // Don't fail signup for preferences error
     }
+
+
 
     // Send welcome email (if configured)
     if (process.env.ENABLE_WELCOME_EMAIL === 'true') {

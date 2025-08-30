@@ -2,20 +2,54 @@ export { authenticateUser, requireAuth, hasPlanAccess, type AuthenticatedUser, t
 
 /**
  * Validate organization membership for a user
- * This is a placeholder implementation - replace with actual org validation logic
  */
 export async function validateOrgMembership(userId: string, orgId?: string): Promise<boolean> {
-  // TODO: Implement actual organization membership validation
-  // For now, return true to allow the build to pass
-  return true
+  if (!userId || !orgId) {
+    return false
+  }
+
+  try {
+    const { createClient } = await import('@supabase/supabase-js')
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    const { data, error } = await supabase
+      .from('org_members')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('org_id', orgId)
+      .eq('is_active', true)
+      .single()
+
+    if (error) {
+      console.error('Organization membership validation error:', error)
+      return false
+    }
+
+    return !!data
+  } catch (error) {
+    console.error('Organization membership validation failed:', error)
+    return false
+  }
 }
 
 /**
  * Get user from request context
- * This is a placeholder implementation - replace with actual user context logic
  */
 export async function getUserFromContext(request: any): Promise<any> {
-  // TODO: Implement actual user context logic
-  // For now, return null to allow the build to pass
-  return null
+  try {
+    const { authenticateUser } = await import('./server-auth')
+    const { user, error } = await authenticateUser(request)
+    
+    if (error || !user) {
+      return null
+    }
+    
+    return user
+  } catch (error) {
+    console.error('Failed to get user from context:', error)
+    return null
+  }
 }

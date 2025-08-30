@@ -1,0 +1,19 @@
+{
+  "defaults": {
+    "timeout": 30000,
+    "wait": 2000,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--disable-dev-shm-usage"]
+    },
+    "standard": "WCAG2AA",
+    "reporter": "json"
+  },
+  "urls": [
+    "http://localhost:3000",
+    "http://localhost:3000/modules",
+    "http://localhost:3000/pricing",
+    "http://localhost:3000/docs",
+    "http://localhost:3000/guides",
+    "http://localhost:3000/generator"
+  ]
+}

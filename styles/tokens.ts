@@ -1,309 +1,255 @@
 /**
- * Design Tokens for PromptForge v3
- * Centralized design system tokens following the project's voice and branding guidelines
- * WCAG 2.1 AA compliant with robust contrast ratios
+ * Design Tokens - Single source of truth for PromptForge v3
+ * Dark theme with gold accent and glassmorphism effects
  */
 
 export const tokens = {
-  // Color System - Dark theme with gold accent (#d1a954) - WCAG 2.1 AA compliant
+  // Color System
   colors: {
-    // Primary background colors
-    bg: {
-      primary: 'oklch(0.05 0 0)', // Deep black - #0a0a0a
-      secondary: 'oklch(0.08 0 0)', // Dark gray - #141414
-      tertiary: 'oklch(0.12 0 0)', // Medium dark - #1f1f1f
-      elevated: 'oklch(0.15 0 0)', // Elevated surface - #262626
-      glass: 'rgba(255, 255, 255, 0.05)', // Glass effect
-      glassHover: 'rgba(255, 255, 255, 0.1)', // Glass hover
-    },
+    // Base colors
+    bg: '#0E0E0E',
+    fg: '#EDEDED',
+    card: '#111316',
+    muted: '#6B7280',
     
-    // Foreground colors - WCAG 2.1 AA compliant contrast ratios
-    fg: {
-      primary: 'oklch(0.985 0 0)', // White text - 21:1 contrast on dark
-      secondary: 'oklch(0.75 0 0)', // Muted text - 4.5:1 contrast (AA)
-      tertiary: 'oklch(0.65 0 0)', // Disabled text - 3:1 contrast (AA large)
-      accent: 'oklch(0.75 0.189 84.429)', // Gold accent text - 4.5:1 contrast
-      onAccent: 'oklch(0.15 0 0)', // Dark text on gold - 4.5:1 contrast
-    },
+    // Accent system
+    accent: '#D1A954',
+    accentHover: '#B8944A',
+    accentContrast: '#0E0E0E',
     
-    // Muted colors
-    muted: {
-      primary: 'oklch(0.269 0 0)', // Muted background
-      secondary: 'oklch(0.205 0 0)', // Muted border
-      accent: 'oklch(0.439 0 0)', // Muted ring
-    },
+    // Semantic colors
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#3B82F6',
     
-    // Accent colors (Forge Gold theme) - WCAG 2.1 AA compliant
-    accent: {
-      primary: 'oklch(0.708 0.189 84.429)', // #F4B001 - Forge primary gold
-      secondary: 'oklch(0.78 0.189 84.429)', // #FFD700 - Lighter gold for effects
-      tertiary: 'oklch(0.65 0.189 84.429)', // Darker gold - 4.5:1 contrast
-      contrast: 'oklch(0.15 0 0)', // Dark contrast for gold - 4.5:1 contrast
-      hover: 'oklch(0.75 0.189 84.429)', // Hover state - 4.5:1 contrast
-      focus: 'oklch(0.8 0.189 84.429)', // Focus state - 4.5:1 contrast
-      glow: 'oklch(0.8 0.189 84.429)', // Glow effect color
-    },
+    // Border and overlay
+    border: 'rgba(255, 255, 255, 0.08)',
+    borderHover: 'rgba(209, 169, 84, 0.3)',
+    overlay: 'rgba(0, 0, 0, 0.25)',
     
-    // Forge ritual colors
-    ritual: {
-      obsidian: 'oklch(0.05 0 0)', // #0a0a0a - Deep black
-      glitch: 'oklch(0.7 0.2 180)', // #00ffe7 - Glitch cyan
-      pulse: 'oklch(0.8 0.189 84.429)', // Gold pulse animation
-      initiation: 'oklch(0.9 0.189 84.429)', // Initiation mode gold
-      crimson: 'oklch(0.6 0.2 15)', // #ff003c - Decision red
-      forge: 'oklch(0.708 0.189 84.429)', // #F4B001 - Forge gold
-    },
-    
-    // State colors - WCAG 2.1 AA compliant
-    state: {
-      success: 'oklch(0.65 0.17 162.48)', // Green - 4.5:1 contrast
-      warning: 'oklch(0.75 0.188 70.08)', // Yellow - 4.5:1 contrast
-      error: 'oklch(0.55 0.141 25.723)', // Red - 4.5:1 contrast
-      info: 'oklch(0.65 0.243 264.376)', // Blue - 4.5:1 contrast
-      successBg: 'oklch(0.2 0.1 162.48)', // Success background
-      warningBg: 'oklch(0.25 0.1 70.08)', // Warning background
-      errorBg: 'oklch(0.2 0.1 25.723)', // Error background
-      infoBg: 'oklch(0.2 0.15 264.376)', // Info background
-    },
-    
-    // Border colors
-    border: {
-      primary: 'oklch(0.269 0 0)', // Default border
-      secondary: 'oklch(0.205 0 0)', // Subtle border
-      accent: 'oklch(0.708 0.189 84.429)', // Accent border
-      glass: 'rgba(255, 255, 255, 0.1)', // Glass border
-    },
+    // Glass effects
+    glass: 'rgba(17, 19, 22, 0.95)',
+    glassBorder: 'rgba(255, 255, 255, 0.1)',
   },
-
-  // Spacing system (8px base unit)
-  spacing: {
-    xs: '0.25rem', // 4px
-    sm: '0.5rem',  // 8px
-    md: '1rem',    // 16px
-    lg: '1.5rem',  // 24px
-    xl: '2rem',    // 32px
-    '2xl': '3rem', // 48px
-    '3xl': '4rem', // 64px
-    '4xl': '6rem', // 96px
-  },
-
-  // Border radius system
-  radii: {
-    none: '0',
-    sm: '0.25rem',   // 4px
-    md: '0.5rem',    // 8px
-    lg: '0.75rem',   // 12px
-    xl: '1rem',      // 16px
-    '2xl': '1.5rem', // 24px
-    full: '9999px',
-  },
-
-  // Z-index system
-  zIndex: {
-    hide: -1,
-    auto: 'auto',
-    base: 0,
-    docked: 10,
-    dropdown: 1000,
-    sticky: 1100,
-    banner: 1200,
-    overlay: 1300,
-    modal: 1400,
-    popover: 1500,
-    skipLink: 1600,
-    toast: 1700,
-    tooltip: 1800,
-  },
-
-  // Transition system
-  transition: {
-    fast: '150ms cubic-bezier(0.4, 0, 0.2, 1)',
-    normal: '200ms cubic-bezier(0.4, 0, 0.2, 1)',
-    slow: '300ms cubic-bezier(0.4, 0, 0.2, 1)',
-    bounce: '500ms cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-  },
-
-  // Typography system - Unified font stack and sizes
+  
+  // Typography
   typography: {
     fontFamily: {
-      sans: 'var(--font-open-sans), ui-sans-serif, system-ui, sans-serif',
-      serif: 'var(--font-montserrat), ui-serif, Georgia, serif',
-      mono: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, monospace',
+      sans: ['Montserrat', 'system-ui', 'sans-serif'],
+      serif: ['Open Sans', 'system-ui', 'sans-serif'],
+      mono: ['JetBrains Mono', 'Consolas', 'monospace'],
     },
     fontSize: {
-      // Headings H1-H6
-      h1: ['3rem', { lineHeight: '1.1', fontWeight: '700' }], // 48px
-      h2: ['2.25rem', { lineHeight: '1.2', fontWeight: '700' }], // 36px
-      h3: ['1.875rem', { lineHeight: '1.3', fontWeight: '600' }], // 30px
-      h4: ['1.5rem', { lineHeight: '1.4', fontWeight: '600' }], // 24px
-      h5: ['1.25rem', { lineHeight: '1.5', fontWeight: '600' }], // 20px
-      h6: ['1.125rem', { lineHeight: '1.5', fontWeight: '600' }], // 18px
-      
-      // Body text
-      body: ['1rem', { lineHeight: '1.6', fontWeight: '400' }], // 16px
-      bodyLarge: ['1.125rem', { lineHeight: '1.6', fontWeight: '400' }], // 18px
-      bodySmall: ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }], // 14px
-      
-      // Labels and UI text
-      label: ['0.875rem', { lineHeight: '1.4', fontWeight: '500' }], // 14px
-      caption: ['0.75rem', { lineHeight: '1.4', fontWeight: '400' }], // 12px
-      
-      // Legacy sizes for compatibility
-      xs: ['0.75rem', { lineHeight: '1rem' }],
-      sm: ['0.875rem', { lineHeight: '1.25rem' }],
-      base: ['1rem', { lineHeight: '1.5rem' }],
-      lg: ['1.125rem', { lineHeight: '1.75rem' }],
-      xl: ['1.25rem', { lineHeight: '1.75rem' }],
-      '2xl': ['1.5rem', { lineHeight: '2rem' }],
-      '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-      '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-      '5xl': ['3rem', { lineHeight: '1' }],
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+      '5xl': '3rem',
     },
     fontWeight: {
-      light: '300',
       normal: '400',
       medium: '500',
       semibold: '600',
       bold: '700',
-      extrabold: '800',
     },
-    letterSpacing: {
-      tight: '-0.025em',
-      normal: '0',
-      wide: '0.025em',
-      wider: '0.05em',
+    lineHeight: {
+      tight: '1.25',
+      normal: '1.5',
+      relaxed: '1.75',
     },
   },
-
-  // Shadow system
+  
+  // Spacing
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '0.75rem',
+    lg: '1rem',
+    xl: '1.5rem',
+    '2xl': '2rem',
+    '3xl': '3rem',
+    '4xl': '4rem',
+  },
+  
+  // Border radius
+  radius: {
+    sm: '0.375rem',
+    md: '0.5rem',
+    lg: '0.75rem',
+    xl: '1rem',
+    '2xl': '1.5rem',
+    full: '9999px',
+  },
+  
+  // Shadows
   shadow: {
-    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+    sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    md: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    lg: '0 10px 15px rgba(0, 0, 0, 0.1)',
+    xl: '0 20px 25px rgba(0, 0, 0, 0.1)',
+    glass: '0 10px 30px rgba(0, 0, 0, 0.25)',
+    glow: '0 0 20px rgba(209, 169, 84, 0.3)',
   },
-
-  // Glass effect system
-  glass: {
-    backdrop: 'blur(10px)',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    hover: {
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+  
+  // Animation
+  animation: {
+    duration: {
+      fast: '150ms',
+      normal: '200ms',
+      slow: '300ms',
     },
-  },
-
-  // Accessibility system
-  a11y: {
-    // Focus indicators
-    focus: {
-      ring: '2px solid oklch(0.8 0.189 84.429)', // Gold focus ring
-      ringOffset: '2px',
-      ringOffsetColor: 'oklch(0.145 0 0)', // Dark background
-      outline: 'none',
-    },
-    // Skip links
-    skipLink: {
-      position: 'absolute',
-      top: '-40px',
-      left: '6px',
-      background: 'oklch(0.8 0.189 84.429)',
-      color: 'oklch(0.15 0 0)',
-      padding: '8px 16px',
-      borderRadius: '4px',
-      zIndex: '9999',
-      textDecoration: 'none',
-      fontWeight: '600',
-      '&:focus': {
-        top: '6px',
-      },
-    },
-    // High contrast mode support
-    highContrast: {
-      border: '2px solid currentColor',
-      background: 'Canvas',
-      color: 'CanvasText',
-    },
-    // Reduced motion
-    reducedMotion: {
-      transition: 'none',
-      animation: 'none',
-    },
-  },
-
-  // Brand-aligned micro-interactions
-  microInteractions: {
-    // Gold pulse animation for ritualized affordances
-    pulse: {
-      keyframes: {
-        '0%': { boxShadow: '0 0 0 0 oklch(0.8 0.189 84.429 / 0.7)' },
-        '70%': { boxShadow: '0 0 0 10px oklch(0.8 0.189 84.429 / 0)' },
-        '100%': { boxShadow: '0 0 0 0 oklch(0.8 0.189 84.429 / 0)' },
-      },
-      duration: '2s',
-      iteration: 'infinite',
-    },
-    // Initiation mode glow
-    initiation: {
-      keyframes: {
-        '0%': { 
-          boxShadow: '0 0 5px oklch(0.9 0.189 84.429 / 0.5)',
-          transform: 'scale(1)',
-        },
-        '50%': { 
-          boxShadow: '0 0 20px oklch(0.9 0.189 84.429 / 0.8)',
-          transform: 'scale(1.02)',
-        },
-        '100%': { 
-          boxShadow: '0 0 5px oklch(0.9 0.189 84.429 / 0.5)',
-          transform: 'scale(1)',
-        },
-      },
-      duration: '3s',
-      iteration: 'infinite',
-    },
-    // Ritualized hover states
-    ritualHover: {
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      '&:hover': {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 10px 25px oklch(0.8 0.189 84.429 / 0.3)',
-      },
-    },
-  },
-} as const;
-
-// Component-specific token combinations
-export const componentTokens = {
-  button: {
-    height: {
-      sm: '2.25rem', // 36px
-      md: '2.5rem',  // 40px
-      lg: '2.75rem', // 44px
-    },
-    padding: {
-      sm: '0.5rem 0.75rem',
-      md: '0.5rem 1rem',
-      lg: '0.75rem 1.5rem',
+    easing: {
+      ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+      easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
+      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
     },
   },
   
-  card: {
-    padding: {
-      sm: '1rem',
-      md: '1.5rem',
-      lg: '2rem',
-    },
-    gap: '1.5rem',
+  // Breakpoints
+  breakpoints: {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
+    '2xl': '1536px',
   },
   
-  input: {
-    height: '2.5rem', // 40px
-    padding: '0.5rem 0.75rem',
+  // Z-index
+  zIndex: {
+    dropdown: 1000,
+    sticky: 1020,
+    fixed: 1030,
+    modal: 1040,
+    popover: 1050,
+    tooltip: 1060,
   },
-} as const;
+} as const
 
-export type DesignTokens = typeof tokens;
-export type ComponentTokens = typeof componentTokens;
+// CSS Custom Properties for runtime usage
+export const cssVariables = `
+  :root {
+    /* Colors */
+    --color-bg: ${tokens.colors.bg};
+    --color-fg: ${tokens.colors.fg};
+    --color-card: ${tokens.colors.card};
+    --color-muted: ${tokens.colors.muted};
+    --color-accent: ${tokens.colors.accent};
+    --color-accent-hover: ${tokens.colors.accentHover};
+    --color-accent-contrast: ${tokens.colors.accentContrast};
+    --color-success: ${tokens.colors.success};
+    --color-warning: ${tokens.colors.warning};
+    --color-error: ${tokens.colors.error};
+    --color-info: ${tokens.colors.info};
+    --color-border: ${tokens.colors.border};
+    --color-border-hover: ${tokens.colors.borderHover};
+    --color-overlay: ${tokens.colors.overlay};
+    --color-glass: ${tokens.colors.glass};
+    --color-glass-border: ${tokens.colors.glassBorder};
+    
+    /* Typography */
+    --font-family-sans: ${tokens.typography.fontFamily.sans.join(', ')};
+    --font-family-serif: ${tokens.typography.fontFamily.serif.join(', ')};
+    --font-family-mono: ${tokens.typography.fontFamily.mono.join(', ')};
+    
+    /* Spacing */
+    --spacing-xs: ${tokens.spacing.xs};
+    --spacing-sm: ${tokens.spacing.sm};
+    --spacing-md: ${tokens.spacing.md};
+    --spacing-lg: ${tokens.spacing.lg};
+    --spacing-xl: ${tokens.spacing.xl};
+    --spacing-2xl: ${tokens.spacing['2xl']};
+    --spacing-3xl: ${tokens.spacing['3xl']};
+    --spacing-4xl: ${tokens.spacing['4xl']};
+    
+    /* Border radius */
+    --radius-sm: ${tokens.radius.sm};
+    --radius-md: ${tokens.radius.md};
+    --radius-lg: ${tokens.radius.lg};
+    --radius-xl: ${tokens.radius.xl};
+    --radius-2xl: ${tokens.radius['2xl']};
+    --radius-full: ${tokens.radius.full};
+    
+    /* Shadows */
+    --shadow-sm: ${tokens.shadow.sm};
+    --shadow-md: ${tokens.shadow.md};
+    --shadow-lg: ${tokens.shadow.lg};
+    --shadow-xl: ${tokens.shadow.xl};
+    --shadow-glass: ${tokens.shadow.glass};
+    --shadow-glow: ${tokens.shadow.glow};
+    
+    /* Animation */
+    --duration-fast: ${tokens.animation.duration.fast};
+    --duration-normal: ${tokens.animation.duration.normal};
+    --duration-slow: ${tokens.animation.duration.slow};
+    --easing-ease: ${tokens.animation.easing.ease};
+    --easing-ease-in: ${tokens.animation.easing.easeIn};
+    --easing-ease-out: ${tokens.animation.easing.easeOut};
+    --easing-ease-in-out: ${tokens.animation.easing.easeInOut};
+  }
+`
+
+// Utility functions for common patterns
+export const getDifficultyColor = (difficulty: string) => {
+  switch (difficulty.toLowerCase()) {
+    case 'beginner':
+      return {
+        bg: 'rgba(16, 185, 129, 0.2)',
+        text: '#10B981',
+        border: 'rgba(16, 185, 129, 0.3)',
+      }
+    case 'intermediate':
+      return {
+        bg: 'rgba(245, 158, 11, 0.2)',
+        text: '#F59E0B',
+        border: 'rgba(245, 158, 11, 0.3)',
+      }
+    case 'advanced':
+      return {
+        bg: 'rgba(239, 68, 68, 0.2)',
+        text: '#EF4444',
+        border: 'rgba(239, 68, 68, 0.3)',
+      }
+    default:
+      return {
+        bg: 'rgba(107, 114, 128, 0.2)',
+        text: '#6B7280',
+        border: 'rgba(107, 114, 128, 0.3)',
+      }
+  }
+}
+
+export const getVectorColor = (vector: string) => {
+  const colors = {
+    'M01': '#3B82F6', // Blue
+    'M02': '#10B981', // Green
+    'M03': '#F59E0B', // Yellow
+    'M04': '#EF4444', // Red
+    'M05': '#8B5CF6', // Purple
+    'M06': '#06B6D4', // Cyan
+    'M07': '#F97316', // Orange
+    'M08': '#84CC16', // Lime
+    'M09': '#EC4899', // Pink
+    'M10': '#6366F1', // Indigo
+    'M11': '#14B8A6', // Teal
+    'M12': '#F43F5E', // Rose
+    'M13': '#A855F7', // Violet
+  }
+  
+  return colors[vector as keyof typeof colors] || tokens.colors.accent
+}
+
+// Focus ring utility
+export const focusRing = `
+  focus:outline-none focus:ring-2 focus:ring-${tokens.colors.accent} focus:ring-offset-2 focus:ring-offset-${tokens.colors.bg}
+`
+
+// Glass effect utility
+export const glassEffect = `
+  backdrop-blur-sm bg-${tokens.colors.glass} border border-${tokens.colors.glassBorder}
+`

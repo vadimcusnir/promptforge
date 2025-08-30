@@ -3,12 +3,24 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ForgeGlyphInteractive } from "@/components/forge/ForgeGlyphInteractive"
-import { BookOpen, Zap, Target, Download, Code, BarChart3, ArrowRight, Search } from "lucide-react"
+import { BookOpen, Zap, Target, Download, Code, BarChart3, ArrowRight, Search, Clock, Bell } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { TableOfContents } from "@/components/docs/table-of-contents"
 
 export default function DocsPage() {
   const [searchTerm, setSearchTerm] = useState("")
+
+  // TOC items for the documentation sections
+  const tocItems = [
+    { id: "overview", title: "Overview", level: 1 },
+    { id: "7d-engine", title: "7D Parameter Engine", level: 1 },
+    { id: "modules-catalog", title: "Modules Catalog", level: 1 },
+    { id: "scoring-system", title: "Scoring System ≥80", level: 1 },
+    { id: "exports-entitlements", title: "Exports & Entitlements", level: 1 },
+    { id: "api-reference", title: "API Reference", level: 1 },
+    { id: "quick-start", title: "Quick Start Guide", level: 1 },
+  ]
 
   const sections = [
     {
@@ -57,7 +69,9 @@ export default function DocsPage() {
       description: "Technical documentation for API integration",
       icon: Code,
       status: "coming-soon",
-      href: "/docs/api"
+      href: "/docs/api",
+      timeline: "2-3 weeks",
+      notifySignup: true
     }
   ]
 
@@ -89,27 +103,31 @@ export default function DocsPage() {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Search */}
-        <div className="mb-8">
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-fg-secondary w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search documentation..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-lg text-fg-primary placeholder-fg-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-            />
-          </div>
-        </div>
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            {/* Search */}
+            <div className="mb-8">
+              <div className="relative max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-fg-secondary w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search documentation..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-lg text-fg-primary placeholder-fg-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                />
+              </div>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredSections.map((section) => {
             const Icon = section.icon
             return (
               <Card
                 key={section.id}
+                id={section.id}
                 className={`bg-card border border-border hover:border-accent/50 transition-all duration-300 ${
                   section.status === 'coming-soon' ? 'opacity-75' : 'cursor-pointer'
                 }`}
@@ -141,68 +159,84 @@ export default function DocsPage() {
                       </Button>
                     </Link>
                   ) : (
-                    <Button 
-                      disabled 
-                      className="w-full bg-muted text-fg-secondary cursor-not-allowed"
-                    >
-                      Coming Soon
-                    </Button>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-sm text-fg-secondary">
+                        <Clock className="w-4 h-4" />
+                        <span>Publishes in {section.timeline}</span>
+                      </div>
+                      {section.notifySignup && (
+                        <Button 
+                          variant="outline"
+                          className="w-full border-accent/30 text-accent hover:bg-accent/10"
+                        >
+                          <Bell className="w-4 h-4 mr-2" />
+                          Notify Me
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </CardContent>
               </Card>
             )
           })}
-        </div>
+            </div>
 
-        {/* Quick Start Guide */}
-        <div className="mt-12">
-          <Card className="bg-card border border-border">
-            <CardHeader>
-              <CardTitle className="text-2xl font-serif text-fg-primary">Quick Start Guide</CardTitle>
-              <CardDescription className="text-fg-secondary">
-                Get up and running with PromptForge in minutes
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
-                    <span className="text-accent font-bold text-lg">1</span>
+            {/* Quick Start Guide */}
+            <div className="mt-12" id="quick-start">
+              <Card className="bg-card border border-border">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-serif text-fg-primary">Quick Start Guide</CardTitle>
+                  <CardDescription className="text-fg-secondary">
+                    Get up and running with PromptForge in minutes
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
+                        <span className="text-accent font-bold text-lg">1</span>
+                      </div>
+                      <h3 className="font-semibold text-fg-primary mb-2">Choose Module</h3>
+                      <p className="text-sm text-fg-secondary">
+                        Select from 50 industrial modules or start with M01 (SOP Forge)
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
+                        <span className="text-accent font-bold text-lg">2</span>
+                      </div>
+                      <h3 className="font-semibold text-fg-primary mb-2">Configure 7D</h3>
+                      <p className="text-sm text-fg-secondary">
+                        Set the seven dimensions: domain, scale, urgency, audience, format, constraints, success metrics
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
+                        <span className="text-accent font-bold text-lg">3</span>
+                      </div>
+                      <h3 className="font-semibold text-fg-primary mb-2">Generate & Export</h3>
+                      <p className="text-sm text-fg-secondary">
+                        Generate your prompt, test it, and export in your preferred format
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-fg-primary mb-2">Choose Module</h3>
-                  <p className="text-sm text-fg-secondary">
-                    Select from 50 industrial modules or start with M01 (SOP Forge)
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
-                    <span className="text-accent font-bold text-lg">2</span>
+                  <div className="mt-8 text-center">
+                    <Link href="/generator">
+                      <Button size="lg" className="bg-accent hover:bg-accent-hover text-accent-contrast font-semibold">
+                        Start Generating
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
                   </div>
-                  <h3 className="font-semibold text-fg-primary mb-2">Configure 7D</h3>
-                  <p className="text-sm text-fg-secondary">
-                    Set the seven dimensions: domain, scale, urgency, audience, format, constraints, success metrics
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
-                    <span className="text-accent font-bold text-lg">3</span>
-                  </div>
-                  <h3 className="font-semibold text-fg-primary mb-2">Generate & Export</h3>
-                  <p className="text-sm text-fg-secondary">
-                    Generate your prompt, test it, and export in your preferred format
-                  </p>
-                </div>
-              </div>
-              <div className="mt-8 text-center">
-                <Link href="/generator">
-                  <Button size="lg" className="bg-accent hover:bg-accent-hover text-accent-contrast font-semibold">
-                    Start Generating
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Sidebar - Table of Contents */}
+          <div className="lg:col-span-1">
+            <TableOfContents items={tocItems} />
+          </div>
         </div>
       </div>
     </div>

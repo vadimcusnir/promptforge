@@ -92,7 +92,13 @@
     "ai:cache-stats": "curl -X GET 'http://localhost:3000/api/ai-cache?action=stats'",
     "ai:cache-clear": "curl -X DELETE 'http://localhost:3000/api/ai-cache'",
     "ai:migrations": "node scripts/apply-ai-migrations.js",
-    "ai:verify-tables": "node scripts/verify-ai-tables.js"
+    "ai:verify-tables": "node scripts/verify-ai-tables.js",
+    "test:a11y": "axe http://localhost:3000 --exit --reporter json",
+    "test:a11y:pages": "axe http://localhost:3000 http://localhost:3000/modules http://localhost:3000/pricing http://localhost:3000/docs http://localhost:3000/guides http://localhost:3000/generator --exit --reporter json",
+    "test:links": "linkchecker http://localhost:3000 --config=.linkcheckerrc --output=json",
+    "test:pa11y": "pa11y-ci --config .pa11yci.json",
+    "test:accessibility": "pnpm test:a11y:pages && pnpm test:links && pnpm test:pa11y",
+    "test:accessibility:local": "node scripts/test-accessibility.js"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.9",
@@ -129,6 +135,7 @@
     "@sentry/nextjs": "^7.100.1",
     "@stripe/stripe-js": "^7.9.0",
     "@supabase/supabase-js": "latest",
+    "@types/qrcode": "^1.5.5",
     "@upstash/redis": "^1.35.3",
     "ai": "^5.0.28",
     "autoprefixer": "^10.4.20",
@@ -147,7 +154,9 @@
     "next": "15.2.4",
     "next-themes": "^0.4.6",
     "openai": "^5.15.0",
+    "otplib": "^12.0.1",
     "pg": "^8.16.3",
+    "qrcode": "^1.5.4",
     "react": "^19",
     "react-day-picker": "9.8.0",
     "react-dom": "^19",
@@ -163,6 +172,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.8.0",
     "@eslint/js": "^9.34.0",
     "@jest/globals": "^30.0.5",
     "@playwright/test": "^1.55.0",
@@ -183,6 +193,8 @@
     "glob": "^11.0.3",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.1.1",
+    "linkchecker": "^1.1.0",
+    "pa11y-ci": "^3.0.1",
     "postcss": "^8.5",
     "puppeteer": "^24.17.0",
     "tailwindcss": "^4.1.9",

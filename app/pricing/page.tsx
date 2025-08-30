@@ -5,7 +5,8 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Check, X, User, CreditCard } from "lucide-react"
+import { Check, X, User, CreditCard, Info } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout"
 import { useAuth } from "@/hooks/use-auth"
 import { useAnalytics } from "@/hooks/use-analytics"
@@ -446,7 +447,19 @@ export default function PricingPage() {
               onMouseEnter={() => analytics.faqView(t("pricing.faq.upgradeDowngrade"))}
             >
               <CardHeader>
-                <CardTitle className="font-serif text-lg">{t("pricing.faq.upgradeDowngrade")}</CardTitle>
+                <div className="flex items-center gap-2">
+                  <CardTitle className="font-serif text-lg">{t("pricing.faq.upgradeDowngrade")}</CardTitle>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-4 h-4 text-fg-secondary cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-sm">Downgrades apply at next billing cycle</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-400">{t("pricing.faq.upgradeDowngradeAnswer")}</p>
@@ -503,6 +516,9 @@ export default function PricingPage() {
               </Link>
               <Link href="/legal/terms" className="hover:text-gold-400 transition-colors">
                 Terms of Use
+              </Link>
+              <Link href="/legal/gdpr" className="hover:text-gold-400 transition-colors">
+                GDPR Rights
               </Link>
               <a href="mailto:legal@promptforge.ai" className="hover:text-yellow-400 transition-colors">
                 legal@promptforge.ai

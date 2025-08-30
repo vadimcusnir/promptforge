@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useToast } from "@/hooks/use-toast"
 import {
   Settings,
@@ -578,15 +579,37 @@ function GeneratorPage() {
                       <div className="grid md:grid-cols-2 gap-6">
                         {Object.entries(paramOptions).map(([key, options]) => {
                           const isComplete = params7D[key as keyof Params7D] && params7D[key as keyof Params7D] !== ''
+                          const tooltipContent = {
+                            domain: 'The specific field or industry context for your prompt. This determines the domain expertise and terminology used.',
+                            scale: 'The scope and complexity level of the task. Affects the depth and breadth of the generated content.',
+                            urgency: 'Time sensitivity and priority level. Influences the tone and call-to-action strength.',
+                            complexity: 'The complexity level of the task. Determines the sophistication of the approach and language.',
+                            resources: 'Available resources and constraints. Affects the feasibility and implementation approach.',
+                            application: 'How the prompt will be used. Influences the format and delivery method.',
+                            output: 'Desired output format and structure. Determines the final presentation and organization.'
+                          }
+                          
                           return (
                             <div key={key} className="space-y-3">
                               <div className="flex items-center gap-2">
-                                <Label
-                                  htmlFor={`${key}-select`}
-                                  className="capitalize text-fg-primary font-medium"
-                                >
-                                  {key.replace('_', ' ')}
-                                </Label>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="flex items-center gap-2">
+                                        <Label
+                                          htmlFor={`${key}-select`}
+                                          className="capitalize text-fg-primary font-medium cursor-help"
+                                        >
+                                          {key.replace('_', ' ')}
+                                        </Label>
+                                        <Info className="w-4 h-4 text-fg-secondary" />
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      <p className="text-sm">{tooltipContent[key as keyof typeof tooltipContent]}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
                                 {isComplete && <CheckCircle className="w-4 h-4 text-state-success" aria-hidden="true" />}
                               </div>
                               <Select
@@ -609,27 +632,17 @@ function GeneratorPage() {
                                       value={option.value}
                                       className="text-fg-primary hover:bg-accent/10 focus:bg-accent/10"
                                     >
-                                      <div>
-                                        <div className="font-medium">{option.label}</div>
-                                      </div>
+                                      <div className="font-medium">{option.label}</div>
                                     </SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>
-                              {/* Tooltip/help text */}
-                              <p
-                                id={`${key}-help`}
-                                className="text-xs text-fg-secondary"
-                                role="tooltip"
-                              >
-                                {key === 'domain' && 'The specific field or industry context for your prompt'}
-                                {key === 'scale' && 'The scope and complexity level of the task'}
-                                {key === 'urgency' && 'Time sensitivity and priority level'}
-                                {key === 'complexity' && 'The complexity level of the task'}
-                                {key === 'resources' && 'Available resources and constraints'}
-                                {key === 'application' && 'How the prompt will be used'}
-                                {key === 'output' && 'Desired output format and structure'}
-                              </p>
+                              {/* Validation error display */}
+                              {validationErrors[key] && (
+                                <p className="text-xs text-error" role="alert">
+                                  {validationErrors[key]}
+                                </p>
+                              )}
                             </div>
                           )
                         })}
@@ -647,37 +660,50 @@ function GeneratorPage() {
                             <ChevronLeft className="w-4 h-4 mr-2" />
                             Previous
                           </Button>
-                          <Button
-                            size="lg"
-                            className={`font-semibold ${
-                              Object.values(params7D).some(v => !v || v === '')
-                                ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                                : 'bg-accent hover:bg-accent-hover text-accent-contrast ritual-hover'
-                            }`}
-                            onClick={() => {
-                              if (currentStep < 4) {
-                                nextStep()
-                              } else {
-                                // Switch to generator tab
-                                const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
-                                if (generatorTab) generatorTab.click()
-                              }
-                            }}
-                            disabled={Object.values(params7D).some(v => !v || v === '')}
-                            aria-describedby="generate-help"
-                          >
-                            {currentStep < 4 ? (
-                              <>
-                                Next
-                                <ChevronRight className="w-4 h-4 ml-2" />
-                              </>
-                            ) : (
-                              <>
-                                Generate Prompt
-                                <Zap className="w-4 h-4 ml-2" />
-                              </>
-                            )}
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  size="lg"
+                                  className={`font-semibold ${
+                                    Object.values(params7D).some(v => !v || v === '')
+                                      ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                                      : 'bg-accent hover:bg-accent-hover text-accent-contrast ritual-hover'
+                                  }`}
+                                  onClick={() => {
+                                    if (currentStep < 4) {
+                                      nextStep()
+                                    } else {
+                                      // Switch to generator tab
+                                      const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
+                                      if (generatorTab) generatorTab.click()
+                                    }
+                                  }}
+                                  disabled={Object.values(params7D).some(v => !v || v === '')}
+                                  aria-describedby="generate-help"
+                                >
+                                  {currentStep < 4 ? (
+                                    <>
+                                      Next
+                                      <ChevronRight className="w-4 h-4 ml-2" />
+                                    </>
+                                  ) : (
+                                    <>
+                                      Generate Prompt
+                                      <Zap className="w-4 h-4 ml-2" />
+                                    </>
+                                  )}
+                                </Button>
+                              </TooltipTrigger>
+                              {Object.values(params7D).some(v => !v || v === '') && (
+                                <TooltipContent>
+                                  <p className="text-sm">
+                                    Complete all 7D parameters to enable generation
+                                  </p>
+                                </TooltipContent>
+                              )}
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                         {Object.values(params7D).some(v => !v || v === '') && (
                           <p id="generate-help" className="text-sm text-fg-secondary mt-2 text-center">
@@ -723,42 +749,66 @@ function GeneratorPage() {
                           </div>
                         </div>
 
-                        {/* Prompt Metadata */}
-                        <div className="flex items-center justify-between">
-                          <div className="text-sm text-fg-secondary space-y-1">
-                            <div>Run ID: #{generatedPrompt.hash}</div>
-                            <div>Generated: {new Date(generatedPrompt.timestamp).toLocaleString()}</div>
-                            {currentPromptRun && (
-                              <>
-                                <div>Module: {currentPromptRun.moduleId}</div>
-                                {currentPromptRun.tokensUsed && (
-                                  <div>Tokens: {currentPromptRun.tokensUsed.toLocaleString()}</div>
-                                )}
-                                {currentPromptRun.cost && (
-                                  <div>Cost: ${currentPromptRun.cost.toFixed(4)}</div>
-                                )}
-                              </>
+                        {/* Telemetry Strip */}
+                        <div className="bg-card border border-border rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="font-medium text-fg-primary">Generation Telemetry</h4>
+                            <Badge variant="outline" className="text-xs">
+                              Run #{generatedPrompt.hash}
+                            </Badge>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div>
+                              <div className="text-fg-secondary">Module</div>
+                              <div className="font-medium text-fg-primary">{currentPromptRun?.moduleId || generatedPrompt.module}</div>
+                            </div>
+                            <div>
+                              <div className="text-fg-secondary">Generated</div>
+                              <div className="font-medium text-fg-primary">
+                                {new Date(generatedPrompt.timestamp).toLocaleTimeString()}
+                              </div>
+                            </div>
+                            {currentPromptRun?.tokensUsed && (
+                              <div>
+                                <div className="text-fg-secondary">Tokens</div>
+                                <div className="font-medium text-fg-primary">
+                                  {currentPromptRun.tokensUsed.toLocaleString()}
+                                </div>
+                              </div>
+                            )}
+                            {currentPromptRun?.cost && (
+                              <div>
+                                <div className="text-fg-secondary">Cost</div>
+                                <div className="font-medium text-fg-primary">
+                                  ${currentPromptRun.cost.toFixed(4)}
+                                </div>
+                              </div>
                             )}
                           </div>
                           
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm" onClick={handleCopy}>
-                              <Copy className="w-4 h-4 mr-2" />
-                              Copy
-                            </Button>
-                            
-                            {currentPromptRun && (
-                              <ExportModal 
-                                promptRun={currentPromptRun}
-                                userPlan={userPlan}
-                                trigger={
-                                  <Button variant="outline" size="sm">
-                                    <Download className="w-4 h-4 mr-2" />
-                                    Export
-                                  </Button>
-                                }
-                              />
-                            )}
+                          {/* Export Icons */}
+                          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border">
+                            <span className="text-xs text-fg-secondary">Export:</span>
+                            <div className="flex gap-2">
+                              <Button variant="outline" size="sm" onClick={handleCopy}>
+                                <Copy className="w-3 h-3 mr-1" />
+                                Copy
+                              </Button>
+                              
+                              {currentPromptRun && (
+                                <ExportModal 
+                                  promptRun={currentPromptRun}
+                                  userPlan={userPlan}
+                                  trigger={
+                                    <Button variant="outline" size="sm">
+                                      <Download className="w-3 h-3 mr-1" />
+                                      Export
+                                    </Button>
+                                  }
+                                />
+                              )}
+                            </div>
                           </div>
                         </div>
                       </CardContent>

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Search, Lock, Zap, Clock, Target } from "lucide-react"
 import { ForgeGlyphInteractive } from "@/components/forge/ForgeGlyphInteractive"
+import Link from "next/link"
 
 interface Module {
   id: string
@@ -36,14 +37,24 @@ const modules: Module[] = [
 
 export default function ModulesPage() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [selectedVectors, setSelectedVectors] = useState<string[]>([])
+  const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([])
+  const [selectedDurations, setSelectedDurations] = useState<string[]>([])
 
   const filteredModules = useMemo(() => {
-    return modules.filter(module => 
-      module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      module.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      module.id.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  }, [searchTerm])
+    return modules.filter(module => {
+      const matchesSearch = 
+        module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        module.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        module.id.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchesVector = selectedVectors.length === 0 || selectedVectors.includes(module.vector)
+      const matchesDifficulty = selectedDifficulties.length === 0 || selectedDifficulties.includes(module.difficulty)
+      const matchesDuration = selectedDurations.length === 0 || selectedDurations.includes(module.duration)
+      
+      return matchesSearch && matchesVector && matchesDifficulty && matchesDuration
+    })
+  }, [searchTerm, selectedVectors, selectedDifficulties, selectedDurations])
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -65,6 +76,43 @@ export default function ModulesPage() {
       'Cognitive': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
     }
     return colors[vector] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+  }
+
+  // Get unique values for filters
+  const uniqueVectors = [...new Set(modules.map(m => m.vector))].sort()
+  const uniqueDifficulties = [...new Set(modules.map(m => m.difficulty))].sort()
+  const uniqueDurations = [...new Set(modules.map(m => m.duration))].sort()
+
+  // Filter toggle functions
+  const toggleVector = (vector: string) => {
+    setSelectedVectors(prev => 
+      prev.includes(vector) 
+        ? prev.filter(v => v !== vector)
+        : [...prev, vector]
+    )
+  }
+
+  const toggleDifficulty = (difficulty: string) => {
+    setSelectedDifficulties(prev => 
+      prev.includes(difficulty) 
+        ? prev.filter(d => d !== difficulty)
+        : [...prev, difficulty]
+    )
+  }
+
+  const toggleDuration = (duration: string) => {
+    setSelectedDurations(prev => 
+      prev.includes(duration) 
+        ? prev.filter(d => d !== duration)
+        : [...prev, duration]
+    )
+  }
+
+  const clearAllFilters = () => {
+    setSelectedVectors([])
+    setSelectedDifficulties([])
+    setSelectedDurations([])
+    setSearchTerm("")
   }
 
   return (
@@ -105,10 +153,84 @@ export default function ModulesPage() {
           </div>
         </div>
 
+        {/* Filter Chips */}
+        <div className="mb-8">
+          <div className="flex flex-wrap items-center gap-4 mb-4">
+            <span className="text-fg-secondary font-medium">Filters:</span>
+            
+            {/* Vector Filters */}
+            <div className="flex flex-wrap gap-2">
+              {uniqueVectors.map(vector => (
+                <button
+                  key={vector}
+                  onClick={() => toggleVector(vector)}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                    selectedVectors.includes(vector)
+                      ? `${getVectorColor(vector)} ring-2 ring-accent/50`
+                      : 'bg-zinc-800 text-zinc-300 border border-zinc-700 hover:border-zinc-600'
+                  }`}
+                >
+                  {vector}
+                </button>
+              ))}
+            </div>
+
+            {/* Difficulty Filters */}
+            <div className="flex flex-wrap gap-2">
+              {uniqueDifficulties.map(difficulty => (
+                <button
+                  key={difficulty}
+                  onClick={() => toggleDifficulty(difficulty)}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                    selectedDifficulties.includes(difficulty)
+                      ? `${getDifficultyColor(difficulty)} ring-2 ring-accent/50`
+                      : 'bg-zinc-800 text-zinc-300 border border-zinc-700 hover:border-zinc-600'
+                  }`}
+                >
+                  {difficulty}
+                </button>
+              ))}
+            </div>
+
+            {/* Duration Filters */}
+            <div className="flex flex-wrap gap-2">
+              {uniqueDurations.map(duration => (
+                <button
+                  key={duration}
+                  onClick={() => toggleDuration(duration)}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                    selectedDurations.includes(duration)
+                      ? 'bg-accent/20 text-accent border border-accent/30 ring-2 ring-accent/50'
+                      : 'bg-zinc-800 text-zinc-300 border border-zinc-700 hover:border-zinc-600'
+                  }`}
+                >
+                  <Clock className="w-3 h-3 inline mr-1" />
+                  {duration}
+                </button>
+              ))}
+            </div>
+
+            {/* Clear All */}
+            {(selectedVectors.length > 0 || selectedDifficulties.length > 0 || selectedDurations.length > 0 || searchTerm) && (
+              <button
+                onClick={clearAllFilters}
+                className="px-3 py-1 rounded-full text-sm font-medium bg-zinc-700 text-zinc-300 border border-zinc-600 hover:bg-zinc-600 hover:text-white transition-all duration-200"
+              >
+                Clear All
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-fg-secondary">
             Showing {filteredModules.length} of {modules.length} modules
+            {(selectedVectors.length > 0 || selectedDifficulties.length > 0 || selectedDurations.length > 0) && (
+              <span className="text-accent ml-2">
+                (filtered)
+              </span>
+            )}
           </p>
         </div>
 
@@ -160,26 +282,23 @@ export default function ModulesPage() {
                   </div>
 
                   {/* CTA Button */}
-                  <Button
-                    className={`w-full mt-4 ${
-                      module.requiresPro
-                        ? 'bg-accent/20 text-accent border border-accent/30 hover:bg-accent/30'
-                        : 'bg-accent hover:bg-accent-hover text-accent-contrast font-semibold'
-                    }`}
-                    disabled={module.requiresPro}
-                  >
-                    {module.requiresPro ? (
-                      <>
+                  {module.requiresPro ? (
+                    <Link href="/pricing" className="w-full">
+                      <Button
+                        className="w-full mt-4 bg-accent/20 text-accent border border-accent/30 hover:bg-accent/30 transition-all duration-200"
+                      >
                         <Lock className="w-4 h-4 mr-2" />
                         Pro Required
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-4 h-4 mr-2" />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button
+                      className="w-full mt-4 bg-accent hover:bg-accent-hover text-accent-contrast font-semibold transition-all duration-200"
+                    >
+                      <Zap className="w-4 h-4 mr-2" />
                       Use in Generator
-                      </>
-                    )}
-                  </Button>
+                    </Button>
+                  )}
                 </div>
                 </CardContent>
               </Card>

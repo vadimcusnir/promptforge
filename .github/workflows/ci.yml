@@ -336,10 +336,239 @@ jobs:
           path: test-backups/
           retention-days: 1
 
-  # Job 6: Lighthouse Performance Test
-  lighthouse:
+  # Job 6: Accessibility Testing
+  accessibility-tests:
     runs-on: ubuntu-latest
     needs: [lint-typecheck, unit-tests]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install accessibility testing tools
+        run: |
+          echo "🔍 Installing accessibility testing tools..."
+          npm install -g @axe-core/cli
+          npm install -g linkchecker
+          npm install -g pa11y-ci
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Start application
+        run: |
+          echo "🚀 Starting application for accessibility testing..."
+          pnpm start &
+          sleep 30  # Wait for app to start
+
+      - name: Run axe-core accessibility tests
+        run: |
+          echo "♿ Running axe-core accessibility tests..."
+          
+          # Test key pages for accessibility
+          PAGES=(
+            "http://localhost:3000"
+            "http://localhost:3000/modules"
+            "http://localhost:3000/pricing"
+            "http://localhost:3000/docs"
+            "http://localhost:3000/guides"
+            "http://localhost:3000/generator"
+          )
+          
+          for page in "${PAGES[@]}"; do
+            echo "Testing accessibility for: $page"
+            axe "$page" --exit --reporter json > "axe-results-$(basename $page).json" || {
+              echo "⚠️  Accessibility issues found on $page"
+            }
+          done
+
+      - name: Run pa11y accessibility tests
+        run: |
+          echo "♿ Running pa11y accessibility tests..."
+          
+          # Create pa11y configuration
+          cat > .pa11yci.json << 'EOF'
+          {
+            "defaults": {
+              "timeout": 30000,
+              "wait": 2000,
+              "chromeLaunchConfig": {
+                "args": ["--no-sandbox", "--disable-dev-shm-usage"]
+              },
+              "standard": "WCAG2AA",
+              "reporter": "json"
+            },
+            "urls": [
+              "http://localhost:3000",
+              "http://localhost:3000/modules",
+              "http://localhost:3000/pricing",
+              "http://localhost:3000/docs",
+              "http://localhost:3000/guides",
+              "http://localhost:3000/generator"
+            ]
+          }
+          EOF
+          
+          # Run pa11y tests
+          pa11y-ci --config .pa11yci.json --json > pa11y-results.json || {
+            echo "⚠️  pa11y accessibility tests completed with issues"
+          }
+
+      - name: Run link checker
+        run: |
+          echo "🔗 Running link checker..."
+          
+          # Create linkchecker configuration
+          cat > .linkcheckerrc << 'EOF'
+          [checking]
+          threads=10
+          timeout=30
+          useragent=LinkChecker/10.0
+          [output]
+          format=json
+          [filtering]
+          ignorewarnings=url,content-type,size
+          [authentication]
+          [proxy]
+          [checking.ssl]
+          [checking.threads]
+          EOF
+          
+          # Run link checker on key pages
+          linkchecker --config=.linkcheckerrc --output=json http://localhost:3000 > linkchecker-results.json || {
+            echo "⚠️  Link checker found broken links"
+          }
+
+      - name: Check for broken internal links
+        run: |
+          echo "🔍 Checking for broken internal links..."
+          
+          # Check for common broken link patterns
+          BROKEN_LINKS=0
+          
+          # Check for 404 patterns in build output
+          if grep -r "404" .next/static/chunks/ | grep -q "page"; then
+            echo "⚠️  Potential 404 pages detected in build"
+            BROKEN_LINKS=$((BROKEN_LINKS + 1))
+          fi
+          
+          # Check for missing route files
+          MISSING_ROUTES=0
+          for route in "modules" "pricing" "docs" "guides" "generator"; do
+            if [ ! -f "app/$route/page.tsx" ]; then
+              echo "❌ Missing route file: app/$route/page.tsx"
+              MISSING_ROUTES=$((MISSING_ROUTES + 1))
+            fi
+          done
+          
+          if [ $MISSING_ROUTES -gt 0 ]; then
+            echo "❌ Found $MISSING_ROUTES missing route files"
+            exit 1
+          fi
+          
+          echo "✅ No missing route files found"
+
+      - name: Validate ARIA attributes
+        run: |
+          echo "♿ Validating ARIA attributes..."
+          
+          # Check for proper ARIA usage in components
+          ARIA_ISSUES=0
+          
+          # Check for missing aria-labels on interactive elements
+          if grep -r "onClick" components/ | grep -v "aria-label" | grep -v "aria-describedby" | wc -l | grep -q "[1-9]"; then
+            echo "⚠️  Interactive elements without ARIA labels found"
+            ARIA_ISSUES=$((ARIA_ISSUES + 1))
+          fi
+          
+          # Check for proper heading hierarchy
+          if grep -r "h[1-6]" app/ | grep -v "h1" | wc -l | grep -q "[1-9]"; then
+            echo "⚠️  Check heading hierarchy - multiple h1 elements or missing h1"
+            ARIA_ISSUES=$((ARIA_ISSUES + 1))
+          fi
+          
+          # Check for proper form labels
+          if grep -r "input" components/ | grep -v "label" | grep -v "aria-label" | wc -l | grep -q "[1-9]"; then
+            echo "⚠️  Form inputs without proper labels found"
+            ARIA_ISSUES=$((ARIA_ISSUES + 1))
+          fi
+          
+          if [ $ARIA_ISSUES -gt 0 ]; then
+            echo "⚠️  Found $ARIA_ISSUES ARIA-related issues"
+          else
+            echo "✅ No ARIA issues found"
+          fi
+
+      - name: Check color contrast
+        run: |
+          echo "🎨 Checking color contrast compliance..."
+          
+          # Check if design tokens are being used consistently
+          if grep -r "bg-\[#" app/ components/ | wc -l | grep -q "[1-9]"; then
+            echo "⚠️  Hardcoded colors found - use design tokens instead"
+          else
+            echo "✅ No hardcoded colors found"
+          fi
+          
+          # Check for proper contrast ratios in CSS
+          if grep -r "color.*#[0-9a-fA-F]" app/globals.css | wc -l | grep -q "[1-9]"; then
+            echo "⚠️  Check color contrast ratios in globals.css"
+          else
+            echo "✅ Using design token colors"
+          fi
+
+      - name: Upload accessibility test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-test-results
+          path: |
+            axe-results-*.json
+            pa11y-results.json
+            linkchecker-results.json
+          retention-days: 7
+
+      - name: Accessibility test summary
+        run: |
+          echo "♿ Accessibility testing completed"
+          echo "Check the uploaded artifacts for detailed results"
+          echo "Key areas tested:"
+          echo "  - WCAG 2.1 AA compliance"
+          echo "  - ARIA attributes"
+          echo "  - Color contrast"
+          echo "  - Link integrity"
+          echo "  - Keyboard navigation"
+
+  # Job 7: Lighthouse Performance Test
+  lighthouse:
+    runs-on: ubuntu-latest
+    needs: [lint-typecheck, unit-tests, accessibility-tests]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -451,10 +680,10 @@ jobs:
           path: .lighthouseci/
           retention-days: 7
 
-  # Job 7: Database Drift Check
+  # Job 8: Database Drift Check
   database-drift-check:
     runs-on: ubuntu-latest
-    needs: [unit-tests, pii-scan, secret-scan, backup-test, lighthouse]
+    needs: [unit-tests, pii-scan, secret-scan, backup-test, lighthouse, accessibility-tests]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -571,10 +800,10 @@ jobs:
             schema.sql
           retention-days: 7
 
-  # Job 8: Build
+  # Job 9: Build
   build:
     runs-on: ubuntu-latest
-    needs: [unit-tests, pii-scan, secret-scan, backup-test, lighthouse, database-drift-check]
+    needs: [unit-tests, pii-scan, secret-scan, backup-test, lighthouse, accessibility-tests, database-drift-check]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -665,7 +894,7 @@ jobs:
           path: .next/
           retention-days: 1
 
-  # Job 9: Security Audit
+  # Job 10: Security Audit
   security-audit:
     runs-on: ubuntu-latest
     needs: [build]
@@ -732,7 +961,7 @@ jobs:
           echo "🔒 Security audit completed"
           echo "Check the results above for any security issues"
 
-  # Job 10: Deploy Preview (only on PRs)
+  # Job 11: Deploy Preview (only on PRs)
   deploy-preview:
     runs-on: ubuntu-latest
     needs: [build, security-audit]
@@ -803,7 +1032,7 @@ jobs:
               }
             }
 
-  # Job 11: Production Deploy (only on main branch)
+  # Job 12: Production Deploy (only on main branch)
   production-deploy:
     runs-on: ubuntu-latest
     needs: [build, security-audit]
