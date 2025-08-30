@@ -1,35 +1,84 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Search, Code, Book, ArrowRight } from "lucide-react"
+import { Search, Code, Book, ArrowRight, FileText, Settings, Zap, Download } from "lucide-react"
 import Link from "next/link"
 
-// Force dynamic rendering to prevent build issues
-export const dynamic = 'force-dynamic'
+
 
 export default function DocsPage() {
   const sections = [
     {
-      title: "Getting Started",
-      description: "Learn the basics and get up and running efficiently",
+      title: "Overview",
+      description: "Complete introduction to PromptForge industrial prompt engineering platform",
       icon: Book,
       articles: [
-        "Essential Start Guide",
-        "Understanding the 7D Parameter Engine",
-        "Your First Prompt Generation",
-        "Module Selection Guide",
+        "What is PromptForge?",
+        "Industrial vs Traditional Prompt Engineering",
+        "Platform Architecture & Components",
+        "Getting Started Checklist",
+        "Best Practices Overview",
+        "Common Use Cases"
       ],
     },
     {
-      title: "API Reference",
-      description: "Complete API documentation for Enterprise users",
-      icon: Code,
-      articles: ["Authentication", "POST /api/run/{moduleId}", "Response Format", "Rate Limits & Quotas"],
+      title: "7D Parameter Engine",
+      description: "Master the seven-dimensional parameter system for precise prompt configuration",
+      icon: Settings,
+      articles: [
+        "Domain Selection (Business, Marketing, Sales, etc.)",
+        "Scale Configuration (Startup, SMB, Enterprise)",
+        "Urgency Levels (Standard, High, Critical)",
+        "Complexity Settings (Basic, Intermediate, Advanced)",
+        "Resource Allocation (Limited, Standard, Unlimited)",
+        "Application Context (Content, Strategy, Analysis)",
+        "Output Format (Text, Structured, Visual)"
+      ],
     },
     {
-      title: "Advanced Features",
-      description: "Master the advanced capabilities of PromptForge",
-      icon: Book,
-      articles: ["Custom Module Creation", "Batch Processing", "Export Formats", "Team Collaboration"],
+      title: "Modules Catalog M01–M50",
+      description: "Complete reference for all 50 operational modules across 7 semantic vectors",
+      icon: Zap,
+      articles: [
+        "Strategic Vector Modules (M01-M10)",
+        "Rhetoric Vector Modules (M11-M20)",
+        "Content Vector Modules (M21-M30)",
+        "Analytics Vector Modules (M31-M40)",
+        "Branding Vector Modules (M41-M45)",
+        "Crisis Vector Modules (M46-M48)",
+        "Cognitive Vector Modules (M49-M50)",
+        "Module Selection Matrix",
+        "Cross-Module Combinations"
+      ],
+    },
+    {
+      title: "Scoring System ≥80",
+      description: "Understanding the quality scoring system and achieving export-ready prompts",
+      icon: FileText,
+      articles: [
+        "Scoring Algorithm Overview",
+        "Quality Metrics & Criteria",
+        "Achieving 80+ Score Threshold",
+        "Common Score Issues & Solutions",
+        "Score Optimization Techniques",
+        "Export Eligibility Requirements",
+        "Score History & Analytics"
+      ],
+    },
+    {
+      title: "Exports & Entitlements",
+      description: "Export formats, licensing, and plan-based entitlements",
+      icon: Download,
+      articles: [
+        "Export Format Options (TXT, MD, PDF, JSON, ZIP)",
+        "Plan-Based Export Limits",
+        "License Notices & Watermarks",
+        "Bundle Creation & Management",
+        "API Export Endpoints",
+        "White-label Export Options",
+        "Export Analytics & Tracking"
+      ],
     },
   ]
 
@@ -39,9 +88,16 @@ export default function DocsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-white mb-4 font-serif">Documentation</h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Everything you need to master PromptForge and build better prompts
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-6">
+            Everything you need to master PromptForge industrial prompt engineering. From basic usage to advanced 
+            enterprise integration, our comprehensive documentation covers all aspects of the platform.
           </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
+            <span>• 50 Industrial Modules</span>
+            <span>• 7D Parameter Engine</span>
+            <span>• Enterprise API</span>
+            <span>• Professional Export</span>
+          </div>
         </div>
 
         {/* Search */}
@@ -57,7 +113,7 @@ export default function DocsPage() {
         </div>
 
         {/* Documentation Sections */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {sections.map((section, index) => {
             const Icon = section.icon
             return (
@@ -73,13 +129,11 @@ export default function DocsPage() {
                   <ul className="space-y-2">
                     {section.articles.map((article, articleIndex) => (
                       <li key={articleIndex}>
-                        <Link
-                          href={`/docs/${article.toLowerCase().replace(/\s+/g, "-")}`}
-                          className="text-gray-300 hover:text-yellow-500 transition-colors flex items-center gap-2"
-                        >
+                        <span className="text-gray-300 flex items-center gap-2">
                           <ArrowRight className="w-3 h-3" />
                           {article}
-                        </Link>
+                          <span className="text-xs text-gray-500 ml-2">(Coming Soon)</span>
+                        </span>
                       </li>
                     ))}
                   </ul>
