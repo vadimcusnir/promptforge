@@ -32,11 +32,11 @@ import { PromptForm } from "@/components/generator/PromptForm"
 import { ExportModal } from "@/components/export-modal"
 import { generatePrompt, createPromptRun, simulateGptResponse, PromptRun } from "@/utils/promptCompiler"
 import { FormData } from "@/utils/parseInputSchema"
-import { LoadingSpinner, LoadingState } from "@/components/loading-spinner"
+import { LoadingSpinner } from "@/components/loading-spinner"
 import { 
   EmptyState
 } from "@/components/ui/empty-state"
-import { Skeleton, SkeletonCard, SkeletonButton, SkeletonInput } from "@/components/ui/skeleton"
+
 
 // Legacy interface for backward compatibility
 interface GeneratedPrompt {
@@ -63,7 +63,7 @@ function GeneratorPage() {
   const [params7D, setParams7D] = useState<Params7D>(default7D)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
-  const [isExporting, setIsExporting] = useState(false)
+  const [_isExporting, _setIsExporting] = useState(false)
   const [generatedPrompt, setGeneratedPrompt] = useState<GeneratedPrompt | null>(null)
   const [history, setHistory] = useState<GeneratedPrompt[]>([])
   const [currentPromptRun, setCurrentPromptRun] = useState<PromptRun | null>(null)
@@ -274,7 +274,7 @@ function GeneratorPage() {
     }
   }
 
-  const retryHistoryLoad = () => {
+  const _retryHistoryLoad = () => {
     setHistoryError(null)
     setIsLoadingHistory(true)
     // Reload history

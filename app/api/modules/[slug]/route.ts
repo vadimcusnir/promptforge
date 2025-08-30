@@ -9,31 +9,31 @@ const pathSchema = z.object({
   slug: z.string().min(1)
 })
 
-// Legacy slug mappings for module redirects
-const LEGACY_SLUG_MAPPINGS: Record<string, string> = {
-  'risk-and-trust-reversal': 'trust-reversal-protocol',
-  'crisis-communication': 'crisis-communication-playbook',
-  'social-media-calendar': 'social-content-grid',
-  'content-calendar-optimizer': 'social-content-grid', // M14 fusion
-  'landing-page-optimizer': 'landing-page-alchemist',
-  'influencer-partnership-framework': 'influence-partnership-frame',
-  'content-performance-analyzer': 'content-analytics-dashboard',
-  'content-personalization-engine': 'momentum-campaign-builder',
-  'database-design-optimizer': 'data-schema-optimizer',
-  'microservices-architecture': 'microservices-grid',
-  'security-architecture-framework': 'security-fortress-frame',
-  'performance-optimization-engine': 'performance-engine',
-  'container-orchestration-strategy': 'orchestration-matrix',
-  'cloud-infrastructure-architect': 'cloud-infra-map',
-  'sales-process-optimizer': 'sales-flow-architect',
-  'sales-operations-framework': 'sales-flow-architect', // M31 fusion
-  'sales-enablement-framework': 'enablement-frame',
-  'sales-intelligence-framework': 'negotiation-dynamics',
-  'quality-management-system': 'quality-system-map',
-  'supply-chain-optimizer': 'supply-flow-optimizer',
-  'change-management-framework': 'change-force-field',
-  'executive-prompt-report': 'executive-prompt-dossier'
-}
+// Legacy slug mappings for module redirects - kept for potential future use
+// const LEGACY_SLUG_MAPPINGS: Record<string, string> = {
+//   'risk-and-trust-reversal': 'trust-reversal-protocol',
+//   'crisis-communication': 'crisis-communication-playbook',
+//   'social-media-calendar': 'social-content-grid',
+//   'content-calendar-optimizer': 'social-content-grid', // M14 fusion
+//   'landing-page-optimizer': 'landing-page-alchemist',
+//   'influencer-partnership-framework': 'influence-partnership-frame',
+//   'content-performance-analyzer': 'content-analytics-dashboard',
+//   'content-personalization-engine': 'momentum-campaign-builder',
+//   'database-design-optimizer': 'data-schema-optimizer',
+//   'microservices-architecture': 'microservices-grid',
+//   'security-architecture-framework': 'security-fortress-frame',
+//   'performance-optimization-engine': 'performance-engine',
+//   'container-orchestration-strategy': 'orchestration-matrix',
+//   'cloud-infrastructure-architect': 'cloud-infra-map',
+//   'sales-process-optimizer': 'sales-flow-architect',
+//   'sales-operations-framework': 'sales-flow-architect', // M31 fusion
+//   'sales-enablement-framework': 'enablement-frame',
+//   'sales-intelligence-framework': 'negotiation-dynamics',
+//   'quality-management-system': 'quality-system-map',
+//   'supply-chain-optimizer': 'supply-flow-optimizer',
+//   'change-management-framework': 'change-force-field',
+//   'executive-prompt-report': 'executive-prompt-dossier'
+// }
 
 // Function to generate current slug from module name
 function generateCurrentSlug(name: string): string {

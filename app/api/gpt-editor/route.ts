@@ -164,7 +164,7 @@ async function optimizePrompt(
   const editedPrompt = generateOptimizedPrompt(prompt, sevenD, scores)
   
   // Generate improvement suggestions
-  const suggestions = generateSuggestions(scores, prompt, editedPrompt)
+  const suggestions = generateSuggestions(scores)
   
   const processingTime = Date.now() - startTime
   const tokenCount = Math.ceil((prompt.length + editedPrompt.length) / 4)
@@ -259,9 +259,7 @@ function generateOptimizedPrompt(
 
 // Generate improvement suggestions
 function generateSuggestions(
-  scores: { clarity: number; specificity: number; completeness: number; overall: number },
-  _originalPrompt: string,
-  _editedPrompt: string
+  scores: { clarity: number; specificity: number; completeness: number; overall: number }
 ): string[] {
   const suggestions = []
   

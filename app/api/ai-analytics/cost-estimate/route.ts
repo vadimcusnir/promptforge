@@ -12,7 +12,7 @@ const costEstimateSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     // Require authentication
-    const user = await requireAuth(request)
+    await requireAuth(request)
     
     // Parse request body
     const body = await request.json()
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     // Calculate cost per token for each model
     const costPerToken = formattedEstimates.map(estimate => {
-      const [provider, modelName] = estimate.model.split('/')
+      const [provider] = estimate.model.split('/')
       const costs = costUtils.getCostPerToken(provider as 'openai' | 'anthropic', estimate.model)
       
       return {
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // Require authentication
-    const user = await requireAuth(request)
+    await requireAuth(request)
     
     // Parse query parameters
     const { searchParams } = new URL(request.url)
@@ -152,7 +152,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate cost per token for each model
     const costPerToken = formattedEstimates.map(estimate => {
-      const [provider, modelName] = estimate.model.split('/')
+      const [provider] = estimate.model.split('/')
       const costs = costUtils.getCostPerToken(provider as 'openai' | 'anthropic', estimate.model)
       
       return {

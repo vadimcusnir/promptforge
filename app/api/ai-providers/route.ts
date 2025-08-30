@@ -15,7 +15,7 @@ const providerRequestSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     // Require authentication
-    const _user = await requireAuth(request)
+    await requireAuth(request)
     
     // Parse query parameters
     const { searchParams } = new URL(request.url)
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { action: validAction, model: validModel, promptLength: validPromptLength, maxTokens: validMaxTokens, priority: validPriority } = validation.data
+    const { action: validAction, promptLength: validPromptLength, maxTokens: validMaxTokens, priority: validPriority } = validation.data
 
     switch (validAction) {
       case 'list': {

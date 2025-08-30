@@ -244,7 +244,7 @@ async function processGPTTest(
     
     const mockResponse = generateMockResponse(prompt)
     const scores = analyzePromptQuality(prompt, sevenD)
-    const breakdown = generateBreakdown(scores, prompt)
+    const breakdown = generateBreakdown(scores)
     const verdict = scores.overall >= 80 ? 'pass' : scores.overall >= 60 ? 'needs_improvement' : 'fail'
     const latency = Date.now() - startTime
     
@@ -308,7 +308,7 @@ async function processGPTTest(
       // Fallback to mock response if AI Gateway fails
       const mockResponse = generateMockResponse(prompt)
       const scores = analyzePromptQuality(prompt, sevenD)
-      const breakdown = generateBreakdown(scores, prompt)
+      const breakdown = generateBreakdown(scores)
       const verdict = scores.overall >= 80 ? 'pass' : scores.overall >= 60 ? 'needs_improvement' : 'fail'
       const latency = Date.now() - startTime
       
@@ -379,8 +379,7 @@ function analyzePromptQuality(prompt: string, sevenD?: Record<string, string>): 
 
 // Generate breakdown analysis
 function generateBreakdown(
-  scores: { clarity: number; specificity: number; completeness: number; relevance: number; overall: number },
-  _prompt: string
+  scores: { clarity: number; specificity: number; completeness: number; relevance: number; overall: number }
 ): {
   strengths: string[];
   weaknesses: string[];
@@ -535,7 +534,7 @@ function parseBreakdown(analysisText: string): {
   const strengthsMatch = analysisText.match(/strengths?[:\s]*([\s\S]*?)(?=weaknesses?|recommendations?|$)/i)
   if (strengthsMatch) {
     const strengthsText = strengthsMatch[1]
-    const strengthItems = strengthsText.split(/[•\-\*]/).filter(item => item.trim())
+    const strengthItems = strengthsText.split(/[•\-*]/).filter(item => item.trim())
     strengths.push(...strengthItems.map(item => item.trim()).filter(item => item.length > 0))
   }
   
@@ -543,7 +542,7 @@ function parseBreakdown(analysisText: string): {
   const weaknessesMatch = analysisText.match(/weaknesses?[:\s]*([\s\S]*?)(?=recommendations?|$)/i)
   if (weaknessesMatch) {
     const weaknessesText = weaknessesMatch[1]
-    const weaknessItems = weaknessesText.split(/[•\-\*]/).filter(item => item.trim())
+    const weaknessItems = weaknessesText.split(/[•\-*]/).filter(item => item.trim())
     weaknesses.push(...weaknessItems.map(item => item.trim()).filter(item => item.length > 0))
   }
   
@@ -551,7 +550,7 @@ function parseBreakdown(analysisText: string): {
   const recommendationsMatch = analysisText.match(/recommendations?[:\s]*([\s\S]*?)$/i)
   if (recommendationsMatch) {
     const recommendationsText = recommendationsMatch[1]
-    const recommendationItems = recommendationsText.split(/[•\-\*]/).filter(item => item.trim())
+    const recommendationItems = recommendationsText.split(/[•\-*]/).filter(item => item.trim())
     recommendations.push(...recommendationItems.map(item => item.trim()).filter(item => item.length > 0))
   }
   

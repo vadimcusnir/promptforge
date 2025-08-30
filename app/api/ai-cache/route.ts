@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           )
         }
-        const value = await aiCache.get(key)
+        const value = await aiCache.get(key, 'default-model')
         return NextResponse.json({
           success: true,
           data: value
@@ -143,7 +143,15 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           )
         }
-        await aiCache.set(key, data)
+        await aiCache.set(
+          key,
+          'default-model',
+          0.7,
+          1000,
+          JSON.stringify(data),
+          { promptTokens: 10, completionTokens: 20, totalTokens: 30 },
+          100
+        )
         return NextResponse.json({
           success: true,
           message: 'Data cached successfully'
@@ -177,7 +185,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     // Require authentication
-    const user = await requireAuth(request)
+    await requireAuth(request)
     
     // Clear all cache
     await aiCache.clear()

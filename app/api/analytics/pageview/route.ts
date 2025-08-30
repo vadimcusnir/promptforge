@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-// Pageview schema
-const pageviewSchema = z.object({
-  url: z.string().url('Invalid URL'),
-  title: z.string().optional(),
-  referrer: z.string().optional(),
-  userId: z.string().optional(),
-  sessionId: z.string().optional(),
-  timestamp: z.number().optional()
-})
+// Pageview schema - kept for potential future validation
+// const pageviewSchema = z.object({
+//   url: z.string().url('Invalid URL'),
+//   title: z.string().optional(),
+//   referrer: z.string().optional(),
+//   userId: z.string().optional(),
+//   sessionId: z.string().optional(),
+//   timestamp: z.number().optional()
+// })
 
 // Lazy Supabase client creation
 async function getSupabase() {
@@ -22,7 +21,11 @@ async function getSupabase() {
       from: () => ({
         insert: () => Promise.resolve({ error: null })
       })
-    } as any
+    } as {
+      from: (_table: string) => {
+        insert: (_data: Record<string, unknown>) => Promise<{ error: null }>
+      }
+    }
   }
   
   const { createClient } = await import('@supabase/supabase-js')

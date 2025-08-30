@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Params7D } from "@/lib/default-params";
 
 export async function POST(req: NextRequest) {
   try {

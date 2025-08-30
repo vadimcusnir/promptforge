@@ -4,14 +4,14 @@ import { z } from 'zod'
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-// Waitlist schema
-const waitlistSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  name: z.string().min(1, 'Name is required'),
-  company: z.string().optional(),
-  role: z.string().optional(),
-  source: z.string().optional()
-})
+// Waitlist schema - kept for potential future validation
+// const waitlistSchema = z.object({
+//   email: z.string().email('Invalid email format'),
+//   name: z.string().min(1, 'Name is required'),
+//   company: z.string().optional(),
+//   role: z.string().optional(),
+//   source: z.string().optional()
+// })
 
 // Lazy Supabase client creation
   async function getSupabase() {

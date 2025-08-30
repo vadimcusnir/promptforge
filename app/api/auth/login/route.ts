@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { cookies } from 'next/headers'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -26,7 +25,21 @@ async function getSupabase() {
           })
         })
       })
-    } as any
+    } as {
+      auth: {
+        signInWithPassword: (_credentials: { email: string; password: string }) => Promise<{
+          data: { user: null; session: null };
+          error: { message: string }
+        }>
+      };
+      from: (_table: string) => {
+        select: (_columns: string) => {
+          eq: (_column: string, _value: string) => {
+            single: () => Promise<{ data: null; error: { message: string } }>
+          }
+        }
+      }
+    }
   }
   
   const { createClient } = await import('@supabase/supabase-js')

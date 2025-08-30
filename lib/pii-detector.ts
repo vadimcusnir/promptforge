@@ -48,7 +48,7 @@ export const PII_PATTERNS = {
   addresses: /\b\d+\s+[A-Za-z\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Way|Place|Pl)\b/gi,
   
   // Dates of Birth
-  dob: /\b(?:birth|born|DOB|date of birth)[:\s]+(?:0?[1-9]|1[0-2])[\/\-](?:0?[1-9]|[12]\d|3[01])[\/\-]\d{4}\b/gi,
+  dob: /\b(?:birth|born|DOB|date of birth)[:\s]+(?:0?[1-9]|1[0-2])[\/-](?:0?[1-9]|[12]\d|3[01])[\/-]\d{4}\b/gi,
   
   // Passport Numbers
   passport: /\b[A-Z]{1,2}\d{6,9}\b/g,

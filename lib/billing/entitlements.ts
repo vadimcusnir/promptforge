@@ -94,7 +94,7 @@ export async function applyPlanEntitlements(orgId: string, planCode: PlanCode): 
     console.log(`🔧 Applying entitlements for org ${orgId}, plan: ${planCode}`)
     
     // Call the SQL helper function
-    const { data, error } = await supabase.rpc('pf_apply_plan_entitlements', {
+    const { error } = await supabase.rpc('pf_apply_plan_entitlements', {
       p_org_id: orgId,
       p_plan_code: planCode
     })

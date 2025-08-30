@@ -57,7 +57,7 @@ export default function ComingSoonPage() {
         const data = await response.json()
         setError(data.error || "Something went wrong. Please try again.")
       }
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.")
     } finally {
       setIsLoading(false)

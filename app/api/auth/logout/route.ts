@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -14,7 +13,13 @@ async function getSupabase() {
           signOut: () => Promise.resolve({ error: null })
         }
       }
-    } as any
+    } as {
+      auth: {
+        admin: {
+          signOut: () => Promise<{ error: null }>
+        }
+      }
+    }
   }
   
   const { createClient } = await import('@supabase/supabase-js')

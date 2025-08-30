@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-// Event tracking schema
-const eventSchema = z.object({
-  event: z.string().min(1, 'Event name is required'),
-  properties: z.record(z.any()).optional(),
-  userId: z.string().optional(),
-  sessionId: z.string().optional(),
-  timestamp: z.number().optional()
-})
+// Event tracking schema - kept for potential future validation
+// const eventSchema = z.object({
+//   event: z.string().min(1, 'Event name is required'),
+//   properties: z.record(z.unknown()).optional(),
+//   userId: z.string().optional(),
+//   sessionId: z.string().optional(),
+//   timestamp: z.number().optional()
+// })
 
 // Lazy Supabase client creation
 async function getSupabase() {
@@ -21,7 +20,11 @@ async function getSupabase() {
       from: () => ({
         insert: () => Promise.resolve({ error: null })
       })
-    } as any
+    } as {
+      from: (_table: string) => {
+        insert: (_data: Record<string, unknown>) => Promise<{ error: null }>
+      }
+    }
   }
   
   const { createClient } = await import('@supabase/supabase-js')

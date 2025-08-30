@@ -12,8 +12,6 @@ import {
   Bell, 
   Zap,
   Target,
-  Clock,
-  Gauge,
   Shield
 } from "lucide-react"
 import { 

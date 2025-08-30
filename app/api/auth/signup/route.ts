@@ -20,6 +20,7 @@ async function getSupabase() {
     // Return mock client for build-time operations
     return {
       auth: {
+        signUp: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Mock client' } }),
         admin: {
           createUser: () => Promise.resolve({ data: { user: null }, error: { message: 'Mock client' } }),
           deleteUser: () => Promise.resolve({ error: null })
@@ -33,7 +34,26 @@ async function getSupabase() {
         }),
         insert: () => Promise.resolve({ error: null })
       })
-    } as any
+    } as {
+      auth: {
+        signUp: (_credentials: { email: string; password: string }) => Promise<{
+          data: { user: null; session: null };
+          error: { message: string }
+        }>;
+        admin: {
+          createUser: () => Promise<{ data: { user: null }; error: { message: string } }>;
+          deleteUser: () => Promise<{ error: null }>
+        }
+      };
+      from: (_table: string) => {
+        select: (_columns: string) => {
+          eq: (_column: string, _value: string) => {
+            single: () => Promise<{ data: null; error: { message: string } }>
+          }
+        };
+        insert: (_data: Record<string, unknown>) => Promise<{ error: null }>
+      }
+    }
   }
   
   const { createClient } = await import('@supabase/supabase-js')
@@ -54,7 +74,7 @@ export async function POST(request: NextRequest) {
     const supabase = await getSupabase()
 
     // Check if user already exists
-    const { data: existingUser, error: checkError } = await supabase
+    const { data: existingUser } = await supabase
       .from('users')
       .select('id')
       .eq('email', email)

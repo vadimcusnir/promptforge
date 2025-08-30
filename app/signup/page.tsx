@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/components/ui/link';
 import { H1, H2 } from '@/components/ui/heading';
@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Loader2, Lock, Mail, User, Eye, EyeOff, Shield, CheckCircle } from 'lucide-react';
+import { Lock, Mail, User, Eye, EyeOff, Shield, CheckCircle } from 'lucide-react';
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({

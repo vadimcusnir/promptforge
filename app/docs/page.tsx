@@ -72,7 +72,7 @@ export default function DocsPage() {
               Documentation
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Complete guide to PromptForge's industrial prompt engineering system
+              Complete guide to PromptForge&apos;s industrial prompt engineering system
             </p>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { getEffectiveEntitlements } from "@/lib/billing/entitlements"
-import { validateOrgMembership } from "@/lib/billing/entitlements"
 import { requireAuth } from "@/lib/auth/server-auth"
 
 // Query parameters schema
