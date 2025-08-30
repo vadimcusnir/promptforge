@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "pnpm run check:voice-branding:build && NEXT_SKIP_API_ROUTES=true next build",
+    "build": "pnpm run check:voice-branding:build && NEXT_SKIP_API_ROUTES=true NEXT_PUBLIC_SUPABASE_URL=https://placeholder.supabase.co SUPABASE_SERVICE_ROLE_KEY=placeholder next build",
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
