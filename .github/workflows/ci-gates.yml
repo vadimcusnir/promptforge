@@ -150,8 +150,8 @@ jobs:
           
           # Test redirect functionality
           echo "🔄 Testing redirect functionality..."
-          curl -I http://localhost:3000/modules/risk-and-trust-reversal | grep -q "308" || {
-            echo "❌ Redirect test failed"
+          pnpm test:redirects || {
+            echo "❌ Redirect tests failed"
             exit 1
           }
           
