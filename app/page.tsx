@@ -146,7 +146,7 @@ export default function HomePage() {
                 </div>
                 <CardTitle className="font-serif">Export Professional Bundle</CardTitle>
                 <CardDescription className="text-zinc-500">
-                  Get structured outputs with checksums, manifests, and telemetry data
+                  Get structured outputs with checksums, manifests, and performance metadata
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -347,6 +347,15 @@ export default function HomePage() {
             <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6">
               Start Building Now
               <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-zinc-700 text-lg px-8 py-6 bg-transparent"
+              onClick={() => window.open('/api/download/free-guide', '_blank')}
+            >
+              <Download className="mr-2 w-5 h-5" />
+              Download Free Guide
             </Button>
             <Button size="lg" variant="outline" className="border-zinc-700 text-lg px-8 py-6 bg-transparent">
               Schedule Demo

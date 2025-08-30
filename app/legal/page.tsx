@@ -99,6 +99,44 @@ export default function LegalPage() {
             </div>
           </div>
 
+          {/* Security Policy */}
+          <Link href="/legal/security" className="group">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-8 hover:border-gold-400/50 transition-all duration-300 hover:scale-105">
+              <div className="flex items-center mb-4">
+                <Shield className="w-8 h-8 text-gold-400 mr-3" />
+                <h2 className="text-2xl font-bold text-white group-hover:text-gold-400 transition-colors">
+                  Security Policy
+                </h2>
+              </div>
+              <p className="text-gray-300 mb-4">
+                Our security measures, infrastructure protection, and compliance certifications.
+              </p>
+              <div className="flex items-center text-gold-400 group-hover:text-gold-300 transition-colors">
+                <span className="text-sm">View Security</span>
+                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
+
+          {/* GDPR Compliance */}
+          <Link href="/legal/gdpr" className="group">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-8 hover:border-gold-400/50 transition-all duration-300 hover:scale-105">
+              <div className="flex items-center mb-4">
+                <FileText className="w-8 h-8 text-gold-400 mr-3" />
+                <h2 className="text-2xl font-bold text-white group-hover:text-gold-400 transition-colors">
+                  GDPR Compliance
+                </h2>
+              </div>
+              <p className="text-gray-300 mb-4">
+                Your data protection rights under the General Data Protection Regulation.
+              </p>
+              <div className="flex items-center text-gold-400 group-hover:text-gold-300 transition-colors">
+                <span className="text-sm">View GDPR</span>
+                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
+
           {/* Data Processing Agreement */}
           <Link href="/legal/dpa" className="group">
             <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-8 hover:border-gold-400/50 transition-all duration-300 hover:scale-105">

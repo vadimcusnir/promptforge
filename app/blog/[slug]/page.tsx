@@ -1,384 +1,130 @@
-"use client"
+import type { Metadata } from "next"
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Clock, User, Share2, BookOpen, ArrowRight, ChevronRight } from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
-import { useParams } from "next/navigation"
-
-// Mock article data
-const articleData = {
-  "mastering-7d-parameter-engine": {
-    title: "Mastering the 7D Parameter Engine: A Complete Guide",
-    subtitle: "Learn how to leverage all seven dimensions for industrial-grade prompt engineering",
-    coverImage: "/industrial-prompt-engineering-dashboard.png",
-    author: "Sarah Chen",
-    authorImage: "/professional-woman-portrait.png",
-    authorBio:
-      "Senior Prompt Engineer at PromptForge with 8+ years in AI systems architecture. Previously led ML teams at Google and OpenAI.",
-    publishDate: "2024-01-15",
-    readTime: "8 min",
-    domain: "Engineering",
-    vectors: ["Precision", "Scale", "Complexity"],
-    tldr: "The 7D Parameter Engine transforms prompt engineering from art to science by providing systematic control over Domain, Scale, Urgency, Complexity, Resources, Application, and Output dimensions. This guide covers implementation patterns, optimization strategies, and real-world case studies.",
-    tableOfContents: [
-      { id: "introduction", title: "Introduction to 7D Parameters" },
-      { id: "domain-dimension", title: "Domain Dimension: Context Mastery" },
-      { id: "scale-urgency", title: "Scale & Urgency: Performance Tuning" },
-      { id: "complexity-resources", title: "Complexity & Resources: Optimization" },
-      { id: "application-output", title: "Application & Output: Delivery" },
-      { id: "case-studies", title: "Real-World Case Studies" },
-      { id: "best-practices", title: "Best Practices & Patterns" },
-    ],
-    content: `
-      <h2 id="introduction">Introduction to 7D Parameters</h2>
-      <p>The 7D Parameter Engine represents a fundamental shift in how we approach prompt engineering. Instead of relying on intuition and trial-and-error, we now have a systematic framework that provides precise control over every aspect of prompt generation.</p>
-      
-      <p>Each dimension serves a specific purpose in the prompt generation pipeline:</p>
-      
-      <ul>
-        <li><strong>Domain:</strong> Establishes context and expertise level</li>
-        <li><strong>Scale:</strong> Defines scope and complexity boundaries</li>
-        <li><strong>Urgency:</strong> Controls response time and resource allocation</li>
-        <li><strong>Complexity:</strong> Manages cognitive load and processing depth</li>
-        <li><strong>Resources:</strong> Optimizes computational and human resources</li>
-        <li><strong>Application:</strong> Tailors output for specific use cases</li>
-        <li><strong>Output:</strong> Formats and structures the final result</li>
-      </ul>
-
-      <h2 id="domain-dimension">Domain Dimension: Context Mastery</h2>
-      <p>The Domain dimension is perhaps the most critical aspect of the 7D system. It establishes the contextual framework within which all other parameters operate.</p>
-      
-      <blockquote>
-        "Context is king in prompt engineering. Without proper domain alignment, even the most sophisticated parameters will produce suboptimal results." - Dr. Elena Vasquez, AI Research Director
-      </blockquote>
-
-      <p>When configuring the Domain dimension, consider these key factors:</p>
-      
-      <ul>
-        <li>Industry-specific terminology and conventions</li>
-        <li>Regulatory requirements and compliance standards</li>
-        <li>Stakeholder expertise levels and expectations</li>
-        <li>Cultural and linguistic nuances</li>
-      </ul>
-
-      <h2 id="scale-urgency">Scale & Urgency: Performance Tuning</h2>
-      <p>Scale and Urgency work together to optimize the performance characteristics of your prompt system. These dimensions directly impact resource allocation and response quality.</p>
-
-      <p>For high-scale, low-urgency scenarios, you can afford to invest in more sophisticated processing. Conversely, high-urgency situations may require simplified approaches that prioritize speed over perfection.</p>
-
-      <h2 id="complexity-resources">Complexity & Resources: Optimization</h2>
-      <p>The interplay between Complexity and Resources determines the feasibility and sustainability of your prompt system. This is where engineering discipline becomes crucial.</p>
-
-      <p>Key optimization strategies include:</p>
-      <ul>
-        <li>Complexity budgeting and resource allocation</li>
-        <li>Caching strategies for repeated patterns</li>
-        <li>Progressive enhancement approaches</li>
-        <li>Fallback mechanisms for resource constraints</li>
-      </ul>
-
-      <h2 id="application-output">Application & Output: Delivery</h2>
-      <p>The final two dimensions focus on delivery and user experience. Application defines how the prompt will be used, while Output specifies the format and structure of results.</p>
-
-      <h2 id="case-studies">Real-World Case Studies</h2>
-      <p>Let's examine how leading organizations have implemented the 7D Parameter Engine in production environments.</p>
-
-      <h3>Case Study 1: Financial Services Compliance</h3>
-      <p>A major investment bank implemented our 7D system to automate regulatory reporting. By carefully tuning the Domain (financial regulations) and Complexity (multi-jurisdictional requirements) dimensions, they achieved 99.7% accuracy while reducing processing time by 85%.</p>
-
-      <h3>Case Study 2: Healthcare Documentation</h3>
-      <p>A healthcare network used the 7D engine to standardize clinical documentation across 50+ facilities. The key was balancing Scale (network-wide deployment) with Urgency (real-time patient care) while maintaining strict compliance standards.</p>
-
-      <h2 id="best-practices">Best Practices & Patterns</h2>
-      <p>After analyzing hundreds of implementations, we've identified several patterns that consistently lead to success:</p>
-
-      <ol>
-        <li><strong>Start with Domain:</strong> Always establish clear domain boundaries before tuning other parameters</li>
-        <li><strong>Measure Everything:</strong> Implement comprehensive telemetry from day one</li>
-        <li><strong>Iterate Systematically:</strong> Change one dimension at a time to understand impact</li>
-        <li><strong>Plan for Scale:</strong> Design your parameter configurations with growth in mind</li>
-        <li><strong>Maintain Audit Trails:</strong> Every parameter change should be logged and reversible</li>
-      </ol>
-
-      <p>The 7D Parameter Engine represents the future of industrial prompt engineering. By providing systematic control over all aspects of prompt generation, it enables organizations to build reliable, scalable, and auditable AI systems.</p>
-    `,
+// Static blog posts data
+const blogPosts = [
+  {
+    id: '1',
+    title: 'The Complete Guide to Prompt Engineering: From Basics to Advanced Techniques',
+    excerpt: 'Master the art of prompt engineering with our comprehensive guide covering fundamental principles, advanced strategies, and real-world applications.',
+    content: 'Full content here...',
+    author: 'Dr. Sarah Chen',
+    publishedAt: '2024-01-15',
+    readTime: 12,
+    category: 'Prompt Engineering',
+    tags: ['basics', 'advanced', 'techniques', 'ai', 'gpt'],
+    featured: true,
+    views: 15420,
+    likes: 892,
+    shares: 234,
+    slug: 'complete-guide-prompt-engineering'
   },
+  {
+    id: '2',
+    title: '7D Framework: Revolutionizing Business Communication with AI',
+    excerpt: 'Discover how the 7D framework transforms business communication by providing structured, scalable, and effective prompt strategies.',
+    content: 'Full content here...',
+    author: 'Marcus Rodriguez',
+    publishedAt: '2024-01-12',
+    readTime: 8,
+    category: 'Business Strategy',
+    tags: ['7d-framework', 'business', 'communication', 'strategy', 'ai'],
+    featured: true,
+    views: 12850,
+    likes: 756,
+    shares: 189,
+    slug: '7d-framework-business-communication-ai'
+  }
+]
+
+export async function generateStaticParams() {
+  return blogPosts.map((post) => ({
+    slug: post.slug,
+  }))
 }
 
-export default function BlogArticlePage() {
-  const params = useParams()
-  const slug = params.slug as string
-  const [activeSection, setActiveSection] = useState("")
-
-  const article = articleData[slug as keyof typeof articleData]
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = article?.tableOfContents || []
-      const currentSection = sections.find((section) => {
-        const element = document.getElementById(section.id)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom >= 100
-        }
-        return false
-      })
-      if (currentSection) {
-        setActiveSection(currentSection.id)
-      }
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const post = blogPosts.find(p => p.slug === slug)
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
     }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [article])
-
-  if (!article) {
-    return (
-      <div className="min-h-screen bg-[#0e0e0e] text-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Article Not Found</h2>
-          <Link href="/blog">
-            <Button
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:border-[#d1a954] hover:text-[#d1a954] bg-transparent"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Blog
-            </Button>
-          </Link>
-        </div>
-      </div>
-    )
   }
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" })
-    }
+  return {
+    title: `${post.title} - PromptForge Blog`,
+    description: post.excerpt,
+    keywords: post.tags,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: 'article',
+      publishedTime: post.publishedAt,
+      authors: [post.author],
+    },
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
+  }
+}
+
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = blogPosts.find(p => p.slug === slug)
+
+  if (!post) {
+    notFound()
   }
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-white">
-      {/* Breadcrumb */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center text-sm text-gray-400">
-            <Link href="/" className="hover:text-[#d1a954] transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4 mx-2" />
-            <Link href="/blog" className="hover:text-[#d1a954] transition-colors">
-              Blog
-            </Link>
-            <ChevronRight className="w-4 h-4 mx-2" />
-            <span className="text-gray-300">Article</span>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4 py-8">
+        <nav className="mb-8">
+          <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+            <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+            <span>/</span>
+            <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+            <span>/</span>
+            <span className="text-gray-900 dark:text-white">{post.title}</span>
           </div>
-        </div>
-      </div>
+        </nav>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Back Button */}
-        <Link
-          href="/blog"
-          className="inline-flex items-center text-gray-400 hover:text-[#d1a954] transition-colors mb-8"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Blog
-        </Link>
-
-        {/* Article Header */}
-        <header className="mb-12">
-          <div className="mb-6">
-            <h1 className="font-montserrat text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-              {article.title}
+        <article className="max-w-4xl mx-auto">
+          <header className="mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              {post.title}
             </h1>
-            <p className="text-xl text-gray-300 mb-6">{article.subtitle}</p>
-          </div>
+            
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">
+              {post.excerpt}
+            </p>
 
-          {/* Meta Information */}
-          <div className="flex flex-wrap items-center gap-4 mb-6 pb-6 border-b border-gray-800">
-            <div className="flex items-center gap-3">
-              <Image
-                src={article.authorImage || "/placeholder.svg"}
-                alt={article.author}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-              <div>
-                <p className="text-white font-medium">{article.author}</p>
-                <div className="flex items-center gap-4 text-sm text-gray-400">
-                  <span>{new Date(article.publishDate).toLocaleDateString()}</span>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {article.readTime}
-                  </div>
-                </div>
+            <div className="flex items-center justify-between mb-8">
+              <div className="text-sm text-gray-500">
+                By {post.author} • {new Date(post.publishedAt).toLocaleDateString()} • {post.readTime} min read
               </div>
             </div>
-            <div className="flex items-center gap-2 ml-auto">
-              <Badge variant="outline" className="border-gray-600 text-gray-300">
-                {article.domain}
-              </Badge>
-              {article.vectors.map((vector) => (
-                <Badge key={vector} variant="outline" className="border-gray-600 text-gray-300 text-xs">
-                  {vector}
-                </Badge>
-              ))}
+          </header>
+
+          <div className="prose prose-lg max-w-none dark:prose-invert">
+            <p>{post.content}</p>
+          </div>
+
+          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-center">
+              <Link href="/blog" className="text-blue-600 hover:text-blue-800">
+                ← Back to Blog
+              </Link>
+              
+              <Link href="/generator" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Try PromptForge →
+              </Link>
             </div>
           </div>
-
-          {/* Cover Image */}
-          <div className="aspect-video relative overflow-hidden rounded-lg mb-8">
-            <Image src={article.coverImage || "/placeholder.svg"} alt={article.title} fill className="object-cover" />
-          </div>
-
-          {/* TL;DR */}
-          <Card className="bg-[#1a1a1a] border-l-4 border-l-[#d1a954] border-gray-700 mb-8">
-            <CardContent className="p-6">
-              <h3 className="font-montserrat font-bold text-[#d1a954] mb-3 flex items-center">
-                <BookOpen className="w-5 h-5 mr-2" />
-                TL;DR
-              </h3>
-              <p className="text-gray-300 leading-relaxed">{article.tldr}</p>
-            </CardContent>
-          </Card>
-
-          {/* Table of Contents */}
-          <Card className="bg-[#1a1a1a] border-gray-700 mb-12">
-            <CardContent className="p-6">
-              <h3 className="font-montserrat font-bold text-white mb-4">Table of Contents</h3>
-              <nav className="space-y-2">
-                {article.tableOfContents.map((item, index) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`block w-full text-left px-3 py-2 rounded transition-colors ${
-                      activeSection === item.id
-                        ? "bg-[#d1a954] text-black font-medium"
-                        : "text-gray-300 hover:text-[#d1a954] hover:bg-gray-800"
-                    }`}
-                  >
-                    {index + 1}. {item.title}
-                  </button>
-                ))}
-              </nav>
-            </CardContent>
-          </Card>
-        </header>
-
-        {/* Article Content */}
-        <article className="prose prose-invert prose-lg max-w-none">
-          <div
-            className="article-content"
-            dangerouslySetInnerHTML={{ __html: article.content }}
-            style={{
-              maxWidth: "65ch",
-              margin: "0 auto",
-              lineHeight: "1.6",
-            }}
-          />
         </article>
-
-        {/* Author Box */}
-        <Card className="bg-[#1a1a1a] border-gray-700 mt-16 mb-12">
-          <CardContent className="p-8">
-            <div className="flex items-start gap-6">
-              <Image
-                src={article.authorImage || "/placeholder.svg"}
-                alt={article.author}
-                width={80}
-                height={80}
-                className="rounded-full"
-              />
-              <div className="flex-1">
-                <h3 className="font-montserrat text-xl font-bold text-white mb-2">About {article.author}</h3>
-                <p className="text-gray-300 mb-4 leading-relaxed">{article.authorBio}</p>
-                <div className="flex gap-3">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-gray-600 text-gray-300 hover:border-[#d1a954] hover:text-[#d1a954] bg-transparent"
-                  >
-                    <User className="w-4 h-4 mr-2" />
-                    View Profile
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-gray-600 text-gray-300 hover:border-[#d1a954] hover:text-[#d1a954] bg-transparent"
-                  >
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Follow
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Related Articles */}
-        <Card className="bg-[#1a1a1a] border-gray-700 mb-12">
-          <CardContent className="p-8">
-            <h3 className="font-montserrat text-xl font-bold text-white mb-6">Related Articles</h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "From Prototype to Production: Scaling Your Prompt Systems",
-                  image: "/industrial-factory-automation.png",
-                  domain: "Operations",
-                  readTime: "12 min",
-                },
-                {
-                  title: "Building Audit Trails for AI Compliance",
-                  image: "/digital-audit-compliance.png",
-                  domain: "Compliance",
-                  readTime: "15 min",
-                },
-                {
-                  title: "Module Library Best Practices",
-                  image: "/organized-tool-library.png",
-                  domain: "Architecture",
-                  readTime: "6 min",
-                },
-              ].map((relatedArticle, index) => (
-                <Link key={index} href="#" className="group">
-                  <div className="aspect-video relative overflow-hidden rounded-lg mb-3">
-                    <Image
-                      src={relatedArticle.image || "/placeholder.svg"}
-                      alt={relatedArticle.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <Badge variant="outline" className="border-gray-600 text-gray-300 text-xs mb-2">
-                    {relatedArticle.domain}
-                  </Badge>
-                  <h4 className="font-medium text-white group-hover:text-[#d1a954] transition-colors line-clamp-2 mb-1">
-                    {relatedArticle.title}
-                  </h4>
-                  <p className="text-gray-400 text-sm">{relatedArticle.readTime}</p>
-                </Link>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Newsletter CTA */}
-        <Card className="bg-gradient-to-r from-[#d1a954] to-[#b8954a] border-0">
-          <CardContent className="p-8 text-center">
-            <h3 className="font-montserrat text-2xl font-bold text-black mb-2">Get More Industrial AI Insights</h3>
-            <p className="text-black/80 mb-6">Join 10,000+ engineers building the future of prompt systems</p>
-            <Button className="bg-black text-white hover:bg-gray-800">
-              Subscribe to Newsletter <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
       </div>
     </div>
   )

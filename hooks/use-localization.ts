@@ -13,6 +13,7 @@ interface LocalizedFeatures {
 }
 
 export type Locale = "en" | "ro" | "es" | "fr" | "de"
+export type Currency = "EUR" | "USD" | "RON"
 
 const localizedTexts: LocalizedText = {
   "pricing.title": {
@@ -120,6 +121,20 @@ const localizedTexts: LocalizedText = {
     fr: "Oui, nous proposons des réductions de volume pour les équipes de 10+ utilisateurs et des tarifs personnalisés pour les grandes organisations. Contactez notre équipe commerciale pour plus de détails.",
     de: "Ja, wir bieten Mengenrabatte für Teams mit 10+ Benutzern und maßgeschneiderte Preise für große Organisationen. Kontaktieren Sie unser Vertriebsteam für Details.",
   },
+  "pricing.faq.dataPrivacy": {
+    en: "What data do you store about my prompts?",
+    ro: "Ce date stocați despre prompturile mele?",
+    es: "¿Qué datos almacenan sobre mis indicaciones?",
+    fr: "Quelles données stockez-vous sur mes prompts ?",
+    de: "Welche Daten speichern Sie über meine Prompts?",
+  },
+  "pricing.faq.dataPrivacyAnswer": {
+    en: "We store only metadata (run IDs, timestamps, performance metrics) for audit and analytics purposes. Your actual prompt content is never stored on our servers. All telemetry data is anonymized and used solely for system optimization.",
+    ro: "Stocăm doar metadate (ID-uri de rulare, timestamp-uri, metrici de performanță) pentru audit și analiză. Conținutul real al prompturilor nu este niciodată stocat pe serverele noastre. Toate datele de telemetrie sunt anonimizate și folosite doar pentru optimizarea sistemului.",
+    es: "Solo almacenamos metadatos (ID de ejecución, marcas de tiempo, métricas de rendimiento) para auditoría y análisis. El contenido real de sus indicaciones nunca se almacena en nuestros servidores. Todos los datos de telemetría están anonimizados y se usan únicamente para optimización del sistema.",
+    fr: "Nous ne stockons que des métadonnées (ID d'exécution, horodatages, métriques de performance) à des fins d'audit et d'analyse. Le contenu réel de vos prompts n'est jamais stocké sur nos serveurs. Toutes les données de télémétrie sont anonymisées et utilisées uniquement pour l'optimisation du système.",
+    de: "Wir speichern nur Metadaten (Lauf-IDs, Zeitstempel, Leistungsmetriken) für Audit- und Analysezwecke. Ihr tatsächlicher Prompt-Inhalt wird niemals auf unseren Servern gespeichert. Alle Telemetriedaten sind anonymisiert und werden ausschließlich zur Systemoptimierung verwendet.",
+  },
 }
 
 const localizedFeatures: LocalizedFeatures = {
@@ -148,18 +163,47 @@ const localizedFeatures: LocalizedFeatures = {
 
 export function useLocalization() {
   const [currentLocale, setCurrentLocale] = useState<Locale>("en")
+  const [currentCurrency, setCurrentCurrency] = useState<Currency>("EUR")
 
   useEffect(() => {
-    // Detect user's preferred language from browser
-    const browserLang = navigator.language.split("-")[0] as Locale
-    if (browserLang && ["en", "ro", "es", "fr", "de"].includes(browserLang)) {
-      setCurrentLocale(browserLang)
+    // Auto-detect user location and set appropriate defaults
+    const detectUserLocation = async () => {
+      try {
+        // Try to get user's country from IP
+        const response = await fetch('https://ipapi.co/json/')
+        const data = await response.json()
+        const country = data.country_code
+        
+        // Set currency based on location
+        if (country === 'US') {
+          setCurrentCurrency('USD')
+        } else if (country === 'RO' || country === 'MD') {
+          setCurrentCurrency('RON')
+        } else {
+          setCurrentCurrency('EUR') // Default for EU/Moldova
+        }
+      } catch (error) {
+        // Fallback to EUR for Moldova/EU
+        setCurrentCurrency('EUR')
+      }
     }
 
-    // Load saved preference from localStorage
+    // Load saved preferences from localStorage
     const savedLocale = localStorage.getItem("preferred-locale") as Locale
-    if (savedLocale && ["en", "ro", "es", "fr", "de"].includes(savedLocale)) {
+    const savedCurrency = localStorage.getItem("preferred-currency") as Currency
+    
+    if (savedLocale && ["en", "ro"].includes(savedLocale)) {
       setCurrentLocale(savedLocale)
+    } else {
+      // Default to English for international users
+      setCurrentLocale("en")
+    }
+    
+    if (savedCurrency && ["EUR", "USD", "RON"].includes(savedCurrency)) {
+      setCurrentCurrency(savedCurrency)
+    } else {
+      // Auto-detect currency if no saved preference
+      detectUserLocation()
     }
   }, [])
 
@@ -176,6 +220,19 @@ export function useLocalization() {
     }
   }
 
+  const changeCurrency = (currency: Currency) => {
+    setCurrentCurrency(currency)
+    localStorage.setItem("preferred-currency", currency)
+    
+    // Track currency change
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "currency_change", {
+        currency,
+        page: "pricing",
+      })
+    }
+  }
+
   const t = (key: string): string => {
     return localizedTexts[key]?.[currentLocale] || localizedTexts[key]?.["en"] || key
   }
@@ -185,14 +242,26 @@ export function useLocalization() {
   }
 
   const getCurrencySymbol = (): string => {
-    const currencyMap: Record<Locale, string> = {
-      en: "$",
-      ro: "RON",
-      es: "€",
-      fr: "€",
-      de: "€",
+    const currencyMap: Record<Currency, string> = {
+      EUR: "€",
+      USD: "$",
+      RON: "RON",
     }
-    return currencyMap[currentLocale] || "$"
+    return currencyMap[currentCurrency] || "€"
+  }
+
+  const getCurrencyRate = (): number => {
+    // Base prices in EUR, conversion rates
+    const rates: Record<Currency, number> = {
+      EUR: 1.0,
+      USD: 1.1, // Approximate EUR to USD rate
+      RON: 4.9, // Approximate EUR to RON rate
+    }
+    return rates[currentCurrency] || 1.0
+  }
+
+  const convertPrice = (priceEUR: number): number => {
+    return Math.round(priceEUR * getCurrencyRate())
   }
 
   const getDateFormat = (): Intl.DateTimeFormat => {
@@ -208,11 +277,16 @@ export function useLocalization() {
 
   return {
     currentLocale,
+    currentCurrency,
     changeLocale,
+    changeCurrency,
     t,
     getFeatures,
     getCurrencySymbol,
+    getCurrencyRate,
+    convertPrice,
     getDateFormat,
-    supportedLocales: ["en", "ro", "es", "fr", "de"] as const,
+    supportedLocales: ["en", "ro"] as const,
+    supportedCurrencies: ["EUR", "USD", "RON"] as const,
   }
 }

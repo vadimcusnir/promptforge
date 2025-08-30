@@ -2,7 +2,7 @@
 
 /**
  * Create Stripe Products and Prices for PromptForge v3
- * Creates: Pilot (free), Pro (49€/month, 490€/year), Enterprise (299€/month, 2990€/year, 5 seats)
+ * Creates: Pilot (free), Pro ($49/month, $490/year), Enterprise ($299/month, $2990/year, 5 seats)
  */
 
 const Stripe = require('stripe')

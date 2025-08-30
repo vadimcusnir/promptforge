@@ -31,7 +31,7 @@ export function MobileStickyCTA({
   variant = 'primary',
   plan = 'pro',
   price = '$49',
-  originalPrice = '$99',
+  originalPrice = undefined,
   ctaText = 'Upgrade Now',
   subtext = 'Unlock all features',
   features = ['50+ modules', 'Real GPT testing', 'Export all formats'],
@@ -267,7 +267,7 @@ export function useStickyCTA() {
     variant: 'primary' as const,
     plan: 'pro' as const,
     price: '$49',
-    originalPrice: '$99',
+    originalPrice: undefined,
     ctaText: 'Upgrade Now',
     subtext: 'Unlock all features',
     features: ['50+ modules', 'Real GPT testing', 'Export all formats']

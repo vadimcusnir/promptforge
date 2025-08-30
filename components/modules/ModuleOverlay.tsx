@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { X, ArrowRight, Lock, Zap, Target, Settings, FileText, BarChart3, Shield, Unlock } from "lucide-react"
+import { X, ArrowRight, Lock, Zap, Target, Settings, FileText, BarChart3, Shield, Unlock, Code } from "lucide-react"
 
 interface Module {
   id: string
@@ -180,6 +180,57 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               {moduleDetails.guardrails ||
                 "Respects compliance and confidentiality limits. Output is audited and traceable."}
             </p>
+          </div>
+
+          {/* JSON Specification */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Code className="w-5 h-5 text-yellow-400" />
+              <h3 className="text-lg font-semibold text-white">JSON Specification</h3>
+            </div>
+            <div className="bg-black/30 rounded-lg p-4 border border-gray-700">
+              <pre className="text-xs text-gray-300 font-mono overflow-x-auto">
+{`{
+  "module": {
+    "id": "${module.module_code}",
+    "name": "${module.name}",
+    "category": "${module.category}",
+    "domain": "${module.domain_slug}",
+    "complexity": "${module.complexity}",
+    "estimated_time_minutes": ${module.estimated_time_minutes},
+    "tags": ${JSON.stringify(module.tags)},
+    "vector": "${module.category === 'business' ? 'Strategic' : module.category === 'marketing' ? 'Rhetoric' : 'Content'}",
+    "input_schema": {
+      "domain": "string (business|marketing|sales|analytics)",
+      "scale": "string (startup|smb|enterprise)",
+      "urgency": "string (standard|high|critical)",
+      "complexity": "string (basic|intermediate|advanced)",
+      "resources": "string (limited|standard|unlimited)",
+      "application": "string (content|strategy|analysis)",
+      "output": "string (text|structured|visual)"
+    },
+    "output_format": {
+      "txt": "always_available",
+      "md": "creator_plus",
+      "pdf": "pro_plus",
+      "json": "pro_plus",
+      "bundle_zip": "enterprise_only"
+    },
+    "scoring": {
+      "threshold": 80,
+      "criteria": ["clarity", "execution", "completeness"],
+      "export_eligible": "score >= 80"
+    },
+    "entitlements": {
+      "free": ["basic_usage", "txt_export"],
+      "creator": ["all_modules", "md_export"],
+      "pro": ["live_testing", "pdf_json_export"],
+      "enterprise": ["api_access", "bundle_export", "white_label"]
+    }
+  }
+}`}
+              </pre>
+            </div>
           </div>
 
           {/* Telemetry Note */}

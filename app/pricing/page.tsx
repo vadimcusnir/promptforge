@@ -42,7 +42,7 @@ export default function PricingPage() {
   const { user, isLoading: isAuthLoading, login, logout } = useAuth()
   const analytics = useAnalytics()
   const { currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA, trackVariantConversion } = useABTesting()
-  const { currentLocale, changeLocale, t, getFeatures, getCurrencySymbol } = useLocalization()
+  const { currentLocale, currentCurrency, changeLocale, changeCurrency, t, getFeatures, getCurrencySymbol, convertPrice } = useLocalization()
 
   // Track pricing page view
   useEffect(() => {
@@ -73,8 +73,8 @@ export default function PricingPage() {
     {
       id: "creator",
       name: "Creator",
-      price_monthly: currentVariant ? (getVariantPricing("creator", false) || 19) : 19,
-      price_annual: currentVariant ? (getVariantPricing("creator", true) || 190) : 190,
+      price_monthly: convertPrice(currentVariant ? (getVariantPricing("creator", false) || 19) : 19),
+      price_annual: convertPrice(currentVariant ? (getVariantPricing("creator", true) || 190) : 190),
       description: "For content creators and solopreneurs",
       features: currentVariant 
         ? getVariantFeatures("creator").map(f => ({ name: f, included: true }))
@@ -94,8 +94,8 @@ export default function PricingPage() {
     {
       id: "pro",
       name: "Pro",
-      price_monthly: currentVariant ? (getVariantPricing("pro", false) || 49) : 49,
-      price_annual: currentVariant ? (getVariantPricing("pro", true) || 490) : 490,
+      price_monthly: convertPrice(currentVariant ? (getVariantPricing("pro", false) || 49) : 49),
+      price_annual: convertPrice(currentVariant ? (getVariantPricing("pro", true) || 490) : 490),
       description: "For professionals and teams",
       features: currentVariant 
         ? getVariantFeatures("pro").map(f => ({ name: f, included: true }))
@@ -115,8 +115,8 @@ export default function PricingPage() {
     {
       id: "enterprise",
       name: "Enterprise",
-      price_monthly: currentVariant ? (getVariantPricing("enterprise", false) || 299) : 299,
-      price_annual: currentVariant ? (getVariantPricing("enterprise", true) || 2990) : 2990,
+      price_monthly: convertPrice(currentVariant ? (getVariantPricing("enterprise", false) || 299) : 299),
+      price_annual: convertPrice(currentVariant ? (getVariantPricing("enterprise", true) || 2990) : 2990),
       description: "For organizations at scale",
       features: currentVariant 
         ? getVariantFeatures("enterprise").map(f => ({ name: f, included: true }))
@@ -256,36 +256,20 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen pattern-bg text-white">
-      {/* Header with language selector and user status */}
+      {/* Header with currency selector and user status */}
       <div className="absolute top-4 right-4 flex items-center gap-4 z-10">
-        {/* Language Selector */}
+        {/* Currency Selector */}
         <div className="relative group">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-2 text-gray-300 hover:text-white"
-            onClick={() => setShowLoginModal(false)}
-          >
-            <Globe className="w-4 h-4" />
-            {currentLocale.toUpperCase()}
-          </Button>
-          <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
-            {["en", "ro", "es", "fr", "de"].map((locale) => (
-              <button
-                key={locale}
-                className={`block w-full px-4 py-2 text-left hover:bg-gray-700 rounded-lg ${
-                  currentLocale === locale ? "text-yellow-400" : "text-gray-300"
-                }`}
-                onClick={() => changeLocale(locale as any)}
-              >
-                {locale === "en" && "English"}
-                {locale === "ro" && "Română"}
-                {locale === "es" && "Español"}
-                {locale === "fr" && "Français"}
-                {locale === "de" && "Deutsch"}
-              </button>
-            ))}
-          </div>
+          <Select value={currentCurrency} onValueChange={changeCurrency}>
+            <SelectTrigger className="w-20 bg-gray-800/50 border-gray-700 text-gray-300 hover:text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="EUR">€ EUR</SelectItem>
+              <SelectItem value="USD">$ USD</SelectItem>
+              <SelectItem value="RON">RON</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* User Status */}
@@ -376,7 +360,7 @@ export default function PricingPage() {
                 </div>
                 {isAnnual && plan.price_monthly > 0 && (
                   <p className="text-sm text-gray-500 mt-2">
-                    {memoizedCurrencySymbol}{plan.price_monthly}/month when billed monthly
+                    Billed annually • {memoizedCurrencySymbol}{Math.round(plan.price_annual / 12)}/month
                   </p>
                 )}
                 </CardHeader>
@@ -427,7 +411,7 @@ export default function PricingPage() {
 
         <div className="mt-16 text-center">
           <h2 className="text-2xl font-bold font-serif mb-8">{t("pricing.faq.title")}</h2>
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             <Card 
               className="bg-zinc-900/80 border border-zinc-700 text-left"
               onMouseEnter={() => analytics.faqView(t("pricing.faq.freePlan"))}
@@ -473,6 +457,18 @@ export default function PricingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-400">{t("pricing.faq.enterpriseAnswer")}</p>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="bg-zinc-900/80 border border-zinc-700 text-left"
+              onMouseEnter={() => analytics.faqView(t("pricing.faq.dataPrivacy"))}
+            >
+              <CardHeader>
+                <CardTitle className="font-serif text-lg">{t("pricing.faq.dataPrivacy")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400">{t("pricing.faq.dataPrivacyAnswer")}</p>
               </CardContent>
             </Card>
           </div>

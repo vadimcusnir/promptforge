@@ -14,8 +14,8 @@ PromptForge v3 includes a complete Stripe billing integration with automatic ent
 
 ### **Plan Structure**
 - **Pilot**: Free tier with basic features
-- **Pro**: €49/month or €490/year with advanced features
-- **Enterprise**: €299/month or €2990/year with full features + 5 seats
+- **Pro**: $49/month or $490/year with advanced features
+- **Enterprise**: $299/month or $2990/year with full features + 5 seats
 
 ## 🔧 **SETUP & CONFIGURATION**
 
@@ -51,9 +51,9 @@ node scripts/create-stripe-products.js
 ```
 
 This will create:
-- PromptForge Pilot (€0/month)
-- PromptForge Pro (€49/month, €490/year)
-- PromptForge Enterprise (€299/month, €2990/year)
+- PromptForge Pilot ($0/month)
+- PromptForge Pro ($49/month, $490/year)
+- PromptForge Enterprise ($299/month, $2990/year)
 
 #### **Webhook Endpoint**
 1. Go to Stripe Dashboard → Webhooks

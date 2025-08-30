@@ -21,10 +21,10 @@ export function ExportWithScoreGate({
 }: ExportWithScoreGateProps) {
   const [selectedFormat, setSelectedFormat] = useState<string>('txt');
 
-  // Verifică dacă score-ul este suficient pentru export
+  // Check if the score is sufficient for export
   const canExportWithScore = promptScore >= 80;
   
-  // Verifică ce formate poate exporta planul (hardcoded pentru exemplu)
+  // Check what formats the plan can export (hardcoded for example)
   const exportFormats = [
     { key: 'txt', label: 'Text (.txt)', available: true },
     { key: 'md', label: 'Markdown (.md)', available: true },

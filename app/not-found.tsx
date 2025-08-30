@@ -41,25 +41,25 @@ export default function NotFound() {
         404
       </h1>
       <p className="pf-sub">
-        Artefactul nu a fost găsit. Promptul căutat nu există sau a expirat.
+        Artifact not found. The requested prompt does not exist or has expired.
       </p>
 
       {/* actions */}
-      <nav className="pf-actions" aria-label="Acțiuni rapide">
-        <Link href="/" className="pf-btn pf-btn--primary" aria-label="Înapoi la homepage">
-          ← Pornește forja
+      <nav className="pf-actions" aria-label="Quick actions">
+        <Link href="/" className="pf-btn pf-btn--primary" aria-label="Back to homepage">
+          ← Start Forge
         </Link>
-        <Link href="/modules" className="pf-btn pf-btn--ghost" aria-label="Vezi toate modulele">
-          Vezi modulele
+        <Link href="/modules" className="pf-btn pf-btn--ghost" aria-label="View all modules">
+          View Modules
         </Link>
-        <Link href="/generator" className="pf-btn pf-btn--ghost" aria-label="Deschide Generatorul 7-D">
-          Deschide Generatorul
+        <Link href="/generator" className="pf-btn pf-btn--ghost" aria-label="Open 7-D Generator">
+          Open Generator
         </Link>
       </nav>
 
       {/* small help */}
       <p className="pf-hint">
-        Dacă ai ajuns aici dintr-un link, verifică adresa sau revino la paginile principale.
+        If you arrived here from a link, check the address or return to the main pages.
       </p>
 
       <style jsx>{`

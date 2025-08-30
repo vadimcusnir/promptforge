@@ -50,14 +50,7 @@ export default function PrivacyPage() {
                   <li className="flex items-start">
                     <span className="text-gold-400 mr-2">•</span>
                     <span>
-                      <strong>Prompt metadata:</strong> Module selections, parameter configurations, and generation
-                      timestamps
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Generated prompts:</strong> Your final outputs for cloud history and version tracking
+                      <strong>Prompt metadata:</strong> Module selections, parameter configurations, and generation timestamps (not the actual prompt content)
                     </span>
                   </li>
                   <li className="flex items-start">
@@ -88,7 +81,7 @@ export default function PrivacyPage() {
                   <li className="flex items-start">
                     <span className="text-gold-400 mr-2">•</span>
                     <span>
-                      <strong>Functionality:</strong> Enable cloud history, version control, and cross-device sync
+                      <strong>Functionality:</strong> Enable cloud history of your module selections and parameter configurations (not prompt content)
                     </span>
                   </li>
                   <li className="flex items-start">
@@ -145,6 +138,37 @@ export default function PrivacyPage() {
                     <span className="text-gold-400 mr-2">•</span>
                     <span>
                       <strong>Regular backups:</strong> Automated backups with point-in-time recovery
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            {/* What We Don't Store */}
+            <section>
+              <div className="flex items-center mb-6">
+                <Trash2 className="w-6 h-6 text-red-400 mr-3" />
+                <h2 className="text-2xl font-bold text-red-400 font-montserrat">What We Don't Store</h2>
+              </div>
+              <div className="space-y-4 text-gray-300 leading-relaxed">
+                <p>We explicitly do NOT store the following data:</p>
+                <ul className="space-y-2 ml-6">
+                  <li className="flex items-start">
+                    <span className="text-red-400 mr-2">•</span>
+                    <span>
+                      <strong>Actual prompt content:</strong> Your generated prompts are never stored on our servers
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-400 mr-2">•</span>
+                    <span>
+                      <strong>Input text:</strong> Any text you input into the system is processed locally and not stored
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-400 mr-2">•</span>
+                    <span>
+                      <strong>Personal information in prompts:</strong> We don't store any personal data that might be in your prompts
                     </span>
                   </li>
                 </ul>

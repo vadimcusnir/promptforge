@@ -5,6 +5,8 @@ export function Footer() {
     { name: "Legal Center", href: "/legal" },
     { name: "Privacy Policy", href: "/legal/privacy" },
     { name: "Terms of Use", href: "/legal/terms" },
+    { name: "Security", href: "/legal/security" },
+    { name: "GDPR", href: "/legal/gdpr" },
     { name: "Contact", href: "/contact" },
   ]
 

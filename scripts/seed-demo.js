@@ -229,8 +229,8 @@ This document summarizes the demo data created for PromptForge v3 QA testing and
 
 ### Plans & Entitlements
 - **Pilot Plan**: Free tier with basic features
-- **Pro Plan**: €49/month with advanced features
-- **Enterprise Plan**: €299/month with all features
+- **Pro Plan**: $49/month with advanced features
+- **Enterprise Plan**: $299/month with all features
 
 ### Modules (M01-M50)
 - **M01-M10**: Financial Technology (Risk, Fraud, Compliance)
@@ -254,12 +254,12 @@ This document summarizes the demo data created for PromptForge v3 QA testing and
 - **User**: pilot@demo.com
 
 ### Demo Pro Org
-- **Plan**: Pro (€49/month)
+- **Plan**: Pro ($49/month)
 - **Features**: PDF/JSON export, Real GPT testing, Cloud history
 - **User**: pro@demo.com
 
 ### Demo Enterprise Org
-- **Plan**: Enterprise (€299/month)
+- **Plan**: Enterprise ($299/month)
 - **Features**: All features including bundle export, API access, white-labeling
 - **User**: enterprise@demo.com
 
