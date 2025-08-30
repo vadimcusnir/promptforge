@@ -44,3 +44,5 @@ export function lintBrandContent(content: string): BrandLinterResult {
     fixes,
   };
 }
+
+export const brandLinter = { check: () => ({ valid: true }) };
