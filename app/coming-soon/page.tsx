@@ -87,7 +87,7 @@ export default function ComingSoonPage() {
                 placeholder="Your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10  border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
               />
@@ -96,7 +96,7 @@ export default function ComingSoonPage() {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10  border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
               />
@@ -137,7 +137,7 @@ export default function ComingSoonPage() {
             )}
           </>
         ) : (
-          <div className="max-w-md bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8">
+          <div className="max-w-md bg-white/5  border border-white/10 rounded-xl p-8">
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
                 className="w-8 h-8 text-green-400"

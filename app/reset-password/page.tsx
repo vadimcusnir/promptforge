@@ -80,7 +80,7 @@ function ResetPasswordForm() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
         <div className="w-full max-w-md">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 shadow-md">
+          <Card className="bg-white/10 border-white/20">
             <CardHeader className="text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-2xl mb-4">
                 <CheckCircle className="w-8 h-8 text-green-400" />

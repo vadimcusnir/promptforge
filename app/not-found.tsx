@@ -41,25 +41,25 @@ const GlitchMask = () => (
 // Pulsing LED Component
 const PulsingLED = () => (
   <div className="fixed top-8 right-8 z-50">
-    <div className="w-3 h-3 bg-[#d1a954] rounded-full cyber-pulse shadow-lg shadow-[#d1a954]/50" />
-    <div className="absolute inset-0 w-3 h-3 bg-[#d1a954] rounded-full animate-ping opacity-75" />
+    <div className="w-3 h-3 bg-[#d1a954] rounded-full" />
+    <div className="absolute inset-0 w-3 h-3 bg-[#d1a954] rounded-full opacity-75" />
   </div>
 );
 
 // Fractured Code Animation
 const FracturedCode = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
-    <div className="absolute top-20 left-10 font-mono text-xs text-[#d1a954] cyber-pulse">
+    <div className="absolute top-20 left-10 font-mono text-xs text-[#d1a954]">
       <span className="block">ERR_404</span>
       <span className="block">RITUAL_FAILED</span>
       <span className="block">PAGE_NOT_FOUND</span>
     </div>
-    <div className="absolute bottom-20 right-10 font-mono text-xs text-[#d1a954] cyber-pulse delay-1000">
+    <div className="absolute bottom-20 right-10 font-mono text-xs text-[#d1a954] delay-1000">
       <span className="block">FORGE_ACTIVE</span>
       <span className="block">PROMPT_READY</span>
       <span className="block">EVOLUTION_CONTINUES</span>
     </div>
-    <div className="absolute top-1/2 left-1/4 font-mono text-xs text-[#d1a954] cyber-pulse delay-500">
+    <div className="absolute top-1/2 left-1/4 font-mono text-xs text-[#d1a954] delay-500">
       <span className="block">CYBER_RITUAL</span>
       <span className="block">BRUTALIST_DESIGN</span>
     </div>
@@ -124,10 +124,10 @@ export default function NotFound() {
             <span className="block glitch-text" data-text="Ritual Failed:">Ritual Failed:</span>
             <span className="block glitch-text" data-text="Page Not Found">Page Not Found</span>
             {/* Enhanced glitch effect layers */}
-            <span className="absolute inset-0 text-[#d1a954] opacity-75 blur-[1px] cyber-pulse">
+            <span className="absolute inset-0 text-[#d1a954] opacity-75 blur-[1px]">
               Ritual Failed: Page Not Found
             </span>
-            <span className="absolute inset-0 text-[#d1a954] opacity-50 blur-[2px] translate-x-1 cyber-pulse delay-500">
+            <span className="absolute inset-0 text-[#d1a954] opacity-50 blur-[2px] translate-x-1 delay-500">
               Ritual Failed: Page Not Found
             </span>
           </h1>
@@ -143,7 +143,7 @@ export default function NotFound() {
             <Link
               href="/generator"
               onClick={resetCountdown}
-              className="px-8 py-4 bg-[#d1a954] text-black font-bold text-lg rounded-lg hover:bg-[#b5965c] transition-all duration-300 transform hover:scale-105 shadow-lg shadow-[#d1a954]/25 brutalist-border"
+              className="px-8 py-4 bg-[#d1a954] text-black font-bold text-lg rounded-lg hover:bg-[#b5965c] transition-all duration-300 transform hover:scale-105 brutalist-border"
             >
               Return to Generator
             </Link>
@@ -164,7 +164,7 @@ export default function NotFound() {
           </p>
 
           {/* Countdown */}
-          <div className="text-xs text-gray-500 mb-4 animate-in fade-in duration-1000 delay-1500 cyber-pulse">
+          <div className="text-xs text-gray-500 mb-4 animate-in fade-in duration-1000 delay-1500">
             Auto-redirect in {countdown}s
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function NotFound() {
       {showRedirect && (
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center animate-in fade-in duration-500">
           <div className="text-center animate-in zoom-in duration-500">
-            <div className="text-[#d1a954] text-4xl mb-4 cyber-pulse">
+            <div className="text-[#d1a954] text-4xl mb-4">
               ⚡
             </div>
             <p className="text-white text-xl mb-2">Redirecting to Forge...</p>

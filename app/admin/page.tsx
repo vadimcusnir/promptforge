@@ -118,7 +118,7 @@ export default function AdminPage() {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center px-6">
-        <Card className="w-full max-w-md bg-white/5 backdrop-blur-sm border border-white/10">
+        <Card className="w-full max-w-md bg-white/5  border border-white/10">
           <CardHeader>
             <CardTitle className="text-center text-white">
               Admin Login
@@ -164,7 +164,7 @@ export default function AdminPage() {
 
         <div className="grid gap-6">
           {/* Coming Soon Control */}
-          <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
+          <Card className="bg-white/5  border border-white/10">
             <CardHeader>
               <CardTitle className="text-white">Coming Soon Mode</CardTitle>
             </CardHeader>
@@ -237,7 +237,7 @@ export default function AdminPage() {
           </Card>
 
           {/* Quick Links */}
-          <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
+          <Card className="bg-white/5  border border-white/10">
             <CardHeader>
               <CardTitle className="text-white">Quick Links</CardTitle>
             </CardHeader>
