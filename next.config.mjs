@@ -32,11 +32,20 @@ const nextConfig = {
     return config
   },
   images: {
-    domains: ['localhost', 'promptforge.ai'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
       },
     ],
     formats: ['image/webp', 'image/avif'],

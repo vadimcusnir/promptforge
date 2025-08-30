@@ -26,7 +26,7 @@ html {
   --accent-foreground: #0e0e0e;
   --destructive: #dc2626;
   --destructive-foreground: #ecfeff;
-  --border: rgba(255, 255, 255, 0.12);
+  --border: 0 0% 14.9%;
   --input: rgba(255, 255, 255, 0.06);
   --ring: #d1a954;
   --radius: 8px;
