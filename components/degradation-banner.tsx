@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AlertTriangle, X, RefreshCw, Info } from 'lucide-react'
 
 interface DegradationBannerProps {

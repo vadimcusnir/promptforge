@@ -76,7 +76,7 @@ NEXT_PUBLIC_COMING_SOON=true
 ADMIN_API_TOKEN=your_secure_token_here
 
 # Base URL for production
-NEXT_PUBLIC_BASE_URL=https://promptforge.ai
+NEXT_PUBLIC_BASE_URL=https://chatgpt-prompting.com
 ```
 
 ### Build Commands

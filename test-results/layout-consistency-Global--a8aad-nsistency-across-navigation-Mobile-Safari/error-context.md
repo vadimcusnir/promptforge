@@ -1,0 +1,234 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "PromptForge - Go to homepage" [ref=e4]:
+        - /url: /
+        - img [ref=e8]
+        - generic [ref=e11]: Forge
+      - button "Open menu" [ref=e12]:
+        - img [ref=e13]
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - button "EN" [ref=e18]:
+            - img [ref=e19]
+            - text: EN
+          - generic:
+            - button "English"
+            - button "Română"
+            - button "Español"
+            - button "Français"
+            - button "Deutsch"
+        - button "Login" [ref=e22]
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "Choose Your Plan" [level=1] [ref=e25]
+          - paragraph [ref=e26]: Scale from pilot to enterprise with clear upgrade paths
+          - generic [ref=e27]:
+            - generic [ref=e28]: Monthly
+            - checkbox [ref=e30]
+            - generic [ref=e33]: Annual
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - generic [ref=e37]: Free
+              - generic [ref=e38]: Perfect for getting started
+              - generic [ref=e39]:
+                - generic [ref=e40]: $0
+                - generic [ref=e41]: /forever
+            - generic [ref=e42]:
+              - list [ref=e43]:
+                - listitem [ref=e44]:
+                  - img [ref=e45]
+                  - generic [ref=e47]: Modules M01, M10, M18
+                - listitem [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e51]: Export txt, md
+                - listitem [ref=e52]:
+                  - img [ref=e53]
+                  - generic [ref=e55]: Local history
+                - listitem [ref=e56]:
+                  - img [ref=e57]
+                  - generic [ref=e59]: Community support
+                - listitem [ref=e60]:
+                  - img [ref=e61]
+                  - generic [ref=e64]: Export pdf, json
+                - listitem [ref=e65]:
+                  - img [ref=e66]
+                  - generic [ref=e69]: Live Test Engine
+                - listitem [ref=e70]:
+                  - img [ref=e71]
+                  - generic [ref=e74]: Cloud history
+                - listitem [ref=e75]:
+                  - img [ref=e76]
+                  - generic [ref=e79]: API access
+              - button "Start Free" [ref=e80]
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: Creator
+              - generic [ref=e84]: For content creators and solopreneurs
+              - generic [ref=e85]:
+                - generic [ref=e86]: $19
+                - generic [ref=e87]: /month
+            - generic [ref=e88]:
+              - list [ref=e89]:
+                - listitem [ref=e90]:
+                  - img [ref=e91]
+                  - generic [ref=e93]: All modules (M01-M40)
+                - listitem [ref=e94]:
+                  - img [ref=e95]
+                  - generic [ref=e97]: Export txt, md, pdf
+                - listitem [ref=e98]:
+                  - img [ref=e99]
+                  - generic [ref=e101]: Local history
+                - listitem [ref=e102]:
+                  - img [ref=e103]
+                  - generic [ref=e105]: Community support
+              - button "Start Creator" [ref=e106]
+          - generic [ref=e107]:
+            - generic [ref=e109]: Most Popular
+            - generic [ref=e110]:
+              - generic [ref=e111]: Pro
+              - generic [ref=e112]: For professionals and teams
+              - generic [ref=e113]:
+                - generic [ref=e114]: $49
+                - generic [ref=e115]: /month
+            - generic [ref=e116]:
+              - list [ref=e117]:
+                - listitem [ref=e118]:
+                  - img [ref=e119]
+                  - generic [ref=e121]: All modules (M01-M50)
+                - listitem [ref=e122]:
+                  - img [ref=e123]
+                  - generic [ref=e125]: Export txt, md, pdf, json
+                - listitem [ref=e126]:
+                  - img [ref=e127]
+                  - generic [ref=e129]: Live Test Engine
+                - listitem [ref=e130]:
+                  - img [ref=e131]
+                  - generic [ref=e133]: Cloud history
+              - button "Start Pro Trial" [ref=e134]
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - generic [ref=e137]: Enterprise
+              - generic [ref=e138]: For organizations at scale
+              - generic [ref=e139]:
+                - generic [ref=e140]: $299
+                - generic [ref=e141]: /month
+            - generic [ref=e142]:
+              - list [ref=e143]:
+                - listitem [ref=e144]:
+                  - img [ref=e145]
+                  - generic [ref=e147]: Everything in Pro
+                - listitem [ref=e148]:
+                  - img [ref=e149]
+                  - generic [ref=e151]: API access
+                - listitem [ref=e152]:
+                  - img [ref=e153]
+                  - generic [ref=e155]: Bundle.zip exports
+                - listitem [ref=e156]:
+                  - img [ref=e157]
+                  - generic [ref=e159]: White-label options
+              - button "Contact Sales" [ref=e160]
+        - generic [ref=e161]:
+          - heading "Frequently Asked Questions" [level=2] [ref=e162]
+          - generic [ref=e163]:
+            - generic [ref=e164]:
+              - generic [ref=e166]: What's included in the free plan?
+              - paragraph [ref=e168]: The free plan includes access to 3 core modules (M01, M10, M18), basic text exports, and local history storage. Perfect for trying out the platform.
+            - generic [ref=e169]:
+              - generic [ref=e171]: Can I upgrade or downgrade anytime?
+              - paragraph [ref=e173]: Yes, you can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at the next billing cycle.
+            - generic [ref=e174]:
+              - generic [ref=e176]: What's the difference between simulated and live testing?
+              - paragraph [ref=e178]: Simulated testing uses our internal algorithms to score prompts. Live testing uses actual GPT models for more accurate evaluation (Pro+ only).
+            - generic [ref=e179]:
+              - generic [ref=e181]: Do you offer enterprise discounts?
+              - paragraph [ref=e183]: Yes, we offer volume discounts for teams of 10+ users and custom pricing for large organizations. Contact our sales team for details.
+        - generic [ref=e185]:
+          - generic [ref=e186]:
+            - link "Legal Center" [ref=e187]:
+              - /url: /legal
+            - link "Privacy Policy" [ref=e188]:
+              - /url: /legal/privacy
+            - link "Terms of Use" [ref=e189]:
+              - /url: /legal/terms
+            - link "legal@[EXAMPLE_DOMAIN_yourdomain.com]" [ref=e190]:
+              - /url: mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]
+          - paragraph [ref=e191]: All exports include appropriate license notices and watermarks based on your plan
+      - generic [ref=e193]:
+        - generic [ref=e196]: Start Pro – $49
+        - button "Start Now" [ref=e197]
+  - contentinfo [ref=e198]:
+    - generic [ref=e199]:
+      - generic [ref=e200]:
+        - generic [ref=e201]:
+          - heading "Legal" [level=3] [ref=e202]
+          - list [ref=e203]:
+            - listitem [ref=e204]:
+              - link "Legal Center" [ref=e205]:
+                - /url: /legal
+            - listitem [ref=e206]:
+              - link "Privacy Policy" [ref=e207]:
+                - /url: /legal/privacy
+            - listitem [ref=e208]:
+              - link "Terms of Use" [ref=e209]:
+                - /url: /legal/terms
+            - listitem [ref=e210]:
+              - link "Contact" [ref=e211]:
+                - /url: /contact
+        - generic [ref=e212]:
+          - heading "Navigation" [level=3] [ref=e213]
+          - list [ref=e214]:
+            - listitem [ref=e215]:
+              - link "About" [ref=e216]:
+                - /url: /about
+            - listitem [ref=e217]:
+              - link "Blog" [ref=e218]:
+                - /url: /blog
+            - listitem [ref=e219]:
+              - link "Docs" [ref=e220]:
+                - /url: /docs
+            - listitem [ref=e221]:
+              - link "Guides" [ref=e222]:
+                - /url: /guides
+            - listitem [ref=e223]:
+              - link "Modules" [ref=e224]:
+                - /url: /modules
+            - listitem [ref=e225]:
+              - link "Pricing" [ref=e226]:
+                - /url: /pricing
+        - generic [ref=e227]:
+          - heading "Connect" [level=3] [ref=e228]
+          - generic [ref=e229]:
+            - img [ref=e231]
+            - generic [ref=e233]: Industrial Prompt Engineering
+          - paragraph [ref=e234]: Forging precision in the art of prompt engineering. Every output auditable, every process reproducible.
+      - generic [ref=e236]:
+        - generic [ref=e237]: © PromptForge™ 2025. All rights reserved.
+        - generic [ref=e238]: "\"Precision forged through discipline, excellence through iteration.\""
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e239]
+  - generic [ref=e242]:
+    - generic [ref=e243]:
+      - img [ref=e244]
+      - generic [ref=e246]:
+        - heading "We use cookies to enhance your experience" [level=3] [ref=e247]
+        - paragraph [ref=e248]: We use cookies and similar technologies to help personalize content, provide social media features, and analyze our traffic. We also share information about your use of our site with our social media, advertising, and analytics partners who may combine it with other information you've provided to them.
+        - generic [ref=e249]:
+          - link "Privacy Policy" [ref=e250]:
+            - /url: /legal/privacy
+          - link "Terms of Use" [ref=e251]:
+            - /url: /legal/terms
+    - generic [ref=e252]:
+      - button "Accept All" [ref=e253]
+      - button "Necessary Only" [ref=e254]
+      - button "Preferences" [ref=e255]:
+        - img [ref=e256]
+        - text: Preferences
+```

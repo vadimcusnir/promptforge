@@ -51,7 +51,7 @@ Allow: /legal
 Allow: /thankyou
 
 # Sitemap
-Sitemap: https://promptforge.ai/sitemap.xml`;
+Sitemap: https://chatgpt-prompting.com/sitemap.xml`;
 
   return new NextResponse(robots, {
     headers: {

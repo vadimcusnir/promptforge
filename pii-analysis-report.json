@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-08-29T04:03:37.898Z",
+  "timestamp": "2025-08-30T08:54:01.129Z",
   "summary": {
-    "totalFindings": 424,
+    "totalFindings": 502,
     "critical": 0,
-    "high": 340,
-    "medium": 56,
-    "low": 28
+    "high": 404,
+    "medium": 71,
+    "low": 27
   },
   "findings": {
     "critical": {
@@ -227,6 +227,27 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "AI_GATEWAY_SETUP_GUIDE.md",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "ANALYTICS_IMPLEMENTATION.md",
           "lineNumbers": [
             78,
@@ -240,6 +261,25 @@
           "sampleMatches": [
             "1703123456789",
             "1703123456789"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "API_SMOKE_TESTS_IMPLEMENTATION.md",
+          "lineNumbers": [
+            122
+          ],
+          "matches": [
+            "456-426614174000\n"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "456-426614174000\n"
           ]
         },
         {
@@ -411,6 +451,44 @@
           "totalMatches": 1,
           "sampleMatches": [
             "user@example.com"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "OBSERVABILITY_IMPLEMENTATION.md",
+          "lineNumbers": [
+            76
+          ],
+          "matches": [
+            "alerts@yourdomain.com"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "alerts@yourdomain.com"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "OBSERVABILITY_IMPLEMENTATION.md",
+          "lineNumbers": [
+            51
+          ],
+          "matches": [
+            "4           "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "4           "
           ]
         },
         {
@@ -617,6 +695,50 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "ai-gateway-correct-test-report.json",
+          "lineNumbers": [
+            2,
+            73
+          ],
+          "matches": [
+            "2025-08-30",
+            "2025-08-30"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "2025-08-30",
+            "2025-08-30"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "ai-gateway-simple-test-report.json",
+          "lineNumbers": [
+            2,
+            53
+          ],
+          "matches": [
+            "2025-08-30",
+            "2025-08-30"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "2025-08-30",
+            "2025-08-30"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "app/api/create-checkout-session/route.ts",
           "lineNumbers": [
             5
@@ -694,6 +816,23 @@
           "totalMatches": 1,
           "sampleMatches": [
             "80\n        "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "app/api/gpt-test/route.ts",
+          "lineNumbers": [],
+          "matches": [
+            "4)\n        "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "4)\n        "
           ]
         },
         {
@@ -955,6 +1094,23 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "app/observability-test/page.tsx",
+          "lineNumbers": [],
+          "matches": [
+            "49)\n      "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "49)\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "app/page.tsx",
           "lineNumbers": [],
           "matches": [
@@ -963,6 +1119,57 @@
           "totalMatches": 1,
           "sampleMatches": [
             "80\n            "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "app/sitemap.xml/route.ts",
+          "lineNumbers": [
+            9,
+            17,
+            24,
+            31,
+            38,
+            45,
+            53,
+            60,
+            67,
+            74,
+            82,
+            89,
+            96,
+            104,
+            111,
+            119
+          ],
+          "matches": [
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01"
+          ],
+          "totalMatches": 16,
+          "sampleMatches": [
+            "2025-01-01",
+            "2025-01-01",
+            "2025-01-01"
           ]
         },
         {
@@ -999,6 +1206,25 @@
           "sampleMatches": [
             "100)\n      ",
             "100\n                        "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "components/degradation-banner.tsx",
+          "lineNumbers": [],
+          "matches": [
+            "1000)\n      ",
+            "2\n                "
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "1000)\n      ",
+            "2\n                "
           ]
         },
         {
@@ -1047,11 +1273,28 @@
           "filePath": "components/home/LiveGenerationDemo.tsx",
           "lineNumbers": [],
           "matches": [
-            "2500))\n\n    "
+            "1000)\n      "
           ],
           "totalMatches": 1,
           "sampleMatches": [
-            "2500))\n\n    "
+            "1000)\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "components/kpi-sla-dashboard.tsx",
+          "lineNumbers": [],
+          "matches": [
+            "30000)\n\n    "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "30000)\n\n    "
           ]
         },
         {
@@ -1177,6 +1420,23 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "components/performance-monitor.tsx",
+          "lineNumbers": [],
+          "matches": [
+            "1000\n      "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "1000\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "components/security/SecurityDashboard.tsx",
           "lineNumbers": [],
           "matches": [
@@ -1185,6 +1445,23 @@
           "totalMatches": 1,
           "sampleMatches": [
             "5)\n                "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "components/ui/content-chunker.tsx",
+          "lineNumbers": [],
+          "matches": [
+            "100)\n          "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "100)\n          "
           ]
         },
         {
@@ -5828,6 +6105,25 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "env.example",
+          "lineNumbers": [
+            44
+          ],
+          "matches": [
+            "alerts@yourdomain.com"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "alerts@yourdomain.com"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "env.template",
           "lineNumbers": [
             53
@@ -5972,6 +6268,99 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "lib/ai-cache.ts",
+          "lineNumbers": [],
+          "matches": [
+            "1000)\n    \n    ",
+            "10)\n      \n      ",
+            "10)\n      \n      "
+          ],
+          "totalMatches": 3,
+          "sampleMatches": [
+            "1000)\n    \n    ",
+            "10)\n      \n      ",
+            "10)\n      \n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "lib/ai-cache.ts",
+          "lineNumbers": [
+            420
+          ],
+          "matches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "lib/ai-cost-tracking.ts",
+          "lineNumbers": [],
+          "matches": [
+            "100)\n\n      ",
+            "100\n\n      ",
+            "10)\n      ",
+            "4)\n        ",
+            "4)\n        "
+          ],
+          "totalMatches": 5,
+          "sampleMatches": [
+            "100)\n\n      ",
+            "100\n\n      ",
+            "10)\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "lib/ai-providers.ts",
+          "lineNumbers": [],
+          "matches": [
+            "150000\n    ",
+            "40000\n    ",
+            "2)\n      \n      ",
+            "1000)\n      ",
+            "2)\n      \n      ",
+            "4)\n    \n    ",
+            "1)))\n      ",
+            "1000)\n      ",
+            "1)))\n      \n      ",
+            "4)\n          "
+          ],
+          "totalMatches": 10,
+          "sampleMatches": [
+            "150000\n    ",
+            "40000\n    ",
+            "2)\n      \n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "lib/auth/jwt-security.ts",
           "lineNumbers": [],
           "matches": [
@@ -6070,6 +6459,25 @@
           "totalMatches": 1,
           "sampleMatches": [
             "EXAMPLE_EMAIL_noreply@yourdomain.com"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "lib/kpi-monitoring.ts",
+          "lineNumbers": [],
+          "matches": [
+            "1000)\n    ",
+            "50\n    )\n  "
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "1000)\n    ",
+            "50\n    )\n  "
           ]
         },
         {
@@ -6387,6 +6795,27 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "package.json",
+          "lineNumbers": [
+            90
+          ],
+          "matches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "performance-report-glass-effects.json",
           "lineNumbers": [
             2,
@@ -6414,11 +6843,553 @@
             2
           ],
           "matches": [
-            "2025-08-29"
+            "2025-08-30"
           ],
           "totalMatches": 1,
           "sampleMatches": [
-            "2025-08-29"
+            "2025-08-30"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/05053e47c01a3a54dcf1dd29f2bba7795f461f0b.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - ",
+            "49\n        - "
+          ],
+          "totalMatches": 7,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/1a2f308faefd7c2a07111431513aca586c3de03f.webm",
+          "lineNumbers": [
+            625
+          ],
+          "matches": [
+            "333333333331"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "333333333331"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/258aef4935ab28d7dd1284d784d0a9207b088bbb.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/356a65ae1388c3b49d56813e93ab2e3ad76476b8.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/356e40ddf928800a4cd5581b5ab1f5fcdd655418.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 6,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/3e1e20a7779591c33d449ea89f6e4f10a34bb55b.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/446f0491e68d2aa993aeac8cbf8f0a5cb6fd52a4.webm",
+          "lineNumbers": [
+            92
+          ],
+          "matches": [
+            "77777777777777"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "77777777777777"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/4f9eff1df82234c40ea39982e2777a2fe6dff165.png",
+          "lineNumbers": [
+            850,
+            862
+          ],
+          "matches": [
+            "6000000000000",
+            "6000000000000",
+            "900000000000000",
+            "6000000000000"
+          ],
+          "totalMatches": 4,
+          "sampleMatches": [
+            "6000000000000",
+            "6000000000000",
+            "900000000000000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/7100a0a0a4b6d358dafaa138eeed53fa90ddb609.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/7cf2f8b7796c0b3ddbcc7a648d84666143e47f57.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - ",
+            "49\n        - "
+          ],
+          "totalMatches": 7,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/8ea7ed4a06b448fb7f314ed45b4ebb60a6bd8452.webm",
+          "lineNumbers": [
+            1470,
+            2957
+          ],
+          "matches": [
+            "6666666631",
+            "333333333333333335",
+            "3333333332"
+          ],
+          "totalMatches": 3,
+          "sampleMatches": [
+            "6666666631",
+            "333333333333333335",
+            "3333333332"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/9deaa8bdd5e5eff0ec92f9f6f75ca3237dbc8460.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/9ff381a62024a35226de7daa9679c998551f9401.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 6,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/c42749482b15d0b7bf1162968016ebe003102c2a.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 6,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/data/d3a07301e3518fa7a140145dc3dc11cf8ab2ab19.png",
+          "lineNumbers": [
+            545
+          ],
+          "matches": [
+            "8\r8\r8\r8\r8\r8"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "8\r8\r8\r8\r8\r8"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/index.html",
+          "lineNumbers": [
+            26,
+            34,
+            46,
+            49,
+            51
+          ],
+          "matches": [
+            "4278190080",
+            "4294967295",
+            "3988292384",
+            "2147483648",
+            "1099511627776",
+            "1099511627776)",
+            "1732584193",
+            "4023233417",
+            "2562383102",
+            "3285377520",
+            "1518500249",
+            "1859775393",
+            "2400959708",
+            "3395469782",
+            "9007199254740991)",
+            "4294967296))",
+            "4294967295",
+            "4294967296",
+            "4294967296)",
+            "4294967296",
+            "1549556828",
+            "134775813)",
+            "4294967295",
+            "4294967295)",
+            "4294901760)",
+            "1073741823",
+            "1073741824",
+            "1073741824",
+            "1073741824",
+            "1073741825",
+            "1073741824",
+            "1073741824",
+            "268435455)",
+            "1073741824",
+            "1073741824)",
+            "1073741824",
+            "1073741824",
+            "1073741824",
+            "1073741824)",
+            "130023424)",
+            "268435455)",
+            "268435455)",
+            "130023424)",
+            "130023424)",
+            "4194304)))",
+            "134217728)",
+            "134217728)",
+            "8080-20240426",
+            "8080-20240426",
+            "499 0 11-8",
+            "499 0 0111",
+            "75 0 010 1",
+            "75 0 010 1",
+            "75 0 010-1",
+            "1 1 0 11-2 0 1 1 0 012 0",
+            "75 0 000 1",
+            "75 0 000-1",
+            "75 0 000 1",
+            "75 0 0014 13",
+            "75 0 002 1",
+            "75 0 000 1",
+            "75 0 000-1",
+            "75 0 010 1",
+            "75 0 016 5",
+            "75 0 010 1",
+            "75 0 018 6",
+            "75 0 000 1",
+            "75 0 000-1",
+            "75 0 010 1",
+            "75 0 018 9",
+            "75 0 010-1",
+            "75 0 010 1",
+            "75 0 010 1",
+            "75 0 11-10",
+            "756 0 010-",
+            "25 0 108 4",
+            "25 0 000 10",
+            "502 0 018 10",
+            "8 8 0 1 1 0 16",
+            "8 8 0 0 1 8 0",
+            "5 0 1 0 13 0 6",
+            "5 0 0 0-13 0",
+            "749 0 0 1-1",
+            "749 0 0 1 ",
+            "751 0 0 1 1",
+            "751 0 0 1 ",
+            "75 0 0 1 0 1",
+            "75 0 0 1 1",
+            "75 0 0 1 9",
+            "75 0 0 1 0 14",
+            "75 0 0 1 14",
+            "75 0 0 1 5 9",
+            "80808020 25",
+            "80808020 25",
+            "80808020 75",
+            "80808020 75"
+          ],
+          "totalMatches": 96,
+          "sampleMatches": [
+            "4278190080",
+            "4294967295",
+            "3988292384"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "playwright-report/index.html",
+          "lineNumbers": [
+            26
+          ],
+          "matches": [
+            "9007199254740991"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "9007199254740991"
           ]
         },
         {
@@ -8623,6 +9594,23 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "rate-limit.ts",
+          "lineNumbers": [],
+          "matches": [
+            "300\n        "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "300\n        "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "ruleset.yml",
           "lineNumbers": [
             19,
@@ -8691,6 +9679,23 @@
             "20241220000000",
             "20241220000000",
             "60))\n    \n    "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/check-db-state.js",
+          "lineNumbers": [],
+          "matches": [
+            "1\n        )\n      "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "1\n        )\n      "
           ]
         },
         {
@@ -8832,6 +9837,27 @@
           "totalMatches": 1,
           "sampleMatches": [
             "20241220000000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/emergency-rollback.sh",
+          "lineNumbers": [],
+          "matches": [
+            "1\n        ",
+            "1\n        ",
+            "10\n    \n    "
+          ],
+          "totalMatches": 3,
+          "sampleMatches": [
+            "1\n        ",
+            "1\n        ",
+            "10\n    \n    "
           ]
         },
         {
@@ -9061,6 +10087,27 @@
             "00000000-0000-0000",
             "1234-5678-9012-3456",
             "0000-0000-0000-0000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/launch-control.js",
+          "lineNumbers": [],
+          "matches": [
+            "1000)\n    \n    ",
+            "30000))\n    ",
+            "300000))\n    "
+          ],
+          "totalMatches": 3,
+          "sampleMatches": [
+            "1000)\n    \n    ",
+            "30000))\n    ",
+            "300000))\n    "
           ]
         },
         {
@@ -9410,6 +10457,25 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/smoke-test-api.sh",
+          "lineNumbers": [],
+          "matches": [
+            "4\n    \n    ",
+            "2\n    \n    "
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "4\n    \n    ",
+            "2\n    \n    "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
           "filePath": "scripts/supabase-backup.js",
           "lineNumbers": [
             104
@@ -9422,6 +10488,80 @@
           "sampleMatches": [
             "2025-01-15",
             "24))\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/test-ai-gateway-correct.js",
+          "lineNumbers": [],
+          "matches": [
+            "500\n      "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "500\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/test-ai-gateway-simple.js",
+          "lineNumbers": [],
+          "matches": [
+            "500\n      ",
+            "500\n      "
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "500\n      ",
+            "500\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/test-ai-gateway.js",
+          "lineNumbers": [],
+          "matches": [
+            "500\n        "
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "500\n        "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "scripts/test-ai-gateway.js",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "00000000-0000-0000",
+            "0000-000000000000"
           ]
         },
         {
@@ -9597,7 +10737,7 @@
           "risk": "MEDIUM",
           "action": "REVIEW_AND_SANITIZE",
           "description": "Potential real PII that needs review and sanitization",
-          "filePath": "supabase/migrations/20241220000000_security_lockdown.sql",
+          "filePath": "supabase/migrations/20241220000003_security_lockdown.sql",
           "lineNumbers": [
             151
           ],
@@ -9607,6 +10747,471 @@
           "totalMatches": 1,
           "sampleMatches": [
             "admin@yourdomain.com"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "supabase/migrations/20241220000007_ai_cache.sql",
+          "lineNumbers": [],
+          "matches": [
+            "100\n      ",
+            "100\n      "
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "100\n      ",
+            "100\n      "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "supabase/migrations/20241220000008_ai_usage_tracking.sql",
+          "lineNumbers": [
+            267
+          ],
+          "matches": [
+            "00000000-0000-0000",
+            "0000-000000000000",
+            "00000000-0000-0000",
+            "0000-000000000000"
+          ],
+          "totalMatches": 4,
+          "sampleMatches": [
+            "00000000-0000-0000",
+            "0000-000000000000",
+            "00000000-0000-0000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/.last-run.json",
+          "lineNumbers": [
+            10
+          ],
+          "matches": [
+            "28543070810"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "28543070810"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--0e086-per-semantic-HTML-structure-Mobile-Chrome/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--0e086-per-semantic-HTML-structure-Mobile-Safari/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--0e086-per-semantic-HTML-structure-Mobile-Safari/video.webm",
+          "lineNumbers": [
+            625
+          ],
+          "matches": [
+            "333333333331"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "333333333331"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--0e086-per-semantic-HTML-structure-chromium/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--0e086-per-semantic-HTML-structure-chromium/test-failed-1.png",
+          "lineNumbers": [
+            850,
+            862
+          ],
+          "matches": [
+            "6000000000000",
+            "6000000000000",
+            "900000000000000",
+            "6000000000000"
+          ],
+          "totalMatches": 4,
+          "sampleMatches": [
+            "6000000000000",
+            "6000000000000",
+            "900000000000000"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--0e086-per-semantic-HTML-structure-firefox/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--0e086-per-semantic-HTML-structure-webkit/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - ",
+            "7\n              - ",
+            "11\n              - ",
+            "12\n              - ",
+            "13\n              - ",
+            "22\n              - ",
+            "24\n              - ",
+            "32\n              - ",
+            "35\n              - ",
+            "40\n              - ",
+            "45\n              - ",
+            "50\n              - ",
+            "10\n                - ",
+            "49\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 17,
+          "sampleMatches": [
+            "80\n          - ",
+            "50\n          - ",
+            "1\n              - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-Mobile-Chrome/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - ",
+            "49\n        - "
+          ],
+          "totalMatches": 7,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-Mobile-Chrome/test-failed-1.png",
+          "lineNumbers": [
+            545
+          ],
+          "matches": [
+            "8\r8\r8\r8\r8\r8"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "8\r8\r8\r8\r8\r8"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-Mobile-Safari/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - ",
+            "49\n        - "
+          ],
+          "totalMatches": 7,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-chromium/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 6,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-firefox/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 6,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-firefox/video.webm",
+          "lineNumbers": [
+            1470,
+            2957
+          ],
+          "matches": [
+            "6666666631",
+            "333333333333333335",
+            "3333333332"
+          ],
+          "totalMatches": 3,
+          "sampleMatches": [
+            "6666666631",
+            "333333333333333335",
+            "3333333332"
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-webkit/error-context.md",
+          "lineNumbers": [],
+          "matches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - ",
+            "49\n                - ",
+            "50)\n                - ",
+            "299\n                - "
+          ],
+          "totalMatches": 6,
+          "sampleMatches": [
+            "18\n                - ",
+            "19\n                - ",
+            "40)\n                - "
+          ]
+        },
+        {
+          "category": "realPII",
+          "name": "Potential Real PII",
+          "severity": "HIGH",
+          "risk": "MEDIUM",
+          "action": "REVIEW_AND_SANITIZE",
+          "description": "Potential real PII that needs review and sanitization",
+          "filePath": "test-results/layout-consistency-Global--a8aad-nsistency-across-navigation-webkit/video.webm",
+          "lineNumbers": [
+            92
+          ],
+          "matches": [
+            "77777777777777"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "77777777777777"
           ]
         },
         {
@@ -9711,108 +11316,7 @@
             "6553965703",
             "9406900438",
             "12534534374",
-            "23635617252",
-            "5596493207294004333",
-            "9540569856",
-            "7964146377785",
-            "5546352701",
-            "44808489742035",
-            "2844325930",
-            "901089551279",
-            "7171277369",
-            "2223056813776",
-            "50481136302",
-            "5475421866",
-            "11810427026",
-            "65590003458",
-            "983579752699",
-            "6192244266536777",
-            "6856774263",
-            "2355905914403",
-            "68191037286",
-            "1853648145",
-            "620592570559",
-            "394935807208",
-            "65598901468376",
-            "62670662745",
-            "557351194072925",
-            "205435675065",
-            "3994023112053119",
-            "9299318151",
-            "3665861581",
-            "4425973586",
-            "8216744040352",
-            "1933514121",
-            "5835677618051",
-            "68612081267506",
-            "6818381145",
-            "6765453568512",
-            "32103352468437",
-            "875256267380",
-            "23090199551",
-            "6616090338",
-            "79473346386335",
-            "4369739449",
-            "8932468159442",
-            "1088892011",
-            "341202270546",
-            "8599483041",
-            "32533484016",
-            "7986121747",
-            "5208829979",
-            "26488053201",
-            "14923208161",
-            "213879564070225",
-            "5466490725",
-            "57469406211",
-            "214733217149",
-            "9974741773",
-            "86572350101",
-            "2552474546",
-            "893513206216",
-            "4598795270",
-            "42874259512",
-            "416863712161",
-            "2937693683",
-            "2952923827",
-            "88958246862",
-            "953080998556456",
-            "2642717924",
-            "8299640125",
-            "945037798035",
-            "9947402301",
-            "33858008175",
-            "7996693221",
-            "3358781300",
-            "7246059571",
-            "9550685198",
-            "4558451784",
-            "9492015435",
-            "6770567961",
-            "185166773782",
-            "4265678278",
-            "9147427157",
-            "33125044968",
-            "1298888693338",
-            "60433558585186",
-            "1009687760",
-            "1243166691944",
-            "6457119955",
-            "1383701487",
-            "48026864326",
-            "9609610392",
-            "1817866409474",
-            "3279661365",
-            "1951236683",
-            "556972229956",
-            "1492270384259",
-            "9169058734",
-            "93298628862",
-            "37216469998",
-            "93849001673",
-            "838298716793024",
-            "760353746514",
-            "492453676038",
+            "94537791247",
             "9898566516",
             "8773770763",
             "5142665841",
@@ -9870,6 +11374,135 @@
             "252235454914",
             "8129630210",
             "51070292571",
+            "4699334642",
+            "32216839604",
+            "5596493207294004333",
+            "9540569856",
+            "7964146377785",
+            "5546352701",
+            "44808489742035",
+            "2844325930",
+            "901089551279",
+            "7171277369",
+            "2223056813776",
+            "50481136302",
+            "5475421866",
+            "81936914347",
+            "983579752699",
+            "6192244266536777",
+            "6856774263",
+            "2355905914403",
+            "68191037286",
+            "1853648145",
+            "620592570559",
+            "394935807208",
+            "65598901468376",
+            "62670662745",
+            "557351194072925",
+            "205435675065",
+            "3994023112053119",
+            "9299318151",
+            "3665861581",
+            "4425973586",
+            "8216744040352",
+            "1933514121",
+            "5835677618051",
+            "68612081267506",
+            "6818381145",
+            "6765453568512",
+            "32103352468437",
+            "875256267380",
+            "23090199551",
+            "6616090338",
+            "79473346386335",
+            "4369739449",
+            "8932468159442",
+            "1088892011",
+            "341202270546",
+            "8599483041",
+            "32533484016",
+            "7986121747",
+            "5208829979",
+            "26488053201",
+            "14923208161",
+            "213879564070225",
+            "5466490725",
+            "57469406211",
+            "214733217149",
+            "9974741773",
+            "86572350101",
+            "2552474546",
+            "893513206216",
+            "4598795270",
+            "42874259512",
+            "6594973048",
+            "466368658943",
+            "9652773926",
+            "3473283977",
+            "5035607481",
+            "79738199273",
+            "7476166654",
+            "9078205849121",
+            "953961283699",
+            "9774686600",
+            "25328409174",
+            "23635617252",
+            "9409979170734",
+            "29729222675759884",
+            "7216142106",
+            "111214009193320",
+            "68846017219314",
+            "636606785999734988",
+            "1064249400262",
+            "5915936248",
+            "11810427026",
+            "65590003458",
+            "416863712161",
+            "2937693683",
+            "2952923827",
+            "88958246862",
+            "953080998556456",
+            "2642717924",
+            "8299640125",
+            "9729312252",
+            "84029431765",
+            "6459423495",
+            "69454912389543",
+            "4626845737",
+            "84029431765",
+            "9947402301",
+            "7996693221",
+            "3358781300",
+            "635093714074",
+            "7246059571",
+            "9550685198",
+            "4558451784",
+            "9492015435",
+            "6770567961",
+            "185166773782",
+            "4265678278",
+            "9147427157",
+            "33125044968",
+            "1298888693338",
+            "60433558585186",
+            "1009687760",
+            "1243166691944",
+            "6457119955",
+            "1383701487",
+            "48026864326",
+            "9609610392",
+            "1817866409474",
+            "3279661365",
+            "1951236683",
+            "556972229956",
+            "1492270384259",
+            "9169058734",
+            "93298628862",
+            "37216469998",
+            "93849001673",
+            "838298716793024",
+            "760353746514",
+            "492453676038",
             "86502660770",
             "665256827892",
             "8608014210",
@@ -9926,11 +11559,13 @@
             "266463414789",
             "74230023826",
             "360975981950",
-            "18108507554",
+            "848704413264",
             "5126328450",
             "8841326469",
-            "3445311444",
-            "9006972638483",
+            "7033618527021",
+            "57218332233493",
+            "92756223828",
+            "2366982622028",
             "82929745263",
             "21536321677",
             "4471051393",
@@ -9997,6 +11632,7 @@
             "9072712549",
             "5731034155",
             "21536321677",
+            "2675473294",
             "8073115525",
             "59692075154510",
             "9910192519",
@@ -10083,8 +11719,10 @@
             "7255520283",
             "7255520283",
             "7255520283",
-            "7957968566",
             "7255520283",
+            "7255520283",
+            "7255520283",
+            "7957968566",
             "7255520283",
             "7255520283",
             "59301114323",
@@ -10098,8 +11736,6 @@
             "7255520283",
             "7255520283",
             "5432523689",
-            "7255520283",
-            "7255520283",
             "7255520283",
             "7255520283",
             "7255520283",
@@ -10147,13 +11783,15 @@
             "7255520283",
             "211293470648",
             "7255520283",
+            "7255520283",
             "7360456890",
+            "7255520283",
             "7255520283",
             "7255520283",
             "7255520283",
             "7255520283"
           ],
-          "totalMatches": 531,
+          "totalMatches": 564,
           "sampleMatches": [
             "5538282352",
             "7566837099",
@@ -10178,11 +11816,68 @@
           ]
         }
       ],
-      "count": 340,
+      "count": 404,
       "risk": "REVIEW_AND_SANITIZE"
     },
     "medium": {
       "demoData": [
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "AI_GATEWAY_SETUP_GUIDE.md",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "00000000-0000-0000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "AI_GATEWAY_SETUP_GUIDE.md",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "AI_GATEWAY_SETUP_GUIDE.md",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "00000000-0000-0000-0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000-0000-000000000000"
+          ]
+        },
         {
           "category": "demoData",
           "name": "Demo/Placeholder Data",
@@ -10715,6 +12410,63 @@
           "risk": "LOW",
           "action": "VERIFY_SAFETY",
           "description": "Demo data that should be verified as safe",
+          "filePath": "lib/ai-cache.ts",
+          "lineNumbers": [
+            420
+          ],
+          "matches": [
+            "00000000-0000-0000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "lib/ai-cache.ts",
+          "lineNumbers": [
+            420
+          ],
+          "matches": [
+            "0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "lib/ai-cache.ts",
+          "lineNumbers": [
+            420
+          ],
+          "matches": [
+            "00000000-0000-0000-0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000-0000-000000000000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
           "filePath": "lib/modules.ts",
           "lineNumbers": [
             664
@@ -10748,6 +12500,63 @@
           "sampleMatches": [
             "user@example.com",
             "user@example.com"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "package.json",
+          "lineNumbers": [
+            90
+          ],
+          "matches": [
+            "00000000-0000-0000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "package.json",
+          "lineNumbers": [
+            90
+          ],
+          "matches": [
+            "0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "package.json",
+          "lineNumbers": [
+            90
+          ],
+          "matches": [
+            "00000000-0000-0000-0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000-0000-000000000000"
           ]
         },
         {
@@ -11284,6 +13093,63 @@
           "risk": "LOW",
           "action": "VERIFY_SAFETY",
           "description": "Demo data that should be verified as safe",
+          "filePath": "scripts/test-ai-gateway.js",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "00000000-0000-0000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "scripts/test-ai-gateway.js",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "scripts/test-ai-gateway.js",
+          "lineNumbers": [
+            87
+          ],
+          "matches": [
+            "00000000-0000-0000-0000-000000000000"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "00000000-0000-0000-0000-000000000000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
           "filePath": "scripts/test-entitlements.js",
           "lineNumbers": [
             18
@@ -11314,9 +13180,72 @@
           "sampleMatches": [
             "test@example.com"
           ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "supabase/migrations/20241220000008_ai_usage_tracking.sql",
+          "lineNumbers": [
+            267
+          ],
+          "matches": [
+            "00000000-0000-0000",
+            "00000000-0000-0000"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "00000000-0000-0000",
+            "00000000-0000-0000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "supabase/migrations/20241220000008_ai_usage_tracking.sql",
+          "lineNumbers": [
+            267
+          ],
+          "matches": [
+            "0000-000000000000",
+            "0000-000000000000"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "0000-000000000000",
+            "0000-000000000000"
+          ]
+        },
+        {
+          "category": "demoData",
+          "name": "Demo/Placeholder Data",
+          "severity": "MEDIUM",
+          "risk": "LOW",
+          "action": "VERIFY_SAFETY",
+          "description": "Demo data that should be verified as safe",
+          "filePath": "supabase/migrations/20241220000008_ai_usage_tracking.sql",
+          "lineNumbers": [
+            267
+          ],
+          "matches": [
+            "00000000-0000-0000-0000-000000000000",
+            "00000000-0000-0000-0000-000000000000"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "00000000-0000-0000-0000-000000000000",
+            "00000000-0000-0000-0000-000000000000"
+          ]
         }
       ],
-      "count": 56,
+      "count": 71,
       "risk": "VERIFY_SAFETY"
     },
     "low": {
@@ -11525,6 +13454,25 @@
           "risk": "NONE",
           "action": "NO_ACTION_NEEDED",
           "description": "Safe placeholder patterns that don't need action",
+          "filePath": "OBSERVABILITY_IMPLEMENTATION.md",
+          "lineNumbers": [
+            69
+          ],
+          "matches": [
+            "your_sentry_dsn_here"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "your_sentry_dsn_here"
+          ]
+        },
+        {
+          "category": "placeholders",
+          "name": "Placeholder Patterns",
+          "severity": "LOW",
+          "risk": "NONE",
+          "action": "NO_ACTION_NEEDED",
+          "description": "Safe placeholder patterns that don't need action",
           "filePath": "README_SETUP.md",
           "lineNumbers": [
             58,
@@ -11549,111 +13497,37 @@
           "description": "Safe placeholder patterns that don't need action",
           "filePath": "env.example",
           "lineNumbers": [
-            10,
-            16
-          ],
-          "matches": [
-            "sk_test_your_stripe_secret_key_here",
-            "pk_test_your_stripe_publishable_key_here"
-          ],
-          "totalMatches": 2,
-          "sampleMatches": [
-            "sk_test_your_stripe_secret_key_here",
-            "pk_test_your_stripe_publishable_key_here"
-          ]
-        },
-        {
-          "category": "placeholders",
-          "name": "Placeholder Patterns",
-          "severity": "LOW",
-          "risk": "NONE",
-          "action": "NO_ACTION_NEEDED",
-          "description": "Safe placeholder patterns that don't need action",
-          "filePath": "env.example",
-          "lineNumbers": [
-            68
-          ],
-          "matches": [
-            "SG.your_sendgrid_api_key_here"
-          ],
-          "totalMatches": 1,
-          "sampleMatches": [
-            "SG.your_sendgrid_api_key_here"
-          ]
-        },
-        {
-          "category": "placeholders",
-          "name": "Placeholder Patterns",
-          "severity": "LOW",
-          "risk": "NONE",
-          "action": "NO_ACTION_NEEDED",
-          "description": "Safe placeholder patterns that don't need action",
-          "filePath": "env.example",
-          "lineNumbers": [
-            68
-          ],
-          "matches": [
-            "SG.your_sendgrid_api_key_here"
-          ],
-          "totalMatches": 1,
-          "sampleMatches": [
-            "SG.your_sendgrid_api_key_here"
-          ]
-        },
-        {
-          "category": "placeholders",
-          "name": "Placeholder Patterns",
-          "severity": "LOW",
-          "risk": "NONE",
-          "action": "NO_ACTION_NEEDED",
-          "description": "Safe placeholder patterns that don't need action",
-          "filePath": "env.example",
-          "lineNumbers": [
-            26
-          ],
-          "matches": [
-            "https://your-project-id.supabase.co"
-          ],
-          "totalMatches": 1,
-          "sampleMatches": [
-            "https://your-project-id.supabase.co"
-          ]
-        },
-        {
-          "category": "placeholders",
-          "name": "Placeholder Patterns",
-          "severity": "LOW",
-          "risk": "NONE",
-          "action": "NO_ACTION_NEEDED",
-          "description": "Safe placeholder patterns that don't need action",
-          "filePath": "env.example",
-          "lineNumbers": [
-            10,
+            6,
+            8,
+            11,
             13,
             16,
-            19,
-            29,
-            32,
-            61,
-            68,
-            82
+            18,
+            21,
+            25,
+            35
           ],
           "matches": [
+            "your_supabase_url_here",
+            "your_supabase_anon_key_here",
+            "your_supabase_service_role_key_here",
+            "your_ai_gateway_api_key_here",
+            "your_openai_api_key_here",
+            "your_anthropic_api_key_here",
             "your_stripe_secret_key_here",
-            "your_webhook_secret_here",
             "your_stripe_publishable_key_here",
-            "your_portal_config_id_here",
-            "your_service_role_key_here",
-            "your_anon_key_here",
-            "your_sentry_dsn_here",
+            "your_stripe_webhook_secret_here",
             "your_sendgrid_api_key_here",
-            "your_jwt_secret_here"
+            "your_verified_sender_email_here",
+            "your_sentry_dsn_here",
+            "your_jwt_secret_here",
+            "your_encryption_key_here"
           ],
-          "totalMatches": 9,
+          "totalMatches": 14,
           "sampleMatches": [
-            "your_stripe_secret_key_here",
-            "your_webhook_secret_here",
-            "your_stripe_publishable_key_here"
+            "your_supabase_url_here",
+            "your_supabase_anon_key_here",
+            "your_supabase_service_role_key_here"
           ]
         },
         {
@@ -11673,6 +13547,25 @@
           "totalMatches": 1,
           "sampleMatches": [
             "postgresql://username:password@localhost"
+          ]
+        },
+        {
+          "category": "placeholders",
+          "name": "Placeholder Patterns",
+          "severity": "LOW",
+          "risk": "NONE",
+          "action": "NO_ACTION_NEEDED",
+          "description": "Safe placeholder patterns that don't need action",
+          "filePath": "scripts/README-smoke-tests.md",
+          "lineNumbers": [
+            60
+          ],
+          "matches": [
+            "your_token_here"
+          ],
+          "totalMatches": 1,
+          "sampleMatches": [
+            "your_token_here"
           ]
         },
         {
@@ -11879,6 +13772,28 @@
           "risk": "NONE",
           "action": "NO_ACTION_NEEDED",
           "description": "Safe placeholder patterns that don't need action",
+          "filePath": "scripts/smoke-test-config.env",
+          "lineNumbers": [
+            8,
+            11
+          ],
+          "matches": [
+            "your_auth_token_here",
+            "your_org_uuid_here"
+          ],
+          "totalMatches": 2,
+          "sampleMatches": [
+            "your_auth_token_here",
+            "your_org_uuid_here"
+          ]
+        },
+        {
+          "category": "placeholders",
+          "name": "Placeholder Patterns",
+          "severity": "LOW",
+          "risk": "NONE",
+          "action": "NO_ACTION_NEEDED",
+          "description": "Safe placeholder patterns that don't need action",
           "filePath": "scripts/supabase-backup.js",
           "lineNumbers": [
             106,
@@ -11901,7 +13816,7 @@
           "risk": "NONE",
           "action": "NO_ACTION_NEEDED",
           "description": "Safe placeholder patterns that don't need action",
-          "filePath": "supabase/migrations/20241220000000_security_lockdown.sql",
+          "filePath": "supabase/migrations/20241220000003_security_lockdown.sql",
           "lineNumbers": [
             152
           ],
@@ -11914,7 +13829,7 @@
           ]
         }
       ],
-      "count": 28,
+      "count": 27,
       "risk": "NO_ACTION_NEEDED"
     }
   },

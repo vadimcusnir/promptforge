@@ -1,0 +1,71 @@
+{
+  "startTime": "2025-08-30T08:14:19.851Z",
+  "tests": [
+    {
+      "prompt": "Hello, this is a test prompt. Please respond with a brief greeting.",
+      "model": "gpt-4o",
+      "success": false,
+      "latency": 685,
+      "error": "[object Object]",
+      "tokens": 0,
+      "cost": 0,
+      "provider": "ai-gateway"
+    },
+    {
+      "prompt": "What is artificial intelligence in simple terms?",
+      "model": "gpt-4o",
+      "success": false,
+      "latency": 245,
+      "error": "[object Object]",
+      "tokens": 0,
+      "cost": 0,
+      "provider": "ai-gateway"
+    },
+    {
+      "prompt": "Hello, this is a test prompt. Please respond with a brief greeting.",
+      "model": "gpt-4o",
+      "success": false,
+      "latency": 841,
+      "error": "Incorrect API key provided: sk-proj-********************************************************************************************************************************************************tDAA. You can find your API key at https://platform.openai.com/account/api-keys.",
+      "tokens": 0,
+      "cost": 0,
+      "provider": "openai"
+    },
+    {
+      "prompt": "What is artificial intelligence in simple terms?",
+      "model": "gpt-4o",
+      "success": false,
+      "latency": 326,
+      "error": "Incorrect API key provided: sk-proj-********************************************************************************************************************************************************tDAA. You can find your API key at https://platform.openai.com/account/api-keys.",
+      "tokens": 0,
+      "cost": 0,
+      "provider": "openai"
+    }
+  ],
+  "summary": {
+    "totalTests": 4,
+    "passed": 0,
+    "failed": 4,
+    "totalCost": 0,
+    "totalTokens": 0,
+    "averageLatency": 0
+  },
+  "endTime": "2025-08-30T08:14:25.961Z",
+  "duration": 6110,
+  "providerStats": {
+    "ai-gateway": {
+      "tests": 2,
+      "passed": 0,
+      "totalCost": 0,
+      "totalTokens": 0,
+      "totalLatency": 0
+    },
+    "openai": {
+      "tests": 2,
+      "passed": 0,
+      "totalCost": 0,
+      "totalTokens": 0,
+      "totalLatency": 0
+    }
+  }
+}

@@ -243,7 +243,7 @@ SEV-3 Triggers:
 ```bash
 # Pre-launch verification
 node scripts/check-db-state.js
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 
 # Start canary deployment
 node scripts/launch-control.js --start-canary
@@ -278,7 +278,7 @@ node scripts/launch-control.js --traffic 5
 node scripts/api-smoke-tests.js
 
 # Check system health
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 
 # Monitor logs
 tail -f logs/application.log | grep ERROR

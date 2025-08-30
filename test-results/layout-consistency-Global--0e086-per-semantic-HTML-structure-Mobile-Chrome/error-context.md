@@ -1,0 +1,306 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "PromptForge - Go to homepage" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e8] [cursor=pointer]
+        - generic [ref=e11] [cursor=pointer]: Forge
+      - button "Open menu" [ref=e12]:
+        - img [ref=e13]
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Industrial Prompt Engineering
+          - heading "Your Operational Prompt Generator" [level=1] [ref=e20]:
+            - text: Your Operational
+            - generic [ref=e21]: Prompt Generator
+          - paragraph [ref=e22]:
+            - text: 50 modules. 7 vectors. Export in <60s.
+            - text: Build auditable, reproducible prompt systems for professional workflows.
+        - generic [ref=e23]:
+          - button "Start using PromptForge generator" [ref=e24] [cursor=pointer]:
+            - text: Start the Forge
+            - img [ref=e25] [cursor=pointer]
+          - button "View a live demonstration" [ref=e27] [cursor=pointer]: View Demo
+        - generic [ref=e28]:
+          - generic [ref=e29]: TTA < 60s
+          - generic [ref=e31]: Score ≥ 80
+          - generic [ref=e33]: Export .md/.json/.pdf
+      - generic [ref=e35]:
+        - heading "// PROMPTFORGE Live Generation" [level=2] [ref=e36]
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]: Enter Your Topic
+            - textbox "e.g. marketing strategy" [ref=e40]
+            - generic [ref=e41]:
+              - generic [ref=e42] [cursor=pointer]: marketing strategy
+              - generic [ref=e43] [cursor=pointer]: code review
+              - generic [ref=e44] [cursor=pointer]: content creation
+              - generic [ref=e45] [cursor=pointer]: user onboarding
+              - generic [ref=e46] [cursor=pointer]: data analysis
+            - generic [ref=e47]:
+              - generic [ref=e48]: "Prompt Type:"
+              - generic [ref=e49]:
+                - button "Preview" [ref=e50]
+                - button "Full" [ref=e51]
+            - button "⚡ Generate Preview Prompt" [disabled] [ref=e52]
+          - generic [ref=e53]:
+            - generic [ref=e54]:
+              - text: Generated Professional Prompt
+              - generic [ref=e55]: (Preview Mode)
+            - textbox "Your professional prompt will appear here..." [ref=e56]
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - text: "⚙️ Engine:"
+            - code [ref=e59]: PromptForge Engine (TypeScript)
+          - generic [ref=e60]:
+            - text: "🟢 Modules Active:"
+            - generic [ref=e61]: 50/50
+          - generic [ref=e62]:
+            - text: "⚡ Success Rate:"
+            - generic [ref=e63]: 98.7%
+          - generic [ref=e64]:
+            - text: "📊 LCP Optimized:"
+            - generic [ref=e65]: Preview Mode
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - heading "How It Works" [level=2] [ref=e69]
+          - paragraph [ref=e70]: Three steps to professional prompt generation
+        - generic [ref=e71]:
+          - generic [ref=e73]:
+            - img [ref=e75]
+            - generic [ref=e78]: Configure 7D Parameters
+            - generic [ref=e79]: Set domain, scale, urgency, complexity, resources, application, and output format
+          - generic [ref=e81]:
+            - img [ref=e83]
+            - generic [ref=e85]: Run Selected Module
+            - generic [ref=e86]: Choose from 50 specialized modules across 7 semantic vectors for your use case
+          - generic [ref=e88]:
+            - img [ref=e90]
+            - generic [ref=e93]: Export Professional Bundle
+            - generic [ref=e94]: Get structured outputs with checksums, manifests, and telemetry data
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - heading "50 Industrial Modules" [level=2] [ref=e98]
+          - paragraph [ref=e99]: Organized across 7 semantic vectors for maximum precision
+        - generic [ref=e100]:
+          - button "SOP Forge module - Strategic vector" [ref=e101] [cursor=pointer]:
+            - generic [ref=e102] [cursor=pointer]:
+              - generic [ref=e103] [cursor=pointer]: M01
+              - generic [ref=e104] [cursor=pointer]: SOP Forge
+              - generic [ref=e105] [cursor=pointer]: Strategic
+          - button "Risk Reversal module - Strategic vector" [ref=e106] [cursor=pointer]:
+            - generic [ref=e107] [cursor=pointer]:
+              - generic [ref=e108] [cursor=pointer]: M07
+              - generic [ref=e109] [cursor=pointer]: Risk Reversal
+              - generic [ref=e110] [cursor=pointer]: Strategic
+          - button "Funnel Nota module - Rhetoric vector" [ref=e111] [cursor=pointer]:
+            - generic [ref=e112] [cursor=pointer]:
+              - generic [ref=e113] [cursor=pointer]: M11
+              - generic [ref=e114] [cursor=pointer]: Funnel Nota
+              - generic [ref=e115] [cursor=pointer]: Rhetoric
+          - button "Visibility Diag module - Strategic vector" [ref=e116] [cursor=pointer]:
+            - generic [ref=e117] [cursor=pointer]:
+              - generic [ref=e118] [cursor=pointer]: M12
+              - generic [ref=e119] [cursor=pointer]: Visibility Diag
+              - generic [ref=e120] [cursor=pointer]: Strategic
+          - button "Pricing Psych module - Rhetoric vector" [ref=e121] [cursor=pointer]:
+            - generic [ref=e122] [cursor=pointer]:
+              - generic [ref=e123] [cursor=pointer]: M13
+              - generic [ref=e124] [cursor=pointer]: Pricing Psych
+              - generic [ref=e125] [cursor=pointer]: Rhetoric
+          - button "Lead Gen module - Content vector" [ref=e126] [cursor=pointer]:
+            - generic [ref=e127] [cursor=pointer]:
+              - generic [ref=e128] [cursor=pointer]: M22
+              - generic [ref=e129] [cursor=pointer]: Lead Gen
+              - generic [ref=e130] [cursor=pointer]: Content
+          - button "Personal PR module - Content vector" [ref=e131] [cursor=pointer]:
+            - generic [ref=e132] [cursor=pointer]:
+              - generic [ref=e133] [cursor=pointer]: M24
+              - generic [ref=e134] [cursor=pointer]: Personal PR
+              - generic [ref=e135] [cursor=pointer]: Content
+          - button "Cohort Test module - Analytics vector" [ref=e136] [cursor=pointer]:
+            - generic [ref=e137] [cursor=pointer]:
+              - generic [ref=e138] [cursor=pointer]: M32
+              - generic [ref=e139] [cursor=pointer]: Cohort Test
+              - generic [ref=e140] [cursor=pointer]: Analytics
+          - button "Content Heat module - Branding vector" [ref=e141] [cursor=pointer]:
+            - generic [ref=e142] [cursor=pointer]:
+              - generic [ref=e143] [cursor=pointer]: M35
+              - generic [ref=e144] [cursor=pointer]: Content Heat
+              - generic [ref=e145] [cursor=pointer]: Branding
+          - button "Crisis Mgmt module - Crisis vector" [ref=e146] [cursor=pointer]:
+            - generic [ref=e147] [cursor=pointer]:
+              - generic [ref=e148] [cursor=pointer]: M40
+              - generic [ref=e149] [cursor=pointer]: Crisis Mgmt
+              - generic [ref=e150] [cursor=pointer]: Crisis
+          - button "Learning Path module - Cognitive vector" [ref=e151] [cursor=pointer]:
+            - generic [ref=e152] [cursor=pointer]:
+              - generic [ref=e153] [cursor=pointer]: M45
+              - generic [ref=e154] [cursor=pointer]: Learning Path
+              - generic [ref=e155] [cursor=pointer]: Cognitive
+          - button "Brand Voice module - Branding vector" [ref=e156] [cursor=pointer]:
+            - generic [ref=e157] [cursor=pointer]:
+              - generic [ref=e158] [cursor=pointer]: M50
+              - generic [ref=e159] [cursor=pointer]: Brand Voice
+              - generic [ref=e160] [cursor=pointer]: Branding
+        - button "View all 50 industrial modules" [ref=e162]:
+          - text: View All 50 Modules
+          - img [ref=e163]
+      - generic [ref=e167]:
+        - generic [ref=e168]:
+          - heading "Choose Your Plan" [level=2] [ref=e169]
+          - paragraph [ref=e170]: Scale from pilot to enterprise with clear upgrade paths
+        - generic [ref=e171]:
+          - generic [ref=e172]:
+            - generic [ref=e173]:
+              - generic [ref=e174]: Pilot
+              - generic [ref=e175]: Perfect for getting started
+              - generic [ref=e176]: Free
+            - generic [ref=e177]:
+              - list [ref=e178]:
+                - listitem [ref=e179]:
+                  - img [ref=e180]
+                  - generic [ref=e182]: Modules M01-M10
+                - listitem [ref=e183]:
+                  - img [ref=e184]
+                  - generic [ref=e186]: Export .txt, .md
+                - listitem [ref=e187]:
+                  - img [ref=e188]
+                  - generic [ref=e190]: Local history
+                - listitem [ref=e191]:
+                  - img [ref=e192]
+                  - generic [ref=e194]: Community support
+              - button "Start free pilot plan" [ref=e195]: Start Free
+          - generic [ref=e196]:
+            - generic [ref=e198]: Most Popular
+            - generic [ref=e199]:
+              - generic [ref=e200]: Pro
+              - generic [ref=e201]: For professionals and teams
+              - generic [ref=e202]:
+                - text: $49
+                - generic [ref=e203]: /month
+            - generic [ref=e204]:
+              - list [ref=e205]:
+                - listitem [ref=e206]:
+                  - img [ref=e207]
+                  - generic [ref=e209]: All 50 modules
+                - listitem [ref=e210]:
+                  - img [ref=e211]
+                  - generic [ref=e213]: Export .pdf, .json
+                - listitem [ref=e214]:
+                  - img [ref=e215]
+                  - generic [ref=e217]: Live Test Engine
+                - listitem [ref=e218]:
+                  - img [ref=e219]
+                  - generic [ref=e221]: Cloud history
+                - listitem [ref=e222]:
+                  - img [ref=e223]
+                  - generic [ref=e225]: Advanced Evaluator
+              - button "Start Pro plan trial" [ref=e226]: Start Pro Trial
+          - generic [ref=e227]:
+            - generic [ref=e228]:
+              - generic [ref=e229]: Enterprise
+              - generic [ref=e230]: For organizations at scale
+              - generic [ref=e231]:
+                - text: $299
+                - generic [ref=e232]: /month
+            - generic [ref=e233]:
+              - list [ref=e234]:
+                - listitem [ref=e235]:
+                  - img [ref=e236]
+                  - generic [ref=e238]: Everything in Pro
+                - listitem [ref=e239]:
+                  - img [ref=e240]
+                  - generic [ref=e242]: Public API access
+                - listitem [ref=e243]:
+                  - img [ref=e244]
+                  - generic [ref=e246]: Bundle.zip exports
+                - listitem [ref=e247]:
+                  - img [ref=e248]
+                  - generic [ref=e250]: White-label options
+                - listitem [ref=e251]:
+                  - img [ref=e252]
+                  - generic [ref=e254]: 5 seats included
+              - button "Contact Sales" [ref=e255]
+      - generic [ref=e257]:
+        - heading "Ready to Build Industrial-Grade Prompts?" [level=2] [ref=e258]
+        - paragraph [ref=e259]: Join professionals who demand auditable, reproducible prompt systems.
+        - generic [ref=e260]:
+          - button "Start Building Now" [ref=e261]:
+            - text: Start Building Now
+            - img [ref=e262]
+          - button "Schedule Demo" [ref=e264]
+  - contentinfo [ref=e265]:
+    - generic [ref=e266]:
+      - generic [ref=e267]:
+        - generic [ref=e268]:
+          - heading "Legal" [level=3] [ref=e269]
+          - list [ref=e270]:
+            - listitem [ref=e271]:
+              - link "Legal Center" [ref=e272] [cursor=pointer]:
+                - /url: /legal
+            - listitem [ref=e273]:
+              - link "Privacy Policy" [ref=e274] [cursor=pointer]:
+                - /url: /legal/privacy
+            - listitem [ref=e275]:
+              - link "Terms of Use" [ref=e276] [cursor=pointer]:
+                - /url: /legal/terms
+            - listitem [ref=e277]:
+              - link "Contact" [ref=e278] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e279]:
+          - heading "Navigation" [level=3] [ref=e280]
+          - list [ref=e281]:
+            - listitem [ref=e282]:
+              - link "About" [ref=e283] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e284]:
+              - link "Blog" [ref=e285] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e286]:
+              - link "Docs" [ref=e287] [cursor=pointer]:
+                - /url: /docs
+            - listitem [ref=e288]:
+              - link "Guides" [ref=e289] [cursor=pointer]:
+                - /url: /guides
+            - listitem [ref=e290]:
+              - link "Modules" [ref=e291] [cursor=pointer]:
+                - /url: /modules
+            - listitem [ref=e292]:
+              - link "Pricing" [ref=e293] [cursor=pointer]:
+                - /url: /pricing
+        - generic [ref=e294]:
+          - heading "Connect" [level=3] [ref=e295]
+          - generic [ref=e296]:
+            - img [ref=e298]
+            - generic [ref=e300]: Industrial Prompt Engineering
+          - paragraph [ref=e301]: Forging precision in the art of prompt engineering. Every output auditable, every process reproducible.
+      - generic [ref=e303]:
+        - generic [ref=e304]: © PromptForge™ 2025. All rights reserved.
+        - generic [ref=e305]: "\"Precision forged through discipline, excellence through iteration.\""
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e306]
+  - generic [ref=e309]:
+    - generic [ref=e310]:
+      - img [ref=e311]
+      - generic [ref=e313]:
+        - heading "We use cookies to enhance your experience" [level=3] [ref=e314]
+        - paragraph [ref=e315]: We use cookies and similar technologies to help personalize content, provide social media features, and analyze our traffic. We also share information about your use of our site with our social media, advertising, and analytics partners who may combine it with other information you've provided to them.
+        - generic [ref=e316]:
+          - link "Privacy Policy" [ref=e317] [cursor=pointer]:
+            - /url: /legal/privacy
+          - link "Terms of Use" [ref=e318] [cursor=pointer]:
+            - /url: /legal/terms
+    - generic [ref=e319]:
+      - button "Accept All" [ref=e320]
+      - button "Necessary Only" [ref=e321]
+      - button "Preferences" [ref=e322]:
+        - img [ref=e323]
+        - text: Preferences
+```

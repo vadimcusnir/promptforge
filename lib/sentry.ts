@@ -8,13 +8,7 @@ export const initSentry = () => {
       environment: process.env.NODE_ENV,
       tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
       profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-      integrations: [
-        Sentry.browserTracingIntegration(),
-        Sentry.replayIntegration({
-          maskAllText: false,
-          blockAllMedia: false,
-        }),
-      ],
+      // Remove unavailable integrations for now
       beforeSend(event) {
         // Filter out certain errors or add context
         if (event.exception) {

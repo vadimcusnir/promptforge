@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
+// import { z } from 'zod' // Unused import
 import { executeExportPipeline, validateExportRequest, ExportFormat } from '@/lib/export-pipeline'
 import { join } from 'path'
 import { randomUUID } from 'crypto'
@@ -7,14 +7,14 @@ import { randomUUID } from 'crypto'
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-// Export request schema
-const exportRequestSchema = z.object({
-  runId: z.string().uuid('Invalid run ID'),
-  format: z.enum(['pdf', 'json', 'txt', 'md']),
-  orgId: z.string().uuid('Invalid organization ID'),
-  includeMetadata: z.boolean().default(true),
-  includeHistory: z.boolean().default(false)
-})
+// Export request schema (commented out for now)
+// const exportRequestSchema = z.object({
+//   runId: z.string().uuid('Invalid run ID'),
+//   format: z.enum(['pdf', 'json', 'txt', 'md']),
+//   orgId: z.string().uuid('Invalid organization ID'),
+//   includeMetadata: z.boolean().default(true),
+//   includeHistory: z.boolean().default(false)
+// })
 
 // Lazy Supabase client creation
 async function getSupabase() {
@@ -29,7 +29,7 @@ async function getSupabase() {
         }),
         insert: () => Promise.resolve({ error: null })
       })
-    } as any
+    } as unknown
   }
   
   const { createClient } = await import('@supabase/supabase-js')
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Supabase client
-    const supabase = await getSupabase()
+    const supabase = await getSupabase() as any
 
     // Get user entitlements
     const { data: entitlements, error: entitlementsError } = await supabase
@@ -216,7 +216,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Create Supabase client
-    const supabase = await getSupabase()
+    const supabase = await getSupabase() as any
 
     // Get export record
     const { data: exportRecord, error: dbError } = await supabase

@@ -1,7 +1,7 @@
 // P0 Launch Configuration with fallbacks for missing environment variables
 export const config = {
   // Base URLs
-  baseUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://promptforge.ai',
+  baseUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://chatgpt-prompting.com',
   
   // Supabase (optional for P0)
   supabase: {

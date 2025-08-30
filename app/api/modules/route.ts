@@ -14,23 +14,23 @@ const querySchema = z.object({
   offset: z.coerce.number().min(0).default(0)
 })
 
-// Response schema
-const moduleSchema = z.object({
-  id: z.string(),
-  module_code: z.string(),
-  name: z.string(),
-  description: z.string(),
-  category: z.string(),
-  domain_slug: z.string(),
-  complexity: z.string(),
-  estimated_time_minutes: z.number(),
-  tags: z.array(z.string()),
-  template_prompt: z.string(),
-  example_output: z.string(),
-  best_practices: z.array(z.string()),
-  created_at: z.string(),
-  updated_at: z.string()
-})
+// Response schema (commented out for now)
+// const moduleSchema = z.object({
+//   id: z.string(),
+//   module_code: z.string(),
+//   name: z.string(),
+//   description: z.string(),
+//   category: z.string(),
+//   domain_slug: z.string(),
+//   complexity: z.string(),
+//   estimated_time_minutes: z.number(),
+//   tags: z.array(z.string()),
+//   template_prompt: z.string(),
+//   example_output: z.string(),
+//   best_practices: z.array(z.string()),
+//   created_at: z.string(),
+//   updated_at: z.string()
+// })
 
 // Fallback modules data for when database is not available
 const fallbackModules = [

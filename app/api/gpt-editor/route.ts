@@ -5,6 +5,7 @@ import { validateOrgMembership } from '@/lib/billing/entitlements'
 import { createRateLimit, RATE_LIMITS, getClientIdentifier } from '@/lib/rate-limit'
 import { logTelemetryEvent, hashUserId, generate7DSignature as generate7DSignatureTelemetry } from '@/lib/telemetry'
 import { randomUUID } from 'crypto'
+// import { aiGateway, aiUtils } from '@/lib/ai-gateway' // Unused imports
 
 const editorRequestSchema = z.object({
   prompt: z.string().min(64, 'Prompt must be at least 64 characters').max(10000, 'Prompt too long'),
@@ -20,18 +21,18 @@ const editorRequestSchema = z.object({
   orgId: z.string().uuid('Valid organization ID required')
 })
 
-const editorResponseSchema = z.object({
-  success: z.boolean(),
-  editedPrompt: z.string().optional(),
-  scores: z.object({
-    clarity: z.number().min(0).max(100),
-    specificity: z.number().min(0).max(100),
-    completeness: z.number().min(0).max(100),
-    overall: z.number().min(0).max(100)
-  }).optional(),
-  suggestions: z.array(z.string()).optional(),
-  error: z.string().optional()
-})
+// const editorResponseSchema = z.object({
+//   success: z.boolean(),
+//   editedPrompt: z.string().optional(),
+//   scores: z.object({
+//     clarity: z.number().min(0).max(100),
+//     specificity: z.number().min(0).max(100),
+//     completeness: z.number().min(0).max(100),
+//     overall: z.number().min(0).max(100)
+//   }).optional(),
+//   suggestions: z.array(z.string()).optional(),
+//   error: z.string().optional()
+// })
 
 export async function POST(request: NextRequest) {
   try {
@@ -259,8 +260,8 @@ function generateOptimizedPrompt(
 // Generate improvement suggestions
 function generateSuggestions(
   scores: { clarity: number; specificity: number; completeness: number; overall: number },
-  originalPrompt: string,
-  editedPrompt: string
+  _originalPrompt: string,
+  _editedPrompt: string
 ): string[] {
   const suggestions = []
   

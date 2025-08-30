@@ -223,8 +223,7 @@ function getClientIdentifier(request: NextRequest): string {
   }
   
   // Fall back to IP address
-  const ip = request.ip || 
-             request.headers.get('x-forwarded-for') || 
+  const ip = request.headers.get('x-forwarded-for') || 
              request.headers.get('x-real-ip') ||
              'unknown'
   
@@ -273,7 +272,7 @@ export async function enhancedRateLimit(request: NextRequest): Promise<NextRespo
 // Cleanup function for Redis connections
 export async function cleanupRateLimit(): Promise<void> {
   if (redis) {
-    await redis.quit()
+    // Redis client doesn't need explicit cleanup in this implementation
     redis = null
   }
 }

@@ -36,7 +36,7 @@
 ```bash
 # Verify all systems are healthy
 node scripts/check-db-state.js
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 node scripts/api-smoke-tests.js --pre-launch
 ```
 
@@ -86,7 +86,7 @@ node scripts/launch-control.js --start-canary
 # /api/analytics: 120 req/min/org
 
 # Verify rate limiting is active
-curl -X POST https://api.promptforge.ai/api/gpt-test \
+curl -X POST https://api.chatgpt-prompting.com/api/gpt-test \
   -H "Content-Type: application/json" \
   -d '{"test": "rate-limit"}' \
   -H "x-organization-id: test-org"
@@ -109,7 +109,7 @@ curl -X POST https://api.promptforge.ai/api/gpt-test \
 #### Testing Fallbacks
 ```bash
 # Test simulated mode
-curl -X POST https://api.promptforge.ai/api/gpt-test \
+curl -X POST https://api.chatgpt-prompting.com/api/gpt-test \
   -H "Content-Type: application/json" \
   -d '{"mode": "simulated"}'
 
@@ -153,7 +153,7 @@ node scripts/launch-control.js --monitor --stabilization
 bash scripts/emergency-rollback.sh "Emergency rollback triggered"
 
 # Verify rollback success
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 ```
 
 #### Gradual Rollback

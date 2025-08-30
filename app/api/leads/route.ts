@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   // Temporarily disabled for P0 launch
   return NextResponse.json(
     { 
@@ -11,7 +11,7 @@ export async function POST(_request: NextRequest) {
   );
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   // Temporarily disabled for P0 launch
   return NextResponse.json(
     { 

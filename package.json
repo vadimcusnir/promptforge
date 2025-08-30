@@ -82,9 +82,21 @@
     "test:launch:rollback": "bash scripts/emergency-rollback.sh",
     "test:launch:traffic": "node scripts/launch-control.js --traffic",
     "test:launch:validate": "node scripts/launch-control.js --validate",
-    "test:launch:complete": "node scripts/launch-control.js --complete"
+    "test:launch:complete": "node scripts/launch-control.js --complete",
+    "test:ai-gateway": "node scripts/test-ai-gateway.js",
+    "test:ai-gateway-simple": "node scripts/test-ai-gateway-simple.js",
+    "test:ai-gateway-correct": "node scripts/test-ai-gateway-correct.js",
+    "ai:cost-estimate": "curl -X GET 'http://localhost:3000/api/ai-analytics/cost-estimate?promptLength=100&expectedResponseLength=500'",
+    "ai:usage-stats": "curl -X GET 'http://localhost:3000/api/ai-analytics/usage?orgId=00000000-0000-0000-0000-000000000000&days=30'",
+    "ai:providers": "curl -X GET 'http://localhost:3000/api/ai-providers?action=list'",
+    "ai:cache-stats": "curl -X GET 'http://localhost:3000/api/ai-cache?action=stats'",
+    "ai:cache-clear": "curl -X DELETE 'http://localhost:3000/api/ai-cache'",
+    "ai:migrations": "node scripts/apply-ai-migrations.js",
+    "ai:verify-tables": "node scripts/verify-ai-tables.js"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.9",
+    "@ai-sdk/openai": "^2.0.23",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -117,10 +129,13 @@
     "@sentry/nextjs": "^7.100.1",
     "@stripe/stripe-js": "^7.9.0",
     "@supabase/supabase-js": "latest",
+    "@upstash/redis": "^1.35.3",
+    "ai": "^5.0.28",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
+    "critters": "^0.0.25",
     "date-fns": "4.1.0",
     "dompurify": "^3.0.9",
     "dotenv": "^17.2.1",
@@ -145,7 +160,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.20.5",
     "vaul": "^0.9.9",
-    "zod": "3.25.67"
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",

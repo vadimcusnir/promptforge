@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { securityMonitor } from '@/lib/security/security-monitor'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get security metrics for the last 24 hours
     const metrics = await securityMonitor.getSecurityMetrics(24)

@@ -31,7 +31,7 @@ const nextConfig = {
     },
   },
   // Force dynamic rendering for all pages to avoid useSearchParams issues
-  output: 'standalone',
+  // output: 'standalone', // Commented out to fix pnpm start issues
   // Skip API routes during build to prevent static generation errors
   async rewrites() {
     if (process.env.NODE_ENV === 'production') {
@@ -48,7 +48,7 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   // Performance optimizations
-  swcMinify: true,
+  // swcMinify: true, // Removed - deprecated in Next.js 15
   compress: true,
   poweredByHeader: false,
   generateEtags: false,

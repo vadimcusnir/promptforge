@@ -41,7 +41,7 @@ vercel ls --prod
 # - Database: Supabase Dashboard
 
 # 4. Assess traffic and error patterns
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 ```
 
 ### 2. SEV-1 Response (Critical)
@@ -67,7 +67,7 @@ curl -X POST $SLACK_WEBHOOK -H "Content-Type: application/json" -d '{
 
 # 3. Check rollback success
 sleep 30
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 
 # 4. Verify external services
 curl -s https://api.openai.com/v1/models
@@ -94,7 +94,7 @@ vercel ls --prod | head -10
 tail -100 logs/application.log | grep ERROR
 
 # 5. Check if rollback is needed
-if [ $(curl -s https://api.promptforge.ai/health | jq -r '.error_rate') -gt 0.1 ]; then
+if [ $(curl -s https://api.chatgpt-prompting.com/health | jq -r '.error_rate') -gt 0.1 ]; then
   echo "Error rate > 10%, considering rollback"
   bash scripts/emergency-rollback.sh "SEV-2: High error rate"
 fi
@@ -108,7 +108,7 @@ fi
 # 1. Monitor metrics for 1 hour
 for i in {1..60}; do
   echo "$(date) - Check $i/60"
-  curl -s https://api.promptforge.ai/health | jq .
+  curl -s https://api.chatgpt-prompting.com/health | jq .
   sleep 60
 done
 
@@ -133,7 +133,7 @@ bash scripts/emergency-rollback.sh "Emergency rollback triggered"
 
 # 2. Verify rollback success
 sleep 10
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 
 # 3. Check traffic routing
 # Verify traffic is routed to stable version
@@ -229,13 +229,13 @@ curl -X PATCH https://api.statuspage.io/v1/pages/$PAGE_ID/incidents/$INCIDENT_ID
 
 ```bash
 # 1. Error Rate
-curl -s https://api.promptforge.ai/health | jq -r '.error_rate'
+curl -s https://api.chatgpt-prompting.com/health | jq -r '.error_rate'
 
 # 2. Response Time
-curl -s https://api.promptforge.ai/health | jq -r '.avg_response_time'
+curl -s https://api.chatgpt-prompting.com/health | jq -r '.avg_response_time'
 
 # 3. Throughput
-curl -s https://api.promptforge.ai/health | jq -r '.requests_per_minute'
+curl -s https://api.chatgpt-prompting.com/health | jq -r '.requests_per_minute'
 
 # 4. Database Health
 node scripts/check-db-state.js
@@ -293,7 +293,7 @@ cpu_usage > 80%
 
 ```bash
 # Check service health
-curl -s https://api.promptforge.ai/health | jq .
+curl -s https://api.chatgpt-prompting.com/health | jq .
 
 # Run smoke tests
 node scripts/api-smoke-tests.js

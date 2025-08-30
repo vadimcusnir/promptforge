@@ -47,14 +47,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://promptforge.ai'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://chatgpt-prompting.com'),
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || 'https://promptforge.ai',
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || 'https://chatgpt-prompting.com',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://promptforge.ai',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://chatgpt-prompting.com',
     title: 'PromptForge - Industrial Prompt Engineering Platform',
     description: 'Your operational prompt generator. 50 modules, 7 vectors, export in <60s. Build auditable, reproducible prompt systems.',
     siteName: 'PromptForge',
@@ -282,32 +282,18 @@ export default function RootLayout({
         <meta name="theme-color" content="#0e0e0e" />
         <meta name="msapplication-TileColor" content="#d1a954" />
         
-        {/* Google Analytics 4 - Only load if properly configured - defer for performance */}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && 
-         process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX' && (
-          <>
-                          <script
-                async
-                defer
-                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-              />
-              <script
-                defer
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
-                      page_title: document.title,
-                      page_location: window.location.href,
-                      send_page_view: true
-                    });
-                  `,
-                }}
-              />
-          </>
-        )}
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGZR6E2GY4"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-EGZR6E2GY4');
+            `,
+          }}
+        />
         
         {/* Sentry - Configuration files handle initialization */}
         {/* sentry.client.config.ts, sentry.server.config.ts, sentry.edge.config.ts */}

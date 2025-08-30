@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: 'PromptForge v3 Launch - Industrial Prompt Engineering Platform',
     description: 'Join the launch of PromptForge v3 - the most advanced industrial prompt engineering platform.',
     type: 'website',
-    url: 'https://promptforge.ai/launch',
+    url: 'https://chatgpt-prompting.com/launch',
     images: ['/og-launch.png']
   }
 }

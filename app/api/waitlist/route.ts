@@ -23,7 +23,7 @@ const waitlistSchema = z.object({
             select: () => Promise.resolve({ data: null, error: null })
           })
         })
-      } as any
+      } as unknown
     }
     
     const { createClient } = await import('@supabase/supabase-js')
@@ -35,7 +35,7 @@ const waitlistSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await getSupabase()
+    const supabase = await getSupabase() as any
 
     const { name, email } = await request.json()
 
