@@ -3,30 +3,30 @@ import type { NextRequest } from 'next/server'
 import { wafMiddleware } from '@/lib/security/waf-middleware'
 import { redirectTelemetry } from '@/lib/redirect-telemetry-edge'
 
-// Legacy slug mappings for module redirects
+// Legacy slug mappings for module redirects (legacy slug -> module ID)
 const LEGACY_SLUG_MAPPINGS: Record<string, string> = {
-  'risk-and-trust-reversal': 'trust-reversal-protocol',
-  'crisis-communication': 'crisis-communication-playbook',
-  'social-media-calendar': 'social-content-grid',
-  'content-calendar-optimizer': 'social-content-grid', // M14 fusion
-  'landing-page-optimizer': 'landing-page-alchemist',
-  'influencer-partnership-framework': 'influence-partnership-frame',
-  'content-performance-analyzer': 'content-analytics-dashboard',
-  'content-personalization-engine': 'momentum-campaign-builder',
-  'database-design-optimizer': 'data-schema-optimizer',
-  'microservices-architecture': 'microservices-grid',
-  'security-architecture-framework': 'security-fortress-frame',
-  'performance-optimization-engine': 'performance-engine',
-  'container-orchestration-strategy': 'orchestration-matrix',
-  'cloud-infrastructure-architect': 'cloud-infra-map',
-  'sales-process-optimizer': 'sales-flow-architect',
-  'sales-operations-framework': 'sales-flow-architect', // M31 fusion
-  'sales-enablement-framework': 'enablement-frame',
-  'sales-intelligence-framework': 'negotiation-dynamics',
-  'quality-management-system': 'quality-system-map',
-  'supply-chain-optimizer': 'supply-flow-optimizer',
-  'change-management-framework': 'change-force-field',
-  'executive-prompt-report': 'executive-prompt-dossier'
+  'risk-and-trust-reversal': 'M07', // TRUST REVERSAL PROTOCOL™
+  'crisis-communication': 'M10', // CRISIS COMMUNICATION PLAYBOOK™
+  'social-media-calendar': 'M14', // SOCIAL CONTENT GRID™
+  'content-calendar-optimizer': 'M14', // SOCIAL CONTENT GRID™ (fusion)
+  'landing-page-optimizer': 'M15', // LANDING PAGE ALCHEMIST™
+  'influencer-partnership-framework': 'M17', // INFLUENCE PARTNERSHIP FRAME™
+  'content-performance-analyzer': 'M18', // CONTENT ANALYTICS DASHBOARD™
+  'content-personalization-engine': 'M19', // AUDIENCE SEGMENT PERSONALIZER™
+  'database-design-optimizer': 'M21', // DATA SCHEMA OPTIMIZER™
+  'microservices-architecture': 'M22', // MICROSERVICES GRID™
+  'security-architecture-framework': 'M23', // SECURITY FORTRESS FRAME™
+  'performance-optimization-engine': 'M24', // PERFORMANCE ENGINE™
+  'container-orchestration-strategy': 'M25', // ORCHESTRATION MATRIX™
+  'cloud-infrastructure-architect': 'M26', // CLOUD INFRA MAP™
+  'sales-process-optimizer': 'M31', // SALES FLOW ARCHITECT™
+  'sales-operations-framework': 'M31', // SALES FLOW ARCHITECT™ (fusion)
+  'sales-enablement-framework': 'M32', // ENABLEMENT FRAME™
+  'sales-intelligence-framework': 'M33', // NEGOTIATION DYNAMICS™
+  'quality-management-system': 'M41', // QUALITY SYSTEM MAP™
+  'supply-chain-optimizer': 'M42', // SUPPLY FLOW OPTIMIZER™
+  'change-management-framework': 'M43', // CHANGE FORCE FIELD™
+  'executive-prompt-report': 'M50' // EXECUTIVE PROMPT DOSSIER™
 }
 
 export async function middleware(request: NextRequest) {
@@ -54,14 +54,14 @@ export async function middleware(request: NextRequest) {
     // Check if this is a legacy slug that needs redirecting
     if (LEGACY_SLUG_MAPPINGS[slug]) {
       console.log('Found legacy slug, redirecting:', slug, '->', LEGACY_SLUG_MAPPINGS[slug])
-      const newSlug = LEGACY_SLUG_MAPPINGS[slug]
+      const moduleId = LEGACY_SLUG_MAPPINGS[slug]
       const newUrl = new URL(request.url)
       
-      // Replace the legacy slug with the new slug
+      // Replace the legacy slug with the module ID
       if (pathname.startsWith('/modules/')) {
-        newUrl.pathname = pathname.replace(`/modules/${slug}`, `/modules/${newSlug}`)
+        newUrl.pathname = pathname.replace(`/modules/${slug}`, `/modules/${moduleId}`)
       } else if (pathname.startsWith('/generator')) {
-        newUrl.searchParams.set('module', newSlug)
+        newUrl.searchParams.set('module', moduleId)
       }
       
       // Track redirect for telemetry
