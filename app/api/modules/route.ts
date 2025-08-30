@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Check if Supabase is configured
-    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       console.warn('Supabase not configured, returning fallback modules')
       return NextResponse.json({
         success: true,
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
     // Import Supabase client only when needed
     const { createClient } = await import('@supabase/supabase-js')
     const supabase = createClient(
-      process.env.SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     )
 
@@ -221,7 +221,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if Supabase is configured
-    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       console.warn('Supabase not configured, returning fallback module')
       const fallbackModule = fallbackModules.find(m => m.module_code === module_code)
       if (fallbackModule) {
@@ -240,7 +240,7 @@ export async function POST(request: NextRequest) {
     // Import Supabase client only when needed
     const { createClient } = await import('@supabase/supabase-js')
     const supabase = createClient(
-      process.env.SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     )
 

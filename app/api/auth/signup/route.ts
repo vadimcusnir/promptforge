@@ -16,7 +16,7 @@ const signupSchema = z.object({
 
 // Lazy Supabase client creation
 async function getSupabase() {
-  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     // Return mock client for build-time operations
     return {
       auth: {
@@ -38,7 +38,7 @@ async function getSupabase() {
   
   const { createClient } = await import('@supabase/supabase-js')
   return createClient(
-    process.env.SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   )
 }
