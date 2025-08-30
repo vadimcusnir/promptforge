@@ -676,3 +676,39 @@
     transition: none;
   }
 }
+
+/* Skip Link - Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #d1a954;
+  color: #000;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* Prevent header color changes on focus */
+header:focus-within {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+}
+
+header:focus-within .bg-black\/95 {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+}
+
+/* Ensure consistent header styling */
+header {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+  backdrop-filter: blur(8px);
+}
