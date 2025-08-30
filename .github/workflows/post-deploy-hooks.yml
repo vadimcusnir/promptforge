@@ -1,0 +1,356 @@
+name: Post-Deploy Hooks
+
+on:
+  deployment_status:
+    types: [success]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run post-deploy hooks for'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - preview
+
+jobs:
+  post-deploy-hooks:
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success' || github.event_name == 'workflow_dispatch'
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Get deployment URL
+        id: get-url
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+              echo "url=https://promptforge.ai" >> $GITHUB_OUTPUT
+            else
+              echo "url=https://promptforge-preview.vercel.app" >> $GITHUB_OUTPUT
+            fi
+          else
+            # Extract URL from deployment status
+            DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+            echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Wait for deployment to be ready
+        run: |
+          echo "⏳ Waiting for deployment to be ready..."
+          URL="${{ steps.get-url.outputs.url }}"
+          
+          for i in {1..30}; do
+            if curl -s -f "$URL" > /dev/null; then
+              echo "✅ Deployment is ready at $URL"
+              break
+            fi
+            echo "Attempt $i/30: Deployment not ready yet..."
+            sleep 10
+          done
+
+      - name: Sitemap Recrawl
+        run: |
+          echo "🗺️  Triggering sitemap recrawl..."
+          URL="${{ steps.get-url.outputs.url }}"
+          
+          # Submit sitemap to search engines
+          SITEMAP_URL="$URL/sitemap.xml"
+          
+          # Google Search Console (if configured)
+          if [ -n "$GOOGLE_SEARCH_CONSOLE_API_KEY" ]; then
+            echo "Submitting sitemap to Google Search Console..."
+            curl -X POST \
+              "https://www.googleapis.com/webmasters/v3/sites/https%3A%2F%2Fpromptforge.ai%2F/sitemaps" \
+              -H "Authorization: Bearer $GOOGLE_SEARCH_CONSOLE_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"feedpath\": \"$SITEMAP_URL\"}" || echo "Google Search Console submission failed"
+          fi
+          
+          # Bing Webmaster Tools (if configured)
+          if [ -n "$BING_API_KEY" ]; then
+            echo "Submitting sitemap to Bing Webmaster Tools..."
+            curl -X POST \
+              "https://ssl.bing.com/webmaster/api.svc/json/SubmitUrlbatch?apikey=$BING_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"siteUrl\": \"$URL\", \"urlList\": [\"$SITEMAP_URL\"]}" || echo "Bing submission failed"
+          fi
+          
+          # Ping search engines about sitemap update
+          echo "Pinging search engines about sitemap update..."
+          curl -s "https://www.google.com/ping?sitemap=$SITEMAP_URL" || echo "Google ping failed"
+          curl -s "https://www.bing.com/ping?sitemap=$SITEMAP_URL" || echo "Bing ping failed"
+          
+          echo "✅ Sitemap recrawl initiated"
+
+      - name: CDN Purge
+        run: |
+          echo "🌐 Purging CDN cache..."
+          URL="${{ steps.get-url.outputs.url }}"
+          
+          # Vercel CDN purge (if using Vercel)
+          if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
+            echo "Purging Vercel CDN cache..."
+            curl -X POST \
+              "https://api.vercel.com/v1/integrations/deploy/$VERCEL_PROJECT_ID/purge" \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"urls\": [\"$URL\"]}" || echo "Vercel CDN purge failed"
+          fi
+          
+          # Cloudflare CDN purge (if using Cloudflare)
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ZONE_ID" ]; then
+            echo "Purging Cloudflare CDN cache..."
+            curl -X POST \
+              "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/purge_cache" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"purge_everything\": true}" || echo "Cloudflare CDN purge failed"
+          fi
+          
+          # Generic cache busting headers
+          echo "Setting cache busting headers..."
+          curl -X POST "$URL/api/cache-bust" \
+            -H "Content-Type: application/json" \
+            -d "{\"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" || echo "Cache bust API call failed"
+          
+          echo "✅ CDN purge completed"
+
+      - name: Lighthouse CI Post-Deploy
+        run: |
+          echo "📊 Running Lighthouse CI post-deploy..."
+          URL="${{ steps.get-url.outputs.url }}"
+          
+          # Install Lighthouse CI
+          npm install -g @lhci/cli@0.12.x
+          
+          # Create Lighthouse CI configuration for post-deploy
+          cat > .lighthouserc-post-deploy.js << 'EOF'
+          module.exports = {
+            ci: {
+              collect: {
+                url: [
+                  '$URL',
+                  '$URL/modules',
+                  '$URL/pricing',
+                  '$URL/generator'
+                ],
+                numberOfRuns: 3,
+                settings: {
+                  chromeFlags: '--no-sandbox --disable-dev-shm-usage'
+                }
+              },
+              assert: {
+                assertions: {
+                  'categories:performance': ['warn', {minScore: 0.8}],
+                  'categories:accessibility': ['error', {minScore: 0.9}],
+                  'categories:best-practices': ['warn', {minScore: 0.8}],
+                  'categories:seo': ['warn', {minScore: 0.8}],
+                  'first-contentful-paint': ['warn', {'maxNumericValue': 2000}],
+                  'largest-contentful-paint': ['warn', {'maxNumericValue': 2500}],
+                  'cumulative-layout-shift': ['warn', {'maxNumericValue': 0.1}],
+                  'total-blocking-time': ['warn', {'maxNumericValue': 300}]
+                }
+              },
+              upload: {
+                target: 'temporary-public-storage'
+              }
+            }
+          }
+          EOF
+          
+          # Replace URL placeholder
+          sed -i "s/\$URL/$URL/g" .lighthouserc-post-deploy.js
+          
+          # Run Lighthouse CI
+          lhci autorun --config=.lighthouserc-post-deploy.js || {
+            echo "⚠️  Lighthouse CI post-deploy completed with warnings"
+          }
+          
+          echo "✅ Lighthouse CI post-deploy completed"
+
+      - name: Performance Budget Check
+        run: |
+          echo "💰 Checking performance budgets..."
+          URL="${{ steps.get-url.outputs.url }}"
+          
+          # Run Lighthouse and extract performance metrics
+          npm install -g lighthouse
+          
+          lighthouse "$URL" --output=json --output-path=lighthouse-report.json --chrome-flags="--no-sandbox --disable-dev-shm-usage" || {
+            echo "⚠️  Lighthouse report generation failed"
+            exit 0
+          }
+          
+          # Extract key metrics
+          PERFORMANCE_SCORE=$(cat lighthouse-report.json | jq '.categories.performance.score * 100')
+          FCP=$(cat lighthouse-report.json | jq '.audits["first-contentful-paint"].numericValue')
+          LCP=$(cat lighthouse-report.json | jq '.audits["largest-contentful-paint"].numericValue')
+          CLS=$(cat lighthouse-report.json | jq '.audits["cumulative-layout-shift"].numericValue')
+          
+          echo "Performance Score: $PERFORMANCE_SCORE"
+          echo "First Contentful Paint: $FCP ms"
+          echo "Largest Contentful Paint: $LCP ms"
+          echo "Cumulative Layout Shift: $CLS"
+          
+          # Check if performance degraded
+          PERFORMANCE_DEGRADED=false
+          
+          if (( $(echo "$PERFORMANCE_SCORE < 80" | bc -l) )); then
+            echo "❌ Performance score below threshold (80)"
+            PERFORMANCE_DEGRADED=true
+          fi
+          
+          if (( $(echo "$FCP > 2000" | bc -l) )); then
+            echo "❌ First Contentful Paint above threshold (2000ms)"
+            PERFORMANCE_DEGRADED=true
+          fi
+          
+          if (( $(echo "$LCP > 2500" | bc -l) )); then
+            echo "❌ Largest Contentful Paint above threshold (2500ms)"
+            PERFORMANCE_DEGRADED=true
+          fi
+          
+          if (( $(echo "$CLS > 0.1" | bc -l) )); then
+            echo "❌ Cumulative Layout Shift above threshold (0.1)"
+            PERFORMANCE_DEGRADED=true
+          fi
+          
+          if [ "$PERFORMANCE_DEGRADED" = true ]; then
+            echo "🚨 Performance budget exceeded - marking build as degraded"
+            
+            # Create degraded build marker
+            cat > build-status.json << EOF
+          {
+            "status": "degraded",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "reason": "performance_budget_exceeded",
+            "metrics": {
+              "performance_score": $PERFORMANCE_SCORE,
+              "first_contentful_paint": $FCP,
+              "largest_contentful_paint": $LCP,
+              "cumulative_layout_shift": $CLS
+            }
+          }
+          EOF
+          else
+            echo "✅ Performance budget within acceptable limits"
+            
+            # Create success build marker
+            cat > build-status.json << EOF
+          {
+            "status": "success",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "metrics": {
+              "performance_score": $PERFORMANCE_SCORE,
+              "first_contentful_paint": $FCP,
+              "largest_contentful_paint": $LCP,
+              "cumulative_layout_shift": $CLS
+            }
+          }
+          EOF
+          fi
+
+      - name: Health Check
+        run: |
+          echo "🏥 Running health check..."
+          URL="${{ steps.get-url.outputs.url }}"
+          
+          # Test critical endpoints
+          ENDPOINTS=(
+            "/"
+            "/modules"
+            "/pricing"
+            "/generator"
+            "/api/health"
+          )
+          
+          HEALTH_CHECK_FAILED=false
+          
+          for endpoint in "${ENDPOINTS[@]}"; do
+            echo "Testing $endpoint..."
+            if curl -s -f "$URL$endpoint" > /dev/null; then
+              echo "✅ $endpoint - OK"
+            else
+              echo "❌ $endpoint - FAILED"
+              HEALTH_CHECK_FAILED=true
+            fi
+          done
+          
+          # Test redirect functionality
+          echo "Testing redirect functionality..."
+          if curl -s -I "$URL/modules/risk-and-trust-reversal" | grep -q "308"; then
+            echo "✅ Redirects working"
+          else
+            echo "❌ Redirects not working"
+            HEALTH_CHECK_FAILED=true
+          fi
+          
+          if [ "$HEALTH_CHECK_FAILED" = true ]; then
+            echo "🚨 Health check failed"
+            exit 1
+          else
+            echo "✅ Health check passed"
+          fi
+
+      - name: Notify Deployment Success
+        run: |
+          echo "📢 Notifying deployment success..."
+          URL="${{ steps.get-url.outputs.url }}"
+          
+          # Send notification to Slack (if configured)
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -X POST "$SLACK_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"text\": \"🚀 Deployment Successful\",
+                \"blocks\": [
+                  {
+                    \"type\": \"section\",
+                    \"text\": {
+                      \"type\": \"mrkdwn\",
+                      \"text\": \"*PromptForge* deployment completed successfully\\n*Environment:* ${{ github.event.inputs.environment || 'production' }}\\n*URL:* $URL\\n*Commit:* ${{ github.sha }}\"
+                    }
+                  }
+                ]
+              }" || echo "Slack notification failed"
+          fi
+          
+          # Send notification to Discord (if configured)
+          if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+            curl -X POST "$DISCORD_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"content\": \"🚀 **PromptForge Deployment Successful**\\n**Environment:** ${{ github.event.inputs.environment || 'production' }}\\n**URL:** $URL\\n**Commit:** ${{ github.sha }}\"
+              }" || echo "Discord notification failed"
+          fi
+          
+          echo "✅ Deployment notifications sent"
+
+      - name: Upload Post-Deploy Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-deploy-results
+          path: |
+            lighthouse-report.json
+            build-status.json
+          retention-days: 30

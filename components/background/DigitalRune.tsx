@@ -136,12 +136,12 @@ export function DigitalRune() {
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
       {/* Central Rune */}
       <div
-        className="absolute text-6xl md:text-8xl font-mono font-bold text-[#d1a954] opacity-20"
+        className="absolute text-6xl md:text-8xl font-mono font-bold text-[hsl(var(--accent))] opacity-20"
         style={{
-          textShadow: "0 0 30px rgba(209, 169, 84, 0.3)",
+          textShadow: "0 0 30px hsl(var(--primary) / 0.3)",
           filter: prefersReducedMotion
             ? "none"
-            : "drop-shadow(0 0 20px rgba(209, 169, 84, 0.2))",
+            : "drop-shadow(0 0 20px hsl(var(--primary) / 0.2))",
           transform: prefersReducedMotion ? "none" : "translateZ(0)",
           animation: prefersReducedMotion
             ? "none"
@@ -155,14 +155,14 @@ export function DigitalRune() {
       {symbols.map((symbol, index) => (
         <div
           key={index}
-          className="absolute text-lg md:text-xl font-mono font-bold text-[#d1a954]"
+          className="absolute text-lg md:text-xl font-mono font-bold text-[hsl(var(--accent))]"
           style={{
             left: `${symbol.x}%`,
             top: `${symbol.y}%`,
             opacity: symbol.opacity,
             transform: `translate(-50%, -50%) scale(${symbol.scale}) rotate(${symbol.rotation}deg) translateZ(0)`,
             textShadow: symbol.glitch
-              ? "0 0 15px rgba(209, 169, 84, 0.8)"
+              ? "0 0 15px hsl(var(--primary) / 0.8)"
               : "0 0 10px rgba(209, 169, 84, 0.4)",
             filter: symbol.glitch ? "hue-rotate(45deg)" : "none",
             transition: prefersReducedMotion ? "none" : "all 0.1s ease-out",
@@ -193,7 +193,7 @@ export function DigitalRune() {
                 y1={`${symbol1.y}%`}
                 x2={`${symbol2.x}%`}
                 y2={`${symbol2.y}%`}
-                stroke="rgba(209, 169, 84, 0.3)"
+                stroke="hsl(var(--primary) / 0.3)"
                 strokeWidth="1"
                 strokeDasharray="2,4"
               />

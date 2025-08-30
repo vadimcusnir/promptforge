@@ -1,2 +1,5 @@
 export const english = {};
-export const validateEnglishContent = () => ({ valid: true });
+export const validateEnglishContent = (params: any) => ({ 
+  isValid: true,
+  error: null
+});

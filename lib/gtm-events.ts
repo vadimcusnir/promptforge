@@ -37,6 +37,12 @@ export const GTMEvents = {
     event: eventName,
     ...parameters,
   }),
+  
+  pricingUpgrade: (planName: string, price: number): GTMEvent => ({
+    event: 'pricing_upgrade',
+    plan_name: planName,
+    plan_price: price,
+  }),
 };
 
 export function trackEvent(event: GTMEvent): void {

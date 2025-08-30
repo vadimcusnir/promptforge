@@ -21,7 +21,7 @@ export function SearchBar() {
           placeholder="Search documentation..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:border-[#d1a954] transition-all duration-200"
+          className="w-full pl-10 pr-4 py-2 bg-primary border border-border/30 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))]/50 focus:border-[hsl(var(--accent))] transition-all duration-200"
         />
       </div>
     </form>

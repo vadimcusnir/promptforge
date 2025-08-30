@@ -35,7 +35,7 @@ export function TestEngineSection() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-white">
-          <span className="text-[#d1a954]">Test Engine</span> & Quality Assurance
+          <span className="text-[hsl(var(--accent))]">Test Engine</span> & Quality Assurance
         </h1>
         <p className="text-xl text-white/80 max-w-3xl mx-auto">
           Validate your prompts with our advanced testing system: simulated analysis and live GPT testing 
@@ -44,9 +44,9 @@ export function TestEngineSection() {
       </div>
 
       {/* Testing Overview */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
             <Zap className="w-5 h-5 text-black" />
           </div>
           Testing Philosophy
@@ -69,12 +69,12 @@ export function TestEngineSection() {
       {/* Testing Modes */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Simulated Testing */}
-        <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-6">
+        <div className="bg-primary border border-border/30 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
               <BarChart3 className="w-5 h-5 text-black" />
             </div>
-            <h3 className="text-xl font-bold text-[#d1a954]">Simulated Testing</h3>
+            <h3 className="text-xl font-bold text-[hsl(var(--accent))]">Simulated Testing</h3>
           </div>
           
           <div className="space-y-3 text-white/80 text-sm">
@@ -92,12 +92,12 @@ export function TestEngineSection() {
         </div>
 
         {/* Live GPT Testing */}
-        <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-6">
+        <div className="bg-primary border border-border/30 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-black" />
             </div>
-            <h3 className="text-xl font-bold text-[#d1a954]">Live GPT Testing</h3>
+            <h3 className="text-xl font-bold text-[hsl(var(--accent))]">Live GPT Testing</h3>
           </div>
           
           <div className="space-y-3 text-white/80 text-sm">
@@ -113,8 +113,8 @@ export function TestEngineSection() {
             </ul>
           </div>
           
-          <div className="mt-4 p-3 bg-[#d1a954]/10 border border-[#d1a954]/30 rounded-lg">
-            <div className="flex items-center gap-2 text-[#d1a954] text-xs">
+          <div className="mt-4 p-3 bg-[hsl(var(--accent))]/10 border border-[hsl(var(--accent))]/30 rounded-lg">
+            <div className="flex items-center gap-2 text-[hsl(var(--accent))] text-xs">
               <Shield className="w-4 h-4" />
               <span>Requires Pro/Enterprise entitlement</span>
             </div>
@@ -123,27 +123,27 @@ export function TestEngineSection() {
       </div>
 
       {/* Scoring System */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">Scoring System</h2>
         
         <div className="space-y-6">
-          <div className="text-center p-6 bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg">
-            <div className="text-4xl font-bold text-[#d1a954] mb-2">≥80</div>
+          <div className="text-center p-6 bg-primary border border-border/30 rounded-lg">
+            <div className="text-4xl font-bold text-[hsl(var(--accent))] mb-2">≥80</div>
             <p className="text-white/80">Minimum score required for professional-grade prompts</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {scoringMetrics.map((metric) => (
-              <div key={metric.name} className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+              <div key={metric.name} className="bg-primary border border-border/30 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-semibold text-white">{metric.name}</h4>
-                  <span className="text-[#d1a954] font-bold">{metric.weight}%</span>
+                  <span className="text-[hsl(var(--accent))] font-bold">{metric.weight}%</span>
                 </div>
                 <p className="text-white/70 text-sm mb-3">{metric.description}</p>
                 <div className="space-y-1">
                   {metric.criteria.map((criterion) => (
                     <div key={criterion} className="flex items-center gap-2 text-white/60 text-xs">
-                      <div className="w-1.5 h-1.5 bg-[#d1a954] rounded-full" />
+                      <div className="w-1.5 h-1.5 bg-[hsl(var(--accent))] rounded-full" />
                       {criterion}
                     </div>
                   ))}
@@ -155,7 +155,7 @@ export function TestEngineSection() {
       </div>
 
       {/* Score Calculation */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">How Scores Are Calculated</h2>
         
         <div className="space-y-6">
@@ -163,49 +163,49 @@ export function TestEngineSection() {
             <div className="space-y-4">
               <h4 className="font-semibold text-white text-lg">Weighted Scoring</h4>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-[#1a1a1a] rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-primary rounded-lg">
                   <span className="text-white/80 text-sm">Structure</span>
-                  <span className="text-[#d1a954] font-mono">25%</span>
+                  <span className="text-[hsl(var(--accent))] font-mono">25%</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-[#1a1a1a] rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-primary rounded-lg">
                   <span className="text-white/80 text-sm">KPI Compliance</span>
-                  <span className="text-[#d1a954] font-mono">30%</span>
+                  <span className="text-[hsl(var(--accent))] font-mono">30%</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-[#1a1a1a] rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-primary rounded-lg">
                   <span className="text-white/80 text-sm">Clarity</span>
-                  <span className="text-[#d1a954] font-mono">25%</span>
+                  <span className="text-[hsl(var(--accent))] font-mono">25%</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-[#1a1a1a] rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-primary rounded-lg">
                   <span className="text-white/80 text-sm">Executability</span>
-                  <span className="text-[#d1a954] font-mono">20%</span>
+                  <span className="text-[hsl(var(--accent))] font-mono">20%</span>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4">
               <h4 className="font-semibold text-white text-lg">Example Calculation</h4>
-              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+              <div className="bg-primary border border-border/30 rounded-lg p-4">
                 <div className="space-y-2 text-sm font-mono">
                   <div className="flex justify-between">
                     <span className="text-white/80">Structure: 85/100</span>
-                    <span className="text-[#d1a954]">× 0.25 = 21.25</span>
+                    <span className="text-[hsl(var(--accent))]">× 0.25 = 21.25</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/80">KPI: 90/100</span>
-                    <span className="text-[#d1a954]">× 0.30 = 27.00</span>
+                    <span className="text-[hsl(var(--accent))]">× 0.30 = 27.00</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/80">Clarity: 88/100</span>
-                    <span className="text-[#d1a954]">× 0.25 = 22.00</span>
+                    <span className="text-[hsl(var(--accent))]">× 0.25 = 22.00</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/80">Executability: 82/100</span>
-                    <span className="text-[#d1a954]">× 0.20 = 16.40</span>
+                    <span className="text-[hsl(var(--accent))]">× 0.20 = 16.40</span>
                   </div>
-                  <div className="border-t border-[#5a5a5a]/30 pt-2 mt-2">
+                  <div className="border-t border-border/30 pt-2 mt-2">
                     <div className="flex justify-between font-bold">
                       <span className="text-white">Total Score:</span>
-                      <span className="text-[#d1a954]">86.65</span>
+                      <span className="text-[hsl(var(--accent))]">86.65</span>
                     </div>
                   </div>
                 </div>
@@ -216,12 +216,12 @@ export function TestEngineSection() {
       </div>
 
       {/* Testing Workflow */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">Testing Workflow</h2>
         
         <div className="space-y-6">
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               1
             </div>
             <div>
@@ -233,7 +233,7 @@ export function TestEngineSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               2
             </div>
             <div>
@@ -245,7 +245,7 @@ export function TestEngineSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               3
             </div>
             <div>
@@ -257,7 +257,7 @@ export function TestEngineSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               4
             </div>
             <div>
@@ -274,7 +274,7 @@ export function TestEngineSection() {
       <div className="text-center">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#d1a954]/20 border border-[#d1a954]/40 text-[#d1a954] rounded-lg hover:bg-[#d1a954]/30 transition-colors duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[hsl(var(--accent))]/20 border border-[hsl(var(--accent))]/40 text-[hsl(var(--accent))] rounded-lg hover:bg-[hsl(var(--accent))]/30 transition-colors duration-200"
         >
           <ArrowUp className="w-4 h-4" />
           Back to Top

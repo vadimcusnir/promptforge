@@ -214,7 +214,7 @@ export function ExportManager({
   return (
     <div className="space-y-6">
       <Card className="glass-effect p-6 glow-primary">
-        <h3 className="text-lg font-bold font-[var(--font-heading)] mb-4 text-foreground">
+        <h3 className="text-lg font-bold font-sans mb-4 text-foreground">
           Export Manager
         </h3>
 

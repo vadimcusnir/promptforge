@@ -46,7 +46,7 @@ export function ExportPipelineSection() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-white">
-          <span className="text-[#d1a954]">Export Pipeline</span> & Artifacts
+          <span className="text-[hsl(var(--accent))]">Export Pipeline</span> & Artifacts
         </h1>
         <p className="text-xl text-white/80 max-w-3xl mx-auto">
           Transform your validated prompts into professional deliverables with multiple export formats, 
@@ -55,9 +55,9 @@ export function ExportPipelineSection() {
       </div>
 
       {/* Export Overview */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
             <Download className="w-5 h-5 text-black" />
           </div>
           Export Philosophy
@@ -83,17 +83,17 @@ export function ExportPipelineSection() {
         <h2 className="text-2xl font-bold text-white text-center">Available Export Formats</h2>
         
         {exportFormats.map((format) => (
-          <div key={format.name} className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-6">
+          <div key={format.name} className="bg-primary border border-border/30 rounded-xl p-6">
             <div className="flex items-start gap-4 mb-4">
               <div className="text-3xl">{format.icon}</div>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-xl font-bold text-[#d1a954]">{format.name}</h3>
+                  <h3 className="text-xl font-bold text-[hsl(var(--accent))]">{format.name}</h3>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     format.plan === "All plans" 
                       ? "bg-green-500/20 text-green-400 border border-green-500/30"
                       : format.plan === "Pro/Enterprise"
-                      ? "bg-[#d1a954]/20 text-[#d1a954] border border-[#d1a954]/30"
+                      ? "bg-[hsl(var(--accent))]/20 text-[hsl(var(--accent))] border border-[hsl(var(--accent))]/30"
                       : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
                   }`}>
                     {format.plan}
@@ -102,7 +102,7 @@ export function ExportPipelineSection() {
                 <p className="text-white/80 text-sm mb-3">{format.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {format.features.map((feature) => (
-                    <span key={feature} className="px-2 py-1 bg-[#1a1a1a] text-white/70 text-xs rounded border border-[#5a5a5a]/30">
+                    <span key={feature} className="px-2 py-1 bg-primary text-white/70 text-xs rounded border border-border/30">
                       {feature}
                     </span>
                   ))}
@@ -114,9 +114,9 @@ export function ExportPipelineSection() {
       </div>
 
       {/* Gating Rules */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
             <Shield className="w-5 h-5 text-black" />
           </div>
           Plan-Based Gating
@@ -125,7 +125,7 @@ export function ExportPipelineSection() {
         <div className="space-y-6">
           <div className="grid md:grid-cols-3 gap-6">
             {/* Free Plan */}
-            <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+            <div className="bg-primary border border-border/30 rounded-lg p-4">
               <h4 className="font-semibold text-white mb-3 text-center">Free Plan</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2 text-white/80">
@@ -137,23 +137,23 @@ export function ExportPipelineSection() {
                   <span>.md export</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/60">
-                  <div className="w-4 h-4 border border-[#5a5a5a] rounded-full" />
+                  <div className="w-4 h-4 border border-border rounded-full" />
                   <span>.json export</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/60">
-                  <div className="w-4 h-4 border border-[#5a5a5a] rounded-full" />
+                  <div className="w-4 h-4 border border-border rounded-full" />
                   <span>.pdf export</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/60">
-                  <div className="w-4 h-4 border border-[#5a5a5a] rounded-full" />
+                  <div className="w-4 h-4 border border-border rounded-full" />
                   <span>.zip bundles</span>
                 </div>
               </div>
             </div>
 
             {/* Pro Plan */}
-            <div className="bg-[#1a1a1a] border border-[#d1a954]/30 rounded-lg p-4">
-              <h4 className="font-semibold text-[#d1a954] mb-3 text-center">Pro Plan</h4>
+            <div className="bg-primary border border-[hsl(var(--accent))]/30 rounded-lg p-4">
+              <h4 className="font-semibold text-[hsl(var(--accent))] mb-3 text-center">Pro Plan</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2 text-white/80">
                   <CheckCircle className="w-4 h-4 text-green-400" />
@@ -163,24 +163,24 @@ export function ExportPipelineSection() {
                   <CheckCircle className="w-4 h-4 text-green-400" />
                   <span>.md export</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#d1a954]">
-                  <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <div className="flex items-center gap-2 text-[hsl(var(--accent))]">
+                  <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                   <span>.json export</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#d1a954]">
-                  <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <div className="flex items-center gap-2 text-[hsl(var(--accent))]">
+                  <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                   <span>.pdf export</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/60">
-                  <div className="w-4 h-4 border border-[#5a5a5a] rounded-full" />
+                  <div className="w-4 h-4 border border-border rounded-full" />
                   <span>.zip bundles</span>
                 </div>
               </div>
             </div>
 
             {/* Enterprise Plan */}
-            <div className="bg-[#1a1a1a] border border-[#d1a954]/30 rounded-lg p-4">
-              <h4 className="font-semibold text-[#d1a954] mb-3 text-center">Enterprise Plan</h4>
+            <div className="bg-primary border border-[hsl(var(--accent))]/30 rounded-lg p-4">
+              <h4 className="font-semibold text-[hsl(var(--accent))] mb-3 text-center">Enterprise Plan</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2 text-white/80">
                   <CheckCircle className="w-4 h-4 text-green-400" />
@@ -190,16 +190,16 @@ export function ExportPipelineSection() {
                   <CheckCircle className="w-4 h-4 text-green-400" />
                   <span>.md export</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#d1a954]">
-                  <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <div className="flex items-center gap-2 text-[hsl(var(--accent))]">
+                  <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                   <span>.json export</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#d1a954]">
-                  <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <div className="flex items-center gap-2 text-[hsl(var(--accent))]">
+                  <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                   <span>.pdf export</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#d1a954]">
-                  <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <div className="flex items-center gap-2 text-[hsl(var(--accent))]">
+                  <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                   <span>.zip bundles</span>
                 </div>
               </div>
@@ -209,9 +209,9 @@ export function ExportPipelineSection() {
       </div>
 
       {/* Artifact Management */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
             <Package className="w-5 h-5 text-black" />
           </div>
           Artifact Management
@@ -222,7 +222,7 @@ export function ExportPipelineSection() {
             {/* Manifest Requirements */}
             <div className="space-y-4">
               <h4 className="font-semibold text-white text-lg">Export Manifest</h4>
-              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+              <div className="bg-primary border border-border/30 rounded-lg p-4">
                 <div className="space-y-2 text-sm font-mono">
                   <div className="text-white/60">Every export includes:</div>
                   <div className="text-white/80">• Prompt content & metadata</div>
@@ -237,7 +237,7 @@ export function ExportPipelineSection() {
             {/* Checksum & Validation */}
             <div className="space-y-4">
               <h4 className="font-semibold text-white text-lg">Integrity Verification</h4>
-              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+              <div className="bg-primary border border-border/30 rounded-lg p-4">
                 <div className="space-y-2 text-sm font-mono">
                   <div className="text-white/60">Security features:</div>
                   <div className="text-white/80">• SHA-256 checksums</div>
@@ -253,12 +253,12 @@ export function ExportPipelineSection() {
       </div>
 
       {/* Export Workflow */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">Export Workflow</h2>
         
         <div className="space-y-6">
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               1
             </div>
             <div>
@@ -270,7 +270,7 @@ export function ExportPipelineSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               2
             </div>
             <div>
@@ -282,7 +282,7 @@ export function ExportPipelineSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               3
             </div>
             <div>
@@ -294,7 +294,7 @@ export function ExportPipelineSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               4
             </div>
             <div>
@@ -311,7 +311,7 @@ export function ExportPipelineSection() {
       <div className="text-center">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#d1a954]/20 border border-[#d1a954]/40 text-[#d1a954] rounded-lg hover:bg-[#d1a954]/30 transition-colors duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[hsl(var(--accent))]/20 border border-[hsl(var(--accent))]/40 text-[hsl(var(--accent))] rounded-lg hover:bg-[hsl(var(--accent))]/30 transition-colors duration-200"
         >
           <ArrowUp className="w-4 h-4" />
           Back to Top

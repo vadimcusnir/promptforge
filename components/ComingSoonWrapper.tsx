@@ -92,7 +92,7 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
     return (
       <div className="min-h-screen bg-black text-white font-mono flex items-center justify-center">
         <div className="text-center">
-          <div className="text-2xl text-[#FFD700] mb-4">Checking access...</div>
+          <div className="text-2xl text-foreground mb-4">Checking access...</div>
           <div className="text-sm text-gray-400">Please wait while we verify your permissions</div>
           <div className="text-xs text-gray-500 mt-2">Debug: Checking access for {pathname}</div>
         </div>

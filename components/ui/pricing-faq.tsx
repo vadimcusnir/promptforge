@@ -43,7 +43,7 @@ export function PricingFAQ() {
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
-        <p className="text-[#5a5a5a]">
+        <p className="text-foreground">
           Everything you need to know about PromptForge pricing
         </p>
       </div>
@@ -52,10 +52,10 @@ export function PricingFAQ() {
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className="border border-[#5a5a5a]/30 rounded-lg glass-effect overflow-hidden"
+            className="border border-border/30 rounded-lg glass-effect overflow-hidden"
           >
             <button
-              className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-[#5a5a5a]/10 transition-colors"
+              className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-primary/10 transition-colors"
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
               <span className="font-semibold">{faq.question}</span>
@@ -65,7 +65,7 @@ export function PricingFAQ() {
             </button>
             {openIndex === index && (
               <div className="px-6 pb-4">
-                <p className="text-[#5a5a5a]">{faq.answer}</p>
+                <p className="text-foreground">{faq.answer}</p>
               </div>
             )}
           </div>

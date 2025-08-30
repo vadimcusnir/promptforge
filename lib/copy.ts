@@ -29,4 +29,8 @@ export const COPY = {
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
   },
+  skip_to_content: 'Skip to main content',
+  menu_toggle: 'Toggle navigation menu',
+  brand: 'PromptForge',
+  cta_start: 'Start the Forge',
 };

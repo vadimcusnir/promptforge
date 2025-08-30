@@ -92,7 +92,7 @@ export function generatePrompt(module: ModuleDefinition, inputValues: FormData):
     runId,
     hash,
     metadata: {
-      moduleId: module.id,
+      moduleId: module.id.toString(),
       timestamp,
       inputValues,
       estimatedTokens: module.estimated_tokens
@@ -126,7 +126,7 @@ export function createPromptRun(
   
   return {
     id: compiled.runId,
-    moduleId: module.id,
+    moduleId: module.id.toString(),
     prompt: compiled.content,
     inputValues,
     timestamp: compiled.metadata.timestamp,

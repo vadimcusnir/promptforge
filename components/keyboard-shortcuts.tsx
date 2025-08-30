@@ -94,7 +94,7 @@ export function KeyboardShortcuts({
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <Card className="glass-strong p-6 max-w-md w-full animate-slide-up">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold font-[var(--font-heading)] text-foreground">
+          <h3 className="text-lg font-bold font-sans text-foreground">
             Keyboard Shortcuts
           </h3>
           <Button

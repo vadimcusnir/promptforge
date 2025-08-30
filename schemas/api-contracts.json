@@ -1,0 +1,355 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-01T00:00:00Z",
+  "endpoints": {
+    "/api/run/{moduleId}": {
+      "method": "POST",
+      "description": "Generate a prompt using the specified module",
+      "request": {
+        "type": "object",
+        "required": ["params7D"],
+        "properties": {
+          "params7D": {
+            "type": "object",
+            "description": "7D parameter configuration",
+            "required": ["domain", "scale", "urgency", "complexity", "resources", "application", "outputFormat"],
+            "properties": {
+              "domain": {
+                "type": "string",
+                "enum": ["business", "technical", "creative", "academic", "personal"]
+              },
+              "scale": {
+                "type": "string",
+                "enum": ["micro", "small", "medium", "large", "enterprise"]
+              },
+              "urgency": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              "complexity": {
+                "type": "string",
+                "enum": ["simple", "moderate", "complex", "expert"]
+              },
+              "resources": {
+                "type": "string",
+                "enum": ["minimal", "limited", "adequate", "abundant"]
+              },
+              "application": {
+                "type": "string",
+                "enum": ["internal", "external", "public", "confidential"]
+              },
+              "outputFormat": {
+                "type": "string",
+                "enum": ["text", "structured", "template", "script"]
+              }
+            }
+          },
+          "variant": {
+            "type": "string",
+            "enum": ["default", "creative", "technical", "business"],
+            "default": "default"
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999999
+          }
+        }
+      },
+      "response": {
+        "type": "object",
+        "required": ["artifacts", "telemetry"],
+        "properties": {
+          "artifacts": {
+            "type": "object",
+            "required": ["prompt", "metadata"],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "metadata": {
+                "type": "object",
+                "required": ["moduleId", "variant", "timestamp"],
+                "properties": {
+                  "moduleId": {
+                    "type": "string"
+                  },
+                  "variant": {
+                    "type": "string"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "seed": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "telemetry": {
+            "type": "object",
+            "required": ["score", "metrics"],
+            "properties": {
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "metrics": {
+                "type": "object",
+                "properties": {
+                  "clarity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "specificity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "completeness": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "errorResponses": {
+        "400": {
+          "type": "object",
+          "required": ["error", "message"],
+          "properties": {
+            "error": {
+              "type": "string",
+              "enum": ["INVALID_PARAMETERS", "MALFORMED_REQUEST"]
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "401": {
+          "type": "object",
+          "required": ["error", "message"],
+          "properties": {
+            "error": {
+              "type": "string",
+              "enum": ["UNAUTHORIZED", "INVALID_API_KEY"]
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "403": {
+          "type": "object",
+          "required": ["error", "message"],
+          "properties": {
+            "error": {
+              "type": "string",
+              "enum": ["ENTITLEMENT_REQUIRED", "INSUFFICIENT_PERMISSIONS"]
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "429": {
+          "type": "object",
+          "required": ["error", "message", "retryAfter"],
+          "properties": {
+            "error": {
+              "type": "string",
+              "enum": ["RATE_LIMIT_EXCEEDED"]
+            },
+            "message": {
+              "type": "string"
+            },
+            "retryAfter": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "/api/entitlements/{orgId}": {
+      "method": "GET",
+      "description": "Get entitlements for an organization",
+      "pathParameters": {
+        "type": "object",
+        "required": ["orgId"],
+        "properties": {
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "response": {
+        "type": "object",
+        "required": ["orgId", "plan", "entitlements"],
+        "properties": {
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "plan": {
+            "type": "string",
+            "enum": ["pilot", "creator", "pro", "enterprise"]
+          },
+          "entitlements": {
+            "type": "object",
+            "properties": {
+              "canExportPDF": {
+                "type": "boolean"
+              },
+              "canExportJSON": {
+                "type": "boolean"
+              },
+              "canExportBundleZip": {
+                "type": "boolean"
+              },
+              "canUseGptTestReal": {
+                "type": "boolean"
+              },
+              "maxModulesPerDay": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "maxExportsPerDay": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/bundle": {
+      "method": "POST",
+      "description": "Export a bundle of prompts",
+      "request": {
+        "type": "object",
+        "required": ["moduleIds", "format"],
+        "properties": {
+          "moduleIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 50
+          },
+          "format": {
+            "type": "string",
+            "enum": ["pdf", "json", "zip"]
+          },
+          "includeMetadata": {
+            "type": "boolean",
+            "default": true
+          },
+          "customization": {
+            "type": "object",
+            "properties": {
+              "companyName": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "headerText": {
+                "type": "string",
+                "maxLength": 200
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "type": "object",
+        "required": ["downloadUrl", "expiresAt"],
+        "properties": {
+          "downloadUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fileSize": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  },
+  "commonSchemas": {
+    "ErrorResponse": {
+      "type": "object",
+      "required": ["error", "message"],
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "object"
+        }
+      }
+    },
+    "PaginationParams": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      }
+    },
+    "PaginationResponse": {
+      "type": "object",
+      "required": ["data", "pagination"],
+      "properties": {
+        "data": {
+          "type": "array"
+        },
+        "pagination": {
+          "type": "object",
+          "required": ["page", "limit", "total", "totalPages"],
+          "properties": {
+            "page": {
+              "type": "integer"
+            },
+            "limit": {
+              "type": "integer"
+            },
+            "total": {
+              "type": "integer"
+            },
+            "totalPages": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

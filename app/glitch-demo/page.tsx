@@ -2,7 +2,7 @@
 
 export default function GlitchDemoPage() {
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#ECFEFF] p-8">
+    <div className="min-h-screen bg-primary text-foreground p-8">
       <div className="max-w-4xl mx-auto space-y-16">
         {/* Header */}
         <section className="text-center">
@@ -13,7 +13,7 @@ export default function GlitchDemoPage() {
             </span>{" "}
             v1 Demo
           </h1>
-          <p className="text-xl text-[#ECFEFF]/80">
+          <p className="text-xl text-foreground/80">
             Deterministic, seed-based glitch effects for keywords
           </p>
         </section>
@@ -33,7 +33,7 @@ export default function GlitchDemoPage() {
               </span>{" "}
               Effects
             </h2>
-            <p className="text-[#ECFEFF]/80 mb-4">
+            <p className="text-foreground/80 mb-4">
               Same text = same glitch pattern every time
             </p>
             <ul className="space-y-2 text-sm">
@@ -56,7 +56,7 @@ export default function GlitchDemoPage() {
               </span>{" "}
               First
             </h2>
-            <p className="text-[#ECFEFF]/80 mb-4">
+            <p className="text-foreground/80 mb-4">
               Optimized for 60fps with minimal CLS
             </p>
             <ul className="space-y-2 text-sm">
@@ -94,7 +94,7 @@ export default function GlitchDemoPage() {
                 </span>{" "}
                 Prompting
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">
+              <p className="text-foreground/60 text-sm">
                 H1 example with single keyword
               </p>
             </div>
@@ -116,7 +116,7 @@ export default function GlitchDemoPage() {
                   <span className="kw__glitch" aria-hidden="true"></span>
                 </span>
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">
+              <p className="text-foreground/60 text-sm">
                 H2 example with multiple keywords
               </p>
             </div>
@@ -130,7 +130,7 @@ export default function GlitchDemoPage() {
                 </span>{" "}
                 in Action
               </h3>
-              <p className="text-[#ECFEFF]/60 text-sm">
+              <p className="text-foreground/60 text-sm">
                 Scroll to trigger • Hover to replay (6s cooldown)
               </p>
             </div>
@@ -156,22 +156,22 @@ export default function GlitchDemoPage() {
 
           <div className="grid md:grid-cols-3 gap-6 text-sm">
             <div>
-              <h4 className="font-bold text-[#0891B2] mb-2">Duration</h4>
+              <h4 className="font-bold text-foreground mb-2">Duration</h4>
               <p>280–420ms (14 frames @ 60fps)</p>
             </div>
             <div>
-              <h4 className="font-bold text-[#0891B2] mb-2">Symbols</h4>
+              <h4 className="font-bold text-foreground mb-2">Symbols</h4>
               <p>&gt; &lt; | / \\ &#123; &#125; [ ] ~ _ - # $ % * + = ^ ; :</p>
             </div>
             <div>
-              <h4 className="font-bold text-[#0891B2] mb-2">Accessibility</h4>
+              <h4 className="font-bold text-foreground mb-2">Accessibility</h4>
               <p>Screen reader friendly, respects reduce-motion</p>
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <section className="text-center text-[#ECFEFF]/60">
+        <section className="text-center text-foreground/60">
           <p>Glitch Protocol v1 • PromptForge Tactical Design System</p>
         </section>
       </div>

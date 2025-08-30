@@ -1,4 +1,7 @@
 export const industryPacks = [];
-export const getIndustryPack = () => ({ pack: {} });
-export const getAvailablePacksForUser = () => [];
-export const getTemplatesForDomain = () => [];
+export const getIndustryPack = (domain: any) => ({ pack: { domain, templates: [] } });
+export const getAvailablePacksForUser = (entitlements: any) => ({
+  available: [{ domain: 'general', name: 'General Pack' }],
+  restricted: [{ pack: { domain: 'premium', name: 'Premium Pack' } }]
+});
+export const getTemplatesForDomain = (domain: any) => [];

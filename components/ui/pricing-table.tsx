@@ -74,13 +74,13 @@ export function PricingTable() {
           key={plan.id}
           className={`relative rounded-lg border p-8 glass-effect ${
             plan.popular
-              ? "border-[#d1a954] bg-gradient-to-b from-[#d1a954]/10 to-transparent"
-              : "border-[#5a5a5a]/30"
+              ? "border-[hsl(var(--accent))] bg-gradient-to-b from-[hsl(var(--accent))]/10 to-transparent"
+              : "border-border/30"
           }`}
         >
           {plan.popular && (
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <div className="bg-gradient-to-r from-[#d1a954] to-[#d1a954]/80 text-black px-4 py-2 rounded-full text-sm font-semibold">
+              <div className="bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--accent))]/80 text-black px-4 py-2 rounded-full text-sm font-semibold">
                 Most Popular
               </div>
             </div>
@@ -88,25 +88,25 @@ export function PricingTable() {
 
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-            <p className="text-[#5a5a5a] text-sm mb-4">{plan.subtitle}</p>
+            <p className="text-foreground text-sm mb-4">{plan.subtitle}</p>
 
             <div className="mb-4">
               {plan.originalPrice && (
-                <span className="text-[#5a5a5a] line-through text-lg mr-2">
+                <span className="text-foreground line-through text-lg mr-2">
                   {plan.originalPrice}
                 </span>
               )}
               <span className="text-4xl font-bold">{plan.price}</span>
-              <span className="text-[#5a5a5a]">/{plan.period}</span>
+              <span className="text-foreground">/{plan.period}</span>
             </div>
 
             <button
               className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
                 plan.popular
-                  ? "bg-gradient-to-r from-[#d1a954] to-[#d1a954]/80 text-black hover:shadow-lg hover:shadow-[#d1a954]/25"
+                  ? "bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--accent))]/80 text-black hover:shadow-lg hover:shadow-[hsl(var(--accent))]/25"
                   : plan.id === "basic"
-                    ? "border border-[#5a5a5a] text-[#5a5a5a] hover:border-white hover:text-white"
-                    : "bg-white text-black hover:bg-[#5a5a5a] hover:text-white"
+                    ? "border border-border text-foreground hover:border-white hover:text-white"
+                    : "bg-white text-black hover:bg-primary hover:text-white"
               }`}
               onClick={() => {
                 const price =
@@ -118,7 +118,7 @@ export function PricingTable() {
             </button>
 
             {plan.socialProof && (
-              <p className="text-sm text-[#5a5a5a] mt-3">{plan.socialProof}</p>
+              <p className="text-sm text-foreground mt-3">{plan.socialProof}</p>
             )}
           </div>
 
@@ -128,10 +128,10 @@ export function PricingTable() {
                 {feature.included ? (
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
                 ) : (
-                  <X className="w-5 h-5 text-[#5a5a5a] flex-shrink-0" />
+                  <X className="w-5 h-5 text-foreground flex-shrink-0" />
                 )}
                 <span
-                  className={feature.included ? "text-white" : "text-[#5a5a5a]"}
+                  className={feature.included ? "text-white" : "text-foreground"}
                 >
                   {feature.name}
                 </span>

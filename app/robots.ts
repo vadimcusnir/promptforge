@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://chatgpt-prompting.com";
+  const baseUrl = "https://chatgpt-promptiing.com";
 
   return {
     rules: [

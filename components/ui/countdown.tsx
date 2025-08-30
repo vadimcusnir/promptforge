@@ -38,25 +38,25 @@ export function Countdown() {
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className="text-[#5a5a5a]">Ends in:</span>
+      <span className="text-foreground">Ends in:</span>
       <div className="flex items-center gap-1">
         {timeLeft.days > 0 && (
           <>
-            <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
+            <div className="bg-[hsl(var(--accent))] text-black px-2 py-1 rounded text-xs font-mono">
               {String(timeLeft.days).padStart(2, "0")}d
             </div>
-            <span className="text-[#d1a954]">:</span>
+            <span className="text-[hsl(var(--accent))]">:</span>
           </>
         )}
-        <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
+        <div className="bg-[hsl(var(--accent))] text-black px-2 py-1 rounded text-xs font-mono">
           {String(timeLeft.hours).padStart(2, "0")}
         </div>
-        <span className="text-[#d1a954]">:</span>
-        <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
+        <span className="text-[hsl(var(--accent))]">:</span>
+        <div className="bg-[hsl(var(--accent))] text-black px-2 py-1 rounded text-xs font-mono">
           {String(timeLeft.minutes).padStart(2, "0")}
         </div>
-        <span className="text-[#d1a954]">:</span>
-        <div className="bg-[#d1a954] text-black px-2 py-1 rounded text-xs font-mono">
+        <span className="text-[hsl(var(--accent))]">:</span>
+        <div className="bg-[hsl(var(--accent))] text-black px-2 py-1 rounded text-xs font-mono">
           {String(timeLeft.seconds).padStart(2, "0")}
         </div>
       </div>

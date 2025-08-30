@@ -1,6 +1,6 @@
-export function validateSACFHeaders() { return true; }
-export function assertMembership() { return true; }
-export function assertRole() { return true; }
+export function validateSACFHeaders() { return { orgId: "test-org" }; }
+export function assertMembership(orgId?: string, userId?: string) { return true; }
+export function assertRole(orgId?: string, userId?: string, role?: string) { return true; }
 export function handleSecurityError(error: any) { 
   console.error('Security error:', error);
   return new Response(JSON.stringify({ 

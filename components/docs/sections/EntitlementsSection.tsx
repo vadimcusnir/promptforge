@@ -24,9 +24,9 @@ export function EntitlementsSection() {
       name: "Pro",
       price: "$49/month",
       description: "For teams and growing businesses",
-      color: "text-[#d1a954]",
-      borderColor: "border-[#d1a954]/30",
-      bgColor: "bg-[#d1a954]/10"
+      color: "text-[hsl(var(--accent))]",
+      borderColor: "border-[hsl(var(--accent))]/30",
+      bgColor: "bg-[hsl(var(--accent))]/10"
     },
     {
       name: "Enterprise",
@@ -95,7 +95,7 @@ export function EntitlementsSection() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-white">
-          <span className="text-[#d1a954]">Entitlements</span> & Plan Capabilities
+          <span className="text-[hsl(var(--accent))]">Entitlements</span> & Plan Capabilities
         </h1>
         <p className="text-xl text-white/80 max-w-3xl mx-auto">
           Understand how plan levels unlock different capabilities: from basic module access to 
@@ -104,9 +104,9 @@ export function EntitlementsSection() {
       </div>
 
       {/* Plan Overview */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
             <Shield className="w-5 h-5 text-black" />
           </div>
           Plan Structure
@@ -130,7 +130,7 @@ export function EntitlementsSection() {
       {/* Plan Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {plans.map((plan) => (
-          <div key={plan.name} className={`bg-[#0e0e0e] border ${plan.borderColor} rounded-xl p-6 ${plan.bgColor}`}>
+          <div key={plan.name} className={`bg-primary border ${plan.borderColor} rounded-xl p-6 ${plan.bgColor}`}>
             <div className="text-center space-y-3">
               <h3 className={`text-xl font-bold ${plan.color}`}>{plan.name}</h3>
               <div className="text-2xl font-bold text-white">{plan.price}</div>
@@ -141,23 +141,23 @@ export function EntitlementsSection() {
       </div>
 
       {/* Feature Comparison Table */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 text-center">Feature Comparison</h2>
         
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#5a5a5a]/30">
+              <tr className="border-b border-border/30">
                 <th className="text-left p-3 text-white/80 font-medium">Feature</th>
                 <th className="text-center p-3 text-green-400 font-medium">Free</th>
                 <th className="text-center p-3 text-blue-400 font-medium">Creator</th>
-                <th className="text-center p-3 text-[#d1a954] font-medium">Pro</th>
+                <th className="text-center p-3 text-[hsl(var(--accent))] font-medium">Pro</th>
                 <th className="text-center p-3 text-purple-400 font-medium">Enterprise</th>
               </tr>
             </thead>
             <tbody>
               {features.map((feature, index) => (
-                <tr key={feature.name} className={`border-b border-[#5a5a5a]/20 ${index % 2 === 0 ? 'bg-[#1a1a1a]/30' : ''}`}>
+                <tr key={feature.name} className={`border-b border-border/20 ${index % 2 === 0 ? 'bg-primary/30' : ''}`}>
                   <td className="p-3 text-white font-medium">{feature.name}</td>
                   <td className="p-3 text-center text-white/80 text-sm">{feature.free}</td>
                   <td className="p-3 text-center text-white/80 text-sm">{feature.creator}</td>
@@ -176,7 +176,7 @@ export function EntitlementsSection() {
         
         <div className="grid md:grid-cols-2 gap-6">
           {/* Free Plan */}
-          <div className="bg-[#0e0e0e] border border-green-500/30 rounded-xl p-6">
+          <div className="bg-primary border border-green-500/30 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
                 <Shield className="w-5 h-5 text-black" />
@@ -205,7 +205,7 @@ export function EntitlementsSection() {
           </div>
 
           {/* Creator Plan */}
-          <div className="bg-[#0e0e0e] border border-blue-500/30 rounded-xl p-6">
+          <div className="bg-primary border border-blue-500/30 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                 <Users className="w-5 h-5 text-black" />
@@ -234,36 +234,36 @@ export function EntitlementsSection() {
           </div>
 
           {/* Pro Plan */}
-          <div className="bg-[#0e0e0e] border border-[#d1a954]/30 rounded-xl p-6">
+          <div className="bg-primary border border-[hsl(var(--accent))]/30 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
                 <Crown className="w-5 h-5 text-black" />
               </div>
-              <h3 className="text-xl font-bold text-[#d1a954]">Pro Plan</h3>
+              <h3 className="text-xl font-bold text-[hsl(var(--accent))]">Pro Plan</h3>
             </div>
             
             <div className="space-y-3 text-white/80 text-sm">
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                 <span>Access to all 50 modules</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                 <span>Live GPT testing</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                 <span>Advanced export formats</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#d1a954]" />
+                <CheckCircle className="w-4 h-4 text-[hsl(var(--accent))]" />
                 <span>Team collaboration</span>
               </div>
             </div>
           </div>
 
           {/* Enterprise Plan */}
-          <div className="bg-[#0e0e0e] border border-purple-500/30 rounded-xl p-6">
+          <div className="bg-primary border border-purple-500/30 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
                 <Zap className="w-5 h-5 text-black" />
@@ -294,7 +294,7 @@ export function EntitlementsSection() {
       </div>
 
       {/* Entitlement Management */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">Entitlement Management</h2>
         
         <div className="space-y-6">
@@ -303,21 +303,21 @@ export function EntitlementsSection() {
               <h4 className="font-semibold text-white text-lg">Centralized Control</h4>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                   <div>
                     <p className="text-white/90 text-sm font-medium">Plan Management System</p>
                     <p className="text-white/60 text-xs">Entitlements managed via Stripe webhooks</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                   <div>
                     <p className="text-white/90 text-sm font-medium">No UI Modification</p>
                     <p className="text-white/60 text-xs">Users cannot change their own entitlements</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                   <div>
                     <p className="text-white/90 text-sm font-medium">Automatic Updates</p>
                     <p className="text-white/60 text-xs">Changes reflect immediately across the system</p>
@@ -330,21 +330,21 @@ export function EntitlementsSection() {
               <h4 className="font-semibold text-white text-lg">Security Features</h4>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                   <div>
                     <p className="text-white/90 text-sm font-medium">API Validation</p>
                     <p className="text-white/60 text-xs">All endpoints check entitlements before proceeding</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                   <div>
                     <p className="text-white/90 text-sm font-medium">403 Responses</p>
                     <p className="text-white/60 text-xs">Unauthorized requests return "ENTITLEMENT_REQUIRED"</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                   <div>
                     <p className="text-white/90 text-sm font-medium">Audit Logging</p>
                     <p className="text-white/60 text-xs">All entitlement checks are logged for security</p>
@@ -360,7 +360,7 @@ export function EntitlementsSection() {
       <div className="text-center">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#d1a954]/20 border border-[#d1a954]/40 text-[#d1a954] rounded-lg hover:bg-[#d1a954]/30 transition-colors duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[hsl(var(--accent))]/20 border border-[hsl(var(--accent))]/40 text-[hsl(var(--accent))] rounded-lg hover:bg-[hsl(var(--accent))]/30 transition-colors duration-200"
         >
           <ArrowUp className="w-4 h-4" />
           Back to Top

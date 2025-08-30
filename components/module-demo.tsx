@@ -59,11 +59,11 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`;
 
   return (
     <div className="mb-12">
-      <h2 className="text-3xl font-bold mb-8 text-[#d1a954] font-sans">
+      <h2 className="text-3xl font-bold mb-8 text-[hsl(var(--accent))] font-sans">
         Interactive Demo
       </h2>
 
-      <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6">
+      <div className="glass-effect border border-border/30 rounded-lg p-6">
         <div className="mb-6">
           <label className="block text-sm font-semibold mb-3 text-white font-open-sans">
             Enter your context or requirements:
@@ -72,14 +72,14 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`;
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={`Example: "Launch campaign for new SaaS product targeting enterprise clients"`}
-            className="w-full h-24 bg-black/50 border border-[#5a5a5a]/30 rounded-lg p-4 text-white placeholder-[#5a5a5a] focus:border-[#d1a954] focus:outline-none font-open-sans"
+            className="w-full h-24 bg-black/50 border border-border/30 rounded-lg p-4 text-white placeholder-[#5a5a5a] focus:border-[hsl(var(--accent))] focus:outline-none font-open-sans"
           />
         </div>
 
         <button
           onClick={handleDemo}
           disabled={!inputValue.trim() || isGenerating}
-          className="bg-gradient-to-r from-[#d1a954] to-[#d1a954]/80 text-black font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-[#d1a954]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-open-sans"
+          className="bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--accent))]/80 text-black font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-[hsl(var(--accent))]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-open-sans"
         >
           <Play className="w-4 h-4 inline mr-2" />
           {isGenerating ? "Generating..." : "Run Demo Now"}
@@ -94,20 +94,20 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`;
               <div className="flex gap-2">
                 <button
                   onClick={copyToClipboard}
-                  className="text-[#5a5a5a] hover:text-white transition-colors p-2"
+                  className="text-foreground hover:text-white transition-colors p-2"
                   title="Copy to clipboard"
                 >
                   <Copy className="w-4 h-4" />
                 </button>
                 <button
-                  className="text-[#5a5a5a] hover:text-white transition-colors p-2"
+                  className="text-foreground hover:text-white transition-colors p-2"
                   title="Download as file"
                 >
                   <Download className="w-4 h-4" />
                 </button>
               </div>
             </div>
-            <pre className="bg-black/70 border border-[#5a5a5a]/30 rounded-lg p-4 text-sm text-[#5a5a5a] overflow-x-auto whitespace-pre-wrap font-mono">
+            <pre className="bg-black/70 border border-border/30 rounded-lg p-4 text-sm text-foreground overflow-x-auto whitespace-pre-wrap font-mono">
               {generatedPrompt}
             </pre>
           </div>

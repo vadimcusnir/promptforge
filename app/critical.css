@@ -188,7 +188,7 @@ body {
 
 /* Font loading optimizations */
 .font-montserrat {
-  font-family: var(--font-montserrat), 'Montserrat', serif;
+  font-family: var(--font-sans);
   font-display: swap;
 }
 

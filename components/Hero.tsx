@@ -13,7 +13,7 @@ export function Hero() {
             boxShadow: "0 0 0 1px var(--pf-gold-400) inset",
           }}
         />
-        <h1 className="font-heading font-black tracking-tight text-5xl sm:text-6xl">
+        <h1 className="font-sans font-black tracking-tight text-5xl sm:text-6xl">
           The Cognitive‑OS for Prompts
         </h1>
         <p className="mt-4 text-lg text-white/80">

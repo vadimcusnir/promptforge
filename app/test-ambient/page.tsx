@@ -37,15 +37,15 @@ export default function TestAmbientPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white p-8">
+    <div className="min-h-screen bg-[hsl(var(--background))] text-white p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center">
           🎮 Ambient Mode Test Page
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#5a5a5a]/30">
-            <h2 className="text-xl font-bold mb-4 text-[#d1a954]">
+          <div className="bg-primary p-6 rounded-lg border border-border/30">
+            <h2 className="text-xl font-bold mb-4 text-[hsl(var(--accent))]">
               Current Status
             </h2>
             <div className="space-y-2">
@@ -74,8 +74,8 @@ export default function TestAmbientPage() {
             </div>
           </div>
 
-          <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#5a5a5a]/30">
-            <h2 className="text-xl font-bold mb-4 text-[#d1a954]">Controls</h2>
+          <div className="bg-primary p-6 rounded-lg border border-border/30">
+            <h2 className="text-xl font-bold mb-4 text-[hsl(var(--accent))]">Controls</h2>
             <div className="space-y-3">
               <button
                 onClick={() => toggleMotion(false)}
@@ -93,7 +93,7 @@ export default function TestAmbientPage() {
               </button>
               <button
                 onClick={checkMotionMode}
-                className="w-full bg-[#d1a954] hover:bg-[#b8954a] text-black px-4 py-2 rounded font-mono text-sm transition-colors"
+                className="w-full bg-[hsl(var(--accent))] hover:bg-primary text-black px-4 py-2 rounded font-mono text-sm transition-colors"
               >
                 🔄 Refresh Status
               </button>
@@ -101,8 +101,8 @@ export default function TestAmbientPage() {
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#5a5a5a]/30 mb-8">
-          <h2 className="text-xl font-bold mb-4 text-[#d1a954]">
+        <div className="bg-primary p-6 rounded-lg border border-border/30 mb-8">
+          <h2 className="text-xl font-bold mb-4 text-[hsl(var(--accent))]">
             What You Should See
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -134,8 +134,8 @@ export default function TestAmbientPage() {
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#5a5a5a]/30">
-          <h2 className="text-xl font-bold mb-4 text-[#d1a954]">
+        <div className="bg-primary p-6 rounded-lg border border-border/30">
+          <h2 className="text-xl font-bold mb-4 text-[hsl(var(--accent))]">
             Technical Details
           </h2>
           <div className="text-sm space-y-2 font-mono">

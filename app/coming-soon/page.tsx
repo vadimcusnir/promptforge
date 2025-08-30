@@ -52,7 +52,7 @@ export default function ComingSoonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[hsl(var(--background))] text-white relative overflow-hidden">
       {/* Background now handled by global BackgroundRoot */}
 
       {/* Digital Rune - Central Symbol */}
@@ -87,7 +87,7 @@ export default function ComingSoonPage() {
                 placeholder="Your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-10 px-3 text-sm rounded border bg-white/10  border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10  border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
               />
@@ -96,14 +96,14 @@ export default function ComingSoonPage() {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-10 px-3 text-sm rounded border bg-white/10  border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10  border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))] focus:border-transparent transition-all"
                 required
                 disabled={isLoading}
               />
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-11 px-4 rounded bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
+                className="w-full h-11 px-4 rounded bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/90 text-black font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))]/50 focus:ring-offset-2 focus:ring-offset-black"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
@@ -130,7 +130,7 @@ export default function ComingSoonPage() {
             {isAdmin && (
               <a
                 href="/demo-bundle"
-                className="mt-4 inline-block text-sm text-[#d1a954] hover:text-[#d1a954]/80 underline transition-colors"
+                className="mt-4 inline-block text-sm text-[hsl(var(--accent))] hover:text-[hsl(var(--accent))]/80 underline transition-colors"
               >
                 Preview Demo Bundle →
               </a>

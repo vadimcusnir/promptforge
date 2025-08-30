@@ -407,8 +407,8 @@ export function CyberPoeticBackground() {
       "triangle",
     ];
     const colors = [
-      "rgba(255, 255, 255, 0.3)",
-      "rgba(0, 255, 127, 0.2)",
+      "hsl(var(--foreground) / 0.3)",
+      "hsl(var(--success) / 0.2)",
       "rgba(255, 90, 36, 0.2)",
     ];
 
@@ -623,7 +623,7 @@ export function CyberPoeticBackground() {
 
   if (getMotionLevel() === "static") {
     return (
-      <div className="fixed inset-0 bg-[#0a0a0a] z-0">
+      <div className="fixed inset-0 bg-[hsl(var(--background))] z-0">
         <div className="absolute inset-0 opacity-5">
           <div className="max-w-[1440px] mx-auto h-full grid grid-cols-12 gap-6">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -645,7 +645,7 @@ export function CyberPoeticBackground() {
       ref={containerRef}
       className="fixed inset-0 z-0 overflow-hidden"
       style={{
-        backgroundColor: "#0a0a0a",
+        backgroundColor: "hsl(var(--background))",
         willChange: "transform",
         transform: "translateZ(0)",
       }}

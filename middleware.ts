@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { wafMiddleware } from '@/lib/security/waf-middleware'
+import { redirectTelemetry } from '@/lib/redirect-telemetry-edge'
 
 // Legacy slug mappings for module redirects
 const LEGACY_SLUG_MAPPINGS: Record<string, string> = {
@@ -38,6 +39,8 @@ export async function middleware(request: NextRequest) {
   // Handle legacy module slug redirects
   const pathname = request.nextUrl.pathname
   
+  console.log('Middleware processing:', pathname)
+  
   // Check for module-related paths that might need redirects
   if (pathname.startsWith('/modules/') || pathname.startsWith('/generator?module=')) {
     const pathSegments = pathname.split('/')
@@ -46,8 +49,11 @@ export async function middleware(request: NextRequest) {
     // Extract slug from URL (remove query params)
     const slug = lastSegment.split('?')[0]
     
+    console.log('Checking slug:', slug, 'in mappings:', Object.keys(LEGACY_SLUG_MAPPINGS))
+    
     // Check if this is a legacy slug that needs redirecting
     if (LEGACY_SLUG_MAPPINGS[slug]) {
+      console.log('Found legacy slug, redirecting:', slug, '->', LEGACY_SLUG_MAPPINGS[slug])
       const newSlug = LEGACY_SLUG_MAPPINGS[slug]
       const newUrl = new URL(request.url)
       
@@ -56,6 +62,17 @@ export async function middleware(request: NextRequest) {
         newUrl.pathname = pathname.replace(`/modules/${slug}`, `/modules/${newSlug}`)
       } else if (pathname.startsWith('/generator')) {
         newUrl.searchParams.set('module', newSlug)
+      }
+      
+      // Track redirect for telemetry
+      try {
+        redirectTelemetry.trackRedirect(
+          slug,
+          request.headers.get('user-agent') || undefined,
+          request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined
+        );
+      } catch (error) {
+        console.error('Failed to track redirect telemetry:', error);
       }
       
       // Return 308 permanent redirect

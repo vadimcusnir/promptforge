@@ -511,7 +511,7 @@ export default function LiveGenerationDemo() {
   if (!isLoaded) {
     return (
       <section className="mt-24 border-t border-gray-700 pt-16 px-4 sm:px-8 lg:px-16">
-        <div className="bg-[#0e0e0e] border border-gray-700 rounded-xl p-8">
+        <div className="bg-primary border border-gray-700 rounded-xl p-8">
           <div className="text-center text-gray-400">
             <div className="text-sm font-mono mb-2">// PROMPTFORGE Live Generation</div>
             <div className="text-lg">Loading demo interface...</div>
@@ -524,7 +524,7 @@ export default function LiveGenerationDemo() {
   return (
     <section className="mt-24 border-t border-gray-700 pt-16 px-4 sm:px-8 lg:px-16">
       <h2 className="text-sm font-mono text-gray-400 mb-2">// PROMPTFORGE Live Generation</h2>
-      <div className="bg-[#0e0e0e] border border-gray-700 rounded-xl p-8 grid md:grid-cols-2 gap-12">
+      <div className="bg-primary border border-gray-700 rounded-xl p-8 grid md:grid-cols-2 gap-12">
         <div>
           <label className="text-sm font-semibold text-yellow-400">Enter Your Topic</label>
           <input 
@@ -538,7 +538,7 @@ export default function LiveGenerationDemo() {
             {EXAMPLES.map((example) => (
               <span 
                 key={example}
-                className="cursor-pointer px-3 py-1 bg-[#1a1a1a] rounded hover:bg-yellow-800 transition"
+                className="cursor-pointer px-3 py-1 bg-primary rounded hover:bg-yellow-800 transition"
                 onClick={() => handleExampleSelect(example)}
               >
                 {example}
@@ -641,7 +641,7 @@ export default function LiveGenerationDemo() {
         </div>
       </div>
       <div className="mt-6 text-sm text-gray-500 flex flex-wrap gap-8 font-mono">
-        <span>⚙️ Engine: <code className="bg-[#1a1a1a] px-2 py-1 rounded">PromptForge Engine (TypeScript)</code></span>
+        <span>⚙️ Engine: <code className="bg-primary px-2 py-1 rounded">PromptForge Engine (TypeScript)</code></span>
         <span>🟢 Modules Active: <span className="text-green-400">50/50</span></span>
         <span>⚡ Success Rate: <span className="text-green-400">98.7%</span></span>
         <span>📊 LCP Optimized: <span className="text-green-400">

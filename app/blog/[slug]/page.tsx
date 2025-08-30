@@ -333,7 +333,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
           <div className="max-w-4xl mx-auto">
             {/* Back to Blog Button */}
             <Link href="/blog">
-              <Button variant="ghost" className="text-[#d1a954] hover:text-[#e6c200] mb-6">
+              <Button variant="ghost" className="text-[hsl(var(--accent))] hover:text-foreground mb-6">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Blog
               </Button>
@@ -342,7 +342,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
             {/* Article Meta */}
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <Badge variant="secondary" className="bg-gray-800 text-[#d1a954] border-gray-700">
+                <Badge variant="secondary" className="bg-gray-800 text-[hsl(var(--accent))] border-gray-700">
                   {article.domain}
                 </Badge>
                 {article.vectors.map((vector, index) => (
@@ -389,7 +389,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyLink}
-                  className="text-gray-400 hover:text-[#d1a954]"
+                  className="text-gray-400 hover:text-[hsl(var(--accent))]"
                 >
                   {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
                 </Button>
@@ -412,8 +412,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
             <div className="lg:col-span-3">
               <article className="prose prose-invert prose-lg max-w-none">
                 {/* TL;DR Section */}
-                <div className="bg-gray-900 border-l-4 border-[#d1a954] p-6 mb-8 rounded-r-lg">
-                  <h3 className="text-[#d1a954] font-semibold mb-2">TL;DR</h3>
+                <div className="bg-gray-900 border-l-4 border-[hsl(var(--accent))] p-6 mb-8 rounded-r-lg">
+                  <h3 className="text-[hsl(var(--accent))] font-semibold mb-2">TL;DR</h3>
                   <p className="text-gray-300 leading-relaxed">{article.excerpt}</p>
                 </div>
 
@@ -427,7 +427,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                         onClick={() => handleSectionClick(heading.id)}
                         className={`block text-left w-full p-2 rounded transition-colors ${
                           activeSection === heading.id
-                            ? 'bg-[#d1a954] text-black'
+                            ? 'bg-[hsl(var(--accent))] text-black'
                             : 'text-gray-300 hover:text-white hover:bg-gray-800'
                         }`}
                       >
@@ -483,7 +483,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                 </div>
 
                 {/* Call to Action */}
-                <div className="bg-gradient-to-r from-[#d1a954] to-[#e6c200] rounded-lg p-8 mt-12 text-center">
+                <div className="bg-gradient-to-r from-[hsl(var(--accent))] to-[#e6c200] rounded-lg p-8 mt-12 text-center">
                   <h3 className="text-2xl font-bold text-black mb-4">
                     Ready to Experience the 7D Engine?
                   </h3>
@@ -518,13 +518,13 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                     <div className="text-gray-400 text-sm">{article.author.bio}</div>
                   </div>
                   <div className="flex justify-center space-x-3">
-                    <a href={article.author.social.twitter} className="text-gray-400 hover:text-[#d1a954] transition-colors">
+                    <a href={article.author.social.twitter} className="text-gray-400 hover:text-[hsl(var(--accent))] transition-colors">
                       <ExternalLink className="w-4 h-4" />
                     </a>
-                    <a href={article.author.social.linkedin} className="text-gray-400 hover:text-[#d1a954] transition-colors">
+                    <a href={article.author.social.linkedin} className="text-gray-400 hover:text-[hsl(var(--accent))] transition-colors">
                       <ExternalLink className="w-4 h-4" />
                     </a>
-                    <a href={article.author.social.github} className="text-gray-400 hover:text-[#d1a954] transition-colors">
+                    <a href={article.author.social.github} className="text-gray-400 hover:text-[hsl(var(--accent))] transition-colors">
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   </div>
@@ -541,7 +541,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                     {article.relatedPosts.map((post, index) => (
                       <div key={index} className="group cursor-pointer">
                         <div className="text-sm text-gray-400 mb-1">{post.domain}</div>
-                        <div className="text-white group-hover:text-[#d1a954] transition-colors font-medium text-sm">
+                        <div className="text-white group-hover:text-[hsl(var(--accent))] transition-colors font-medium text-sm">
                           {post.title}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">{post.readTime}</div>

@@ -26,23 +26,23 @@ export function DocsLayout() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-4 border-b border-[#5a5a5a]/30 bg-[#0e0e0e]">
+      <div className="md:hidden flex items-center justify-between p-4 border-b border-border/30 bg-primary">
         <div className="flex items-center gap-3">
-          <div className="w-6 h-6 bg-[#d1a954] rounded" />
-          <span className="font-mono font-bold text-[#d1a954]">Docs</span>
+          <div className="w-6 h-6 bg-[hsl(var(--accent))] rounded" />
+          <span className="font-mono font-bold text-[hsl(var(--accent))]">Docs</span>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="text-white hover:bg-[#1a1a1a]"
+          className="text-white hover:bg-primary"
         >
           {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
       </div>
 
       {/* Search Bar - Mobile */}
-      <div className="md:hidden p-4 border-b border-[#5a5a5a]/30">
+      <div className="md:hidden p-4 border-b border-border/30">
         <SearchBar />
       </div>
 

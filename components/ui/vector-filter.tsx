@@ -28,8 +28,8 @@ export function VectorFilter({
           onClick={() => onVectorChange(vector.id)}
           className={`px-4 py-2 rounded-lg border transition-all ${
             selectedVector === vector.id
-              ? "border-[#d1a954] bg-[#d1a954]/10 text-[#d1a954]"
-              : "border-[#5a5a5a]/30 hover:border-[#5a5a5a] text-[#5a5a5a] hover:text-white"
+              ? "border-[hsl(var(--accent))] bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))]"
+              : "border-border/30 hover:border-border text-foreground hover:text-white"
           }`}
         >
           <span className={vector.color}>{vector.name}</span>

@@ -18,13 +18,13 @@ const config = {
       },
     },
     extend: {
-      // Unified Design System Colors
+      // Unified Design System Colors - All using CSS variables
       colors: {
         // State colors
-        success: tokens.colors.success,
-        warning: tokens.colors.warning,
-        error: tokens.colors.error,
-        info: tokens.colors.info,
+        success: 'hsl(var(--success))',
+        warning: 'hsl(var(--warning))',
+        error: 'hsl(var(--error))',
+        info: 'hsl(var(--info))',
         
         // Unified shadcn/ui colors
         background: 'hsl(var(--background))',
@@ -71,10 +71,10 @@ const config = {
       // Z-index system
       zIndex: tokens.zIndex,
       
-      // Unified Typography System
+      // Unified Typography System - PFv4 Recommended Fonts
       fontFamily: {
-        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        sans: ['var(--font-sans)'],
+        mono: ['var(--font-mono)'],
       },
       
       // PFv3.1 Shadow System
@@ -157,29 +157,29 @@ const config = {
     function({ addUtilities }: any) {
       const glassUtilities = {
         '.glass': {
-          background: tokens.colors.glass,
+          background: 'hsl(var(--glass))',
           backdropFilter: 'blur(10px)',
-          border: `1px solid ${tokens.colors.glassBorder}`,
+          border: '1px solid hsl(var(--glass-border))',
         },
         '.glass-hover': {
           '&:hover': {
-            background: tokens.colors.glass,
-            border: `1px solid ${tokens.colors.borderHover}`,
+            background: 'hsl(var(--glass))',
+            border: '1px solid hsl(var(--border-hover))',
           },
         },
         '.glass-card': {
-          background: tokens.colors.glass,
+          background: 'hsl(var(--glass))',
           backdropFilter: 'blur(10px)',
-          border: `1px solid ${tokens.colors.glassBorder}`,
-          borderRadius: tokens.radius.lg,
-          boxShadow: tokens.shadow.glass,
+          border: '1px solid hsl(var(--glass-border))',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-glass)',
         },
         '.glass-card-hover': {
           '&:hover': {
-            background: tokens.colors.glass,
-            border: `1px solid ${tokens.colors.borderHover}`,
+            background: 'hsl(var(--glass))',
+            border: '1px solid hsl(var(--border-hover))',
             transform: 'translateY(-2px)',
-            boxShadow: tokens.shadow.lg,
+            boxShadow: 'var(--shadow-lg)',
           },
         },
         // Ritualized affordances
@@ -201,18 +201,18 @@ const config = {
           '&:focus-visible': {
             outline: 'none',
             ring: '2px',
-            ringColor: tokens.colors.accent,
+            ringColor: 'hsl(var(--accent))',
             ringOffset: '2px',
-            ringOffsetColor: tokens.colors.bg,
+            ringOffsetColor: 'hsl(var(--background))',
           },
         },
         '.focus-ring-inset': {
           '&:focus-visible': {
             outline: 'none',
             ring: '2px',
-            ringColor: tokens.colors.accent,
+            ringColor: 'hsl(var(--accent))',
             ringOffset: '-2px',
-            ringOffsetColor: tokens.colors.bg,
+            ringOffsetColor: 'hsl(var(--background))',
           },
         },
       };

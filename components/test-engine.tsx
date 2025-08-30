@@ -128,7 +128,7 @@ export function TestEngine({
   return (
     <Card className="glass-effect p-6 glow-accent">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold font-[var(--font-heading)] text-foreground flex items-center gap-2">
+        <h2 className="text-xl font-bold font-sans text-foreground flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-primary" />
           Test Engine
         </h2>

@@ -8,17 +8,17 @@ export const metadata = {
 
 export default function LegalPage() {
   return (
-    <div className="min-h-screen bg-black text-[#e0e0e0]">
+    <div className="min-h-screen bg-black text-foreground">
       {/* Breadcrumb */}
       <nav className="max-w-4xl mx-auto px-4 py-6" aria-label="Breadcrumb">
         <ol className="flex items-center space-x-2 text-sm">
           <li>
-            <Link href="/" className="hover:text-[#FFD700] transition-colors">
+            <Link href="/" className="hover:text-foreground transition-colors">
               Home
             </Link>
           </li>
           <li className="text-gray-500">/</li>
-          <li className="text-[#FFD700]" aria-current="page">
+          <li className="text-foreground" aria-current="page">
             Legal
           </li>
         </ol>
@@ -29,13 +29,13 @@ export default function LegalPage() {
         {/* Header */}
         <header className="text-center mb-16">
           <div className="mb-8 flex justify-center">
-            <Scale className="w-20 h-20 text-[#FFD700]" />
+            <Scale className="w-20 h-20 text-foreground" />
           </div>
           
           <h1 className="text-4xl font-bold mb-4 text-white">
             Legal
           </h1>
-          <p className="text-xl text-[#FFD700] font-medium">
+          <p className="text-xl text-foreground font-medium">
             Transparency and trust in every document
           </p>
         </header>
@@ -43,9 +43,9 @@ export default function LegalPage() {
         {/* Legal Documents Grid */}
         <div className="grid gap-8">
           {/* Privacy Policy */}
-          <div className="border border-gray-800 rounded-lg p-6 hover:border-[#FFD700] transition-colors">
+          <div className="border border-gray-800 rounded-lg p-6 hover:border-border transition-colors">
             <div className="flex items-start gap-4">
-              <Shield className="w-8 h-8 text-[#FFD700] mt-1 flex-shrink-0" />
+              <Shield className="w-8 h-8 text-foreground mt-1 flex-shrink-0" />
               <div className="flex-1">
                 <h2 className="text-xl font-semibold mb-2 text-white">
                   Privacy Policy
@@ -56,7 +56,7 @@ export default function LegalPage() {
                 </p>
                 <Link 
                   href="/privacy" 
-                  className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFD700]/80 transition-colors font-medium"
+                  className="inline-flex items-center gap-2 text-foreground hover:text-foreground/80 transition-colors font-medium"
                 >
                   Read Privacy Policy
                   <FileText className="w-4 h-4" />
@@ -66,9 +66,9 @@ export default function LegalPage() {
           </div>
 
           {/* Terms of Service */}
-          <div className="border border-gray-800 rounded-lg p-6 hover:border-[#FFD700] transition-colors">
+          <div className="border border-gray-800 rounded-lg p-6 hover:border-border transition-colors">
             <div className="flex items-start gap-4">
-              <FileText className="w-8 h-8 text-[#FFD700] mt-1 flex-shrink-0" />
+              <FileText className="w-8 h-8 text-foreground mt-1 flex-shrink-0" />
               <div className="flex-1">
                 <h2 className="text-xl font-semibold mb-2 text-white">
                   Terms of Service
@@ -78,7 +78,7 @@ export default function LegalPage() {
                 </p>
                 <Link 
                   href="/terms" 
-                  className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFD700]/80 transition-colors font-medium"
+                  className="inline-flex items-center gap-2 text-foreground hover:text-foreground/80 transition-colors font-medium"
                 >
                   Read Terms of Service
                   <FileText className="w-4 h-4" />
@@ -90,7 +90,7 @@ export default function LegalPage() {
           {/* Contact Legal Team */}
           <div className="border border-gray-800 rounded-lg p-6 bg-gray-900/20">
             <div className="flex items-start gap-4">
-              <Mail className="w-8 h-8 text-[#FFD700] mt-1 flex-shrink-0" />
+              <Mail className="w-8 h-8 text-foreground mt-1 flex-shrink-0" />
               <div className="flex-1">
                 <h2 className="text-xl font-semibold mb-2 text-white">
                   Contact Legal Team
@@ -100,10 +100,10 @@ export default function LegalPage() {
                   Our legal team is here to help.
                 </p>
                 <a 
-                  href="mailto:legal@promptforge.com" 
-                  className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFD700]/80 transition-colors font-medium"
+                  href="mailto:legal@chatgpt-prompting.com" 
+                  className="inline-flex items-center gap-2 text-foreground hover:text-foreground/80 transition-colors font-medium"
                 >
-                  legal@promptforge.com
+                  legal@chatgpt-prompting.com
                   <Mail className="w-4 h-4" />
                 </a>
               </div>

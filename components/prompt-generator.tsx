@@ -146,7 +146,7 @@ export function PromptGenerator({
   return (
     <Card className="glass-effect p-6 glow-accent">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-[var(--font-heading)] text-foreground">
+        <h2 className="text-2xl font-bold font-sans text-foreground">
           Prompt Generator
         </h2>
         {validationResult && (

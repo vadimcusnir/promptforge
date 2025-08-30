@@ -6,7 +6,33 @@ import type React from "react";
 import type { Metadata } from "next";
 import ClientRootLayout from "./ClientRootLayout";
 import { getMotionMode } from "@/lib/motion";
+import { Cinzel } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "./styles/variables.css";
+import "./styles/animations.css";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
+});
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-cinzel",
+  weight: ["400", "500", "600", "700"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chatgpt-prompting.com"),
@@ -28,11 +54,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/forge_v3_logo/forge_v3_logo_transparent.png", sizes: "32x32", type: "image/png" },
-      { url: "/forge_v3_logo/forge_v3_logo_transparent.png", sizes: "48x48", type: "image/png" },
+      { url: "/f_v3_brand_images/forge_v3_logo_transparent.png", sizes: "32x32", type: "image/png" },
+      { url: "/f_v3_brand_images/forge_v3_logo_transparent.png", sizes: "48x48", type: "image/png" },
     ],
-    shortcut: "/forge_v3_logo/forge_v3_logo_transparent.png",
-    apple: "/forge_v3_logo/forge_v3_logo_transparent.png",
+    shortcut: "/f_v3_brand_images/forge_v3_logo_transparent.png",
+    apple: "/f_v3_brand_images/forge_v3_logo_transparent.png",
   },
   openGraph: {
     title: "PromptForge v3 — Cognitive OS for Prompts",
@@ -43,10 +69,10 @@ export const metadata: Metadata = {
     siteName: "Prompt-Forge™",
     images: [
       {
-        url: "/og-image.png",
+        url: "/f_v3_brand_images/forge_logo_final_white_text.png",
         width: 1200,
         height: 630,
-        alt: "Prompt-Forge™ - Cyber-Poetic Terminal Interface",
+        alt: "Prompt-Forge™ - Cognitive OS for Prompts",
       },
     ],
     locale: "en_US",
@@ -56,7 +82,7 @@ export const metadata: Metadata = {
     title: "PromptForge v3 — Cognitive OS for Prompts",
     description:
       "50 modules + 7D Engine. Score ≥80. Start free, upgrade for PDF/JSON/ZIP.",
-    images: ["/og-image.png"],
+    images: ["/f_v3_brand_images/forge_logo_final_white_text.png"],
     creator: "@ai_idei",
   },
   other: {
@@ -75,11 +101,15 @@ export default async function RootLayout({
 }>) {
   const mode = await getMotionMode(); // "off" | "on"
   return (
-    <html lang="en" data-motion={mode}>
+    <html 
+      lang="en" 
+      className={`${spaceGrotesk.variable} ${cinzel.variable} ${jetbrainsMono.variable}`}
+      data-motion={mode}
+    >
       <head>
         <meta httpEquiv="Content-Language" content="en" />
       </head>
-      <body>
+      <body className="font-sans antialiased">
         <div className="pf-pitch" aria-hidden="true" />
         <StratifiedBackground />
         <Header />

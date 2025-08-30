@@ -60,7 +60,7 @@ All prompts are scored on a 0-100 scale:
 
 ---
 © 2025 PromptForge™. All rights reserved.
-For more information, visit: https://promptforge.com
+For more information, visit: https://chatgpt-prompting.com
 `
 
     // Create response with the guide content

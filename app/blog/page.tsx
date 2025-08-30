@@ -114,7 +114,7 @@ export default function BlogPage() {
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 font-sans">
-              Blog <span className="text-[#d1a954]">PromptForge™</span>
+              Blog <span className="text-[hsl(var(--accent))]">PromptForge™</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Insights, strategies, and deep dives into AI prompt engineering, 
@@ -181,13 +181,13 @@ export default function BlogPage() {
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredArticles.map((article) => (
-                  <Card key={article.id} className="bg-gray-900 border-gray-800 hover:border-[#d1a954] transition-all duration-300 hover:shadow-lg hover:shadow-[#d1a954]/10">
+                  <Card key={article.id} className="bg-gray-900 border-gray-800 hover:border-[hsl(var(--accent))] transition-all duration-300 hover:shadow-lg hover:shadow-[hsl(var(--accent))]/10">
                     <div className="aspect-video bg-gray-800 rounded-t-lg mb-4 flex items-center justify-center">
                       <div className="text-gray-400 text-sm">Cover Image</div>
                     </div>
                     <CardHeader className="pb-3">
                       <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary" className="bg-gray-800 text-[#d1a954] border-gray-700">
+                        <Badge variant="secondary" className="bg-gray-800 text-[hsl(var(--accent))] border-gray-700">
                           {article.domain}
                         </Badge>
                         {article.vectors.slice(0, 2).map((vector, index) => (
@@ -196,7 +196,7 @@ export default function BlogPage() {
                           </Badge>
                         ))}
                       </div>
-                      <CardTitle className="text-xl text-white hover:text-[#d1a954] transition-colors cursor-pointer">
+                      <CardTitle className="text-xl text-white hover:text-[hsl(var(--accent))] transition-colors cursor-pointer">
                         {article.title}
                       </CardTitle>
                     </CardHeader>
@@ -218,7 +218,7 @@ export default function BlogPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-[#d1a954] hover:text-[#e6c200] hover:bg-[#d1a954]/10"
+                          className="text-[hsl(var(--accent))] hover:text-foreground hover:bg-[hsl(var(--accent))]/10"
                         >
                           Read More <ArrowRight className="w-3 h-3 ml-1" />
                         </Button>
@@ -245,7 +245,7 @@ export default function BlogPage() {
                   {recommendedArticles.map((article) => (
                     <div key={article.id} className="group cursor-pointer">
                       <div className="text-sm text-gray-400 mb-1">{article.domain}</div>
-                      <div className="text-white group-hover:text-[#d1a954] transition-colors font-medium">
+                      <div className="text-white group-hover:text-[hsl(var(--accent))] transition-colors font-medium">
                         {article.title}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">{article.readTime}</div>
@@ -255,7 +255,7 @@ export default function BlogPage() {
               </div>
 
               {/* Newsletter CTA */}
-              <div className="bg-gradient-to-r from-[#d1a954] to-[#e6c200] rounded-lg p-6 text-center">
+              <div className="bg-gradient-to-r from-[hsl(var(--accent))] to-[#e6c200] rounded-lg p-6 text-center">
                 <h3 className="text-lg font-semibold text-black mb-2">Stay Updated</h3>
                 <p className="text-black/80 text-sm mb-4">
                   Get the latest insights on AI prompt engineering
@@ -279,10 +279,10 @@ export default function BlogPage() {
             Experience the power of 50+ operational modules and the 7D engine
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#d1a954] text-black hover:bg-[#e6c200]">
+            <Button size="lg" className="bg-[hsl(var(--accent))] text-black hover:bg-primary">
               Try Generator Free
             </Button>
-            <Button size="lg" variant="outline" className="border-[#d1a954] text-[#d1a954] hover:bg-[#d1a954] hover:text-black">
+            <Button size="lg" variant="outline" className="border-[hsl(var(--accent))] text-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))] hover:text-black">
               View Modules
             </Button>
           </div>

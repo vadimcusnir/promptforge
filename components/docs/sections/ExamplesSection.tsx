@@ -90,7 +90,7 @@ Provide executive-level insights with supporting data points and strategic recom
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-white">
-          <span className="text-[#d1a954]">Examples</span> & Use Cases
+          <span className="text-[hsl(var(--accent))]">Examples</span> & Use Cases
         </h1>
         <p className="text-xl text-white/80 max-w-3xl mx-auto">
           See PromptForge™ v3 in action with real-world examples of 7D configurations, 
@@ -99,9 +99,9 @@ Provide executive-level insights with supporting data points and strategic recom
       </div>
 
       {/* Examples Overview */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
             <Code className="w-5 h-5 text-black" />
           </div>
           Learning Through Examples
@@ -125,18 +125,18 @@ Provide executive-level insights with supporting data points and strategic recom
       {/* Example Cards */}
       <div className="space-y-8">
         {examples.map((example, index) => (
-          <div key={example.title} className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+          <div key={example.title} className="bg-primary border border-border/30 rounded-xl p-8">
             {/* Example Header */}
             <div className="flex items-start gap-4 mb-6">
-              <div className="w-12 h-12 bg-[#d1a954] rounded-lg flex items-center justify-center text-black font-bold text-lg">
+              <div className="w-12 h-12 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center text-black font-bold text-lg">
                 {index + 1}
               </div>
               <div className="flex-1">
-                <h3 className="text-2xl font-bold text-[#d1a954] mb-2">{example.title}</h3>
+                <h3 className="text-2xl font-bold text-[hsl(var(--accent))] mb-2">{example.title}</h3>
                 <p className="text-white/80 text-lg">{example.description}</p>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-[#d1a954]">{example.testScore}</div>
+                <div className="text-3xl font-bold text-[hsl(var(--accent))]">{example.testScore}</div>
                 <div className="text-white/60 text-sm">Test Score</div>
               </div>
             </div>
@@ -144,15 +144,15 @@ Provide executive-level insights with supporting data points and strategic recom
             {/* 7D Parameters */}
             <div className="mb-6">
               <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                <Zap className="w-4 h-4 text-[#d1a954]" />
+                <Zap className="w-4 h-4 text-[hsl(var(--accent))]" />
                 7D Parameter Configuration
               </h4>
-              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+              <div className="bg-primary border border-border/30 rounded-lg p-4">
                 <div className="grid md:grid-cols-2 gap-4 text-sm font-mono">
                   {Object.entries(example.params7D).map(([key, value]) => (
                     <div key={key} className="flex justify-between">
                       <span className="text-white/60">{key}:</span>
-                      <span className="text-[#d1a954] font-medium">{value}</span>
+                      <span className="text-[hsl(var(--accent))] font-medium">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -162,10 +162,10 @@ Provide executive-level insights with supporting data points and strategic recom
             {/* Generated Prompt */}
             <div className="mb-6">
               <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#d1a954]" />
+                <FileText className="w-4 h-4 text-[hsl(var(--accent))]" />
                 Generated Prompt
               </h4>
-              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+              <div className="bg-primary border border-border/30 rounded-lg p-4">
                 <pre className="text-white/90 text-sm font-mono whitespace-pre-wrap leading-relaxed">
                   {example.prompt}
                 </pre>
@@ -175,12 +175,12 @@ Provide executive-level insights with supporting data points and strategic recom
             {/* Export Formats */}
             <div className="mb-6">
               <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                <Download className="w-4 h-4 text-[#d1a954]" />
+                <Download className="w-4 h-4 text-[hsl(var(--accent))]" />
                 Available Export Formats
               </h4>
               <div className="flex flex-wrap gap-2">
                 {example.exportFormats.map((format) => (
-                  <span key={format} className="px-3 py-1 bg-[#d1a954]/20 text-[#d1a954] text-xs rounded-full border border-[#d1a954]/30 font-medium">
+                  <span key={format} className="px-3 py-1 bg-[hsl(var(--accent))]/20 text-[hsl(var(--accent))] text-xs rounded-full border border-[hsl(var(--accent))]/30 font-medium">
                     {format}
                   </span>
                 ))}
@@ -188,18 +188,18 @@ Provide executive-level insights with supporting data points and strategic recom
             </div>
 
             {/* Analysis */}
-            <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-4">
+            <div className="bg-primary border border-border/30 rounded-lg p-4">
               <h5 className="font-semibold text-white mb-3">Why This Configuration Works</h5>
               <div className="grid md:grid-cols-2 gap-4 text-sm text-white/80">
                 <div>
-                  <h6 className="font-medium text-[#d1a954] mb-2">Parameter Synergy</h6>
+                  <h6 className="font-medium text-[hsl(var(--accent))] mb-2">Parameter Synergy</h6>
                   <p>
                     The combination of {example.params7D.domain} domain with {example.params7D.complexity} complexity 
                     and {example.params7D.resources} resources creates a balanced approach that matches the task requirements.
                   </p>
                 </div>
                 <div>
-                  <h6 className="font-medium text-[#d1a954] mb-2">Quality Assurance</h6>
+                  <h6 className="font-medium text-[hsl(var(--accent))] mb-2">Quality Assurance</h6>
                   <p>
                     With a test score of {example.testScore}, this prompt exceeds the minimum threshold of 80, 
                     ensuring professional-grade quality and effectiveness.
@@ -212,7 +212,7 @@ Provide executive-level insights with supporting data points and strategic recom
       </div>
 
       {/* Best Practices */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">Best Practices from Examples</h2>
         
         <div className="grid md:grid-cols-2 gap-6">
@@ -220,21 +220,21 @@ Provide executive-level insights with supporting data points and strategic recom
             <h4 className="font-semibold text-white text-lg">Parameter Optimization</h4>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                 <div>
                   <p className="text-white/90 text-sm font-medium">Start with Domain and Scale</p>
                   <p className="text-white/60 text-xs">These provide the foundation for other parameters</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                 <div>
                   <p className="text-white/90 text-sm font-medium">Match Complexity to Resources</p>
                   <p className="text-white/60 text-xs">Ensure your capabilities align with your ambitions</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                 <div>
                   <p className="text-white/90 text-sm font-medium">Consider Application Context</p>
                   <p className="text-white/60 text-xs">Internal vs. client-facing prompts have different needs</p>
@@ -247,21 +247,21 @@ Provide executive-level insights with supporting data points and strategic recom
             <h4 className="font-semibold text-white text-lg">Prompt Engineering Tips</h4>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                 <div>
                   <p className="text-white/90 text-sm font-medium">Be Specific and Clear</p>
                   <p className="text-white/60 text-xs">Vague prompts produce vague results</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                 <div>
                   <p className="text-white/90 text-sm font-medium">Include Examples</p>
                   <p className="text-white/60 text-xs">Show the AI what you want, don't just tell it</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#d1a954] rounded-full mt-2" />
+                <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full mt-2" />
                 <div>
                   <p className="text-white/90 text-sm font-medium">Test and Iterate</p>
                   <p className="text-white/60 text-xs">Use the test engine to refine your prompts</p>
@@ -273,7 +273,7 @@ Provide executive-level insights with supporting data points and strategic recom
       </div>
 
       {/* Interactive Example Builder */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">Try It Yourself</h2>
         
         <div className="text-center space-y-4">
@@ -284,10 +284,10 @@ Provide executive-level insights with supporting data points and strategic recom
           </p>
           
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="px-6 py-3 bg-[#d1a954] text-black font-semibold rounded-lg hover:bg-[#d1a954]/90 transition-colors duration-200">
+            <button className="px-6 py-3 bg-[hsl(var(--accent))] text-black font-semibold rounded-lg hover:bg-[hsl(var(--accent))]/90 transition-colors duration-200">
               Go to Generator
             </button>
-            <button className="px-6 py-3 bg-[#1a1a1a] text-white border border-[#5a5a5a]/30 rounded-lg hover:bg-[#1a1a1a]/50 transition-colors duration-200">
+            <button className="px-6 py-3 bg-primary text-white border border-border/30 rounded-lg hover:bg-primary/50 transition-colors duration-200">
               View All Modules
             </button>
           </div>
@@ -298,7 +298,7 @@ Provide executive-level insights with supporting data points and strategic recom
       <div className="text-center">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#d1a954]/20 border border-[#d1a954]/40 text-[#d1a954] rounded-lg hover:bg-[#d1a954]/30 transition-colors duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[hsl(var(--accent))]/20 border border-[hsl(var(--accent))]/40 text-[hsl(var(--accent))] rounded-lg hover:bg-[hsl(var(--accent))]/30 transition-colors duration-200"
         >
           <ArrowUp className="w-4 h-4" />
           Back to Top

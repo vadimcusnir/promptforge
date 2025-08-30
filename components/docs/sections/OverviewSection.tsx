@@ -8,7 +8,7 @@ export function OverviewSection() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-white">
-          Welcome to <span className="text-[#d1a954]">PromptForge™ v3</span>
+          Welcome to <span className="text-[hsl(var(--accent))]">PromptForge™ v3</span>
         </h1>
         <p className="text-xl text-white/80 max-w-3xl mx-auto">
           The Cognitive OS for Prompts - 50 semantic modules powered by a revolutionary 7D parameter engine
@@ -16,9 +16,9 @@ export function OverviewSection() {
       </div>
 
       {/* What is PromptForge */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#d1a954] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
             <ArrowUp className="w-5 h-5 text-black" />
           </div>
           What is PromptForge?
@@ -42,26 +42,26 @@ export function OverviewSection() {
       {/* Core Components */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* 50 Semantic Modules */}
-        <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-6">
-          <h3 className="text-xl font-bold text-[#d1a954] mb-4">50 Semantic Modules</h3>
+        <div className="bg-primary border border-border/30 rounded-xl p-6">
+          <h3 className="text-xl font-bold text-[hsl(var(--accent))] mb-4">50 Semantic Modules</h3>
           <p className="text-white/80 text-sm leading-relaxed mb-4">
             Each module specializes in a specific domain or use case, from creative writing and 
             technical documentation to business strategy and scientific research.
           </p>
-          <div className="flex items-center gap-2 text-[#d1a954] text-sm">
+          <div className="flex items-center gap-2 text-[hsl(var(--accent))] text-sm">
             <span>Specialized domains</span>
             <ArrowUpRight className="w-4 h-4" />
           </div>
         </div>
 
         {/* 7D Parameter Engine */}
-        <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-6">
-          <h3 className="text-xl font-bold text-[#d1a954] mb-4">7D Parameter Engine</h3>
+        <div className="bg-primary border border-border/30 rounded-xl p-6">
+          <h3 className="text-xl font-bold text-[hsl(var(--accent))] mb-4">7D Parameter Engine</h3>
           <p className="text-white/80 text-sm leading-relaxed mb-4">
             A revolutionary parameter system that considers Domain, Scale, Urgency, Complexity, 
             Resources, Application, and Output to generate perfectly calibrated prompts.
           </p>
-          <div className="flex items-center gap-2 text-[#d1a954] text-sm">
+          <div className="flex items-center gap-2 text-[hsl(var(--accent))] text-sm">
             <span>Multi-dimensional optimization</span>
             <ArrowUpRight className="w-4 h-4" />
           </div>
@@ -69,12 +69,12 @@ export function OverviewSection() {
       </div>
 
       {/* Workflow Overview */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">How It Works</h2>
         
         <div className="space-y-6">
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               1
             </div>
             <div>
@@ -86,7 +86,7 @@ export function OverviewSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               2
             </div>
             <div>
@@ -99,7 +99,7 @@ export function OverviewSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               3
             </div>
             <div>
@@ -112,7 +112,7 @@ export function OverviewSection() {
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d1a954] rounded-full flex items-center justify-center text-black font-bold text-sm">
+            <div className="w-8 h-8 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center text-black font-bold text-sm">
               4
             </div>
             <div>
@@ -127,36 +127,36 @@ export function OverviewSection() {
       </div>
 
       {/* Key Benefits */}
-      <div className="bg-[#0e0e0e] border border-[#5a5a5a]/30 rounded-xl p-8">
+      <div className="bg-primary border border-border/30 rounded-xl p-8">
         <h2 className="text-2xl font-bold text-white mb-6">Key Benefits</h2>
         
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[#d1a954] rounded-full" />
+              <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full" />
               <span className="text-white/90">Professional-grade prompt quality</span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[#d1a954] rounded-full" />
+              <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full" />
               <span className="text-white/90">Context-aware generation</span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[#d1a954] rounded-full" />
+              <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full" />
               <span className="text-white/90">Advanced testing & validation</span>
             </div>
           </div>
           
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[#d1a954] rounded-full" />
+              <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full" />
               <span className="text-white/90">Multiple export formats</span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[#d1a954] rounded-full" />
+              <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full" />
               <span className="text-white/90">Enterprise API access</span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[#d1a954] rounded-full" />
+              <div className="w-2 h-2 bg-[hsl(var(--accent))] rounded-full" />
               <span className="text-white/90">Scalable team collaboration</span>
             </div>
           </div>
@@ -167,7 +167,7 @@ export function OverviewSection() {
       <div className="text-center">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#d1a954]/20 border border-[#d1a954]/40 text-[#d1a954] rounded-lg hover:bg-[#d1a954]/30 transition-colors duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[hsl(var(--accent))]/20 border border-[hsl(var(--accent))]/40 text-[hsl(var(--accent))] rounded-lg hover:bg-[hsl(var(--accent))]/30 transition-colors duration-200"
         >
           <ArrowUp className="w-4 h-4" />
           Back to Top

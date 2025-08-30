@@ -30,7 +30,7 @@ const GlitchMask = () => (
     />
     <defs>
       <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#d1a954" stopOpacity="0.3" />
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.3" />
         <stop offset="50%" stopColor="#b5965c" stopOpacity="0.2" />
         <stop offset="100%" stopColor="#c7a869" stopOpacity="0.1" />
       </linearGradient>
@@ -41,25 +41,25 @@ const GlitchMask = () => (
 // Pulsing LED Component
 const PulsingLED = () => (
   <div className="fixed top-8 right-8 z-50">
-    <div className="w-3 h-3 bg-[#d1a954] rounded-full" />
-    <div className="absolute inset-0 w-3 h-3 bg-[#d1a954] rounded-full opacity-75" />
+    <div className="w-3 h-3 bg-[hsl(var(--accent))] rounded-full" />
+    <div className="absolute inset-0 w-3 h-3 bg-[hsl(var(--accent))] rounded-full opacity-75" />
   </div>
 );
 
 // Fractured Code Animation
 const FracturedCode = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
-    <div className="absolute top-20 left-10 font-mono text-xs text-[#d1a954]">
+    <div className="absolute top-20 left-10 font-mono text-xs text-[hsl(var(--accent))]">
       <span className="block">ERR_404</span>
       <span className="block">RITUAL_FAILED</span>
       <span className="block">PAGE_NOT_FOUND</span>
     </div>
-    <div className="absolute bottom-20 right-10 font-mono text-xs text-[#d1a954] delay-1000">
+    <div className="absolute bottom-20 right-10 font-mono text-xs text-[hsl(var(--accent))] delay-1000">
       <span className="block">FORGE_ACTIVE</span>
       <span className="block">PROMPT_READY</span>
       <span className="block">EVOLUTION_CONTINUES</span>
     </div>
-    <div className="absolute top-1/2 left-1/4 font-mono text-xs text-[#d1a954] delay-500">
+    <div className="absolute top-1/2 left-1/4 font-mono text-xs text-[hsl(var(--accent))] delay-500">
       <span className="block">CYBER_RITUAL</span>
       <span className="block">BRUTALIST_DESIGN</span>
     </div>
@@ -120,14 +120,14 @@ export default function NotFound() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center">
         <div className="max-w-4xl mx-auto animate-in slide-in-from-bottom-8 duration-1000">
           {/* Glitch H1 */}
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 text-[#d1a954] relative animate-in fade-in duration-1000 delay-300">
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 text-[hsl(var(--accent))] relative animate-in fade-in duration-1000 delay-300">
             <span className="block glitch-text" data-text="Ritual Failed:">Ritual Failed:</span>
             <span className="block glitch-text" data-text="Page Not Found">Page Not Found</span>
             {/* Enhanced glitch effect layers */}
-            <span className="absolute inset-0 text-[#d1a954] opacity-75 blur-[1px]">
+            <span className="absolute inset-0 text-[hsl(var(--accent))] opacity-75 blur-[1px]">
               Ritual Failed: Page Not Found
             </span>
-            <span className="absolute inset-0 text-[#d1a954] opacity-50 blur-[2px] translate-x-1 delay-500">
+            <span className="absolute inset-0 text-[hsl(var(--accent))] opacity-50 blur-[2px] translate-x-1 delay-500">
               Ritual Failed: Page Not Found
             </span>
           </h1>
@@ -143,7 +143,7 @@ export default function NotFound() {
             <Link
               href="/generator"
               onClick={resetCountdown}
-              className="px-8 py-4 bg-[#d1a954] text-black font-bold text-lg rounded-lg hover:bg-[#b5965c] transition-all duration-300 transform hover:scale-105 brutalist-border"
+              className="px-8 py-4 bg-[hsl(var(--accent))] text-black font-bold text-lg rounded-lg hover:bg-primary transition-all duration-300 transform hover:scale-105 brutalist-border"
             >
               Return to Generator
             </Link>
@@ -152,7 +152,7 @@ export default function NotFound() {
             <Link
               href="/modules"
               onClick={resetCountdown}
-              className="px-8 py-4 border-2 border-[#d1a954] text-[#d1a954] font-bold text-lg rounded-lg hover:bg-[#d1a954] hover:text-black transition-all duration-300 transform hover:scale-105 brutalist-border"
+              className="px-8 py-4 border-2 border-[hsl(var(--accent))] text-[hsl(var(--accent))] font-bold text-lg rounded-lg hover:bg-[hsl(var(--accent))] hover:text-black transition-all duration-300 transform hover:scale-105 brutalist-border"
             >
               Browse Modules
             </Link>
@@ -174,7 +174,7 @@ export default function NotFound() {
       {showRedirect && (
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center animate-in fade-in duration-500">
           <div className="text-center animate-in zoom-in duration-500">
-            <div className="text-[#d1a954] text-4xl mb-4">
+            <div className="text-[hsl(var(--accent))] text-4xl mb-4">
               ⚡
             </div>
             <p className="text-white text-xl mb-2">Redirecting to Forge...</p>

@@ -34,7 +34,7 @@ export default function AboutPage() {
             <Eye className="h-12 w-12 text-[var(--pf-gold-500)]" />
           </div>
           
-          <h1 className="font-heading font-black tracking-tight text-5xl sm:text-6xl lg:text-7xl mb-6">
+          <h1 className="font-sans font-black tracking-tight text-5xl sm:text-6xl lg:text-7xl mb-6">
             Transformăm Limbajul în{" "}
             <span className="text-[var(--pf-gold-500)]">Cod Ritualic</span>
           </h1>

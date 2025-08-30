@@ -3,6 +3,8 @@ export interface BrandLinterResult {
   isValid: boolean;
   issues: BrandIssue[];
   fixes: BrandFix[];
+  score: number;
+  breaches: string[];
 }
 
 export interface BrandIssue {
@@ -42,6 +44,8 @@ export function lintBrandContent(content: string): BrandLinterResult {
     isValid: issues.length === 0,
     issues,
     fixes,
+    score: issues.length === 0 ? 100 : Math.max(0, 100 - (issues.length * 10)),
+    breaches: issues.map(issue => issue.type),
   };
 }
 

@@ -54,7 +54,7 @@ export default function TestMotionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white p-8">
+    <div className="min-h-screen bg-primary text-white p-8">
       <toast.ToastContainer />
 
       <div className="max-w-6xl mx-auto space-y-12">

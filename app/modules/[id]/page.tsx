@@ -71,7 +71,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
           <h1 className="text-4xl md:text-5xl font-bold mb-4 font-sans">
             {module.name}
           </h1>
-          <p className="text-xl text-[#5a5a5a] mb-6 font-open-sans">
+          <p className="text-xl text-foreground mb-6 font-open-sans">
             {module.description}
           </p>
         </div>
@@ -81,18 +81,18 @@ export default async function ModulePage({ params }: ModulePageProps) {
         <ModuleDemo module={module} />
 
         <div className="flex flex-col sm:flex-row gap-4 mb-12">
-          <button className="flex-1 bg-gradient-to-r from-[#d1a954] to-[#d1a954]/80 text-black font-semibold py-4 px-8 rounded-lg hover:shadow-lg hover:shadow-[#d1a954]/25 transition-all font-open-sans">
+          <button className="flex-1 bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--accent))]/80 text-black font-semibold py-4 px-8 rounded-lg hover:shadow-lg hover:shadow-[hsl(var(--accent))]/25 transition-all font-open-sans">
             <Play className="w-5 h-5 inline mr-2" />
             Generate Prompt with This Module
           </button>
-          <button className="flex items-center justify-center gap-2 border border-[#5a5a5a]/30 text-[#5a5a5a] hover:text-white hover:border-white py-4 px-8 rounded-lg transition-colors font-open-sans">
+          <button className="flex items-center justify-center gap-2 border border-border/30 text-foreground hover:text-white hover:border-white py-4 px-8 rounded-lg transition-colors font-open-sans">
             <ExternalLink className="w-4 h-4" />
             Export Specifications
           </button>
         </div>
 
-        <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-8">
-          <h3 className="text-2xl font-bold mb-6 text-[#d1a954] font-sans">
+        <div className="glass-effect border border-border/30 rounded-lg p-8">
+          <h3 className="text-2xl font-bold mb-6 text-[hsl(var(--accent))] font-sans">
             Frequently Asked Questions
           </h3>
           <div className="space-y-6">
@@ -100,7 +100,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
               <h4 className="text-lg font-semibold mb-2 text-white">
                 When should I use this module?
               </h4>
-              <p className="text-[#5a5a5a] font-open-sans">
+              <p className="text-foreground font-open-sans">
                 This module is optimized for {module.description.toLowerCase()}.
                 Use it when you need precise, industrial-grade prompts that meet
                 the specified KPI targets.
@@ -110,7 +110,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
               <h4 className="text-lg font-semibold mb-2 text-white">
                 What makes this different from other modules?
               </h4>
-              <p className="text-[#5a5a5a] font-open-sans">
+              <p className="text-foreground font-open-sans">
                 Each module in Vector {module.vector} is specifically engineered
                 for{" "}
                 {vectorNames[
@@ -123,7 +123,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
               <h4 className="text-lg font-semibold mb-2 text-white">
                 What do I get with Pro upgrade?
               </h4>
-              <p className="text-[#5a5a5a] font-open-sans">
+              <p className="text-foreground font-open-sans">
                 Pro users get complete export bundles (JSON/PDF), advanced
                 telemetry, GPT Live optimization, and unlimited module
                 executions with priority processing.

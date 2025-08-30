@@ -38,7 +38,7 @@ const files = [
 
 export default function DemoBundlePage() {
   return (
-    <section className="min-h-screen px-6 py-16 max-w-4xl mx-auto text-white bg-[#0a0a0a]">
+    <section className="min-h-screen px-6 py-16 max-w-4xl mx-auto text-white bg-[hsl(var(--background))]">
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-4">
           Preview Demo Bundle
@@ -48,7 +48,7 @@ export default function DemoBundlePage() {
           artifacts, or grab everything as a ZIP.
         </p>
         <div className="mt-4 flex flex-wrap gap-2 text-sm">
-          <span className="px-3 py-1 bg-[#d1a954]/20 text-[#d1a954] rounded-full">
+          <span className="px-3 py-1 bg-[hsl(var(--accent))]/20 text-[hsl(var(--accent))] rounded-full">
             Module M12
           </span>
           <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
@@ -68,7 +68,7 @@ export default function DemoBundlePage() {
           >
             <div className="flex items-center justify-between mb-3">
               <div>
-                <div className="font-mono text-lg font-semibold text-[#d1a954]">
+                <div className="font-mono text-lg font-semibold text-[hsl(var(--accent))]">
                   {f.name}
                 </div>
                 <div className="text-sm opacity-80">{f.desc}</div>
@@ -146,7 +146,7 @@ export default function DemoBundlePage() {
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <a
           href="/api/demo-bundle.zip"
-          className="px-6 py-4 rounded-lg bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-bold text-lg transition-all duration-200 text-center flex items-center justify-center gap-2"
+          className="px-6 py-4 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/90 text-black font-bold text-lg transition-all duration-200 text-center flex items-center justify-center gap-2"
         >
           <svg
             className="w-5 h-5"
@@ -172,7 +172,7 @@ export default function DemoBundlePage() {
       </div>
 
       <div className="bg-white/5 rounded-lg border border-white/15 p-6">
-        <h3 className="text-xl font-semibold mb-4 text-[#d1a954]">
+        <h3 className="text-xl font-semibold mb-4 text-[hsl(var(--accent))]">
           Bundle Specifications
         </h3>
         <div className="grid md:grid-cols-2 gap-6 text-sm">
@@ -200,7 +200,7 @@ export default function DemoBundlePage() {
         <div className="mt-4 pt-4 border-t border-white/15">
           <p className="text-sm text-white/70">
             Bundle format & checksum follow the{" "}
-            <span className="text-[#d1a954]">PROMPTFORGE export standard</span>.{" "}
+            <span className="text-[hsl(var(--accent))]">PROMPTFORGE export standard</span>.{" "}
             <span className="text-white/90">
               Artifacts: .txt, .md, .json, .pdf, manifest, checksum.
             </span>

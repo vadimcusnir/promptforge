@@ -122,7 +122,7 @@ export default function AdminPage() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center px-6">
+      <div className="min-h-screen bg-[hsl(var(--background))] text-white flex items-center justify-center px-6">
         <Card className="w-full max-w-md bg-white/5  border border-white/10">
           <CardHeader>
             <CardTitle className="text-center text-white">
@@ -142,7 +142,7 @@ export default function AdminPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-bold"
+                className="w-full bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/90 text-black font-bold"
               >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
@@ -154,7 +154,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
+    <div className="min-h-screen bg-[hsl(var(--background))] text-white p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">PromptForge Admin</h1>
@@ -249,25 +249,25 @@ export default function AdminPage() {
             <CardContent className="space-y-2">
               <Link
                 href="/"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+                className="block text-[hsl(var(--accent))] hover:text-[hsl(var(--accent))]/80 underline"
               >
                 → Homepage (Admin View)
               </Link>
               <Link
                 href="/coming-soon"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+                className="block text-[hsl(var(--accent))] hover:text-[hsl(var(--accent))]/80 underline"
               >
                 → Coming Soon Page (Public View)
               </Link>
               <Link
                 href="/dashboard"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+                className="block text-[hsl(var(--accent))] hover:text-[hsl(var(--accent))]/80 underline"
               >
                 → Dashboard
               </Link>
               <Link
                 href="/generator"
-                className="block text-[#d1a954] hover:text-[#d1a954]/80 underline"
+                className="block text-[hsl(var(--accent))] hover:text-[hsl(var(--accent))]/80 underline"
               >
                 → Generator
               </Link>

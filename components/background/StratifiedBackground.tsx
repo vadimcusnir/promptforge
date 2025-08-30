@@ -206,8 +206,8 @@ export function StratifiedBackground({
         className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
+            linear-gradient(hsl(var(--foreground) / 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(var(--foreground) / 0.1) 1px, transparent 1px)
           `,
           backgroundSize: "64px 64px",
         }}
@@ -218,7 +218,7 @@ export function StratifiedBackground({
         {tokens.map((token) => (
           <div
             key={token.id}
-            className="absolute text-xs font-mono text-[#00FF7F] transition-all duration-300"
+            className="absolute text-xs font-mono text-foreground transition-all duration-300"
             style={{
               left: `${token.x}%`,
               top: `${token.y}%`,
@@ -236,7 +236,7 @@ export function StratifiedBackground({
         {shapes.map((shape) => (
           <div
             key={shape.id}
-            className="absolute text-lg text-[#FFD700] transition-all duration-500"
+            className="absolute text-lg text-foreground transition-all duration-500"
             style={{
               left: `${shape.x}%`,
               top: `${shape.y}%`,
@@ -254,7 +254,7 @@ export function StratifiedBackground({
         {quotes.map((quote) => (
           <div
             key={quote.id}
-            className={`absolute text-xs font-mono text-[#FF8C42] max-w-xs transition-all duration-1000 ${
+            className={`absolute text-xs font-mono text-foreground max-w-xs transition-all duration-1000 ${
               quote.visible ? "opacity-100" : "opacity-0"
             }`}
             style={{

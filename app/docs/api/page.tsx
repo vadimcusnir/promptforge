@@ -15,7 +15,7 @@ export default function ApiDocsPage() {
   ]
 
   const generateCurlExample = (moduleId: string) => {
-    return `curl -X POST https://api.promptforge.com/api/run/${moduleId} \\
+    return `curl -X POST https://api.chatgpt-prompting.com/api/run/${moduleId} \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -d '{
