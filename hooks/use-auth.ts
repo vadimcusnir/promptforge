@@ -11,6 +11,7 @@ interface User {
   subscriptionId?: string
   trialEndsAt?: string
   creditsRemaining: number
+  isAdmin?: boolean
 }
 
 export function useAuth() {

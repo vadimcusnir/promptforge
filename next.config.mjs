@@ -22,7 +22,6 @@ const nextConfig = {
     // Performance optimizations
     optimizeCss: true,
     optimizeServerReact: true,
-    serverComponentsExternalPackages: ['@prisma/client'],
     turbo: {
       rules: {
         '*.svg': {

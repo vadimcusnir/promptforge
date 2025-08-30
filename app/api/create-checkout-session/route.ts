@@ -3,7 +3,7 @@ import { z } from "zod"
 import { requireAuth } from "@/lib/auth/server-auth"
 import { stripe } from "@/lib/billing/stripe"
 import { STRIPE_PRICE_IDS, PLAN_CODES, type PlanCode, getPlanMetadata } from "@/lib/billing/plans"
-import { RATE_LIMITS } from "@/lib/rate-limit"
+import { createRateLimit, getClientIdentifier, RATE_LIMITS } from "@/lib/rate-limit"
 
 // Request validation schema
 const checkoutRequestSchema = z.object({
@@ -13,7 +13,7 @@ const checkoutRequestSchema = z.object({
 })
 
 // Rate limiting for checkout requests
-const checkoutLimiter = new RateLimiter({
+const checkoutLimiter = createRateLimit({
   windowMs: 60 * 1000, // 1 minute
   maxRequests: 10, // 10 requests per minute
   message: 'Rate limit exceeded. Please try again later.'
@@ -22,10 +22,11 @@ const checkoutLimiter = new RateLimiter({
 export async function POST(request: NextRequest) {
   try {
     // Apply rate limiting
-    const rateLimitResult = checkoutLimiter.check(request)
+    const clientId = getClientIdentifier(request)
+    const rateLimitResult = checkoutLimiter(clientId)
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
-        { error: rateLimitResult.message || 'Rate limit exceeded. Please try again later.' },
+        { error: 'Rate limit exceeded. Please try again later.' },
         { status: 429 }
       )
     }

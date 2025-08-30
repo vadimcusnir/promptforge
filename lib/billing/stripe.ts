@@ -139,14 +139,15 @@ export function isValidPlanCode(planCode: string): planCode is PlanCode {
 }
 
 // Get plan entitlements
-export function getPlanEntitlements(planCode: PlanCode): Record<string, boolean> {
+export function getPlanEntitlements(planCode: PlanCode): Record<string, boolean | number> {
   return PLAN_ENTITLEMENTS[planCode] || PLAN_ENTITLEMENTS[PLAN_CODES.PILOT]
 }
 
 // Check if plan has specific entitlement
 export function hasEntitlement(planCode: PlanCode, entitlement: string): boolean {
   const entitlements = getPlanEntitlements(planCode)
-  return entitlements[entitlement] || false
+  const value = entitlements[entitlement]
+  return Boolean(value)
 }
 
 // Get plan metadata

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { config, isServiceAvailable } from "@/lib/config"
-import { RATE_LIMITS } from "@/lib/rate-limit"
+import { createRateLimit, getClientIdentifier, RATE_LIMITS } from "@/lib/rate-limit"
 
 // Request schema validation
 const portalRequestSchema = z.object({
@@ -10,7 +10,7 @@ const portalRequestSchema = z.object({
 })
 
 // Rate limiting for portal requests
-const portalLimiter = new RateLimiter({
+const portalLimiter = createRateLimit({
   windowMs: 60 * 1000, // 1 minute
   maxRequests: 5, // 5 requests per minute
   message: 'Rate limit exceeded. Please try again later.'
@@ -19,10 +19,11 @@ const portalLimiter = new RateLimiter({
 export async function POST(request: NextRequest) {
   try {
     // Apply rate limiting
-    const rateLimitResult = portalLimiter.check(request)
+    const clientId = getClientIdentifier(request)
+    const rateLimitResult = portalLimiter(clientId)
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
-        { error: rateLimitResult.message || 'Rate limit exceeded. Please try again later.' },
+        { error: 'Rate limit exceeded. Please try again later.' },
         { status: 429 }
       )
     }

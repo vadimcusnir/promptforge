@@ -10,12 +10,8 @@ import {
   Users, 
   TrendingUp, 
   TrendingDown, 
-  AlertTriangle,
   CheckCircle,
-  XCircle,
-  Clock,
   BarChart3,
-  PieChart,
   Activity
 } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
@@ -177,7 +173,7 @@ export default function BillingAdminPage() {
           <CardHeader>
             <CardTitle className="text-center">Access Denied</CardTitle>
             <CardDescription className="text-center">
-              You don't have permission to access this page.
+              You don&apos;t have permission to access this page.
             </CardDescription>
           </CardHeader>
         </Card>

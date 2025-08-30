@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { requireAuth } from "@/lib/auth/server-auth"
 import { PaymentAnalyticsService } from "@/lib/billing/analytics"
-import { RATE_LIMITS } from "@/lib/rate-limit"
+import { createRateLimit, getClientIdentifier, RATE_LIMITS } from "@/lib/rate-limit"
 
 // Request validation schema
 const analyticsQuerySchema = z.object({
@@ -12,7 +12,7 @@ const analyticsQuerySchema = z.object({
 })
 
 // Rate limiting for analytics requests
-const analyticsLimiter = new RateLimiter({
+const analyticsLimiter = createRateLimit({
   windowMs: 60 * 1000, // 1 minute
   maxRequests: 20, // 20 requests per minute
   message: 'Rate limit exceeded. Please try again later.'
@@ -21,10 +21,11 @@ const analyticsLimiter = new RateLimiter({
 export async function GET(request: NextRequest) {
   try {
     // Apply rate limiting
-    const rateLimitResult = analyticsLimiter.check(request)
+    const clientId = getClientIdentifier(request)
+    const rateLimitResult = analyticsLimiter(clientId)
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
-        { error: rateLimitResult.message || 'Rate limit exceeded. Please try again later.' },
+        { error: 'Rate limit exceeded. Please try again later.' },
         { status: 429 }
       )
     }

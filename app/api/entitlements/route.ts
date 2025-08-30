@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { getEffectiveEntitlements, validateOrgMembership } from "@/lib/billing/entitlements"
 import { requireAuth } from "@/lib/auth/server-auth"
-import { RATE_LIMITS } from "@/lib/rate-limit"
+import { createRateLimit, getClientIdentifier, RATE_LIMITS } from "@/lib/rate-limit"
 
 // Query parameters schema
 const entitlementsQuerySchema = z.object({
@@ -10,7 +10,7 @@ const entitlementsQuerySchema = z.object({
 })
 
 // Rate limiting for entitlements requests
-const entitlementsLimiter = new RateLimiter({
+const entitlementsLimiter = createRateLimit({
   windowMs: 60 * 1000, // 1 minute
   maxRequests: 100, // 100 requests per minute
   message: 'Rate limit exceeded. Please try again later.'
@@ -19,10 +19,11 @@ const entitlementsLimiter = new RateLimiter({
 export async function GET(request: NextRequest) {
   try {
     // Apply rate limiting
-    const rateLimitResult = entitlementsLimiter.check(request)
+    const clientId = getClientIdentifier(request)
+    const rateLimitResult = entitlementsLimiter(clientId)
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
-        { error: rateLimitResult.message || 'Rate limit exceeded. Please try again later.' },
+        { error: 'Rate limit exceeded. Please try again later.' },
         { status: 429 }
       )
     }

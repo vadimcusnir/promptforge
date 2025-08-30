@@ -12,7 +12,7 @@ const forgotPasswordSchema = z.object({
 })
 
 // Lazy Supabase client creation
-async function getSupabase() {
+async function _getSupabase() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     // Return mock client for build-time operations
     return {
@@ -26,7 +26,7 @@ async function getSupabase() {
           })
         })
       })
-    } as any
+    } as unknown
   }
   
   const { createClient } = await import('@supabase/supabase-js')

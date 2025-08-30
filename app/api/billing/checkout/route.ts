@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { config, isServiceAvailable } from "@/lib/config"
-import { RateLimiter, RATE_LIMITS } from "@/lib/rate-limit"
+import { createRateLimit, getClientIdentifier, RATE_LIMITS } from "@/lib/rate-limit"
 
 // Request schema validation
 const checkoutRequestSchema = z.object({
@@ -12,17 +12,17 @@ const checkoutRequestSchema = z.object({
 })
 
 // Rate limiting for checkout requests
-const checkoutLimiter = new RateLimiter()
+const checkoutLimiter = createRateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 10, // 10 requests per minute
+  message: 'Rate limit exceeded. Please try again later.'
+})
 
 export async function POST(request: NextRequest) {
   try {
     // Apply rate limiting
-    const clientId = request.ip || 'unknown'
-    const rateLimitResult = checkoutLimiter.check(clientId, {
-      windowMs: 60 * 1000, // 1 minute
-      maxRequests: 10, // 10 requests per minute
-      message: 'Rate limit exceeded. Please try again later.'
-    })
+    const clientId = getClientIdentifier(request)
+    const rateLimitResult = checkoutLimiter(clientId)
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
         { error: 'Rate limit exceeded. Please try again later.' },
