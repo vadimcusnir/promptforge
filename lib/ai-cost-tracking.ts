@@ -45,10 +45,22 @@ export class AICostTracker {
   private cache: Map<string, AICostRecord[]> = new Map()
 
   constructor() {
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    // Lazy initialization to avoid build-time errors
+    this.supabase = null
+  }
+
+  private getSupabaseClient() {
+    if (!this.supabase) {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+      
+      if (!url || !key) {
+        throw new Error('Supabase configuration missing. Please check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.')
+      }
+      
+      this.supabase = createClient(url, key)
+    }
+    return this.supabase
   }
 
   // Calculate cost for a given usage
@@ -87,7 +99,7 @@ export class AICostTracker {
       }
 
       // Store in database
-      const { error } = await this.supabase
+      const { error } = await this.getSupabaseClient()
         .from('ai_usage_logs')
         .insert([fullRecord])
 
@@ -122,7 +134,7 @@ export class AICostTracker {
       const startDate = new Date()
       startDate.setDate(startDate.getDate() - days)
 
-      const { data, error } = await this.supabase
+      const { data, error } = await this.getSupabaseClient()
         .from('ai_usage_logs')
         .select('*')
         .eq('orgId', orgId)
@@ -153,7 +165,7 @@ export class AICostTracker {
       const startDate = new Date()
       startDate.setDate(startDate.getDate() - days)
 
-      const { data, error } = await this.supabase
+      const { data, error } = await this.getSupabaseClient()
         .from('ai_usage_logs')
         .select('*')
         .eq('userId', userId)
