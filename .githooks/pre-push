@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# PromptForge Pre-Push Hook
+# Runs guard checks before allowing push
+
+echo "🛡️  Running PromptForge Frontend Recovery Guard..."
+
+# Run the guard script
+if ! ./scripts/guard-against-regressions.sh; then
+    echo ""
+    echo "❌ Push blocked due to frontend regression issues."
+    echo "Please fix the issues above before pushing."
+    echo ""
+    echo "💡 Quick fixes:"
+    echo "  - Remove duplicate components"
+    echo "  - Fix conflicting CSS patterns"
+    echo "  - Resolve case sensitivity issues"
+    echo "  - Run 'pnpm type-check' and 'pnpm lint'"
+    echo ""
+    exit 1
+fi
+
+echo "✅ Frontend guard checks passed. Proceeding with push..."
