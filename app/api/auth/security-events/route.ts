@@ -44,12 +44,12 @@ export async function GET(request: NextRequest) {
 
     // Filter by event type if specified
     const filteredEvents = eventType 
-      ? events.filter(event => event.eventType.includes(eventType))
+      ? events.filter((event: any) => event.eventType.includes(eventType))
       : events
 
     return NextResponse.json({
       success: true,
-      events: filteredEvents.map(event => ({
+      events: filteredEvents.map((event: any) => ({
         id: event.id,
         eventType: event.eventType,
         severity: event.severity,

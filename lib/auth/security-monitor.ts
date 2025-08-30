@@ -15,7 +15,9 @@ export interface SecurityEvent {
   method?: string
   blocked?: boolean
   responseCode?: number
-  createdAt?: string
+  locationData?: Record<string, any>
+  resolved?: boolean
+  createdAt: Date
 }
 
 export class SecurityMonitor {
@@ -98,7 +100,7 @@ export class SecurityMonitor {
       method: request.method,
       blocked: false,
       responseCode: 200,
-      createdAt: new Date().toISOString()
+      createdAt: new Date()
     }
 
     try {
@@ -213,6 +215,32 @@ export class SecurityMonitor {
     }
   }
 
+  // Get security events for a user
+  async getUserSecurityEvents(
+    userId: string,
+    limit: number = 50,
+    severity?: string
+  ): Promise<SecurityEvent[]> {
+    let query = this.supabase
+      .from('security_events')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(limit)
+
+    if (severity) {
+      query = query.eq('severity', severity)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      throw new Error(`Failed to get security events: ${error.message}`)
+    }
+
+    return data.map(this.mapSecurityEvent)
+  }
+
   // Get security dashboard data
   async getSecurityDashboard(userId: string): Promise<{
     totalEvents: number
@@ -222,6 +250,24 @@ export class SecurityMonitor {
     recentEvents: SecurityEvent[]
   }> {
     return await this.getSecurityMetrics(userId, 24)
+  }
+
+  // Map database security event to SecurityEvent interface
+  private mapSecurityEvent(data: any): SecurityEvent {
+    return {
+      id: data.id,
+      userId: data.user_id,
+      sessionId: data.session_id,
+      eventType: data.event_type,
+      severity: data.severity,
+      description: data.description,
+      metadata: data.metadata || {},
+      ipAddress: data.ip_address,
+      userAgent: data.user_agent,
+      locationData: data.location_data || {},
+      resolved: data.resolved,
+      createdAt: new Date(data.created_at),
+    }
   }
 
   // Clean up old rate limit entries
