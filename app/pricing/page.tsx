@@ -1,13 +1,11 @@
 "use client"
 
-import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Check, X, Globe, User, CreditCard, TrendingUp, Zap, Crown, Star } from "lucide-react"
+import { Check, X, User, CreditCard } from "lucide-react"
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout"
 import { useAuth } from "@/hooks/use-auth"
 import { useAnalytics } from "@/hooks/use-analytics"
@@ -35,21 +33,21 @@ interface Plan {
 
 export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(false)
-  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [showLoginModal] = useState(false)
   
   // Hooks
   const { createCheckoutSession, isLoading: isCheckoutLoading } = useStripeCheckout()
-  const { user, isLoading: isAuthLoading, login, logout } = useAuth()
+  const { user, isLoading: isAuthLoading } = useAuth()
   const analytics = useAnalytics()
   const { currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA, trackVariantConversion } = useABTesting()
-  const { currentLocale, t, getFeatures } = useLocalization()
+  const { t, getFeatures } = useLocalization()
 
   // Track pricing page view
   useEffect(() => {
     analytics.pricingView('pricing_page')
   }, [analytics])
 
-  // Plans with A/B testing integration
+  // Plans with A/B testing integration - Normalized plan names
   const plans: Plan[] = [
     {
       id: "free",
@@ -136,8 +134,8 @@ export default function PricingPage() {
   ]
 
   // Performance optimizations
-  const memoizedPlans = useMemo(() => plans, [currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA])
-  const memoizedFeatures = useMemo(() => getFeatures("creator"), [])
+  const memoizedPlans = useMemo(() => plans, [plans])
+  const memoizedFeatures = useMemo(() => getFeatures("creator"), [getFeatures])
   
   // Memoized callbacks for better performance
   const handleCheckout = useCallback(async (planId: string) => {
@@ -297,7 +295,7 @@ export default function PricingPage() {
                 type="checkbox" 
                 className="sr-only" 
                 checked={isAnnual}
-                onChange={(e) => handleToggleBilling()}
+                onChange={() => handleToggleBilling()}
               />
               <div className={`w-12 h-6 rounded-full cursor-pointer transition-colors ${
                 isAnnual ? 'bg-yellow-600' : 'bg-gray-700'
@@ -472,8 +470,8 @@ export default function PricingPage() {
               <Link href="/legal/terms" className="hover:text-gold-400 transition-colors">
                 Terms of Use
               </Link>
-              <a href="mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]" className="hover:text-gold-400 transition-colors">
-                legal@[EXAMPLE_DOMAIN_yourdomain.com]
+              <a href="mailto:legal@promptforge.ai" className="hover:text-yellow-400 transition-colors">
+                legal@promptforge.ai
               </a>
             </div>
             <p className="text-xs text-gray-500 mt-4">

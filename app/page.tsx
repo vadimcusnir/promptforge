@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Zap, Settings, Download, Check, ArrowUpRight } from "lucide-react"
+import { ArrowRight, Zap, Settings, Download, Check } from "lucide-react"
 import dynamic from "next/dynamic"
 import { useAnalytics } from "@/hooks/use-analytics"
 import { Suspense } from "react"
@@ -11,6 +11,11 @@ import { Suspense } from "react"
 // Lazy load non-critical components for better LCP
 const LiveGenerationDemo = dynamic(() => import("@/components/home/LiveGenerationDemo"), {
   loading: () => <DemoSkeleton />,
+  ssr: false
+})
+
+const ForgeGlyphInteractive = dynamic(() => import("@/components/forge/ForgeGlyphInteractive"), {
+  loading: () => <div className="w-16 h-16 bg-gray-700 rounded animate-pulse" />,
   ssr: false
 })
 
@@ -42,10 +47,20 @@ export default function HomePage() {
   
   return (
     <div id="main-content" className="min-h-screen text-white relative z-10">
-      {/* Hero Section - Optimized for LCP with critical CSS */}
+      {/* Hero Section - Forge Branding Integration */}
       <section className="hero-section">
         <div className="hero-container">
           <div className="mb-8">
+            {/* Forge Glyph Interactive */}
+            <div className="flex justify-center mb-8">
+              <ForgeGlyphInteractive 
+                status="ready" 
+                size="xl"
+                onGlitch={() => console.log("Forge glyph glitch triggered")}
+                minimizeOnScroll={true}
+              />
+            </div>
+            
             <Badge className="hero-badge">
               Industrial Prompt Engineering
             </Badge>
@@ -76,10 +91,10 @@ export default function HomePage() {
               size="lg" 
               variant="outline" 
               className="hero-secondary-button" 
-              ariaLabel="View a live demonstration"
-              onClick={handleViewDemoClick}
+              ariaLabel="Explore modules catalog"
+              onClick={() => window.location.href = '/modules'}
             >
-              View Demo
+              Explore Modules
             </Button>
           </div>
 
@@ -154,52 +169,50 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Modules Grid */}
-      <section id="modules" className="py-24 px-4 sm:px-6 lg:px-8">
+      {/* Simplified Features Section */}
+      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">50 Industrial Modules</h2>
-            <p className="text-zinc-500 text-lg">Organized across 7 semantic vectors for maximum precision</p>
+            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">Core Features</h2>
+            <p className="text-zinc-500 text-lg">Industrial-grade prompt engineering tools</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-12">
-            {[
-              { id: "M01", name: "SOP Forge", vector: "Strategic" },
-              { id: "M07", name: "Risk Reversal", vector: "Strategic" },
-              { id: "M11", name: "Funnel Nota", vector: "Rhetoric" },
-              { id: "M12", name: "Visibility Diag", vector: "Strategic" },
-              { id: "M13", name: "Pricing Psych", vector: "Rhetoric" },
-              { id: "M22", name: "Lead Gen", vector: "Content" },
-              { id: "M24", name: "Personal PR", vector: "Content" },
-              { id: "M32", name: "Cohort Test", vector: "Analytics" },
-              { id: "M35", name: "Content Heat", vector: "Branding" },
-              { id: "M40", name: "Crisis Mgmt", vector: "Crisis" },
-              { id: "M45", name: "Learning Path", vector: "Cognitive" },
-              { id: "M50", name: "Brand Voice", vector: "Branding" },
-            ].map((module) => (
-              <Card
-                key={module.id}
-                className="bg-zinc-900/80 border border-zinc-700 hover:border-yellow-600/50 transition-colors cursor-pointer group"
-                role="button"
-                tabIndex={0}
-                aria-label={`${module.name} module - ${module.vector} vector`}
-              >
-                <CardContent className="p-4">
-                  <div className="text-yellow-500 font-mono text-sm mb-1">{module.id}</div>
-                  <div className="font-medium text-sm mb-2">{module.name}</div>
-                  <Badge variant="secondary" className="text-xs bg-zinc-800 text-zinc-500">
-                    {module.vector}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="bg-zinc-900/80 border border-zinc-700">
+              <CardHeader>
+                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-yellow-500" />
+                </div>
+                <CardTitle className="font-serif">7D Scoring Engine</CardTitle>
+                <CardDescription className="text-zinc-500">
+                  Advanced evaluation system that tests prompts across 7 dimensions for optimal performance
+                </CardDescription>
+              </CardHeader>
+            </Card>
 
-          <div className="text-center">
-            <Button variant="outline" className="border-zinc-700 bg-transparent" ariaLabel="View all 50 industrial modules">
-              View All 50 Modules
-              <ArrowUpRight className="ml-2 w-4 h-4" />
-            </Button>
+            <Card className="bg-zinc-900/80 border border-zinc-700">
+              <CardHeader>
+                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
+                  <Settings className="w-6 h-6 text-yellow-500" />
+                </div>
+                <CardTitle className="font-serif">50 Specialized Modules</CardTitle>
+                <CardDescription className="text-zinc-500">
+                  Comprehensive library of prompt modules across 7 semantic vectors for every use case
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-zinc-900/80 border border-zinc-700">
+              <CardHeader>
+                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
+                  <Download className="w-6 h-6 text-yellow-500" />
+                </div>
+                <CardTitle className="font-serif">Professional Export</CardTitle>
+                <CardDescription className="text-zinc-500">
+                  Export prompts in multiple formats with checksums, manifests, and telemetry data
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </div>
         </div>
       </section>

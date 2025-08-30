@@ -1,11 +1,22 @@
 /**
  * Design Tokens for PromptForge v3
  * Centralized design system tokens following the project's voice and branding guidelines
+ * WCAG 2.1 AA compliant with robust contrast ratios
  */
 
 export const tokens = {
   // Color System - Dark theme with gold accent (#d1a954) - WCAG 2.1 AA compliant
   colors: {
+    // Primary background colors
+    bg: {
+      primary: 'oklch(0.05 0 0)', // Deep black - #0a0a0a
+      secondary: 'oklch(0.08 0 0)', // Dark gray - #141414
+      tertiary: 'oklch(0.12 0 0)', // Medium dark - #1f1f1f
+      elevated: 'oklch(0.15 0 0)', // Elevated surface - #262626
+      glass: 'rgba(255, 255, 255, 0.05)', // Glass effect
+      glassHover: 'rgba(255, 255, 255, 0.1)', // Glass hover
+    },
+    
     // Foreground colors - WCAG 2.1 AA compliant contrast ratios
     fg: {
       primary: 'oklch(0.985 0 0)', // White text - 21:1 contrast on dark
@@ -15,15 +26,6 @@ export const tokens = {
       onAccent: 'oklch(0.15 0 0)', // Dark text on gold - 4.5:1 contrast
     },
     
-    // Background colors
-    bg: {
-      primary: 'oklch(0.145 0 0)', // Dark background
-      secondary: 'oklch(0.269 0 0)', // Card background
-      tertiary: 'oklch(0.205 0 0)', // Elevated background
-      glass: 'rgba(255, 255, 255, 0.05)', // Glass effect
-      glassHover: 'rgba(255, 255, 255, 0.1)', // Glass hover
-    },
-    
     // Muted colors
     muted: {
       primary: 'oklch(0.269 0 0)', // Muted background
@@ -31,14 +33,23 @@ export const tokens = {
       accent: 'oklch(0.439 0 0)', // Muted ring
     },
     
-    // Accent colors (Gold theme) - WCAG 2.1 AA compliant
+    // Accent colors (Forge Gold theme) - WCAG 2.1 AA compliant
     accent: {
-      primary: 'oklch(0.708 0.189 84.429)', // #d1a954 - Primary gold
-      secondary: 'oklch(0.78 0.189 84.429)', // Lighter gold - 4.5:1 contrast
+      primary: 'oklch(0.708 0.189 84.429)', // #F4B001 - Forge primary gold
+      secondary: 'oklch(0.78 0.189 84.429)', // #FFD700 - Lighter gold for effects
       tertiary: 'oklch(0.65 0.189 84.429)', // Darker gold - 4.5:1 contrast
       contrast: 'oklch(0.15 0 0)', // Dark contrast for gold - 4.5:1 contrast
       hover: 'oklch(0.75 0.189 84.429)', // Hover state - 4.5:1 contrast
       focus: 'oklch(0.8 0.189 84.429)', // Focus state - 4.5:1 contrast
+      glow: 'oklch(0.8 0.189 84.429)', // Glow effect color
+    },
+    
+    // Forge ritual colors
+    ritual: {
+      obsidian: 'oklch(0.05 0 0)', // #0a0a0a - Deep black
+      glitch: 'oklch(0.7 0.2 180)', // #00ffe7 - Glitch cyan
+      crimson: 'oklch(0.6 0.2 15)', // #ff003c - Decision red
+      forge: 'oklch(0.708 0.189 84.429)', // #F4B001 - Forge gold
     },
     
     // State colors - WCAG 2.1 AA compliant
@@ -110,7 +121,7 @@ export const tokens = {
     bounce: '500ms cubic-bezier(0.68, -0.55, 0.265, 1.55)',
   },
 
-  // Typography system
+  // Typography system - Unified font stack and sizes
   typography: {
     fontFamily: {
       sans: 'var(--font-open-sans), ui-sans-serif, system-ui, sans-serif',
@@ -118,6 +129,24 @@ export const tokens = {
       mono: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, monospace',
     },
     fontSize: {
+      // Headings H1-H6
+      h1: ['3rem', { lineHeight: '1.1', fontWeight: '700' }], // 48px
+      h2: ['2.25rem', { lineHeight: '1.2', fontWeight: '700' }], // 36px
+      h3: ['1.875rem', { lineHeight: '1.3', fontWeight: '600' }], // 30px
+      h4: ['1.5rem', { lineHeight: '1.4', fontWeight: '600' }], // 24px
+      h5: ['1.25rem', { lineHeight: '1.5', fontWeight: '600' }], // 20px
+      h6: ['1.125rem', { lineHeight: '1.5', fontWeight: '600' }], // 18px
+      
+      // Body text
+      body: ['1rem', { lineHeight: '1.6', fontWeight: '400' }], // 16px
+      bodyLarge: ['1.125rem', { lineHeight: '1.6', fontWeight: '400' }], // 18px
+      bodySmall: ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }], // 14px
+      
+      // Labels and UI text
+      label: ['0.875rem', { lineHeight: '1.4', fontWeight: '500' }], // 14px
+      caption: ['0.75rem', { lineHeight: '1.4', fontWeight: '400' }], // 12px
+      
+      // Legacy sizes for compatibility
       xs: ['0.75rem', { lineHeight: '1rem' }],
       sm: ['0.875rem', { lineHeight: '1.25rem' }],
       base: ['1rem', { lineHeight: '1.5rem' }],
@@ -129,10 +158,18 @@ export const tokens = {
       '5xl': ['3rem', { lineHeight: '1' }],
     },
     fontWeight: {
+      light: '300',
       normal: '400',
       medium: '500',
       semibold: '600',
       bold: '700',
+      extrabold: '800',
+    },
+    letterSpacing: {
+      tight: '-0.025em',
+      normal: '0',
+      wide: '0.025em',
+      wider: '0.05em',
     },
   },
 

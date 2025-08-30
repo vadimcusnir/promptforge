@@ -18,9 +18,11 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
-    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react', '@radix-ui/react-slot'],
     // Performance optimizations
     optimizeCss: true,
+    optimizeServerReact: true,
+    serverComponentsExternalPackages: ['@prisma/client'],
     turbo: {
       rules: {
         '*.svg': {
@@ -53,15 +55,13 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
-  // Temporarily disable ESLint during build for P0 launch
-  // This allows the core functionality to work while maintaining code quality
+  // ESLint enabled for code quality
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    // Temporarily ignore TypeScript errors during build for P0 launch
-    // This allows the core functionality to work while maintaining type safety
-    ignoreBuildErrors: true,
+    // TypeScript errors must be fixed for production
+    ignoreBuildErrors: false,
   },
   // Security Headers Configuration
   async headers() {

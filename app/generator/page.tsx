@@ -21,9 +21,7 @@ import {
   Lock,
   Copy,
   CheckCircle,
-  AlertCircle,
   Info,
-  RefreshCw,
 } from "lucide-react"
 import { EntitlementGate } from "@/components/entitlement-gate"
 import { useEntitlements } from "@/hooks/use-entitlements"
@@ -57,7 +55,7 @@ interface GeneratedPrompt {
 }
 
 function GeneratorPage() {
-  const { hasEntitlement } = useEntitlements()
+  const { } = useEntitlements()
   const { toast } = useToast()
   const analytics = useAnalytics()
   const searchParams = useSearchParams()
@@ -65,7 +63,7 @@ function GeneratorPage() {
   const [params7D, setParams7D] = useState<Params7D>(default7D)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
-  const [isExporting] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
   const [generatedPrompt, setGeneratedPrompt] = useState<GeneratedPrompt | null>(null)
   const [history, setHistory] = useState<GeneratedPrompt[]>([])
   const [currentPromptRun, setCurrentPromptRun] = useState<PromptRun | null>(null)
@@ -284,7 +282,7 @@ function GeneratorPage() {
     if (savedHistory) {
       try {
         setHistory(JSON.parse(savedHistory))
-      } catch (error) {
+      } catch (_error) {
         setHistoryError('Failed to parse history data')
       }
     }
@@ -313,35 +311,7 @@ function GeneratorPage() {
   // Get current selected module definition
   const currentModule = availableModules.find(m => m.id === selectedModule) || availableModules[0]
 
-  // Loading skeleton for module selection
-  const ModuleSelectionSkeleton = () => (
-    <Card className="bg-zinc-900/80 border border-zinc-700">
-      <CardHeader>
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-4 w-48" />
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <SkeletonInput />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-        <div className="space-y-2 max-h-96">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonCard key={i} className="p-3" />
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  )
 
-  // Loading skeleton for main content
-  const MainContentSkeleton = () => (
-    <div className="space-y-6">
-      <SkeletonCard />
-      <SkeletonCard />
-    </div>
-  )
 
   return (
     <div className="min-h-screen pattern-bg text-white">
@@ -478,34 +448,102 @@ function GeneratorPage() {
               </TabsList>
 
               <TabsContent value="config">
-                <Card className="bg-zinc-900/80 border border-zinc-700">
-                  <CardHeader>
-                    <CardTitle className="font-serif">7D Parameter Configuration</CardTitle>
-                    <CardDescription>Configure the seven dimensions for optimal prompt generation</CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid md:grid-cols-2 gap-6">
-                    {Object.entries(paramOptions).map(([key, options]) => (
-                      <div key={key} className="space-y-2">
-                        <Label className="capitalize">{key}</Label>
-                        <Select
-                          value={params7D[key as keyof Params7D]}
-                          onValueChange={(value) => updateParam(key as keyof Params7D, value)}
-                        >
-                          <SelectTrigger className="bg-black/50 border-gray-700">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {options.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                <div className="space-y-6">
+                  {/* Step-by-step workflow */}
+                  <Card className="bg-zinc-900/80 border border-zinc-700">
+                    <CardHeader>
+                      <CardTitle className="font-serif flex items-center gap-2">
+                        <Settings className="w-5 h-5 text-yellow-400" />
+                        7D Parameter Configuration
+                      </CardTitle>
+                      <CardDescription>Configure the seven dimensions for optimal prompt generation</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {/* Progress indicator */}
+                      <div className="mb-6">
+                        <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+                          <span>Configuration Progress</span>
+                          <span>{Object.values(params7D).filter(v => v && v !== '').length}/7 Complete</span>
+                        </div>
+                        <div className="w-full bg-gray-700 rounded-full h-2">
+                          <div 
+                            className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${(Object.values(params7D).filter(v => v && v !== '').length / 7) * 100}%` }}
+                          />
+                        </div>
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
+
+                      {/* Form fields with tooltips */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {Object.entries(paramOptions).map(([key, options]) => {
+                          const isComplete = params7D[key as keyof Params7D] && params7D[key as keyof Params7D] !== ''
+                          return (
+                            <div key={key} className="space-y-3">
+                              <div className="flex items-center gap-2">
+                                <Label className="capitalize text-white font-medium">{key.replace('_', ' ')}</Label>
+                                {isComplete && <CheckCircle className="w-4 h-4 text-green-400" />}
+                              </div>
+                              <Select
+                                value={params7D[key as keyof Params7D]}
+                                onValueChange={(value) => updateParam(key as keyof Params7D, value)}
+                              >
+                                <SelectTrigger className={`bg-zinc-800 border-zinc-700 text-white ${
+                                  isComplete ? 'border-green-500/50' : 'border-zinc-700'
+                                }`}>
+                                  <SelectValue placeholder={`Select ${key.replace('_', ' ')}`} />
+                                </SelectTrigger>
+                                <SelectContent className="bg-zinc-800 border-zinc-700">
+                                  {options.map((option) => (
+                                    <SelectItem key={option.value} value={option.value} className="text-white hover:bg-zinc-700">
+                                      <div>
+                                        <div className="font-medium">{option.label}</div>
+                                      </div>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              {/* Tooltip/help text */}
+                              <p className="text-xs text-gray-400">
+                                {key === 'domain' && 'The specific field or industry context for your prompt'}
+                                {key === 'scale' && 'The scope and complexity level of the task'}
+                                {key === 'urgency' && 'Time sensitivity and priority level'}
+                                {key === 'audience' && 'Target audience and their expertise level'}
+                                {key === 'format' && 'Desired output format and structure'}
+                                {key === 'constraints' && 'Limitations and requirements to consider'}
+                                {key === 'success_metrics' && 'How to measure prompt effectiveness'}
+                              </p>
+                            </div>
+                          )
+                        })}
+                      </div>
+
+                      {/* Generate button */}
+                      <div className="mt-8 pt-6 border-t border-zinc-700">
+                        <Button
+                          size="lg"
+                          className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
+                          onClick={() => {
+                            // Switch to generator tab
+                            const generatorTab = document.querySelector('[value="generator"]') as Element
+                            if (generatorTab) generatorTab.click()
+                          }}
+                          disabled={Object.values(params7D).some(v => !v || v === '')}
+                        >
+                          <Zap className="w-5 h-5 mr-2" />
+                          {Object.values(params7D).some(v => !v || v === '') 
+                            ? 'Complete All Parameters' 
+                            : 'Generate Prompt'
+                          }
+                        </Button>
+                        {Object.values(params7D).some(v => !v || v === '') && (
+                          <p className="text-sm text-gray-400 mt-2 text-center">
+                            Please complete all 7 parameters to generate your prompt
+                          </p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabsContent>
 
               <TabsContent value="generator">

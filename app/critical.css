@@ -1,33 +1,58 @@
-/* Critical CSS for LCP optimization */
-/* Inline this in the head for fastest rendering */
+/* Critical CSS for LCP optimization - Inlined for maximum performance */
 
-/* Critical hero section styles */
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-open-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Critical hero section styles - LCP optimization */
 .hero-section {
   position: relative;
-  padding: 6rem 1rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding: 2rem 1rem;
 }
 
 .hero-container {
   max-width: 80rem;
   margin: 0 auto;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-badge {
+  display: inline-block;
   background-color: rgba(209, 169, 84, 0.2);
   color: #fbbf24;
   border: 1px solid rgba(209, 169, 84, 0.3);
-  margin-bottom: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  display: inline-block;
   font-size: 0.875rem;
   font-weight: 500;
+  margin-bottom: 1rem;
 }
 
 .hero-title {
-  font-size: 3rem;
-  line-height: 1;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.1;
   font-weight: 700;
   font-family: var(--font-montserrat), serif;
   margin-bottom: 1.5rem;
@@ -42,7 +67,7 @@
 }
 
 .hero-description {
-  font-size: 1.25rem;
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
   color: #71717a;
   margin-bottom: 2rem;
   max-width: 48rem;
@@ -120,6 +145,26 @@
   border-radius: 50%;
 }
 
+/* Background pattern - optimized for performance */
+.fixed-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.pattern-bg {
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(209, 169, 84, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(209, 169, 84, 0.05) 0%, transparent 50%);
+  background-size: 400px 400px;
+  background-repeat: repeat;
+  opacity: 0.6;
+}
+
 /* Responsive optimizations */
 @media (min-width: 640px) {
   .hero-buttons {
@@ -163,4 +208,71 @@
   .hero-secondary-button {
     transition: none;
   }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .pattern-bg {
+    background-size: 200px 200px;
+    opacity: 0.3;
+  }
+  
+  .hero-section {
+    padding: 4rem 1rem;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  .hero-description {
+    font-size: 1.125rem;
+  }
+  
+  .hero-buttons {
+    gap: 0.75rem;
+  }
+  
+  .hero-primary-button,
+  .hero-secondary-button {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* Performance optimizations */
+.hero-section {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+.hero-title,
+.hero-description {
+  contain: layout style;
+}
+
+/* Critical loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Ensure text remains visible during font loading */
+.hero-title {
+  font-display: swap;
+}
+
+.hero-description {
+  font-display: swap;
 }

@@ -43,10 +43,17 @@ export function Header() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-amber-400/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative w-8 h-8 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center shadow-lg">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-black font-bold" fill="currentColor">
-                <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z" />
-                <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="1.5" fill="none" />
-              </svg>
+              {/* Forge Rune Digitală */}
+              <div className="text-black font-mono font-bold text-xs">
+                <div className="relative">
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-black" />
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-0.5 text-xs">&gt;</div>
+                  <div className="absolute top-1/2 left-1 transform -translate-y-1/2 text-xs">&#123;</div>
+                  <div className="absolute top-1/2 right-1 transform -translate-y-1/2 text-xs">&#125;</div>
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs">~</div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-black rounded-full" />
+                </div>
+              </div>
             </div>
           </div>
           <span className="font-montserrat font-bold text-xl text-white">Forge</span>

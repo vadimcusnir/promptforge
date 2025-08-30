@@ -12,8 +12,8 @@ const cacheRequestSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     // Require authentication
-    const user = await requireAuth(request)
-    
+    await requireAuth(request)
+
     // Parse query parameters
     const { searchParams } = new URL(request.url)
     const action = searchParams.get('action') || 'stats'
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     const { action: validAction } = validation.data
 
     switch (validAction) {
-      case 'stats':
+      case 'stats': {
         const stats = await aiCache.getStats()
         return NextResponse.json({
           success: true,
@@ -40,13 +40,15 @@ export async function GET(request: NextRequest) {
             formatted: cacheUtils.formatStats(stats)
           }
         })
+      }
 
-      case 'cleanup':
+      case 'cleanup': {
         await aiCache.cleanup()
         return NextResponse.json({
           success: true,
           message: 'Cache cleanup completed'
         })
+      }
 
       default:
         return NextResponse.json(
@@ -75,8 +77,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Require authentication
-    const user = await requireAuth(request)
-    
+    await requireAuth(request)
+
     // Parse request body
     const body = await request.json()
     const validation = cacheRequestSchema.safeParse(body)
@@ -90,22 +92,26 @@ export async function POST(request: NextRequest) {
 
     const { action: validAction, key, data } = validation.data
 
+    // Note: key and data are destructured but may not be used in all cases
+
     switch (validAction) {
-      case 'clear':
+      case 'clear': {
         await aiCache.clear()
         return NextResponse.json({
           success: true,
           message: 'Cache cleared successfully'
         })
+      }
 
-      case 'cleanup':
+      case 'cleanup': {
         await aiCache.cleanup()
         return NextResponse.json({
           success: true,
           message: 'Cache cleanup completed'
         })
+      }
 
-      case 'stats':
+      case 'stats': {
         const stats = await aiCache.getStats()
         return NextResponse.json({
           success: true,
@@ -114,6 +120,35 @@ export async function POST(request: NextRequest) {
             formatted: cacheUtils.formatStats(stats)
           }
         })
+      }
+
+      case 'get': {
+        if (!key) {
+          return NextResponse.json(
+            { success: false, error: 'Key is required for get operation' },
+            { status: 400 }
+          )
+        }
+        const value = await aiCache.get(key)
+        return NextResponse.json({
+          success: true,
+          data: value
+        })
+      }
+
+      case 'set': {
+        if (!key) {
+          return NextResponse.json(
+            { success: false, error: 'Key is required for set operation' },
+            { status: 400 }
+          )
+        }
+        await aiCache.set(key, data)
+        return NextResponse.json({
+          success: true,
+          message: 'Data cached successfully'
+        })
+      }
 
       default:
         return NextResponse.json(

@@ -40,14 +40,16 @@ export function PerformanceMonitor() {
         }))
         
         // Log LCP for debugging
-        console.log('LCP:', Math.round(lastEntry.startTime), 'ms')
+        if (process.env.NODE_ENV === 'development') {
+          console.log('LCP:', Math.round(lastEntry.startTime), 'ms')
+        }
       }
     })
 
     // Track First Input Delay (FID)
     const fidObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries()
-      const lastEntry = entries[entries.length - 1] as any
+      const lastEntry = entries[entries.length - 1] as PerformanceEntry & { processingStart?: number }
       if (lastEntry && typeof lastEntry.processingStart === 'number') {
         setMetrics(prev => ({
           ...prev,
@@ -60,8 +62,9 @@ export function PerformanceMonitor() {
     const clsObserver = new PerformanceObserver((list) => {
       let clsValue = 0
       for (const entry of list.getEntries()) {
-        if (!(entry as any).hadRecentInput) {
-          clsValue += (entry as any).value
+        const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
+        if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+          clsValue += layoutShiftEntry.value
         }
       }
       setMetrics(prev => ({
@@ -73,8 +76,8 @@ export function PerformanceMonitor() {
     // Track Time to First Byte (TTFB)
     const navigationObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries()
-      const navigationEntry = entries[0] as PerformanceNavigationTiming
-      if (navigationEntry) {
+      const navigationEntry = entries[0] as PerformanceEntry & { responseStart?: number; requestStart?: number }
+      if (navigationEntry && navigationEntry.responseStart && navigationEntry.requestStart) {
         setMetrics(prev => ({
           ...prev,
           ttfb: Math.round(navigationEntry.responseStart - navigationEntry.requestStart)
@@ -102,7 +105,9 @@ export function PerformanceMonitor() {
       navigationObserver.observe({ entryTypes: ['navigation'] })
       fcpObserver.observe({ entryTypes: ['first-contentful-paint'] })
     } catch (error) {
-      console.warn('Performance observation failed:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Performance observation failed:', error)
+      }
     }
 
     // Cleanup observers

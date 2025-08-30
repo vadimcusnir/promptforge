@@ -1,214 +1,274 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
-import { useSearchParams } from "next/navigation"
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Building, Mail, Phone, MapPin, ArrowRight, Star } from "lucide-react"
-import EnterpriseContactForm from "@/components/enterprise-contact-form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ForgeGlyphInteractive } from "@/components/forge/ForgeGlyphInteractive"
+import { Send, Mail, MessageSquare, HelpCircle } from "lucide-react"
 
 export default function ContactPage() {
-  const searchParams = useSearchParams()
-  const preselectedPlan = searchParams.get('plan')
-  const [showEnterpriseForm, setShowEnterpriseForm] = useState(false)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    category: "",
+    message: ""
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
-  useEffect(() => {
-    // Show enterprise form if plan is specified
-    if (preselectedPlan === 'enterprise') {
-      setShowEnterpriseForm(true)
-    }
-  }, [preselectedPlan])
-
-  const handleEnterpriseSuccess = () => {
-    setShowEnterpriseForm(false)
-    // Redirect to thank you or show success message
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    setIsSubmitting(false)
+    setIsSubmitted(true)
   }
 
-  if (showEnterpriseForm) {
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  if (isSubmitted) {
     return (
-      <div className="min-h-screen pattern-bg text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold font-serif mb-4">Enterprise Contact</h2>
-            <p className="text-xl text-gray-400">
-              Get custom pricing and features for your organization
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <Card className="w-full max-w-md bg-zinc-900/80 border border-zinc-700">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
+              <Send className="w-8 h-8 text-green-400" />
+            </div>
+            <h2 className="text-2xl font-bold font-serif text-white mb-4">
+              Message Sent
+            </h2>
+            <p className="text-gray-400 mb-6">
+              Thank you for contacting us. We&apos;ll get back to you within 24 hours.
             </p>
-          </div>
-          
-          <EnterpriseContactForm 
-            preselectedPlan="enterprise"
-            onSuccess={handleEnterpriseSuccess}
-          />
-        </div>
+            <Button
+              onClick={() => {
+                setIsSubmitted(false)
+                setFormData({ name: "", email: "", subject: "", category: "", message: "" })
+              }}
+              className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
+            >
+              Send Another Message
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen pattern-bg text-white py-12">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold font-serif mb-4">Get in Touch</h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Have questions about PromptForge? Need enterprise pricing? Want to discuss custom integrations?
-            We're here to help you succeed.
-          </p>
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <div className="border-b border-gray-800 bg-black/95 backdrop-blur">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center mb-6">
+            <ForgeGlyphInteractive 
+              status="ready" 
+              size="md"
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4">
+              Contact Us
+            </h1>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Ready to forge your prompts? Get in touch with our team.
+            </p>
+          </div>
         </div>
+      </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+      {/* Content */}
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Contact Form */}
+          <Card className="bg-zinc-900/80 border border-zinc-700">
+            <CardHeader>
+              <CardTitle className="text-2xl font-serif text-white">Send us a Message</CardTitle>
+              <CardDescription className="text-gray-400">
+                                     Fill out the form below and we&apos;ll get back to you as soon as possible.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
+                      Name *
+                    </label>
+                    <Input
+                      id="name"
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+                      Email *
+                    </label>
+                    <Input
+                      id="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="category" className="block text-sm font-medium text-white mb-2">
+                    Category
+                  </label>
+                  <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-800 border-zinc-700">
+                      <SelectItem value="general" className="text-white hover:bg-zinc-700">General Inquiry</SelectItem>
+                      <SelectItem value="support" className="text-white hover:bg-zinc-700">Technical Support</SelectItem>
+                      <SelectItem value="billing" className="text-white hover:bg-zinc-700">Billing Question</SelectItem>
+                      <SelectItem value="enterprise" className="text-white hover:bg-zinc-700">Enterprise Sales</SelectItem>
+                      <SelectItem value="partnership" className="text-white hover:bg-zinc-700">Partnership</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-white mb-2">
+                    Subject *
+                  </label>
+                  <Input
+                    id="subject"
+                    type="text"
+                    required
+                    value={formData.subject}
+                    onChange={(e) => handleInputChange("subject", e.target.value)}
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                    placeholder="Brief subject line"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
+                    Message *
+                  </label>
+                  <Textarea
+                    id="message"
+                    required
+                    rows={6}
+                    value={formData.message}
+                    onChange={(e) => handleInputChange("message", e.target.value)}
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                    placeholder="Tell us how we can help you..."
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Send Message
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
           {/* Contact Information */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
-                <CardTitle className="font-serif text-2xl">Contact Information</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Reach out to our team for support, sales, or partnerships
-                </CardDescription>
+                <CardTitle className="text-xl font-serif text-white flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-yellow-500" />
+                  Email Support
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-yellow-500" />
+              <CardContent>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-gray-400">General Inquiries</p>
+                    <p className="text-white font-mono">hello@promptforge.ai</p>
                   </div>
                   <div>
-                    <div className="font-medium">Email Support</div>
-                    <div className="text-gray-400">[EXAMPLE_EMAIL_support@yourdomain.com]</div>
-                    <div className="text-sm text-gray-500">24/7 technical support</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center">
-                    <Building className="w-6 h-6 text-yellow-500" />
+                    <p className="text-sm text-gray-400">Technical Support</p>
+                    <p className="text-white font-mono">support@promptforge.ai</p>
                   </div>
                   <div>
-                    <div className="font-medium">Enterprise Sales</div>
-                    <div className="text-gray-400">[EXAMPLE_EMAIL_enterprise@yourdomain.com]</div>
-                    <div className="text-sm text-gray-500">Custom pricing & features</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center">
-                    <Phone className="w-6 h-6 text-yellow-500" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Phone Support</div>
-                    <div className="text-gray-400">[EXAMPLE_phone: [EXAMPLE_PHONE_[EXAMPLE_PHONE_555-123-4567]]]]]]</div>
-                    <div className="text-sm text-gray-500">Mon-Fri 9AM-6PM EST</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-6 h-6 text-yellow-500" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Office</div>
-                    <div className="text-gray-400">[EXAMPLE_ADDRESS_[EXAMPLE_ADDRESS_123 AI Street, Tech City]]</div>
-                    <div className="text-sm text-gray-500">United States</div>
+                    <p className="text-sm text-gray-400">Enterprise Sales</p>
+                    <p className="text-white font-mono">enterprise@promptforge.ai</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Essential Actions */}
             <Card className="bg-zinc-900/80 border border-zinc-700">
               <CardHeader>
-                <CardTitle className="font-serif text-xl">Essential Actions</CardTitle>
+                <CardTitle className="text-xl font-serif text-white flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-yellow-500" />
+                  Response Time
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-gray-400">General Inquiries</p>
+                    <p className="text-white">Within 24 hours</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">Technical Support</p>
+                    <p className="text-white">Within 12 hours</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">Enterprise Sales</p>
+                    <p className="text-white">Within 4 hours</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-zinc-900/80 border border-zinc-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-serif text-white flex items-center gap-2">
+                  <HelpCircle className="w-5 h-5 text-yellow-500" />
+                  FAQ
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400 mb-4">
+                  Check our documentation and guides for quick answers to common questions.
+                </p>
                 <Button
                   variant="outline"
-                  className="w-full border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
-                  onClick={() => setShowEnterpriseForm(true)}
+                  className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                  onClick={() => window.location.href = '/docs'}
                 >
-                  <Building className="w-4 h-4 mr-2" />
-                  Enterprise Inquiry
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  className="w-full border-gray-700 text-gray-300 hover:border-yellow-400 hover:text-yellow-400"
-                  onClick={() => window.open('https://docs.[EXAMPLE_DOMAIN_yourdomain.com]', '_blank')}
-                >
-                  <Star className="w-4 h-4 mr-2" />
                   View Documentation
-                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Enterprise Contact Form */}
-          <div>
-            <Card className="bg-zinc-900/80 border border-zinc-700">
-              <CardHeader className="text-center">
-                <div className="w-20 h-20 bg-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Building className="w-10 h-10 text-yellow-500" />
-                </div>
-                <CardTitle className="font-serif text-2xl">Enterprise Solutions</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Get custom pricing and features for your organization
-                </CardDescription>
-                <div className="flex justify-center gap-2 mt-4">
-                  <Badge className="bg-yellow-600 text-black">Custom Pricing</Badge>
-                  <Badge className="bg-green-600 text-white">White-label</Badge>
-                  <Badge className="bg-blue-600 text-white">API Access</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <EnterpriseContactForm 
-                  preselectedPlan={preselectedPlan || undefined}
-                  onSuccess={handleEnterpriseSuccess}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="mt-24 text-center">
-          <h2 className="text-3xl font-bold font-serif mb-12">Frequently Asked Questions</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <Card className="bg-zinc-900/80 border border-zinc-700 text-left">
-              <CardHeader>
-                <CardTitle className="font-serif text-lg">What's included in Enterprise?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400">
-                  Everything in Pro plus API access, white-label options, custom integrations, 
-                  dedicated support, and SLA guarantees.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-zinc-900/80 border border-zinc-700 text-left">
-              <CardHeader>
-                <CardTitle className="font-serif text-lg">How efficient is response time?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400">
-                  We respond to all inquiries within 24 hours, with enterprise customers 
-                  getting priority support and dedicated account managers.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-zinc-900/80 border border-zinc-700 text-left">
-              <CardHeader>
-                <CardTitle className="font-serif text-lg">Do you offer custom features?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400">
-                  Yes! Enterprise customers can request custom integrations, white-label solutions, 
-                  and tailored features for their specific use cases.
-                </p>
               </CardContent>
             </Card>
           </div>

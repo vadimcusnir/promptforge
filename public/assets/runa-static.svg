@@ -1,0 +1,39 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F4B001;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#goldGradient)" stroke="#000" stroke-width="2"/>
+  
+  <!-- Main vertical line -->
+  <line x1="100" y1="30" x2="100" y2="170" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Top arrow -->
+  <text x="100" y="25" text-anchor="middle" font-family="monospace" font-size="24" font-weight="bold" fill="#000">&gt;</text>
+  
+  <!-- Left bracket -->
+  <text x="60" y="100" text-anchor="middle" font-family="monospace" font-size="20" font-weight="bold" fill="#000" transform="translate(0, 7)">&#123;</text>
+  
+  <!-- Right bracket -->
+  <text x="140" y="100" text-anchor="middle" font-family="monospace" font-size="20" font-weight="bold" fill="#000" transform="translate(0, 7)">&#125;</text>
+  
+  <!-- Bottom wave -->
+  <text x="100" y="175" text-anchor="middle" font-family="monospace" font-size="18" font-weight="bold" fill="#000">~</text>
+  
+  <!-- Center dot -->
+  <circle cx="100" cy="100" r="3" fill="#000"/>
+  
+  <!-- Subtle glow effect -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="url(#goldGradient)" stroke-width="1" opacity="0.3" filter="url(#glow)"/>
+</svg>

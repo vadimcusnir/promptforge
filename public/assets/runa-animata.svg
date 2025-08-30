@@ -1,0 +1,75 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F4B001;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glitch" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 1 0 0  0 1 0 0 0  0 0 0 1 0"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle with pulse animation -->
+  <circle cx="100" cy="100" r="95" fill="url(#goldGradient)" stroke="#000" stroke-width="2">
+    <animate attributeName="r" values="95;98;95" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.8;1" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Main vertical line with glow -->
+  <line x1="100" y1="30" x2="100" y2="170" stroke="#000" stroke-width="4" stroke-linecap="round" filter="url(#glow)">
+    <animate attributeName="stroke-width" values="4;6;4" dur="2s" repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Top arrow with rotation -->
+  <text x="100" y="25" text-anchor="middle" font-family="monospace" font-size="24" font-weight="bold" fill="#000">
+    &gt;
+    <animateTransform attributeName="transform" type="rotate" values="0 100 25;5 100 25;0 100 25" dur="4s" repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Left bracket with magnetic effect -->
+  <text x="60" y="100" text-anchor="middle" font-family="monospace" font-size="20" font-weight="bold" fill="#000" transform="translate(0, 7)">
+    &#123;
+    <animateTransform attributeName="transform" type="translate" values="0,7;-2,7;0,7" dur="3s" repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Right bracket with magnetic effect -->
+  <text x="140" y="100" text-anchor="middle" font-family="monospace" font-size="20" font-weight="bold" fill="#000" transform="translate(0, 7)">
+    &#125;
+    <animateTransform attributeName="transform" type="translate" values="0,7;2,7;0,7" dur="3s" repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Bottom wave with pulse -->
+  <text x="100" y="175" text-anchor="middle" font-family="monospace" font-size="18" font-weight="bold" fill="#000">
+    ~
+    <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="scale" values="1;1.2;1" dur="1.5s" repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Center dot with breathing effect -->
+  <circle cx="100" cy="100" r="3" fill="#000">
+    <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Glow effect with intensity animation -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="url(#goldGradient)" stroke-width="1" opacity="0.3" filter="url(#glow)">
+    <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Glitch overlay (appears on hover) -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#00ffe7" stroke-width="2" opacity="0" filter="url(#glitch)">
+    <animate attributeName="opacity" values="0;0.8;0" dur="0.5s" repeatCount="indefinite" begin="mouseover"/>
+  </circle>
+</svg>

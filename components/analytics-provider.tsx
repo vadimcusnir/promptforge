@@ -9,23 +9,23 @@ import {
   createPricingSelectEvent,
   createStartTrialEvent,
   createExportEvent,
-  type ViewPageEvent,
-  type CtaClickEvent,
-  type PricingSelectEvent,
-  type StartTrialEvent,
-  type ExportEvent
+  type _ViewPageEvent,
+  type _CtaClickEvent,
+  type _PricingSelectEvent,
+  type _StartTrialEvent,
+  type _ExportEvent
 } from '@/lib/analytics-events'
 
 interface AnalyticsContextType {
-  trackEvent: (eventName: string, properties?: Record<string, any>) => void
-  trackPageView: (url: string, title?: string) => void
-  
+  trackEvent: (_eventName: string, _properties?: Record<string, any>) => void
+  trackPageView: (_url: string, _title?: string) => void
+
   // Standard events as requested
-  trackViewPage: (pagePath: string, pageTitle: string, options?: { pageCategory?: string }) => void
-  trackCtaClick: (ctaType: string, ctaText: string, ctaPosition: string, options?: { targetUrl?: string }) => void
-  trackPricingSelect: (planId: string, planType: 'free' | 'pro' | 'enterprise', billingCycle: 'monthly' | 'annual', price: number) => void
-  trackStartTrial: (planId: string, trialType: 'free' | 'pro_trial', options?: { userId?: string, email?: string }) => void
-  trackExport: (exportType: 'pdf' | 'json' | 'txt' | 'md' | 'zip', options?: { moduleId?: string, fileSize?: number, userId?: string }) => void
+  trackViewPage: (_pagePath: string, _pageTitle: string, _options?: { pageCategory?: string }) => void
+  trackCtaClick: (_ctaType: string, _ctaText: string, _ctaPosition: string, _options?: { targetUrl?: string }) => void
+  trackPricingSelect: (_planId: string, _planType: 'free' | 'pro' | 'enterprise', _billingCycle: 'monthly' | 'annual', _price: number) => void
+  trackStartTrial: (_planId: string, _trialType: 'free' | 'pro_trial', _options?: { userId?: string, email?: string }) => void
+  trackExport: (_exportType: 'pdf' | 'json' | 'txt' | 'md' | 'zip', _options?: { moduleId?: string, fileSize?: number, userId?: string }) => void
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | undefined>(undefined)
@@ -63,13 +63,13 @@ function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
     return sessionId
   }
 
-  const trackEvent = (eventName: string, properties: Record<string, any> = {}) => {
+  const trackEvent = (_eventName: string, _properties: Record<string, any> = {}) => {
     // GA4 event tracking - only if properly configured
     if (isGAConfigured && typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', eventName, {
-        ...properties,
+      (window as any).gtag('event', _eventName, {
+        ..._properties,
         event_category: 'user_interaction',
-        event_label: properties.event_label || eventName,
+        event_label: _properties.event_label || _eventName,
         timestamp: Date.now()
       })
     }
@@ -77,13 +77,13 @@ function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
     // Internal analytics API
     fetch('/api/analytics/track', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'x-session-id': getSessionId() || ''
       },
       body: JSON.stringify({
-        event: eventName,
-        properties,
+        event: _eventName,
+        properties: _properties,
         timestamp: Date.now(),
         url: window.location.href
       })
@@ -91,16 +91,16 @@ function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
 
     // Console log for development
     if (process.env.NODE_ENV === 'development') {
-      console.log('📊 Analytics Event:', eventName, properties)
+      console.log('📊 Analytics Event:', _eventName, _properties)
     }
   }
 
-  const trackPageView = (url: string, title?: string) => {
+  const trackPageView = (_url: string, _title?: string) => {
     // GA4 pageview tracking - only if properly configured
     if (isGAConfigured && typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('config', process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID, {
-        page_title: title || document.title,
-        page_location: url,
+        page_title: _title || document.title,
+        page_location: _url,
         send_page_view: true
       })
     }
@@ -113,8 +113,8 @@ function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
         'x-session-id': getSessionId() || ''
       },
       body: JSON.stringify({
-        url,
-        title: title || document.title,
+        url: _url,
+        title: _title || document.title,
         timestamp: Date.now(),
         referrer: document.referrer
       })

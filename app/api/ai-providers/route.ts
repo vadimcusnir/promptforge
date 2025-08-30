@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { action: validAction, model: _validModel, promptLength: validPromptLength, maxTokens: validMaxTokens, priority: validPriority } = validation.data
+    const { action: validAction, model: validModel, promptLength: validPromptLength, maxTokens: validMaxTokens, priority: validPriority } = validation.data
 
     switch (validAction) {
       case 'list': {
@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Require authentication
-    const _user = await requireAuth(request)
+    await requireAuth(request)
     
     // Parse request body
     const body = await request.json()
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
     const { action: validAction, model: validModel, promptLength: validPromptLength, maxTokens: validMaxTokens, priority: validPriority, strategy: validStrategy } = validation.data
 
     switch (validAction) {
-      case 'test':
+      case 'test': {
         if (!validModel) {
           return NextResponse.json(
             { success: false, error: 'Model is required for testing' },
@@ -163,8 +163,9 @@ export async function POST(request: NextRequest) {
             latency: testResult.latency || 0
           }
         })
+      }
 
-      case 'recommendations':
+      case 'recommendations': {
         const recommendations = aiProviderManager.getProviderRecommendations(
           validPromptLength || 100,
           validMaxTokens || 500,
@@ -179,12 +180,14 @@ export async function POST(request: NextRequest) {
             providers: recommendations
           }
         })
+      }
 
-      default:
+      default: {
         return NextResponse.json(
           { success: false, error: 'Invalid action' },
           { status: 400 }
         )
+      }
     }
 
   } catch (error) {

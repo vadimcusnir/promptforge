@@ -259,7 +259,7 @@ export function useMobileOptimizations() {
       
       setOptimizations({
         isMobile,
-        isLowEndDevice: (navigator as any).deviceMemory < 4 || (navigator as any).hardwareConcurrency < 4,
+        isLowEndDevice: ((navigator as any).deviceMemory && (navigator as any).deviceMemory < 4) || ((navigator as any).hardwareConcurrency && (navigator as any).hardwareConcurrency < 4),
         reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
         dataSaver: (navigator as any).connection?.saveData || false
       })
