@@ -83,7 +83,7 @@ export function HistoryPanel({ onRestoreConfig }: HistoryPanelProps) {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <History className="w-5 h-5 text-gold-industrial" />
-          <h2 className="text-xl font-semibold font-montserrat">
+          <h2 className="text-xl font-semibold font-sans">
             Session History
           </h2>
         </div>

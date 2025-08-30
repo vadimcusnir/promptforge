@@ -75,7 +75,7 @@ export function ExportMenu({ currentPlan, onExport, className }: ExportMenuProps
     <div className={cn('relative', className)}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-4 py-2 bg-surface border border-border rounded-md text-text hover:border-brand/50 transition-colors duration-200 focus-ring font-ui text-sm"
+        className="flex items-center space-x-2 px-4 py-2 bg-surface border border-border rounded-md text-foreground hover:border-accent/50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent/50 font-sans text-sm"
       >
         <span>Export</span>
         <ForgeGlyph variant="static" size="sm" />
@@ -105,10 +105,10 @@ export function ExportMenu({ currentPlan, onExport, className }: ExportMenuProps
                     onMouseLeave={() => setHoveredFormat(null)}
                     disabled={!option.available}
                     className={cn(
-                      'w-full px-4 py-2 text-left text-sm font-ui transition-colors duration-200 focus-ring',
+                      'w-full px-4 py-2 text-left text-sm font-sans transition-colors duration-200 focus-ring',
                       option.available
-                        ? 'text-text hover:bg-surfaceAlt'
-                        : 'text-textMuted cursor-not-allowed'
+                        ? 'text-foreground hover:bg-surfaceAlt'
+                        : 'text-foregroundMuted cursor-not-allowed'
                     )}
                   >
                     {option.label}
@@ -117,7 +117,7 @@ export function ExportMenu({ currentPlan, onExport, className }: ExportMenuProps
                   {/* Tooltip for disabled options */}
                   {!option.available && hoveredFormat === option.format && (
                     <div className="absolute left-full top-0 ml-2 px-3 py-2 bg-surfaceAlt border border-border rounded-md shadow-lg z-30">
-                      <div className="text-xs text-text font-ui whitespace-nowrap">
+                      <div className="text-xs text-foreground font-sans whitespace-nowrap">
                         {option.reason}
                       </div>
                       <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-border" />

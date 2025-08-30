@@ -32,7 +32,7 @@ export default function DPAPage() {
               <div className="absolute inset-0 bg-gold-400/20 rounded-full blur-xl " />
             </div>
           </div>
-          <h1 className="text-5xl font-bold font-montserrat text-gold-400 mb-4">Data Processing Agreement</h1>
+          <h1 className="text-5xl font-bold font-sans text-gold-400 mb-4">Data Processing Agreement</h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Enterprise-grade data protection and GDPR compliance for your organization
           </p>
@@ -48,7 +48,7 @@ export default function DPAPage() {
         <div className="max-w-3xl mx-auto space-y-12">
           {/* Introduction */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Introduction</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Introduction</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 This Data Processing Agreement ("DPA") forms part of the Terms of Service between PromptForge ("Data Processor") 
@@ -64,7 +64,7 @@ export default function DPAPage() {
 
           {/* Definitions */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Definitions</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Definitions</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 space-y-3">
                 <div>
@@ -89,7 +89,7 @@ export default function DPAPage() {
 
           {/* Processing Details */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Processing Details</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Processing Details</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
                 <h4 className="font-bold text-white mb-3">Nature and Purpose of Processing</h4>
@@ -122,7 +122,7 @@ export default function DPAPage() {
 
           {/* Data Processor Obligations */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Data Processor Obligations</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Data Processor Obligations</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
@@ -149,7 +149,7 @@ export default function DPAPage() {
 
           {/* Sub-processors */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Sub-processors</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Sub-processors</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 PromptForge engages the following sub-processors to provide the service:
@@ -180,7 +180,7 @@ export default function DPAPage() {
 
           {/* Data Subject Rights */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Data Subject Rights</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Data Subject Rights</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 PromptForge supports the following data subject rights as required by GDPR:
@@ -216,7 +216,7 @@ export default function DPAPage() {
 
           {/* Data Breach Procedures */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Data Breach Procedures</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Data Breach Procedures</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
                 <h4 className="font-bold text-red-400 mb-3">Incident Response</h4>
@@ -236,7 +236,7 @@ export default function DPAPage() {
 
           {/* Audit Rights */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Audit Rights</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Audit Rights</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 The Data Controller has the right to audit PromptForge's compliance with this DPA:
@@ -266,7 +266,7 @@ export default function DPAPage() {
 
           {/* Termination */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Termination</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Termination</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 Upon termination of the service agreement:
@@ -299,7 +299,7 @@ export default function DPAPage() {
 
           {/* Contact Information */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Contact Information</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Contact Information</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
                 <h4 className="font-bold text-white mb-3">Data Protection Officer</h4>

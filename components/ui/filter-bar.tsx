@@ -76,13 +76,13 @@ export function FilterBar({
     <div className={cn('space-y-4', className)}>
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textMuted w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foregroundMuted w-4 h-4" />
         <input
           type="text"
           placeholder="Search modules... (Cmd+K)"
           value={searchQuery}
           onChange={handleSearchChange}
-          className="w-full pl-10 pr-4 py-2 bg-surface border border-border rounded-md text-text placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-colors"
+          className="w-full pl-10 pr-4 py-2 bg-surface border border-border rounded-md text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-colors"
         />
       </div>
 
@@ -90,12 +90,12 @@ export function FilterBar({
       <div className="flex items-center justify-between">
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center space-x-2 px-3 py-2 bg-surfaceAlt border border-border rounded-md text-text hover:border-brand/50 transition-colors"
+          className="flex items-center space-x-2 px-3 py-2 bg-surface-alt border border-border rounded-md text-foreground hover:border-accent/50 transition-colors"
         >
           <Filter className="w-4 h-4" />
-          <span className="font-ui text-sm">Filters</span>
+          <span className="font-sans text-sm">Filters</span>
           {hasActiveFilters && (
-            <span className="px-2 py-1 bg-brand/10 text-brand text-xs rounded-full">
+            <span className="px-2 py-1 bg-accent/10 text-accent text-xs rounded-full">
               {selectedVectors.length + (maxDifficulty < 5 ? 1 : 0) + (selectedPlan !== 'all' ? 1 : 0)}
             </span>
           )}
@@ -104,10 +104,10 @@ export function FilterBar({
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="flex items-center space-x-1 text-textMuted hover:text-text transition-colors"
+            className="flex items-center space-x-1 text-foregroundMuted hover:text-foreground transition-colors"
           >
             <X className="w-4 h-4" />
-            <span className="font-ui text-sm">Clear</span>
+            <span className="font-sans text-sm">Clear</span>
           </button>
         )}
       </div>
@@ -117,17 +117,17 @@ export function FilterBar({
         <div className="space-y-4 pt-4 border-t border-border">
           {/* Vectors */}
           <div>
-            <h4 className="font-ui text-sm font-medium text-text mb-2">Vectors</h4>
+            <h4 className="font-sans text-sm font-medium text-foreground mb-2">Vectors</h4>
             <div className="flex flex-wrap gap-2">
               {vectors.map((vector) => (
                 <button
                   key={vector}
                   onClick={() => handleVectorToggle(vector)}
                   className={cn(
-                    'px-3 py-1 rounded-full text-xs font-ui transition-colors',
+                    'px-3 py-1 rounded-full text-xs font-sans transition-colors',
                     selectedVectors.includes(vector)
-                      ? 'bg-brand/20 text-brand border border-brand/30'
-                      : 'bg-surfaceAlt text-textMuted border border-border hover:border-brand/50'
+                      ? 'bg-accent/20 text-accent border border-accent/30'
+                      : 'bg-surface-alt text-foreground-muted border border-border hover:border-accent/50'
                   )}
                 >
                   {vector}
@@ -138,17 +138,17 @@ export function FilterBar({
 
           {/* Difficulty */}
           <div>
-            <h4 className="font-ui text-sm font-medium text-text mb-2">Max Difficulty</h4>
+            <h4 className="font-sans text-sm font-medium text-foreground mb-2">Max Difficulty</h4>
             <div className="flex flex-wrap gap-2">
               {difficulties.map((difficulty) => (
                 <button
                   key={difficulty.value}
                   onClick={() => handleDifficultyChange(difficulty.value)}
                   className={cn(
-                    'px-3 py-1 rounded-full text-xs font-ui transition-colors',
+                    'px-3 py-1 rounded-full text-xs font-sans transition-colors',
                     maxDifficulty >= difficulty.value
-                      ? 'bg-brand/20 text-brand border border-brand/30'
-                      : 'bg-surfaceAlt text-textMuted border border-border hover:border-brand/50'
+                      ? 'bg-accent/20 text-accent border border-accent/30'
+                      : 'bg-surface-alt text-foreground-muted border border-border hover:border-accent/50'
                   )}
                 >
                   {difficulty.label}
@@ -159,17 +159,17 @@ export function FilterBar({
 
           {/* Plan */}
           <div>
-            <h4 className="font-ui text-sm font-medium text-text mb-2">Plan Access</h4>
+            <h4 className="font-sans text-sm font-medium text-foreground mb-2">Plan Access</h4>
             <div className="flex flex-wrap gap-2">
               {plans.map((plan) => (
                 <button
                   key={plan}
                   onClick={() => handlePlanChange(plan)}
                   className={cn(
-                    'px-3 py-1 rounded-full text-xs font-ui transition-colors capitalize',
+                    'px-3 py-1 rounded-full text-xs font-sans transition-colors capitalize',
                     selectedPlan === plan
-                      ? 'bg-brand/20 text-brand border border-brand/30'
-                      : 'bg-surfaceAlt text-textMuted border border-border hover:border-brand/50'
+                      ? 'bg-accent/20 text-accent border border-accent/30'
+                      : 'bg-surface-alt text-foreground-muted border border-border hover:border-accent/50'
                   )}
                 >
                   {plan}

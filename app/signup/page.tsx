@@ -149,7 +149,7 @@ export default function SignupPage() {
                     placeholder="Enter your full name"
                     value={formData.fullName}
                     onChange={(e) => handleInputChange('fullName', e.target.value)}
-                    className="pl-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
+                    className="pl-10 bg-background-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-background-glass-hover focus:border-accent-primary"
                     required
                   />
                 </div>
@@ -168,7 +168,7 @@ export default function SignupPage() {
                     placeholder="Enter your email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="pl-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
+                    className="pl-10 bg-background-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-background-glass-hover focus:border-accent-primary"
                     required
                   />
                 </div>
@@ -187,7 +187,7 @@ export default function SignupPage() {
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    className="pl-10 pr-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
+                    className="pl-10 pr-10 bg-background-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-background-glass-hover focus:border-accent-primary"
                     required
                   />
                   <Button
@@ -220,7 +220,7 @@ export default function SignupPage() {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className="pl-10 pr-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
+                    className="pl-10 pr-10 bg-background-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-background-glass-hover focus:border-accent-primary"
                     required
                   />
                   <Button

@@ -56,7 +56,7 @@ export function ForgeLogoFull({
                     <rect x="95" y="125" width="10" height="10" />
                   </g>
                 </svg>
-                <span class="font-display font-semibold text-text text-xl">PromptForge™</span>
+                <span class="font-display font-semibold text-foreground text-xl">PromptForge™</span>
               </div>
             `
           }

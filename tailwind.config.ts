@@ -18,27 +18,15 @@ const config = {
       },
     },
     extend: {
-      // PFv3.1 Design System Colors
+      // Unified Design System Colors
       colors: {
-        // PFv3.1 Brand Colors
-        bg: "#05010A",
-        brand: "#00FF7F", 
-        accent: "#FF2F2F",
-        gold: "#CDA434",
-        surface: "#0B0712",
-        surfaceAlt: "#100A18",
-        border: "#2A2036",
-        text: "#F5F7FA",
-        textMuted: "#C9CDD4",
-        focus: "#7FFFD4",
-        
         // State colors
         success: tokens.colors.success,
         warning: tokens.colors.warning,
         error: tokens.colors.error,
         info: tokens.colors.info,
         
-        // Legacy shadcn/ui colors for compatibility
+        // Unified shadcn/ui colors
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -61,8 +49,17 @@ const config = {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
-        ring: 'hsl(var(--ring))',
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
       },
       
       // Spacing system
@@ -74,11 +71,10 @@ const config = {
       // Z-index system
       zIndex: tokens.zIndex,
       
-      // PFv3.1 Typography System
+      // Unified Typography System
       fontFamily: {
-        display: ['Cinzel', 'serif'],
-        ui: ['Space Grotesk', 'ui-sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace'],
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
       
       // PFv3.1 Shadow System

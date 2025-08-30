@@ -354,7 +354,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
             </div>
 
             {/* Title and Subtitle */}
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 font-montserrat leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 font-sans leading-tight">
               {article.title}
             </h1>
             <p className="text-xl text-gray-300 mb-8 leading-relaxed">

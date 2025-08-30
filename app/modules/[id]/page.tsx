@@ -68,7 +68,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-montserrat">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-sans">
             {module.name}
           </h1>
           <p className="text-xl text-[#5a5a5a] mb-6 font-open-sans">
@@ -92,7 +92,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </div>
 
         <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-8">
-          <h3 className="text-2xl font-bold mb-6 text-[#d1a954] font-montserrat">
+          <h3 className="text-2xl font-bold mb-6 text-[#d1a954] font-sans">
             Frequently Asked Questions
           </h3>
           <div className="space-y-6">

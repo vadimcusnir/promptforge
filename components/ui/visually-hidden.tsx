@@ -14,7 +14,7 @@ const VisuallyHidden = React.forwardRef<HTMLSpanElement, VisuallyHiddenProps>(
         ref={ref as any}
         className={cn(
           "absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0",
-          showOnFocus && "focus:static focus:w-auto focus:h-auto focus:p-3 focus:m-0 focus:overflow-visible focus:whitespace-normal focus:border focus:border-accent-primary focus:bg-bg-primary focus:text-fg-primary focus:z-50",
+          showOnFocus && "focus:static focus:w-auto focus:h-auto focus:p-3 focus:m-0 focus:overflow-visible focus:whitespace-normal focus:border focus:border-accent-primary focus:bg-background-primary focus:text-fg-primary focus:z-50",
           className
         )}
         {...props}

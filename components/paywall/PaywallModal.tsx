@@ -40,7 +40,7 @@ export function PaywallModal({ isOpen, onClose, trigger }: PaywallModalProps) {
       <div className="bg-dark-secondary border border-lead-gray/30 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold font-montserrat">
+            <h2 className="text-2xl font-bold font-sans">
               Upgrade Required
             </h2>
             <button

@@ -10,7 +10,7 @@ interface ModuleSpecProps {
 export function ModuleSpec({ module }: ModuleSpecProps) {
   return (
     <div className="mb-12">
-      <h2 className="text-3xl font-bold mb-8 text-[#d1a954] font-montserrat">
+      <h2 className="text-3xl font-bold mb-8 text-[#d1a954] font-sans">
         Module Specifications
       </h2>
 
@@ -19,7 +19,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
         <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-4">
             <Settings className="w-6 h-6 text-[#d1a954]" />
-            <h3 className="text-xl font-semibold text-[#d1a954] font-montserrat">
+            <h3 className="text-xl font-semibold text-[#d1a954] font-sans">
               Input Requirements
             </h3>
           </div>
@@ -32,7 +32,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
         <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-4">
             <Zap className="w-6 h-6 text-[#d1a954]" />
-            <h3 className="text-xl font-semibold text-[#d1a954] font-montserrat">
+            <h3 className="text-xl font-semibold text-[#d1a954] font-sans">
               Technical Specs
             </h3>
           </div>
@@ -45,7 +45,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
         <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-4">
             <Target className="w-6 h-6 text-[#d1a954]" />
-            <h3 className="text-xl font-semibold text-[#d1a954] font-montserrat">
+            <h3 className="text-xl font-semibold text-[#d1a954] font-sans">
               Expected Output
             </h3>
           </div>
@@ -58,7 +58,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
         <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-4">
             <BarChart3 className="w-6 h-6 text-[#d1a954]" />
-            <h3 className="text-xl font-semibold text-[#d1a954] font-montserrat">
+            <h3 className="text-xl font-semibold text-[#d1a954] font-sans">
               Success Metrics
             </h3>
           </div>
@@ -74,7 +74,7 @@ export function ModuleSpec({ module }: ModuleSpecProps) {
       <div className="glass-effect border border-[#5a5a5a]/30 rounded-lg p-6 mt-6">
         <div className="flex items-center gap-3 mb-4">
           <Shield className="w-6 h-6 text-[#d1a954]" />
-          <h3 className="text-xl font-semibold text-[#d1a954] font-montserrat">
+          <h3 className="text-xl font-semibold text-[#d1a954] font-sans">
             Guardrails & Constraints
           </h3>
         </div>

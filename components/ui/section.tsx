@@ -8,9 +8,9 @@ const sectionVariants = cva(
     variants: {
       variant: {
         default: "bg-transparent",
-        card: "bg-bg-secondary border border-border-primary rounded-lg p-6",
+        card: "bg-background-secondary border border-border-primary rounded-lg p-6",
         glass: "glass-card p-6",
-        elevated: "bg-bg-secondary border border-border-primary rounded-lg p-6 shadow-lg",
+        elevated: "bg-background-secondary border border-border-primary rounded-lg p-6 shadow-lg",
       },
       spacing: {
         none: "py-0",

@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             </div>
           </div>
           <p className="text-gray-400 text-lg mb-4 italic">"Your prompts are your power. We guard it."</p>
-          <h1 className="text-5xl font-bold font-montserrat text-white mb-4">Privacy Policy</h1>
+          <h1 className="text-5xl font-bold font-sans text-white mb-4">Privacy Policy</h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">We protect your data like it's semantic gold.</p>
         </div>
 
@@ -43,7 +43,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Eye className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">What We Collect</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">What We Collect</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>We collect only what's necessary to make PromptForge work effectively:</p>
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Lock className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Why We Collect It</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Why We Collect It</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Every piece of data serves a specific purpose:</p>
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Shield className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">How We Store It</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">How We Store It</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Your data is protected with enterprise-grade security:</p>
@@ -149,7 +149,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Trash2 className="w-6 h-6 text-red-400 mr-3" />
-                <h2 className="text-2xl font-bold text-red-400 font-montserrat">What We Don't Store</h2>
+                <h2 className="text-2xl font-bold text-red-400 font-sans">What We Don't Store</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>We explicitly do NOT store the following data:</p>
@@ -180,7 +180,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Trash2 className="w-6 h-6 text-red-400 mr-3" />
-                <h2 className="text-2xl font-bold text-red-400 font-montserrat">What We Never Do</h2>
+                <h2 className="text-2xl font-bold text-red-400 font-sans">What We Never Do</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Your trust is sacred. We will never:</p>
@@ -218,7 +218,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Shield className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Legal Basis for Data Processing</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Legal Basis for Data Processing</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Our data processing is based on GDPR Article 6 and other applicable privacy laws:</p>
@@ -255,7 +255,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Eye className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Analytics & Telemetry</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Analytics & Telemetry</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>We collect analytics data to improve our service and understand usage patterns:</p>
@@ -272,7 +272,7 @@ export default function PrivacyPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Download className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Your Rights</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Your Rights</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>You have complete control over your data:</p>

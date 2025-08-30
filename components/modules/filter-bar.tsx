@@ -107,7 +107,7 @@ export function FilterBar({
     <div className={cn('pf-bg-glass rounded-lg p-4 space-y-4', className)}>
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
         <Input
           placeholder="Search modules... (Cmd+K)"
           value={searchTerm}
@@ -138,7 +138,7 @@ export function FilterBar({
             variant="ghost"
             size="sm"
             onClick={clearAllFilters}
-            className="text-text-muted hover:text-text-primary"
+            className="text-foreground-muted hover:text-foreground-primary"
           >
             <X className="w-4 h-4 mr-1" />
             Clear All
@@ -151,7 +151,7 @@ export function FilterBar({
         <div className="space-y-4 pt-4 border-t border-border/50">
           {/* Vectors */}
           <div>
-            <h4 className="text-sm font-medium text-text-primary mb-2">Vectors</h4>
+            <h4 className="text-sm font-medium text-foreground-primary mb-2">Vectors</h4>
             <div className="flex flex-wrap gap-2">
               {vectors.map((vector) => (
                 <Badge
@@ -172,7 +172,7 @@ export function FilterBar({
           
           {/* Difficulty */}
           <div>
-            <h4 className="text-sm font-medium text-text-primary mb-2">Difficulty</h4>
+            <h4 className="text-sm font-medium text-foreground-primary mb-2">Difficulty</h4>
             <div className="flex flex-wrap gap-2">
               {difficulties.map((difficulty) => (
                 <Badge
@@ -193,7 +193,7 @@ export function FilterBar({
           
           {/* Plans */}
           <div>
-            <h4 className="text-sm font-medium text-text-primary mb-2">Plan Access</h4>
+            <h4 className="text-sm font-medium text-foreground-primary mb-2">Plan Access</h4>
             <div className="flex flex-wrap gap-2">
               {plans.map((plan) => (
                 <Badge

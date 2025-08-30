@@ -116,7 +116,7 @@ export function ModuleCard({
         {vectors.map((vector) => (
           <span 
             key={vector}
-            className={cn('px-2 py-1 rounded-full text-xs font-ui border', getVectorColor(vector))}
+            className={cn('px-2 py-1 rounded-full text-xs font-sans border', getVectorColor(vector))}
           >
             {vector}
           </span>
@@ -125,10 +125,10 @@ export function ModuleCard({
 
       {/* Metadata */}
       <div className="flex items-center gap-2 mb-4">
-        <span className={cn('px-2 py-1 rounded-full text-xs font-ui border', getDifficultyColor(difficulty))}>
+        <span className={cn('px-2 py-1 rounded-full text-xs font-sans border', getDifficultyColor(difficulty))}>
           {getDifficultyLabel(difficulty)}
         </span>
-        <span className={cn('px-2 py-1 rounded-full text-xs font-ui border', getPlanColor(minPlan))}>
+        <span className={cn('px-2 py-1 rounded-full text-xs font-sans border', getPlanColor(minPlan))}>
           {getPlanDisplayName(minPlan)}
         </span>
       </div>

@@ -58,7 +58,7 @@ export function TestEngine({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <TrendingUp className="w-6 h-6 text-gold-industrial" />
-          <h2 className="text-xl font-semibold font-montserrat">Test Engine</h2>
+          <h2 className="text-xl font-semibold font-sans">Test Engine</h2>
         </div>
         <EntitlementGate
           orgId={orgId}

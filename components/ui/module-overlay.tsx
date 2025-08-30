@@ -96,7 +96,7 @@ export function ModuleOverlay({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-background/80 backdrop-blur-sm"
         onClick={onClose}
       />
       
@@ -107,17 +107,17 @@ export function ModuleOverlay({
           <div className="flex items-center space-x-4">
             <ForgeGlyph variant="pulse" size="md" />
             <div>
-              <h2 className="font-display text-2xl font-semibold text-text">
+              <h2 className="font-sans text-2xl font-semibold text-foreground">
                 {module.title}
               </h2>
-              <p className="text-textMuted font-ui text-sm">
+              <p className="text-foregroundMuted font-sans text-sm">
                 {module.summary}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-textMuted hover:text-text transition-colors"
+            className="p-2 text-foregroundMuted hover:text-foreground transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -130,20 +130,20 @@ export function ModuleOverlay({
             <div className="space-y-6">
               {/* Overview */}
               <div>
-                <h3 className="font-display text-lg font-semibold text-text mb-3">Overview</h3>
-                <p className="text-textMuted font-ui text-sm leading-relaxed">
+                <h3 className="font-sans text-lg font-semibold text-foreground mb-3">Overview</h3>
+                <p className="text-foregroundMuted font-sans text-sm leading-relaxed">
                   {module.overview}
                 </p>
               </div>
 
               {/* Vectors */}
               <div>
-                <h3 className="font-display text-lg font-semibold text-text mb-3">Vectors</h3>
+                <h3 className="font-sans text-lg font-semibold text-foreground mb-3">Vectors</h3>
                 <div className="flex flex-wrap gap-2">
                   {module.vectors.map((vector) => (
                     <span 
                       key={vector}
-                      className={cn('px-3 py-1 rounded-full text-sm font-ui border', getVectorColor(vector))}
+                      className={cn('px-3 py-1 rounded-full text-sm font-sans border', getVectorColor(vector))}
                     >
                       {vector}
                     </span>
@@ -153,14 +153,14 @@ export function ModuleOverlay({
 
               {/* Inputs */}
               <div>
-                <h3 className="font-display text-lg font-semibold text-text mb-3">Inputs</h3>
+                <h3 className="font-sans text-lg font-semibold text-foreground mb-3">Inputs</h3>
                 <ul className="space-y-2">
                   {module.inputs.map((input, index) => (
                     <li key={index} className="flex items-start space-x-2">
                       <div className="rune-executable w-4 h-4 flex-shrink-0 mt-0.5">
                         <div className="star-8 w-2 h-2" />
                       </div>
-                      <span className="text-textMuted font-ui text-sm">{input}</span>
+                      <span className="text-foregroundMuted font-sans text-sm">{input}</span>
                     </li>
                   ))}
                 </ul>
@@ -168,14 +168,14 @@ export function ModuleOverlay({
 
               {/* Outputs */}
               <div>
-                <h3 className="font-display text-lg font-semibold text-text mb-3">Outputs</h3>
+                <h3 className="font-sans text-lg font-semibold text-foreground mb-3">Outputs</h3>
                 <ul className="space-y-2">
                   {module.outputs.map((output, index) => (
                     <li key={index} className="flex items-start space-x-2">
                       <div className="rune-executable w-4 h-4 flex-shrink-0 mt-0.5">
                         <div className="star-8 w-2 h-2" />
                       </div>
-                      <span className="text-textMuted font-ui text-sm">{output}</span>
+                      <span className="text-foregroundMuted font-sans text-sm">{output}</span>
                     </li>
                   ))}
                 </ul>
@@ -186,14 +186,14 @@ export function ModuleOverlay({
             <div className="space-y-6">
               {/* KPIs */}
               <div>
-                <h3 className="font-display text-lg font-semibold text-text mb-3">Key Performance Indicators</h3>
+                <h3 className="font-sans text-lg font-semibold text-foreground mb-3">Key Performance Indicators</h3>
                 <ul className="space-y-2">
                   {module.kpis.map((kpi, index) => (
                     <li key={index} className="flex items-start space-x-2">
                       <div className="rune-executable w-4 h-4 flex-shrink-0 mt-0.5">
                         <div className="star-8 w-2 h-2" />
                       </div>
-                      <span className="text-textMuted font-ui text-sm">{kpi}</span>
+                      <span className="text-foregroundMuted font-sans text-sm">{kpi}</span>
                     </li>
                   ))}
                 </ul>
@@ -201,14 +201,14 @@ export function ModuleOverlay({
 
               {/* Guardrails */}
               <div>
-                <h3 className="font-display text-lg font-semibold text-text mb-3">Guardrails</h3>
+                <h3 className="font-sans text-lg font-semibold text-foreground mb-3">Guardrails</h3>
                 <ul className="space-y-2">
                   {module.guardrails.map((guardrail, index) => (
                     <li key={index} className="flex items-start space-x-2">
                       <div className="rune-executable w-4 h-4 flex-shrink-0 mt-0.5">
                         <div className="star-8 w-2 h-2" />
                       </div>
-                      <span className="text-textMuted font-ui text-sm">{guardrail}</span>
+                      <span className="text-foregroundMuted font-sans text-sm">{guardrail}</span>
                     </li>
                   ))}
                 </ul>
@@ -216,21 +216,21 @@ export function ModuleOverlay({
 
               {/* Metadata */}
               <div>
-                <h3 className="font-display text-lg font-semibold text-text mb-3">Module Details</h3>
+                <h3 className="font-sans text-lg font-semibold text-foreground mb-3">Module Details</h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-textMuted font-ui text-sm">Difficulty:</span>
-                    <span className={cn('px-2 py-1 rounded-full text-xs font-ui border', getDifficultyColor(module.difficulty))}>
+                    <span className="text-foregroundMuted font-sans text-sm">Difficulty:</span>
+                    <span className={cn('px-2 py-1 rounded-full text-xs font-sans border', getDifficultyColor(module.difficulty))}>
                       {getDifficultyLabel(module.difficulty)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-textMuted font-ui text-sm">Min Plan:</span>
-                    <span className="text-text font-ui text-sm capitalize">{module.minPlan}</span>
+                    <span className="text-foregroundMuted font-sans text-sm">Min Plan:</span>
+                    <span className="text-foreground font-sans text-sm capitalize">{module.minPlan}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-textMuted font-ui text-sm">Module ID:</span>
-                    <span className="text-text font-ui text-sm font-mono">{module.id}</span>
+                    <span className="text-foregroundMuted font-sans text-sm">Module ID:</span>
+                    <span className="text-foreground font-sans text-sm font-mono">{module.id}</span>
                   </div>
                 </div>
               </div>
@@ -244,7 +244,7 @@ export function ModuleOverlay({
             <div className="flex items-center space-x-4">
               <button
                 onClick={onSimulate}
-                className="flex items-center space-x-2 px-4 py-2 bg-surface border border-border text-text hover:border-brand/50 transition-colors rounded-md font-ui text-sm"
+                className="flex items-center space-x-2 px-4 py-2 bg-surface border border-border text-foreground hover:border-accent/50 transition-colors rounded-md font-sans text-sm"
               >
                 <Play className="w-4 h-4" />
                 <span>Simulate</span>
@@ -253,7 +253,7 @@ export function ModuleOverlay({
               {canRunRealTest && (
                 <button
                   onClick={onRunRealTest}
-                  className="flex items-center space-x-2 px-4 py-2 bg-brand text-bg hover:bg-brand/90 transition-colors rounded-md font-ui text-sm"
+                  className="flex items-center space-x-2 px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-colors rounded-md font-sans text-sm"
                 >
                   <ExternalLink className="w-4 h-4" />
                   <span>Run Real Test</span>
@@ -262,12 +262,12 @@ export function ModuleOverlay({
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-textMuted font-ui text-sm mr-2">Export:</span>
+              <span className="text-foregroundMuted font-sans text-sm mr-2">Export:</span>
               {getAvailableExports().map((format) => (
                 <button
                   key={format}
                   onClick={() => onExport(format)}
-                  className="flex items-center space-x-1 px-3 py-1 bg-surface border border-border text-text hover:border-brand/50 transition-colors rounded-md font-ui text-xs"
+                  className="flex items-center space-x-1 px-3 py-1 bg-surface border border-border text-foreground hover:border-accent/50 transition-colors rounded-md font-sans text-xs"
                 >
                   <Download className="w-3 h-3" />
                   <span className="uppercase">{format}</span>
@@ -278,7 +278,7 @@ export function ModuleOverlay({
 
           {!canAccess && (
             <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-md">
-              <p className="text-red-400 font-ui text-sm">
+              <p className="text-red-400 font-sans text-sm">
                 This module requires {module.minPlan} plan or higher. Upgrade to access all features.
               </p>
             </div>

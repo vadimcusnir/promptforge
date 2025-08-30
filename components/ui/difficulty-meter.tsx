@@ -16,8 +16,8 @@ const difficultyLabels = {
 }
 
 const difficultyColors = {
-  1: 'bg-brand',
-  2: 'bg-brand/80',
+  1: 'bg-accent',
+  2: 'bg-accent/80',
   3: 'bg-gold',
   4: 'bg-gold/80',
   5: 'bg-accent'
@@ -39,7 +39,7 @@ export function DifficultyMeter({ difficulty, className }: DifficultyMeterProps)
           />
         ))}
       </div>
-      <span className="text-xs font-ui text-textMuted">
+      <span className="text-xs font-sans text-foregroundMuted">
         {difficultyLabels[difficulty]}
       </span>
     </div>

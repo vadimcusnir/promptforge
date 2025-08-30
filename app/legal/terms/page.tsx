@@ -36,7 +36,7 @@ export default function TermsPage() {
               </div>
             </div>
           </div>
-          <h1 className="text-5xl font-bold font-montserrat text-gold-400 mb-4">Terms of Use</h1>
+          <h1 className="text-5xl font-bold font-sans text-gold-400 mb-4">Terms of Use</h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">Use the Forge. Don't abuse the Forge.</p>
         </div>
 
@@ -44,7 +44,7 @@ export default function TermsPage() {
         <div className="max-w-3xl mx-auto space-y-12">
           {/* Service Description */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Description of Service</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Description of Service</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>PromptForge is an industrial-grade prompt generation platform that provides:</p>
               <ul className="space-y-2 ml-6">
@@ -70,7 +70,7 @@ export default function TermsPage() {
 
           {/* Usage Rights */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Usage Rights</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Usage Rights</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>You may use PromptForge for:</p>
               <ul className="space-y-2 ml-6">
@@ -104,7 +104,7 @@ export default function TermsPage() {
 
           {/* Plan Entitlements */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Plan Entitlements</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Plan Entitlements</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
                 <h3 className="text-lg font-bold text-white mb-3">Free & Creator</h3>
@@ -129,7 +129,7 @@ export default function TermsPage() {
 
           {/* Export & Licensing */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Export & Licensing</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Export & Licensing</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>Export rights and license notices vary by plan:</p>
               <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 space-y-4">
@@ -164,7 +164,7 @@ export default function TermsPage() {
 
           {/* Limitations */}
           <section>
-            <h2 className="text-2xl font-bold text-red-400 font-montserrat mb-6">Limitations</h2>
+            <h2 className="text-2xl font-bold text-red-400 font-sans mb-6">Limitations</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>You may NOT use PromptForge for:</p>
               <ul className="space-y-2 ml-6">
@@ -198,7 +198,7 @@ export default function TermsPage() {
 
           {/* Refunds & Support */}
           <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-montserrat mb-6">Refunds & Support</h2>
+            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Refunds & Support</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
                 <div className="flex items-start">
@@ -223,7 +223,7 @@ export default function TermsPage() {
 
           {/* Termination */}
           <section>
-            <h2 className="text-2xl font-bold text-red-400 font-montserrat mb-6">Termination</h2>
+            <h2 className="text-2xl font-bold text-red-400 font-sans mb-6">Termination</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>We may terminate your account if you violate these terms, including:</p>
               <ul className="space-y-2 ml-6">

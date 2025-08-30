@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Header } from '@/components/header'
+import { Header } from '@/components/Header'
 import { cn } from '@/lib/utils'
 
 export default function ApiDocsPage() {
@@ -110,16 +110,16 @@ export default function ApiDocsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-background">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="font-display text-4xl font-bold text-text mb-4">
+          <h1 className="font-sans text-4xl font-bold text-foreground mb-4">
             API Documentation
           </h1>
-          <p className="text-xl text-textMuted font-ui max-w-3xl">
+          <p className="text-xl text-muted-foreground font-sans max-w-3xl">
             Integrate PromptForge modules into your applications with our REST API. 
             Execute prompt engineering workflows programmatically.
           </p>
@@ -131,7 +131,7 @@ export default function ApiDocsPage() {
             <div className="sticky top-24 space-y-6">
               {/* Module Selection */}
               <div>
-                <h2 className="font-ui text-lg font-semibold text-text mb-4">
+                <h2 className="font-sans text-lg font-semibold text-foreground mb-4">
                   Select Module
                 </h2>
                 <div className="space-y-2">
@@ -140,10 +140,10 @@ export default function ApiDocsPage() {
                       key={module.id}
                       onClick={() => setSelectedModule(module.id)}
                       className={cn(
-                        'w-full text-left p-3 rounded-md border transition-colors focus-ring font-ui',
+                        'w-full text-left p-3 rounded-md border transition-colors focus-ring font-sans',
                         selectedModule === module.id
-                          ? 'border-brand bg-surfaceAlt text-text'
-                          : 'border-border bg-surface text-textMuted hover:border-brand/50'
+                          ? 'border-primary bg-card text-foreground'
+                          : 'border-border bg-surface text-foregroundMuted hover:border-primary/50'
                       )}
                     >
                       <div className="font-medium">{module.name}</div>
@@ -155,23 +155,23 @@ export default function ApiDocsPage() {
 
               {/* Navigation */}
               <div>
-                <h2 className="font-ui text-lg font-semibold text-text mb-4">
+                <h2 className="font-sans text-lg font-semibold text-foreground mb-4">
                   Documentation
                 </h2>
                 <nav className="space-y-2">
-                  <a href="#authentication" className="block text-textMuted hover:text-text transition-colors font-ui">
+                  <a href="#authentication" className="block text-foregroundMuted hover:text-foreground transition-colors font-sans">
                     Authentication
                   </a>
-                  <a href="#endpoints" className="block text-textMuted hover:text-text transition-colors font-ui">
+                  <a href="#endpoints" className="block text-foregroundMuted hover:text-foreground transition-colors font-sans">
                     Endpoints
                   </a>
-                  <a href="#schema" className="block text-textMuted hover:text-text transition-colors font-ui">
+                  <a href="#schema" className="block text-foregroundMuted hover:text-foreground transition-colors font-sans">
                     Schema (7D)
                   </a>
-                  <a href="#examples" className="block text-textMuted hover:text-text transition-colors font-ui">
+                  <a href="#examples" className="block text-foregroundMuted hover:text-foreground transition-colors font-sans">
                     Examples
                   </a>
-                  <a href="#telemetry" className="block text-textMuted hover:text-text transition-colors font-ui">
+                  <a href="#telemetry" className="block text-foregroundMuted hover:text-foreground transition-colors font-sans">
                     Telemetry
                   </a>
                 </nav>
@@ -183,19 +183,19 @@ export default function ApiDocsPage() {
           <div className="lg:col-span-2 space-y-8">
             {/* Authentication */}
             <section id="authentication">
-              <h2 className="font-display text-2xl font-semibold text-text mb-4">
+              <h2 className="font-sans text-2xl font-semibold text-foreground mb-4">
                 Authentication
               </h2>
               <div className="bg-surface border border-border rounded-lg p-6">
-                <p className="text-textMuted font-ui mb-4">
+                <p className="text-foregroundMuted font-sans mb-4">
                   All API requests require authentication using a Bearer token in the Authorization header.
                 </p>
-                <div className="bg-surfaceAlt border border-border rounded-md p-4">
-                  <code className="text-text font-mono text-sm">
+                <div className="bg-card border border-border rounded-md p-4">
+                  <code className="text-foreground font-mono text-sm">
                     Authorization: Bearer YOUR_API_KEY
                   </code>
                 </div>
-                <p className="text-textMuted font-ui text-sm mt-4">
+                <p className="text-foregroundMuted font-sans text-sm mt-4">
                   API keys are available in your dashboard settings. Keep your API key secure and never expose it in client-side code.
                 </p>
               </div>
@@ -203,35 +203,35 @@ export default function ApiDocsPage() {
 
             {/* Endpoints */}
             <section id="endpoints">
-              <h2 className="font-display text-2xl font-semibold text-text mb-4">
+              <h2 className="font-sans text-2xl font-semibold text-foreground mb-4">
                 Endpoints
               </h2>
               <div className="space-y-4">
                 <div className="bg-surface border border-border rounded-lg p-6">
                   <div className="flex items-center space-x-3 mb-4">
-                    <span className="px-2 py-1 bg-brand text-bg rounded text-xs font-mono font-semibold">
+                    <span className="px-2 py-1 bg-accent text-accent-foreground rounded text-xs font-mono font-semibold">
                       POST
                     </span>
-                    <code className="text-text font-mono">
+                    <code className="text-foreground font-mono">
                       /api/run/{selectedModule}
                     </code>
                   </div>
-                  <p className="text-textMuted font-ui mb-4">
+                  <p className="text-foregroundMuted font-sans mb-4">
                     Execute a module with the specified inputs and parameters.
                   </p>
                   
                   {/* cURL Example */}
-                  <div className="bg-surfaceAlt border border-border rounded-md p-4">
+                  <div className="bg-card border border-border rounded-md p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-ui font-medium text-text">cURL Example</h3>
+                      <h3 className="font-sans font-medium text-foreground">cURL Example</h3>
                       <button
                         onClick={() => navigator.clipboard.writeText(generateCurlExample(selectedModule))}
-                        className="text-xs text-brand hover:text-brand/80 transition-colors"
+                        className="text-xs text-accent hover:text-accent/80 transition-colors"
                       >
                         Copy
                       </button>
                     </div>
-                    <pre className="text-text font-mono text-sm overflow-x-auto">
+                    <pre className="text-foreground font-mono text-sm overflow-x-auto">
                       <code>{generateCurlExample(selectedModule)}</code>
                     </pre>
                   </div>
@@ -241,24 +241,24 @@ export default function ApiDocsPage() {
 
             {/* Schema */}
             <section id="schema">
-              <h2 className="font-display text-2xl font-semibold text-text mb-4">
+              <h2 className="font-sans text-2xl font-semibold text-foreground mb-4">
                 Schema (7D Framework)
               </h2>
               <div className="bg-surface border border-border rounded-lg p-6">
-                <p className="text-textMuted font-ui mb-4">
+                <p className="text-foregroundMuted font-sans mb-4">
                   All modules follow the 7D framework for structured input and output.
                 </p>
-                <div className="bg-surfaceAlt border border-border rounded-md p-4">
+                <div className="bg-card border border-border rounded-md p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-ui font-medium text-text">Input Schema</h3>
+                    <h3 className="font-sans font-medium text-foreground">Input Schema</h3>
                     <button
                       onClick={() => navigator.clipboard.writeText(JSON.stringify(schema7D, null, 2))}
-                      className="text-xs text-brand hover:text-brand/80 transition-colors"
+                      className="text-xs text-accent hover:text-accent/80 transition-colors"
                     >
                       Copy
                     </button>
                   </div>
-                  <pre className="text-text font-mono text-sm overflow-x-auto">
+                  <pre className="text-foreground font-mono text-sm overflow-x-auto">
                     <code>{JSON.stringify(schema7D, null, 2)}</code>
                   </pre>
                 </div>
@@ -267,21 +267,21 @@ export default function ApiDocsPage() {
 
             {/* Response Example */}
             <section id="examples">
-              <h2 className="font-display text-2xl font-semibold text-text mb-4">
+              <h2 className="font-sans text-2xl font-semibold text-foreground mb-4">
                 Response Example
               </h2>
               <div className="bg-surface border border-border rounded-lg p-6">
-                <div className="bg-surfaceAlt border border-border rounded-md p-4">
+                <div className="bg-card border border-border rounded-md p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-ui font-medium text-text">Success Response</h3>
+                    <h3 className="font-sans font-medium text-foreground">Success Response</h3>
                     <button
                       onClick={() => navigator.clipboard.writeText(generateResponseExample())}
-                      className="text-xs text-brand hover:text-brand/80 transition-colors"
+                      className="text-xs text-accent hover:text-accent/80 transition-colors"
                     >
                       Copy
                     </button>
                   </div>
-                  <pre className="text-text font-mono text-sm overflow-x-auto">
+                  <pre className="text-foreground font-mono text-sm overflow-x-auto">
                     <code>{generateResponseExample()}</code>
                   </pre>
                 </div>
@@ -290,26 +290,26 @@ export default function ApiDocsPage() {
 
             {/* Telemetry */}
             <section id="telemetry">
-              <h2 className="font-display text-2xl font-semibold text-text mb-4">
+              <h2 className="font-sans text-2xl font-semibold text-foreground mb-4">
                 Telemetry & Monitoring
               </h2>
               <div className="bg-surface border border-border rounded-lg p-6">
-                <p className="text-textMuted font-ui mb-4">
+                <p className="text-foregroundMuted font-sans mb-4">
                   Every API call includes telemetry data for monitoring and optimization.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-surfaceAlt border border-border rounded-md p-4">
-                    <h3 className="font-ui font-medium text-text mb-2">Performance Metrics</h3>
-                    <ul className="space-y-1 text-textMuted font-ui text-sm">
+                  <div className="bg-card border border-border rounded-md p-4">
+                    <h3 className="font-sans font-medium text-foreground mb-2">Performance Metrics</h3>
+                    <ul className="space-y-1 text-foregroundMuted font-sans text-sm">
                       <li>• Response time (duration_ms)</li>
                       <li>• Token usage</li>
                       <li>• Model version</li>
                       <li>• Processing time</li>
                     </ul>
                   </div>
-                  <div className="bg-surfaceAlt border border-border rounded-md p-4">
-                    <h3 className="font-ui font-medium text-text mb-2">Quality Metrics</h3>
-                    <ul className="space-y-1 text-textMuted font-ui text-sm">
+                  <div className="bg-card border border-border rounded-md p-4">
+                    <h3 className="font-sans font-medium text-foreground mb-2">Quality Metrics</h3>
+                    <ul className="space-y-1 text-foregroundMuted font-sans text-sm">
                       <li>• Quality score (0-100)</li>
                       <li>• Confidence level</li>
                       <li>• Validation status</li>
@@ -322,25 +322,25 @@ export default function ApiDocsPage() {
 
             {/* Rate Limits */}
             <section>
-              <h2 className="font-display text-2xl font-semibold text-text mb-4">
+              <h2 className="font-sans text-2xl font-semibold text-foreground mb-4">
                 Rate Limits
               </h2>
               <div className="bg-surface border border-border rounded-lg p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-brand mb-1">100</div>
-                    <div className="text-textMuted font-ui text-sm">Free Plan</div>
-                    <div className="text-textMuted font-ui text-xs">requests/hour</div>
+                    <div className="text-2xl font-bold text-accent mb-1">100</div>
+                    <div className="text-foregroundMuted font-sans text-sm">Free Plan</div>
+                    <div className="text-foregroundMuted font-sans text-xs">requests/hour</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gold mb-1">1,000</div>
-                    <div className="text-textMuted font-ui text-sm">Pro Plan</div>
-                    <div className="text-textMuted font-ui text-xs">requests/hour</div>
+                    <div className="text-foregroundMuted font-sans text-sm">Pro Plan</div>
+                    <div className="text-foregroundMuted font-sans text-xs">requests/hour</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-accent mb-1">10,000</div>
-                    <div className="text-textMuted font-ui text-sm">Enterprise</div>
-                    <div className="text-textMuted font-ui text-xs">requests/hour</div>
+                    <div className="text-foregroundMuted font-sans text-sm">Enterprise</div>
+                    <div className="text-foregroundMuted font-sans text-xs">requests/hour</div>
                   </div>
                 </div>
               </div>

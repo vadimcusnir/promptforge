@@ -72,10 +72,10 @@ export function ModuleCard({
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardTitle className="text-lg font-display text-text-primary group-hover:text-primary-neon transition-colors">
+            <CardTitle className="text-lg font-sans text-foreground-primary group-hover:text-primary-neon transition-colors">
               {module.title}
             </CardTitle>
-            <CardDescription className="text-sm text-text-secondary mt-1">
+            <CardDescription className="text-sm text-foreground-secondary mt-1">
               {module.summary}
             </CardDescription>
           </div>
@@ -144,7 +144,7 @@ export function ModuleCard({
         </div>
         
         {!canAccess && (
-          <p className="text-xs text-text-muted mt-2 text-center">
+          <p className="text-xs text-foreground-muted mt-2 text-center">
             Requires {getPlanDisplayName(module.minPlan)} plan
           </p>
         )}

@@ -59,7 +59,7 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`;
 
   return (
     <div className="mb-12">
-      <h2 className="text-3xl font-bold mb-8 text-[#d1a954] font-montserrat">
+      <h2 className="text-3xl font-bold mb-8 text-[#d1a954] font-sans">
         Interactive Demo
       </h2>
 
@@ -88,7 +88,7 @@ TELEMETRY: Vector V${module.vector} | Score: 85/100 | TTA: 45s`;
         {generatedPrompt && (
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-semibold text-white font-montserrat">
+              <h4 className="text-lg font-semibold text-white font-sans">
                 Generated Output
               </h4>
               <div className="flex gap-2">

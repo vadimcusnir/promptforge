@@ -82,7 +82,7 @@ export function SevenDPanel({
   return (
     <div className="space-y-6">
       <div className="glass-effect rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4 font-montserrat">
+        <h2 className="text-xl font-semibold mb-4 font-sans">
           Module Selection
         </h2>
 
@@ -151,7 +151,7 @@ export function SevenDPanel({
       <div className="glass-effect rounded-lg p-6">
         <div className="flex items-center gap-2 mb-4">
           <Zap className="w-5 h-5 text-gold-industrial" />
-          <h2 className="text-xl font-semibold font-montserrat">
+          <h2 className="text-xl font-semibold font-sans">
             7-D Configuration
           </h2>
         </div>

@@ -40,8 +40,8 @@ const linkVariants = cva(
         // Button-like link
         button: [
           "bg-transparent border border-border-primary text-fg-primary px-4 py-2 rounded-lg",
-          "hover:bg-bg-glass hover:border-accent-primary hover:text-accent-primary",
-          "active:bg-bg-glass-hover active:scale-[0.98]",
+          "hover:bg-background-glass hover:border-accent-primary hover:text-accent-primary",
+          "active:bg-background-glass-hover active:scale-[0.98]",
           "focus-visible:border-accent-primary focus-visible:text-accent-primary",
         ],
         // Primary button-like link

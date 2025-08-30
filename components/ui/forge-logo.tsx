@@ -36,7 +36,7 @@ export function ForgeLogo({
       <ForgeGlyph variant={variant} size={size} />
       {showText && (
         <span className={cn(
-          'font-display font-semibold text-text',
+          'font-display font-semibold text-foreground',
           sizeClasses[size]
         )}>
           PromptForge™

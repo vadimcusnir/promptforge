@@ -37,7 +37,7 @@ export default function SecurityPage() {
             </div>
           </div>
           <p className="text-gray-400 text-lg mb-4 italic">"Security is not optional. It's fundamental."</p>
-          <h1 className="text-5xl font-bold font-montserrat text-white mb-4">Security Policy</h1>
+          <h1 className="text-5xl font-bold font-sans text-white mb-4">Security Policy</h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">Enterprise-grade security for your prompt engineering workflows.</p>
         </div>
 
@@ -48,7 +48,7 @@ export default function SecurityPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Shield className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Infrastructure Security</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Infrastructure Security</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Our infrastructure is built on enterprise-grade security foundations:</p>
@@ -85,7 +85,7 @@ export default function SecurityPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Lock className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Authentication & Authorization</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Authentication & Authorization</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Multi-layered authentication and authorization controls:</p>
@@ -122,7 +122,7 @@ export default function SecurityPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Eye className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Data Protection</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Data Protection</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Comprehensive data protection measures:</p>
@@ -159,7 +159,7 @@ export default function SecurityPage() {
             <section>
               <div className="flex items-center mb-6">
                 <AlertTriangle className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Monitoring & Incident Response</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Monitoring & Incident Response</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>Proactive monitoring and rapid incident response:</p>
@@ -196,7 +196,7 @@ export default function SecurityPage() {
             <section>
               <div className="flex items-center mb-6">
                 <Download className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Compliance & Certifications</h2>
+                <h2 className="text-2xl font-bold text-gold-400 font-sans">Compliance & Certifications</h2>
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>We maintain compliance with industry standards and regulations:</p>
