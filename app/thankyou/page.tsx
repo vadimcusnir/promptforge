@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function ThankYouPage() {
   return (
-    <div className="min-h-screen bg-[#0e0e0e] relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.05)_1px,transparent_0)] bg-[length:20px_20px]" />
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">

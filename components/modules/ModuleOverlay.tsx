@@ -237,7 +237,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
           <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-lg p-4">
             <p className="text-sm text-yellow-200">
               <Zap className="w-4 h-4 inline mr-2" />
-              Scores and exports are logged in Telemetry for audit and optimization.
+              Only metadata (scores, timestamps, usage patterns) is logged for system optimization. Your prompt content is never stored.
             </p>
           </div>
 

@@ -63,13 +63,13 @@ export function Header() {
                 key={item.name}
                 href={item.href}
                 className={`font-montserrat text-sm font-medium transition-colors duration-200 relative ${
-                  isActive(item.href) ? "text-yellow-400" : "text-gray-300 hover:text-yellow-400"
+                  isActive(item.href) ? "text-accent" : "text-muted-foreground hover:text-accent"
                 }`}
                 aria-current={isActive(item.href) ? "page" : undefined}
               >
                 {item.name}
                 {isActive(item.href) && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full shadow-sm shadow-yellow-400/50" />
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent rounded-full shadow-sm shadow-accent/50" />
                 )}
               </Link>
             ),
@@ -78,19 +78,19 @@ export function Header() {
 
         <div className="hidden md:flex items-center space-x-4">
           <Link href="/login">
-            <Button variant="ghost" className="text-gray-300 hover:text-yellow-400 hover:bg-yellow-400/10" ariaLabel="Log in to your account">
+            <Button variant="ghost" className="text-muted-foreground hover:text-accent hover:bg-accent/10" ariaLabel="Log in to your account">
               Log in
             </Button>
           </Link>
           <Link href="/signup">
-            <Button className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-500 hover:to-amber-600 font-medium shadow-lg shadow-yellow-400/25" ariaLabel="Create a new account">
+            <Button className="bg-accent hover:bg-accent/80 text-accent-foreground font-medium shadow-lg shadow-accent/25" ariaLabel="Create a new account">
               Sign up
             </Button>
           </Link>
         </div>
 
         <button
-          className="md:hidden p-2 text-gray-300 hover:text-yellow-400 transition-colors"
+          className="md:hidden p-2 text-muted-foreground hover:text-accent transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-expanded={isMenuOpen}
           aria-controls="mobile-menu"
@@ -122,7 +122,7 @@ export function Header() {
                   key={item.name}
                   href={item.href}
                   className={`block font-montserrat text-sm font-medium transition-colors duration-200 ${
-                    isActive(item.href) ? "text-yellow-400" : "text-gray-300 hover:text-yellow-400"
+                    isActive(item.href) ? "text-accent" : "text-muted-foreground hover:text-accent"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                   aria-current={isActive(item.href) ? "page" : undefined}
@@ -133,12 +133,12 @@ export function Header() {
             )}
             <div className="pt-4 border-t border-gray-800 space-y-2">
               <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="ghost" className="w-full text-gray-300 hover:text-yellow-400 hover:bg-yellow-400/10" ariaLabel="Log in to your account">
+                <Button variant="ghost" className="w-full text-muted-foreground hover:text-accent hover:bg-accent/10" ariaLabel="Log in to your account">
                   Log in
                 </Button>
               </Link>
               <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
-                <Button className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-500 hover:to-amber-600 font-medium" ariaLabel="Create a new account">
+                <Button className="w-full bg-accent hover:bg-accent/80 text-accent-foreground font-medium" ariaLabel="Create a new account">
                   Sign up
                 </Button>
               </Link>

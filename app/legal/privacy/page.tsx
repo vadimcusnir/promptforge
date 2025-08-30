@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ChevronRight, Shield, Lock, Eye, Download, Trash2 } from "lucide-react"
+import { AnalyticsPrivacyDocumentation, AnalyticsEventDetails } from "@/components/analytics/privacy-documentation"
 
 export default function PrivacyPage() {
   return (
@@ -210,6 +211,60 @@ export default function PrivacyPage() {
                     </span>
                   </li>
                 </ul>
+              </div>
+            </section>
+
+            {/* Legal Basis */}
+            <section>
+              <div className="flex items-center mb-6">
+                <Shield className="w-6 h-6 text-gold-400 mr-3" />
+                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Legal Basis for Data Processing</h2>
+              </div>
+              <div className="space-y-4 text-gray-300 leading-relaxed">
+                <p>Our data processing is based on GDPR Article 6 and other applicable privacy laws:</p>
+                <ul className="space-y-2 ml-6">
+                  <li className="flex items-start">
+                    <span className="text-gold-400 mr-2">•</span>
+                    <span>
+                      <strong>Legitimate Interest (Art. 6(1)(f)):</strong> System optimization, security monitoring, and service improvement
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-gold-400 mr-2">•</span>
+                    <span>
+                      <strong>Contract Performance (Art. 6(1)(b)):</strong> Providing the services you've subscribed to
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-gold-400 mr-2">•</span>
+                    <span>
+                      <strong>Consent (Art. 6(1)(a)):</strong> Optional analytics and marketing communications
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-gold-400 mr-2">•</span>
+                    <span>
+                      <strong>Legal Obligation (Art. 6(1)(c)):</strong> Compliance with applicable laws and regulations
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            {/* Analytics & Telemetry */}
+            <section>
+              <div className="flex items-center mb-6">
+                <Eye className="w-6 h-6 text-gold-400 mr-3" />
+                <h2 className="text-2xl font-bold text-gold-400 font-montserrat">Analytics & Telemetry</h2>
+              </div>
+              <div className="space-y-4 text-gray-300 leading-relaxed">
+                <p>We collect analytics data to improve our service and understand usage patterns:</p>
+                <div className="mt-6">
+                  <AnalyticsPrivacyDocumentation />
+                </div>
+                <div className="mt-6">
+                  <AnalyticsEventDetails />
+                </div>
               </div>
             </section>
 

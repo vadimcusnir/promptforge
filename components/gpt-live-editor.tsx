@@ -28,9 +28,7 @@ import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/loading-spinner'
 import { Skeleton, SkeletonCard, SkeletonText } from '@/components/ui/skeleton'
 import { 
-  NoPromptsEmptyState, 
-  NoTestsEmptyState, 
-  ErrorEmptyState 
+  EmptyState
 } from '@/components/ui/empty-state'
 
 interface SevenDParams {
@@ -324,13 +322,12 @@ export function GptLiveEditor({ orgId }: { orgId: string }) {
 
               {/* Error State */}
               {editorError && (
-                <ErrorEmptyState
+                <EmptyState
                   title="Optimization Failed"
                   description={editorError}
-                  action={{
+                  primaryAction={{
                     label: "Retry",
-                    onClick: retryEditor,
-                    icon: RefreshCw
+                    href: "#"
                   }}
                 />
               )}
@@ -392,7 +389,7 @@ export function GptLiveEditor({ orgId }: { orgId: string }) {
 
               {/* Empty State */}
               {!editorResult && !editorError && !isProcessing && (
-                <NoPromptsEmptyState
+                <EmptyState
                   title="No prompt to optimize"
                   description="Enter a prompt above to get AI-powered optimization suggestions"
                 />
@@ -493,13 +490,12 @@ export function GptLiveEditor({ orgId }: { orgId: string }) {
 
               {/* Error State */}
               {testError && (
-                <ErrorEmptyState
+                <EmptyState
                   title="Test Failed"
                   description={testError}
-                  action={{
+                  primaryAction={{
                     label: "Retry",
-                    onClick: retryTest,
-                    icon: RefreshCw
+                    href: "#"
                   }}
                 />
               )}
@@ -617,7 +613,7 @@ export function GptLiveEditor({ orgId }: { orgId: string }) {
 
               {/* Empty State */}
               {!testResult && !testError && !isProcessing && (
-                <NoTestsEmptyState
+                <EmptyState
                   title="No test results yet"
                   description="Enter a prompt and run a test to see detailed analysis"
                 />

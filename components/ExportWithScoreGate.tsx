@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-type Plan = 'pilot' | 'pro' | 'enterprise';
+type Plan = 'free' | 'creator' | 'pro' | 'enterprise';
 
 interface ExportWithScoreGateProps {
   plan: Plan;
@@ -80,7 +80,7 @@ export function ExportWithScoreGate({
                 {format.label}
                 {!format.available && (
                   <Badge variant="secondary" className="ml-auto text-xs">
-                    {plan === 'pilot' ? 'Pro+' : 'Enterprise'}
+                    {plan === 'free' ? 'Creator+' : plan === 'creator' ? 'Pro+' : 'Enterprise'}
                   </Badge>
                 )}
               </Button>

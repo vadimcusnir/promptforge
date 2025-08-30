@@ -70,7 +70,7 @@ export default function ComingSoonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Fixed two-layer background */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.05)_1px,transparent_0)] bg-[length:20px_20px]" />
       <div className="fixed inset-0 bg-gradient-to-br from-[#0e0e0e] via-[#1a1a1a] to-[#0e0e0e]" />

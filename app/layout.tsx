@@ -282,7 +282,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0e0e0e" />
         <meta name="msapplication-TileColor" content="#d1a954" />
         
-        {/* Google tag (gtag.js) */}
+        {/* Google Analytics 4 (gtag.js) - Privacy Compliant */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGZR6E2GY4"></script>
         <script
           dangerouslySetInnerHTML={{
@@ -290,7 +290,38 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-EGZR6E2GY4');
+              
+              // Configure GA4 with privacy-compliant settings
+              gtag('config', 'G-EGZR6E2GY4', {
+                // Privacy settings
+                anonymize_ip: true,
+                allow_google_signals: false,
+                allow_ad_personalization_signals: false,
+                
+                // Custom parameters for PromptForge
+                custom_map: {
+                  'custom_parameter_1': 'session_id',
+                  'custom_parameter_2': 'module_id',
+                  'custom_parameter_3': 'export_type'
+                },
+                
+                // Enhanced measurement (only essential events)
+                enhanced_measurement: {
+                  scrolls: false,
+                  outbound_clicks: true,
+                  site_search: false,
+                  video_engagement: false,
+                  file_downloads: true
+                }
+              });
+              
+              // Set global privacy settings
+              gtag('consent', 'default', {
+                'analytics_storage': 'granted',
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied'
+              });
             `,
           }}
         />
@@ -303,17 +334,17 @@ export default function RootLayout({
         <div className="fixed-bg pattern-bg" />
         
         <SkipLink href="#main-content">Skip to main content</SkipLink>
-        <ErrorBoundary>
-          <SentryProvider>
-            <AnalyticsProvider>
-              <Header />
-              <ComingSoonWrapper>
-                {children}
-              </ComingSoonWrapper>
-              <Footer />
-            </AnalyticsProvider>
-          </SentryProvider>
-        </ErrorBoundary>
+                 <ErrorBoundary>
+           <SentryProvider>
+             <AnalyticsProvider>
+               <Header />
+               <ComingSoonWrapper>
+                 {children}
+               </ComingSoonWrapper>
+               <Footer />
+             </AnalyticsProvider>
+           </SentryProvider>
+         </ErrorBoundary>
         <Toaster />
         <CookieBanner />
         <PerformanceMonitor />

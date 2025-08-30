@@ -42,7 +42,7 @@ export default function PricingPage() {
   const { user, isLoading: isAuthLoading, login, logout } = useAuth()
   const analytics = useAnalytics()
   const { currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA, trackVariantConversion } = useABTesting()
-  const { currentLocale, currentCurrency, changeLocale, changeCurrency, t, getFeatures, getCurrencySymbol, convertPrice } = useLocalization()
+  const { currentLocale, t, getFeatures } = useLocalization()
 
   // Track pricing page view
   useEffect(() => {
@@ -73,8 +73,8 @@ export default function PricingPage() {
     {
       id: "creator",
       name: "Creator",
-      price_monthly: convertPrice(currentVariant ? (getVariantPricing("creator", false) || 19) : 19),
-      price_annual: convertPrice(currentVariant ? (getVariantPricing("creator", true) || 190) : 190),
+      price_monthly: currentVariant ? (getVariantPricing("creator", false) || 19) : 19,
+      price_annual: currentVariant ? (getVariantPricing("creator", true) || 190) : 190,
       description: "For content creators and solopreneurs",
       features: currentVariant 
         ? getVariantFeatures("creator").map(f => ({ name: f, included: true }))
@@ -94,8 +94,8 @@ export default function PricingPage() {
     {
       id: "pro",
       name: "Pro",
-      price_monthly: convertPrice(currentVariant ? (getVariantPricing("pro", false) || 49) : 49),
-      price_annual: convertPrice(currentVariant ? (getVariantPricing("pro", true) || 490) : 490),
+      price_monthly: currentVariant ? (getVariantPricing("pro", false) || 49) : 49,
+      price_annual: currentVariant ? (getVariantPricing("pro", true) || 490) : 490,
       description: "For professionals and teams",
       features: currentVariant 
         ? getVariantFeatures("pro").map(f => ({ name: f, included: true }))
@@ -115,8 +115,8 @@ export default function PricingPage() {
     {
       id: "enterprise",
       name: "Enterprise",
-      price_monthly: convertPrice(currentVariant ? (getVariantPricing("enterprise", false) || 299) : 299),
-      price_annual: convertPrice(currentVariant ? (getVariantPricing("enterprise", true) || 2990) : 2990),
+      price_monthly: currentVariant ? (getVariantPricing("enterprise", false) || 299) : 299,
+      price_annual: currentVariant ? (getVariantPricing("enterprise", true) || 2990) : 2990,
       description: "For organizations at scale",
       features: currentVariant 
         ? getVariantFeatures("enterprise").map(f => ({ name: f, included: true }))
@@ -138,7 +138,6 @@ export default function PricingPage() {
   // Performance optimizations
   const memoizedPlans = useMemo(() => plans, [currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA])
   const memoizedFeatures = useMemo(() => getFeatures("creator"), [])
-  const memoizedCurrencySymbol = useMemo(() => getCurrencySymbol(), [])
   
   // Memoized callbacks for better performance
   const handleCheckout = useCallback(async (planId: string) => {
@@ -235,9 +234,9 @@ export default function PricingPage() {
   // Functions are now memoized above
 
   const getPrice = (plan: Plan): string => {
-    if (plan.price_monthly === 0) return `${memoizedCurrencySymbol}0`
+    if (plan.price_monthly === 0) return `$0`
     const price = isAnnual ? plan.price_annual : plan.price_monthly
-    return `${memoizedCurrencySymbol}${price}`
+    return `$${price}`
   }
 
   const getPeriod = (plan: Plan): string => {
@@ -256,22 +255,8 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen pattern-bg text-white">
-      {/* Header with currency selector and user status */}
+      {/* Header with user status */}
       <div className="absolute top-4 right-4 flex items-center gap-4 z-10">
-        {/* Currency Selector */}
-        <div className="relative group">
-          <Select value={currentCurrency} onValueChange={changeCurrency}>
-            <SelectTrigger className="w-20 bg-gray-800/50 border-gray-700 text-gray-300 hover:text-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="EUR">€ EUR</SelectItem>
-              <SelectItem value="USD">$ USD</SelectItem>
-              <SelectItem value="RON">RON</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
         {/* User Status */}
         {user ? (
           <div className="flex items-center gap-2">
@@ -360,7 +345,7 @@ export default function PricingPage() {
                 </div>
                 {isAnnual && plan.price_monthly > 0 && (
                   <p className="text-sm text-gray-500 mt-2">
-                    Billed annually • {memoizedCurrencySymbol}{Math.round(plan.price_annual / 12)}/month
+                    Billed annually • ${Math.round(plan.price_annual / 12)}/month
                   </p>
                 )}
                 </CardHeader>

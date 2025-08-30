@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Link } from '@/components/ui/link';
+import { H1, H2 } from '@/components/ui/heading';
+import { Main, Section } from '@/components/ui/section';
+import { SkipLink } from '@/components/ui/skip-link';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -100,41 +103,53 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-      <div className="w-full max-w-md">
+      {/* Skip Links */}
+      <div className="sr-only">
+        <SkipLink href="#main-content">Skip to main content</SkipLink>
+        <SkipLink href="#signup-form">Skip to signup form</SkipLink>
+      </div>
+
+      <Main id="main-content" className="w-full max-w-md">
         {/* Logo/Brand */}
-        <div className="text-center mb-8">
+        <Section variant="default" spacing="lg" className="text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-2xl mb-4">
-            <Shield className="w-8 h-8 text-white" />
+            <Shield className="w-8 h-8 text-white" aria-hidden="true" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Join PromptForge</h1>
-          <p className="text-slate-400">Create your account and start building amazing prompts</p>
-        </div>
+          <H1 variant="accent" spacing="sm">Join PromptForge</H1>
+          <p className="text-fg-secondary">Create your account and start building amazing prompts</p>
+        </Section>
 
         {/* Signup Form */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20 shadow-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-white">Create Account</CardTitle>
-            <CardDescription className="text-slate-300">
+        <Card variant="default" size="md" className="text-center">
+          <CardHeader>
+            <H2 spacing="sm">Create Account</H2>
+            <CardDescription>
               Fill in your details to get started
             </CardDescription>
           </CardHeader>
           
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form 
+              id="signup-form"
+              onSubmit={handleSubmit} 
+              className="space-y-6"
+              aria-label="Create new account"
+              noValidate
+            >
               {/* Full Name Field */}
               <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-white">
+                <Label htmlFor="fullName">
                   Full Name *
                 </Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-fg-tertiary" />
                   <Input
                     id="fullName"
                     type="text"
                     placeholder="Enter your full name"
                     value={formData.fullName}
                     onChange={(e) => handleInputChange('fullName', e.target.value)}
-                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/20 focus:border-amber-500"
+                    className="pl-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
                     required
                   />
                 </div>
@@ -142,18 +157,18 @@ export default function SignupPage() {
 
               {/* Email Field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">
+                <Label htmlFor="email">
                   Email Address *
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-fg-tertiary" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/20 focus:border-amber-500"
+                    className="pl-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
                     required
                   />
                 </div>
@@ -161,25 +176,25 @@ export default function SignupPage() {
 
               {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">
+                <Label htmlFor="password">
                   Password *
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-fg-tertiary" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    className="pl-10 pr-10 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/20 focus:border-amber-500"
+                    className="pl-10 pr-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10 text-slate-400"
+                    className="absolute right-0 top-0 h-full px-3 py-2 text-fg-tertiary"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -189,30 +204,30 @@ export default function SignupPage() {
                     )}
                   </Button>
                 </div>
-                <p className="text-xs text-slate-400">Must be at least 8 characters long</p>
+                <p className="text-xs text-fg-tertiary">Must be at least 8 characters long</p>
               </div>
 
               {/* Confirm Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-white">
+                <Label htmlFor="confirmPassword">
                   Confirm Password *
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-fg-tertiary" />
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className="pl-10 pr-10 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/20 focus:border-amber-500"
+                    className="pl-10 pr-10 bg-bg-glass border-border-glass text-fg-primary placeholder:text-fg-tertiary focus:bg-bg-glass-hover focus:border-accent-primary"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10 text-slate-400"
+                    className="absolute right-0 top-0 h-full px-3 py-2 text-fg-tertiary"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -233,13 +248,13 @@ export default function SignupPage() {
                     onCheckedChange={(checked) => handleInputChange('acceptTerms', checked as boolean)}
                     className="mt-1"
                   />
-                  <Label htmlFor="acceptTerms" className="text-sm text-slate-300 leading-relaxed">
+                  <Label htmlFor="acceptTerms" className="text-sm text-fg-secondary leading-relaxed">
                     I agree to the{' '}
-                    <Link href="/terms" className="text-amber-400 hover:text-amber-300 underline">
+                    <Link href="/legal/terms" variant="default" underline>
                       Terms of Service
                     </Link>{' '}
                     and{' '}
-                    <Link href="/privacy" className="text-amber-400 hover:text-amber-300 underline">
+                    <Link href="/legal/privacy" variant="default" underline>
                       Privacy Policy
                     </Link> *
                   </Label>
@@ -252,7 +267,7 @@ export default function SignupPage() {
                     onCheckedChange={(checked) => handleInputChange('acceptMarketing', checked as boolean)}
                     className="mt-1"
                   />
-                  <Label htmlFor="acceptMarketing" className="text-sm text-slate-300 leading-relaxed">
+                  <Label htmlFor="acceptMarketing" className="text-sm text-fg-secondary leading-relaxed">
                     I would like to receive updates about new features and promotions
                   </Label>
                 </div>
@@ -260,40 +275,49 @@ export default function SignupPage() {
 
               {/* Error Display */}
               {error && (
-                <Alert variant="destructive" className="bg-red-500/20 border-red-500/30">
-                  <AlertDescription className="text-red-200">{error}</AlertDescription>
+                <Alert 
+                  variant="destructive" 
+                  className="bg-state-error/20 border-state-error/30"
+                  id="error-message"
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  <AlertDescription className="text-state-error">{error}</AlertDescription>
                 </Alert>
               )}
 
               {/* Success Display */}
               {success && (
-                <Alert className="bg-green-500/20 border-green-500/30">
-                  <CheckCircle className="h-4 w-4 text-green-400" />
-                  <AlertDescription className="text-green-200">{success}</AlertDescription>
+                <Alert 
+                  className="bg-state-success/20 border-state-success/30"
+                  id="success-message"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <CheckCircle className="h-4 w-4 text-state-success" aria-hidden="true" />
+                  <AlertDescription className="text-state-success">{success}</AlertDescription>
                 </Alert>
               )}
 
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold py-3"
-                disabled={isLoading}
+                variant="primary"
+                size="lg"
+                className="w-full"
+                loading={isLoading}
+                icon={!isLoading ? <Shield className="h-4 w-4" /> : undefined}
+                ariaLabel="Create new account"
+                ariaDescribedBy={error ? "error-message" : success ? "success-message" : undefined}
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating Account...
-                  </>
-                ) : (
-                  'Create Account'
-                )}
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
 
               {/* Additional Links */}
               <div className="text-center">
-                <p className="text-slate-400 text-sm">
+                <p className="text-fg-tertiary text-sm">
                   Already have an account?{' '}
-                  <Link href="/login" className="text-amber-400 hover:text-amber-300 font-medium">
+                  <Link href="/login" variant="default" className="font-medium">
                     Sign in
                   </Link>
                 </p>
@@ -303,12 +327,12 @@ export default function SignupPage() {
         </Card>
 
         {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-slate-500 text-sm">
+        <Section variant="default" spacing="lg" className="text-center">
+          <p className="text-fg-tertiary text-sm">
             © 2024 PromptForge. All rights reserved.
           </p>
-        </div>
-      </div>
+        </Section>
+      </Main>
     </div>
   );
 }

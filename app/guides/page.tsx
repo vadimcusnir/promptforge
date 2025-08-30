@@ -1,24 +1,40 @@
-"use client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Breadcrumb } from "@/components/ui/breadcrumb"
 import { BookOpen, Zap, Settings, TestTube, Download, Code, CheckCircle, Play, Clock, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { Suspense } from "react"
 import dynamic from "next/dynamic"
+import { Metadata } from "next"
 
+export const metadata: Metadata = {
+  title: "PromptForge Guides - Industrial Prompt Engineering Tutorials",
+  description: "Master industrial prompt engineering with comprehensive guides covering 7D parameters, module mastery, testing, and API integration. Learn from beginner to advanced levels.",
+  keywords: ["prompt engineering guides", "AI tutorials", "industrial prompts", "7D parameters", "module mastery", "API integration"],
+  openGraph: {
+    title: "PromptForge Guides - Industrial Prompt Engineering Tutorials",
+    description: "Master industrial prompt engineering with comprehensive guides covering 7D parameters, module mastery, testing, and API integration.",
+    type: "website",
+  },
+  alternates: {
+    canonical: "/guides",
+  },
+}
 
+// Lazy load the client-side interactive components - temporarily disabled
+// const GuidesClient = dynamic(() => import("@/components/guides/GuidesClient"), {
+//   loading: () => <GuidesSkeleton />
+// })
 
-// Lazy load the client-side interactive components
-const GuidesClient = dynamic(() => import("@/components/guides/GuidesClient"), {
-  loading: () => <GuidesSkeleton />,
-  ssr: false
-})
+// Import skeleton components
+import { CardSkeleton, ListSkeleton } from "@/components/ui/skeleton"
 
 
 
 // Server-side content for SEO
 const serverSideGuides = [
+  // Getting Started Section
   {
     id: "first-prompt",
     title: "Generate Your First Prompt",
@@ -29,6 +45,26 @@ const serverSideGuides = [
     icon: BookOpen
   },
   {
+    id: "platform-overview",
+    title: "Platform Overview & Navigation",
+    description: "Understand the PromptForge interface and core concepts.",
+    category: "getting-started",
+    duration: "6 min",
+    difficulty: "Beginner",
+    icon: BookOpen
+  },
+  {
+    id: "account-setup",
+    title: "Account Setup & Preferences",
+    description: "Configure your account settings and workspace preferences.",
+    category: "getting-started",
+    duration: "4 min",
+    difficulty: "Beginner",
+    icon: BookOpen
+  },
+  
+  // Module Mastery Section
+  {
     id: "module-selection",
     title: "Choosing the Right Module",
     description: "Navigate the 50-module library to find the perfect tool for your use case.",
@@ -37,6 +73,26 @@ const serverSideGuides = [
     difficulty: "Beginner",
     icon: Zap
   },
+  {
+    id: "module-combinations",
+    title: "Module Combinations & Workflows",
+    description: "Learn how to combine multiple modules for complex prompt engineering tasks.",
+    category: "module-mastery",
+    duration: "10 min",
+    difficulty: "Intermediate",
+    icon: Zap
+  },
+  {
+    id: "module-optimization",
+    title: "Module Performance Optimization",
+    description: "Optimize module selection and configuration for maximum efficiency.",
+    category: "module-mastery",
+    duration: "7 min",
+    difficulty: "Intermediate",
+    icon: Zap
+  },
+  
+  // 7D Optimization Section
   {
     id: "7d-parameters",
     title: "Master the 7D Parameter Engine",
@@ -47,6 +103,26 @@ const serverSideGuides = [
     icon: Settings
   },
   {
+    id: "domain-selection",
+    title: "Domain Selection Strategies",
+    description: "Choose the right domain for your specific use case and industry.",
+    category: "7d-optimization",
+    duration: "6 min",
+    difficulty: "Beginner",
+    icon: Settings
+  },
+  {
+    id: "scale-urgency-config",
+    title: "Scale & Urgency Configuration",
+    description: "Configure scale and urgency parameters for optimal results.",
+    category: "7d-optimization",
+    duration: "8 min",
+    difficulty: "Intermediate",
+    icon: Settings
+  },
+  
+  // Test Engine Section
+  {
     id: "test-simulate",
     title: "Testing with Simulation Engine",
     description: "Learn how to validate prompts using our deterministic testing system.",
@@ -55,6 +131,26 @@ const serverSideGuides = [
     difficulty: "Intermediate",
     icon: TestTube
   },
+  {
+    id: "quality-scoring",
+    title: "Quality Scoring & Validation",
+    description: "Understand the scoring system and achieve 80+ scores for export eligibility.",
+    category: "test-engine",
+    duration: "9 min",
+    difficulty: "Intermediate",
+    icon: TestTube
+  },
+  {
+    id: "a-b-testing",
+    title: "A/B Testing & Comparison",
+    description: "Compare different prompt variations and measure performance.",
+    category: "test-engine",
+    duration: "11 min",
+    difficulty: "Advanced",
+    icon: TestTube
+  },
+  
+  // Export Workflow Section
   {
     id: "export-bundles",
     title: "Export and Bundle Management",
@@ -65,11 +161,49 @@ const serverSideGuides = [
     icon: Download
   },
   {
+    id: "format-selection",
+    title: "Export Format Selection",
+    description: "Choose the right export format (TXT, MD, JSON, PDF) for your needs.",
+    category: "export-workflow",
+    duration: "5 min",
+    difficulty: "Beginner",
+    icon: Download
+  },
+  {
+    id: "batch-export",
+    title: "Batch Export & Automation",
+    description: "Export multiple prompts efficiently and set up automated workflows.",
+    category: "export-workflow",
+    duration: "8 min",
+    difficulty: "Advanced",
+    icon: Download
+  },
+  
+  // Integration API Section
+  {
     id: "api-integration",
     title: "Enterprise API Integration",
     description: "Integrate PromptForge into your workflow using our REST API.",
     category: "integration-api",
     duration: "15 min",
+    difficulty: "Advanced",
+    icon: Code
+  },
+  {
+    id: "api-authentication",
+    title: "API Authentication & Security",
+    description: "Set up secure API authentication and manage API keys.",
+    category: "integration-api",
+    duration: "6 min",
+    difficulty: "Intermediate",
+    icon: Code
+  },
+  {
+    id: "webhook-integration",
+    title: "Webhook Integration & Events",
+    description: "Set up webhooks for real-time notifications and event handling.",
+    category: "integration-api",
+    duration: "12 min",
     difficulty: "Advanced",
     icon: Code
   }
@@ -88,20 +222,7 @@ function GuidesSkeleton() {
   return (
     <div className="grid gap-6">
       {Array.from({ length: 3 }).map((_, i) => (
-        <Card key={i} className="bg-zinc-900/80 border border-zinc-700">
-          <CardHeader>
-            <div className="animate-pulse space-y-3">
-              <div className="h-6 bg-gray-700 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-700 rounded w-full"></div>
-              <div className="h-4 bg-gray-700 rounded w-2/3"></div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="animate-pulse space-y-2">
-              <div className="h-10 bg-gray-700 rounded"></div>
-            </div>
-          </CardContent>
-        </Card>
+        <CardSkeleton key={i} />
       ))}
     </div>
   )
@@ -121,13 +242,53 @@ const getDifficultyColor = (difficulty: string) => {
 }
 
 export default function GuidesPage() {
+  const breadcrumbItems = [
+    { label: "Guides", current: true }
+  ]
+
+  // Structured data for guides
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "PromptForge Guides",
+    "description": "Comprehensive guides for industrial prompt engineering",
+    "url": "/guides",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": serverSideGuides.map((guide, index) => ({
+        "@type": "Article",
+        "position": index + 1,
+        "name": guide.title,
+        "description": guide.description,
+        "url": `/guides/${guide.id}`,
+        "timeRequired": guide.duration || "5 min",
+        "educationalLevel": guide.difficulty || "Beginner",
+        "about": {
+          "@type": "Thing",
+          "name": guide.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+        }
+      }))
+    }
+  }
+
   return (
     <div className="min-h-screen text-white relative z-10">
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      
       <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <div className="mb-8">
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
+
         {/* Server-side rendered header for SEO */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4">
-            <BookOpen className="w-8 h-8 text-yellow-500" />
+            <BookOpen className="w-8 h-8 text-accent" />
             <h1 className="text-4xl font-bold font-serif">PromptForge™ Guides</h1>
           </div>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-8">
@@ -143,9 +304,9 @@ export default function GuidesPage() {
             const categoryGuides = serverSideGuides.filter(g => g.category === category.id)
             
             return (
-              <Card key={category.id} className="bg-zinc-900/80 border border-zinc-700 hover:border-yellow-500/30 transition-colors">
+              <Card key={category.id} className="bg-card border border-border hover:border-accent/30 transition-colors">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-yellow-500">
+                  <CardTitle className="flex items-center gap-3 text-accent">
                     <Icon className="w-6 h-6" />
                     {category.name}
                   </CardTitle>
@@ -163,8 +324,8 @@ export default function GuidesPage() {
                     {categoryGuides.map((guide) => (
                       <div key={guide.id} className="flex items-center justify-between text-sm">
                         <span className="text-gray-300">{guide.title}</span>
-                        <Badge className={getDifficultyColor(guide.difficulty)}>
-                          {guide.difficulty}
+                        <Badge className={getDifficultyColor(guide.difficulty || 'Beginner')}>
+                          {guide.difficulty || 'Beginner'}
                         </Badge>
                       </div>
                     ))}
@@ -184,13 +345,13 @@ export default function GuidesPage() {
               return (
                 <Card
                   key={guide.id}
-                  className="bg-zinc-900/80 border border-zinc-700 hover:border-yellow-500/30 transition-all"
+                  className="bg-card border border-border hover:border-accent/30 transition-all"
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <Icon className="w-5 h-5 text-yellow-500" />
+                          <Icon className="w-5 h-5 text-accent" />
                           <CardTitle className="text-xl font-serif">{guide.title}</CardTitle>
                         </div>
                         <CardDescription className="text-gray-400">{guide.description}</CardDescription>
@@ -210,7 +371,7 @@ export default function GuidesPage() {
                     <div className="flex gap-3">
                       <Button
                         variant="outline"
-                        className="flex-1 border-gray-700 hover:border-yellow-500 hover:text-yellow-500 bg-transparent"
+                        className="flex-1 border-border hover:border-accent hover:text-accent bg-transparent"
                         disabled
                       >
                         <BookOpen className="w-4 h-4 mr-2" />
@@ -218,7 +379,7 @@ export default function GuidesPage() {
                       </Button>
 
                       <Button
-                        className="flex-1 bg-yellow-500 hover:bg-yellow-500/80 text-black"
+                        className="flex-1 bg-accent hover:bg-accent/80 text-accent-foreground"
                         asChild
                       >
                         <Link href="/generator">
@@ -234,29 +395,39 @@ export default function GuidesPage() {
           </div>
         </div>
 
-        {/* Client-side interactive components */}
-        <Suspense fallback={<GuidesSkeleton />}>
+        {/* Client-side interactive components - temporarily disabled */}
+        {/* <Suspense fallback={<GuidesSkeleton />}>
           <GuidesClient />
-        </Suspense>
+        </Suspense> */}
 
         {/* Call to Action */}
         <div className="mt-12 text-center">
-          <Card className="bg-zinc-900/80 border border-zinc-700 border-yellow-500/20">
+          <Card className="bg-card border border-border border-accent/20">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold mb-4 font-serif">Ready to forge your first prompt?</h3>
+              <h3 className="text-2xl font-bold mb-4 font-serif">Ready to Start Building?</h3>
               <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
                 Put your knowledge into practice. Open the Generator and start creating industrial-grade prompts.
               </p>
-              <Button
-                size="lg"
-                className="bg-yellow-500 hover:bg-yellow-500/80 text-black"
-                asChild
-              >
-                <Link href="/generator">
-                  Open Generator
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  size="lg"
+                  className="bg-accent hover:bg-accent/80 text-accent-foreground"
+                  asChild
+                >
+                  <Link href="/generator">
+                    Start Building Now
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black"
+                  asChild
+                >
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>

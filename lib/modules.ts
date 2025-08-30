@@ -32,6 +32,7 @@ export interface ModuleDefinition {
     internal: string[];
     external: string[];
   };
+  legacy_slugs?: string[];
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -222,7 +223,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M07: {
     id: 'M07',
-    name: 'RISK & TRUST REVERSAL™',
+    name: 'TRUST REVERSAL PROTOCOL™',
     description: 'Eliminate purchase risk with guarantee stacks',
     vectors: ['rhetoric', 'strategic', 'crisis'],
     difficulty: 3,
@@ -244,6 +245,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### No Results Risk\n**Customer Concern**: "What if it doesn\'t work?"\n**Reversal Strategy**: 90-day money-back guarantee + case studies\n**Proof Elements**: 47 success stories, 94% satisfaction rate',
     dependencies: { internal: ['guarantee_templates', 'legal_framework'], external: ['Payment processor', 'Refund system'] },
+    legacy_slugs: ['risk-and-trust-reversal'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -310,7 +312,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M10: {
     id: 'M10',
-    name: 'CRISIS COMMUNICATION™',
+    name: 'CRISIS COMMUNICATION PLAYBOOK™',
     description: 'Emergency response framework with stakeholder management',
     vectors: ['crisis', 'rhetoric', 'strategic'],
     difficulty: 4,
@@ -333,6 +335,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '## Immediate Actions (0-2 hours)\n- Assemble crisis team (Owner: CEO)\n- Assess scope and impact (Owner: CTO)\n- Prepare holding statement (Owner: PR)\n- Notify key stakeholders (Owner: Customer Success)',
     dependencies: { internal: ['crisis_templates', 'escalation_tree'], external: ['PR agency', 'Legal counsel'] },
+    legacy_slugs: ['crisis-communication'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -430,8 +433,8 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M14: {
     id: 'M14',
-    name: 'SOCIAL MEDIA CALENDAR™',
-    description: 'Strategic content calendar with engagement optimization',
+    name: 'SOCIAL CONTENT GRID™',
+    description: 'Unified social media and content calendar with engagement optimization and audience segmentation',
     vectors: ['content', 'strategic', 'data'],
     difficulty: 2,
     estimated_tokens: 2500,
@@ -453,6 +456,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### LinkedIn\n**Frequency**: 5 posts/week\n**Best Times**: Tuesday-Thursday 9-11am\n**Content Mix**: 40% education, 30% thought leadership, 30% company updates',
     dependencies: { internal: ['content_analyzer', 'timing_optimizer'], external: ['Social platform APIs', 'Scheduling tools'] },
+    legacy_slugs: ['social-media-calendar', 'content-calendar-optimizer'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -460,7 +464,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M15: {
     id: 'M15',
-    name: 'LANDING PAGE OPTIMIZER™',
+    name: 'LANDING PAGE ALCHEMIST™',
     description: 'Conversion-focused page structure with psychological triggers',
     vectors: ['content', 'cognitive', 'data'],
     difficulty: 3,
@@ -483,6 +487,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '**Hero Section**: "Your email rates are lying to you" + "Discover the 3-step method that doubled open rates for 500+ companies"\n**Problem**: Low engagement + Missed revenue opportunities\n**Solution**: AI-powered optimization + 47 case studies',
     dependencies: { internal: ['conversion_analyzer', 'page_templates'], external: ['A/B testing tools', 'Analytics platform'] },
+    legacy_slugs: ['landing-page-optimizer'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -520,7 +525,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M17: {
     id: 'M17',
-    name: 'INFLUENCER PARTNERSHIP FRAMEWORK™',
+    name: 'INFLUENCE PARTNERSHIP FRAME™',
     description: 'Strategic influencer collaboration with ROI measurement',
     vectors: ['content', 'strategic', 'data'],
     difficulty: 4,
@@ -550,7 +555,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M18: {
     id: 'M18',
-    name: 'CONTENT PERFORMANCE ANALYZER™',
+    name: 'CONTENT ANALYTICS DASHBOARD™',
     description: 'Data-driven content optimization with predictive insights',
     vectors: ['data', 'content', 'analytical'],
     difficulty: 4,
@@ -580,8 +585,8 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M19: {
     id: 'M19',
-    name: 'CONTENT CALENDAR OPTIMIZER™',
-    description: 'AI-powered content scheduling with engagement prediction',
+    name: 'AUDIENCE SEGMENT PERSONALIZER™',
+    description: 'Advanced audience segmentation and personalization engine for targeted content delivery',
     vectors: ['content', 'data', 'strategic'],
     difficulty: 3,
     estimated_tokens: 2900,
@@ -603,6 +608,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### Blog Posts\n**Peak Performance**: Tuesday-Thursday 10am-2pm\n**Expected Engagement**: 15-20% above average\n**Audience Match**: 87%\n\n**Weekly Theme**: "AI Implementation Stories"\n**Content**: Case study + How-to guide + Industry insights',
     dependencies: { internal: ['timing_analyzer', 'calendar_engine'], external: ['Social media APIs', 'Analytics platforms'] },
+    legacy_slugs: ['content-calendar-optimizer'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -610,7 +616,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M20: {
     id: 'M20',
-    name: 'CONTENT PERSONALIZATION ENGINE™',
+    name: 'MOMENTUM CAMPAIGN BUILDER™',
     description: 'Dynamic content adaptation based on user behavior and preferences',
     vectors: ['content', 'data', 'cognitive'],
     difficulty: 4,
@@ -730,7 +736,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M24: {
     id: 'M24',
-    name: 'DATABASE DESIGN OPTIMIZER™',
+    name: 'DATA SCHEMA OPTIMIZER™',
     description: 'Database schema design with performance and scalability optimization',
     vectors: ['technical', 'data', 'operational'],
     difficulty: 4,
@@ -760,7 +766,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M25: {
     id: 'M25',
-    name: 'MICROSERVICES ARCHITECTURE™',
+    name: 'MICROSERVICES GRID™',
     description: 'Microservices design with service mesh and communication patterns',
     vectors: ['technical', 'strategic', 'operational'],
     difficulty: 5,
@@ -790,7 +796,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M26: {
     id: 'M26',
-    name: 'SECURITY ARCHITECTURE FRAMEWORK™',
+    name: 'SECURITY FORTRESS FRAME™',
     description: 'Comprehensive security design with threat modeling and compliance',
     vectors: ['technical', 'security', 'compliance'],
     difficulty: 5,
@@ -820,7 +826,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M27: {
     id: 'M27',
-    name: 'PERFORMANCE OPTIMIZATION ENGINE™',
+    name: 'PERFORMANCE ENGINE™',
     description: 'System performance analysis and optimization strategies',
     vectors: ['technical', 'data', 'operational'],
     difficulty: 4,
@@ -880,7 +886,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M29: {
     id: 'M29',
-    name: 'CONTAINER ORCHESTRATION STRATEGY™',
+    name: 'ORCHESTRATION MATRIX™',
     description: 'Container deployment and orchestration with Kubernetes',
     vectors: ['technical', 'operational', 'strategic'],
     difficulty: 5,
@@ -910,7 +916,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M30: {
     id: 'M30',
-    name: 'CLOUD INFRASTRUCTURE ARCHITECT™',
+    name: 'CLOUD INFRA MAP™',
     description: 'Multi-cloud infrastructure design with cost optimization',
     vectors: ['technical', 'strategic', 'operational'],
     difficulty: 5,
@@ -940,8 +946,8 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M31: {
     id: 'M31',
-    name: 'SALES PROCESS OPTIMIZER™',
-    description: 'Sales funnel optimization and conversion rate improvement',
+    name: 'SALES FLOW ARCHITECT™',
+    description: 'Comprehensive sales process optimization and operations framework with conversion enhancement',
     vectors: ['sales', 'data', 'strategic'],
     difficulty: 3,
     estimated_tokens: 3200,
@@ -963,6 +969,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### Lead Qualification Bottleneck\n**Impact**: 60% of leads don\'t meet ICP criteria\n**Root Cause**: Vague qualification criteria\n**Solution**: Implement BANT framework + scoring system\n\n## Optimization Strategies\n**Lead Scoring System**: Implement 1-100 scoring based on engagement and fit\n**Expected Impact**: 40% improvement in lead quality\n**Implementation**: Define scoring criteria, integrate with CRM, train team\n**Timeline**: 4 weeks',
     dependencies: { internal: ['sales_analyzer', 'crm_integration'], external: ['Sales training platforms', 'CRM systems'] },
+    legacy_slugs: ['sales-process-optimizer', 'sales-operations-framework'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -1000,7 +1007,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M33: {
     id: 'M33',
-    name: 'SALES ENABLEMENT FRAMEWORK™',
+    name: 'ENABLEMENT FRAME™',
     description: 'Comprehensive sales enablement with training and resources',
     vectors: ['sales', 'content', 'operational'],
     difficulty: 4,
@@ -1120,8 +1127,8 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M37: {
     id: 'M37',
-    name: 'SALES OPERATIONS FRAMEWORK™',
-    description: 'Sales operations optimization with process and technology',
+    name: 'CUSTOMER SUCCESS PLAYBOOK™',
+    description: 'Comprehensive customer success strategy and implementation framework',
     vectors: ['sales', 'operational', 'technical'],
     difficulty: 4,
     estimated_tokens: 3600,
@@ -1143,6 +1150,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### Lead Routing Process\n**Current State**: Manual assignment based on manager discretion\n**Issues**: Inconsistent assignment, delays, poor territory balance\n**Optimization**: Automated routing with territory rules and load balancing\n**Expected Impact**: 50% faster lead assignment, 30% better territory balance\n\n## Technology Strategy\n**Sales Intelligence Integration**: Real-time prospect data and insights\n**Business Case**: Improve prospect qualification and personalization\n**Implementation**: 3-month integration with existing CRM\n**ROI**: 25% increase in conversion rates',
     dependencies: { internal: ['operations_analyzer', 'process_designer'], external: ['CRM systems', 'Sales operations tools'] },
+    legacy_slugs: ['sales-operations-framework'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -1180,7 +1188,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M39: {
     id: 'M39',
-    name: 'PARTNER ECOSYSTEM STRATEGY™',
+    name: 'INTELLIGENCE ENGINE™',
     description: 'Strategic partnership development and management',
     vectors: ['sales', 'strategic', 'operational'],
     difficulty: 4,
@@ -1203,6 +1211,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### System Integrators\n**Description**: Technology partners who implement and customize solutions\n**Value Proposition**: Technical expertise, implementation services, ongoing support\n**Success Metrics**: Joint wins, implementation success, customer satisfaction\n**Resource Requirements**: Technical enablement, joint go-to-market, co-selling support\n\n## Partner Recruitment\n**Technology Partner Program**: Strategic partnerships with leading technology companies\n**Target Partners**: Cloud providers, enterprise software companies\n**Outreach Methods**: Executive relationships, industry events, mutual customer introductions\n**Selection Criteria**: Market presence, technical capabilities, cultural fit',
     dependencies: { internal: ['partner_analyzer', 'ecosystem_manager'], external: ['Partner management platforms', 'CRM systems'] },
+    legacy_slugs: ['sales-intelligence-framework'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -1210,8 +1219,8 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M40: {
     id: 'M40',
-    name: 'SALES INTELLIGENCE FRAMEWORK™',
-    description: 'Sales intelligence and competitive analysis system',
+    name: 'NEGOTIATION DYNAMICS™',
+    description: 'Advanced negotiation strategies and dynamic pricing optimization',
     vectors: ['sales', 'data', 'strategic'],
     difficulty: 4,
     estimated_tokens: 3600,
@@ -1233,6 +1242,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### Market Intelligence\n**Purpose**: Understand market trends, opportunities, and threats\n**Data Sources**: Industry reports, news feeds, social media, analyst reports\n**Collection Methods**: Automated monitoring, manual research, expert interviews\n**Analysis**: Trend analysis, opportunity identification, risk assessment\n\n## Competitive Intelligence\n**Salesforce**: Market leader in CRM with strong enterprise presence\n**Strengths**: Brand recognition, extensive ecosystem, enterprise features\n**Weaknesses**: High cost, complex implementation, limited customization\n**Market Position**: 20% market share, premium pricing\n**Strategy**: Enterprise focus, ecosystem expansion, AI integration',
     dependencies: { internal: ['intelligence_engine', 'competitive_analyzer'], external: ['Sales intelligence tools', 'Research platforms'] },
+    legacy_slugs: ['sales-intelligence-framework'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -1270,7 +1280,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M42: {
     id: 'M42',
-    name: 'QUALITY MANAGEMENT SYSTEM™',
+    name: 'QUALITY SYSTEM MAP™',
     description: 'Comprehensive quality management and continuous improvement',
     vectors: ['operational', 'strategic', 'compliance'],
     difficulty: 5,
@@ -1293,6 +1303,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### Six Sigma Framework\n**Purpose**: Reduce defects and improve process efficiency\n**Components**: Define, Measure, Analyze, Improve, Control (DMAIC)\n**Implementation**: Project-based approach with certified belts\n**Success Metrics**: Defect reduction, process improvement, cost savings\n\n## Quality Processes\n**Product Development**: End-to-end quality control\n**Owner**: Quality Manager\n**Inputs**: Design specifications, customer requirements\n**Outputs**: Quality-approved products\n**Controls**: Design reviews, testing protocols, validation checkpoints',
     dependencies: { internal: ['quality_analyzer', 'improvement_engine'], external: ['Quality management platforms', 'Compliance tools'] },
+    legacy_slugs: ['quality-management-system'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -1300,7 +1311,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M43: {
     id: 'M43',
-    name: 'SUPPLY CHAIN OPTIMIZER™',
+    name: 'SUPPLY FLOW OPTIMIZER™',
     description: 'Supply chain optimization with risk management and cost control',
     vectors: ['operational', 'strategic', 'analytical'],
     difficulty: 4,
@@ -1323,6 +1334,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### Inventory Management\n**Current Performance**: 45 days average inventory, 15% stockouts\n**Issues**: Overstocking, poor demand forecasting, supplier delays\n**Optimization Opportunities**: Just-in-time inventory, demand planning, supplier collaboration\n\n## Optimization Strategies\n**Demand Planning System**: AI-powered forecasting and inventory optimization\n**Implementation**: 6-month rollout with pilot program\n**Expected Impact**: 30% inventory reduction, 50% fewer stockouts\n**Investment**: $200,000\n**ROI**: 400% over 3 years',
     dependencies: { internal: ['supply_chain_analyzer', 'optimization_engine'], external: ['Supply chain platforms', 'Analytics tools'] },
+    legacy_slugs: ['supply-chain-optimizer'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -1360,7 +1372,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M45: {
     id: 'M45',
-    name: 'CHANGE MANAGEMENT FRAMEWORK™',
+    name: 'CHANGE FORCE FIELD™',
     description: 'Comprehensive change management strategy and implementation',
     vectors: ['operational', 'strategic', 'cognitive'],
     difficulty: 4,
@@ -1383,6 +1395,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '### Leadership Team\n**Impact Level**: High - Direct responsibility for change success\n**Influence**: High - Can influence others and allocate resources\n**Attitude**: Supportive - 80% in favor, 20% neutral\n**Engagement Strategy**: Executive coaching, regular check-ins, success celebration\n\n## Change Strategy\n**Vision & Strategy**: Clear articulation of change purpose and benefits\n**Purpose**: Align stakeholders around common vision\n**Implementation**: Leadership workshops, vision statements, strategic communication\n**Success Metrics**: Stakeholder understanding, commitment levels, alignment scores',
     dependencies: { internal: ['change_analyzer', 'stakeholder_manager'], external: ['Change management platforms', 'Communication tools'] },
+    legacy_slugs: ['change-management-framework'],
     is_active: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-08-20T15:30:00Z'
@@ -1478,7 +1491,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
 
   M49: {
     id: 'M49',
-    name: 'EXECUTIVE PROMPT REPORT™',
+    name: 'EXECUTIVE PROMPT DOSSIER™',
     description: 'Generate high-level report for a prompt run with KPIs, version diff, and optimization recommendations',
     vectors: ['data', 'strategic', 'analytical'],
     difficulty: 3,
@@ -1499,6 +1512,7 @@ export const COMPLETE_MODULES_CATALOG: Record<string, ModuleDefinition> = {
     },
     sample_output: '## KPIs\n- Clarity: 89%\n- Execution: 93%\n- Fit: 95%\n\n## Version Diff\n- Changed structure in "Guardrails" section\n- Added next-actions block',
     dependencies: { internal: ['telemetry_store', 'diff_engine'], external: ['PDF exporter'] },
+    legacy_slugs: ['executive-prompt-report'],
     is_active: true,
     created_at: '2025-08-26T10:00:00Z',
     updated_at: '2025-08-26T10:00:00Z'

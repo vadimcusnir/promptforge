@@ -16,6 +16,34 @@ export type Locale = "en" | "ro" | "es" | "fr" | "de"
 export type Currency = "EUR" | "USD" | "RON"
 
 const localizedTexts: LocalizedText = {
+  "hero.title": {
+    en: "Your Operational Prompt Generator",
+    ro: "Generatorul Tău Operațional de Prompturi",
+    es: "Tu Generador Operacional de Prompts",
+    fr: "Votre Générateur Opérationnel de Prompts",
+    de: "Ihr Operativer Prompt-Generator",
+  },
+  "hero.subtitle": {
+    en: "50 modules. 7 vectors. Export in <60s. Build auditable, reproducible prompt systems for professional workflows.",
+    ro: "50 module. 7 vectori. Export în <60s. Construiește sisteme de prompturi auditable și reproducibile pentru fluxuri de lucru profesionale.",
+    es: "50 módulos. 7 vectores. Exporta en <60s. Construye sistemas de prompts auditables y reproducibles para flujos de trabajo profesionales.",
+    fr: "50 modules. 7 vecteurs. Export en <60s. Construisez des systèmes de prompts auditable et reproductibles pour les flux de travail professionnels.",
+    de: "50 Module. 7 Vektoren. Export in <60s. Bauen Sie auditable, reproduzierbare Prompt-Systeme für professionelle Arbeitsabläufe.",
+  },
+  "hero.cta.primary": {
+    en: "Start the Forge",
+    ro: "Începe Forjarea",
+    es: "Inicia la Forja",
+    fr: "Commencez la Forge",
+    de: "Starte die Schmiede",
+  },
+  "hero.cta.secondary": {
+    en: "View Demo",
+    ro: "Vezi Demo",
+    es: "Ver Demo",
+    fr: "Voir la Démo",
+    de: "Demo Ansehen",
+  },
   "pricing.title": {
     en: "Choose Your Plan",
     ro: "Alege Planul Tău",
@@ -24,11 +52,11 @@ const localizedTexts: LocalizedText = {
     de: "Wählen Sie Ihren Plan",
   },
   "pricing.subtitle": {
-    en: "Scale from pilot to enterprise with clear upgrade paths",
-    ro: "Scalați de la pilot la enterprise cu căi clare de upgrade",
-    es: "Escala desde piloto hasta empresa con caminos claros de actualización",
-    fr: "Passez du pilote à l'entreprise avec des chemins de mise à niveau clairs",
-    de: "Skalieren Sie vom Pilotprojekt zum Unternehmen mit klaren Upgrade-Pfaden",
+    en: "Scale from free to enterprise with clear upgrade paths",
+    ro: "Scalați de la gratuit la enterprise cu căi clare de upgrade",
+    es: "Escala desde gratis hasta empresa con caminos claros de actualización",
+    fr: "Passez du gratuit à l'entreprise avec des chemins de mise à niveau clairs",
+    de: "Skalieren Sie von kostenlos zum Unternehmen mit klaren Upgrade-Pfaden",
   },
   "pricing.monthly": {
     en: "Monthly",
@@ -163,7 +191,7 @@ const localizedFeatures: LocalizedFeatures = {
 
 export function useLocalization() {
   const [currentLocale, setCurrentLocale] = useState<Locale>("en")
-  const [currentCurrency, setCurrentCurrency] = useState<Currency>("EUR")
+  const [currentCurrency, setCurrentCurrency] = useState<Currency>("USD")
 
   useEffect(() => {
     // Auto-detect user location and set appropriate defaults
@@ -174,17 +202,11 @@ export function useLocalization() {
         const data = await response.json()
         const country = data.country_code
         
-        // Set currency based on location
-        if (country === 'US') {
-          setCurrentCurrency('USD')
-        } else if (country === 'RO' || country === 'MD') {
-          setCurrentCurrency('RON')
-        } else {
-          setCurrentCurrency('EUR') // Default for EU/Moldova
-        }
+        // Set currency to USD for all locations
+        setCurrentCurrency('USD')
       } catch (error) {
-        // Fallback to EUR for Moldova/EU
-        setCurrentCurrency('EUR')
+        // Fallback to USD
+        setCurrentCurrency('USD')
       }
     }
 
@@ -195,7 +217,7 @@ export function useLocalization() {
     if (savedLocale && ["en", "ro"].includes(savedLocale)) {
       setCurrentLocale(savedLocale)
     } else {
-      // Default to English for international users
+      // Default to English for all users
       setCurrentLocale("en")
     }
     

@@ -4,74 +4,117 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* Accessibility-compliant color system following 60-30-10 rule */
+  /* 60% - Dominant: Light backgrounds */
+  /* 30% - Secondary: Dark text and elements */
+  /* 10% - Accent: Gold for primary actions only */
+  
+  --background: 0 0% 97%;        /* #F7F7F7 - Very light gray (60% dominant) */
+  --foreground: 0 0% 5%;         /* #0E0E0E - Dark text (30% secondary) */
+  --card: 0 0% 100%;             /* #FFFFFF - White cards */
+  --card-foreground: 0 0% 5%;    /* #0E0E0E - Dark text on cards */
+  --popover: 0 0% 100%;          /* #FFFFFF - White popovers */
+  --popover-foreground: 0 0% 5%; /* #0E0E0E - Dark text on popovers */
+  
+  /* Primary/Accent color - Gold for CTAs only (10% rule) */
+  --primary: 45 100% 60%;        /* #D1A954 - PromptForge gold */
+  --primary-foreground: 0 0% 5%; /* #0E0E0E - Dark text on gold */
+  
+  /* Secondary colors */
+  --secondary: 0 0% 20%;         /* #333333 - Medium gray */
+  --secondary-foreground: 0 0% 97%; /* #F7F7F7 - Light text on dark */
+  
+  /* Muted colors */
+  --muted: 0 0% 96%;             /* #F5F5F5 - Light gray */
+  --muted-foreground: 0 0% 45%;  /* #737373 - Medium gray text */
+  
+  /* Accent (same as primary for consistency) */
+  --accent: 45 100% 60%;         /* #D1A954 - Same as primary */
+  --accent-foreground: 0 0% 5%;  /* #0E0E0E - Dark text on accent */
+  
+  /* Status colors with proper contrast */
+  --destructive: 0 84% 60%;      /* #EF4444 - Red with sufficient contrast */
+  --destructive-foreground: 0 0% 98%; /* #FAFAFA - Light text on red */
+  
+  /* UI elements */
+  --border: 0 0% 90%;            /* #E5E5E5 - Light borders */
+  --input: 0 0% 90%;             /* #E5E5E5 - Input borders */
+  --ring: 45 100% 60%;           /* #D1A954 - Focus rings use accent */
+  
+  /* Chart colors (accessible palette) */
+  --chart-1: 45 100% 60%;        /* Gold */
+  --chart-2: 142 76% 36%;        /* Green */
+  --chart-3: 38 92% 50%;         /* Orange */
+  --chart-4: 217 91% 60%;        /* Blue */
+  --chart-5: 262 83% 58%;        /* Purple */
+  
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Sidebar colors */
+  --sidebar: 0 0% 98%;           /* #FAFAFA - Light sidebar */
+  --sidebar-foreground: 0 0% 5%; /* #0E0E0E - Dark text */
+  --sidebar-primary: 45 100% 60%; /* #D1A954 - Gold accent */
+  --sidebar-primary-foreground: 0 0% 5%; /* #0E0E0E - Dark text */
+  --sidebar-accent: 0 0% 96%;    /* #F5F5F5 - Light accent */
+  --sidebar-accent-foreground: 0 0% 5%; /* #0E0E0E - Dark text */
+  --sidebar-border: 0 0% 90%;    /* #E5E5E5 - Light borders */
+  --sidebar-ring: 45 100% 60%;   /* #D1A954 - Gold focus ring */
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Dark mode - Inverted 60-30-10 rule */
+  /* 60% - Dominant: Dark backgrounds */
+  /* 30% - Secondary: Light text and elements */
+  /* 10% - Accent: Gold for primary actions only */
+  
+  --background: 0 0% 5%;         /* #0E0E0E - Very dark gray (60% dominant) */
+  --foreground: 0 0% 97%;        /* #F7F7F7 - Light text (30% secondary) */
+  --card: 0 0% 8%;               /* #141414 - Dark cards */
+  --card-foreground: 0 0% 97%;   /* #F7F7F7 - Light text on cards */
+  --popover: 0 0% 8%;            /* #141414 - Dark popovers */
+  --popover-foreground: 0 0% 97%; /* #F7F7F7 - Light text on popovers */
+  
+  /* Primary/Accent color - Gold for CTAs only (10% rule) */
+  --primary: 45 100% 60%;        /* #D1A954 - Same gold accent */
+  --primary-foreground: 0 0% 5%; /* #0E0E0E - Dark text on gold */
+  
+  /* Secondary colors */
+  --secondary: 0 0% 20%;         /* #333333 - Medium gray */
+  --secondary-foreground: 0 0% 97%; /* #F7F7F7 - Light text on dark */
+  
+  /* Muted colors */
+  --muted: 0 0% 15%;             /* #262626 - Dark gray */
+  --muted-foreground: 0 0% 65%;  /* #A6A6A6 - Medium light gray text */
+  
+  /* Accent (same as primary for consistency) */
+  --accent: 45 100% 60%;         /* #D1A954 - Same as primary */
+  --accent-foreground: 0 0% 5%;  /* #0E0E0E - Dark text on accent */
+  
+  /* Status colors with proper contrast */
+  --destructive: 0 84% 60%;      /* #EF4444 - Red with sufficient contrast */
+  --destructive-foreground: 0 0% 98%; /* #FAFAFA - Light text on red */
+  
+  /* UI elements */
+  --border: 0 0% 20%;            /* #333333 - Dark borders */
+  --input: 0 0% 20%;             /* #333333 - Input borders */
+  --ring: 45 100% 60%;           /* #D1A954 - Focus rings use accent */
+  
+  /* Chart colors (accessible palette) */
+  --chart-1: 45 100% 60%;        /* Gold */
+  --chart-2: 142 76% 36%;        /* Green */
+  --chart-3: 38 92% 50%;         /* Orange */
+  --chart-4: 217 91% 60%;        /* Blue */
+  --chart-5: 262 83% 58%;        /* Purple */
+  
+  /* Sidebar colors */
+  --sidebar: 0 0% 8%;            /* #141414 - Dark sidebar */
+  --sidebar-foreground: 0 0% 97%; /* #F7F7F7 - Light text */
+  --sidebar-primary: 45 100% 60%; /* #D1A954 - Gold accent */
+  --sidebar-primary-foreground: 0 0% 5%; /* #0E0E0E - Dark text */
+  --sidebar-accent: 0 0% 15%;    /* #262626 - Dark accent */
+  --sidebar-accent-foreground: 0 0% 97%; /* #F7F7F7 - Light text */
+  --sidebar-border: 0 0% 20%;    /* #333333 - Dark borders */
+  --sidebar-ring: 45 100% 60%;   /* #D1A954 - Gold focus ring */
 }
 
 @theme inline {
@@ -135,7 +178,7 @@
   }
 }
 
-/* Critical CSS optimizations */
+/* Critical CSS optimizations for LCP */
 .fixed-bg {
   position: fixed;
   top: 0;
@@ -148,11 +191,155 @@
 
 .pattern-bg {
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(209, 169, 84, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(209, 169, 84, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, hsl(45 100% 60% / 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, hsl(45 100% 60% / 0.05) 0%, transparent 50%);
   background-size: 400px 400px;
   background-repeat: repeat;
   opacity: 0.6;
+}
+
+/* Hero section critical CSS - optimized for LCP */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(209, 169, 84, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(209, 169, 84, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(209, 169, 84, 0.1);
+  border: 1px solid rgba(209, 169, 84, 0.3);
+  border-radius: 9999px;
+  color: #d1a954;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #ffffff 0%, #d1a954 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-description {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  line-height: 1.6;
+  color: #94a3b8;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 640px) {
+  .hero-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.hero-primary-button {
+  background: linear-gradient(135deg, #d1a954 0%, #f59e0b 100%);
+  color: #000000;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  border: none;
+  font-size: 1.125rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px 0 rgba(209, 169, 84, 0.3);
+}
+
+.hero-primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px 0 rgba(209, 169, 84, 0.4);
+}
+
+.hero-secondary-button {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-size: 1.125rem;
+  transition: all 0.2s ease;
+}
+
+.hero-secondary-button:hover {
+  border-color: #d1a954;
+  color: #d1a954;
+  background: rgba(209, 169, 84, 0.1);
+}
+
+.hero-proof-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.hero-proof-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.hero-proof-dot {
+  width: 8px;
+  height: 8px;
+  background: #d1a954;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 /* Optimize glass effects for performance */

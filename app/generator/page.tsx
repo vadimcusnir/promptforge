@@ -36,10 +36,7 @@ import { generatePrompt, createPromptRun, simulateGptResponse, PromptRun } from 
 import { FormData } from "@/utils/parseInputSchema"
 import { LoadingSpinner, LoadingState } from "@/components/loading-spinner"
 import { 
-  NoPromptsEmptyState, 
-  NoTestsEmptyState, 
-  NoHistoryEmptyState,
-  ErrorEmptyState 
+  EmptyState
 } from "@/components/ui/empty-state"
 import { Skeleton, SkeletonCard, SkeletonButton, SkeletonInput } from "@/components/ui/skeleton"
 
@@ -299,15 +296,15 @@ function GeneratorPage() {
   
   // Legacy modules array for backward compatibility
   const modules = [
-    { id: "M01", name: "SOP Forge", vector: "Strategic", moduleNumber: 1, plan: "free" },
-    { id: "M07", name: "Risk Reversal", vector: "Strategic", moduleNumber: 7, plan: "creator" },
-    { id: "M10", name: "Funnel Nota", vector: "Rhetoric", moduleNumber: 10, plan: "free" },
-    { id: "M11", name: "Visibility Diag", vector: "Strategic", moduleNumber: 11, plan: "creator" },
-    { id: "M12", name: "Pricing Psych", vector: "Rhetoric", moduleNumber: 12, plan: "creator" },
-    { id: "M18", name: "Content Audit", vector: "Content", moduleNumber: 18, plan: "free" },
-    { id: "M25", name: "Brand Voice", vector: "Branding", moduleNumber: 25, plan: "creator" },
-    { id: "M35", name: "Crisis Comm", vector: "Crisis", moduleNumber: 35, plan: "pro" },
-    { id: "M45", name: "Analytics Deep", vector: "Analytics", moduleNumber: 45, plan: "creator" },
+    { id: "M01", name: "SOP FORGE™", vector: "Strategic", moduleNumber: 1, plan: "free" },
+    { id: "M07", name: "TRUST REVERSAL PROTOCOL™", vector: "Strategic", moduleNumber: 7, plan: "creator" },
+    { id: "M10", name: "CRISIS COMMUNICATION PLAYBOOK™", vector: "Crisis", moduleNumber: 10, plan: "free" },
+    { id: "M11", name: "VIRAL CONTENT ENGINE™", vector: "Content", moduleNumber: 11, plan: "creator" },
+    { id: "M12", name: "BRAND VOICE CODEX™", vector: "Branding", moduleNumber: 12, plan: "creator" },
+    { id: "M18", name: "CONTENT ANALYTICS DASHBOARD™", vector: "Content", moduleNumber: 18, plan: "free" },
+    { id: "M25", name: "MICROSERVICES GRID™", vector: "Technical", moduleNumber: 25, plan: "creator" },
+    { id: "M35", name: "SALES FORECASTING ENGINE™", vector: "Sales", moduleNumber: 35, plan: "pro" },
+    { id: "M45", name: "CHANGE FORCE FIELD™", vector: "Operational", moduleNumber: 45, plan: "creator" },
   ]
 
   const userPlan = "free" // Default plan for now
@@ -704,16 +701,12 @@ function GeneratorPage() {
                           )}
                         </div>
                       ) : (
-                        <NoTestsEmptyState
+                        <EmptyState
                           title="No test results yet"
                           description="Generate a prompt and run a test to see results"
-                          action={{
+                          primaryAction={{
                             label: "Generate Prompt",
-                            onClick: () => {
-                              const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
-                              if (generatorTab) generatorTab.click()
-                            },
-                            variant: "outline"
+                            href: "#"
                           }}
                         />
                       )}
@@ -736,13 +729,12 @@ function GeneratorPage() {
                         ))}
                       </div>
                     ) : historyError ? (
-                      <ErrorEmptyState
+                      <EmptyState
                         title="Failed to Load History"
                         description={historyError}
-                        action={{
+                        primaryAction={{
                           label: "Retry",
-                          onClick: retryHistoryLoad,
-                          icon: RefreshCw
+                          href: "#"
                         }}
                       />
                     ) : history.length > 0 ? (
@@ -804,16 +796,12 @@ function GeneratorPage() {
                         ))}
                       </div>
                     ) : (
-                                              <NoHistoryEmptyState
+                                              <EmptyState
                           title="No generation history yet"
                           description="Start generating prompts to see your history here"
-                          action={{
+                          primaryAction={{
                             label: "Generate First Prompt",
-                            onClick: () => {
-                              const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
-                              if (generatorTab) generatorTab.click()
-                            },
-                            variant: "outline"
+                            href: "#"
                           }}
                         />
                     )}
