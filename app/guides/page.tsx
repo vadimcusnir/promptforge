@@ -242,9 +242,7 @@ const getDifficultyColor = (difficulty: string) => {
 }
 
 export default function GuidesPage() {
-  const breadcrumbItems = [
-    { label: "Guides", current: true }
-  ]
+  // Breadcrumb will be automatically generated from path
 
   // Structured data for guides
   const structuredData = {
@@ -282,7 +280,7 @@ export default function GuidesPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <div className="mb-8">
-          <Breadcrumb items={breadcrumbItems} />
+          <Breadcrumb path="/guides" />
         </div>
 
         {/* Server-side rendered header for SEO */}

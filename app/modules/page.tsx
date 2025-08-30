@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
@@ -8,50 +10,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 import dynamic from "next/dynamic"
 
-export const metadata: Metadata = {
-  title: "Modules - PromptForge Industrial Prompt Engineering",
-  description: "Explore 50 industrial prompt engineering modules across 7 semantic vectors. From strategic business planning to crisis management and cognitive optimization.",
-  keywords: ["prompt engineering modules", "industrial prompts", "AI modules", "business prompts", "strategic planning", "crisis management", "cognitive optimization"],
-  authors: [{ name: "PromptForge Team" }],
-  creator: "PromptForge",
-  publisher: "PromptForge",
-  alternates: {
-    canonical: "/modules",
-  },
-  openGraph: {
-    title: "Modules - PromptForge Industrial Prompt Engineering",
-    description: "Explore 50 industrial prompt engineering modules across 7 semantic vectors. From strategic business planning to crisis management and cognitive optimization.",
-    type: "website",
-    url: "/modules",
-    siteName: "PromptForge",
-    images: [
-      {
-        url: "/og/modules.webp",
-        width: 1200,
-        height: 630,
-        alt: "PromptForge Industrial Modules",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Modules - PromptForge Industrial Prompt Engineering",
-    description: "Explore 50 industrial prompt engineering modules across 7 semantic vectors. From strategic business planning to crisis management and cognitive optimization.",
-    images: ["/og/modules.webp"],
-    creator: "@promptforge",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-}
+// Metadata is handled in layout.tsx for client components
 
 // Lazy load the client-side interactive components - temporarily disabled
 // const ModulesClient = dynamic(() => import("@/components/modules/ModulesClient"), {
@@ -305,16 +264,14 @@ function ModulesSkeleton() {
 }
 
 export default function ModulesPage() {
-  const breadcrumbItems = [
-    { label: "Modules", current: true }
-  ]
+  // Breadcrumb will be automatically generated from path
 
   return (
     <div className="min-h-screen pattern-bg text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <div className="mb-8">
-          <Breadcrumb items={breadcrumbItems} />
+          <Breadcrumb path="/modules" />
         </div>
 
         {/* Server-side rendered header for SEO */}

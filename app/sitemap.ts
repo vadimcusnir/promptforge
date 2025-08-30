@@ -1,8 +1,20 @@
 import { MetadataRoute } from 'next'
+import { getAllPublicPages } from '@/lib/site-structure'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://chatgpt-prompting.com'
   const now = new Date()
+
+  // Get all public pages from site structure
+  const publicPages = getAllPublicPages()
+  
+  // Generate sitemap entries from site structure
+  const siteStructurePages = publicPages.map(page => ({
+    url: `${baseUrl}${page.path}`,
+    lastModified: now,
+    changeFrequency: getChangeFrequency(page.category),
+    priority: getPriority(page.path, page.category),
+  }))
   
   // Core pages with high priority
   const corePages = [
@@ -225,14 +237,65 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   return [
-    ...corePages,
-    ...documentationPages,
-    ...guidePages,
+    ...siteStructurePages,
     ...modulePages,
     ...blogPages,
-    ...secondaryPages,
-    ...legalPages,
-    ...utilityPages,
-    comingSoonPage,
+    ...guidePages,
   ]
+}
+
+// Helper function to determine change frequency based on category
+function getChangeFrequency(category?: string): 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' {
+  switch (category) {
+    case 'main':
+      return 'weekly'
+    case 'learning':
+      return 'weekly'
+    case 'business':
+      return 'monthly'
+    case 'legal':
+      return 'yearly'
+    case 'auth':
+      return 'monthly'
+    case 'special':
+      return 'monthly'
+    default:
+      return 'monthly'
+  }
+}
+
+// Helper function to determine priority based on path and category
+function getPriority(path: string, category?: string): number {
+  // Homepage gets highest priority
+  if (path === '/') {
+    return 1.0
+  }
+
+  // Main application pages
+  if (path === '/generator' || path === '/modules') {
+    return 0.9
+  }
+
+  // Important business pages
+  if (path === '/pricing' || path === '/about') {
+    return 0.8
+  }
+
+  // Learning and documentation
+  if (category === 'learning') {
+    return 0.7
+  }
+
+  // Business pages
+  if (category === 'business') {
+    return 0.6
+  }
+
+  // Legal pages
+  if (category === 'legal') {
+    return 0.3
+  }
+
+  // Default priority
+  return 0.5
 }

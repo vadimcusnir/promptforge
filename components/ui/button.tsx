@@ -148,6 +148,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return null
     }
 
+    // When asChild is true, we need to ensure only one child is passed to Slot
+    if (asChild) {
+      return (
+        <Comp
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          disabled={disabled || loading}
+          {...props}
+          {...accessibilityProps}
+        >
+          {children}
+        </Comp>
+      )
+    }
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
