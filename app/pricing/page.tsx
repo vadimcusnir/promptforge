@@ -33,11 +33,11 @@ interface Plan {
 
 export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(false)
-  const [showLoginModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
   
   // Hooks
   const { createCheckoutSession, isLoading: isCheckoutLoading } = useStripeCheckout()
-  const { user, isLoading: isAuthLoading } = useAuth()
+  const { user, logout, isLoading: isAuthLoading } = useAuth()
   const analytics = useAnalytics()
   const { currentVariant, getVariantPricing, getVariantFeatures, getVariantCTA, trackVariantConversion } = useABTesting()
   const { t, getFeatures } = useLocalization()

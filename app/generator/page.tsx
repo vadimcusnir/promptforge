@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { SkeletonCard } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -55,7 +56,6 @@ interface GeneratedPrompt {
 }
 
 function GeneratorPage() {
-  const { } = useEntitlements()
   const { toast } = useToast()
   const analytics = useAnalytics()
   const searchParams = useSearchParams()
@@ -524,7 +524,7 @@ function GeneratorPage() {
                           className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
                           onClick={() => {
                             // Switch to generator tab
-                            const generatorTab = document.querySelector('[value="generator"]') as Element
+                            const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
                             if (generatorTab) generatorTab.click()
                           }}
                           disabled={Object.values(params7D).some(v => !v || v === '')}

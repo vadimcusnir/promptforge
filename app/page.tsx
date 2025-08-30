@@ -14,7 +14,7 @@ const LiveGenerationDemo = dynamic(() => import("@/components/home/LiveGeneratio
   ssr: false
 })
 
-const ForgeGlyphInteractive = dynamic(() => import("@/components/forge/ForgeGlyphInteractive"), {
+const ForgeGlyphInteractive = dynamic(() => import("@/components/forge/ForgeGlyphInteractive").then(mod => ({ default: mod.ForgeGlyphInteractive })), {
   loading: () => <div className="w-16 h-16 bg-gray-700 rounded animate-pulse" />,
   ssr: false
 })

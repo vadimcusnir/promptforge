@@ -53,7 +53,7 @@ export function PerformanceMonitor() {
       if (lastEntry && typeof lastEntry.processingStart === 'number') {
         setMetrics(prev => ({
           ...prev,
-          fid: Math.round(lastEntry.processingStart - lastEntry.startTime)
+          fid: lastEntry.processingStart ? Math.round(lastEntry.processingStart - lastEntry.startTime) : 0
         }))
       }
     })
@@ -80,7 +80,7 @@ export function PerformanceMonitor() {
       if (navigationEntry && navigationEntry.responseStart && navigationEntry.requestStart) {
         setMetrics(prev => ({
           ...prev,
-          ttfb: Math.round(navigationEntry.responseStart - navigationEntry.requestStart)
+          ttfb: Math.round((navigationEntry.responseStart || 0) - (navigationEntry.requestStart || 0))
         }))
       }
     })

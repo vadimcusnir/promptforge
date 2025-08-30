@@ -9,11 +9,11 @@ import {
   createPricingSelectEvent,
   createStartTrialEvent,
   createExportEvent,
-  type _ViewPageEvent,
-  type _CtaClickEvent,
-  type _PricingSelectEvent,
-  type _StartTrialEvent,
-  type _ExportEvent
+  type ViewPageEvent,
+  type CtaClickEvent,
+  type PricingSelectEvent,
+  type StartTrialEvent,
+  type ExportEvent
 } from '@/lib/analytics-events'
 
 interface AnalyticsContextType {

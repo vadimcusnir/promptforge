@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           )
         }
-        const value = await aiCache.get(key, 'default-model')
+        const value = await aiCache.get(key, 'default-model', 0.7, 1000)
         return NextResponse.json({
           success: true,
           data: value

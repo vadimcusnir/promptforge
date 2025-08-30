@@ -216,10 +216,10 @@ export function RitualVideo({
 // Collection component for all ritual videos
 export function RitualVideoCollection({ className }: { className?: string }) {
   const videos = [
-    'inversul_luminii',
-    'lumina_din_tacere', 
-    'aparatul_de_vizualizare',
-    'fara_glyph',
+    'inversul-luminii',
+    'lumina-din-tacere',
+    'aparatul-de-vizualizare',
+    'fara-glyph',
     'contaminare'
   ] as const
 
