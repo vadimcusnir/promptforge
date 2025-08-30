@@ -1,15 +1,32 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { getEffectiveEntitlements } from "@/lib/billing/entitlements"
+import { getEffectiveEntitlements, validateOrgMembership } from "@/lib/billing/entitlements"
 import { requireAuth } from "@/lib/auth/server-auth"
+import { RATE_LIMITS } from "@/lib/rate-limit"
 
 // Query parameters schema
 const entitlementsQuerySchema = z.object({
   orgId: z.string().uuid('Invalid organization ID')
 })
 
+// Rate limiting for entitlements requests
+const entitlementsLimiter = new RateLimiter({
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 100, // 100 requests per minute
+  message: 'Rate limit exceeded. Please try again later.'
+})
+
 export async function GET(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = entitlementsLimiter.check(request)
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: rateLimitResult.message || 'Rate limit exceeded. Please try again later.' },
+        { status: 429 }
+      )
+    }
+
     // Require authentication
     const user = await requireAuth(request)
     
@@ -27,8 +44,9 @@ export async function GET(request: NextRequest) {
     // Validate query parameters
     const { orgId: validatedOrgId } = entitlementsQuerySchema.parse({ orgId })
     
-    // Validate organization membership - user can only access their own org
-    if (validatedOrgId !== user.id) {
+    // Validate organization membership - user must be a member of the organization
+    const hasAccess = await validateOrgMembership(user.id, validatedOrgId)
+    if (!hasAccess) {
       return NextResponse.json(
         { error: 'Access denied to organization' },
         { status: 403 }
@@ -38,7 +56,7 @@ export async function GET(request: NextRequest) {
     // Get effective entitlements for the organization
     const entitlements = await getEffectiveEntitlements(validatedOrgId)
     
-    console.log(`✅ Entitlements retrieved for org ${validatedOrgId}: ${Object.keys(entitlements).length} flags`)
+    console.log(`✅ Entitlements retrieved for org ${validatedOrgId} by user ${user.id}: ${Object.keys(entitlements).length} flags`)
     
     return NextResponse.json({
       success: true,

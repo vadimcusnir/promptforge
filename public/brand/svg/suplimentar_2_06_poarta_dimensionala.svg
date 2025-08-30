@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Poarta Dimensională - un portal între dimensiuni cu efecte de tranziție -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru poartă -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercuri concentrice pentru portal -->
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="2;3;2"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Cercul intermediar 1 -->
+  <circle id="middle-circle-1" cx="256" cy="256" r="110" fill="none" stroke="#E0E0E0" stroke-width="1.5">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="110;115;110"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Cercul intermediar 2 -->
+  <circle id="middle-circle-2" cx="256" cy="256" r="80" fill="none" stroke="#E0E0E0" stroke-width="1.5">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="80;85;80"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Cercul interior -->
+  <circle id="inner-circle" cx="256" cy="256" r="50" fill="none" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="50;55;50"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Linii radiale pentru portal -->
+  <!-- Linia 1 (orizontală dreapta) -->
+  <line id="radial-line-1" x1="256" y1="256" x2="396" y2="256" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (orizontală stânga) -->
+  <line id="radial-line-2" x1="256" y1="256" x2="116" y2="256" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (verticală sus) -->
+  <line id="radial-line-3" x1="256" y1="256" x2="256" y2="116" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (verticală jos) -->
+  <line id="radial-line-4" x1="256" y1="256" x2="256" y2="396" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 5 (diagonală dreapta-sus) -->
+  <line id="radial-line-5" x1="256" y1="256" x2="346" y2="166" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="-360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 6 (diagonală stânga-jos) -->
+  <line id="radial-line-6" x1="256" y1="256" x2="166" y2="346" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="-360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 7 (diagonală stânga-sus) -->
+  <line id="radial-line-7" x1="256" y1="256" x2="166" y2="166" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="-360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 8 (diagonală dreapta-jos) -->
+  <line id="radial-line-8" x1="256" y1="256" x2="346" y2="346" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke-width"
+      values="1;2;1"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="-360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Centrul portalului -->
+  <circle id="portal-center" cx="256" cy="256" r="20" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="20;25;20"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru portal -->
+  <circle id="portal-pulse" cx="256" cy="256" r="0" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;140;0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri dimensionale -->
+  <!-- Simbol 1 (sus) -->
+  <text id="symbol-1" x="256" y="136" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">⌬
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="0s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Simbol 2 (dreapta) -->
+  <text id="symbol-2" x="376" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">⌬
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="6s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Simbol 3 (jos) -->
+  <text id="symbol-3" x="256" y="376" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">⌬
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Simbol 4 (stânga) -->
+  <text id="symbol-4" x="136" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" opacity="0">⌬
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="6s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Particule dimensionale -->
+  <!-- Particula 1 -->
+  <circle id="particle-1" cx="256" cy="256" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="256;346;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;166;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 2 -->
+  <circle id="particle-2" cx="256" cy="256" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="3s"
+      begin="0.75s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="256;166;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0.75s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;166;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="0.75s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 3 -->
+  <circle id="particle-3" cx="256" cy="256" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;1;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="3s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="256;166;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;346;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 4 -->
+  <circle id="particle-4" cx="256" cy="256" r="3" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;1;0"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="3s"
+      begin="2.25s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="256;346;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="2.25s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="256;346;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="2.25s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de glitch pentru portal -->
+  <circle id="portal-glitch" cx="256" cy="256" r="50" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.5;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="2s;5s;8s"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Text "POARTA DIMENSIONALĂ" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">POARTA DIMENSIONALĂ</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Poarta Dimensională</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un portal între dimensiuni cu efecte de tranziție. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

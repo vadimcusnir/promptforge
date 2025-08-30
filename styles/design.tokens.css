@@ -1,0 +1,346 @@
+/* ============================================================================
+   PROMPTFORGE v3.1 - DESIGN TOKENS
+   Dark Ritual Theme with Sacred Geometry
+   ============================================================================ */
+
+:root {
+  /* ============================================================================
+     COLOR PALETTE - Dark Ritual
+     ============================================================================ */
+  
+  /* Base Colors */
+  --pf-bg-primary: #05010A;
+  --pf-bg-secondary: #0A0514;
+  --pf-bg-tertiary: #0F0A1E;
+  --pf-bg-elevated: #1A0F2E;
+  
+  /* Primary Colors */
+  --pf-primary-neon: #00FF7F;
+  --pf-primary-neon-hover: #00E66F;
+  --pf-primary-neon-active: #00CC5F;
+  --pf-primary-neon-glow: rgba(0, 255, 127, 0.3);
+  
+  /* Accent Colors */
+  --pf-accent-red: #FF2F2F;
+  --pf-accent-red-hover: #E62A2A;
+  --pf-accent-red-active: #CC2525;
+  --pf-accent-red-glow: rgba(255, 47, 47, 0.3);
+  
+  /* Gold Accent */
+  --pf-gold: #CDA434;
+  --pf-gold-hover: #B8942E;
+  --pf-gold-active: #A38428;
+  --pf-gold-glow: rgba(205, 164, 52, 0.3);
+  
+  /* Text Colors */
+  --pf-text-primary: #FFFFFF;
+  --pf-text-secondary: #B8B8CC;
+  --pf-text-tertiary: #8A8A9A;
+  --pf-text-muted: #6A6A7A;
+  
+  /* Status Colors */
+  --pf-success: #00FF7F;
+  --pf-warning: #FFA500;
+  --pf-error: #FF2F2F;
+  --pf-info: #00BFFF;
+  
+  /* Vector Colors */
+  --pf-vector-strategic: #00BFFF;
+  --pf-vector-rhetoric: #9D4EDD;
+  --pf-vector-content: #00FF7F;
+  --pf-vector-analytics: #FF9500;
+  --pf-vector-branding: #FF2F8E;
+  --pf-vector-crisis: #FF2F2F;
+  --pf-vector-cognitive: #00FFFF;
+  
+  /* Difficulty Colors */
+  --pf-difficulty-1: #00FF7F;
+  --pf-difficulty-2: #80FF40;
+  --pf-difficulty-3: #FFFF00;
+  --pf-difficulty-4: #FF8000;
+  --pf-difficulty-5: #FF2F2F;
+  
+  /* Plan Colors */
+  --pf-plan-free: #6A6A7A;
+  --pf-plan-creator: #9D4EDD;
+  --pf-plan-pro: #00FF7F;
+  --pf-plan-enterprise: #CDA434;
+  
+  /* ============================================================================
+     TYPOGRAPHY
+     ============================================================================ */
+  
+  /* Font Families */
+  --pf-font-display: 'Cinzel', serif;
+  --pf-font-ui: 'Space Grotesk', sans-serif;
+  --pf-font-mono: 'JetBrains Mono', monospace;
+  
+  /* Font Sizes */
+  --pf-text-xs: 0.75rem;
+  --pf-text-sm: 0.875rem;
+  --pf-text-base: 1rem;
+  --pf-text-lg: 1.125rem;
+  --pf-text-xl: 1.25rem;
+  --pf-text-2xl: 1.5rem;
+  --pf-text-3xl: 1.875rem;
+  --pf-text-4xl: 2.25rem;
+  --pf-text-5xl: 3rem;
+  --pf-text-6xl: 3.75rem;
+  
+  /* Font Weights */
+  --pf-font-light: 300;
+  --pf-font-normal: 400;
+  --pf-font-medium: 500;
+  --pf-font-semibold: 600;
+  --pf-font-bold: 700;
+  --pf-font-extrabold: 800;
+  
+  /* Line Heights */
+  --pf-leading-tight: 1.25;
+  --pf-leading-snug: 1.375;
+  --pf-leading-normal: 1.5;
+  --pf-leading-relaxed: 1.625;
+  --pf-leading-loose: 2;
+  
+  /* ============================================================================
+     SPACING
+     ============================================================================ */
+  
+  --pf-space-1: 0.25rem;
+  --pf-space-2: 0.5rem;
+  --pf-space-3: 0.75rem;
+  --pf-space-4: 1rem;
+  --pf-space-5: 1.25rem;
+  --pf-space-6: 1.5rem;
+  --pf-space-8: 2rem;
+  --pf-space-10: 2.5rem;
+  --pf-space-12: 3rem;
+  --pf-space-16: 4rem;
+  --pf-space-20: 5rem;
+  --pf-space-24: 6rem;
+  --pf-space-32: 8rem;
+  
+  /* ============================================================================
+     BORDERS & RADIUS
+     ============================================================================ */
+  
+  --pf-border-width: 1px;
+  --pf-border-width-2: 2px;
+  --pf-border-width-4: 4px;
+  
+  --pf-radius-sm: 0.25rem;
+  --pf-radius-md: 0.5rem;
+  --pf-radius-lg: 0.75rem;
+  --pf-radius-xl: 1rem;
+  --pf-radius-2xl: 1.5rem;
+  --pf-radius-full: 9999px;
+  
+  /* ============================================================================
+     SHADOWS & GLOWS
+     ============================================================================ */
+  
+  --pf-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --pf-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --pf-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --pf-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  --pf-glow-primary: 0 0 20px var(--pf-primary-neon-glow);
+  --pf-glow-accent: 0 0 20px var(--pf-accent-red-glow);
+  --pf-glow-gold: 0 0 20px var(--pf-gold-glow);
+  
+  /* ============================================================================
+     ANIMATIONS
+     ============================================================================ */
+  
+  --pf-transition-fast: 150ms ease-in-out;
+  --pf-transition-normal: 220ms ease-in-out;
+  --pf-transition-slow: 300ms ease-in-out;
+  
+  /* ============================================================================
+     Z-INDEX
+     ============================================================================ */
+  
+  --pf-z-dropdown: 1000;
+  --pf-z-sticky: 1020;
+  --pf-z-fixed: 1030;
+  --pf-z-modal-backdrop: 1040;
+  --pf-z-modal: 1050;
+  --pf-z-popover: 1060;
+  --pf-z-tooltip: 1070;
+  --pf-z-toast: 1080;
+}
+
+/* ============================================================================
+   DARK RITUAL BASE STYLES
+   ============================================================================ */
+
+.pf-dark-ritual {
+  background: var(--pf-bg-primary);
+  color: var(--pf-text-primary);
+  font-family: var(--pf-font-ui);
+}
+
+/* ============================================================================
+   SACRED GEOMETRY - 8-POINT STAR
+   ============================================================================ */
+
+.pf-sacred-star {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.pf-sacred-star::before,
+.pf-sacred-star::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--pf-primary-neon);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.pf-sacred-star::after {
+  transform: translate(-50%, -50%) rotate(22.5deg);
+  border-color: var(--pf-gold);
+}
+
+/* ============================================================================
+   GLITCH EFFECTS
+   ============================================================================ */
+
+.pf-glitch {
+  position: relative;
+  overflow: hidden;
+}
+
+.pf-glitch::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--pf-accent-red);
+  animation: pf-glitch-1 0.3s infinite;
+}
+
+.pf-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--pf-primary-neon);
+  animation: pf-glitch-2 0.3s infinite;
+}
+
+@keyframes pf-glitch-1 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+@keyframes pf-glitch-2 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-2px, 2px); }
+  80% { transform: translate(-2px, -2px); }
+}
+
+/* ============================================================================
+   PULSE ANIMATIONS
+   ============================================================================ */
+
+.pf-pulse {
+  animation: pf-pulse 2s infinite;
+}
+
+@keyframes pf-pulse {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 0 0 var(--pf-primary-neon-glow);
+  }
+  50% { 
+    opacity: 0.8;
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+
+/* ============================================================================
+   LOADING DOTS
+   ============================================================================ */
+
+.pf-loading-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.pf-loading-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pf-primary-neon);
+  animation: pf-dot-bounce 1.4s infinite ease-in-out both;
+}
+
+.pf-loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.pf-loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes pf-dot-bounce {
+  0%, 80%, 100% { 
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-pulse,
+  .pf-glitch,
+  .pf-loading-dots span {
+    animation: none;
+  }
+}
+
+.pf-focus-ring:focus {
+  outline: 2px solid var(--pf-primary-neon);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+.pf-text-display { font-family: var(--pf-font-display); }
+.pf-text-ui { font-family: var(--pf-font-ui); }
+.pf-text-mono { font-family: var(--pf-font-mono); }
+
+.pf-bg-glass {
+  background: rgba(10, 5, 20, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pf-border-glow {
+  border: 1px solid var(--pf-primary-neon);
+  box-shadow: var(--pf-glow-primary);
+}
+
+.pf-hover-glow:hover {
+  box-shadow: var(--pf-glow-primary);
+  transition: box-shadow var(--pf-transition-normal);
+}

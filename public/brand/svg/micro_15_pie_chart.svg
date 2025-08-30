@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .pie-segment {
+      fill: none;
+      stroke-width: 40;
+      stroke-linecap: butt;
+    }
+
+    .segment1 {
+      stroke: var(--gold);
+      stroke-dasharray: 0 314;
+      transform: rotate(-90deg);
+      transform-origin: center;
+    }
+
+    .segment2 {
+      stroke: var(--red);
+      stroke-dasharray: 0 314;
+      transform: rotate(-90deg);
+      transform-origin: center;
+    }
+
+    .segment3 {
+      stroke: var(--white);
+      stroke-dasharray: 0 314;
+      transform: rotate(-90deg);
+      transform-origin: center;
+    }
+
+    .center-circle {
+      fill: var(--black);
+      stroke: var(--gray);
+      stroke-width: 1;
+    }
+
+    .label {
+      font-family: monospace;
+      font-size: 12px;
+      fill: var(--white);
+    }
+
+    /* Animații pentru segmente */
+    @keyframes fillSegment1 {
+      0% { stroke-dasharray: 0 314; }
+      100% { stroke-dasharray: 157 314; }
+    }
+
+    @keyframes fillSegment2 {
+      0% { stroke-dasharray: 0 314; }
+      100% { stroke-dasharray: 94 314; }
+    }
+
+    @keyframes fillSegment3 {
+      0% { stroke-dasharray: 0 314; }
+      100% { stroke-dasharray: 63 314; }
+    }
+
+    /* Aplicarea animațiilor */
+    #segment1 {
+      animation: fillSegment1 2s forwards;
+    }
+
+    #segment2 {
+      animation: fillSegment2 2s forwards 2s;
+    }
+
+    #segment3 {
+      animation: fillSegment3 2s forwards 4s;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #segment1, #segment2, #segment3 {
+        animation: none;
+      }
+      #segment1 {
+        stroke-dasharray: 157 314;
+      }
+      #segment2 {
+        stroke-dasharray: 94 314;
+      }
+      #segment3 {
+        stroke-dasharray: 63 314;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #segment1,
+    .container:hover #segment2,
+    .container:hover #segment3 {
+      animation-duration: 1s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Pie chart -->
+    <circle id="segment1" class="pie-segment segment1" cx="128" cy="128" r="50" />
+    <circle id="segment2" class="pie-segment segment2" cx="128" cy="128" r="50" />
+    <circle id="segment3" class="pie-segment segment3" cx="128" cy="128" r="50" />
+    <circle class="center-circle" cx="128" cy="128" r="30" />
+    
+    <!-- Legende -->
+    <rect x="180" y="100" width="10" height="10" fill="var(--gold)" />
+    <text class="label" x="195" y="110">50%</text>
+    
+    <rect x="180" y="120" width="10" height="10" fill="var(--red)" />
+    <text class="label" x="195" y="130">30%</text>
+    
+    <rect x="180" y="140" width="10" height="10" fill="var(--white)" />
+    <text class="label" x="195" y="150">20%</text>
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">15</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

@@ -137,12 +137,28 @@ export async function POST(request: NextRequest) {
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription, supabase)
         break
       
+      case 'customer.subscription.paused':
+        await handleSubscriptionPaused(event.data.object as Stripe.Subscription, supabase)
+        break
+      
+      case 'customer.subscription.resumed':
+        await handleSubscriptionResumed(event.data.object as Stripe.Subscription, supabase)
+        break
+      
       case 'invoice.payment_succeeded':
         await handlePaymentSucceeded(event.data.object as Stripe.Invoice, supabase)
         break
       
       case 'invoice.payment_failed':
         await handlePaymentFailed(event.data.object as Stripe.Invoice, supabase)
+        break
+      
+      case 'invoice.payment_action_required':
+        await handlePaymentActionRequired(event.data.object as Stripe.Invoice, supabase)
+        break
+      
+      case 'customer.subscription.trial_will_end':
+        await handleTrialWillEnd(event.data.object as Stripe.Subscription, supabase)
         break
       
       default:
@@ -388,6 +404,90 @@ async function getPlanCodeFromSubscription(subscription: Stripe.Subscription): P
     console.error('❌ Error getting plan code from subscription:', error)
     return null
   }
+}
+
+// Handle subscription paused
+async function handleSubscriptionPaused(subscription: Stripe.Subscription, supabase: any) {
+  console.log(`⏸️ Processing subscription pause: ${subscription.id}`)
+  
+  // Update subscription status to paused
+  await supabase
+    .from('subscriptions')
+    .update({ 
+      status: 'paused',
+      updated_at: new Date().toISOString()
+    })
+    .eq('stripe_subscription_id', subscription.id)
+  
+  console.log(`✅ Subscription ${subscription.id} marked as paused`)
+}
+
+// Handle subscription resumed
+async function handleSubscriptionResumed(subscription: Stripe.Subscription, supabase: any) {
+  console.log(`▶️ Processing subscription resume: ${subscription.id}`)
+  
+  if (typeof subscription.customer === 'string') {
+    await processSubscription(subscription, subscription.customer, supabase)
+  } else {
+    await processSubscription(subscription, subscription.customer.id, supabase)
+  }
+}
+
+// Handle payment action required
+async function handlePaymentActionRequired(invoice: Stripe.Invoice, supabase: any) {
+  console.log(`⚠️ Processing payment action required for invoice ${invoice.id}`)
+  
+  // Check if invoice has subscription ID
+  const subscriptionId = (invoice as any).subscription
+  if (subscriptionId && typeof subscriptionId === 'string') {
+    // Update subscription status to past_due
+    await supabase
+      .from('subscriptions')
+      .update({ 
+        status: 'past_due',
+        updated_at: new Date().toISOString()
+      })
+      .eq('stripe_subscription_id', subscriptionId)
+    
+    console.log(`✅ Subscription ${subscriptionId} marked as past_due due to payment action required`)
+  }
+}
+
+// Handle trial will end
+async function handleTrialWillEnd(subscription: Stripe.Subscription, supabase: any) {
+  console.log(`⏰ Processing trial will end for subscription: ${subscription.id}`)
+  
+  // Get organization ID from customer metadata
+  const customerId = typeof subscription.customer === 'string' ? subscription.customer : subscription.customer.id
+  const customer = await stripe.customers.retrieve(customerId)
+  
+  if (customer.deleted) {
+    console.error('❌ Customer deleted')
+    return
+  }
+
+  const orgId = customer.metadata?.org_id
+  if (!orgId) {
+    console.error('❌ Customer missing org_id metadata')
+    return
+  }
+
+  // Log trial ending event for analytics
+  await supabase
+    .from('webhook_events')
+    .insert({
+      stripe_event_id: `trial_ending_${subscription.id}`,
+      event_type: 'trial_will_end',
+      processed_at: new Date().toISOString(),
+      status: 'success',
+      metadata: {
+        org_id: orgId,
+        subscription_id: subscription.id,
+        trial_end: subscription.trial_end
+      }
+    })
+  
+  console.log(`✅ Trial ending event logged for org ${orgId}`)
 }
 
 // Apply plan entitlements using RPC function

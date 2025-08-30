@@ -3,15 +3,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Design Tokens - PromptForge v3 */
+/* Design Tokens - PromptForge v3.1 */
 :root {
-  /* Base colors */
+  /* PFv3.1 Design System - Dark Ritual Palette */
+  --bg: #05010A;
+  --brand: #00FF7F;
+  --accent: #FF2F2F;
+  --gold: #CDA434;
+  --surface: #0B0712;
+  --surfaceAlt: #100A18;
+  --border: #2A2036;
+  --text: #F5F7FA;
+  --textMuted: #C9CDD4;
+  --focus: #7FFFD4;
+  
+  /* Existing v3 colors - MAINTAINED */
   --color-bg: #0E0E0E;
   --color-fg: #EDEDED;
   --color-card: #111316;
   --color-muted: #6B7280;
   
-  /* Accent system */
+  /* Accent system - KEEPING GOLD THEME */
   --color-accent: #D1A954;
   --color-accent-hover: #B8944A;
   --color-accent-contrast: #0E0E0E;
@@ -31,45 +43,44 @@
   --color-glass: rgba(17, 19, 22, 0.95);
   --color-glass-border: rgba(255, 255, 255, 0.1);
   
-  /* Typography */
+  /* Typography - PFv4 Fonts */
+  --font-family-display: 'Cinzel', serif;
+  --font-family-ui: 'Space Grotesk', ui-sans-serif;
+  --font-family-mono: 'JetBrains Mono', ui-monospace;
+  
+  /* Legacy fonts for compatibility */
   --font-family-sans: 'Montserrat', system-ui, sans-serif;
   --font-family-serif: 'Open Sans', system-ui, sans-serif;
-  --font-family-mono: 'JetBrains Mono', Consolas, monospace;
   
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 0.75rem;
-  --spacing-lg: 1rem;
-  --spacing-xl: 1.5rem;
-  --spacing-2xl: 2rem;
-  --spacing-3xl: 3rem;
-  --spacing-4xl: 4rem;
+  /* Spacing - PFv4 System */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
   
-  /* Border radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
-  --radius-full: 9999px;
+  /* Border radius - PFv4 System */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
   
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
-  --shadow-glass: 0 10px 30px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 20px rgba(209, 169, 84, 0.3);
+  /* Shadows - PFv3.1 System */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.25);
+  --shadow-md: 0 8px 24px rgba(0,0,0,.35);
+  --shadow-lg: 0 20px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
+  --shadow-glow: 0 0 0 2px rgba(0,255,127,.2), 0 0 24px rgba(0,255,127,.35);
+  --shadow-rune: 0 0 0 1px rgba(205,164,52,.3), 0 0 12px rgba(205,164,52,.2);
   
-  /* Animation */
-  --duration-fast: 150ms;
-  --duration-normal: 200ms;
-  --duration-slow: 300ms;
-  --easing-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Animation - PFv3.1 System */
+  --duration-fast: 120ms;
+  --duration-normal: 220ms;
+  --duration-slow: 360ms;
+  --easing-inout: cubic-bezier(.2,.6,.2,1);
 }
 
 :root {
@@ -746,24 +757,171 @@
   }
 }
 
+/* PFv3.1 Graphic Motifs & Executable Rune System */
+.rune-executable {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: all var(--duration-normal) var(--easing-inout);
+}
+
+.rune-executable::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(45deg, var(--gold), var(--brand));
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--easing-inout);
+}
+
+.rune-executable:hover::before {
+  opacity: 0.1;
+}
+
+.rune-executable:hover {
+  box-shadow: var(--shadow-rune);
+  transform: scale(1.05);
+}
+
+.rune-pulse {
+  animation: rune-pulse 2s infinite;
+}
+
+.rune-glitch {
+  animation: rune-glitch 0.3s ease-in-out;
+}
+
+.rune-loading {
+  position: relative;
+}
+
+.rune-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--brand);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: rune-dot 1.5s infinite;
+}
+
+@keyframes rune-pulse {
+  0%, 100% { 
+    box-shadow: var(--shadow-rune);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 0 2px rgba(0,255,127,.4), 0 0 32px rgba(0,255,127,.5);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes rune-glitch {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+}
+
+@keyframes rune-dot {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* Glitch Effects */
+.glitch-subtle {
+  position: relative;
+}
+
+.glitch-subtle::before,
+.glitch-subtle::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch-subtle::before {
+  color: var(--brand);
+  animation: glitch-1 0.3s infinite;
+}
+
+.glitch-subtle::after {
+  color: var(--accent);
+  animation: glitch-2 0.3s infinite;
+}
+
+@keyframes glitch-1 {
+  0%, 100% { transform: translate(0); opacity: 0; }
+  20% { transform: translate(-1px, 1px); opacity: 0.1; }
+  40% { transform: translate(1px, -1px); opacity: 0.1; }
+  60% { transform: translate(-1px, -1px); opacity: 0.1; }
+  80% { transform: translate(1px, 1px); opacity: 0.1; }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { transform: translate(0); opacity: 0; }
+  15% { transform: translate(1px, -1px); opacity: 0.1; }
+  35% { transform: translate(-1px, 1px); opacity: 0.1; }
+  55% { transform: translate(1px, 1px); opacity: 0.1; }
+  75% { transform: translate(-1px, -1px); opacity: 0.1; }
+}
+
+/* Sacred Geometry - 8-point Star */
+.star-8 {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.star-8::before,
+.star-8::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--gold);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.star-8::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
 /* Skip Link - Accessibility */
 .skip-link {
   position: absolute;
   top: -40px;
   left: 6px;
-  background: #d1a954;
-  color: #000;
+  background: var(--gold);
+  color: var(--bg);
   padding: 8px;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   z-index: 1000;
-  transition: top 0.3s;
+  transition: top var(--duration-normal);
 }
 
 .skip-link:focus {
   top: 6px;
-  outline: 2px solid #fbbf24;
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
 

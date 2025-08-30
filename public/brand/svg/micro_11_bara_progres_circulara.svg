@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .progress-bg {
+      fill: none;
+      stroke: var(--gray);
+      stroke-width: 8;
+    }
+
+    .progress-bar {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 314;
+      transform: rotate(-90deg);
+      transform-origin: center;
+    }
+
+    .progress-text {
+      font-family: monospace;
+      font-size: 24px;
+      fill: var(--white);
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    /* Animații pentru bară de progres */
+    @keyframes fillCircle {
+      0% { 
+        stroke-dashoffset: 314;
+      }
+      100% { 
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes countPercent {
+      0% { 
+        content: "0%";
+      }
+      10% { 
+        content: "10%";
+      }
+      20% { 
+        content: "20%";
+      }
+      30% { 
+        content: "30%";
+      }
+      40% { 
+        content: "40%";
+      }
+      50% { 
+        content: "50%";
+      }
+      60% { 
+        content: "60%";
+      }
+      70% { 
+        content: "70%";
+      }
+      80% { 
+        content: "80%";
+      }
+      90% { 
+        content: "90%";
+      }
+      100% { 
+        content: "100%";
+      }
+    }
+
+    /* Aplicarea animațiilor */
+    #progress-bar {
+      animation: fillCircle 3s linear infinite;
+    }
+
+    #progress-text::after {
+      content: "0%";
+      animation: countPercent 3s linear infinite;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #progress-bar, #progress-text::after {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #progress-bar {
+      animation-duration: 1.5s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Bară de progres circulară -->
+    <circle class="progress-bg" cx="128" cy="128" r="50" />
+    <circle id="progress-bar" class="progress-bar" cx="128" cy="128" r="50" />
+    
+    <!-- Text procentaj -->
+    <text id="progress-text" class="progress-text" x="128" y="128">
+      <tspan id="percent">0%</tspan>
+    </text>
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">11</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+
+  <script type="text/javascript">
+    <![CDATA[
+      // Script pentru actualizarea textului procentajului
+      const progressBar = document.getElementById('progress-bar');
+      const percentText = document.getElementById('percent');
+      
+      function updatePercent() {
+        const offset = parseInt(getComputedStyle(progressBar).strokeDashoffset);
+        const max = 314;
+        const percent = Math.round(((max - offset) / max) * 100);
+        percentText.textContent = percent + '%';
+        requestAnimationFrame(updatePercent);
+      }
+      
+      updatePercent();
+    ]]>
+  </script>
+</svg>
+

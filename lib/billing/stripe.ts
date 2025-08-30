@@ -1,5 +1,12 @@
 import Stripe from 'stripe'
 import { z } from 'zod'
+import { 
+  PLAN_CODES, 
+  type PlanCode, 
+  PLAN_ENTITLEMENTS, 
+  STRIPE_PRICE_IDS,
+  validateStripePriceIds 
+} from './plans'
 
 // Environment validation schema
 const envSchema = z.object({
@@ -15,19 +22,16 @@ const env = envSchema.parse({
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 })
 
+// Validate Stripe price IDs are configured
+validateStripePriceIds()
+
 // Initialize Stripe client
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-07-30.basil'
 })
 
-// Plan codes enum
-export const PLAN_CODES = {
-  PILOT: 'pilot',
-  PRO: 'pro',
-  ENTERPRISE: 'enterprise'
-} as const
-
-export type PlanCode = typeof PLAN_CODES[keyof typeof PLAN_CODES]
+// Re-export plan codes and types for backward compatibility
+export { PLAN_CODES, type PlanCode }
 
 // Billing intervals
 export const BILLING_INTERVALS = {
@@ -37,48 +41,8 @@ export const BILLING_INTERVALS = {
 
 export type BillingInterval = typeof BILLING_INTERVALS[keyof typeof BILLING_INTERVALS]
 
-// Plan entitlements mapping
-export const PLAN_ENTITLEMENTS: Record<PlanCode, Record<string, boolean>> = {
-  [PLAN_CODES.PILOT]: {
-    canUseAllModules: false,
-    canExportMD: true,
-    canExportPDF: false,
-    canExportJSON: false,
-    canUseGptTestReal: false,
-    hasCloudHistory: false,
-    hasEvaluatorAI: false,
-    hasAPI: false,
-    canExportBundleZip: false,
-    hasWhiteLabel: false,
-    hasSeatsGT1: false
-  },
-  [PLAN_CODES.PRO]: {
-    canUseAllModules: true,
-    canExportMD: true,
-    canExportPDF: true,
-    canExportJSON: true,
-    canUseGptTestReal: true,
-    hasCloudHistory: true,
-    hasEvaluatorAI: true,
-    hasAPI: false,
-    canExportBundleZip: false,
-    hasWhiteLabel: false,
-    hasSeatsGT1: false
-  },
-  [PLAN_CODES.ENTERPRISE]: {
-    canUseAllModules: true,
-    canExportMD: true,
-    canExportPDF: true,
-    canExportJSON: true,
-    canUseGptTestReal: true,
-    hasCloudHistory: true,
-    hasEvaluatorAI: true,
-    hasAPI: true,
-    canExportBundleZip: true,
-    hasWhiteLabel: true,
-    hasSeatsGT1: true
-  }
-}
+// Re-export plan entitlements for backward compatibility
+export { PLAN_ENTITLEMENTS }
 
 // Price lookup by plan code and interval
 export async function getPriceByPlanAndInterval(

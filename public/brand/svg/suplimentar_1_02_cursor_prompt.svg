@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cursor Prompt - un cursor care tastează un singur cuvânt, apoi șterge, apoi tastează altul -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru text și cursor -->
+  <g font-family="'JetBrains Mono', monospace" font-weight="400">
+    <!-- Textul "Prompt" -->
+    <text id="text-prompt" x="256" y="256" font-size="32" fill="#FFD700" text-anchor="middle" opacity="0">
+      PROMPT
+      <animate
+        attributeName="opacity"
+        values="0;1;1;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0"
+        keyTimes="0;0.05;0.1;0.15;0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7;0.75;0.8;0.85;0.9;0.95;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </text>
+    
+    <!-- Textul "System" -->
+    <text id="text-system" x="256" y="256" font-size="32" fill="#E0E0E0" text-anchor="middle" opacity="0">
+      SYSTEM
+      <animate
+        attributeName="opacity"
+        values="0;0;0;0;0;0;0;0;0;0;0;1;1;1;1;1;0;0;0;0;0"
+        keyTimes="0;0.05;0.1;0.15;0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7;0.75;0.8;0.85;0.9;0.95;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </text>
+    
+    <!-- Textul "Forge" -->
+    <text id="text-forge" x="256" y="256" font-size="32" fill="#FF0000" text-anchor="middle" opacity="0">
+      FORGE
+      <animate
+        attributeName="opacity"
+        values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;1;1"
+        keyTimes="0;0.05;0.1;0.15;0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7;0.75;0.8;0.85;0.9;0.95;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </text>
+    
+    <!-- Cursor vertical pulsating -->
+    <rect id="cursor" x="320" y="236" width="3" height="32" fill="#E0E0E0">
+      <!-- Animație pentru poziția cursorului în funcție de text -->
+      <animate
+        attributeName="x"
+        values="216;232;248;264;280;296;296;280;264;248;232;216;232;248;264;280;296;296;280;264;248;232;216;232;248;264;280"
+        keyTimes="0;0.05;0.1;0.15;0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7;0.75;0.8;0.85;0.9;0.95;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+      
+      <!-- Animație de pulsație pentru cursor -->
+      <animate
+        attributeName="opacity"
+        values="1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1"
+        keyTimes="0;0.05;0.1;0.15;0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7;0.75;0.8;0.85;0.9;0.95;1"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </rect>
+  </g>
+  
+  <!-- Efect de pulsație pentru cursor -->
+  <animate
+    xlink:href="#cursor"
+    attributeName="opacity"
+    values="1;0;1;0;1"
+    keyTimes="0;0.4;0.6;0.8;1"
+    dur="1s"
+    repeatCount="indefinite"/>
+  
+  <!-- Linie de terminal minimalistă -->
+  <rect x="156" y="216" width="200" height="80" stroke="#5a5a5a" stroke-width="2" fill="none" rx="4" ry="4"/>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Cursor Prompt</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un cursor care tastează un singur cuvânt, apoi șterge, apoi tastează altul („Prompt → System → Forge"). Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

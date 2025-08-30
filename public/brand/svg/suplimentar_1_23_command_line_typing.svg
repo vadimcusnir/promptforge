@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Command Line Typing - Un prompt de comandă care tastează automat comenzi -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru terminal -->
+  <rect x="96" y="176" width="320" height="160" fill="#000000" stroke="#5a5a5a" stroke-width="2" rx="4" ry="4"/>
+  
+  <!-- Bara de titlu pentru terminal -->
+  <rect x="96" y="176" width="320" height="24" fill="#5a5a5a" rx="4" ry="4"/>
+  <text x="256" y="192" font-family="'JetBrains Mono', monospace" font-size="12" fill="#000000" text-anchor="middle" dominant-baseline="middle">TERMINAL</text>
+  
+  <!-- Butoane de control pentru terminal (decorative) -->
+  <circle cx="108" cy="188" r="6" fill="#FF0000"/>
+  <circle cx="124" cy="188" r="6" fill="#FFD700"/>
+  <circle cx="140" cy="188" r="6" fill="#E0E0E0"/>
+  
+  <!-- Prompt de terminal și text -->
+  <text id="prompt-line1" x="106" y="216" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0">
+    <tspan id="prompt1">$ </tspan>
+    <tspan id="command1" fill="#FFD700">
+      <!-- Animație pentru tastarea primei comenzi -->
+      <animate
+        attributeName="textContent"
+        values="f;fo;for;forg;forge;forge ;forge -;forge --;forge --i;forge --in;forge --ini;forge --init"
+        keyTimes="0;0.04;0.08;0.12;0.16;0.2;0.24;0.28;0.32;0.36;0.4;0.44"
+        dur="6s"
+        repeatCount="indefinite"/>
+    </tspan>
+  </text>
+  
+  <!-- Rezultatul primei comenzi -->
+  <text id="result-line1" x="106" y="236" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" opacity="0">
+    Initializing forge environment...
+    <animate
+      attributeName="opacity"
+      values="0;0;1"
+      keyTimes="0;0.44;0.48"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="result-line2" x="106" y="256" font-family="'JetBrains Mono', monospace" font-size="14" fill="#00FF00" opacity="0">
+    Success! Environment ready.
+    <animate
+      attributeName="opacity"
+      values="0;0;0;1"
+      keyTimes="0;0.44;0.52;0.56"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- A doua linie de prompt -->
+  <text id="prompt-line2" x="106" y="276" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;1"
+      keyTimes="0;0.44;0.52;0.56;0.6"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <tspan id="prompt2">$ </tspan>
+    <tspan id="command2" fill="#FFD700">
+      <!-- Animație pentru tastarea celei de-a doua comenzi -->
+      <animate
+        attributeName="textContent"
+        values="p;pr;pro;prom;promp;prompt;prompt ;prompt -;prompt --;prompt --g;prompt --ge;prompt --gen;prompt --gene;prompt --gener;prompt --genera;prompt --generat;prompt --generate"
+        keyTimes="0;0.04;0.08;0.12;0.16;0.2;0.24;0.28;0.32;0.36;0.4;0.44;0.48;0.52;0.56;0.6;0.64"
+        begin="3.6s"
+        dur="6s"
+        repeatCount="indefinite"/>
+    </tspan>
+  </text>
+  
+  <!-- Rezultatul celei de-a doua comenzi -->
+  <text id="result-line3" x="106" y="296" font-family="'JetBrains Mono', monospace" font-size="14" fill="#E0E0E0" opacity="0">
+    Generating prompt...
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1"
+      keyTimes="0;0.44;0.48;0.52;0.56;0.6;0.64;0.68;0.72;0.76;0.8;0.84;0.88;0.92;0.96;0.98;0.99;1"
+      begin="3.6s"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="result-line4" x="106" y="316" font-family="'JetBrains Mono', monospace" font-size="14" fill="#00FF00" opacity="0">
+    Success! Prompt generated.
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1"
+      keyTimes="0;0.44;0.48;0.52;0.56;0.6;0.64;0.68;0.72;0.76;0.8;0.84;0.88;0.92;0.96;0.98;0.99;0.995;1"
+      begin="3.6s"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Cursor care clipește -->
+  <rect id="cursor" x="120" y="206" width="8" height="2" fill="#E0E0E0">
+    <!-- Animație pentru clipirea cursorului -->
+    <animate
+      attributeName="opacity"
+      values="1;0;1;0;1"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="1s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație pentru poziția cursorului pe prima linie -->
+    <animate
+      attributeName="x"
+      values="120;132;144;156;168;180;192;204;216;228;240;252;252"
+      keyTimes="0;0.04;0.08;0.12;0.16;0.2;0.24;0.28;0.32;0.36;0.4;0.44;0.48"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație pentru poziția cursorului pe a doua linie -->
+    <animate
+      attributeName="y"
+      values="206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;206;266;266;266;266;266;266;266;266;266;266;266;266;266;266;266;266;266;266"
+      keyTimes="0;0.02;0.04;0.06;0.08;0.1;0.12;0.14;0.16;0.18;0.2;0.22;0.24;0.26;0.28;0.3;0.32;0.34;0.36;0.38;0.4;0.42;0.44;0.46;0.48;0.5;0.52;0.54;0.56;0.58;0.6;0.62;0.64;0.66;0.68;0.7;0.72;0.74;0.76;0.78;0.8;0.82;0.84;0.86;0.88;0.9;0.92;0.94"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație pentru poziția cursorului pe a doua linie (continuare) -->
+    <animate
+      attributeName="x"
+      values="252;252;252;252;252;252;252;252;252;252;252;252;120;132;144;156;168;180;192;204;216;228;240;252;264;276;288;300;312;324;336;348;360;372;384;396;408"
+      keyTimes="0;0.02;0.04;0.06;0.08;0.1;0.12;0.14;0.16;0.18;0.2;0.22;0.6;0.64;0.68;0.72;0.76;0.8;0.84;0.88;0.92;0.96;0.98;0.99;0.991;0.992;0.993;0.994;0.995;0.996;0.997;0.998;0.999;0.9991;0.9992;0.9993;0.9994"
+      begin="3.6s"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Text "COMMAND LINE" -->
+  <text x="256" y="376" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">COMMAND LINE</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Command Line Typing</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un prompt de comandă care tastează automat comenzi precum "forge --init", "prompt --generate", urmat de "success". Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

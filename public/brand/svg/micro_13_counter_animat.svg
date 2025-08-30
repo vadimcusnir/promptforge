@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="128" viewBox="0 0 256 128" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @font-face {
+      font-family: 'JetBrainsMono';
+      font-style: normal;
+      font-weight: 300;
+      src: url('data:font/woff2;base64,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');
+    }
+
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .counter-bg {
+      fill: var(--gray);
+      stroke: var(--white);
+      stroke-width: 1;
+    }
+
+    .counter-text {
+      font-family: 'JetBrainsMono', monospace;
+      font-size: 36px;
+      fill: var(--gold);
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    .label {
+      font-family: 'JetBrainsMono', monospace;
+      font-size: 14px;
+      fill: var(--white);
+      text-anchor: middle;
+    }
+
+    /* Animații pentru counter */
+    @keyframes countUp {
+      0% { content: "0"; }
+      10% { content: "1"; }
+      20% { content: "2"; }
+      30% { content: "3"; }
+      40% { content: "4"; }
+      50% { content: "5"; }
+      60% { content: "6"; }
+      70% { content: "7"; }
+      80% { content: "8"; }
+      90% { content: "9"; }
+      100% { content: "10"; }
+    }
+
+    @keyframes pulseBg {
+      0%, 100% { 
+        fill: var(--gray);
+        stroke: var(--white);
+      }
+      50% { 
+        fill: var(--black);
+        stroke: var(--gold);
+      }
+    }
+
+    /* Aplicarea animațiilor */
+    #counter-bg {
+      animation: pulseBg 5s infinite;
+    }
+
+    #counter-text::after {
+      content: "0";
+      animation: countUp 5s steps(10) infinite;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #counter-bg, #counter-text::after {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #counter-bg,
+    .container:hover #counter-text::after {
+      animation-duration: 2.5s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Counter -->
+    <rect id="counter-bg" class="counter-bg" x="78" y="44" width="100" height="60" rx="4" ry="4" />
+    <text id="counter-text" class="counter-text" x="128" y="74">
+      <tspan id="count">0</tspan>
+    </text>
+    
+    <!-- Etichetă -->
+    <text class="label" x="128" y="114">COUNTER</text>
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">13</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="252" height="124" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+
+  <script type="text/javascript">
+    <![CDATA[
+      // Script pentru actualizarea counter-ului
+      const countText = document.getElementById('count');
+      let currentCount = 0;
+      
+      function updateCount() {
+        currentCount = (currentCount + 1) % 11;
+        countText.textContent = currentCount;
+        setTimeout(updateCount, 500);
+      }
+      
+      updateCount();
+    ]]>
+  </script>
+</svg>
+

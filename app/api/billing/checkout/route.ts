@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { config, isServiceAvailable } from "@/lib/config"
+import { RateLimiter, RATE_LIMITS } from "@/lib/rate-limit"
 
 // Request schema validation
 const checkoutRequestSchema = z.object({
@@ -10,8 +11,25 @@ const checkoutRequestSchema = z.object({
   cancelUrl: z.string().url('Invalid cancel URL').optional()
 })
 
+// Rate limiting for checkout requests
+const checkoutLimiter = new RateLimiter()
+
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const clientId = request.ip || 'unknown'
+    const rateLimitResult = checkoutLimiter.check(clientId, {
+      windowMs: 60 * 1000, // 1 minute
+      maxRequests: 10, // 10 requests per minute
+      message: 'Rate limit exceeded. Please try again later.'
+    })
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. Please try again later.' },
+        { status: 429 }
+      )
+    }
+
     // Check if Stripe is configured for P0 launch
     if (!isServiceAvailable('hasStripe')) {
       return NextResponse.json(

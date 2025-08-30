@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="256" viewBox="0 0 512 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .axis {
+      fill: none;
+      stroke: var(--gray);
+      stroke-width: 1;
+    }
+
+    .bar {
+      fill: var(--gold);
+      height: 0;
+    }
+
+    .label {
+      font-family: monospace;
+      font-size: 12px;
+      fill: var(--white);
+      text-anchor: middle;
+    }
+
+    .value {
+      font-family: monospace;
+      font-size: 10px;
+      fill: var(--white);
+      text-anchor: middle;
+    }
+
+    /* Animații pentru bare */
+    @keyframes growBar1 {
+      0%, 100% { height: 20px; }
+      50% { height: 120px; }
+    }
+
+    @keyframes growBar2 {
+      0%, 100% { height: 40px; }
+      50% { height: 160px; }
+    }
+
+    @keyframes growBar3 {
+      0%, 100% { height: 60px; }
+      50% { height: 100px; }
+    }
+
+    @keyframes growBar4 {
+      0%, 100% { height: 80px; }
+      50% { height: 140px; }
+    }
+
+    @keyframes growBar5 {
+      0%, 100% { height: 100px; }
+      50% { height: 60px; }
+    }
+
+    /* Aplicarea animațiilor */
+    #bar1 {
+      animation: growBar1 4s infinite alternate;
+    }
+
+    #bar2 {
+      animation: growBar2 4s infinite alternate;
+    }
+
+    #bar3 {
+      animation: growBar3 4s infinite alternate;
+    }
+
+    #bar4 {
+      animation: growBar4 4s infinite alternate;
+    }
+
+    #bar5 {
+      animation: growBar5 4s infinite alternate;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .bar {
+        animation: none !important;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover .bar {
+      animation-duration: 2s !important;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Axe -->
+    <line class="axis" x1="60" y1="200" x2="452" y2="200" />
+    <line class="axis" x1="60" y1="200" x2="60" y2="40" />
+    
+    <!-- Bare -->
+    <rect id="bar1" class="bar" x="100" y="200" width="40" height="0" transform="translate(0,-20)" />
+    <rect id="bar2" class="bar" x="180" y="200" width="40" height="0" transform="translate(0,-40)" />
+    <rect id="bar3" class="bar" x="260" y="200" width="40" height="0" transform="translate(0,-60)" />
+    <rect id="bar4" class="bar" x="340" y="200" width="40" height="0" transform="translate(0,-80)" />
+    <rect id="bar5" class="bar" x="420" y="200" width="40" height="0" transform="translate(0,-100)" />
+    
+    <!-- Etichete -->
+    <text class="label" x="120" y="220">A</text>
+    <text class="label" x="200" y="220">B</text>
+    <text class="label" x="280" y="220">C</text>
+    <text class="label" x="360" y="220">D</text>
+    <text class="label" x="440" y="220">E</text>
+    
+    <!-- Valori -->
+    <text class="value" x="120" y="170">20%</text>
+    <text class="value" x="200" y="150">40%</text>
+    <text class="value" x="280" y="130">60%</text>
+    <text class="value" x="360" y="110">80%</text>
+    <text class="value" x="440" y="90">100%</text>
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">12</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="508" height="252" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

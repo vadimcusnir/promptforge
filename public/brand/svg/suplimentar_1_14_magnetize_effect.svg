@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Magnetize Effect - două linii paralele atrag o formă mică (pătrat), apoi o eliberează -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Linii magnetice paralele -->
+  <!-- Linia de sus -->
+  <rect id="magnet-top" x="156" y="176" width="200" height="10" fill="#FF0000">
+    <!-- Animație pentru pulsație magnetică -->
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FF0000;#FFD700;#FFD700;#FF0000"
+      keyTimes="0;0.3;0.5;0.7;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Linia de jos -->
+  <rect id="magnet-bottom" x="156" y="326" width="200" height="10" fill="#FF0000">
+    <!-- Animație pentru pulsație magnetică -->
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FF0000;#FFD700;#FFD700;#FF0000"
+      keyTimes="0;0.3;0.5;0.7;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Pătrat atras de magnet -->
+  <rect id="attracted-square" x="246" y="246" width="20" height="20" fill="#E0E0E0">
+    <!-- Animație pentru mișcarea pătratului -->
+    <animate
+      attributeName="y"
+      values="246;186;186;246;306;306;246"
+      keyTimes="0;0.3;0.5;0.6;0.7;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <!-- Animație pentru rotația pătratului -->
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Linii de câmp magnetic (vizibile când magnetul este activ) -->
+  <!-- Linii de câmp de sus -->
+  <line id="field-line-top-1" x1="176" y1="186" x2="176" y2="246" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-top-2" x1="216" y1="186" x2="216" y2="246" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-top-3" x1="256" y1="186" x2="256" y2="246" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-top-4" x1="296" y1="186" x2="296" y2="246" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-top-5" x1="336" y1="186" x2="336" y2="246" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linii de câmp de jos -->
+  <line id="field-line-bottom-1" x1="176" y1="326" x2="176" y2="266" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6;0.7;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-bottom-2" x1="216" y1="326" x2="216" y2="266" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6;0.7;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-bottom-3" x1="256" y1="326" x2="256" y2="266" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6;0.7;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-bottom-4" x1="296" y1="326" x2="296" y2="266" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6;0.7;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="field-line-bottom-5" x1="336" y1="326" x2="336" y2="266" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.5;0.5;0"
+      keyTimes="0;0.2;0.3;0.5;0.6;0.7;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efecte de pulsație pentru magneți -->
+  <!-- Pulsație pentru magnetul de sus -->
+  <rect id="magnet-top-pulse" x="156" y="176" width="200" height="10" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.3;0;0;0;0.3;0"
+      keyTimes="0;0.2;0.3;0.4;0.6;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Pulsație pentru magnetul de jos -->
+  <rect id="magnet-bottom-pulse" x="156" y="326" width="200" height="10" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.3;0;0"
+      keyTimes="0;0.5;0.5;0.6;0.6;0.7;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Efecte de particule pentru atracție -->
+  <!-- Particule pentru magnetul de sus -->
+  <circle id="particle-top-1" cx="196" cy="196" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.25;0.35;0.45"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="196;216;196"
+      keyTimes="0;0.35;0.45"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-top-2" cx="236" cy="196" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.27;0.37;0.47"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="196;216;196"
+      keyTimes="0;0.37;0.47"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-top-3" cx="276" cy="196" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.29;0.39;0.49"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="196;216;196"
+      keyTimes="0;0.39;0.49"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-top-4" cx="316" cy="196" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.31;0.41;0.51"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="196;216;196"
+      keyTimes="0;0.41;0.51"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particule pentru magnetul de jos -->
+  <circle id="particle-bottom-1" cx="196" cy="316" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.5;0.6;0.65;0.7;0.8;0.9"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="316;316;316;316;296;316"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-bottom-2" cx="236" cy="316" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.5;0.6;0.67;0.72;0.82;0.92"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="316;316;316;316;296;316"
+      keyTimes="0;0.5;0.6;0.72;0.82;0.92"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-bottom-3" cx="276" cy="316" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.5;0.6;0.69;0.74;0.84;0.94"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="316;316;316;316;296;316"
+      keyTimes="0;0.5;0.6;0.74;0.84;0.94"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="particle-bottom-4" cx="316" cy="316" r="2" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.5;0.6;0.71;0.76;0.86;0.96"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="cy"
+      values="316;316;316;316;296;316"
+      keyTimes="0;0.5;0.6;0.76;0.86;0.96"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Text "MAGNETIZE" -->
+  <text x="256" y="400" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">MAGNETIZE</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Magnetize Effect</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Două linii paralele atrag o formă mică (pătrat), apoi o eliberează. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

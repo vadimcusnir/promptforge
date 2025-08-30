@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="128" viewBox="0 0 1024 128" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --black: #000000;
+      --gold: #FFD700;
+      --red: #FF0000;
+      --white: #E0E0E0;
+      --gray: #5a5a5a;
+    }
+
+    /* Stiluri generale */
+    .background {
+      fill: var(--black);
+    }
+
+    .line {
+      fill: none;
+      stroke: var(--gray);
+      stroke-width: 1;
+      stroke-dasharray: 8, 8;
+    }
+
+    .dot {
+      fill: var(--gold);
+      r: 3;
+    }
+
+    /* Animații pentru linie și puncte */
+    @keyframes dashMove {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -32; }
+    }
+
+    @keyframes moveDot {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(1000px); }
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { r: 3; fill: var(--gold); }
+      50% { r: 5; fill: var(--white); }
+    }
+
+    /* Aplicarea animațiilor */
+    #separator-line {
+      animation: dashMove 10s infinite linear;
+    }
+
+    #dot1 {
+      animation: moveDot 10s infinite linear, pulseDot 1s infinite;
+    }
+
+    #dot2 {
+      animation: moveDot 10s infinite linear 3.33s, pulseDot 1s infinite 0.33s;
+    }
+
+    #dot3 {
+      animation: moveDot 10s infinite linear 6.66s, pulseDot 1s infinite 0.66s;
+    }
+
+    /* Suport pentru prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      #separator-line, #dot1, #dot2, #dot3 {
+        animation: none;
+      }
+    }
+
+    /* Interactivitate */
+    .container:hover #separator-line {
+      animation-duration: 5s;
+    }
+
+    .container:hover #dot1,
+    .container:hover #dot2,
+    .container:hover #dot3 {
+      animation-duration: 5s, 0.5s;
+    }
+  </style>
+
+  <!-- Fundal -->
+  <rect class="background" width="100%" height="100%" />
+
+  <!-- Container pentru interactivitate -->
+  <g class="container">
+    <!-- Linie de separare -->
+    <line id="separator-line" class="line" x1="12" y1="64" x2="1012" y2="64" />
+    
+    <!-- Puncte animate -->
+    <circle id="dot1" class="dot" cx="12" cy="64" r="3" />
+    <circle id="dot2" class="dot" cx="12" cy="64" r="3" />
+    <circle id="dot3" class="dot" cx="12" cy="64" r="3" />
+    
+    <!-- Etichetă -->
+    <text x="10" y="30" font-family="monospace" font-size="16" fill="var(--gold)">07</text>
+    
+    <!-- Border -->
+    <rect x="2" y="2" width="1020" height="124" fill="none" stroke="var(--gold)" stroke-width="1" />
+  </g>
+</svg>
+

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Spirala Cușniriană - un model de spirală cu semnificație simbolică specifică -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru spirală -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior (contur) -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Spirala Cușniriană (segmente) -->
+  <!-- Segment 1 -->
+  <path id="spiral-segment-1" d="M256 116 A140 140 0 0 1 396 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="440" stroke-dashoffset="440">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="440;0;0;0;0;0;0;0;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#FFD700;#FFD700;#FFD700;#FFD700;#FFD700;#FFD700;#E0E0E0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 2 -->
+  <path id="spiral-segment-2" d="M396 256 A140 140 0 0 1 256 396" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="440" stroke-dashoffset="440">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="440;440;0;0;0;0;0;0;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#FFD700;#FFD700;#FFD700;#FFD700;#FFD700;#FFD700;#E0E0E0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 3 -->
+  <path id="spiral-segment-3" d="M256 396 A140 140 0 0 1 116 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="440" stroke-dashoffset="440">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="440;440;440;0;0;0;0;0;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#FFD700;#FFD700;#FFD700;#FFD700;#FFD700;#E0E0E0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 4 -->
+  <path id="spiral-segment-4" d="M116 256 A140 140 0 0 1 256 116" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="440" stroke-dashoffset="440">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="440;440;440;440;0;0;0;0;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FFD700;#FFD700;#FFD700;#FFD700;#E0E0E0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Spirala interioară -->
+  <!-- Segment 5 -->
+  <path id="spiral-segment-5" d="M256 156 A100 100 0 0 1 356 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="314" stroke-dashoffset="314">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="314;314;314;314;314;0;0;0;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FF0000;#FF0000;#FF0000;#E0E0E0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 6 -->
+  <path id="spiral-segment-6" d="M356 256 A100 100 0 0 1 256 356" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="314" stroke-dashoffset="314">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="314;314;314;314;314;314;0;0;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FF0000;#FF0000;#E0E0E0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 7 -->
+  <path id="spiral-segment-7" d="M256 356 A100 100 0 0 1 156 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="314" stroke-dashoffset="314">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="314;314;314;314;314;314;314;0;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 8 -->
+  <path id="spiral-segment-8" d="M156 256 A100 100 0 0 1 256 156" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="314" stroke-dashoffset="314">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="314;314;314;314;314;314;314;314;0"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FF0000"
+      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Spirala centrală -->
+  <!-- Segment 9 -->
+  <path id="spiral-segment-9" d="M256 196 A60 60 0 0 1 316 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="188" stroke-dashoffset="188">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="188;188;188;188;188;188;188;188;188;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;1"
+      dur="8s"
+      begin="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FFD700"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;1"
+      dur="8s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 10 -->
+  <path id="spiral-segment-10" d="M316 256 A60 60 0 0 1 256 316" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="188" stroke-dashoffset="188">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="188;188;188;188;188;188;188;188;188;188;0"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1"
+      dur="8s"
+      begin="9s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FFD700"
+      keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1"
+      dur="8s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 11 -->
+  <path id="spiral-segment-11" d="M256 316 A60 60 0 0 1 196 256" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="188" stroke-dashoffset="188">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="188;188;188;188;188;188;188;188;188;188;188;0"
+      keyTimes="0;0.08;0.16;0.24;0.32;0.4;0.48;0.56;0.64;0.72;0.8;1"
+      dur="8s"
+      begin="10s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FFD700"
+      keyTimes="0;0.08;0.16;0.24;0.32;0.4;0.48;0.56;0.64;0.72;0.8;1"
+      dur="8s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 12 -->
+  <path id="spiral-segment-12" d="M196 256 A60 60 0 0 1 256 196" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="188" stroke-dashoffset="188">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="188;188;188;188;188;188;188;188;188;188;188;188;0"
+      keyTimes="0;0.07;0.14;0.21;0.28;0.35;0.42;0.49;0.56;0.63;0.7;0.77;1"
+      dur="8s"
+      begin="11s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#E0E0E0;#FFD700"
+      keyTimes="0;0.07;0.14;0.21;0.28;0.35;0.42;0.49;0.56;0.63;0.7;0.77;1"
+      dur="8s"
+      begin="11s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Centrul spiralei -->
+  <circle id="center" cx="256" cy="256" r="10" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="10;12;10;12;10"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru spirală -->
+  <circle id="pulse-effect" cx="256" cy="256" r="0" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="r"
+      values="0;140;0"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri care apar de-a lungul spiralei -->
+  <text id="symbol-1" x="396" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">∞
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0"
+      keyTimes="0;0.1;0.15;0.2"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-2" x="256" y="396" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">∆
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;1;0"
+      keyTimes="0;0.2;0.25;0.25;0.3;0.35"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-3" x="116" y="256" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">◯
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;1;0"
+      keyTimes="0;0.35;0.35;0.35;0.35;0.35;0.4;0.45"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <text id="symbol-4" x="256" y="116" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" opacity="0">□
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;1;0"
+      keyTimes="0;0.45;0.45;0.45;0.45;0.45;0.45;0.45;0.5;0.55"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Text "SPIRALA CUȘNIRIANĂ" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">SPIRALA CUȘNIRIANĂ</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Spirala Cușniriană</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un model de spirală cu semnificație simbolică specifică. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

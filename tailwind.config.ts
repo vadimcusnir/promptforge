@@ -18,39 +18,25 @@ const config = {
       },
     },
     extend: {
-      // Design tokens integration
+      // PFv3.1 Design System Colors
       colors: {
-        // Base colors
-        bg: {
-          primary: tokens.colors.bg,
-          secondary: tokens.colors.card,
-          glass: tokens.colors.glass,
-        },
-        
-        // Foreground colors
-        fg: {
-          primary: tokens.colors.fg,
-          secondary: tokens.colors.muted,
-        },
-        
-        // Accent colors (Gold theme)
-        accent: {
-          DEFAULT: tokens.colors.accent,
-          hover: tokens.colors.accentHover,
-          contrast: tokens.colors.accentContrast,
-        },
+        // PFv3.1 Brand Colors
+        bg: "#05010A",
+        brand: "#00FF7F", 
+        accent: "#FF2F2F",
+        gold: "#CDA434",
+        surface: "#0B0712",
+        surfaceAlt: "#100A18",
+        border: "#2A2036",
+        text: "#F5F7FA",
+        textMuted: "#C9CDD4",
+        focus: "#7FFFD4",
         
         // State colors
         success: tokens.colors.success,
         warning: tokens.colors.warning,
         error: tokens.colors.error,
         info: tokens.colors.info,
-        
-        // Border colors
-        border: {
-          DEFAULT: tokens.colors.border,
-          hover: tokens.colors.borderHover,
-        },
         
         // Legacy shadcn/ui colors for compatibility
         background: 'hsl(var(--background))',
@@ -88,13 +74,18 @@ const config = {
       // Z-index system
       zIndex: tokens.zIndex,
       
-      // Typography system
-      fontFamily: tokens.typography.fontFamily,
-      fontSize: tokens.typography.fontSize,
-      fontWeight: tokens.typography.fontWeight,
+      // PFv3.1 Typography System
+      fontFamily: {
+        display: ['Cinzel', 'serif'],
+        ui: ['Space Grotesk', 'ui-sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace'],
+      },
       
-      // Shadow system
-      boxShadow: tokens.shadow,
+      // PFv3.1 Shadow System
+      boxShadow: {
+        'glow': '0 0 0 2px rgba(0,255,127,.2), 0 0 24px rgba(0,255,127,.35)',
+        'rune': '0 0 0 1px rgba(205,164,52,.3), 0 0 12px rgba(205,164,52,.2)',
+      },
       
       // Transition system
       transitionDuration: {

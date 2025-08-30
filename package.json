@@ -27,6 +27,7 @@
     "test:optimizations": "node scripts/test-optimizations.js",
     "setup:billing": "node scripts/setup-billing.js",
     "setup:stripe": "node scripts/create-stripe-products.js",
+    "setup:stripe:production": "node scripts/setup-stripe-production.js",
     "check:config": "node scripts/check-config.js",
     "quick:setup": "node scripts/quick-setup.js",
     "seed:demo": "node scripts/seed-demo.js",

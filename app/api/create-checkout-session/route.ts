@@ -1,89 +1,124 @@
 import { NextRequest, NextResponse } from "next/server"
-import Stripe from "stripe"
+import { z } from "zod"
+import { requireAuth } from "@/lib/auth/server-auth"
+import { stripe } from "@/lib/billing/stripe"
+import { STRIPE_PRICE_IDS, PLAN_CODES, type PlanCode, getPlanMetadata } from "@/lib/billing/plans"
+import { RATE_LIMITS } from "@/lib/rate-limit"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-07-30.basil",
+// Request validation schema
+const checkoutRequestSchema = z.object({
+  planId: z.enum([PLAN_CODES.PILOT, PLAN_CODES.PRO, PLAN_CODES.ENTERPRISE]),
+  isAnnual: z.boolean(),
+  orgId: z.string().uuid().optional()
+})
+
+// Rate limiting for checkout requests
+const checkoutLimiter = new RateLimiter({
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 10, // 10 requests per minute
+  message: 'Rate limit exceeded. Please try again later.'
 })
 
 export async function POST(request: NextRequest) {
   try {
-    const { planId, isAnnual, userId } = await request.json()
-
-    // Validate plan
-    const plans = {
-      creator: {
-        monthly: { 
-          price: process.env.STRIPE_CREATOR_MONTHLY_PRICE_ID || "price_creator_monthly", 
-          amount: 1900 
-        }, // $19.00
-        annual: { 
-          price: process.env.STRIPE_CREATOR_ANNUAL_PRICE_ID || "price_creator_annual", 
-          amount: 19000 
-        }, // $190.00
-      },
-      pro: {
-        monthly: { 
-          price: process.env.STRIPE_PRO_MONTHLY_PRICE_ID || "price_pro_monthly", 
-          amount: 4900 
-        }, // $49.00
-        annual: { 
-          price: process.env.STRIPE_PRO_ANNUAL_PRICE_ID || "price_pro_annual", 
-          amount: 49000 
-        }, // $490.00
-      },
-      enterprise: {
-        monthly: { 
-          price: process.env.STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || "price_enterprise_monthly", 
-          amount: 29900 
-        }, // $299.00
-        annual: { 
-          price: process.env.STRIPE_ENTERPRISE_ANNUAL_PRICE_ID || "price_enterprise_annual", 
-          amount: 299000 
-        }, // $2990.00
-      },
+    // Apply rate limiting
+    const rateLimitResult = checkoutLimiter.check(request)
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: rateLimitResult.message || 'Rate limit exceeded. Please try again later.' },
+        { status: 429 }
+      )
     }
 
-    const plan = plans[planId as keyof typeof plans]
-    if (!plan) {
-      return NextResponse.json({ error: "Invalid plan" }, { status: 400 })
+    // Require authentication
+    const user = await requireAuth(request)
+    
+    // Parse and validate request body
+    const body = await request.json()
+    const { planId, isAnnual, orgId } = checkoutRequestSchema.parse(body)
+
+    // Get plan metadata
+    const planMetadata = getPlanMetadata(planId)
+    
+    // Skip checkout for pilot plan (free)
+    if (planId === PLAN_CODES.PILOT) {
+      return NextResponse.json({
+        success: true,
+        message: 'Pilot plan is free - no checkout required',
+        planId,
+        isAnnual,
+        userId: user.id
+      })
     }
 
-    const billingCycle = isAnnual ? "annual" : "monthly"
-    const priceData = plan[billingCycle as keyof typeof plan]
+    // Get price ID from environment variables (no fallbacks)
+    const priceIds = STRIPE_PRICE_IDS[planId]
+    const priceId = isAnnual ? priceIds.annual : priceIds.monthly
+    
+    if (!priceId) {
+      return NextResponse.json(
+        { error: `Price ID not configured for ${planId} ${isAnnual ? 'annual' : 'monthly'} plan` },
+        { status: 500 }
+      )
+    }
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: `${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan`,
-              description: `${billingCycle.charAt(0).toUpperCase() + billingCycle.slice(1)} subscription`,
-            },
-            unit_amount: priceData.amount,
-            recurring: {
-              interval: billingCycle === "annual" ? "year" : "month",
-            },
-          },
+          price: priceId,
           quantity: 1,
         },
       ],
       mode: "subscription",
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/thankyou?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing?canceled=true`,
       metadata: {
-        userId: userId || "anonymous",
+        userId: user.id,
+        orgId: orgId || user.id, // Use provided orgId or default to user.id
         planId,
-        billingCycle,
+        billingCycle: isAnnual ? 'annual' : 'monthly',
       },
-      customer_email: userId ? undefined : undefined, // Will be collected in checkout if no user
+      subscription_data: {
+        metadata: {
+          userId: user.id,
+          orgId: orgId || user.id,
+          planId,
+          billingCycle: isAnnual ? 'annual' : 'monthly',
+        }
+      },
+      customer_email: user.email,
+      allow_promotion_codes: true,
     })
 
-    return NextResponse.json({ sessionId: session.id, url: session.url })
+    console.log(`✅ Checkout session created for user ${user.id}, plan: ${planId}`)
+
+    return NextResponse.json({ 
+      success: true,
+      sessionId: session.id, 
+      url: session.url,
+      planId,
+      isAnnual,
+      userId: user.id
+    })
   } catch (error) {
     console.error("Stripe checkout error:", error)
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid request data', details: error.errors },
+        { status: 400 }
+      )
+    }
+    
+    if (error instanceof Error && error.message.includes('Authentication required')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+    
     return NextResponse.json(
       { error: "Failed to create checkout session" },
       { status: 500 }

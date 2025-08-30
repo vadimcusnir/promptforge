@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexa-Core Pulse - un hexagon împărțit în 6 segmente, fiecare pulsează pe rând -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Definirea centrului hexagonului -->
+  <defs>
+    <radialGradient id="segment-gradient" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0.2"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Hexagon exterior (contur) -->
+  <polygon points="256,136 346,181 346,331 256,376 166,331 166,181" 
+           fill="none" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linii de divizare pentru segmente -->
+  <line x1="256" y1="136" x2="256" y2="376" stroke="#5a5a5a" stroke-width="1"/>
+  <line x1="166" y1="181" x2="346" y2="331" stroke="#5a5a5a" stroke-width="1"/>
+  <line x1="166" y1="331" x2="346" y2="181" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Centrul hexagonului -->
+  <circle cx="256" cy="256" r="20" fill="#000000" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Segmentele hexagonului -->
+  <!-- Segment 1 (sus) -->
+  <path id="segment1" d="M256,136 L346,181 L256,256 Z" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 2 (dreapta sus) -->
+  <path id="segment2" d="M346,181 L346,331 L256,256 Z" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.2;0.3;0.4"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 3 (dreapta jos) -->
+  <path id="segment3" d="M346,331 L256,376 L256,256 Z" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.4;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 4 (jos) -->
+  <path id="segment4" d="M256,376 L166,331 L256,256 Z" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.6;0.6;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 5 (stânga jos) -->
+  <path id="segment5" d="M166,331 L166,181 L256,256 Z" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Segment 6 (stânga sus) -->
+  <path id="segment6" d="M166,181 L256,136 L256,256 Z" fill="#5a5a5a">
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FFD700;#5a5a5a"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de pulsație pentru segmentele active -->
+  <!-- Pulsație pentru segment 1 -->
+  <circle id="pulse1" cx="286" cy="191" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="5;8;5"
+      keyTimes="0;0.1;0.2"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pulsație pentru segment 2 -->
+  <circle id="pulse2" cx="316" cy="256" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.2;0.3;0.4"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="5;5;8;5"
+      keyTimes="0;0.2;0.3;0.4"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pulsație pentru segment 3 -->
+  <circle id="pulse3" cx="286" cy="321" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.4;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="5;5;5;8;5"
+      keyTimes="0;0.4;0.4;0.5;0.6"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pulsație pentru segment 4 -->
+  <circle id="pulse4" cx="226" cy="321" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.6;0.6;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="5;5;5;5;8;5"
+      keyTimes="0;0.6;0.6;0.6;0.7;0.8"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pulsație pentru segment 5 -->
+  <circle id="pulse5" cx="196" cy="256" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="5;5;5;5;5;8;5"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Pulsație pentru segment 6 -->
+  <circle id="pulse6" cx="226" cy="191" r="5" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="5;5;5;5;5;5;8;5"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Indicator central de activitate -->
+  <circle cx="256" cy="256" r="10" fill="#FF0000">
+    <animate
+      attributeName="r"
+      values="10;12;10"
+      keyTimes="0;0.5;1"
+      dur="1.5s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="opacity"
+      values="0.7;1;0.7"
+      keyTimes="0;0.5;1"
+      dur="1.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Hexa-Core Pulse</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un hexagon împărțit în 6 segmente, fiecare pulsează pe rând, ca un ciclu operațional. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

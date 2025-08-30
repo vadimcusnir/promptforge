@@ -1,389 +1,376 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { KPICard } from '@/components/dashboard/KPICard';
-import { TrendChart } from '@/components/dashboard/TrendChart';
-import { SLAAlerts } from '@/components/dashboard/SLAAlerts';
-import { PerformanceInsights } from '@/components/dashboard/PerformanceInsights';
-import { RunHistory } from '@/components/dashboard/RunHistory';
-import { useAuth } from '@/hooks/use-auth';
-import { RefreshCw, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react'
+import { NavBar } from '@/components/ui/navbar'
+import { TelemetryBadge } from '@/components/ui/telemetry-badge'
+import { cn } from '@/lib/utils'
 
-interface KPIMetrics {
-  pass_rate_pct: number;
-  sla_efficient_pct: number;
-  p95_score: number;
-  p95_tta: number;
-  total_runs: number;
-  successful_runs: number;
-  efficient_runs: number;
-  avg_score: number;
-  avg_tta: number;
-}
-
-interface TrendData {
-  dates: string[];
-  passRates: number[];
-  avgScores: number[];
-  avgTTAs: number[];
-  runCounts: number[];
-}
-
-interface SLAAlert {
-  type: 'warning' | 'critical';
-  message: string;
-  metric: string;
-  current: number;
-  threshold: number;
-}
-
-interface PerformanceInsight {
-  type: 'performance' | 'quality' | 'efficiency';
-  title: string;
-  description: string;
-  impact: 'low' | 'medium' | 'high';
-  recommendation: string;
+interface Run {
+  id: string
+  moduleId: string
+  moduleName: string
+  domain: string
+  version: string
+  status: 'completed' | 'running' | 'failed'
+  score?: number
+  duration?: number
+  createdAt: string
+  artifacts?: string[]
 }
 
 export default function DashboardPage() {
-  const { user, accessToken } = useAuth();
-  const orgId = user?.id; // Use user ID as orgId for now
-  const [metrics, setMetrics] = useState<KPIMetrics | null>(null);
-  const [trends, setTrends] = useState<TrendData | null>(null);
-  const [alerts, setAlerts] = useState<SLAAlert[]>([]);
-  const [insights, setInsights] = useState<PerformanceInsight[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [runs, setRuns] = useState<Run[]>([])
+  const [filteredRuns, setFilteredRuns] = useState<Run[]>([])
+  const [currentPlan] = useState<'free' | 'creator' | 'pro' | 'enterprise'>('free')
+  
+  // Filters
+  const [moduleFilter, setModuleFilter] = useState('all')
+  const [domainFilter, setDomainFilter] = useState('all')
+  const [dateFilter, setDateFilter] = useState('all')
+  const [versionFilter, setVersionFilter] = useState('all')
 
+  // Load runs
   useEffect(() => {
-    if (!orgId || !accessToken) return;
-    
-    fetchDashboardData();
-    
-    // Refresh data every 5 minutes
-    const interval = setInterval(fetchDashboardData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [orgId, accessToken]);
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const headers = {
-        'Authorization': `Bearer ${accessToken}`
-      };
-      
-      // Fetch KPI metrics
-      const metricsResponse = await fetch(`/api/dashboard/metrics?orgId=${orgId}`, { headers });
-      if (metricsResponse.ok) {
-        const metricsData = await metricsResponse.json();
-        setMetrics(metricsData);
+    const loadRuns = async () => {
+      try {
+        const response = await fetch('/api/runs')
+        if (response.ok) {
+          const data = await response.json()
+          setRuns(data.runs || [])
+          setFilteredRuns(data.runs || [])
+        }
+      } catch (error) {
+        console.error('Failed to load runs:', error)
+        // Fallback to demo data
+        const demoRuns = getDemoRuns()
+        setRuns(demoRuns)
+        setFilteredRuns(demoRuns)
       }
-      
-      // Fetch trend data
-      const trendsResponse = await fetch(`/api/dashboard/trends?orgId=${orgId}`, { headers });
-      if (trendsResponse.ok) {
-        const trendsData = await trendsResponse.json();
-        setTrends(trendsData.trends);
-      }
-      
-      // Fetch SLA alerts
-      const alertsResponse = await fetch(`/api/dashboard/alerts?orgId=${orgId}`, { headers });
-      if (alertsResponse.ok) {
-        const alertsData = await alertsResponse.json();
-        setAlerts(alertsData.alerts || []);
-      }
-      
-      // Fetch performance insights
-      const insightsResponse = await fetch(`/api/dashboard/insights?orgId=${orgId}`, { headers });
-      if (insightsResponse.ok) {
-        const insightsData = await insightsResponse.json();
-        setInsights(insightsData.insights || []);
-      }
-      
-    } catch (err) {
-      setError('Failed to fetch dashboard data');
-      console.error('Dashboard data fetch error:', err);
-    } finally {
-      setLoading(false);
     }
-  };
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    await fetchDashboardData();
-    setIsRefreshing(false);
-  };
+    loadRuns()
+  }, [])
 
-  const retryDataLoad = () => {
-    setError(null);
-    fetchDashboardData();
-  };
+  // Apply filters
+  useEffect(() => {
+    let filtered = runs
 
-  // Show loading state while checking authentication
-  if (!user || !accessToken) {
-    return (
-      <div className="container mx-auto p-6">
-        <Alert>
-          <AlertTitle>Authentication Required</AlertTitle>
-          <AlertDescription>Please log in to access the dashboard.</AlertDescription>
-        </Alert>
-      </div>
-    );
+    if (moduleFilter !== 'all') {
+      filtered = filtered.filter(run => run.moduleId === moduleFilter)
+    }
+
+    if (domainFilter !== 'all') {
+      filtered = filtered.filter(run => run.domain === domainFilter)
+    }
+
+    if (versionFilter !== 'all') {
+      filtered = filtered.filter(run => run.version === versionFilter)
+    }
+
+    if (dateFilter !== 'all') {
+      const now = new Date()
+      const filterDate = new Date()
+      
+      switch (dateFilter) {
+        case 'today':
+          filterDate.setHours(0, 0, 0, 0)
+          break
+        case 'week':
+          filterDate.setDate(now.getDate() - 7)
+          break
+        case 'month':
+          filterDate.setMonth(now.getMonth() - 1)
+          break
+      }
+      
+      filtered = filtered.filter(run => new Date(run.createdAt) >= filterDate)
+    }
+
+    setFilteredRuns(filtered)
+  }, [runs, moduleFilter, domainFilter, dateFilter, versionFilter])
+
+  const handleReRun = (runId: string) => {
+    console.log('Re-running:', runId)
+    // TODO: Implement re-run functionality
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+  const handleDownload = (runId: string, artifact: string) => {
+    console.log('Downloading:', runId, artifact)
+    // TODO: Implement download functionality
   }
 
-  if (error) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Dashboard Error</h3>
-            <p className="text-gray-600 mb-4">{error}</p>
-            <button 
-              onClick={retryDataLoad}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Retry
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'text-brand'
+      case 'running': return 'text-gold'
+      case 'failed': return 'text-accent'
+      default: return 'text-textMuted'
+    }
   }
 
-  if (!metrics) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <RefreshCw className="w-12 h-12 mx-auto mb-4 text-blue-500" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No dashboard data available</h3>
-            <p className="text-gray-600 mb-4">Your dashboard metrics will appear here once you start using the platform</p>
-            <button 
-              onClick={handleRefresh}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Refresh
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed': return '✓'
+      case 'running': return '⟳'
+      case 'failed': return '✗'
+      default: return '?'
+    }
   }
+
+  const uniqueModules = [...new Set(runs.map(run => run.moduleId))]
+  const uniqueDomains = [...new Set(runs.map(run => run.domain))]
+  const uniqueVersions = [...new Set(runs.map(run => run.version))]
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg">
+      <NavBar plan={currentPlan} />
+      
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">
-              Monitor your prompt performance and system health
+            <h1 className="font-display text-3xl font-bold text-text mb-2">
+              Dashboard
+            </h1>
+            <p className="text-textMuted font-ui">
+              Monitor your prompt engineering runs and results
             </p>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            {isRefreshing ? 'Refreshing...' : 'Refresh'}
-          </button>
+          <div className="flex items-center space-x-4">
+            <div className="text-sm text-textMuted font-ui">
+              {filteredRuns.length} of {runs.length} runs
+            </div>
+          </div>
         </div>
 
-                 {/* KPI Overview */}
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-           <KPICard
-             title="Pass Rate"
-             value={`${metrics.pass_rate_pct}%`}
-             description="Successful runs"
-             status={metrics.pass_rate_pct >= 99 ? 'success' : metrics.pass_rate_pct >= 90 ? 'warning' : 'error'}
-             trend={trends ? trends.passRates : []}
-           />
-           <KPICard
-             title="SLA Efficiency"
-             value={`${metrics.sla_efficient_pct}%`}
-             description="≤60s TTA"
-             status={metrics.sla_efficient_pct >= 80 ? 'success' : metrics.sla_efficient_pct >= 60 ? 'warning' : 'error'}
-             trend={trends ? trends.avgTTAs.map(t => t <= 60 ? 100 : 0) : []}
-           />
-           <KPICard
-             title="P95 Score"
-             value={metrics.p95_score.toString()}
-             description="Quality threshold"
-             status={metrics.p95_score >= 80 ? 'success' : metrics.p95_score >= 70 ? 'warning' : 'error'}
-             trend={trends ? trends.avgScores : []}
-           />
-           <KPICard
-             title="Total Runs"
-             value={metrics.total_runs.toLocaleString()}
-             description="Last 7 days"
-             status="success"
-             trend={trends ? trends.runCounts : []}
-           />
+        {/* Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div>
+            <label className="block text-sm font-ui font-medium text-text mb-2">
+              Module
+            </label>
+            <select
+              value={moduleFilter}
+              onChange={(e) => setModuleFilter(e.target.value)}
+              className="w-full px-3 py-2 bg-surface border border-border rounded-md text-text focus-ring font-ui"
+            >
+              <option value="all">All Modules</option>
+              {uniqueModules.map(moduleId => (
+                <option key={moduleId} value={moduleId}>
+                  {moduleId}
+                </option>
+              ))}
+            </select>
          </div>
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="trends">Trends</TabsTrigger>
-            <TabsTrigger value="alerts">Alerts</TabsTrigger>
-            <TabsTrigger value="insights">Insights</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Recent Activity */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>Latest prompt runs and their status</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {orgId ? (
-                    <RunHistory orgId={orgId} />
-                  ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      <p>Organization ID not available</p>
+          <div>
+            <label className="block text-sm font-ui font-medium text-text mb-2">
+              Domain
+            </label>
+            <select
+              value={domainFilter}
+              onChange={(e) => setDomainFilter(e.target.value)}
+              className="w-full px-3 py-2 bg-surface border border-border rounded-md text-text focus-ring font-ui"
+            >
+              <option value="all">All Domains</option>
+              {uniqueDomains.map(domain => (
+                <option key={domain} value={domain}>
+                  {domain}
+                </option>
+              ))}
+            </select>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
 
-              {/* Quick Stats */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quick Stats</CardTitle>
-                  <CardDescription>Key performance indicators</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Average Score</span>
-                    <span className="font-semibold">{metrics.avg_score.toFixed(1)}</span>
+          <div>
+            <label className="block text-sm font-ui font-medium text-text mb-2">
+              Date Range
+            </label>
+            <select
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="w-full px-3 py-2 bg-surface border border-border rounded-md text-text focus-ring font-ui"
+            >
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Average TTA</span>
-                    <span className="font-semibold">{metrics.avg_tta.toFixed(1)}s</span>
+
+          <div>
+            <label className="block text-sm font-ui font-medium text-text mb-2">
+              Version
+            </label>
+            <select
+              value={versionFilter}
+              onChange={(e) => setVersionFilter(e.target.value)}
+              className="w-full px-3 py-2 bg-surface border border-border rounded-md text-text focus-ring font-ui"
+            >
+              <option value="all">All Versions</option>
+              {uniqueVersions.map(version => (
+                <option key={version} value={version}>
+                  v{version}
+                </option>
+              ))}
+            </select>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Success Rate</span>
-                    <span className="font-semibold">{((metrics.successful_runs / metrics.total_runs) * 100).toFixed(1)}%</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Efficiency Rate</span>
-                    <span className="font-semibold">{((metrics.efficient_runs / metrics.total_runs) * 100).toFixed(1)}%</span>
+
+        {/* Runs Table */}
+        <div className="bg-surface border border-border rounded-xl overflow-hidden">
+          {filteredRuns.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="rune-executable rune-loading w-12 h-12 mx-auto mb-4">
+                <div className="star-8 w-8 h-8" />
                   </div>
-                </CardContent>
-              </Card>
+              <p className="text-textMuted font-ui">
+                No runs found matching your filters
+              </p>
             </div>
-          </TabsContent>
-
-          <TabsContent value="trends" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Performance Trends</CardTitle>
-                <CardDescription>Track your metrics over time</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {trends ? (
-                  <div className="space-y-6">
-                    <TrendChart 
-                      data={trends.passRates} 
-                      labels={trends.dates} 
-                      title="Pass Rate (%)" 
-                      color="green" 
-                    />
-                    <TrendChart 
-                      data={trends.avgScores} 
-                      labels={trends.dates} 
-                      title="Average Scores" 
-                      color="blue" 
-                    />
-                    <TrendChart 
-                      data={trends.avgTTAs} 
-                      labels={trends.dates} 
-                      title="Average TTA (seconds)" 
-                      color="purple" 
-                    />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left p-4 font-ui font-medium text-text">Run</th>
+                    <th className="text-left p-4 font-ui font-medium text-text">Module</th>
+                    <th className="text-left p-4 font-ui font-medium text-text">Domain</th>
+                    <th className="text-left p-4 font-ui font-medium text-text">Status</th>
+                    <th className="text-left p-4 font-ui font-medium text-text">Score</th>
+                    <th className="text-left p-4 font-ui font-medium text-text">Duration</th>
+                    <th className="text-left p-4 font-ui font-medium text-text">Created</th>
+                    <th className="text-left p-4 font-ui font-medium text-text">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRuns.map((run) => (
+                    <tr key={run.id} className="border-b border-border last:border-b-0 hover:bg-surfaceAlt/50 transition-colors">
+                      <td className="p-4">
+                        <TelemetryBadge runId={run.id} />
+                      </td>
+                      <td className="p-4">
+                        <div>
+                          <div className="font-ui text-sm font-medium text-text">
+                            {run.moduleName}
+                          </div>
+                          <div className="font-mono text-xs text-textMuted">
+                            {run.moduleId}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className="font-ui text-sm text-text">
+                          {run.domain}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center space-x-2">
+                          <span className={cn('text-sm font-ui', getStatusColor(run.status))}>
+                            {getStatusIcon(run.status)}
+                          </span>
+                          <span className={cn('text-sm font-ui capitalize', getStatusColor(run.status))}>
+                            {run.status}
+                          </span>
                   </div>
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <p>No trend data available yet</p>
-                    <p className="text-sm">Start using the platform to see performance trends</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="alerts" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>SLA Alerts</CardTitle>
-                <CardDescription>Monitor system performance and SLA compliance</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {alerts.length > 0 ? (
-                  <SLAAlerts alerts={alerts} />
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-green-500" />
-                    <p>All systems operating normally</p>
-                    <p className="text-sm">No SLA violations detected</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="insights" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Performance Insights</CardTitle>
-                <CardDescription>AI-powered recommendations for improvement</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {insights.length > 0 ? (
-                  <PerformanceInsights insights={insights} />
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <RefreshCw className="w-12 h-12 mx-auto mb-4 text-blue-500" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No insights yet</h3>
-                    <p className="text-gray-600 mb-4">Performance insights will appear here as you use the platform</p>
+                      </td>
+                      <td className="p-4">
+                        {run.score !== undefined ? (
+                          <span className="font-ui text-sm text-brand font-semibold">
+                            {run.score}%
+                          </span>
+                        ) : (
+                          <span className="text-textMuted">-</span>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        {run.duration ? (
+                          <span className="font-ui text-sm text-text">
+                            {run.duration < 1000 ? `${run.duration}ms` : `${(run.duration / 1000).toFixed(1)}s`}
+                          </span>
+                        ) : (
+                          <span className="text-textMuted">-</span>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        <span className="font-ui text-sm text-textMuted">
+                          {new Date(run.createdAt).toLocaleDateString()}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleReRun(run.id)}
+                            className="px-3 py-1 bg-surfaceAlt border border-border rounded-md text-text hover:border-brand/50 transition-colors focus-ring font-ui text-xs"
+                          >
+                            Re-run
+                          </button>
+                          {run.artifacts && run.artifacts.length > 0 && (
+                            <div className="relative group">
+                              <button className="px-3 py-1 bg-surfaceAlt border border-border rounded-md text-text hover:border-brand/50 transition-colors focus-ring font-ui text-xs">
+                                Download
+                              </button>
+                              <div className="absolute right-0 top-full mt-1 w-32 bg-surface border border-border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                <div className="py-1">
+                                  {run.artifacts.map((artifact, index) => (
                     <button 
-                      onClick={() => window.location.href = '/generator'}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                                      key={index}
+                                      onClick={() => handleDownload(run.id, artifact)}
+                                      className="w-full px-3 py-1 text-left text-xs font-ui text-text hover:bg-surfaceAlt"
                     >
-                      Generate First Prompt
+                                      {artifact}
                     </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        </div>
       </div>
     </div>
-  );
+  )
+}
+
+// Demo data fallback
+function getDemoRuns(): Run[] {
+  return [
+    {
+      id: 'run_001_20241220',
+      moduleId: 'M001',
+      moduleName: 'Content Optimization',
+      domain: 'marketing',
+      version: '1.2',
+      status: 'completed',
+      score: 87,
+      duration: 1250,
+      createdAt: '2024-12-20T10:30:00Z',
+      artifacts: ['output.txt', 'metrics.json']
+    },
+    {
+      id: 'run_002_20241220',
+      moduleId: 'M002',
+      moduleName: 'Technical Documentation',
+      domain: 'development',
+      version: '2.1',
+      status: 'running',
+      duration: 850,
+      createdAt: '2024-12-20T11:15:00Z'
+    },
+    {
+      id: 'run_003_20241220',
+      moduleId: 'M003',
+      moduleName: 'Marketing Copy Generator',
+      domain: 'marketing',
+      version: '1.5',
+      status: 'failed',
+      createdAt: '2024-12-20T09:45:00Z'
+    }
+  ]
 }

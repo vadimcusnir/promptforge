@@ -1,294 +1,156 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
-
-// Query parameters schema
-const querySchema = z.object({
-  domain: z.string().optional(),
-  category: z.string().optional(),
-  complexity: z.enum(['beginner', 'intermediate', 'advanced', 'expert']).optional(),
-  search: z.string().optional(),
-  limit: z.coerce.number().min(1).max(100).default(50),
-  offset: z.coerce.number().min(0).default(0)
-})
-
-// Response schema (commented out for now)
-// const moduleSchema = z.object({
-//   id: z.string(),
-//   module_code: z.string(),
-//   name: z.string(),
-//   description: z.string(),
-//   category: z.string(),
-//   domain_slug: z.string(),
-//   complexity: z.string(),
-//   estimated_time_minutes: z.number(),
-//   tags: z.array(z.string()),
-//   template_prompt: z.string(),
-//   example_output: z.string(),
-//   best_practices: z.array(z.string()),
-//   created_at: z.string(),
-//   updated_at: z.string()
-// })
-
-// Fallback modules data for when database is not available
-const fallbackModules = [
-  {
-    id: "demo-1",
-    module_code: "M01",
-    name: "Strategic Business Planning",
-    description: "Generate comprehensive business strategies using the 7D parameter engine",
-    category: "business",
-    domain_slug: "business",
-    complexity: "intermediate",
-    estimated_time_minutes: 15,
-    tags: ["strategy", "planning", "business"],
-    template_prompt: "Create a strategic business plan for...",
-    example_output: "Strategic business plan with clear objectives...",
-    best_practices: ["Define clear objectives", "Include measurable KPIs"],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  },
-  {
-    id: "demo-2",
-    module_code: "M02",
-    name: "Marketing Campaign Creation",
-    description: "Design targeted marketing campaigns with precision",
-    category: "marketing",
-    domain_slug: "marketing",
-    complexity: "beginner",
-    estimated_time_minutes: 10,
-    tags: ["marketing", "campaign", "strategy"],
-    template_prompt: "Create a marketing campaign for...",
-    example_output: "Complete marketing campaign with messaging...",
-    best_practices: ["Define target audience", "Set clear objectives"],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
-]
+import { NextRequest, NextResponse } from "next/server"
+import { validateModuleCatalog } from "@/lib/module.schema"
+import catalogData from "@/lib/modules.catalog.json"
 
 export async function GET(request: NextRequest) {
   try {
-    // Parse query parameters
+    // Validate the catalog against our schema
+    const validatedCatalog = validateModuleCatalog(catalogData)
+    
+    // Transform modules for UI consumption
+    const modules = Object.values(validatedCatalog.modules).map(module => ({
+      id: module.id,
+      title: module.title,
+      slug: module.slug,
+      summary: module.summary,
+      vectors: module.vectors,
+      difficulty: module.difficulty,
+      minPlan: module.minPlan,
+      tags: module.tags,
+      outputs: module.outputs,
+      version: module.version,
+      deprecated: module.deprecated
+    }))
+    
+    // Add search parameters for filtering
     const { searchParams } = new URL(request.url)
-    const query = querySchema.parse({
-      domain: searchParams.get('domain'),
-      category: searchParams.get('category'),
-      complexity: searchParams.get('complexity'),
-      search: searchParams.get('search'),
-      limit: searchParams.get('limit'),
-      offset: searchParams.get('offset')
-    })
-
-    // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.warn('Supabase not configured, returning fallback modules')
-      return NextResponse.json({
-        success: true,
-        data: {
-          modules: fallbackModules,
-          total: fallbackModules.length,
-          limit: query.limit,
-          offset: query.offset
-        }
+    const vector = searchParams.get('vector')
+    const difficulty = searchParams.get('difficulty')
+    const minPlan = searchParams.get('minPlan')
+    const search = searchParams.get('search')
+    
+    let filteredModules = modules
+    
+    // Apply filters
+    if (vector) {
+      filteredModules = filteredModules.filter(module => 
+        module.vectors.includes(vector as any)
+      )
+    }
+    
+    if (difficulty) {
+      const difficultyNum = parseInt(difficulty)
+      filteredModules = filteredModules.filter(module => 
+        module.difficulty === difficultyNum
+      )
+    }
+    
+    if (minPlan) {
+      const planHierarchy = { free: 0, creator: 1, pro: 2, enterprise: 3 }
+      const userPlanLevel = planHierarchy[minPlan as keyof typeof planHierarchy] || 0
+      
+      filteredModules = filteredModules.filter(module => {
+        const modulePlanLevel = planHierarchy[module.minPlan as keyof typeof planHierarchy] || 0
+        return userPlanLevel >= modulePlanLevel
       })
     }
-
-    // Import Supabase client only when needed
-    const { createClient } = await import('@supabase/supabase-js')
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    )
-
-    // Build query
-    let queryBuilder = supabase
-      .from('modules')
-      .select('*')
-      .order('module_code', { ascending: true })
-
-    // Apply filters
-    if (query.domain) {
-      queryBuilder = queryBuilder.eq('domain_slug', query.domain)
-    }
-
-    if (query.category) {
-      queryBuilder = queryBuilder.eq('category', query.category)
-    }
-
-    if (query.complexity) {
-      queryBuilder = queryBuilder.eq('complexity', query.complexity)
-    }
-
-    // Apply search
-    if (query.search) {
-      const searchTerm = query.search.toLowerCase()
-      queryBuilder = queryBuilder.or(
-        `name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,tags.cs.{${searchTerm}}`
+    
+    if (search) {
+      const searchLower = search.toLowerCase()
+      filteredModules = filteredModules.filter(module =>
+        module.title.toLowerCase().includes(searchLower) ||
+        module.summary.toLowerCase().includes(searchLower) ||
+        module.tags.some(tag => tag.toLowerCase().includes(searchLower))
       )
     }
-
-    // Apply pagination
-    queryBuilder = queryBuilder
-      .range(query.offset, query.offset + query.limit - 1)
-
-    // Execute query
-    const { data: modules, error, count } = await queryBuilder
-
-    if (error) {
-      console.error('Error fetching modules:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch modules' },
-        { status: 500 }
-      )
-    }
-
-    // Get total count for pagination
-    let totalCount = count
-    if (count === null) {
-      const { count: total } = await supabase
-        .from('modules')
-        .select('*', { count: 'exact', head: true })
-      totalCount = total
-    }
-
-    // Get domain configurations for additional context
-    const { data: domains } = await supabase
-      .from('domain_configs')
-      .select('slug, name, industry')
-
-    const domainMap = domains?.reduce((acc, domain) => {
-      acc[domain.slug] = domain
-      return acc
-    }, {} as Record<string, { slug: string; name: string; industry: string }>) || {}
-
-    // Enrich modules with domain information
-    const enrichedModules = modules?.map(module => ({
-      ...module,
-      domain_info: domainMap[module.domain_slug] || null
-    })) || []
-
+    
     return NextResponse.json({
       success: true,
       data: {
-        modules: enrichedModules,
-        pagination: {
-          total: totalCount || 0,
-          limit: query.limit,
-          offset: query.offset,
-          has_more: (query.offset + query.limit) < (totalCount || 0)
-        },
+        modules: filteredModules,
+        total: filteredModules.length,
+        catalogVersion: validatedCatalog.version,
         filters: {
-          applied: {
-            domain: query.domain,
-            category: query.category,
-            complexity: query.complexity,
-            search: query.search
-          }
+          vectors: ['strategic', 'rhetoric', 'content', 'analytics', 'branding', 'crisis', 'cognitive'],
+          difficulties: [1, 2, 3, 4, 5],
+          plans: ['free', 'creator', 'pro', 'enterprise']
         }
       }
     })
-
-  } catch (error) {
-    console.error('Modules API error:', error)
     
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    )
+  } catch (error) {
+    console.error('Module catalog validation failed:', error)
+    
+    return NextResponse.json({
+      success: false,
+      error: 'Module catalog validation failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 
-// Get specific module by code
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { module_code } = body
-
-    if (!module_code) {
-      return NextResponse.json(
-        { success: false, error: 'Module code is required' },
-        { status: 400 }
-      )
+    const { moduleId, action, inputs } = body
+    
+    // Validate module exists
+    const validatedCatalog = validateModuleCatalog(catalogData)
+    const module = validatedCatalog.modules[moduleId]
+    
+    if (!module) {
+      return NextResponse.json({
+        success: false,
+        error: 'Module not found'
+      }, { status: 404 })
     }
-
-    // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.warn('Supabase not configured, returning fallback module')
-      const fallbackModule = fallbackModules.find(m => m.module_code === module_code)
-      if (fallbackModule) {
+    
+    // Handle different actions
+    switch (action) {
+      case 'simulate':
+        // Return simulation data
         return NextResponse.json({
           success: true,
-          data: fallbackModule
+          data: {
+            moduleId,
+            action: 'simulate',
+            result: {
+              estimatedTokens: Math.floor(Math.random() * 2000) + 500,
+              estimatedTime: Math.floor(Math.random() * 300) + 60,
+              sampleOutput: `Simulated output for ${module.title}...`
+            }
+          }
         })
-      } else {
-        return NextResponse.json(
-          { success: false, error: 'Module not found' },
-          { status: 404 }
-        )
-      }
+        
+      case 'run':
+        // TODO: Implement actual module execution
+        return NextResponse.json({
+          success: true,
+          data: {
+            moduleId,
+            action: 'run',
+            result: {
+              runId: `run_${Date.now()}`,
+              status: 'completed',
+              output: `Real execution result for ${module.title}...`
+            }
+          }
+        })
+        
+      default:
+        return NextResponse.json({
+          success: false,
+          error: 'Invalid action'
+        }, { status: 400 })
     }
-
-    // Import Supabase client only when needed
-    const { createClient } = await import('@supabase/supabase-js')
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    )
-
-    // Fetch specific module
-    const { data: module, error } = await supabase
-      .from('modules')
-      .select('*')
-      .eq('module_code', module_code)
-      .single()
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { success: false, error: 'Module not found' },
-          { status: 404 }
-        )
-      }
-      
-      console.error('Error fetching module:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch module' },
-        { status: 500 }
-      )
-    }
-
-    // Get domain configuration
-    const { data: domain } = await supabase
-      .from('domain_configs')
-      .select('*')
-      .eq('slug', module.domain_slug)
-      .single()
-
-    // Enrich module with domain information
-    const enrichedModule = {
-      ...module,
-      domain_info: domain || null
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: enrichedModule
-    })
-
+    
   } catch (error) {
-    console.error('Module detail API error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('Module execution failed:', error)
+    
+    return NextResponse.json({
+      success: false,
+      error: 'Module execution failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }

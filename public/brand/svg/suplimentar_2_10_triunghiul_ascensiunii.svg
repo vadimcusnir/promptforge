@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Triunghiul Ascensiunii - un simbol al evoluției și transcendenței -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru triunghi -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Triunghiul principal (ascendent) -->
+  <path id="main-triangle" d="M256 136 L356 336 L156 336 Z" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="800" stroke-dashoffset="800">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="800;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Triunghiul secundar (descendent) -->
+  <path id="secondary-triangle" d="M256 336 L356 136 L156 136 Z" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="800" stroke-dashoffset="800">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="800;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="1.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Steaua rezultată din suprapunerea triunghiurilor -->
+  <path id="star-shape" d="M256 136 L293 216 L356 136 L316 216 L356 336 L293 256 L256 336 L219 256 L156 336 L196 216 L156 136 L219 216 Z" fill="none" stroke="#FFD700" stroke-width="1" stroke-dasharray="1200" stroke-dashoffset="1200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="1200;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Cercul interior -->
+  <circle id="inner-circle" cx="256" cy="256" r="60" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="377" stroke-dashoffset="377">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="377;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="6s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Puncte de intersecție -->
+  <!-- Vârful superior -->
+  <circle id="top-point" cx="256" cy="136" r="5" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;6;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Vârful din dreapta -->
+  <circle id="right-point" cx="356" cy="336" r="5" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="0.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;6;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="0.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Vârful din stânga -->
+  <circle id="left-point" cx="156" cy="336" r="5" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="1s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;6;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="1s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Vârful inferior -->
+  <circle id="bottom-point" cx="256" cy="336" r="5" fill="#FF0000">
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;6;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="1.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Vârful din dreapta sus -->
+  <circle id="top-right-point" cx="356" cy="136" r="5" fill="#FF0000">
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;6;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Vârful din stânga sus -->
+  <circle id="top-left-point" cx="156" cy="136" r="5" fill="#FF0000">
+    <animate
+      attributeName="fill"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="2.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;6;5"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="2.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Centrul triunghiului -->
+  <circle id="center-point" cx="256" cy="256" r="8" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="8;10;8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Linii de energie care radiază din centru -->
+  <!-- Linia 1 (sus) -->
+  <line id="energy-line-1" x1="256" y1="256" x2="256" y2="136" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="8s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (dreapta jos) -->
+  <line id="energy-line-2" x1="256" y1="256" x2="356" y2="336" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="2s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (stânga jos) -->
+  <line id="energy-line-3" x1="256" y1="256" x2="156" y2="336" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      begin="9s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (jos) -->
+  <line id="energy-line-4" x1="256" y1="256" x2="256" y2="336" stroke="#FF0000" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="2s"
+      begin="9.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 5 (dreapta sus) -->
+  <line id="energy-line-5" x1="256" y1="256" x2="356" y2="136" stroke="#FF0000" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.3;0.5;0.7;0.9;1"
+      dur="2s"
+      begin="10s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 6 (stânga sus) -->
+  <line id="energy-line-6" x1="256" y1="256" x2="156" y2="136" stroke="#FF0000" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.2;0.4;0.6;0.8;0.9;1"
+      dur="2s"
+      begin="10.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efecte de pulsație pentru triunghi -->
+  <path id="pulse-triangle" d="M256 136 L356 336 L156 336 Z" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Simboluri pentru nivelurile de ascensiune -->
+  <!-- Nivelul 1 (bază) -->
+  <text id="level-1" x="256" y="316" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#E0E0E0" text-anchor="middle" opacity="0">MATTER
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Nivelul 2 (mijloc) -->
+  <text id="level-2" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#E0E0E0" text-anchor="middle" opacity="0">MIND
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Nivelul 3 (vârf) -->
+  <text id="level-3" x="256" y="196" font-family="'Space Grotesk', sans-serif" font-size="14" fill="#E0E0E0" text-anchor="middle" opacity="0">SPIRIT
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="18s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Efecte de ascensiune -->
+  <circle id="ascension-effect" cx="256" cy="256" r="5" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="336;136;336"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="r"
+      values="5;8;5"
+      keyTimes="0;0.5;1"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Text "TRIUNGHIUL ASCENSIUNII" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">TRIUNGHIUL ASCENSIUNII</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Triunghiul Ascensiunii</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al evoluției și transcendenței. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

@@ -1,0 +1,3306 @@
+
+
+
+
+
+„Instrucțiunea Specializată PromptForge v3 — Module, Logică, Operare” (versiunea care va detalia ce sunt modulele, cum funcționează și întreaga arhitectură de lucru). După ce confirmi, livrezi textul complet pe această structură.
+
+Cuprins
+
+Scop & Domeniu de Aplicare
+1.1 Obiectivul instrucțiunii
+1.2 Cine o folosește (dev, ops, creator, sales)
+1.3 Rezultatul final așteptat (MVP operabil + metrici)
+
+Principii Operationale & Stil (ADN Cusnirian)
+2.1 Voice & semiotică (SOP FORGE™, 8VULTUS)
+2.2 Reguli anti-deraiere (guardrails, SSOT)
+2.3 Minim suficient executabil (AMS)
+
+Arhitectura de Sistem (High-Level)
+3.1 Straturile: UI, API, Orchestrare, DB, Licențiere
+3.2 Fluxul utilizator → modul → rezultat
+3.3 Observabilitate: evenimente, loguri, alertare
+
+Gating Comercial & Entitlements
+4.1 Planuri (pilot, pro, enterprise)
+4.2 Feature flags, is_active, throttling
+4.3 Politici de acces per modul
+
+Modelul de Date al Modulului
+5.1 Chei: id (Mxx), title, slug, legacy_slugs
+5.2 Metadate: dificultate, token estimate, KPIs, guardrails
+5.3 Input schema & output template (contracte)
+
+Ciclul de Viață al Modulului
+6.1 Creare/versiune/compatibilitate
+6.2 Testare (unit/e2e/SEO snapshot)
+6.3 Publicare & rollback
+
+Mecanismul de Execuție
+7.1 Pipeline: validare input → core logic → post-processors
+7.2 Evaluatori & scoruri (calitate, risc, cost)
+7.3 Persistență rezultate & expunere (UI/API)
+
+Telemetrie & KPI
+8.1 Evenimente standard (open/run/success/fail)
+8.2 KPIs cross-modul (conversie, retentie, LTV)
+8.3 Dashboard & raportare
+
+Securitate & Conformitate
+9.1 Rate-limit, sandbox, red team basics
+9.2 PII, audit trail, export policy
+9.3 DoR/DoD gate: score ≥ 80
+
+UX & Design Tokens
+10.1 Navigație module, carduri, breadcrumbs
+10.2 Og/meta, sitemap, redirects 308 (legacy → current)
+10.3 Accesibilitate & performanță
+
+Instrucțiuni per Bloc (Overview)
+11.1 Strategic & Operations (M01–M10) — scop, rol, când le folosești
+11.2 Content & Marketing (M11–M20) — scenarii & rezultate
+11.3 Technical Architecture (M21–M30) — integrare & scalare
+11.4 Sales & Customer Ops (M31–M40) — funnel & succes clienți
+11.5 Business Ops & Identity (M41–M50) — procese & brand
+
+Catalog Detaliat al celor 50 de Module
+12.1 M01 – SOP FORGE™
+12.2 M02 – LATENT MAP™
+12.3 M03 – SEVEN-TO-ONE™
+12.4 M04 – SEMIOTIC DICTIONARY 8VULTUS™
+12.5 M05 – ORAKON MEMORY GRID™
+12.6 M06 – AGENTIC GPT SALES™
+12.7 M07 – TRUST REVERSAL PROTOCOL™
+12.8 M08 – STATUS-TIER LOYALTY™
+12.9 M09 – AUTHORITY POSITIONING™
+12.10 M10 – CRISIS COMMUNICATION PLAYBOOK™
+12.11 M11 – VIRAL CONTENT ENGINE™
+12.12 M12 – BRAND VOICE CODEX™
+12.13 M13 – EMAIL SEQUENCE ARCHITECT™
+12.14 M14 – SOCIAL CONTENT GRID™
+12.15 M15 – LANDING PAGE ALCHEMIST™
+12.16 M16 – CONTENT REPURPOSING ENGINE™
+12.17 M17 – INFLUENCE PARTNERSHIP FRAME™
+12.18 M18 – CONTENT ANALYTICS DASHBOARD™
+12.19 M19 – AUDIENCE SEGMENT PERSONALIZER™
+12.20 M20 – MOMENTUM CAMPAIGN BUILDER™
+12.21 M21 – API DOCS GENERATOR™
+12.22 M22 – SYSTEM BLUEPRINT™
+12.23 M23 – DEVOPS PIPELINE ARCHITECT™
+12.24 M24 – DATA SCHEMA OPTIMIZER™
+12.25 M25 – MICROSERVICES GRID™
+12.26 M26 – SECURITY FORTRESS FRAME™
+12.27 M27 – PERFORMANCE ENGINE™
+12.28 M28 – API GATEWAY DESIGNER™
+12.29 M29 – ORCHESTRATION MATRIX™
+12.30 M30 – CLOUD INFRA MAP™
+12.31 M31 – SALES FLOW ARCHITECT™
+12.32 M32 – CUSTOMER JOURNEY MAPPER™
+12.33 M33 – ENABLEMENT FRAME™
+12.34 M34 – ACCOUNT-BASED STRATEGY™
+12.35 M35 – FORECAST ENGINE™
+12.36 M36 – COMPENSATION DESIGNER™
+12.37 M37 – CUSTOMER SUCCESS PLAYBOOK™
+12.38 M38 – PARTNER ECOSYSTEM GRID™
+12.39 M39 – INTELLIGENCE ENGINE™
+12.40 M40 – NEGOTIATION DYNAMICS™
+12.41 M41 – PROCESS AUTOMATION BLUEPRINT™
+12.42 M42 – QUALITY SYSTEM MAP™
+12.43 M43 – SUPPLY FLOW OPTIMIZER™
+12.44 M44 – PORTFOLIO MANAGER™
+12.45 M45 – CHANGE FORCE FIELD™
+12.46 M46 – CREATIVE STRATEGY ENGINE™
+12.47 M47 – PROMPT SYSTEM ARCHITECT™
+12.48 M48 – FRACTAL IDENTITY MAP™
+12.49 M49 – EXECUTIVE PROMPT DOSSIER™
+12.50 M50 – PROMPT LICENSING MANAGER™
+
+Matrici de Utilizare (When/Why/Who)
+13.1 Hartă „problemă → modul → livrabil”
+13.2 Nivel competență: strategist / builder / operator
+13.3 Time-to-Value & ordinea recomandată
+
+Scenarii Complete (Play-uri)
+14.1 Lansare produs în 48h (stack de module)
+14.2 Repozitionare autoritate în 7 zile
+14.3 Reparație criză reputațională (24–72h)
+14.4 Accelerare pipeline B2B (ABM + Sales)
+
+Automatizare & Integrare
+15.1 Triggeri & webhooks (internal/external)
+15.2 Exporturi sigure (PDF/ZIP/JSON)
+15.3 Integrări (email, CRM, Ads, ClickUp etc.)
+
+Proceduri de Control Calitate
+16.1 Checklists per modul
+16.2 Verificări anti-halucinație/deraiere
+16.3 Semnătură DoD per livrabil
+
+Mentenanță & Versionare
+17.1 Politici de versionare (semver, compat)
+17.2 Deprecieri & aliasuri (legacy_slugs)
+17.3 Arhivă & restaurare
+
+Riscuri & Măsuri de Mitigare
+18.1 Top 10 riscuri tipice
+18.2 Playbook de răspuns
+18.3 Audit periodic
+
+Glosar & Convenții
+19.1 Termeni cheie (grid, frame, map, engine)
+19.2 Convenții de denumire (IDs/slug/alias)
+19.3 Exemple bune vs. rele
+
+Anexe
+20.1 Tabele input/output per modul (schemă)
+20.2 Liste evenimente analytics & KPIs
+20.3 Template testare (unit/e2e)
+20.4 Script redirecturi 308 (legacy → current)
+20.5 Matrice compatibilitate planuri
+
+
+
+
+
+1. Scop & Domeniu de Aplicare
+1.1 Obiectivul instrucțiunii
+
+Definește standardul unic de operare (SSOT) pentru PromptForge v3, astfel încât:
+
+echipele tehnice, operaționale și comerciale să livreze un MVP complet funcțional (UI + API + DB + licențiere + analytics), aliniat la lista finală de 50 de module și la structura „BASE_ACTIVE”. Obiectivul e ca toate componentele marcate „CRITICA/IMPORTANTA” să fie live, cu rute, permisiuni și entitlements corelate, nu doar „code complete”.
+
+procesul de lansare să urmeze checklistul de deployment și matricea RACI/riscuri, cu redirecturi 308 pentru slugs moștenite, sitemap/OG regenerate și testare e2e/SEO activă.
+
+să existe gate-uri măsurabile (DoR/DoD) înainte de expunerea la trafic, inclusiv scor minim de calitate, perf și securitate, conform regulilor și ghidurilor deja definite.
+
+Rezumat executiv al obiectivului:
+„Un singur standard, o singură livrare: MVP-ul PromptForge v3 este lansat pe baza listei active, cu build stabil, rute/API corecte, gating comercial, UX consistent și observabilitate completă—gata pentru înrolarea utilizatorilor plătiți.”
+
+1.2 Cine o folosește (dev, ops, creator, sales)
+
+Dev (FE/BE, integratori, QA tehnic)
+
+Aplică redenumirile/fuziunile de module, sincronizează title/slug/legacy_slugs, actualizează UI, API, schema DB, redirecturile 308 și testele. Folosește RACI pentru responsabilități, urmează checklistul de deployment și raportează prin pipeline.
+
+Ops (DevOps/SRE, securitate, CI/CD)
+
+Asigură pipeline stabil (build, cache, secrets), rate limiting, observabilitate și rollback. Urmează matricea de riscuri și procedurile din ghidul de deployment.
+
+Creator (product/brand, content & UX)
+
+Validează consistența semiotică (nume, descrieri scurte, carduri, breadcrumbs), OG/meta, sitemap, conținutul modulelor din catalog, manualele scurte în UI. Se aliniază la „BASE_ACTIVE” și la structura vizată în lansare.
+
+Sales (revenue, CX, partnerships)
+
+Verifică gating-ul pe planuri, paywall/entitlements și corelează metrici de conversie cu telemetria standard. Urmează playbook-urile și KPI-urile definite în livrabilele de business și riscurile top.
+
+Notă: această instrucțiune este operațională—nu doar explicativă. Fiecare rol are ieșiri clare (artefacte, rapoarte, logs), trase în RACI și validate în DoD.
+
+1.3 Rezultatul final așteptat (MVP operabil + metrici)
+A. MVP operabil (definiția de „gata de producție”)
+
+Cod & rute
+
+Toate modulele critice apar în UI (listare, pagină module), rutele API funcționează (200) și acceptă atât slug curent cât și legacy_slugs (redirect 308 → slug nou).
+
+Config & gating
+
+Planurile, entitlements și feature flags sunt aplicate (Pilot/Pro/Enterprise), is_active: true pentru modulele live, iar accesul este testat pe conturi de probă.
+
+Branding & SEO
+
+OG/meta corecte, sitemap regenerat, fără linkuri moarte, page titles coerente; 0 erori critice Lighthouse.
+
+Observabilitate & securitate
+
+Loguri, evenimente standardizate (module_open, module_run, success/fail), rate limit activ, politici de export respectate; riscurile top au măsuri de mitigare documentate.
+
+Pachet „BASE_ACTIVE”
+
+Delivery strict al fișierelor marcate CRITICA/IMPORTANTA din lista activă (MVP), cu structură curată și fără redundanțe.
+
+B. Metrici minime de acceptare (DoD)
+
+Stabilitate tehnică
+
+Build verde (CI), 0 erori de runtime în logurile canary 24h, TTFB P95 ≤ 500 ms pe paginile modulelor, CLS ≤ 0.1 pe homepage/module index.
+
+Calitate & UX
+
+Lighthouse Performance ≥ 85, Best Practices ≥ 90, SEO ≥ 90 pentru 5 pagini reprezentative (home, module index, 2 module, about).
+
+Compatibilitate & rute
+
+100% din slugurile vechi returnează 308 → slug nou; 0 rute 404 pentru modulele „live”.
+
+Gating & planuri
+
+100% teste de acces pe planuri trec (Pilot/Pro/Enterprise), fără bypass. Paywall și entitlements valide pe mostre de utilizatori.
+
+Telemetrie
+
+Evenimentele standard sunt înregistrate cu module_id (Mxx) ca cheie primară; dashboardul afișează open/run/success rate per modul și traficul provenit din legacy_slugs.
+
+C. KPI inițiali (post-launch, primele 14 zile)
+
+Adopție & activare
+
+≥ 60% dintre utilizatorii noi ating 1 „module_run” în 48h;
+
+≥ 30% ating 2+ module (cross-use).
+
+Conversie & venit
+
+Conversie free→paid la ≥ 6% pe cohorta de trafic cald (landing → trial/paywall).
+
+Calitate execuție
+
+Success rate (run fără erori) ≥ 95% pentru top 10 module; erorile sunt etichetate și rezolvate în < 72h.
+
+D. Non-Scope (deliberat exclus la MVP)
+
+Automatizări avansate „nice-to-have” din afara listei active;
+
+Extensii media grele necritice (experimente brand interactive, showcase voluminos);
+
+Orice ce nu apare în lista activă pentru lansare sau nu e trecut în checklistul de deployment.
+
+Concluzie secțiunea 1
+
+Instrucțiunea te obligă să livrezi un sistem funcțional, măsurat, reversibil: structurat pe fișierele active, ghidat de checklist/RACI/riscuri, cu redirecturi și SEO corecte, și cu telemetrie care probează că MVP-ul este utilizabil și monetizabil—nu doar „deployat”.
+
+
+
+
+
+
+
+
+2. Principii Operaționale & Stil (ADN Cusnirian)
+2.1 Voice & semiotică (SOP FORGE™, 8VULTUS)
+
+Intent: limbaj imperativ, decupat, orientat spre acțiune; fiecare propoziție produce mișcare (nu „informează”, ci „comandă”).
+Semnătură de brand: iconografie fractalică (8VULTUS), denumiri ritualice (Forge, Grid, Frame, Map), coerență vizuală/retorică între UI, module și documente.
+Aplicare în produs:
+
+Titluri & carduri module: folosesc denumirea „Cusniriană” (ex: LANDING PAGE ALCHEMIST™, ORCHESTRATION MATRIX™). Nu alterna cu sinonime „corporate” în UI sau docs. Denumirea = SSOT.
+
+Micro-copy UI: imperativ + metric; ex. „Rulează diagnosticul (≈ 900 tokens, ~0.004$)” — ancorează costul/efortul imediat. Baza: librăriile de instrucțiuni/artefacte din research și rulebook.
+
+Semiotică: glyph-uri/animări (brand HTML/GIF, SVG 2D) sunt parte din înțelegere (nu decor). Ele marchează treceri de stare: locked → eligible → active; sunt legate de entitlements & feature-flags.
+
+Verificare (DoD – Voice/Semiotică)
+
+Toate „numele publice” ale modulelor coincid între UI, API, sitemap, docs (0 abateri).
+
+Toate glyph-urile și animațiile referențiate de module active sunt servite din pachetele marcate ACTIVE, fără duplicări sau fișiere moarte.
+
+2.2 Reguli anti-deraiere (guardrails, SSOT)
+
+SSOT (Single Source of Truth):
+
+ruleset.yml (politici globale: export, scoruri minime, gating),
+
+module.spec(.json/.schema.json) (contracte),
+
+evaluator_config.yaml + prompt_scores_schema.json (scorare calitate/risc),
+
+DoR/DoD în dor_dod.rules.yml (intrare/ieșire în pipeline).
+
+Guardrails cheie:
+
+Validare strictă la intrare: fiecare modul validează input_schema (tipuri, enum_only, min/max). Fără input valid → execuția se oprește, se loghează cauză + hint de corecție.
+
+Scor minim de calitate: post-execuție rulează evaluatori (conținut/riscuri/cost). Dacă score.overall < threshold (ex. 80), se blochează exportul (PDF/ZIP/JSON) și se oferă repair prompts.
+
+Export policy: doar formate permise pe planul utilizatorului; watermark pentru trial; manifest + checksum obligatorii pentru pachete. Orice abatere → HTTP 422.
+
+Gating comercial: entitlement + feature flag înainte de rulare; fără drepturi → 402/403 (UI explică ce plan deblochează modulul).
+
+Rate-limit & securitate: limitare pe rută/modul; sandbox; log audit pentru fiecare rulare; semnalare tentativă de abuz.
+
+Procedură anti-drift:
+
+Build gates în pipeline & checklist de deployment: rute 200, redirect 308 legacy→current, sitemap/OG regenerate, teste E2E verzi, riscuri marcate. Doar după toate acestea se ridică blocajul de deploy.
+
+RACI & Top Risks atașate lansării; canary + rollback explicit.
+
+Verificare (DoD – Guardrails/SSOT)
+
+ruleset.yml încărcat fără erori; toate rutele active trec validările; exporturile refuzate sub pragul de scor; redirecturile 308 funcționează pentru toate legacy_slugs.
+
+2.3 Minim suficient executabil (AMS)
+
+AMS = „afirmația minimă suficientă”: livrabilul conține strict ceea ce este necesar și suficient pentru utilizare/comercializare, fără balast. Baza metodologică: rulebook, standard prompt, front-end/back-end checklists, runtime guides — toate converg la MVP cu fișiere CRITICA/IMPORTANTA din BASE_ACTIVE.
+
+Cum aplici AMS (operational):
+
+Pe modul:
+
+Definești 3 inputuri minime pentru valoare (ex: ICP, obiectiv, canal), 1 ieșire principală (artefact) + 1 metrică de calitate.
+
+Limitezi execuția la un singur flux canonic (ex: draft→revizie→export). Orice „ramură” suplimentară devine post-MVP.
+
+Token & cost budget vizibile în UI (ex: „≈ 1.2k tokens / run”).
+
+Pe setul de module:
+
+Rulează doar CRITICAL/IMPORTANT pentru lansare (listă activă). Mută restul în backlog post-launch.
+
+Sincronizează doar denumirile/slugurile și redirecturile esențiale (fără rescriere completă de conținut la MVP).
+
+Măsurare AMS:
+
+Densitate de execuție: % rulari finalizate / rulari totale; țintă ≥ 95% pe top-10 module.
+
+Timp la valoare (TTV): mediană < 5 min până la artefact exportabil.
+
+Zero over-scope: niciun export care nu respectă ruleset.yml (format, manifest, checksum).
+
+Verificare (DoD – AMS)
+
+Pentru fiecare modul activ există: (a) 1 introducere scurtă (≤ 80 cuvinte), (b) 1 formulă de input minim, (c) 1 șablon de output, (d) 1 KPI. Toate trecute în module.spec + UI.
+
+Build verde + checklist deployment trecut integral; canary fără 404/5xx; KPI de stabilitate atins.
+
+Rezumat Secțiunea 2
+ADN-ul Cusnirian leagă limbajul imperativ, semiotica 8VULTUS și disciplina de guardrails într-un singur standard. AMS ține produsul „tăios”: livrăm minimul care funcționează, măsurăm, iterăm. SSOT + ruleset + checklist asigură că fiecare modul iese la fel în UI, API, SEO, export — fără deriva semantică sau tehnică.
+
+
+
+
+
+
+
+3. Arhitectura de Sistem (High-Level)
+3.1 Straturile: UI, API, Orchestrare, DB, Licențiere
+
+UI (Next.js, App Router)
+
+Puncte de intrare: app/page.tsx, app/layout.tsx, grid de module, editor, export manager, test-engine, UI kit (accordion, card, tabs, sidebar etc.). Toate denumirile de module din UI sunt SSOT și se aliniază cu registry-ul (id, title, slug).
+
+Branding operațional: setul de glyph-uri/animări (SVG/HTML-GIF) servite din pachetele marcate ACTIVE (nu din arhivă), integrate în carduri/stări (locked → eligible → active).
+
+API (rute + politici)
+
+Rute modulare route.ts pentru execuția modulelor și editor (ex.: /app/api/gpt-editor/route.ts), cu rate-limit, server-auth, middleware. Acceptă slug curent + legacy_slugs (compat).
+
+Contracte canonice în module.spec(.json/.schema.json) + prompt.run.schema.json (input schema, output template). Orice input invalid → hard-fail cu motiv.
+
+Orchestrare (Core logic & Evaluatori)
+
+Pipeline: validate input → run core → evaluate → post-process → export. Evaluatorii folosesc evaluator_config.yaml + prompt_scores_schema.json; dacă scorul < prag (ex. 80), exportul este blocat conform ruleset.yml.
+
+Gating operațional: DoR/DoD în dor_dod.rules.yml (nu rulezi dacă nu treci DoR; nu expui dacă nu treci DoD).
+
+DB (Supabase/Postgres)
+
+Tabel modules (chei: id=Mxx, title, slug, legacy_slugs[], plan, is_active), istoric rulări, artefacte export. Migrațiile și seed-urile păstrează aliasurile moștenite pentru redirect/analytics.
+
+Licențiere & Entitlements
+
+Planuri/produse/flag-uri: plans.json, stripe_products_seed.json, feature_flags.json controlează ce modul e accesibil pe Pilot/Pro/Enterprise; paywall & entitlements în middleware/UI.
+
+Politici export: formate permise per plan, watermark trial, manifest + checksum obligatorii (blochează exportul dacă lipsesc sau scorul < prag).
+
+3.2 Fluxul utilizator → modul → rezultat
+
+1) Navigare & selecție
+Utilizatorul deschide biblioteca, vede cardurile modulelor (titlu SSOT + scurt context + cost estimat în tokens). Click pe modul → pagină modul.
+
+2) Validare acces (pre-run)
+
+Middleware verifică: plan, entitlement, feature flag, rate-limit. Dacă nu corespunde → 402/403 cu explicație (UI indică planul necesar).
+
+Se încarcă schema de input; UI afișează minimumul necesar (AMS).
+
+3) Execuție (run)
+
+API primește payload validat (conform prompt.run.schema.json), rulează core logic, apoi evaluatori (calitate, risc, cost). Scorurile sunt atașate rezultatului. Dacă score.overall < threshold, se oprește exportul și se returnează „repair prompts”.
+
+4) Post-process & Export
+
+Dacă trece pragurile: se generează manifest + checksum; se permite export (PDF/ZIP/JSON) în limitele planului (watermark la trial). Artefactul se salvează și se expune în UI (download).
+
+5) Compat & SEO
+
+Orice acces pe legacy_slug redirecționează 308 către slug nou; sitemap & OG se regenerează în deploy.
+
+6) Canary & Rollback
+
+Lansarea merge canary (ex. 5% trafic) cu 404/5xx monitorizate; dacă pragurile sunt depășite → rollback automat.
+
+3.3 Observabilitate: evenimente, loguri, alertare
+
+Evenimente standard (telemetry model)
+
+module_open (props: module_id, module_slug_current, plan, from_legacy:boolean)
+
+module_run_requested (input_size, token_budget)
+
+module_run_started (trace_id)
+
+module_run_scored (scores: quality, risk, cost, overall)
+
+module_run_succeeded (artifact_type, size, export_format)
+
+module_run_blocked (reason: score_below_threshold|no_entitlement|invalid_input)
+
+legacy_redirect_hit (legacy_slug → current_slug)
+
+export_performed (format, checksum_ok:boolean, watermark:boolean)
+Aceste evenimente se corelează cu module_id (Mxx) ca cheie primară pentru rapoarte cross-modul.
+
+Loguri & trasabilitate
+
+Log de execuție la fiecare pas (validate/run/evaluate/export), plus audit trail pentru acces și export (inclusiv motive de blocare). execution_log.json documentează pattern-ul de logare.
+
+Alarme & praguri
+
+Stabilitate: creștere anormală 5xx/timeout pe rute modul;
+
+Integritate: rată exporturi fără manifest/checksum > 0;
+
+Calitate: success_rate pe top-10 module < 95%;
+
+SEO/compat: hit-uri 404 pe pagini de modul > 0;
+
+Licențiere: creștere 402/403 nejustificată (posibil flag/plan greșit).
+Alarmele sunt legate de canary & rollback, conform ghidului de deployment și matricei de riscuri.
+
+Dashboard minim (MVP)
+
+Pagină unică cu: open → run → success funnel pe modul, hit-uri legacy_redirect, erori 4xx/5xx per rută, scoruri medii și TTV median (<5 min până la artefact).
+
+Rezultat secțiunea 3
+Ai un stack clar: UI (Next.js) ↔ API (rute + guardrails) ↔ Orchestrare (evaluatori/scoruri) ↔ DB (Supabase) ↔ Licențiere (plans/flags), plus o telemetrie unificată care probează calitatea, compatibilitatea și monetizarea. Toate regulile critice (DoR/DoD, export policy, redirects 308, checklist release) sunt deja definite în fișierele de control și ghidul de deployment.
+
+
+
+
+
+
+4. Gating Comercial & Entitlements
+4.1 Planuri (pilot, pro, enterprise)
+
+Principiu: accesul la module și la capabilitățile lor se decide printr-o combinație de plan (Pilot/Pro/Enterprise), entitlements (drepturi explicite) și feature flags (activări temporare). Seed-urile pentru planuri/produse și definirea flag-urilor există deja (plans/products/flags).
+
+Roluri de plan (rezumat operațional):
+
+Pilot – inițiere controlată: acces la subsetul de module „CRITICA/IMPORTANTA” pentru testare, export limitat (doar formate de bază, watermark la artefacte), limite stricte de rulări zilnice.
+
+Pro – producție standard: întregul set de module „live”, export complet (manifest + checksum obligatorii), rate-limit relaxat, prioritate normală în coadă.
+
+Enterprise – scalare & guvernanță: toate modulele + capabilități avansate (batch, integrare extinsă), quotas ridicate, SLA, posibile „feature flags” exclusive.
+
+Matrice exemplificativă (MVP) – drepturi de bază:
+
+Capacitate	Pilot	Pro	Enterprise
+Acces top-10 module CRITICA	✓	✓	✓
+Export JSON/PDF (fără watermark)	–	✓	✓
+Export ZIP (bundle)	–	✓	✓
+Batch (≥5 rulări simultan)	–	–	✓
+Webhooks/Integrări extinse	–	✓	✓
+Suport prioritar / SLA	–	–	✓
+
+Politicile de export sunt validate din ruleset.yml + politici de plan: dacă lipsește manifest sau checksum → export blocat; planurile cu trial aplică watermark.
+
+4.2 Feature flags, is_active, throttling
+
+Feature flags
+
+Folosite ca „comutatoare” fine pentru capabilități (ex. enable_batch, beta_exporter_v2, advanced_segmentation).
+
+Pot fi legate de plan sau acordate granular per organizație/utilizator (ex. „early access”).
+
+Sunt verificate înainte de execuția modulului (pre-run gate).
+
+is_active
+
+Marcaj „on/off” pentru fiecare modul în registry + DB: dacă is_active=false, modulul nu apare în listă și nu poate fi rulat (return 404/410 sau 403 cu mesaj „temporarily unavailable” — în funcție de politică).
+
+Folosit pentru „dark launch”/„canary”: apare doar pentru un subset (flag) înainte de activarea globală.
+
+Throttling / Rate-limit
+
+Limite pe rută și/sau modul: ex., Pilot 3-5 rulări/oră, Pro 30/oră, Enterprise 120/oră (valori ilustrative; politica exactă se configurează în gateway/middleware).
+
+Se aplică și la exporturi (pentru a proteja I/O și costurile).
+
+Returnează 429 cu „retry-after” și se loghează evenimentul (telemetrie + alerting dacă se depășesc praguri).
+
+Ordinea de verificare (pre-run):
+
+Auth (identitate/tenant)
+
+Plan (Pilot/Pro/Enterprise)
+
+Entitlements (drept explicit de rulare modul X)
+
+Feature flags (capabilități active)
+
+Rate-limit/Throttling
+
+Input schema validation (hard-fail dacă invalid)
+
+Orice „NU” în pașii 2-5 produce 402/403/429, cu mesaj UI care indică ce plan/flag este necesar.
+
+4.3 Politici de acces per modul
+
+Model unificat (per modul):
+
+Chei canonice: id=Mxx, title, slug, legacy_slugs[], plan_required, entitlements[], feature_flags[], is_active, export_policy, throttle_policy.
+
+Export policy: set de formate permise (JSON/PDF/ZIP), watermark:boolean (dacă plan=trial), require_manifest:boolean, require_checksum:boolean.
+
+Run policy: scor minim impus de evaluatori (ex. min_overall_score=80), altfel export blocat (repair prompts).
+
+Exemplu de matrice (3 module diferite):
+
+Modul (ID)	Plan req.	Entitlements	Flags opționale	Export policy	Throttle policy (indicativ)
+M14 – SOCIAL CONTENT GRID™	Pilot	mod.M14.run	beta.export.pdf_v2	JSON ✓, PDF (Pilot = watermark), ZIP –	Pilot: 5/h · Pro: 30/h · Ent: 120/h
+M31 – SALES FLOW ARCHITECT™	Pro	mod.M31.run, mod.export	enable.webhooks	JSON/PDF ✓, ZIP ✓, manifest+checksum obligatorii	Pro: 30/h · Ent: 120/h
+M40 – NEGOTIATION DYNAMICS™	Enterprise	mod.M40.run, mod.export+	batch.enabled, insights.v1	JSON/PDF/ZIP ✓, batch export ✓, fără watermark	Ent: 120/h (prioritate coadă)
+
+Compatibilitate & moștenire (legacy):
+
+Fiecare modul menține legacy_slugs[] (dacă a fost redenumit/fuzionat).
+
+Routerul/UI rezolvă accesul de pe slug vechi → redirect 308 la slug curent; telemetria marchează from_legacy=true.
+
+Sitemap/OG se regenerează la deploy pentru a reflecta slugurile actuale; 0 linkuri moarte în UI.
+
+Control operațional (deploy & QA):
+
+Checklists de deployment: verificări automate ale rutelelor, redirecturilor, sitemap/OG, testelor e2e și scorurilor minime.
+
+RACI + Top Risks + Canary: lansare pe trafic mic, monitorizare 404/5xx/429, rollback dacă depășește pragurile.
+
+Condiții de acceptare (DoD – Gating & Entitlements):
+
+Toate modulele „live” au plan_required, is_active=true, entitlements mapate și flags verificate pe mediul de producție.
+
+Exporturile respectă politicile: manifest + checksum prezente; watermark aplicat unde e cazul; formatele interzise respinse (422).
+
+Redirecturile 308 din legacy_slugs funcționează pentru 100% din cazuri; niciun 404 pe paginile de modul.
+
+Telemetria raportează corect: module_open/run/succeeded/blocked, legacy_redirect_hit, export_performed.
+
+Rezultat secțiunea 4:
+Ai o schemă de control comercial predictibilă, un circuit de verificări înainte de rulare și politici de export/performanță care țin costul sub control. Fiecare modul e „un contract” între plan, drepturi, flags și scorul minim de calitate, iar întregul sistem se validează automat la deploy conform checklistului.
+
+
+
+
+
+
+
+5. Modelul de Date al Modulului
+5.1 Chei: id (Mxx), title, slug, legacy_slugs
+
+Canon (SSOT) — nivel DB/registry:
+
+{
+  "id": "M14",                       // cheie stabilă (Mxx)
+  "title": "SOCIAL CONTENT GRID™",   // denumire publică identică în UI/API/SEO
+  "slug": "social-content-grid",     // slug curent (URL, sitemap)
+  "legacy_slugs": ["social-media-calendar","content-calendar-optimizer"], // compat
+  "plan_required": "pilot|pro|enterprise",
+  "is_active": true
+}
+
+
+Reguli:
+
+id este immutabil și primează în analytics/rapoarte; slug se poate schimba (menții compat prin legacy_slugs).
+
+Orice acces prin legacy_slugs → redirect 308 către slug curent; evenimentul se marchează (from_legacy=true).
+
+title este unic și sincron în UI, API, sitemap, docs (SSOT).
+
+Indexare sugerată (Postgres/Supabase):
+
+create unique index ux_modules_id on modules(id);
+create unique index ux_modules_slug on modules(slug);
+create index ix_modules_legacy on modules using gin(legacy_slugs);
+
+
+Câmpurile minimale trăiesc în tabelul modules și în registry-ul JSON folosit de UI/API.
+
+5.2 Metadate: dificultate, token estimate, KPIs, guardrails
+
+Metadate operaționale (minim necesar AMS):
+
+{
+  "id": "M14",
+  "meta": {
+    "difficulty": "beginner|intermediate|advanced",
+    "est_tokens_per_run": 1200,         // cost predictiv în UI
+    "est_runtime_s": 8,                 // TTV pentru utilizator
+    "kpis": {
+      "success_rate_min": 0.95,         // DoD pe modul
+      "ctr_goal": 0.12,                 // exemplu KPI de conținut
+      "time_to_value_sla": 300          // < 5 minute până la artefact
+    }
+  },
+  "guardrails": {
+    "min_overall_score": 80,            // evaluator gate
+    "export_policy": {
+      "allowed_formats": ["JSON","PDF"],
+      "watermark_on_trial": true,
+      "require_manifest": true,
+      "require_checksum": true
+    },
+    "rate_limit": { "pilot":5, "pro":30, "enterprise":120 } // /h
+  }
+}
+
+
+Dificultate și est_tokens_per_run sunt afișate în UI pentru transparență cost/efort.
+
+KPIs se verifică în telemetrie (success rate, TTV) și intră în DoD.
+
+Guardrails: scor minim prin evaluatori; export blocat dacă nu există manifest + checksum sau dacă formatul nu e permis de plan (ex. watermark pentru trial).
+
+SQL (extensie meta + politici):
+
+alter table modules add column if not exists meta jsonb default '{}'::jsonb;
+alter table modules add column if not exists guardrails jsonb default '{}'::jsonb;
+
+-- Exemple verificări runtime (pseudo):
+-- check min_score in app-layer înainte de export; refuz 422 dacă nu atinge pragul.
+
+
+Aceste politici sunt oglindite și în fișierele de reguli (ruleset.yml, prompt_scores_schema.json, evaluator_config.yaml).
+
+5.3 Input schema & output template (contracte)
+
+Contractele sunt scrise ca JSON Schema (sau echivalent) și trăiesc în:
+
+module.spec(.json/.schema.json) / prompt.run.schema.json (input & output canonice)
+
+sunt verificate înainte de execuție (input) și după execuție (output), înaintea exportului.
+
+A) input_schema (exemplu M14)
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "M14.run.input",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "icp":        { "type": "string", "minLength": 3 },
+    "goal":       { "type": "string", "enum": ["awareness","leadgen","launch"] },
+    "channels":   { "type": "array", "items": { "type": "string", "enum": ["ig","li","yt","tt"] }, "minItems": 1, "maxItems": 4 },
+    "timespan":   { "type": "string", "pattern": "^(7d|14d|30d)$" },
+    "tone":       { "type": "string", "enum": ["bold","educational","authoritative"] }
+  },
+  "required": ["icp","goal","channels","timespan"]
+}
+
+
+Reguli:
+
+additionalProperties:false pentru a preveni „payload gonflat” (anti-deraiere).
+
+Valorile sunt enum/regex pentru control strict (SSOT).
+
+B) output_template (exemplu M14)
+{
+  "title": "M14.run.output",
+  "type": "object",
+  "properties": {
+    "calendar": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": ["day","channel","post_title","caption","cta"],
+        "properties": {
+          "day":       { "type": "string", "pattern": "^D(1|2|3|4|5|6|7|8|9|10|11|12|13|14|...|30)$" },
+          "channel":   { "type": "string", "enum": ["ig","li","yt","tt"] },
+          "post_title":{ "type": "string", "minLength": 6, "maxLength": 120 },
+          "caption":   { "type": "string", "minLength": 30, "maxLength": 2000 },
+          "cta":       { "type": "string", "enum": ["comment","subscribe","visit","download"] }
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "required": ["quality","risk","cost","overall"],
+      "properties": {
+        "quality": { "type": "number", "minimum": 0, "maximum": 100 },
+        "risk":    { "type": "number", "minimum": 0, "maximum": 100 },
+        "cost":    { "type": "number", "minimum": 0, "maximum": 100 },
+        "overall": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    }
+  },
+  "required": ["calendar","score"]
+}
+
+
+Reguli:
+
+Output-ul include score de la evaluatori; exportul este permis doar dacă overall ≥ min_overall_score din guardrails.
+
+Înainte de export se atașează manifest + checksum; planurile trial impun watermark.
+
+C) Flux de validare (pseudocod)
+function runModule(Mxx, input) {
+  assert(entitlements.ok && featureFlags.ok && rateLimit.ok);          // 402/403/429 dacă nu
+  validate(input, input_schema[Mxx]);                                  // 422 dacă invalid
+  const result = coreExecute(Mxx, input);                               // execuție
+  const score  = evaluate(result, evaluator_config[Mxx]);               // scoruri
+  if (score.overall < guardrails[Mxx].min_overall_score) return repairHints();
+  validate(result, output_template[Mxx]);                               // 422 dacă invalid
+  const artifact = exportWithPolicy(result, guardrails[Mxx].export_policy, plan);
+  return artifact;
+}
+
+
+Observabilitate obligatorie: module_open, module_run_requested/started/scored, module_run_succeeded|blocked, export_performed, legacy_redirect_hit. Toate agregate pe module_id (Mxx) ca cheie primară.
+
+Constrângeri de calitate (DoR/DoD pe Model)
+
+DoR (Definition of Ready): input_schema și output_template definite, guardrails setate, plan_required/is_active în DB/registry, testele unit de validare trec.
+
+DoD (Definition of Done): rute API 200, UI sincron (title/slug), redirecturi 308 testate, export validează manifest+checksum, scorurile medii ≥ prag în canary, Lighthouse SEO ≥ 90 pe pagina modulului.
+
+Rezultat secțiunea 5
+Ai un contract complet: chei stabile (id, slug/legacy_slugs), metadate executabile (difficulty, tokens, KPIs), guardrails (scor, export policy, rate-limit) și schema input/output verificată automat în pipeline. Orice execuție devine predictibilă, auditată și monetizabilă, cu compatibilitate la redenumiri prin legacy_slugs și cu exporturi sigure controlate de ruleset.yml.
+
+
+
+
+
+
+6. Ciclul de Viață al Modulului
+6.1 Creare / versiune / compatibilitate
+
+Scop: fiecare modul trece printr-un flux predictibil, verificabil și reversibil: definire → versiune → compatibilitate → lansare. SSOT: module.spec(.json/.schema.json), ruleset.yml, evaluator_config.yaml, prompt_scores_schema.json, dor_dod.rules.yml.
+
+A) Creare (Definition of Ready)
+
+Definire chei & meta: id=Mxx (immutabil), title, slug, legacy_slugs[], plan_required, is_active, meta.difficulty, meta.est_tokens_per_run, guardrails (score minim + export policy).
+
+Contracte: input_schema (enum/regex, additionalProperties:false) și output_template (artefact + score).
+
+SSOT sincron: titlul/slugul identic în UI, API, sitemap/docs; sitemap/OG pregătite.
+
+B) Versiune (semver pentru modul)
+
+version: major.minor.patch în registry/DB (modules.meta.version), actualizat la schimbări compatibile/incompatibile:
+
+patch: corecții, copy, mici optimizări;
+
+minor: câmp nou opțional în input/output, evaluator ajustat;
+
+major: schimbări incompatibile (ex: renumire slug fără legacy_slugs sau structură output schimbată).
+
+Changelog per modul: sumar modificări + impact (compat / migrații).
+
+C) Compatibilitate (moștenire controlată)
+
+Slug-uri moștenite: legacy_slugs[] populat la redenumiri/fuziuni; router + middleware oferă 308 → slug curent, iar telemetria marchează from_legacy=true. Test obligatoriu pe fiecare slug istoric.
+
+Contracte: la schimbări non-breaking, menții compat (câmpuri noi opționale); la breaking, crești major și menții adaptor/alias cât timp e necesar.
+
+Export policy: manifest + checksum rămân constante; dacă apar formate noi, sunt condiționate de plan/flag.
+
+6.2 Testare (unit / e2e / SEO snapshot)
+
+Strat 0 — Validări statice (CI)
+
+Lint/typecheck, schema lint pentru input_schema/output_template, consistență title/slug față de registry. Build verde sau blocaj.
+
+Strat 1 — Unit tests (logica modulului)
+
+Validare input: respingere corectă la enum/regex/required;
+
+Core run: ramuri de succes + eșec;
+
+Evaluatori: scor consistent pe mostre; blocaj export sub prag;
+
+Export policy: refuz 422 dacă lipsesc manifest/checksum sau formatul nu e permis.
+
+Strat 2 — E2E (Playwright/Cypress)
+
+UI listă → pagină modul → run → rezultat;
+
+Pre-run gates: plan/entitlement/flag/rate-limit (402/403/429 cu mesaj util);
+
+Legacy: acces pe toate legacy_slugs → 308 → slug curent → 200;
+
+Download artefact conform planului (watermark la trial).
+
+Strat 3 — SEO/Lighthouse snapshot
+
+5 pagini: home, index module, 2 module, about: Performance ≥ 85, SEO ≥ 90, Best Practices ≥ 90; zero linkuri moarte; sitemap/OG în regulă.
+
+Strat 4 — Observabilitate (telemetry checks)
+
+Evenimente prezente: module_open/run_requested/run_started/run_scored/run_succeeded|blocked, export_performed, legacy_redirect_hit — toate agregă pe module_id (Mxx). Dashboard arată open→run→success și TTV median < 5 min.
+
+DoD – Testare trecute:
+
+Toate straturile verzi; niciun 404 pe rute modul; niciun export fără manifest/checksum; redirect 308 funcțional pentru 100% slugs vechi.
+
+6.3 Publicare & rollback
+
+A) Publicare (Release discipline)
+
+Branch & freeze: release/mod-{Mxx}-vX.Y.Z; blochezi deploy pe main până la trecerea DoD.
+
+Checklists de deployment: rute 200, redirect 308, sitemap/OG regenerate, e2e/SEO verzi, riscuri marcate.
+
+Gating activ: plan_required, entitlements, feature_flags, is_active=true doar după ce testele au trecut.
+
+Canary: expui 5% trafic; monitorizezi 404/5xx/429, scoruri sub prag, timp răspuns. Prag depășit → rollback.
+
+B) Rollback (Plan explicit, fără “panic”)
+
+Condiții: spike 5xx, success_rate < 95% pe modul, 404 pe pagini modul, exporturi fără manifest/checksum, regress SEO sever.
+
+Pași:
+
+Reveniți la tag-ul stabil anterior;
+
+Dezactivați is_active/flagul pentru modulul problematic;
+
+Păstrați legacy_slugs (nu afectează compat);
+
+Înregistrați incidentul + RCA (root cause analysis) în logs/risks;
+
+Hotfix pe branch, treceți din nou DoR/DoD minimal și relansați pe canary.
+
+C) Aftercare (24–72h)
+
+Triere erori din canary/production; stabilizare scoruri; validare KPIs:
+
+Stabilitate: build verde, 0 runtime errors critice;
+
+UX/SEO: targeturi Lighthouse atinse;
+
+Monetizare: conversie free→paid ≥ 6% cohortă caldă (indicativ), success_rate top-10 module ≥ 95%.
+
+Concluzie Secțiunea 6
+
+Modulul are viață controlată: intră în sistem doar când este „gata” (DoR), iese la utilizatori doar când trece toate testele (DoD), se expune gradual (canary), iar dacă realitatea lovește — rollback este procedural, cu compat menținută prin legacy_slugs și exporturi în siguranță (manifest + checksum). Toate aceste reguli sunt ancorate în fișierele de control, checklisturi și ghidul de deployment din knowledge.
+
+
+
+
+
+
+7. Mecanismul de Execuție
+7.1 Pipeline: validare input → core logic → post-processors
+
+Flux canonic (SSOT):
+
+Pre-gate: auth → plan → entitlements → feature flags → rate-limit/throttling. Orice „NU” produce 402/403/429 cu mesaj util; se loghează evenimentul și retry-after (la 429).
+
+Validare input (hard): se verifică împotriva input_schema (enum, regex, additionalProperties:false). Invalid → 422 + hint de corecție; se oprește execuția.
+
+Core logic (run): modulul procesează inputul; se respectă bugetul est_tokens_per_run (UI afișează cost/efort). Se atașează trace_id.
+
+Post-processors: normalizare, deduplicare, clasare, redactare finală; optional: enrichment (metadate, asteriscuri de risc).
+
+Evaluare (gate): rulează evaluatorii (calitate, risc, cost) și calculează score.overall. Dacă sub pragul guardrails.min_overall_score → blocare export + “repair prompts”.
+
+Export policy: se validează allowed_formats, watermark_on_trial, require_manifest, require_checksum. Abatere → 422.
+
+Persistență & expunere: rezultatul acceptat se salvează, se indexează pentru UI/API, se emite link de descărcare (respectând planul).
+
+Pseudocod operațional:
+
+async function runModule(Mxx, user, payload) {
+  preGate(user, Mxx);                                 // auth/plan/entitlements/flags/rl
+  validate(payload, schemas.input[Mxx]);              // 422 dacă invalid
+  const trace = newTraceId();
+  const raw   = await core[Mxx](payload, { trace });
+  const scored= evaluate(raw, evaluators[Mxx]);       // quality/risk/cost/overall
+  if (scored.overall < guardrails[Mxx].min_overall) 
+      return { blocked: true, hints: repair[Mxx](raw, scored) };
+  validate(scored, schemas.output[Mxx]);              // 422 dacă invalid
+  const artifact = await exportWithPolicy(scored, policy[Mxx], user.plan);
+  return persistAndExpose(Mxx, user, artifact, trace);
+}
+
+
+(Contracte, evaluatori, export policy și reguli sunt definite în module.spec, prompt.run.schema.json, evaluator_config.yaml, ruleset.yml.)
+
+7.2 Evaluatori & scoruri (calitate, risc, cost)
+
+Rol: gardă de calitate post-execuție. Fără scor minim → nu există export. Evaluatorii și schema scorurilor sunt standardizate; threshold-ul este per modul.
+
+Model de scor (SSOT):
+
+{
+  "score": {
+    "quality": 0-100,   // claritate, structură, relevanță
+    "risk":    0-100,   // PII, bias, tone, conformitate
+    "cost":    0-100,   // eficiență, tokens/latency vs. țintă
+    "overall": 0-100    // agregat ponderat
+  }
+}
+
+
+quality: acuratețe, coeziune, completitudine conform output_template.
+
+risk: detectează conținut interzis/sensibil, scăpări PII, halucinații; poate emite „red flags”.
+
+cost: bugete efectiv/estimativ (tokens, timp).
+
+overall: agregat (ex: 0.6·quality + 0.3·(100-risk) + 0.1·cost) — exemplu; ponderea trăiește în evaluator_config.yaml.
+
+Dacă overall < min_overall_score → return “repair prompts” (lista minimă de corecții) și blochează exportul (respectă ruleset.yml).
+
+Telemetrie la evaluare (obligatoriu):
+
+module_run_scored (props: quality, risk, cost, overall, trace_id, module_id, plan, from_legacy), urmat de module_run_succeeded sau module_run_blocked.
+
+7.3 Persistență rezultate & expunere (UI/API)
+
+Persistență (DB + Storage):
+
+DB (Supabase/Postgres): runs (user, module_id, timestamps, scores, status), artifacts (tip, mărime, format, checksum, manifest_id), relație la modules.
+
+Storage: artefactul (JSON/PDF/ZIP) + manifest și fișierul checksum (ex. SHA-256). Exportul e permis doar dacă există ambele (policy).
+
+Manifest & checksum (anti-tamper):
+
+Manifest include: module_id, module_version, input_digest, output_digest, timestamps, export_format, plan.
+
+Checksum semnează pachetul exportat; la download se verifică (checksum_ok=true în telemetrie). Lipsă/nepotrivire → refuz download și alertă.
+
+Expunere (UI/API):
+
+UI: card rezultat + buton „Download” (arată format & watermark dacă trial). Pentru rezultate blocate: afișează repair prompts + „Re-run”.
+
+API: GET /api/modules/{slug}/runs/{id} (status + scoruri + link artefact dacă eligibil); GET /download/{artifact_id} validează entitlement/plan și checksum înaintea servirii.
+
+Compat & SEO:
+
+Acces pe legacy_slugs → 308 către slug curent (măsurat prin legacy_redirect_hit). Sitemap/OG regenerate la deploy.
+
+Evenimente standard (observabilitate minimă):
+
+module_open, module_run_requested, module_run_started,
+
+module_run_scored, module_run_succeeded | module_run_blocked,
+
+export_performed (format, checksum_ok),
+
+legacy_redirect_hit (legacy→current).
+Toate agregă pe module_id (Mxx) ca cheie primară pentru dashboardul open→run→success și pentru TTV median (<5 min).
+
+DoD — Execuție/Persistență/Expunere:
+
+100% rute modul → 200; 0 exporturi fără manifest+checksum; watermark aplicat corect la trial; redirect 308 funcțional pentru toate legacy_slugs; evenimentele de mai sus apar în loguri.
+
+Rezultat Secțiunea 7
+Execuția unui modul este un lanț determinist: pre-gate → validare dură → run → evaluare cuantificată → export cu manifest & checksum → persistență + UI/API. Orice abatere e vizibilă în telemetrie și se blochează înainte de a afecta calitatea, securitatea sau costurile.
+
+
+
+
+
+
+
+
+8. Telemetrie & KPI
+8.1 Evenimente standard (open/run/success/fail)
+
+Standard minim (nume + payload canonic, chei obligatorii):
+
+module_open
+
+module_id (Mxx), module_slug_current, from_legacy (bool), plan, user_id, ts.
+
+Triggere: card → pagină modul (UI) sau acces direct (URL).
+
+module_run_requested
+
+module_id, trace_id, input_size (chars/fields), est_tokens, plan, ts.
+
+module_run_started
+
+module_id, trace_id, runtime_env (prod/canary), ts.
+
+module_run_scored
+
+module_id, trace_id, score_quality, score_risk, score_cost, score_overall, ts.
+
+module_run_succeeded | module_run_blocked
+
+module_id, trace_id, artifact_type (JSON/PDF/ZIP), export_format, checksum_ok (bool if download), block_reason (if blocked), ts.
+
+export_performed
+
+module_id, artifact_id, export_format, checksum_ok, size_bytes, plan, ts.
+
+legacy_redirect_hit
+
+legacy_slug, module_slug_current, module_id, plan, ts.
+
+Cheia primară analitică: module_id (Mxx). Păstrezi și module_slug_current pentru rapoarte SEO/compat. Redirecturile 308 din legacy_slugs trebuie măsurate explicit.
+
+Exemplu (JSON) – module_run_scored:
+
+{
+  "evt": "module_run_scored",
+  "module_id": "M14",
+  "module_slug_current": "social-content-grid",
+  "trace_id": "trc_7Q4...f2",
+  "score_quality": 92,
+  "score_risk": 6,
+  "score_cost": 81,
+  "score_overall": 89,
+  "plan": "pro",
+  "from_legacy": false,
+  "ts": "2025-08-30T10:22:03Z"
+}
+
+
+Politici: evenimentele se emit în toate branch-urile cu canary flag; în producție sunt agregate în dashboardul unic (open→run→success).
+
+8.2 KPIs cross-modul (conversie, retenție, LTV)
+
+A. Activare / Conversie
+
+Open→Run Rate (per modul / plan):
+
+run_rate
+=
+#
+ module_run_started
+#
+ module_open
+run_rate=
+# module_open
+# module_run_started
+	​
+
+
+Success Rate (calitate execuție):
+
+success_rate
+=
+#
+ module_run_succeeded
+#
+ module_run_started
+success_rate=
+# module_run_started
+# module_run_succeeded
+	​
+
+
+Țintă MVP: ≥ 95% pe top-10 module.
+
+Free→Paid Conversion (la nivel platformă, cohortă 14 zile):
+
+conv
+𝐹
+→
+𝑃
+=
+#
+ 
+utilizatori pl
+a
+˘
+titori noi
+#
+ utilizatori free noi
+conv
+F→P
+	​
+
+=
+# utilizatori free noi
+# utilizatori pl
+a
+˘
+titori noi
+	​
+
+
+Țintă inițială: ≥ 6% pe trafic cald.
+
+B. Timp la valoare (TTV)
+
+TTV median (sec): mediană dintre module_run_started.ts și primul module_run_succeeded.ts (același trace_id). Țintă MVP: < 300s.
+
+C. Retenție
+
+D2/D7 „Module Engagement Retention”: % utilizatori care au ≥1 run în ziua 2 / ziua 7 față de ziua 0.
+
+Cross-Module Adoption: % utilizatori care rulează ≥2 module diferite în 14 zile (indicativ product depth).
+
+D. Eficiență & Cost
+
+Avg Tokens/Run (estimare vs. real), Latency P95, Error Rate (4xx/5xx) pe rută modul.
+
+Checksum OK Rate: % exporturi cu verificare reușită (anti-tamper). Orice < 100% declanșează investigație.
+
+E. Valoare comercială (LTV – nivel raportare)
+
+LTV simplificat (rolling):
+
+LTV
+≈
+ARPU
+90
+𝑑
+×
+retenție
+90
+𝑑
+LTV≈ARPU
+90d
+	​
+
+×retenție
+90d
+	​
+
+
+(Estimare de MVP pentru a compara segmente plan/module packs; se rafinează post-lansare.)
+
+F. SEO & Compat
+
+Legacy Redirect Share: % sesiuni care trec prin legacy_redirect_hit → monitorizează calitatea migrației slugs.
+
+404 Rate (module pages): trebuie să rămână 0; altfel blocare release/rollback.
+
+8.3 Dashboard & raportare
+
+Dashboard MVP (o singură pagină, live):
+
+Funnel global: Open → Run → Success (stacked per plan).
+
+Top-10 Module Cards:
+
+success_rate, run_rate, TTV_median, Latency_P95, Checksum_OK, Error_4xx/5xx, legacy_redirect_share.
+
+Alerts bar: praguri depășite (ex.: success_rate < 95% pe modul, 404>0 pe rute modul, export fără manifest/checksum, Latency_P95 > țintă).
+
+Segmentare instant: filtre după plan, modul, from_legacy, cohortă (7/14 zile).
+
+SEO tile: SEO score (Lighthouse snapshot) pe home, index modules, 2 module reprezentative.
+
+Raportare operațională:
+
+Daily ops (10:00): eroare/latency/redirect/404 summary; lista modulelor sub praguri; acțiuni de mitigare.
+
+Weekly exec (Luni): trenduri conversie, retenție D7, cross-module adoption, succes top-10 module, issues & hotfix.
+
+Monthly product: LTV/ARPU simplificată pe segmente, cohort analysis, recomandări de pachete/planuri.
+
+Exemple SQL (Supabase/Postgres, adaptare la schema ta):
+
+-- Success rate per module (ultimele 14 zile)
+select module_id,
+  sum(case when evt='module_run_succeeded' then 1 else 0 end)::float /
+  nullif(sum(case when evt in ('module_run_started') then 1 else 0 end),0) as success_rate
+from analytics
+where ts >= now() - interval '14 days'
+group by module_id
+order by success_rate desc;
+
+-- TTV median (sec) pe modul (matching trace_id)
+-- (în practică, folosești CTE și percentile_cont(0.5))
+
+
+DoD — Telemetrie & KPI:
+
+Toate evenimentele standard apar în log (fără lacune); cheia module_id (Mxx) e prezentă peste tot.
+
+Dashboardul arată funnel global + top-10 module cu success_rate ≥ 95% pe canary → ok pentru full rollout.
+
+0 exporturi fără manifest/checksum; 0 404 pe pagini de modul; redirecturile 308 din legacy_slugs sunt măsurate și funcționale.
+
+Rezultat secțiunea 8
+Ai un model de telemetrie unic și suficient care măsoară impactul real (open→run→success), calitatea (scores, checksum), eficiența (tokens/latency) și valoarea (conversie, retenție, LTV). Dashboardul MVP oferă semnale de decizie pentru canary, rollout, și, la nevoie, rollback — ancorat în regulile și checklisturile definite în knowledge.
+
+
+
+
+
+
+
+9. Securitate & Conformitate
+9.1 Rate-limit, sandbox, red team basics
+
+Rate-limit (gateway + per-modul):
+
+Aplica pe două straturi: (a) pe rută (API/global), (b) pe modul (în funcție de plan). Exemplu orientativ: Pilot 5/h, Pro 30/h, Enterprise 120/h; exporturile au propriul plafon. La depășire: 429 + Retry-After, se loghează eveniment și se ridică alertă dacă pragurile sunt depășite.
+
+Rate-limit și throttling fac parte din pre-gate (auth → plan → entitlements → flags → rate-limit → validare input).
+
+Sandbox (execuție controlată):
+
+Separă execuția de modul (core logic) de sistemele de I/O (export, storage). Orice acces extern (webhooks, integrare) trece prin allow-list, iar timpul de execuție + bugetul de tokeni sunt limitate conform meta (est_tokens_per_run).
+
+Fără acces la PII ne-necesare; default deny.
+
+Red team basics (pre-prod și post-deploy):
+
+Probează: injecții în input (prompt injections), data exfiltration, bypass la flags/entitlements, abuz la export (fără manifest/checksum), flood (burst > rate-limit).
+
+Declanșatoare: dacă success_rate scade sub prag, 5xx cresc, ori apar exporturi fără checksum → marchează incident, oprește canary sau execută rollback controlat.
+
+DoD securitate (minim MVP):
+
+Toate rutele modul au rate-limit activ;
+
+Canary rulează cu alertare pe 404/5xx/429;
+
+0 exporturi fără manifest+checksum;
+
+Red team checklist rulat pe top-10 module înainte de full rollout.
+
+9.2 PII, audit trail, export policy
+
+PII (minimizare + scop legitim):
+
+Colectezi numai ce e necesar pentru rulare; enum/regex în input_schema ca să împiedice câmpuri nedeclarate (additionalProperties:false).
+
+Orice câmp cu potențial PII se marchează în schema modulului și se tratează ca sensibil: mascare în loguri, fără includere în artefacte dacă nu e cerut explicit.
+
+Audit trail (trasabilitate end-to-end):
+
+Evenimente standard: module_open/run_requested/run_started/run_scored/run_succeeded|blocked, export_performed, legacy_redirect_hit, toate cu module_id (Mxx), trace_id, plan, ts.
+
+Păstrezi motivele de blocare (ex. score_below_threshold, no_entitlement, invalid_input) și rezultatele verificărilor de integritate (checksum_ok).
+
+Export policy (ruleset.yml + plan):
+
+Permis doar dacă: formatul e în allowed_formats, manifest și checksum sunt generate, iar overall_score ≥ threshold.
+
+Trial → watermark.
+
+Orice abatere → 422 + hint de remediere; evenimentele se loghează și trimit alertă dacă frecvența devine anormală.
+
+9.3 DoR/DoD gate: score ≥ 80
+
+Gate-uri obligatorii (SSOT):
+
+DoR (Definition of Ready): modulul intră în execuție doar dacă are input_schema/output_template valide, guardrails definite (inclusiv min_overall_score) și este eligibil (plan/entitlement/flag/rate-limit).
+
+Evaluatori → scoruri: după core logic se rulează evaluatori (calitate, risc, cost) și se calculează overall. Pragul minim pentru MVP: overall ≥ 80 (exemplu din reguli). Sub prag → blocare export + „repair prompts” către utilizator.
+
+DoD (Definition of Done): exportul este permis doar dacă trece scorul minim și se confirmă integritatea pachetului (manifest + checksum). Redirecturile 308 din legacy_slugs funcționează; E2E/SEO verzi; canary fără 404/5xx anormale.
+
+Acceptanță secțiunea 9 (verificare rapidă):
+
+Rate-limit activ la rute și pe modul;
+
+Audit trail complet pe evenimentele standard;
+
+0 exporturi fără manifest+checksum;
+
+Min. overall_score atins (≥ 80) pe canary;
+
+Canary monitorizat cu praguri/alerte; rollback definit și testat.
+
+
+
+
+
+
+
+
+10. UX & Design Tokens
+10.1 Navigație module, carduri, breadcrumbs
+
+Principiu: navigație clară, ritm scurt (2–3 acțiuni până la artefact), denumiri SSOT (aceleași în UI/API/SEO), cu stări vizuale legate de gating: locked → eligible → active.
+
+A. Arhitectură de navigație
+
+Header fix: Home / Modules / Docs / Pricing / Account.
+
+Grid de module (12/8/6/3 col în funcție de breakpoint). Filtre: Plan (Pilot/Pro/Ent), Bloc (M01–M10… M41–M50), Stare (active/eligible/locked).
+
+Breadcrumbs: Modules › {Bloc} › {ModuleTitle}; din orice view ai 1 clic înapoi pe index.
+
+Search + CmdK: căutare după title, id (Mxx), slug (autocomplete).
+
+Keyboard: Tab/Shift+Tab, Enter (Open), Esc (Close), Cmd/Ctrl+K (palette), Alt+←/→ (next/prev module).
+
+B. Card module (stări vizuale)
+
+Locked: icon lock subtil, CTA = „Upgrade pentru acces”.
+
+Eligible: badge „Included” + tooltip cu limita planului.
+
+Active: CTA „Open”, afisează ≈ est_tokens/run, difficulty, TTV ~s.
+
+Warning: dacă există legacy_slugs atinse recent, arată „Redirected from legacy” (ajută SEO & compat).
+
+C. Micro-copy operativ (imperativ + metric)
+
+„Rulează diagnosticul (≈1.2k tokens, ~8s).”
+
+„Exportă cu manifest + checksum (PDF/JSON).”
+Tonul rămâne Cusnirian; numele publice ale modulelor nu se alterează nicăieri.
+
+DoD (Navigație)
+
+Toate titlurile/slugurile coincid cu registry;
+
+Din homepage → artefact: max 3 acțiuni;
+
+CmdK funcțional; breadcrumbs consecvente.
+
+10.2 OG/meta, sitemap, redirects 308 (legacy → current)
+
+A. OG/meta
+
+Per pagină de modul:
+
+<title>{ModuleTitle} · PromptForge™</title>
+
+<meta name="description"> (≤ 155c, conține beneficiul + „score gate ≥ 80”).
+
+OG image: varianta cu glyph/stare (active/eligible/locked).
+
+Index: listează blocurile (M01–M50) + texte scurte action-first.
+
+Regenerare automată la build; nicio divergență între UI și meta.
+
+B. Sitemap
+
+Include numai rutele „live” (is_active:true).
+
+Exclude slugurile moștenite (legacy) din sitemap.xml; acestea redirecționează 308.
+
+Canary: sitemap generat dinamic în pre-release.
+
+C. Redirects 308 (legacy → current)
+
+Toate legacy_slugs[] → 308 permanent spre slug curent.
+
+Telemetrie: legacy_redirect_hit pentru fiecare caz; 404 = 0 pe pagini module.
+
+Test E2E acoperă fiecare slug istoric.
+
+DoD (SEO/Compat)
+
+Lighthouse: SEO ≥ 90 pe home, index, 2 module;
+
+0 linkuri moarte; 100% redirects 308 verificate; OG image validă.
+
+10.3 Accesibilitate & performanță
+
+A. Accesibilitate
+
+Contrast min. WCAG AA (4.5:1 text normal).
+
+aria-* pentru card, dialog, tooltip, meniu, tabs; landmarks: header/main/nav/footer.
+
+Focus rings vizibile pe toate interactivele; „Skip to content”.
+
+prefers-reduced-motion: dezactivează animațiile de brand grele, păstrează fallback static.
+
+Tablouri/diagrame: role="img", aria-label concis (max 120c).
+
+Teste: axe-core/Pa11y în CI pe 5 pagini.
+
+B. Performanță (bugete MVP)
+
+LCP ≤ 2.5s, CLS ≤ 0.1, TTI ≤ 3.5s (desktop ± 20% mobil).
+
+Imagini: next/image, dimensiuni declarate, lazy; SVG glyph-uri inline minificate.
+
+Code-split pe paginile de modul; dezactivează importurile nefolosite.
+
+CSS: extrage design tokens; evită calc/filters costisitoare în fold.
+
+JS: evită heavy re-renders; memoizare pe liste mari; evenimente debounce/throttle.
+
+Test: Lighthouse în CI (Performance ≥ 85 la 5 pagini).
+
+C. Design Tokens (Cusnirian) — exemplu canonic
+
+{
+  "color": {
+    "bg": "#05010A",
+    "fg": "#EDEDEE",
+    "accent.green": "#228B22",
+    "accent.red": "#8B0000",
+    "gold": "#CDA434",
+    "muted": "#9AA0A6"
+  },
+  "radius": { "sm":"6px","md":"10px","lg":"16px" },
+  "shadow": { "card":"0 6px 24px rgba(0,0,0,0.35)" },
+  "motion": { "duration":"220ms","easing":"cubic-bezier(.2,.8,.2,1)" },
+  "z": { "nav":20,"modal":1000 }
+}
+
+
+Semantice: status.locked (muted/overlay), status.eligible (gold ring thin), status.active (accent.green glow soft).
+
+States: hover ≠ focus (nu te baza doar pe culoare).
+
+Motion: sub 220ms, ease-out; la prefers-reduced-motion: duration: 1ms.
+
+Implementare: CSS vars / ThemeProvider, un singur source of truth.
+
+Checklist final (A11y + Perf + UX)
+
+ Contrast AA; focus visible; prefers-reduced-motion on.
+
+ Breadcrumbs coerente; CmdK; tastatură completă.
+
+ Grid module: stări locked/eligible/active clare.
+
+ OG/meta corecte; sitemap doar rute live; 308 pentru toate legacy.
+
+ Lighthouse: Perf ≥ 85, SEO ≥ 90, BP ≥ 90 (5 pagini).
+
+ 0 exporturi fără manifest + checksum; 0 erori 404/5xx pe rute modul.
+
+Rezultat Secțiunea 10
+UI-ul livrează viteză + claritate: navigație cu 3 acțiuni până la artefact, denumiri SSOT, compat SEO prin 308, și o piele Cusniriană (tokens) care rămâne accesibilă și performantă sub orice condiții.
+
+
+
+
+
+
+
+11. Instrucțiuni per Bloc (Overview)
+11.1 Strategic & Operations (M01–M10) — scop, rol, când le folosești
+
+Scop: definește direcția, memoria operațională și autoritatea publică. Setează regulile de joc (SOP, semiotică, statut, criză) și structurează „de ce/ce/cum” pentru întreg produsul.
+Rol: strategist, founder, comms lead.
+Când le folosești: la inițiere de proiect, repozitionare, stabilire statut/tiers, gestionare crize, pregătire lansări.
+Module-cheie (exemple rapide):
+
+M01 – SOP FORGE™: codifică proceduri & standarde. Output: SOP-uri acționabile (PDF/JSON). KPI: adoptare SOP, timp mediu de execuție.
+
+M02 – LATENT MAP™: hartă de sens/strategie (teme, tensiuni). Output: schemă priorități + vectori semantici.
+
+M03 – SEVEN-TO-ONE™: comprimă 7 idei → 1 teză vânzătoare. Output: propoziție centrală + alternative.
+
+M04 – SEMIOTIC DICTIONARY 8VULTUS™: lexicon vizual-retoric. Output: tokens de brand (Map/Frame/Grid).
+
+M05 – ORAKON MEMORY GRID™: memorie operațională (ce reținem/uităm). Output: reguli de retenție context.
+
+M06 – AGENTIC GPT SALES™: scenarii tactice de vânzare cu GPT. Output: play-uri + scripturi.
+
+M07 – TRUST REVERSAL PROTOCOL™: inversează riscul perceput. Output: garanții, reversări, probe.
+
+M08 – STATUS-TIER LOYALTY™: stratifică statut/loialitate. Output: perks & gates per tier.
+
+M09 – AUTHORITY POSITIONING™: poziționare publică. Output: claim + mapare canale.
+
+M10 – CRISIS COMMUNICATION PLAYBOOK™: răspuns la criză (24–72h). Output: mesaje, timeline, Q&A.
+Rezultate: SOP + teză centrală + plan de criză + set de tokens; „osatura” pentru celelalte blocuri. Gating/export conform ruleset (manifest, checksum, score ≥ 80).
+
+11.2 Content & Marketing (M11–M20) — scenarii & rezultate
+
+Scop: generează conținut viral, voce coerentă, campanii cu momentum și personalizare pe segmente.
+Rol: content lead, brand, growth.
+Scenarii: lansare în 48h; calendar inteligent; analytics→îmbunătățire; personalizare pe ICP.
+Module-cheie:
+
+M11 – VIRAL CONTENT ENGINE™: idei cu potențial de viralizare. Output: 20–50 hook-uri validate. KPI: CTR, share-rate.
+
+M12 – BRAND VOICE CODEX™: ghid de voce & stil. Output: codex + exemple. KPI: consistență.
+
+M13 – EMAIL SEQUENCE ARCHITECT™: secvențe email. Output: 5–9 mesaje + A/B. KPI: open, reply, sales.
+
+M14 – SOCIAL CONTENT GRID™: grilă socială (fuziune calendare). Output: calendar 7–30 zile. KPI: post-throughput, engagement.
+
+M15 – LANDING PAGE ALCHEMIST™: pagini care convertesc. Output: draft + blocuri. KPI: CVR.
+
+M16 – CONTENT REPURPOSING ENGINE™: reciclați 1→N formate. Output: bundle multi-canal. KPI: cost/post.
+
+M17 – INFLUENCE PARTNERSHIP FRAME™: colaborări/ambasadori. Output: pitch+deal-sheet.
+
+M18 – CONTENT ANALYTICS DASHBOARD™: citire performanță. Output: rapoarte & acțiuni.
+
+M19 – AUDIENCE SEGMENT PERSONALIZER™: mesaje pe segmente. Output: variații ICP. KPI: CVR pe segment.
+
+M20 – MOMENTUM CAMPAIGN BUILDER™: campanii scurte cu inerție. Output: play de 7–14 zile. KPI: lift pe funnel.
+Rezultate: asset-uri exportabile (PDF/JSON/ZIP) + măsuri clare (CTR/CVR/TTV). Redirecturile 308 funcționează pe slugs; SEO ≥ 90 (snapshots).
+
+11.3 Technical Architecture (M21–M30) — integrare & scalare
+
+Scop: documentează API, definește blueprint, pipeline DevOps, securitate și orchestrare pentru scalare.
+Rol: arhitect, platform, DevOps/SRE.
+Când: pre-launch tehnic, refactor, hardening securitate, creșteri de trafic.
+Module-cheie:
+
+M21 – API DOCS GENERATOR™: contracte API din schema. Output: docs + examples.
+
+M22 – SYSTEM BLUEPRINT™: diagrame high-level. Output: C4-ish + checklists.
+
+M23 – DEVOPS PIPELINE ARCHITECT™: CI/CD + approvals + canary. Output: pipelines & policies.
+
+M24 – DATA SCHEMA OPTIMIZER™: modele DB, indici. Output: migrații & teste.
+
+M25 – MICROSERVICES GRID™: granulație & mesaje. Output: hartă servicii.
+
+M26 – SECURITY FORTRESS FRAME™: controale & threat model. Output: checklist securitate.
+
+M27 – PERFORMANCE ENGINE™: profilare & optimizări. Output: bugete perf (LCP/TTFB).
+
+M28 – API GATEWAY DESIGNER™: routing + RL + authz. Output: config gateway.
+
+M29 – ORCHESTRATION MATRIX™: orchestrare containere/queue. Output: topologii & SLO.
+
+M30 – CLOUD INFRA MAP™: hartă infrastructură. Output: IaC blocks + cost guardrails.
+Rezultate: pipeline cu canary+rollback, scor minim la evaluatori, rate-limit pe rute, export cu manifest+checksum; checklist deployment trecut.
+
+11.4 Sales & Customer Ops (M31–M40) — funnel & succes clienți
+
+Scop: construiește flux de vânzări, enablement, forecast, succes clienți și parteneriate.
+Rol: head of sales, revops, CS lead.
+Când: lansare ofertă, ABM, pregătire QBR/EBR, negociere.
+Module-cheie:
+
+M31 – SALES FLOW ARCHITECT™ (fuziune Process+Operations): pipeline standard & SLA. Output: playbook operare. KPI: win-rate, cycle time.
+
+M32 – CUSTOMER JOURNEY MAPPER™: journey map + puncte „aha”. Output: gaps & fix-uri.
+
+M33 – ENABLEMENT FRAME™: kit vânzare (decks, talk tracks). Output: enablement pack.
+
+M34 – ACCOUNT-BASED STRATEGY™: target list & plays. Output: ABM plan. KPI: meetings/booked.
+
+M35 – FORECAST ENGINE™: proiecții & scenarii. Output: forecast tabelat + range.
+
+M36 – COMPENSATION DESIGNER™: scheme bonus/commissions. Output: scheme & simulări.
+
+M37 – CUSTOMER SUCCESS PLAYBOOK™: onboarding, QBR, risc churn. Output: CS rituals. KPI: NRR/GRR.
+
+M38 – PARTNER ECOSYSTEM GRID™: parteneri & roluri. Output: matrix + offer splits.
+
+M39 – INTELLIGENCE ENGINE™: intel concurență/ofertă. Output: battlecards.
+
+M40 – NEGOTIATION DYNAMICS™: tactici & concesii. Output: play de negociere. KPI: discount median.
+Rezultate: funnel definit, enablement la zi, forecast coerent; telemetrie pe open→run→success conectată cu conversia free→paid ≥ 6% (target MVP).
+
+11.5 Business Ops & Identity (M41–M50) — procese & brand
+
+Scop: automatizează procese, asigură calitate, portofoliu proiecte, schimbare controlată, identitate fractalică și licențiere prompts.
+Rol: COO/PMO, QA lead, brand owner, legal/licensing.
+Când: stabilire operațiuni, audit calitate, management portofoliu, rollout „brand tokens”, gestionare IP.
+Module-cheie:
+
+M41 – PROCESS AUTOMATION BLUEPRINT™: hărți & triggeri. Output: play-uri Make/Zapier/n8n.
+
+M42 – QUALITY SYSTEM MAP™: controale calitate. Output: QC gates + checklists.
+
+M43 – SUPPLY FLOW OPTIMIZER™: flux furnizori/resurse. Output: WIP limits + SLA.
+
+M44 – PORTFOLIO MANAGER™: portofoliu proiecte. Output: scoring & prioritizare.
+
+M45 – CHANGE FORCE FIELD™: schimbare cu rezistențe. Output: plan schimbare.
+
+M46 – CREATIVE STRATEGY ENGINE™: strategii creative. Output: creative packs.
+
+M47 – PROMPT SYSTEM ARCHITECT™: arhitectură prompts. Output: librărie & standarde.
+
+M48 – FRACTAL IDENTITY MAP™: identitate multi-strat. Output: tokens & glyph maps.
+
+M49 – EXECUTIVE PROMPT DOSSIER™: rapoarte executive. Output: dossier periodic.
+
+M50 – PROMPT LICENSING MANAGER™: licențiere, planuri, IP. Output: terms & enforcement.
+Rezultate: operațiuni automatizate, calitate verificată, brand unitar (8VULTUS), IP controlat; exporturile respectă manifest+checksum, watermark trial; SEO/redirect 308 corect.
+
+Notă generală (pentru toate blocurile):
+
+Pre-run gates (plan/entitlements/flags/rate-limit) → validare input → run → evaluare & score (blocare sub 80) → export (manifest+checksum, policy-per-plan) → persistență & telemetrie (open/run/success, legacy_redirect_hit). Toate denumirile/slugurile sunt SSOT; legacy_slugs redirecționează 308 și sunt măsurate.
+
+
+
+
+
+
+
+Catalog Detaliat al celor 50 de Module
+12.1 M01 – SOP FORGE™
+12.2 M02 – LATENT MAP™
+12.3 M03 – SEVEN-TO-ONE™
+12.4 M04 – SEMIOTIC DICTIONARY 8VULTUS™
+12.5 M05 – ORAKON MEMORY GRID™
+12.6 M06 – AGENTIC GPT SALES™
+12.7 M07 – TRUST REVERSAL PROTOCOL™
+12.8 M08 – STATUS-TIER LOYALTY™
+12.9 M09 – AUTHORITY POSITIONING™
+12.10 M10 – CRISIS COMMUNICATION PLAYBOOK™
+12.11 M11 – VIRAL CONTENT ENGINE™
+12.12 M12 – BRAND VOICE CODEX™
+12.13 M13 – EMAIL SEQUENCE ARCHITECT™
+12.14 M14 – SOCIAL CONTENT GRID™
+12.15 M15 – LANDING PAGE ALCHEMIST™
+12.16 M16 – CONTENT REPURPOSING ENGINE™
+12.17 M17 – INFLUENCE PARTNERSHIP FRAME™
+12.18 M18 – CONTENT ANALYTICS DASHBOARD™
+12.19 M19 – AUDIENCE SEGMENT PERSONALIZER™
+12.20 M20 – MOMENTUM CAMPAIGN BUILDER™
+12.21 M21 – API DOCS GENERATOR™
+12.22 M22 – SYSTEM BLUEPRINT™
+12.23 M23 – DEVOPS PIPELINE ARCHITECT™
+12.24 M24 – DATA SCHEMA OPTIMIZER™
+12.25 M25 – MICROSERVICES GRID™
+12.26 M26 – SECURITY FORTRESS FRAME™
+12.27 M27 – PERFORMANCE ENGINE™
+12.28 M28 – API GATEWAY DESIGNER™
+12.29 M29 – ORCHESTRATION MATRIX™
+12.30 M30 – CLOUD INFRA MAP™
+12.31 M31 – SALES FLOW ARCHITECT™
+12.32 M32 – CUSTOMER JOURNEY MAPPER™
+12.33 M33 – ENABLEMENT FRAME™
+12.34 M34 – ACCOUNT-BASED STRATEGY™
+12.35 M35 – FORECAST ENGINE™
+12.36 M36 – COMPENSATION DESIGNER™
+12.37 M37 – CUSTOMER SUCCESS PLAYBOOK™
+12.38 M38 – PARTNER ECOSYSTEM GRID™
+12.39 M39 – INTELLIGENCE ENGINE™
+12.40 M40 – NEGOTIATION DYNAMICS™
+12.41 M41 – PROCESS AUTOMATION BLUEPRINT™
+12.42 M42 – QUALITY SYSTEM MAP™
+12.43 M43 – SUPPLY FLOW OPTIMIZER™
+12.44 M44 – PORTFOLIO MANAGER™
+12.45 M45 – CHANGE FORCE FIELD™
+12.46 M46 – CREATIVE STRATEGY ENGINE™
+12.47 M47 – PROMPT SYSTEM ARCHITECT™
+12.48 M48 – FRACTAL IDENTITY MAP™
+12.49 M49 – EXECUTIVE PROMPT DOSSIER™
+12.50 M50 – PROMPT LICENSING MANAGER™
+
+
+
+
+
+
+
+13. Matrici de Utilizare (When / Why / Who)
+13.1 Hartă „problemă → modul → livrabil”
+Problemă (simptom)	Modul (ID)	De ce acest modul	Livrabil (export)
+Nu există „teză centrală” a brandului	M03 – SEVEN-TO-ONE™	comprimă 7 idei → 1 afirmație vandabilă	Teză centrală + 3 alternative (PDF/JSON)
+Poziționare vagă / autoritate scăzută	M09 – AUTHORITY POSITIONING™	cadrează dovezi, canale, claim	Hartă poziționare + claim + canale (PDF)
+Lipsă lexicon vizual / mesaj confuz	M04 – SEMIOTIC DICTIONARY 8VULTUS™	set de „tokens” semiotice coerente	Dicționar semiotic + exemple UI (ZIP)
+Vrei lansare în 48h, fără haos	M01 – SOP FORGE™, M20 – MOMENTUM CAMPAIGN BUILDER™	SOP + play de 7–14 zile	SOP + calendar campanie (PDF/JSON)
+LP nu convertește	M15 – LANDING PAGE ALCHEMIST™	rearanjează blocuri + hooks	Wireframe LP + blocuri copy (JSON/PDF)
+Nu ai calendar de conținut clar	M14 – SOCIAL CONTENT GRID™	fuzionează calendarele într-o grilă	Calendar 7–30 zile (JSON/PDF)
+Mesaje generice pe segmente	M19 – AUDIENCE SEGMENT PERSONALIZER™	personalizează pe ICP	Pachete mesaje per segment (ZIP)
+Lipsă claritate API/integrare	M21 – API DOCS GENERATOR™, M28 – API GATEWAY DESIGNER™	contracte + acces controlat	Docs API + config gateway (ZIP)
+Performanță slabă / cost mare	M27 – PERFORMANCE ENGINE™	profilare + bugete	Raport perf + recomandări (PDF)
+Riscuri/atacuri neadresate	M26 – SECURITY FORTRESS FRAME™	threat model + controale	Checklist securitate (PDF)
+Pipeline vânzări haotic	M31 – SALES FLOW ARCHITECT™	standardizează proces+SLA	Playbook sales (PDF/JSON)
+Forecast imprecis	M35 – FORECAST ENGINE™	modele + scenarii	Forecast tabelat + range (XLS/JSON)
+Churn în creștere	M37 – CUSTOMER SUCCESS PLAYBOOK™	rituri CS + alerte risc	Ritualuri CS + scor risc (PDF)
+Negocieri cu discount mare	M40 – NEGOTIATION DYNAMICS™	tactici + grile concesii	Play negociere (PDF)
+Procese manuale consumatoare	M41 – PROCESS AUTOMATION BLUEPRINT™	hărți/triggeri n8n/Make	Diagrame + scenarii automate (ZIP)
+Calitate inegală la livrabile	M42 – QUALITY SYSTEM MAP™	QC gates + checklist	QC map + liste verificare (PDF)
+Portofoliu fără prioritizare	M44 – PORTFOLIO MANAGER™	scorare + orchestrare	Matrice prioritate + roadmap (PDF)
+Identitate inconsecventă	M48 – FRACTAL IDENTITY MAP™	hartă fractalică de identitate	Token set + reguli UI (ZIP)
+Licențiere prompt/IP neclară	M50 – PROMPT LICENSING MANAGER™	termeni + gating export	Termeni licență + politici (PDF)
+
+Toate exporturile respectă politicile: manifest + checksum obligatorii, watermark la trial, scor minim de calitate la evaluatori (gate).
+
+13.2 Nivel competență: strategist / builder / operator
+Nivel	Ce face (rol)	Module tipice	Handoff / Validări
+Strategist	Decide teză, poziționare, campanii; definește „de ce/ce”	M01–M05, M07–M10, M11, M12, M20	Livrează brieful (JSON/PDF), alege KPI; confirmă DoR (contracte gata)
+Builder	Configurează schema, rulează module, iterează outputul	M13–M19, M21–M30, M41, M42, M46–M50	Se asigură de scor ≥ 80, manifest+checksum, redirect 308 testat; predă bundle-ul (ZIP)
+Operator	Rulează playbook-urile zilnice/săptămânale, monitorizează metrici	M14, M16, M18, M31–M40	Respectă rate-limit, export policy; raportează funnel open→run→success și TTV
+
+Principiu handoff: Strategist produce cadru + KPI, Builder livrează artefact validat (DoD), Operator rulează/raportează. Toți folosesc același SSOT (titlu/slug/contracte), iar telemetria agregă pe module_id (Mxx).
+
+13.3 Time-to-Value & ordinea recomandată
+
+Țintă MVP: TTV median < 5 minute până la primul artefact util (per modul). Canary → succes-rate top-10 ≥ 95% înainte de full rollout.
+
+Ordine recomandată (faze)
+
+Faza A — Osatura strategică (Ziua 0–1)
+
+M03 – SEVEN-TO-ONE™ (TTV ~5–10 min): teză centrală.
+
+M09 – AUTHORITY POSITIONING™ (TTV ~10–15 min): claim + canale.
+
+M04 – SEMIOTIC DICTIONARY 8VULTUS™ (TTV ~10–20 min): tokens de brand.
+
+M01 – SOP FORGE™ (TTV ~20–30 min): proceduri minime.
+→ Rezultat: vertebră strategică + limbaj unificat.
+
+Faza B — Producție conținut & conversie (Ziua 1–2)
+5. M14 – SOCIAL CONTENT GRID™ (TTV ~5–10 min): calendar 7–30 zile.
+6. M15 – LANDING PAGE ALCHEMIST™ (TTV ~15–25 min): schelet LP.
+7. M13 – EMAIL SEQUENCE ARCHITECT™ (TTV ~15–25 min): secvențe email.
+8. M19 – AUDIENCE SEGMENT PERSONALIZER™ (TTV ~10–20 min): mesaje pe ICP.
+→ Rezultat: motor de distribuție + pagină care convertește.
+
+Faza C — Go-to-Market & operațiuni (Ziua 2–3)
+9. M20 – MOMENTUM CAMPAIGN BUILDER™ (TTV ~10–20 min): play 7–14 zile.
+10. M31 – SALES FLOW ARCHITECT™ (TTV ~20–30 min): pipeline clar.
+11. M37 – CUSTOMER SUCCESS PLAYBOOK™ (TTV ~15–25 min): prevenție churn.
+→ Rezultat: funnel complet, CS pregătit pentru post-launch.
+
+Faza D — Scalare & hardening (Ziua 3–5)
+12. M27 – PERFORMANCE ENGINE™, M26 – SECURITY FORTRESS FRAME™ (TTV ~20–40 min): bugete performanță + controale securitate.
+13. M23 – DEVOPS PIPELINE ARCHITECT™ (TTV ~30–60 min): CI/CD + canary + rollback.
+14. M21 – API DOCS GENERATOR™, M28 – API GATEWAY DESIGNER™ (TTV ~20–40 min): integrabilitate.
+→ Rezultat: stabilitate, observabilitate, integrare.
+
+Praguri & măsurare (per fază)
+
+Faza A: SEO snapshot ≥ 90 pe home/index; niciun 404 pe rute.
+
+Faza B: LP CVR baseline; open→run rate pe module de conținut ≥ 60%.
+
+Faza C: primele conversii free→paid (target ≥ 6% pe trafic cald).
+
+Faza D: P95 latency în țintă; 0 exporturi fără manifest+checksum; canary stabil.
+
+Toate livrabilele sunt blocate sub scor minim (≥ 80 overall) și nu pot fi exportate fără manifest + checksum; slugurile vechi trimit 308 spre cele noi și sunt măsurate (legacy_redirect_hit) în dashboardul open→run→success.
+
+
+
+
+
+14. Scenarii Complete (Play-uri)
+14.1 Lansare produs în 48h (stack de module)
+
+Obiectiv: produs lansat public în 48h cu pagină funcțională, conținut distribuit și telemetrie activă.
+
+Stack de module (ordine executabilă)
+
+M03 – SEVEN-TO-ONE™ → teză centrală.
+
+M09 – AUTHORITY POSITIONING™ → claim + canale.
+
+M04 – SEMIOTIC DICTIONARY 8VULTUS™ → tokens/glyph.
+
+M15 – LANDING PAGE ALCHEMIST™ → schelet LP.
+
+M14 – SOCIAL CONTENT GRID™ → 7–30 zile calendar.
+
+M13 – EMAIL SEQUENCE ARCHITECT™ → 5–9 emailuri.
+
+M20 – MOMENTUM CAMPAIGN BUILDER™ → play 7–14 zile.
+
+Input minim (AMS)
+
+ICP, promisiune de valoare, canale primare, timeline (7/14/30 zile).
+
+Livrabile
+
+LP exportabil (JSON/PDF) + calendar social + secvență email + plan campanie; toate cu manifest + checksum.
+
+Telemetrie/KPI
+
+TTV mediu până la LP: < 25 min;
+
+Open→Run rate pe M14/M15 ≥ 60%;
+
+SEO (snapshot) home/index/module ≥ 90;
+
+Primele conversii free→paid ≥ 6% pe trafic cald (14 zile).
+
+Riscuri & guardrails
+
+Sub scor 80 → export blocat + repair prompts;
+
+Rate-limit pe run/export;
+
+Redirect 308 pentru legacy_slugs; 404=0.
+
+DoD (acceptanță)
+
+LP live, sitemap/OG regenerate, carduri module active; 0 exporturi fără manifest/checksum; dashboard arată funnel open→run→success.
+
+14.2 Repozitionare autoritate în 7 zile
+
+Obiectiv: reclădești poziționarea și semnalele de autoritate fără a schimba produsul.
+
+Săptămâna (ritmul zilnic)
+
+Zi 1: M03, M09 → teză + claim nou (artefacte executive).
+
+Zi 2: M04 → tokens/glyph, M12 – BRAND VOICE CODEX™ → voice map.
+
+Zi 3: M11 – VIRAL CONTENT ENGINE™ → 20–50 hook-uri.
+
+Zi 4: M15 → restructurare LP (hero, proof, CTA).
+
+Zi 5: M14 → 14 zile calendar pe două canale (IG/LI).
+
+Zi 6: M19 – AUDIENCE SEGMENT PERSONALIZER™ → 3 segmente ICP.
+
+Zi 7: M18 – CONTENT ANALYTICS DASHBOARD™ → măsurare & corecții.
+
+Livrabile
+
+Dossier poziționare (PDF), voice codex, LP nou, grid conținut 14 zile, personalizări pe segmente, dashboard inițial. Exporturi conforme (manifest + checksum).
+
+KPI-uri
+
+CTR pe hook-uri: baseline + ≥ +20%;
+
+CVR LP: baseline + ≥ +15%;
+
+Run success-rate (top module): ≥ 95%.
+
+Riscuri & guardrails
+
+Deriva semantică → verificare SSOT (titlu/slug/meta);
+
+Sub scor 80 → repair prompts; SEO ≥ 90; 308 funcțional.
+
+DoD
+
+Dossier + LP + calendar + personalizări livrate; dashboard arată lift în CTR/CVR; niciun 404; exporturi cu manifest/checksum.
+
+14.3 Reparație criză reputațională (24–72h)
+
+Obiectiv: stabilizezi percepția publică, creezi control narativ și previi escaladarea.
+
+Fereastra 0–24h
+
+M10 – CRISIS COMMUNICATION PLAYBOOK™ → poziție oficială + Q&A;
+
+M07 – TRUST REVERSAL PROTOCOL™ → garanții, reversări, probe;
+
+M09 → realiniere mesaje pe canale cheie.
+
+Fereastra 24–48h
+
+M14 → calendar mesaje (reactiv + educativ);
+
+M11 → pachet de explicații cu hook-uri low-conflict;
+
+M18 → monitorizare reacții & ajustări.
+
+Fereastra 48–72h
+
+M01 – SOP FORGE™ → SOP intern de criză;
+
+M20 → mini-campanie de reasigurare (7 zile).
+
+Livrabile
+
+Declarație oficială (PDF), FAQ, plan reversare risc, calendar mesaje 7 zile, dashboard reacții. Export conform.
+
+KPI-uri
+
+Timp răspuns public: < 6h;
+
+Sentiment neutral/pozitiv ≥ +25% în 72h;
+
+Scădere mențiuni negative ≥ −30%;
+
+Success-rate run ≥ 95%; 404=0.
+
+Guardrails
+
+Nicio divulgare PII; scor < 80 → blocare export; redirects 308 ok; rate-limit pentru spike trafic.
+
+DoD
+
+Mesaj central publicat pe canale; SOP criză semnat; dashboard trend pozitiv 72h; zero exporturi fără manifest/checksum.
+
+14.4 Accelerare pipeline B2B (ABM + Sales)
+
+Obiectiv: crești viteza și calitatea pipe-ului pentru ținte B2B prin ABM + sales plays.
+
+Stack
+
+M34 – ACCOUNT-BASED STRATEGY™ → liste țintă + plays;
+
+M31 – SALES FLOW ARCHITECT™ → pipeline + SLA;
+
+M33 – ENABLEMENT FRAME™ → talk-tracks, decks;
+
+M39 – INTELLIGENCE ENGINE™ → battlecards;
+
+M13 – EMAIL SEQUENCE ARCHITECT™ → outreach;
+
+M20 – MOMENTUM CAMPAIGN BUILDER™ → campanie sincronizată;
+
+M37 – CUSTOMER SUCCESS PLAYBOOK™ → prevenție churn la POC.
+
+Livrabile
+
+ABM plan (PDF/JSON), pipeline standardizat, enablement pack, battlecards, secvențe email, play campanie, playbook CS. Exporturi conforme (manifest+checksum).
+
+KPI-uri
+
+Replies rate outreach: ≥ 10%;
+
+Meetings booked: baseline + ≥ +30%;
+
+Win-rate oportunități „qualified”: ≥ +15%;
+
+Cycle time: −20%; NRR/GRR stabil pentru POC.
+
+Guardrails & exec
+
+Pre-gates (plan/entitlements/flags/rate-limit) → validare input → run → evaluatori (blocare sub 80) → export cu manifest/checksum; SEO/redirect 308 verificate pentru materiale publice (LP/email landing).
+
+DoD
+
+ABM live, enablement livrat, outreach pornit; dashboard arată creșteri în meetings și win-rate; 0 erori 404/5xx; exporturi conforme.
+
+Rezultatul secțiunii 14
+Fiecare play este un lanț executabil de module, cu input minim, livrabile măsurabile și gate-uri obiective (score ≥ 80, manifest+checksum, 308/SEO verificate). Telemetria furnizează semnale de decizie pentru canary, rollout sau rollback, în 48h/7z/72h/ABM — fără derapaje de calitate sau compatibilitate.
+
+
+
+
+
+15. Automatizare & Integrare
+15.1 Triggeri & webhooks (internal/external)
+
+Principiu: orice modul poate declanșa acțiuni post-execuție printr-un strat de triggeri și webhooks, controlat de plan/entitlements/flags și de export_policy. Trimiterile externe sunt allow-list & rate-limited.
+
+A. Triggeri interni (synch/async)
+
+After-Run: rulează după module_run_succeeded → normalizează output, actualizează indecși, calculează scoruri derivate (ex. „readability”).
+
+After-Export: rulează după export_performed → atașează metadate la artifact, incrementează counters KPI (CVR/CTR), pregătește payload pentru integrări.
+
+Repair-Requested: dacă overall < threshold, livrează repair prompts + creează task intern (ClickUp) pentru follow-up.
+
+B. Webhooks interne (in-platform)
+
+POST /hooks/artifact-ready (trusted): primește {module_id, artifact_id, export_format, checksum_ok} → folosit de generatoare secundare (ex. repurposing) sau de notificatorul intern.
+
+POST /hooks/metric-update: ingestează KPI (ex. success_rate, TTV) în data store-ul de analytics.
+
+C. Webhooks externe (outbound)
+
+Trimitere doar după ce exportul trece manifest + checksum și politicile de plan; pe allow-list (ex: *.clickup.com, *.hubspot.com, *.mailgun.net).
+
+Retry cu backoff (ex. 1m, 5m, 20m) + semnătură HMAC (header X-PF-Signature).
+
+Exemplu payload tipic:
+
+{
+  "event": "artifact_ready",
+  "module_id": "M14",
+  "artifact": {
+    "id": "art_3xc…",
+    "format": "PDF",
+    "checksum_sha256": "4f8c…",
+    "size_bytes": 182334
+  },
+  "run": {
+    "trace_id": "trc_7Q4…",
+    "score_overall": 92
+  },
+  "account": { "plan": "pro", "tenant": "acme" },
+  "ts": "2025-08-30T10:22:03Z"
+}
+
+
+Security: semnătura HMAC calculată pe corpul cererii; refuză 2xx dacă checksum_ok=false.
+
+D. Pre-gates pentru triggeri/webhooks
+
+Verifică plan/entitlement/flag, rate-limit outbound, export_policy (format permis, watermark la trial), block dacă score < threshold. Tot fluxul e logat ca parte din audit trail.
+
+DoD (Triggeri & webhooks)
+
+Evenimentele artifact_ready se emit doar după checksum_ok=true;
+
+Retries cu backoff documentate;
+
+HMAC valid pe 100% din webhook-urile externe;
+
+Alertă dacă rata de eșec > 5%/h.
+
+15.2 Exporturi sigure (PDF/ZIP/JSON)
+
+Politica de export (SSOT): definită în ruleset.yml + guardrails.export_policy per modul. Exportul este permis doar dacă:
+
+overall_score ≥ min_overall_score (ex. 80),
+
+formatul este în allowed_formats,
+
+manifest + checksum sunt generate/valide,
+
+planul permite (trial → watermark).
+
+A. Manifest minim (anti-tamper)
+
+{
+  "artifact_id": "art_3xc…",
+  "module_id": "M14",
+  "module_version": "1.2.0",
+  "input_digest": "sha256:…",
+  "output_digest": "sha256:…",
+  "export_format": "PDF",
+  "plan": "pro",
+  "ts": "2025-08-30T10:22:03Z"
+}
+
+
+B. Checksum
+
+Fișier separat (.sha256) livrat împreună cu artefactul; download-ul verifică checksum (marchează checksum_ok în telemetrie). Dacă neconform → refuz 422 și alertă.
+
+C. Bundle ZIP
+
+Structură:
+
+/artifact/
+  result.json | result.pdf
+  manifest.json
+  checksum.sha256
+  README.txt  (format + politici)
+
+
+Pentru planurile care permit bundle: include și surse auxiliare (ex. assets minificate). Trial → watermark clar.
+
+D. Rate-limit la export
+
+Limite per plan (ex. Pilot: 3/h; Pro: 20/h; Ent: 80/h). Răspuns 429 + Retry-After; eveniment export_rate_limited.
+
+E. Telemetrie
+
+export_performed (format, checksum_ok, size_bytes) + legătură cu module_run_succeeded.
+
+KPI: Checksum OK Rate = 100%; orice sub → incident.
+
+DoD (Export)
+
+0 exporturi fără manifest + checksum, 0 „silent failures”;
+
+Watermark aplicat corect la trial;
+
+Lint pe manifest; verificare checksum la download.
+
+15.3 Integrări (email, CRM, Ads, ClickUp etc.)
+
+Principiu: integrările se fac prin adaptor (mapper + validator), nu direct din modul. Fiecare adaptor are schema lui (input minim + transform). Toate integrările se declanșează după trecerea gate-urilor de export & securitate.
+
+A. Email (Mailgun/Sendgrid/SES)
+
+Use-case: livrare secvențe (M13), anunțuri campanie (M20), alerte CS (M37).
+
+Adaptor: mapează result.json → subject, html/text, list_id/recipient, tags.
+
+Politici: double-opt-in, rate-limit outbound, HMAC pe webhooks, „unsubscribe” dinamic.
+
+Telemetrie: email_queued, email_sent, email_bounced; KPI: deliverability, open, reply.
+
+B. CRM (HubSpot/Salesforce/Pipedrive)
+
+Use-case: M31/M34/M35 – pipeline, ABM, forecast.
+
+Adaptor: transformă artefacte → deal, company, task, note.
+
+Politici: idempotency key (evită dubluri), mapping robust (enumuri/lookup), fail-safe (queue + retry/backoff).
+
+Telemetrie: crm_upsert_ok/fail; KPI: meetings booked, win-rate, cycle time.
+
+C. Ads (Meta/Google/LinkedIn)
+
+Use-case: M11/M14/M20 – creativ + calendar → asset & schedule.
+
+Adaptor: validează că outputul respectă policy (fără PII, fără cuvinte interzise); folosește business manager IDs din vault securizat.
+
+Politici: pre-flight checks (dimensiuni, text length), „dry-run mode” pentru Pilot.
+
+Telemetrie: ads_asset_created, ads_campaign_scheduled; KPI: CTR, CPA.
+
+D. ClickUp/Jira/Asana (tasking)
+
+Use-case: repair prompts sub 80 → creează automat task; M41 (automatizări) → proiecte & hărți.
+
+Adaptor: {title, description, attachments, due} + link la artifact.
+
+Politici: project mapping per tenant, tagging by module_id.
+
+Telemetrie: task_created, task_completed (lag TTV ops).
+
+E. Webhooks inbound (from external)
+
+Ex.: „ad approvals”, „email stats”, „crm status change”.
+
+Politici: verify HMAC, schema strictă per sursă, rate-limit per IP/domain; write-behind queue (nu bloca threadul API).
+
+Telemetrie: ext_event_ingested, ext_event_rejected (motiv).
+
+F. Configurare & gating integrare
+
+Toate integrările au feature_flags dedicate (ex. enable.webhooks, crm.sync, ads.push).
+
+Se verifică planul (Pro/Ent), entitlements și allow-list; altfel → 403.
+
+Canary pentru integrări noi; rollback rapid dacă error_rate > prag.
+
+DoD (Integrări)
+
+Adaptoare cu validare input/output;
+
+HMAC & allow-list active;
+
+Queue + retry/backoff implementate;
+
+Telemetrie „end-to-end” (din artefact până în sistemul țintă) cu KPI-uri configure; niciun export trimis dacă score < 80 sau checksum_ok=false.
+
+Rezultat Secțiunea 15
+Ai un circuit de execuție sigur: triggeri interni & webhooks controlate, exporturi semnate (manifest + checksum), integrări prin adaptoare validate, toate trecând prin aceeași matrice de gate-uri (plan/entitlements/flags → score ≥ 80 → policy export). Telemetria urmărește complet traseul: de la module_run_succeeded până la „email/CRM/Ads/ClickUp done”, cu alerte și rollback pe orice abatere.
+
+
+
+
+
+
+16. Proceduri de Control Calitate
+16.1 Checklists per modul
+
+Șablon unic (SSOT) — folosește-l identic pentru M01–M50:
+
+A. Pre-run (gate-uri înainte de execuție)
+
+plan_required validat (Pilot/Pro/Ent) & entitlements prezente.
+
+feature_flags necesare active (ex. export_v2 / webhooks).
+
+Rate-limit/throttling OK (fără 429 în ultimele 5 min).
+
+input_schema încărcat; enum/regex & additionalProperties:false.
+
+UI afișează est_tokens_per_run și dificultate.
+
+B. Run (execuție)
+6) Payload VALID (422 dacă nu). Log module_run_started.
+7) Core logic → fără ieșiri ne-schemate (nicio cheie „surpriză”).
+8) Post-processors: normalizare, deduplicare, redactare finală.
+
+C. Evaluare & export
+9) Evaluatori rulează: quality, risk, cost, overall.
+10) Blocare sub prag (overall < 80) + repair prompts afișate.
+11) Export permis doar dacă: allowed_formats ∧ manifest ∧ checksum ∧ (plan OK); trial → watermark.
+12) Verificare checksum la download (checksum_ok=true în telemetrie).
+
+D. Compat & SEO
+13) Acces pe toate legacy_slugs[] → 308 spre slug curent (fără 404).
+14) Sitemap/OG actualizate; Lighthouse SEO ≥ 90 (pagina modul).
+
+E. Telemetrie minimă
+15) Emită: module_open/run_requested/run_started/run_scored/run_succeeded|blocked, export_performed, legacy_redirect_hit cu module_id (Mxx).
+
+16.2 Verificări anti-halucinație / deraiere
+
+Filtre „hard” (programatice):
+
+Validare strictă input (enum/regex, additionalProperties:false): niciun câmp nedeclarat nu trece; 422 cu hint de remediere.
+
+Validare output contra output_template: respinge lipsuri/formatări greșite înainte de export.
+
+Evaluatori:
+
+quality ↓ dacă lipsesc câmpuri obligatorii, dacă coerența factuală e detectată ca slabă, sau dacă textul iese din limite (ex. >maxLength).
+
+risk ↑ la semnale PII, bias, ton nepotrivit, „confidențial”/„invented sources”; dacă depășește pragul risc, setează overall < 80 → blocare.
+
+Export policy: fără manifest + checksum → 422; chiar și succes la evaluatori nu permite exportul dacă integritatea lipsește.
+
+Filtre „soft” (heuristice & UX):
+
+Repair prompts: listă scurtă de corecții (max 5), generată automat când overall<80 (ex.: „specifică ICP în 1 frază”, „evită comparații fără surse”).
+
+Tone guard: micro-copy UI „stil Cusnirian” (imperativ, fără promisiuni nerealiste, fără superlative goale).
+
+A/B de formate: dacă quality e oscilant, provoacă re-run cu două sabloane stricte și alege varianta cu scor mai mare (păstrează ambele în log).
+
+Semnale de deraiere (declanșează alertă/rollback local):
+
+Spike 5xx pe ruta modulului;
+
+success_rate < 95% (top-10), pe canary;
+
+exporturi fără manifest/checksum > 0 (orice ≠ 0 e incident);
+
+404 la pagini modul; legacy_redirect_hit fără 308 corect.
+
+16.3 Semnătură DoD per livrabil
+
+Scop: fiecare artefact exportat are o „fișă de predare” verificabilă. DoD = Documented, Measurable, Reproducible.
+
+A. Checklist DoD (atașat în manifest)
+
+[x] module_id (Mxx) + module_version
+
+[x] score.overall ≥ 80 (cu detaliu quality/risk/cost)
+
+[x] export_format ∈ allowed_formats
+
+[x] manifest.json & checksum.sha256 generate și verificate
+
+[x] plan_required îndeplinit; watermark aplicat (dacă trial)
+
+[x] redirect 308 valid pe toate legacy_slugs[]; fără 404
+
+[x] Telemetrie: module_run_succeeded + export_performed(checksum_ok=true) înregistrate
+
+B. Semnătură (hash + responsabil)
+
+{
+  "dod_signature": {
+    "by": "build-system@pf",
+    "at": "2025-08-30T12:34:56Z",
+    "checks": ["score>=80","policy_ok","checksum_ok","seo_ok","redirects_ok"],
+    "hash": "sha256:ae91…"
+  }
+}
+
+
+— seo_ok: Lighthouse SEO ≥ 90 (snapshot pe pagina modul)
+— redirects_ok: test E2E pentru fiecare slug legacy → 308 → slug curent.
+
+C. Acceptanță operațională
+
+DoD stocat în DB (tabla artifacts/manifests), expus în UI (buton „View DoD”).
+
+Orice lipsă → artefact nu se livrează; UI afișează exact ce bife lipsește (AMS).
+
+D. Post-livrare (aftercare 24–72h)
+
+Monitorizezi checksum_ok rate = 100%;
+
+Confirmi că success_rate ≥ 95% se menține;
+
+Dacă apar deviații (404, 5xx, scoruri sub prag), marchezi incident + re-run controlat sau rollback.
+
+Rezultat Secțiunea 16
+Ai un mecanism repetabil: checklist unic per modul, filtre anti-deraiere integrate în schemă/evaluatori/export, plus o semnătură DoD care garantează că fiecare livrabil respectă pragurile (score ≥ 80), politicile de integritate (manifest + checksum) și compatibilitatea SEO/redirect 308. Toate probele sunt înregistrate în telemetrie și pot susține auditul.
+
+
+
+
+
+
+
+Răspund ca Arhitect Global de Platforme AI-comerciale; distins cu AI Systems Architecture Award (EMEA ’24), Product Ops Excellence (CEE ’24), DevOps Design Grand Prix (EU ’25).
+
+Ținta: consolidezi Mentenanță & Versionare ca sistem anti-deraiere pe 3 axe: semver executabil, deprecieri controlate prin legacy_slugs + 308, arhivă/restore verificabil (manifest+checksum). Baza e deja în schemă: semver pe modul, testele, redirecturile 308 și telemetria „from_legacy”. 
+ 
+ 
+
+Take a forward-thinking view: în 24–36 luni gestionezi multi-versiuni paralele (LTS + rapid), pachete de migrație automate și rapoarte de compatibilitate pe cohortă—fără 404, fără exporturi „mute”.
+
+Execuție
+17.1 Politici de versionare (semver, compat)
+
+Schema de versiune pe modul
+modules.meta.version = MAJOR.MINOR.PATCH
+– PATCH: fixuri, copy, optimizări; 0 schimbări de contract.
+– MINOR: câmp nou opțional în input/output sau ajustare evaluator; 100% compat.
+– MAJOR: schimbări incompatibile (ex.: structură output schimbată, slug nou fără adaptor). Crești MAJOR, emiți migrații. 
+
+Contracte ca gardă
+– input_schema: additionalProperties:false, enum/regex; respingi gonflarea payload-ului (422).
+– output_template: validezi artefactul și scorul; sub prag → blocare export. (Ancorat în stratul de testare & export policy.) 
+
+Compatibilitate de execuție
+– La MINOR: păstrezi compat, adaugi adaptor implicit pentru câmpul nou.
+– La MAJOR: marchezi incompatibil, dar publici adaptor/„shim” pe 1 ciclu LTS; în paralel activezi legacy_slugs + 308. 
+
+Branching & release discipline
+– Ramură per modul: release/mod-{Mxx}-vX.Y.Z; freeze până trece DoD (rute 200, e2e/SEO verzi, 308 ok).
+– Canary 5% + praguri alarme; depășite → rollback la tag stabil. 
+
+Canale
+– LTS: ultimele două MINOR pentru fiecare MAJOR (acceptă doar PATCH).
+– Rapid: ultimul MINOR (acceptă PATCH, MINOR).
+– Default UI servește Rapid; API acceptă ?channel=lts.
+
+Changelog atomic
+– Per modul: sumar modificări + impact (compat/migrații) → expus în UI „Version info”. 
+
+17.2 Deprecieri & aliasuri (legacy_slugs)
+
+Aliasuri canonice
+– Fiecare modul păstrează legacy_slugs[]. Router/UI fac 308 permanent → slug curent; telemetria marchează from_legacy=true. 404=0. 
+
+Politica de deprecieri
+– Announce (T0): MINOR nou publicat → bannere UI + deprecation-notice în docs.
+– Soft-deprecate (T0+30 zile): afișezi mesaj la acces pe slug vechi; 308 rămâne activ.
+– Freeze (T0+60): blochezi noi rulări pe versiunea veche (doar export download); 308 activ.
+– Archive (T0+90): scoți din sitemap, ții 308 + artefactele în arhivă.
+
+Rapoarte de moștenire
+– Dashboard: Legacy Redirect Share per modul (indicator calitate migrație).
+– Condiție DoD gating: 100% legacy → 308, fără 404. 
+
+Compat pe contract
+– Non-breaking: păstrezi compat (câmpuri opționale).
+– Breaking: crești MAJOR și menții adaptor/alias pe fereastra deprecierii. 
+
+SEO & sitemap
+– Sitemap include doar rutele active; slugurile moștenite stau exclusiv pe 308; OG/meta regenerate la build. 
+
+17.3 Arhivă & restaurare
+
+Arhivă deterministă (cold storage)
+– La „Archive”: salvezi bundle ZIP conținând result.(json|pdf), manifest.json, checksum.sha256, version.map.
+– Manifest: module_id, module_version, input_digest, output_digest, export_format, plan, ts.
+– Checksum verificat la download; altfel 422 + alertă. (Consistent cu politicile de export/DoD deja definite.) 
+
+Reguli de retenție
+– 30 zile: Rapid dumps. 180 zile: LTS dumps. ≥ 2 ani: numai top-10 artefacte per modul (scor mediu ridicat) + „golden samples”.
+
+Restaurare controlată (play de rollback)
+– Ingresezi ZIP → verifici checksum + manifest → rehidratezi artefactul într-o ramură izolată.
+– Teste: rute 200, e2e/SEO snapshot, 308 funcțional, success_rate ≥95% pe canary → abia apoi promote. (Condițiile există în testare & canary.) 
+
+Politica de acces & audit
+– Restore cere entitlements + semnătură HMAC la hook-uri; fiecare acțiune logată cu trace_id.
+– Telemetrie: legacy_redirect_hit, export_performed(checksum_ok), funnel open→run→success; 404=0. 
+
+Capace comerciale
+– Trial restore → watermark forțat; planurile respectă allowed_formats; export fără manifest/checksum = interzis. (Aliniat cu gating/comercial.) 
+
+Verdict
+
+Fixează guvernanța versiunilor ca product-ops, nu ca „nota de subsol”: semver executabil + aliasuri 308 măsurate + arhivă verificabilă cu manifest & checksum. Rezultatul: zero 404, zero exporturi ne-semnate, migrații previzibile, rollback curat. În 2–3 ani, rulezi LTS pe MAJOR-1, Rapid pe ultimul MINOR, cu autopromote când success-rate ≥95% și Legacy Redirect Share <5%.
+
+
+
+
+
+
+18.1 Top 10 riscuri tipice
+
+Cod corupt / build fail – livrări blocate prin lipsă de test/DoD.
+Mitigare: CI/CD cu test coverage ≥80% + „approve-builds” obligatoriu.
+
+Prompt injection / jailbreak – utilizator manipulează output.
+Mitigare: guardrails în ruleset.yml, evaluare semantică >80 scor.
+
+PII leakage / date sensibile – exporturi conțin informații personale.
+Mitigare: scan PII la commit + blocaj export sub scor 80.
+
+404 / slug breaking – schimbări slug → linkuri moarte.
+Mitigare: legacy_slugs + redirect 308 + telemetrie from_legacy.
+
+Migrații ratate – versiuni incompatibile.
+Mitigare: semver strict + adaptors pe 1 ciclu LTS.
+
+Overcost API – runaway cost prin loopuri.
+Mitigare: token budget/cost max per run în ruleset.yml.
+
+SEO penalty – sitemap rupe indexarea.
+Mitigare: snapshot SEO + e2e test „/sitemap.xml” 200.
+
+Abuz resurse UI – 100% CPU/lag frame.
+Mitigare: perf budget ≤16ms/frame, CI test WebVitals.
+
+Incident reputațional (output toxic).
+Mitigare: content filter strict + fallback prompt.
+
+Perte arhivă / restore fail.
+Mitigare: export cu manifest+checksum verificat la restore.
+
+18.2 Playbook de răspuns
+
+Etape fixe pentru orice risc:
+
+Detect – metrică automată (success_rate, SEO snapshot, PII matches).
+
+Contain – oprește build/deploy/export.
+
+Communicate – alertă Slack + incident channel.
+
+Recover – rollback la ultima versiune stabilă + rehidratare artefact.
+
+Review – RCA (root cause analysis) în 48h + update ruleset.yml.
+
+Exemple rapide:
+
+Prompt injection → contain: bloc export sub scor 80, recover: rule patch în ruleset.yml, review: test e2e nou.
+
+PII leakage → contain: oprire export, recover: eliminare câmp + rerun, review: ajustare regex PII.
+
+404 → contain: activezi 308 fallback, recover: regen sitemap, review: update procedură de slug freeze.
+
+18.3 Audit periodic
+
+Frecvență
+– Lunar: test e2e + scan PII + SEO snapshot.
+– Trimestrial: simulare incident (tabletop exercise).
+– Anual: audit extern SOC 2 / ISO 27001 readiness.
+
+Metode
+– Checklist DoD/DoR pe fiecare modul.
+– Canary success_rate ≥95% înainte de promote.
+– Raport Legacy Redirect Share (<5%).
+– Loguri restore: 100% artefacte verificate checksum.
+
+Output audit
+– Raport PDF semnat + grafică risc/mitigare.
+– Scorecard roșu/galben/verde pe 10 riscuri.
+– Exportat în audit_reports/ cu TTL 90 zile.
+
+Verdict
+
+Nu faci listă de riscuri → faci sistem de RiskOps.
+– Top 10 = matrice clară risc/mitigare/metrica.
+– Playbook = șablon detect→contain→recover→review.
+– Audit = ciclu periodic + raport oficial.
+
+În 2–3 ani, asta devine condiție de piață: fără sistem de RiskOps documentat, platforma e percepută ca hobby, nu ca produs enterprise.
+
+
+
+
+
+19.1 Termeni cheie (grid, frame, map, engine)
+
+Grid: structură matricială (layout vizual/logic); ex.: 3×3 pentru UI sau test coverage. Contract: poziție fixă, celule independente.
+
+Frame: container temporal/spațial (UI frame, logic frame). Rol: încapsulează starea într-un moment. Contract: ≤16ms/frame la UI.
+
+Map: hartă de corespondență (slug → alias, input → output, versiune → adaptor). Contract: 1:1 sau 1:n, dar niciodată n:n.
+
+Engine: nucleu de procesare (test-engine, prompt-engine). Rol: execută logica. Contract: input validat, output scorat ≥80.
+
+→ Definițiile sunt canonice. Nu reinventezi sensul în alt modul. Glosarul = SSOT lingvistic.
+
+19.2 Convenții de denumire (IDs/slug/alias)
+
+IDs interne
+Format: mod-{XX}-{semver} (ex.: mod-17-v2.3.1). Immutable. Folosite în DB + logs.
+
+Slug public
+Format: /{namespace}/{entity}
+– Lowercase, - ca separator, max 40 caractere.
+– Exemplu bun: /editor/prompt-test
+– Exemplu rău: /PromptTest/123
+
+Aliasuri (legacy_slugs)
+– Array atașat modulului. Router → 308 permanent.
+– Telemetrie: from_legacy=true.
+
+Export files
+Format: {moduleId}_{slug}_{ts}.{ext}
+– Ex.: mod17_prompt-test_20250830.pdf
+
+Glosar centralizat
+– Stocat în glossary.yml
+– TTL revizuire: 90 zile
+– Orice nou termen = RFC + aprobare.
+
+19.3 Exemple bune vs. rele
+
+Bune
+
+ID: mod-05-v1.2.0
+
+Slug: /engine/prompt-map
+
+Alias: ["/promptmap", "/prompt-map-legacy"]
+
+Export: mod05_prompt-map_20250830.json
+
+Rele
+
+ID: Module5Latest (non-determinist)
+
+Slug: /Prompt Map (spațiu, majuscule)
+
+Alias: ["/pmap", "/pm"] (confuz, lipsă coerență)
+
+Export: testfile_final2(rev).docx (anti-audit)
+
+Glosarul + Convențiile = coloană vertebrală semantică.
+– Termenii-cheie = contracte, nu metafore.
+– IDs/slug/alias = disciplinează identitatea.
+– Exemple bune vs. rele = cod de conduită.
+
+
+
+ANEXE
+
+
+Anexe 20.1 – Tabele input/output per modul (schemă). Aici construiești atlasul contractelor: fiecare modul are schema lui de intrare/ieșire. Aceste tabele nu sunt „anexe decorative”, ci fișiere de control pentru validare, testare, export și audit
+.
+
+Take a forward-thinking view: în 24–36 luni vei gestiona sute de module, fiecare cu 2–3 versiuni paralele. Tabelele devin punct unic de adevăr (SSOT) — baza pentru autogenerare de UI, API, validări și documentație.
+
+Execuție
+Structura generală a tabelelor
+
+Pentru fiecare modul Mxx se documentează:
+
+Input schema: câmpuri obligatorii/opționale, tip, validatori (enum, regex, min/max).
+
+Output template: obiecte exportate, câmpuri obligatorii, scorurile evaluatorilor.
+
+Guardrails: scor minim overall, politici export (formate, manifest, checksum).
+
+KPI-uri asociate: ce se măsoară (success_rate, TTV, CTR, CVR etc.).
+
+Format: tabel markdown cu coloane Field | Type | Constraints | Required | Notes.
+
+20.1.1 Exemplu detaliat (M14 – SOCIAL CONTENT GRID™)
+
+Input schema
+
+Field	Type	Constraints	Required	Notes
+icp	string	minLength:3	yes	ICP-ul vizat
+goal	string	enum: [awareness, leadgen, launch]	yes	Obiectiv campanie
+channels	array	enum: [ig, li, yt, tt], min 1, max 4	yes	Canale de distribuție
+timespan	string	regex: ^(7d	14d	30d)$
+tone	string	enum: [bold, educational, authoritative]	no	Tonul comunicării
+
+Output template
+
+Field	Type	Constraints	Required	Notes
+calendar	array	minItems:7, obiecte zi/post	yes	Conținut calendarizat
+├─ day	string	regex: ^D(1–30)$	yes	Ziua din campanie
+├─ channel	string	enum: [ig, li, yt, tt]	yes	Canal
+├─ post_title	string	6–120 caractere	yes	Titlu post
+├─ caption	string	30–2000 caractere	yes	Text principal
+├─ cta	string	enum: [comment, subscribe, visit, download]	yes	Call to action
+score	object	quality, risk, cost, overall (0–100)	yes	Evaluatori; overall ≥ 80 obligator
+20.1.2 Șablon generic (M01–M50)
+
+Input schema (pattern)
+
+Field	Type	Constraints	Required	Notes
+core_var1	string	enum/regex/minLength	yes	Parametru central
+core_var2	string	enum/set valori	yes/no	Context
+options[]	array	enum + min/max items	no	Parametri secundari
+timeframe	string	regex (7d/14d/30d, YYYY-MM, etc.)	yes/no	Durată / interval
+
+Output template (pattern)
+
+Field	Type	Constraints	Required	Notes
+artifact[]	array	obiecte structurate	yes	Lista livrabilelor
+├─ title	string	minLength/maxLength	yes	Titlu livrabil
+├─ content	string	minLength/maxLength	yes	Conținut
+├─ meta	object	diverse câmpuri KPI	no	Ex. CTR, sentiment, runtime
+score	object	quality, risk, cost, overall	yes	overall ≥ 80 (guardrail)
+20.1.3 Exemple cross-modul
+
+M03 – SEVEN-TO-ONE™
+Input: 7 fraze (array[string]), context brand.
+Output: 1 teză centrală (string), 3 alternative (array[string]), scor evaluatori.
+
+M15 – LANDING PAGE ALCHEMIST™
+Input: ICP, promisiune, dovezi (array).
+Output: blocuri LP (hero, proof, CTA) structurate; scor evaluatori.
+
+M31 – SALES FLOW ARCHITECT™
+Input: target accounts, SLA parametri.
+Output: pipeline structurat (stages[], owners, metrics); scor.
+
+M42 – QUALITY SYSTEM MAP™
+Input: procese curente, metrici calitate.
+Output: QC gates[], checklists[], scor.
+
+20.1.4 Reguli de validare comune
+
+Hard stop la orice input necunoscut (additionalProperties:false).
+
+Enum/regex strict la câmpuri sensibile (goal, timeframe, channel).
+
+Scor ≥ 80 obligatoriu pentru export.
+
+Export policy: manifest.json + checksum.sha256 obligatorii; watermark la trial.
+
+Legacy slugs → redirect 308; telemetrie from_legacy=true.
+
+Verdict
+
+Tabelele input/output sunt scheletul auditabil al sistemului.
+– Standardizează contractele pe 50 module.
+– Permit generare automată de UI/API/teste.
+– Asigură compat (slug+alias) și securitate (manifest+checksum).
+
+În 2–3 ani aceste tabele vor alimenta un engine de autogenerare: apeși un buton și obții UI, API, docs, validări direct din anexă.
+
+
+
+
+Anexa 20.2 – Liste evenimente analytics & KPIs ca sistem unic de măsurare. Nu faci listă descriptivă → faci matrice executabilă: eveniment → payload → KPI derivat → prag DoD.
+
+Take a forward-thinking view: în 24–36 luni vei scala de la MVP la enterprise. Dacă evenimentele nu sunt standardizate de acum, vei avea 50 de dialecte de loguri imposibil de auditat.
+
+Execuție
+20.2.1 Evenimente standard (nivel platformă)
+
+Contract minim (chei obligatorii): module_id (Mxx) · trace_id · plan · ts.
+
+Eveniment	Payload canonic	Scop	Legat de KPI
+module_open	module_id, slug_current, from_legacy, plan, user_id, ts	Intrare UI/URL	Open→Run Rate
+module_run_requested	module_id, trace_id, input_size, est_tokens, plan	Intenție rulare	TTV
+module_run_started	module_id, trace_id, runtime_env, ts	Execuție inițiată	Latency
+module_run_scored	module_id, trace_id, score_quality, score_risk, score_cost, score_overall	Evaluare	Success Rate, Quality Index
+module_run_succeeded	module_id, trace_id, artifact_type, export_format, checksum_ok	Rulare completă	Success Rate
+module_run_blocked	module_id, trace_id, reason: {score_below_threshold, no_entitlement, invalid_input}	Execuție oprită	Failure Rate
+export_performed	artifact_id, module_id, export_format, size_bytes, checksum_ok, plan	Export artefact	Checksum OK Rate
+legacy_redirect_hit	legacy_slug, slug_current, module_id, plan	Compat URL	Legacy Redirect Share
+audit_event	type: {pii_scan, redteam_probe, rollback}, status, trace_id	Conformitate	Security/Compliance KPI
+20.2.2 KPIs principali (cross-modul)
+A. Calitate execuție
+
+Success Rate = #module_run_succeeded / #module_run_started
+Țintă: ≥95% top-10 module.
+
+Failure Rate = #module_run_blocked / #module_run_requested
+Alertă dacă >5%.
+
+Checksum OK Rate = #export_performed(checksum_ok=true) / total
+Țintă: 100%.
+
+B. Activare & conversie
+
+Open→Run Rate = #run_started / #module_open
+Prag MVP: ≥60%.
+
+Free→Paid Conversion = #utilizatori_paid / #utilizatori_free noi (14 zile)
+Țintă MVP: ≥6%.
+
+C. Timp & eficiență
+
+TTV Median = median(run_started.ts → run_succeeded.ts)
+Prag: <300s.
+
+Latency P95 = timp execuție la 95 percentile.
+Prag: <500ms pentru API, <3.5s TTI pentru UI.
+
+Tokens/Run Avg = tokens consumate vs. est_tokens.
+Prag: deviație ≤20%.
+
+D. Retenție & profunzime
+
+D2/D7 Retention = % useri cu ≥1 run în ziua 2 / 7.
+
+Cross-Module Adoption = % useri cu ≥2 module diferite în 14 zile.
+
+E. SEO & compatibilitate
+
+Legacy Redirect Share = #sessions with legacy_redirect_hit / total sessions.
+Prag: <5%.
+
+404 Rate = #404 module pages / total hits.
+Prag: 0.
+
+F. Comercial
+
+ARPU 90d (average revenue per user).
+
+LTV ≈ ARPU 90d × retenție 90d.
+
+NRR/GRR pentru segmente Enterprise (pe baza M37).
+
+20.2.3 Praguri DoD per KPI
+
+Success Rate ≥95% (top 10)
+
+Checksum OK Rate = 100%
+
+Legacy Redirect Share ≤5%
+
+0 exporturi fără manifest/checksum
+
+0 erori 404 pe pagini modul
+
+SEO ≥90 (Lighthouse snapshot)
+
+20.2.4 Dashboard operațional (MVP)
+
+Tiles:
+
+Funnel global Open→Run→Success.
+
+Top-10 module: Success Rate, Run Rate, TTV median.
+
+SEO tile: scoruri Lighthouse (home, index, 2 module).
+
+Alerts bar: export fără checksum, 404, success_rate<95%.
+
+Rapoarte:
+
+Daily ops (ora 10:00): rezumat erori, latency, redirects.
+
+Weekly exec (luni): trenduri conversie, retenție, cross-module adoption.
+
+Monthly product: ARPU, LTV, cohort analysis.
+
+Verdict
+
+Evenimentele analytics și KPIs sunt coloana vertebrală de guvernanță.
+– Fiecare eveniment are payload canonic și legătură directă la KPI.
+– KPIs sunt cuantificați cu praguri DoD — nu „nice-to-have”.
+– Dashboardul unifică funnel, calitate, compatibilitate, comercial.
+
+
+
+
+20.3 Template testare (unit/e2e) ca schemă executabilă pentru toate modulele M01–M50. Nu descrii; prescrii. Testele validează contracte (schema input/output), gate-uri (plan/entitlements/flags/rate-limit), evaluatori (score ≥ 80), compat (308 legacy→current), export policy (manifest+checksum), SEO snapshot.
+Take a forward-thinking view: în 24–36 luni rulezi LTS + Rapid în paralel; fără șabloane standard, QA devine gât de sticlă. Templatele de mai jos sunt plug-and-play: duplici, completezi, rulezi.
+
+Execuție
+20.3.1 Structură directori (canonică)
+/tests
+  /unit
+    /modules
+      Mxx.spec.input.test.ts
+      Mxx.spec.core.test.ts
+      Mxx.spec.output.test.ts
+      Mxx.spec.export-policy.test.ts
+  /e2e
+    /modules
+      Mxx.e2e.run.spec.ts
+      Mxx.e2e.redirects.spec.ts
+      Mxx.e2e.seo.spec.ts
+      Mxx.e2e.entitlements.spec.ts
+  /fixtures
+    input.Mxx.valid.json
+    input.Mxx.invalid.json
+    legacy-slugs.Mxx.json
+  /helpers
+    schema.ts        // validatori JSON Schema
+    api.ts           // client API + auth + rate-limit helpers
+    seo.ts           // Lighthouse wrapper / snapshot
+    export.ts        // manifest + checksum verify
+
+
+Principiu: 1 modul = 1 pachet de teste (unit + e2e). Nume fixe, reutilizabile.
+
+20.3.2 Template UNIT – 4 straturi obligatorii
+A) Validare INPUT (Mxx.spec.input.test.ts)
+
+Scop: respingi orice payload non-conform (anti-deraiere).
+
+import { validateInput } from '@/tests/helpers/schema';
+import schema from '@/registry/Mxx/input.schema.json';
+
+describe('Mxx :: INPUT schema', () => {
+  it('acceptă payload VALID', () => {
+    const input = require('../fixtures/input.Mxx.valid.json');
+    expect(validateInput(schema, input)).toEqual({ ok: true });
+  });
+
+  it('respinge câmpuri necunoscute (additionalProperties:false)', () => {
+    const bad = { ...require('../fixtures/input.Mxx.valid.json'), HACK: 'x' };
+    const res = validateInput(schema, bad);
+    expect(res.ok).toBe(false);
+    expect(res.errors).toContain('additionalProperties');
+  });
+
+  it('respectă enum/regex/min/max', () => {
+    const bad = { ...require('../fixtures/input.Mxx.valid.json'), goal: 'invalid' };
+    const res = validateInput(schema, bad);
+    expect(res.ok).toBe(false);
+  });
+});
+
+B) Core logic minimal (Mxx.spec.core.test.ts)
+
+Scop: execută cu input valid; verifică absența ramurilor „fantomă”.
+
+import { runCore } from '@/modules/Mxx/core';
+
+describe('Mxx :: CORE', () => {
+  it('produce structură minimă pentru output', async () => {
+    const input = require('../fixtures/input.Mxx.valid.json');
+    const raw = await runCore(input);
+    expect(raw).toHaveProperty('artifact'); // înainte de evaluatori
+  });
+});
+
+C) Validare OUTPUT + Evaluatori (Mxx.spec.output.test.ts)
+
+Scop: output corespunde template-ului; scor calculat; sub 80 → blocare export.
+
+import { validateOutput } from '@/tests/helpers/schema';
+import outSchema from '@/registry/Mxx/output.schema.json';
+import { evaluate } from '@/engine/evaluator';
+
+describe('Mxx :: OUTPUT & SCORE', () => {
+  it('output validează contra schema + scor >= 80', async () => {
+    const input = require('../fixtures/input.Mxx.valid.json');
+    const result = await require('@/modules/Mxx').run(input);
+    const ok = validateOutput(outSchema, result);
+    expect(ok.ok).toBe(true);
+    expect(result.score).toMatchObject({ quality: expect.any(Number), overall: expect.any(Number) });
+    expect(result.score.overall).toBeGreaterThanOrEqual(80);
+  });
+
+  it('scor < 80 → returnează repair prompts și blochează exportul', async () => {
+    const input = require('../fixtures/input.Mxx.invalid.json'); // deliberat slab
+    const res = await require('@/modules/Mxx').run(input);
+    expect(res.blocked).toBe(true);
+    expect(res.hints?.length).toBeGreaterThan(0);
+  });
+});
+
+D) Export policy (manifest + checksum) (Mxx.spec.export-policy.test.ts)
+
+Scop: niciun artefact fără integritate.
+
+import { exportWithPolicy } from '@/tests/helpers/export';
+
+describe('Mxx :: EXPORT POLICY', () => {
+  it('generează manifest.json + checksum.sha256 și verifică la download', async () => {
+    const input = require('../fixtures/input.Mxx.valid.json');
+    const { artifact } = await require('@/modules/Mxx').run(input);
+    const meta = await exportWithPolicy(artifact, { requireManifest: true, requireChecksum: true });
+    expect(meta.manifest).toBeDefined();
+    expect(meta.checksum_ok).toBe(true);
+  });
+});
+
+20.3.3 Template E2E – 4 scenarii obligatorii
+
+Tehnologii recomandate: Playwright (UI), supertest/ky (API), Lighthouse CI (SEO).
+
+1) Run end-to-end (Mxx.e2e.run.spec.ts)
+
+Scop: user flow: open → run → score → export.
+
+import { test, expect } from '@playwright/test';
+
+test('Mxx :: E2E :: Open→Run→Score→Export', async ({ page }) => {
+  await page.goto('/modules');                            // listă module
+  await page.getByRole('link', { name: /Mxx Title/i }).click();
+  await expect(page).toHaveURL(/\/modules\/mxx-slug$/);   // slug curent
+
+  // pre-gates vizibile în UI (plan/flags/limit)
+  await expect(page.getByTestId('entitlements-ok')).toBeVisible();
+
+  // completezi form minim (AMS)
+  await page.fill('[name="icp"]', 'Consultants EU');
+  await page.selectOption('[name="goal"]', 'leadgen');
+  await page.click('button:has-text("Run")');
+
+  // verifici rezultat + scor + export
+  await page.waitForSelector('[data-testid="score-overall"]');
+  const score = Number(await page.textContent('[data-testid="score-overall"]'));
+  expect(score).toBeGreaterThanOrEqual(80);
+  await page.click('button:has-text("Export")');
+  await expect(page.getByText(/manifest\.json/i)).toBeVisible();
+  await expect(page.getByText(/checksum\.sha256/i)).toBeVisible();
+});
+
+2) Redirecturi & compat (Mxx.e2e.redirects.spec.ts)
+
+Scop: 100% legacy_slugs → 308 spre slug curent, fără 404.
+
+import { test, expect } from '@playwright/test';
+import legacy from '../fixtures/legacy-slugs.Mxx.json';
+
+for (const oldSlug of legacy) {
+  test(`Mxx :: redirect 308 :: ${oldSlug}`, async ({ request }) => {
+    const res = await request.get(`/modules/${oldSlug}`, { maxRedirects: 0 });
+    expect(res.status()).toBe(308);
+    expect(res.headers()['location']).toMatch(/\/modules\/mxx-slug$/);
+  });
+}
+
+3) Entitlements / plan / rate-limit (Mxx.e2e.entitlements.spec.ts)
+
+Scop: pre-gates corecte (402/403/429) cu mesaje utile.
+
+import { test, expect } from '@playwright/test';
+
+test('Mxx :: 403 fără entitlement', async ({ request }) => {
+  const res = await request.post('/api/modules/mxx-slug/run', { data: { /* payload valid */ } });
+  expect([402,403]).toContain(res.status());
+  const body = await res.json();
+  expect(body.message).toMatch(/upgrade|entitlement/i);
+});
+
+test('Mxx :: 429 rate-limit', async ({ request }) => {
+  const calls = await Promise.all(
+    Array.from({ length: 10 }).map(() => request.post('/api/modules/mxx-slug/run', { data: {/* ok */} }))
+  );
+  expect(calls.some(r => r.status() === 429)).toBe(true);
+});
+
+4) SEO snapshot (Lighthouse) (Mxx.e2e.seo.spec.ts)
+
+Scop: SEO ≥ 90 pe pagina modulului; 0 linkuri moarte.
+
+// pseudocod CI step
+lighthouse /modules/mxx-slug --only-categories=seo --output=json > seo.Mxx.json
+assert(seo.Mxx.json.categories.seo.score >= 0.90)
+
+20.3.4 Matrice cazuri test (checklist per modul)
+Zonă	Test	Acceptanță
+Input	enum/regex/required, additionalProperties:false	100% respinse cazurile invalide
+Gate	plan/entitlements/flags/rate-limit	402/403/429 corecte + mesaje utile
+Run	produce artefact minim (AMS)	structură „artifact” prezentă
+Evaluatori	quality/risk/cost/overall	overall ≥ 80 pentru export
+Export	manifest.json + checksum.sha256	checksum_ok = true
+Compat	legacy_slugs → 308 spre slug curent	0 rute 404
+SEO	Lighthouse SEO ≥ 90	snapshot verde
+Canary	success_rate ≥ 95%	ok înainte de full rollout
+20.3.5 Parametri CI (indicativi, nivel MVP)
+
+Unit: ≤ 90s total; coverage lines ≥ 80% pe module active.
+
+E2E: ≤ 6 min (parallel shards); retry flakies: 1.
+
+Perf: API P95 ≤ 500ms pe rutele modul; UI TTI ≤ 3.5s.
+
+Blocante release: orice 404 la pagini modul, orice export fără manifest+checksum, SEO < 90, success_rate canary < 95%.
+
+20.3.6 Șablon de fișier „generator” (scaffold automat)
+// scripts/scaffold-tests.ts
+// Usage: pnpm scaffold:test M14 social-content-grid
+const [id, slug] = process.argv.slice(2);
+copy('templates/unit/*', `tests/unit/modules/${id}.*.test.ts`, { id, slug });
+copy('templates/e2e/*', `tests/e2e/modules/${id}.*.spec.ts`, { id, slug });
+write(`tests/fixtures/input.${id}.valid.json`, sampleInput(id));
+write(`tests/fixtures/legacy-slugs.${id}.json`, sampleLegacy(id));
+
+
+Rulează și obții „schelet” complet pentru Mxx în <5 sec.
+
+20.3.7 Negative & securitate (incluse în suite)
+
+PII leak: fixture cu PII → risk↑ → overall < 80 → export blocat (așteptat).
+
+Prompt injection: token „INJECT{{ … }}” în input → evaluator detectează → blocare.
+
+Abuz export: lipsă manifest/checksum → 422; test confirmă motiv.
+
+Cost runaway: depășește est_tokens_per_run cu >20% → cost score ↓ și alert.
+
+Verdict
+
+Setează QA standardizat ca infrastructură, nu ca afterthought.
+— Unit: contracte tari (input/output), evaluatori, export policy.
+— E2E: Open→Run→Score→Export, 308 legacy, gates, SEO snapshot.
+— CI: limite de timp, coverage ≥ 80%, blocante clare (checksum/404/SEO/success_rate).
+
+Take a forward-thinking view: cu aceste template-uri, în 2–3 ani rulezi autogenerare de teste la fiecare schimbare de schemă și menții LTS/Rapid fără să crape nimic în producție.
+
+
+
+
+
+20.4 Script redirecturi 308 (legacy → current). Asta nu e „listă decorativă”, ci cod executabil care garantează:
+– niciun 404 pe modulele M01–M50,
+– 100% legacy_slugs redirecționează permanent spre slug curent,
+– telemetrie legacy_redirect_hit înregistrată,
+– sitemap/SEO curat (fără duplicări).
+
+Take a forward-thinking view: în 24–36 luni vei menține sute de redirecturi din generații de sluguri; fără un script unificat, compatibilitatea și SEO-ul se prăbușesc.
+
+Execuție
+20.4.1 Structură de date (registry JSON)
+
+Fișier unic redirects.json generat automat din DB modules.legacy_slugs[].
+
+[
+  { "legacy": "social-media-calendar", "current": "social-content-grid", "module_id": "M14" },
+  { "legacy": "content-calendar-optimizer", "current": "social-content-grid", "module_id": "M14" },
+  { "legacy": "promptmap", "current": "prompt-map", "module_id": "M47" }
+]
+
+20.4.2 Middleware Next.js / Express (Node canonical)
+// middleware/redirects308.ts
+import redirects from './redirects.json';
+
+export function handleLegacyRedirect(req, res, next) {
+  const path = req.url.split('?')[0].replace(/^\/+/, '');
+  const found = redirects.find(r => r.legacy === path);
+
+  if (found) {
+    const target = `/${found.current}`;
+    // log event → telemetrie
+    req.app.emit('legacy_redirect_hit', {
+      legacy_slug: found.legacy,
+      module_slug_current: found.current,
+      module_id: found.module_id,
+      plan: req.user?.plan || 'anon',
+      ts: new Date().toISOString()
+    });
+    return res.redirect(308, target);
+  }
+  next();
+}
+
+
+Integrare în Next.js (App Router):
+
+// middleware.ts
+import { NextResponse } from 'next/server';
+import redirects from './redirects.json';
+
+export function middleware(req) {
+  const url = req.nextUrl.clone();
+  const slug = url.pathname.replace(/^\/+/, '');
+
+  const found = redirects.find(r => r.legacy === slug);
+  if (found) {
+    url.pathname = `/${found.current}`;
+    // Telemetrie poate fi trimisă prin fetch către /api/telemetry
+    return NextResponse.redirect(url, 308);
+  }
+  return NextResponse.next();
+}
+
+20.4.3 Teste E2E (redirects)
+import { test, expect } from '@playwright/test';
+import redirects from '../redirects.json';
+
+for (const { legacy, current } of redirects) {
+  test(`Redirect ${legacy} → ${current}`, async ({ request }) => {
+    const res = await request.get(`/${legacy}`, { maxRedirects: 0 });
+    expect(res.status()).toBe(308);
+    expect(res.headers()['location']).toMatch(new RegExp(current));
+  });
+}
+
+20.4.4 Telemetrie asociată
+
+Eveniment canonic (scris în analytics):
+
+{
+  "evt": "legacy_redirect_hit",
+  "legacy_slug": "social-media-calendar",
+  "module_slug_current": "social-content-grid",
+  "module_id": "M14",
+  "plan": "pro",
+  "ts": "2025-08-30T14:15:00Z"
+}
+
+
+KPI: Legacy Redirect Share = % sesiuni cu legacy_redirect_hit. Prag DoD: ≤5%.
+
+20.4.5 Pipeline de build
+
+scripts/generate-redirects.ts citește modules.legacy_slugs[] din DB/registry.
+
+Scrie redirects.json.
+
+Rulează test E2E să confirme 308 → current.
+
+Canary: 404 > 0 = blocaj release.
+
+Verdict
+
+Scriptul 308 este coloana vertebrală a compatibilității.
+— Garantează zero 404, zero pierdere SEO.
+— Fiecare legacy_slug e măsurat prin telemetrie.
+— Automatizat la build → nu există divergențe manuale.
+
+În 2–3 ani devine condiție enterprise: fără script centralizat de 308, nu intri pe piață reglementată (SEO, audit, SLA).
+
+
+
+
+
+
+20.5 Matrice compatibilitate planuri ca sistem executabil (config + politici), aliniat la Pilot/Pro/Enterprise, exporturi cu manifest+checksum, rate-limit, flags și legacy_slugs cu 308. Baza e deja definită: planuri, entitlements, feature flags, export policy, redirecturi 308, DoR/DoD, telemetrie. 
+
+Take a forward-thinking view: în 24–36 luni treci la pachete „module packs” + LTS/Rapid pe canale. Matricea devine SSOT comercial și tehnic — un singur fișier guvernează accesul, costul, performanța și auditul. 
+
+Execuție
+20.5.1 Model canonic (chei & principii)
+
+Planuri: pilot, pro, enterprise.
+
+Entitlements: drepturi granulare per modul (mod.Mxx.run, mod.export).
+
+Feature flags: capabilități temporare (enable.batch, webhooks.v1, exporter_v2).
+
+Export policy: allowed_formats, watermark_on_trial, require_manifest, require_checksum.
+
+Rate-limit: pe rută & pe modul; plafon separat pentru export.
+
+Compat: legacy_slugs[] → 308 permanent; 404 = interzis. 
+
+20.5.2 Matrice capabilities per plan (MVP)
+Capacitate	Pilot	Pro	Enterprise
+Acces top-10 module „CRITICA” (run)	✓	✓	✓
+Acces toate modulele „live”	–	✓	✓
+Export JSON/PDF (fără watermark)	–	✓	✓
+Export ZIP (bundle + manifest+checksum)	–	✓	✓
+Batch runs (≥5 simultan)	–	–	✓
+Webhooks outbound (allow-list + HMAC)	–	✓	✓
+Integrare CRM/Ads (adaptoare)	–	✓	✓
+SLA suport (timp răspuns)	–	Std	Prior
+Canary opt-in per modul	–	✓	✓
+Canal LTS (stabil)	–	✓	✓
+Canal Rapid (ultimul MINOR)	✓	✓	✓
+Retenție arhivă (artefacte semnate)	30z	180z	2y+
+
+Notă: Exportul e permis doar cu score.overall ≥ 80 și manifest+checksum; trial → watermark. 
+
+20.5.3 Acces pe blocuri (M01–M50)
+Bloc (range)	Pilot	Pro	Enterprise
+M01–M10 (Strategy & Ops)	subset	complet	complet
+M11–M20 (Content & Marketing)	subset	complet	complet
+M21–M30 (Technical Architecture)	–	complet	complet + batch
+M31–M40 (Sales & Customer Ops)	–	complet	complet + webhooks
+M41–M50 (Business Ops & Identity)	–	complet	complet + packs
+
+Subset = top-10 module CRITICA din lista „BASE_ACTIVE”. Extinderea subsetului se face prin entitlement punctual. 
+
+20.5.4 Export policy matrix
+Element	Pilot	Pro	Enterprise
+allowed_formats	["JSON","PDF"] (PDF=wm)	["JSON","PDF","ZIP"]	["JSON","PDF","ZIP"]
+watermark_on_trial	true	false	false
+require_manifest	true	true	true
+require_checksum	true	true	true
+checksum_ok la download	obligatoriu	obligatoriu	obligatoriu
+
+orice export fără manifest+checksum → 422 + alertă; blocant release dacă frecvența >0. 
+
+20.5.5 Rate-limit & throttling
+Tip	Pilot	Pro	Enterprise
+Runs/oră (per modul)	5	30	120
+Exporturi/oră	3	20	80
+Concurență	1	3	10 (batch on)
+API burst (sec)	mic	mediu	mare (cu SLA)
+
+La depășire: 429 + Retry-After + eveniment rate_limited. Praguri controlate în gateway. 
+
+20.5.6 Integrări & webhooks
+Integrare	Pilot	Pro	Enterprise
+Webhooks artifact_ready (HMAC)	–	✓	✓
+CRM (HubSpot/SFDC/Pipedrive)	–	✓	✓
+Ads (Meta/Google/LinkedIn)	–	✓	✓
+ClickUp/Jira/Asana (tasking)	–	✓	✓
+Inbound webhooks verificate HMAC	–	✓	✓
+
+Toate după export policy și allow-list; se loghează end-to-end (ext_event_ingested/rejected). 
+
+20.5.7 Securitate & conformitate (per plan)
+Control	Pilot	Pro	Enterprise
+Validare input strictă (enum/regex/AP:false)	✓	✓	✓
+Evaluatori risc + scor minim ≥ 80	✓	✓	✓
+Red team pre-release top-10 module	–	✓	✓
+Audit trail (open/run/score/export)	✓	✓	✓
+Export fără manifest/cksum = blocat	✓	✓	✓
+SLA incident (RCA ≤ 48h)	–	Std	Prior
+20.5.8 Retenție & arhivă (artefacte semnate)
+Plan	Retenție standard	Golden samples	Restore drepturi
+Pilot	30 zile	–	read-only
+Pro	180 zile	top-5/modul	read + re-export
+Enterprise	≥2 ani	top-10/modul	full (în limite)
+
+Restore respectă planul curent; trial → watermark forțat. 
+
+20.5.9 SLA & suport (indicativ)
+Plan	Timp răspuns	Fereastră	Escaladare
+Pro	< 1 zi	business	standard
+Enterprise	< 4 ore	24×5	prioritar
+
+SLA condiționat de telemetrie completă + 0 exporturi fără manifest/cksum.
+
+20.5.10 Config executabil (SSOT) — plans.json
+{
+  "pilot": {
+    "modules": { "access": "subset_critical" },
+    "export_policy": {
+      "allowed_formats": ["JSON","PDF"],
+      "watermark_on_trial": true,
+      "require_manifest": true,
+      "require_checksum": true
+    },
+    "rate_limit": { "run_per_hour": 5, "export_per_hour": 3, "concurrency": 1 },
+    "features": { "batch": false, "webhooks": false, "crm": false, "ads": false },
+    "retention_days": 30,
+    "channels": { "rapid": true, "lts": false }
+  },
+  "pro": {
+    "modules": { "access": "all_live" },
+    "export_policy": {
+      "allowed_formats": ["JSON","PDF","ZIP"],
+      "watermark_on_trial": false,
+      "require_manifest": true,
+      "require_checksum": true
+    },
+    "rate_limit": { "run_per_hour": 30, "export_per_hour": 20, "concurrency": 3 },
+    "features": { "batch": false, "webhooks": true, "crm": true, "ads": true },
+    "retention_days": 180,
+    "channels": { "rapid": true, "lts": true }
+  },
+  "enterprise": {
+    "modules": { "access": "all_live" },
+    "export_policy": {
+      "allowed_formats": ["JSON","PDF","ZIP"],
+      "watermark_on_trial": false,
+      "require_manifest": true,
+      "require_checksum": true
+    },
+    "rate_limit": { "run_per_hour": 120, "export_per_hour": 80, "concurrency": 10 },
+    "features": { "batch": true, "webhooks": true, "crm": true, "ads": true },
+    "retention_days": 730,
+    "channels": { "rapid": true, "lts": true },
+    "sla": { "response_hours": 4, "window": "24x5" }
+  }
+}
+
+
+Enforcement (pseudocod API)
+
+preGate(user, module) {
+  assertAuth(user);
+  const plan = plans[user.plan];
+
+  assertEntitlement(user, `mod.${module.id}.run`);     // 402/403 dacă lipsește
+  assertRateLimit(plan.rate_limit);                    // 429 + Retry-After
+  assertFeatureFlags(plan.features, module);           // 403 dacă flag off
+}
+
+exportWithPolicy(result, user) {
+  const pol = plans[user.plan].export_policy;
+  assert(result.score.overall >= 80);                  // gate scor
+  assertAllowedFormat(pol, result.format);
+  requireManifestAndChecksum(pol, result);             // 422 dacă lipsesc
+  applyWatermarkIfTrial(pol, user);
+}
+
+
+20.5.11 Upgrade/Downgrade (reguli)
+
+Upgrade: entitlements & flags se activează instant; rulările în curs păstrează contextul; noile exporturi primesc drepturile extinse.
+
+Downgrade: „grace 7 zile” pentru artefacte deja produse (download permis); rulări noi respectă planul inferior; batch/webhooks se dezactivează imediat.
+
+Schimbare canal: ?channel=lts|rapid la API; UI servește Rapid implicit; Enterprise poate forța LTS pentru stabilitate. 
+
+20.5.12 DoD & KPI-uri de guvernanță (plan compliance)
+
+DoD (blocante release)
+
+0 exporturi fără manifest+checksum.
+
+100% legacy_slugs → 308; 404=0 pe pagini modul.
+
+Success-rate ≥ 95% pe top-10 module (canary).
+
+SEO ≥ 90 pe home/index/2 module.
+
+rate_limit & export_policy aplicate corect (probe e2e). 
+
+KPI-uri
+
+Checksum OK Rate = 100%.
+
+Legacy Redirect Share ≤ 5%.
+
+Open→Run Rate ≥ 60% pe module de conținut.
+
+TTV median < 300s până la primul artefact.
+
+Error 4xx/5xx sub praguri (alerting activ).
+
+Verdict
+
+Matricea de compatibilitate = contractul comercial-tehnic unic.
+– Un fișier (plans.json) decide ce rulezi, ce exporți, cât, unde și cu ce garanții.
+– Gate-urile (entitlements/flags/rl) + export policy (manifest+checksum) pun disciplina financiară și legală direct în runtime.
+– În 2–3 ani, aceeași matrice susține pachete LTS/Rapid, module packs și SLA enterprise, fără să atingi codul modulului — doar configurația.

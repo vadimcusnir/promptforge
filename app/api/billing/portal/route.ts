@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { config, isServiceAvailable } from "@/lib/config"
+import { RATE_LIMITS } from "@/lib/rate-limit"
 
 // Request schema validation
 const portalRequestSchema = z.object({
@@ -8,8 +9,24 @@ const portalRequestSchema = z.object({
   returnUrl: z.string().url('Invalid return URL').optional()
 })
 
+// Rate limiting for portal requests
+const portalLimiter = new RateLimiter({
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 5, // 5 requests per minute
+  message: 'Rate limit exceeded. Please try again later.'
+})
+
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = portalLimiter.check(request)
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: rateLimitResult.message || 'Rate limit exceeded. Please try again later.' },
+        { status: 429 }
+      )
+    }
+
     // Check if Stripe is configured for P0 launch
     if (!isServiceAvailable('hasStripe')) {
       return NextResponse.json(

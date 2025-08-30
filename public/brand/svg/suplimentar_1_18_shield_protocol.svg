@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Protocol - un scut plat cu glitch care se repară singur (fractură → refacere) -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Scut (formă de bază) -->
+  <path id="shield-base" d="M256 136 L356 176 L356 276 C356 336 256 376 256 376 C256 376 156 336 156 276 L156 176 Z" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="2"/>
+  
+  <!-- Fractură în scut (linie de glitch) -->
+  <path id="shield-fracture" d="M216 156 L256 216 L296 176 L336 236 L356 216 L356 276 C356 336 256 376 256 376 C256 376 156 336 156 276 L156 216 L176 236 L216 176 Z" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0.8;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Linii de fractură (glitch) -->
+  <line id="fracture-line-1" x1="216" y1="156" x2="256" y2="216" stroke="#FF0000" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;1;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="fracture-line-2" x1="256" y1="216" x2="296" y2="176" stroke="#FF0000" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;1;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="fracture-line-3" x1="296" y1="176" x2="336" y2="236" stroke="#FF0000" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;1;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="fracture-line-4" x1="336" y1="236" x2="356" y2="216" stroke="#FF0000" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;1;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="fracture-line-5" x1="156" y1="216" x2="176" y2="236" stroke="#FF0000" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;1;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="fracture-line-6" x1="176" y1="236" x2="216" y2="176" stroke="#FF0000" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;1;1;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efect de reparare (linii aurii care acoperă fracturile) -->
+  <line id="repair-line-1" x1="216" y1="156" x2="256" y2="216" stroke="#FFD700" stroke-width="3" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;1;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="repair-line-2" x1="256" y1="216" x2="296" y2="176" stroke="#FFD700" stroke-width="3" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;1;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="repair-line-3" x1="296" y1="176" x2="336" y2="236" stroke="#FFD700" stroke-width="3" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;1;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9;0.95;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="repair-line-4" x1="336" y1="236" x2="356" y2="216" stroke="#FFD700" stroke-width="3" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;1;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9;0.95;0.975;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="repair-line-5" x1="156" y1="216" x2="176" y2="236" stroke="#FFD700" stroke-width="3" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;1;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9;0.95;0.975;0.99;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <line id="repair-line-6" x1="176" y1="236" x2="216" y2="176" stroke="#FFD700" stroke-width="3" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0;0;0;0;1;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;0.9;0.95;0.975;0.99;0.995;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efect de pulsație pentru scut (normal) -->
+  <path id="shield-pulse" d="M256 136 L356 176 L356 276 C356 336 256 376 256 376 C256 376 156 336 156 276 L156 176 Z" fill="#5a5a5a" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0;0;0;0;0.2;0"
+      keyTimes="0;0.1;0.2;0.3;0.6;0.7;0.8;0.9"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efect de pulsație pentru scut (atac) -->
+  <path id="shield-attack" d="M256 136 L356 176 L356 276 C356 336 256 376 256 376 C256 376 156 336 156 276 L156 176 Z" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.3;0;0;0"
+      keyTimes="0;0.25;0.35;0.45;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efect de pulsație pentru scut (reparare) -->
+  <path id="shield-repair" d="M256 136 L356 176 L356 276 C356 336 256 376 256 376 C256 376 156 336 156 276 L156 176 Z" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.3;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Simbol de scut în centru -->
+  <path id="shield-symbol" d="M256 196 L286 216 L286 256 C286 276 256 296 256 296 C256 296 226 276 226 256 L226 216 Z" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+  
+  <!-- Efect de glitch pentru simbolul din centru -->
+  <path id="shield-symbol-glitch" d="M256 196 L286 216 L286 256 C286 276 256 296 256 296 C256 296 226 276 226 256 L226 216 Z" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0;0;0"
+      keyTimes="0;0.3;0.4;0.5;0.6;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efect de reparare pentru simbolul din centru -->
+  <path id="shield-symbol-repair" d="M256 196 L286 216 L286 256 C286 276 256 296 256 296 C256 296 226 276 226 256 L226 216 Z" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.5;0"
+      keyTimes="0;0.5;0.6;0.7;0.8;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Text "SHIELD PROTOCOL" -->
+  <text x="256" y="416" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">SHIELD PROTOCOL</text>
+  
+  <!-- Text de status care se schimbă -->
+  <text id="status-text" x="256" y="96" font-family="'JetBrains Mono', monospace" font-size="16" fill="#E0E0E0" text-anchor="middle">STATUS: ACTIVE
+    <animate
+      attributeName="textContent"
+      values="STATUS: ACTIVE;STATUS: BREACH;STATUS: REPAIRING;STATUS: SECURE;STATUS: ACTIVE"
+      keyTimes="0;0.35;0.6;0.85;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FF0000;#FFD700;#E0E0E0;#E0E0E0"
+      keyTimes="0;0.35;0.6;0.85;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Shield Protocol</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un scut plat cu glitch care se repară singur (fractură → refacere). Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

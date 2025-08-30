@@ -1,1066 +1,224 @@
-"use client"
+'use client'
 
-import { useState, useEffect, Suspense } from "react"
-import { useSearchParams } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { SkeletonCard } from "@/components/ui/skeleton"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { useToast } from "@/hooks/use-toast"
-import {
-  Settings,
-  Zap,
-  TestTube,
-  History,
-  Download,
-  Search,
-  Filter,
-  Lock,
-  Copy,
-  CheckCircle,
-  Info,
-  ChevronRight,
-  ChevronLeft,
-} from "lucide-react"
-import { EntitlementGate } from "@/components/entitlement-gate"
-import { useEntitlements } from "@/hooks/use-entitlements"
-import { useAnalytics } from "@/hooks/use-analytics"
-import { default7D, paramOptions, type Params7D } from "@/lib/default-params"
-import { COMPLETE_MODULES_CATALOG } from "@/lib/modules"
-import { PromptForm } from "@/components/generator/PromptForm"
-import { ExportModal } from "@/components/export-modal"
-import { generatePrompt, createPromptRun, simulateGptResponse, PromptRun } from "@/utils/promptCompiler"
-import { FormData } from "@/utils/parseInputSchema"
-import { LoadingSpinner } from "@/components/loading-spinner"
-import { 
-  EmptyState
-} from "@/components/ui/empty-state"
+import { useState, useEffect } from 'react'
+import { NavBar } from '@/components/ui/navbar'
+import { FilterBar } from '@/components/ui/filter-bar'
+import { ModuleCard } from '@/components/ui/module-card'
+import { ModuleOverlay } from '@/components/ui/module-overlay'
 
-
-// Legacy interface for backward compatibility
-interface GeneratedPrompt {
+interface Module {
   id: string
-  content: string
-  module: string
-  params: Params7D
-  timestamp: string
-  hash: string
-  scores?: {
-    structure: number
-    clarity: number
-    kpi_compliance: number
-    executability: number
-  }
+  title: string
+  vectors: string[]
+  difficulty: 1 | 2 | 3 | 4 | 5
+  minPlan: 'free' | 'creator' | 'pro' | 'enterprise'
+  summary: string
+  overview: string
+  inputs: string[]
+  outputs: string[]
+  kpis: string[]
+  guardrails: string[]
 }
 
-function GeneratorPage() {
-  const { toast } = useToast()
-  const analytics = useAnalytics()
-  const searchParams = useSearchParams()
-  const [selectedModule, setSelectedModule] = useState("M01")
-  const [params7D, setParams7D] = useState<Params7D>(default7D)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [isTesting, setIsTesting] = useState(false)
-  const [_isExporting, _setIsExporting] = useState(false)
-  const [generatedPrompt, setGeneratedPrompt] = useState<GeneratedPrompt | null>(null)
-  const [history, setHistory] = useState<GeneratedPrompt[]>([])
-  const [currentPromptRun, setCurrentPromptRun] = useState<PromptRun | null>(null)
-  const [isLoadingHistory, setIsLoadingHistory] = useState(true)
-  const [historyError, setHistoryError] = useState<string | null>(null)
-  const [currentStep, setCurrentStep] = useState(1)
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
+export default function GeneratorPage() {
+  const [modules, setModules] = useState<Module[]>([])
+  const [filteredModules, setFilteredModules] = useState<Module[]>([])
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null)
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  const [currentPlan] = useState<'free' | 'creator' | 'pro' | 'enterprise'>('free')
   
-  interface TestResults {
-    type: "live" | "simulation"
-    scores: {
-      structure: number
-      clarity: number
-      kpi_compliance: number
-      executability: number
-    }
-    timestamp: string
-  }
+  // Filters
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedVectors, setSelectedVectors] = useState<string[]>([])
+  const [maxDifficulty, setMaxDifficulty] = useState(5)
+  const [selectedPlan, setSelectedPlan] = useState('all')
 
-  const [testResults, setTestResults] = useState<TestResults | null>(null)
-
+  // Load modules
   useEffect(() => {
-    const loadHistory = async () => {
+    const loadModules = async () => {
       try {
-        setIsLoadingHistory(true)
-        setHistoryError(null)
-        
-        const savedHistory = localStorage.getItem("promptforge_history")
-        if (savedHistory) {
-          setHistory(JSON.parse(savedHistory))
+        const response = await fetch('/api/modules')
+        if (response.ok) {
+          const data = await response.json()
+          setModules(data.modules || [])
+          setFilteredModules(data.modules || [])
         }
       } catch (error) {
-        console.error('Failed to load history:', error)
-        setHistoryError('Failed to load generation history')
-        toast({
-          title: "History Load Error",
-          description: "Could not load your generation history",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoadingHistory(false)
+        console.error('Failed to load modules:', error)
+        // Fallback to demo data
+        setModules(getDemoModules())
+        setFilteredModules(getDemoModules())
       }
     }
 
-    loadHistory()
-  }, [toast])
+    loadModules()
+  }, [])
 
+  // Apply filters
   useEffect(() => {
-    const urlParams: Partial<Params7D> = {}
+    let filtered = modules
 
-    // Extract 7D parameters from URL
-    Object.keys(default7D).forEach((key) => {
-      const value = searchParams.get(key)
-      if (value) {
-        urlParams[key as keyof Params7D] = value
-      }
-    })
-
-    // Extract module from URL
-    const moduleParam = searchParams.get("module")
-    if (moduleParam) {
-      setSelectedModule(moduleParam)
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(module =>
+        module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        module.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        module.vectors.some(vector => vector.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
     }
 
-    // Merge URL params with defaults
-    setParams7D({ ...default7D, ...urlParams })
-  }, [searchParams])
-
-  const updateParam = (key: keyof Params7D, value: string) => {
-    setParams7D((prev) => ({ ...prev, [key]: value }))
-    // Clear validation error for this field
-    if (validationErrors[key]) {
-      setValidationErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[key]
-        return newErrors
-      })
+    // Vectors filter
+    if (selectedVectors.length > 0) {
+      filtered = filtered.filter(module =>
+        selectedVectors.some(vector => module.vectors.includes(vector))
+      )
     }
+
+    // Difficulty filter
+    filtered = filtered.filter(module => module.difficulty <= maxDifficulty)
+
+    // Plan filter
+    if (selectedPlan !== 'all') {
+      filtered = filtered.filter(module => module.minPlan === selectedPlan)
+    }
+
+    setFilteredModules(filtered)
+  }, [modules, searchQuery, selectedVectors, maxDifficulty, selectedPlan])
+
+  const handleModuleView = (module: Module) => {
+    setSelectedModule(module)
+    setIsOverlayOpen(true)
   }
 
-  const validateStep = (step: number): boolean => {
-    const errors: Record<string, string> = {}
-    
-    switch (step) {
-      case 1:
-        if (!selectedModule) {
-          errors.module = "Please select a module"
-        }
-        break
-      case 2:
-        if (!params7D.domain) {
-          errors.domain = "Domain is required"
-        }
-        if (!params7D.scale) {
-          errors.scale = "Scale is required"
-        }
-        if (!params7D.urgency) {
-          errors.urgency = "Urgency is required"
-        }
-        break
-      case 3:
-        if (!params7D.complexity) {
-          errors.complexity = "Complexity is required"
-        }
-        if (!params7D.resources) {
-          errors.resources = "Resources are required"
-        }
-        break
-      case 4:
-        if (!params7D.application) {
-          errors.application = "Application is required"
-        }
-        if (!params7D.output) {
-          errors.output = "Output format is required"
-        }
-        break
-    }
-    
-    setValidationErrors(errors)
-    return Object.keys(errors).length === 0
+  const handleSimulate = () => {
+    console.log('Simulating module:', selectedModule?.id)
+    // TODO: Implement simulation
   }
 
-  const nextStep = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 4))
-    }
+  const handleRunRealTest = () => {
+    console.log('Running real test for module:', selectedModule?.id)
+    // TODO: Implement real test
   }
 
-  const prevStep = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 1))
+  const handleExport = (format: string) => {
+    console.log('Exporting module:', selectedModule?.id, 'format:', format)
+    // TODO: Implement export
   }
-
-  // New handler for dynamic form submission
-  const handleFormSubmit = async (formData: FormData) => {
-    if (!currentModule) return
-    
-    setIsGenerating(true)
-    try {
-      // Generate prompt using the new compiler
-      generatePrompt(currentModule, formData)
-      
-      // Create prompt run
-      const promptRun = createPromptRun(currentModule, formData, userPlan)
-      setCurrentPromptRun(promptRun)
-      
-      // Create legacy prompt for backward compatibility
-      const prompt: GeneratedPrompt = {
-        id: promptRun.id,
-        content: promptRun.prompt,
-        module: promptRun.moduleId,
-        params: { ...params7D },
-        timestamp: promptRun.timestamp,
-        hash: promptRun.hash,
-      }
-      
-      setGeneratedPrompt(prompt)
-
-      // Save to history
-      const newHistory = [prompt, ...history.slice(0, 9)]
-      setHistory(newHistory)
-      localStorage.setItem("promptforge_history", JSON.stringify(newHistory))
-
-      toast({
-        title: "Prompt Generated Successfully",
-        description: `Run ID: ${promptRun.id}`,
-        duration: 3000,
-      })
-    } catch (error) {
-      console.error('Generation error:', error)
-      toast({
-        title: "Generation Failed",
-        description: "Please try again",
-        variant: "destructive",
-        duration: 3000,
-      })
-    } finally {
-      setIsGenerating(false)
-    }
-  }
-
-  const handleTest = async (type: "live" | "simulation") => {
-    if (!generatedPrompt) {
-      toast({
-        title: "No Prompt to Test",
-        description: "Generate a prompt first",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setIsTesting(true)
-    try {
-      if (type === "simulation") {
-        // Use the new simulation function
-        const result = await simulateGptResponse(generatedPrompt.content)
-        
-        if (result.scores) {
-          setTestResults({
-            type,
-            scores: result.scores,
-            timestamp: new Date().toISOString(),
-          })
-        }
-
-        // Update current prompt run with scores
-        if (currentPromptRun && result.scores) {
-          const updatedRun = {
-            ...currentPromptRun,
-            scores: result.scores,
-            tokensUsed: result.tokensUsed,
-            cost: result.cost
-          }
-          setCurrentPromptRun(updatedRun)
-        }
-
-        toast({
-          title: "Simulation Test Complete",
-          description: `Average score: ${result.scores ? Math.round(Object.values(result.scores).reduce((a, b) => a + b, 0) / 4) : 'N/A'}`,
-        })
-      } else {
-        // Live test - would call actual API
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-
-        const scores = {
-          structure: Math.floor(Math.random() * 20) + 80,
-          clarity: Math.floor(Math.random() * 20) + 80,
-          kpi_compliance: Math.floor(Math.random() * 20) + 70,
-          executability: Math.floor(Math.random() * 20) + 85,
-        }
-
-        setTestResults({
-          type,
-          scores,
-          timestamp: new Date().toISOString(),
-        })
-
-        toast({
-          title: "Live GPT Test Complete",
-          description: `Average score: ${Math.round(Object.values(scores).reduce((a, b) => a + b, 0) / 4)}`,
-        })
-      }
-    } catch (error) {
-      console.error('Test error:', error)
-      toast({
-        title: "Test Failed",
-        description: "Please try again",
-        variant: "destructive",
-      })
-    } finally {
-      setIsTesting(false)
-    }
-  }
-
-  const handleCopy = async () => {
-    if (!generatedPrompt) return
-
-    try {
-      await navigator.clipboard.writeText(generatedPrompt.content)
-      toast({
-        title: "Copied to Clipboard",
-        description: "Prompt copied successfully",
-      })
-    } catch (error) {
-      console.error('Copy error:', error)
-      toast({
-        title: "Copy Failed",
-        description: "Please try again",
-        variant: "destructive",
-      })
-    }
-  }
-
-  const _retryHistoryLoad = () => {
-    setHistoryError(null)
-    setIsLoadingHistory(true)
-    // Reload history
-    const savedHistory = localStorage.getItem("promptforge_history")
-    if (savedHistory) {
-      try {
-        setHistory(JSON.parse(savedHistory))
-      } catch (_error) {
-        setHistoryError('Failed to parse history data')
-      }
-    }
-    setIsLoadingHistory(false)
-  }
-
-  // Get available modules from the catalog
-  const availableModules = Object.values(COMPLETE_MODULES_CATALOG).filter(module => module.is_active)
-  
-  // Legacy modules array for backward compatibility
-  const modules = [
-    { id: "M01", name: "SOP FORGE™", vector: "Strategic", moduleNumber: 1, plan: "free" },
-    { id: "M07", name: "TRUST REVERSAL PROTOCOL™", vector: "Strategic", moduleNumber: 7, plan: "creator" },
-    { id: "M10", name: "CRISIS COMMUNICATION PLAYBOOK™", vector: "Crisis", moduleNumber: 10, plan: "free" },
-    { id: "M11", name: "VIRAL CONTENT ENGINE™", vector: "Content", moduleNumber: 11, plan: "creator" },
-    { id: "M12", name: "BRAND VOICE CODEX™", vector: "Branding", moduleNumber: 12, plan: "creator" },
-    { id: "M18", name: "CONTENT ANALYTICS DASHBOARD™", vector: "Content", moduleNumber: 18, plan: "free" },
-    { id: "M25", name: "MICROSERVICES GRID™", vector: "Technical", moduleNumber: 25, plan: "creator" },
-    { id: "M35", name: "SALES FORECASTING ENGINE™", vector: "Sales", moduleNumber: 35, plan: "pro" },
-    { id: "M45", name: "CHANGE FORCE FIELD™", vector: "Operational", moduleNumber: 45, plan: "creator" },
-  ]
-
-  const userPlan = "free" // Default plan for now
-  const freeModules = ["M01", "M10", "M18"]
-  
-  // Get current selected module definition
-  const currentModule = availableModules.find(m => m.id === selectedModule) || availableModules[0]
-
-
 
   return (
-    <div className="min-h-screen pattern-bg text-fg-primary">
+    <div className="min-h-screen bg-bg">
+      <NavBar plan={currentPlan} />
+      
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold font-serif mb-4">Prompt Generator</h1>
-          <p className="text-xl text-fg-secondary">Configure, generate, and export industrial-grade prompts</p>
-        </div>
-
-        <div className="grid lg:grid-cols-4 gap-6">
-          {/* Left Panel - Module Selection */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="bg-card border border-border">
-              <CardHeader>
-                <CardTitle className="font-serif flex items-center gap-2">
-                  <Filter className="w-5 h-5 text-yellow-400" />
-                  Module Library
-                </CardTitle>
-                <CardDescription>Select from 50 operational modules</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-fg-secondary" />
-                  <Input placeholder="Search modules..." className="pl-10 bg-black/50 border-gray-700" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">Filter by Vector</Label>
-                  <Select>
-                    <SelectTrigger className="bg-black/50 border-gray-700">
-                      <SelectValue placeholder="All vectors" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="strategic">Strategic</SelectItem>
-                      <SelectItem value="rhetoric">Rhetoric</SelectItem>
-                      <SelectItem value="content">Content</SelectItem>
-                      <SelectItem value="analytics">Analytics</SelectItem>
-                      <SelectItem value="branding">Branding</SelectItem>
-                      <SelectItem value="crisis">Crisis</SelectItem>
-                      <SelectItem value="cognitive">Cognitive</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {modules.map((module) => {
-                    const isLocked = userPlan === "free" && !freeModules.includes(module.id)
-                    const requiredPlan = module.plan
-
-                    return (
-                      <div key={module.id}>
-                        {isLocked ? (
-                          <EntitlementGate
-                            flag="canUseAllModules"
-                            featureName={`Module ${module.id}`}
-                            planRequired="pro"
-                          >
-                            <Card className="cursor-not-allowed opacity-50 border-gray-600">
-                              <CardContent className="p-3">
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="font-mono text-sm text-gray-500">{module.id}</span>
-                                  <div className="flex items-center gap-2">
-                                    <Lock className="w-3 h-3 text-gray-500" />
-                                    <Badge variant="secondary" className="text-xs">
-                                      {requiredPlan === "creator" ? "Creator+" : "Pro+"}
-                                    </Badge>
-                                  </div>
-                                </div>
-                                <div className="font-medium text-sm mb-1 text-gray-500">{module.name}</div>
-                                <Badge variant="outline" className="text-xs text-gray-500">
-                                  {module.vector}
-                                </Badge>
-                              </CardContent>
-                            </Card>
-                          </EntitlementGate>
-                        ) : (
-                          <Card
-                            className={`cursor-pointer transition-colors hover:border-yellow-400/50 ${
-                              selectedModule === module.id ? "border-yellow-400" : ""
-                            }`}
-                            onClick={() => setSelectedModule(module.id)}
-                          >
-                            <CardContent className="p-3">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="font-mono text-sm text-yellow-400">{module.id}</span>
-                                {selectedModule === module.id && (
-                                  <Badge className="text-xs bg-yellow-400 text-black">Active</Badge>
-                                )}
-                              </div>
-                              <div className="font-medium text-sm mb-1">{module.name}</div>
-                              <Badge variant="outline" className="text-xs">
-                                {module.vector}
-                              </Badge>
-                            </CardContent>
-                          </Card>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="sticky top-24">
+              <h2 className="font-display text-lg font-semibold text-text mb-4">
+                Filters
+              </h2>
+              <FilterBar
+                onSearchChange={setSearchQuery}
+                onVectorsChange={setSelectedVectors}
+                onDifficultyChange={setMaxDifficulty}
+                onPlanChange={setSelectedPlan}
+              />
+            </div>
           </div>
 
-          {/* Main Content */}
+          {/* Modules Grid */}
           <div className="lg:col-span-3">
-            {/* Stepper UI */}
-            <Card className="mb-6 bg-card border border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-fg-primary">Configuration Steps</h3>
-                  <span className="text-sm text-fg-secondary">Step {currentStep} of 4</span>
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="font-display text-2xl font-semibold text-text">
+                Module Generator
+              </h1>
+              <div className="text-sm text-textMuted font-ui">
+                {filteredModules.length} of {modules.length} modules
+              </div>
+            </div>
+
+            {filteredModules.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="rune-executable rune-loading w-12 h-12 mx-auto mb-4">
+                  <div className="star-8 w-8 h-8" />
                 </div>
-                <div className="flex items-center justify-between">
-                  {[1, 2, 3, 4].map((step) => (
-                    <div key={step} className="flex items-center">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                        step <= currentStep 
-                          ? 'bg-accent text-accent-contrast' 
-                          : 'bg-muted text-fg-secondary'
-                      }`}>
-                        {step}
-                      </div>
-                      {step < 4 && (
-                        <div className={`w-12 h-0.5 mx-2 ${
-                          step < currentStep ? 'bg-accent' : 'bg-muted'
-                        }`} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between mt-2 text-xs text-fg-secondary">
-                  <span>Module</span>
-                  <span>Context</span>
-                  <span>Complexity</span>
-                  <span>Output</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Tabs defaultValue="config" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4 bg-card border border-border">
-                <TabsTrigger
-                  value="config"
-                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
-                >
-                  <Settings className="w-4 h-4 mr-2" aria-hidden="true" />
-                  7D Config
-                </TabsTrigger>
-                <TabsTrigger
-                  value="generator"
-                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
-                >
-                  <Zap className="w-4 h-4 mr-2" aria-hidden="true" />
-                  Generator
-                </TabsTrigger>
-                <TabsTrigger
-                  value="test"
-                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
-                >
-                  <TestTube className="w-4 h-4 mr-2" aria-hidden="true" />
-                  Test Engine
-                </TabsTrigger>
-                <TabsTrigger
-                  value="history"
-                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
-                >
-                  <History className="w-4 h-4 mr-2" aria-hidden="true" />
-                  History
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="config">
-                <div className="space-y-6">
-                  {/* Step-by-step workflow */}
-                  <Card className="bg-card border border-border">
-                    <CardHeader>
-                                              <CardTitle className="font-serif flex items-center gap-2 text-fg-primary">
-                          <Settings className="w-5 h-5 text-accent" />
-                          7D Parameter Configuration
-                        </CardTitle>
-                        <CardDescription className="text-fg-secondary">Configure the seven dimensions for optimal prompt generation</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {/* Progress indicator */}
-                      <div className="mb-6">
-                        <div className="flex items-center justify-between text-sm text-fg-secondary mb-2">
-                          <span>Configuration Progress</span>
-                          <span>{Object.values(params7D).filter(v => v && v !== '').length}/7 Complete</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2">
-                          <div
-                            className="bg-accent h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${(Object.values(params7D).filter(v => v && v !== '').length / 7) * 100}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Form fields with tooltips */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        {Object.entries(paramOptions).map(([key, options]) => {
-                          const isComplete = params7D[key as keyof Params7D] && params7D[key as keyof Params7D] !== ''
-                          const tooltipContent = {
-                            domain: 'The specific field or industry context for your prompt. This determines the domain expertise and terminology used.',
-                            scale: 'The scope and complexity level of the task. Affects the depth and breadth of the generated content.',
-                            urgency: 'Time sensitivity and priority level. Influences the tone and call-to-action strength.',
-                            complexity: 'The complexity level of the task. Determines the sophistication of the approach and language.',
-                            resources: 'Available resources and constraints. Affects the feasibility and implementation approach.',
-                            application: 'How the prompt will be used. Influences the format and delivery method.',
-                            output: 'Desired output format and structure. Determines the final presentation and organization.'
-                          }
-                          
-                          return (
-                            <div key={key} className="space-y-3">
-                              <div className="flex items-center gap-2">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex items-center gap-2">
-                                        <Label
-                                          htmlFor={`${key}-select`}
-                                          className="capitalize text-fg-primary font-medium cursor-help"
-                                        >
-                                          {key.replace('_', ' ')}
-                                        </Label>
-                                        <Info className="w-4 h-4 text-fg-secondary" />
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent className="max-w-xs">
-                                      <p className="text-sm">{tooltipContent[key as keyof typeof tooltipContent]}</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                {isComplete && <CheckCircle className="w-4 h-4 text-state-success" aria-hidden="true" />}
-                              </div>
-                              <Select
-                                value={params7D[key as keyof Params7D]}
-                                onValueChange={(value) => updateParam(key as keyof Params7D, value)}
-                              >
-                                <SelectTrigger
-                                  id={`${key}-select`}
-                                  className={`bg-input border-input text-fg-primary focus-ring ${
-                                    isComplete ? 'border-state-success/50' : 'border-border'
-                                  }`}
-                                  aria-describedby={`${key}-help`}
-                                >
-                                  <SelectValue placeholder={`Select ${key.replace('_', ' ')}`} />
-                                </SelectTrigger>
-                                <SelectContent className="bg-card border-border">
-                                  {options.map((option) => (
-                                    <SelectItem
-                                      key={option.value}
-                                      value={option.value}
-                                      className="text-fg-primary hover:bg-accent/10 focus:bg-accent/10"
-                                    >
-                                      <div className="font-medium">{option.label}</div>
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              {/* Validation error display */}
-                              {validationErrors[key] && (
-                                <p className="text-xs text-error" role="alert">
-                                  {validationErrors[key]}
-                                </p>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-
-                      {/* Navigation buttons */}
-                      <div className="mt-8 pt-6 border-t border-border">
-                        <div className="flex justify-between">
-                          <Button
-                            variant="outline"
-                            onClick={prevStep}
-                            disabled={currentStep === 1}
-                            className="border-border text-fg-secondary hover:bg-muted"
-                          >
-                            <ChevronLeft className="w-4 h-4 mr-2" />
-                            Previous
-                          </Button>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  size="lg"
-                                  className={`font-semibold ${
-                                    Object.values(params7D).some(v => !v || v === '')
-                                      ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                                      : 'bg-accent hover:bg-accent-hover text-accent-contrast ritual-hover'
-                                  }`}
-                                  onClick={() => {
-                                    if (currentStep < 4) {
-                                      nextStep()
-                                    } else {
-                                      // Switch to generator tab
-                                      const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
-                                      if (generatorTab) generatorTab.click()
-                                    }
-                                  }}
-                                  disabled={Object.values(params7D).some(v => !v || v === '')}
-                                  aria-describedby="generate-help"
-                                >
-                                  {currentStep < 4 ? (
-                                    <>
-                                      Next
-                                      <ChevronRight className="w-4 h-4 ml-2" />
-                                    </>
-                                  ) : (
-                                    <>
-                                      Generate Prompt
-                                      <Zap className="w-4 h-4 ml-2" />
-                                    </>
-                                  )}
-                                </Button>
-                              </TooltipTrigger>
-                              {Object.values(params7D).some(v => !v || v === '') && (
-                                <TooltipContent>
-                                  <p className="text-sm">
-                                    Complete all 7D parameters to enable generation
-                                  </p>
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                        {Object.values(params7D).some(v => !v || v === '') && (
-                          <p id="generate-help" className="text-sm text-fg-secondary mt-2 text-center">
-                            Complete all 7D parameters to generate your prompt
-                          </p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="generator">
-                <div className="space-y-6">
-                  {/* Dynamic Form */}
-                  <PromptForm 
-                    module={currentModule.id}
-                    onSubmit={(prompt: string) => {
-                      // Convert string prompt to FormData for the new system
-                      const formData: FormData = {
-                        prompt,
-                        moduleId: currentModule.id,
-                        // Add other required fields as needed
-                      }
-                      handleFormSubmit(formData)
-                    }}
-                    isSubmitting={isGenerating}
+                <p className="text-textMuted font-ui">
+                  No modules found matching your filters
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredModules.map((module) => (
+                  <ModuleCard
+                    key={module.id}
+                    {...module}
+                    currentPlan={currentPlan}
+                    onView={() => handleModuleView(module)}
                   />
-
-                  {/* Generated Prompt Display */}
-                  {generatedPrompt && (
-                    <Card className="bg-card border border-border">
-                      <CardHeader>
-                        <CardTitle className="font-serif">Generated Prompt</CardTitle>
-                        <CardDescription>
-                          Your industrial-grade prompt ready for use
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="bg-card border border-border rounded-lg p-4 min-h-96">
-                          <div className="text-sm whitespace-pre-wrap">
-                            {generatedPrompt.content}
-                          </div>
-                        </div>
-
-                        {/* Telemetry Strip */}
-                        <div className="bg-card border border-border rounded-lg p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <h4 className="font-medium text-fg-primary">Generation Telemetry</h4>
-                            <Badge variant="outline" className="text-xs">
-                              Run #{generatedPrompt.hash}
-                            </Badge>
-                          </div>
-                          
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                            <div>
-                              <div className="text-fg-secondary">Module</div>
-                              <div className="font-medium text-fg-primary">{currentPromptRun?.moduleId || generatedPrompt.module}</div>
-                            </div>
-                            <div>
-                              <div className="text-fg-secondary">Generated</div>
-                              <div className="font-medium text-fg-primary">
-                                {new Date(generatedPrompt.timestamp).toLocaleTimeString()}
-                              </div>
-                            </div>
-                            {currentPromptRun?.tokensUsed && (
-                              <div>
-                                <div className="text-fg-secondary">Tokens</div>
-                                <div className="font-medium text-fg-primary">
-                                  {currentPromptRun.tokensUsed.toLocaleString()}
-                                </div>
-                              </div>
-                            )}
-                            {currentPromptRun?.cost && (
-                              <div>
-                                <div className="text-fg-secondary">Cost</div>
-                                <div className="font-medium text-fg-primary">
-                                  ${currentPromptRun.cost.toFixed(4)}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                          
-                          {/* Export Icons */}
-                          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border">
-                            <span className="text-xs text-fg-secondary">Export:</span>
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm" onClick={handleCopy}>
-                                <Copy className="w-3 h-3 mr-1" />
-                                Copy
-                              </Button>
-                              
-                              {currentPromptRun && (
-                                <ExportModal 
-                                  promptRun={currentPromptRun}
-                                  userPlan={userPlan}
-                                  trigger={
-                                    <Button variant="outline" size="sm">
-                                      <Download className="w-3 h-3 mr-1" />
-                                      Export
-                                    </Button>
-                                  }
-                                />
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="test">
-                <Card className="bg-card border border-border">
-                  <CardHeader>
-                    <CardTitle className="font-serif">Test Engine</CardTitle>
-                    <CardDescription>Validate prompt quality with simulated or live testing</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <Button
-                        variant="outline"
-                        className="h-20 flex-col bg-transparent"
-                        onClick={() => handleTest("simulation")}
-                        disabled={isTesting || !generatedPrompt}
-                      >
-                        {isTesting ? (
-                          <LoadingSpinner size="sm" />
-                        ) : (
-                          <TestTube className="w-6 h-6 mb-2" />
-                        )}
-                        <span>{isTesting ? "Testing..." : "Simulate Test"}</span>
-                        <span className="text-xs text-fg-secondary">Available on all plans</span>
-                      </Button>
-                      <EntitlementGate flag="canUseGptTestReal" featureName="Live GPT Testing" planRequired="pro">
-                        <Button
-                          variant="outline"
-                          className="h-20 flex-col bg-transparent"
-                          onClick={() => {
-                            analytics.gptTestReal(selectedModule || 'unknown', { 
-                              testType: 'live',
-                              moduleId: selectedModule,
-                              hasPrompt: !!generatedPrompt
-                            })
-                            handleTest("live")
-                          }}
-                          disabled={isTesting || !generatedPrompt}
-                        >
-                          {isTesting ? (
-                            <LoadingSpinner size="sm" />
-                          ) : (
-                            <Zap className="w-6 h-6 mb-2" />
-                          )}
-                          <span>{isTesting ? "Testing..." : "Live GPT Test"}</span>
-                          <span className="text-xs text-fg-secondary">Real AI validation</span>
-                        </Button>
-                      </EntitlementGate>
-                    </div>
-
-                    <div className="bg-card border border-border rounded-lg p-4">
-                      <h4 className="font-medium mb-4">Test Results</h4>
-                      {testResults ? (
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-2 text-sm text-fg-secondary">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            {testResults.type === "live" ? "Live GPT Test" : "Simulation Test"} completed
-                          </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="text-center">
-                              <div className="text-2xl font-bold text-yellow-400">{testResults.scores.structure}</div>
-                              <div className="text-sm text-fg-secondary">Structure</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="text-2xl font-bold text-yellow-400">{testResults.scores.clarity}</div>
-                              <div className="text-sm text-fg-secondary">Clarity</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="text-2xl font-bold text-yellow-400">
-                                {testResults.scores.kpi_compliance}
-                              </div>
-                              <div className="text-sm text-fg-secondary">KPI Compliance</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="text-2xl font-bold text-yellow-400">
-                                {testResults.scores.executability}
-                              </div>
-                              <div className="text-sm text-fg-secondary">Executability</div>
-                            </div>
-                          </div>
-                          
-                          {/* Additional Test Information */}
-                          {currentPromptRun && (
-                            <div className="border-t border-gray-700 pt-4">
-                              <h5 className="font-medium mb-2">Test Details</h5>
-                              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                                <div>
-                                  <span className="text-gray-500">Test Type:</span>
-                                  <div className="font-medium">{testResults.type === "live" ? "Live GPT" : "Simulation"}</div>
-                                </div>
-                                <div>
-                                  <span className="text-gray-500">Run ID:</span>
-                                  <div className="font-mono text-xs">{currentPromptRun.id}</div>
-                                </div>
-                                <div>
-                                  <span className="text-gray-500">Module:</span>
-                                  <div className="font-medium">{currentPromptRun.moduleId}</div>
-                                </div>
-                                {currentPromptRun.tokensUsed && (
-                                  <div>
-                                    <span className="text-gray-500">Tokens Used:</span>
-                                    <div className="font-medium">{currentPromptRun.tokensUsed.toLocaleString()}</div>
-                                  </div>
-                                )}
-                                {currentPromptRun.cost && (
-                                  <div>
-                                    <span className="text-gray-500">Cost:</span>
-                                    <div className="font-medium">${currentPromptRun.cost.toFixed(4)}</div>
-                                  </div>
-                                )}
-                                <div>
-                                  <span className="text-gray-500">Timestamp:</span>
-                                  <div className="text-xs">{new Date(testResults.timestamp).toLocaleString()}</div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <EmptyState
-                          title="No test results yet"
-                          description="Generate a prompt and run a test to see results"
-                          primaryAction={{
-                            label: "Generate Prompt",
-                            href: "#"
-                          }}
-                        />
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="history">
-                <Card className="bg-card border border-border">
-                  <CardHeader>
-                    <CardTitle className="font-serif">Generation History</CardTitle>
-                    <CardDescription>View and manage your previous prompt generations</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoadingHistory ? (
-                      <div className="space-y-4">
-                        {Array.from({ length: 3 }).map((_, i) => (
-                          <SkeletonCard key={i} className="bg-black/30 border-gray-700" />
-                        ))}
-                      </div>
-                    ) : historyError ? (
-                      <EmptyState
-                        title="Failed to Load History"
-                        description={historyError}
-                        primaryAction={{
-                          label: "Retry",
-                          href: "#"
-                        }}
-                      />
-                    ) : history.length > 0 ? (
-                      <div className="space-y-4">
-                        {history.map((prompt) => (
-                          <Card key={prompt.id} className="bg-black/30 border-gray-700">
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="outline" className="text-xs">
-                                    {prompt.module}
-                                  </Badge>
-                                  <span className="text-sm text-fg-secondary">#{prompt.hash}</span>
-                                </div>
-                                <span className="text-xs text-fg-secondary">
-                                  {new Date(prompt.timestamp).toLocaleString()}
-                                </span>
-                              </div>
-                              <p className="text-sm text-gray-300 line-clamp-2 mb-2">
-                                {prompt.content.substring(0, 150)}...
-                              </p>
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm" onClick={() => setGeneratedPrompt(prompt)}>
-                                  Load
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => navigator.clipboard.writeText(prompt.content)}
-                                >
-                                  <Copy className="w-3 h-3" />
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => {
-                                    // Find the corresponding prompt run
-                                    const run = history.find(h => h.id === prompt.id)
-                                    if (run) {
-                                      // Convert legacy prompt to prompt run format
-                                      const promptRun: PromptRun = {
-                                        id: run.id,
-                                        moduleId: run.module,
-                                        prompt: run.content,
-                                        inputValues: {},
-                                        timestamp: run.timestamp,
-                                        hash: run.hash,
-                                        plan: userPlan
-                                      }
-                                      setCurrentPromptRun(promptRun)
-                                    }
-                                  }}
-                                >
-                                  <Info className="w-3 h-3" />
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    ) : (
-                                              <EmptyState
-                          title="No generation history yet"
-                          description="Start generating prompts to see your history here"
-                          primaryAction={{
-                            label: "Generate First Prompt",
-                            href: "#"
-                          }}
-                        />
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Module Overlay */}
+      {selectedModule && (
+        <ModuleOverlay
+          isOpen={isOverlayOpen}
+          onClose={() => setIsOverlayOpen(false)}
+          module={selectedModule}
+          currentPlan={currentPlan}
+          onSimulate={handleSimulate}
+          onRunRealTest={handleRunRealTest}
+          onExport={handleExport}
+        />
+      )}
     </div>
   )
 }
 
-function GeneratorPageWrapper() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <LoadingSpinner size="lg" />
-          <p className="text-slate-400 mt-4">Loading generator...</p>
-        </div>
-      </div>
-    }>
-      <GeneratorPage />
-    </Suspense>
-  );
+// Demo data fallback
+function getDemoModules(): Module[] {
+  return [
+    {
+      id: 'M001',
+      title: 'Content Optimization',
+      vectors: ['prompt', 'context', 'output'],
+      difficulty: 2,
+      minPlan: 'free',
+      summary: 'Optimize content for better engagement and readability',
+      overview: 'This module helps optimize content by analyzing structure, tone, and engagement factors.',
+      inputs: ['Content text', 'Target audience', 'Optimization goals'],
+      outputs: ['Optimized content', 'Engagement metrics', 'Improvement suggestions'],
+      kpis: ['Readability score', 'Engagement rate', 'Conversion rate'],
+      guardrails: ['Content appropriateness', 'Brand voice consistency', 'Factual accuracy']
+    },
+    {
+      id: 'M002',
+      title: 'Technical Documentation',
+      vectors: ['prompt', 'context', 'output', 'guardrails'],
+      difficulty: 4,
+      minPlan: 'creator',
+      summary: 'Generate comprehensive technical documentation',
+      overview: 'Creates detailed technical documentation with code examples and API references.',
+      inputs: ['Code repository', 'API specifications', 'User requirements'],
+      outputs: ['API docs', 'Code comments', 'User guides'],
+      kpis: ['Documentation coverage', 'Code clarity', 'User satisfaction'],
+      guardrails: ['Technical accuracy', 'Security compliance', 'Version control']
+    },
+    {
+      id: 'M003',
+      title: 'Marketing Copy Generator',
+      vectors: ['prompt', 'context', 'output', 'metrics', 'feedback'],
+      difficulty: 3,
+      minPlan: 'pro',
+      summary: 'Generate high-converting marketing copy',
+      overview: 'Creates compelling marketing copy with A/B testing capabilities and performance tracking.',
+      inputs: ['Product details', 'Target market', 'Campaign goals'],
+      outputs: ['Ad copy', 'Email campaigns', 'Landing pages'],
+      kpis: ['Click-through rate', 'Conversion rate', 'ROI'],
+      guardrails: ['Regulatory compliance', 'Brand guidelines', 'Truth in advertising']
+    }
+  ]
 }
-
-export default GeneratorPageWrapper;

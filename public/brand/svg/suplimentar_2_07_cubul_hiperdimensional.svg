@@ -1,0 +1,1162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cubul Hiperdimensional - o reprezentare a unui cub 4D (tesseract) care se transformă -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru cub -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cubul exterior (proiecție 3D a unui tesseract) -->
+  <!-- Fața frontală -->
+  <rect id="front-face" x="176" y="176" width="160" height="160" fill="none" stroke="#E0E0E0" stroke-width="2">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="width"
+      values="160;140;160"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="height"
+      values="160;140;160"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Fața din spate -->
+  <rect id="back-face" x="156" y="156" width="200" height="200" fill="none" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="width"
+      values="200;180;200"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="height"
+      values="200;180;200"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Linii de conectare între fețe -->
+  <!-- Linia 1 (stânga sus) -->
+  <line id="connect-line-1" x1="176" y1="176" x2="156" y2="156" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (dreapta sus) -->
+  <line id="connect-line-2" x1="336" y1="176" x2="356" y2="156" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (stânga jos) -->
+  <line id="connect-line-3" x1="176" y1="336" x2="156" y2="356" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (dreapta jos) -->
+  <line id="connect-line-4" x1="336" y1="336" x2="356" y2="356" stroke="#E0E0E0" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Cubul interior (reprezentând dimensiunea a 4-a) -->
+  <!-- Fața frontală interioară -->
+  <rect id="inner-front-face" x="206" y="206" width="100" height="100" fill="none" stroke="#FFD700" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="width"
+      values="100;80;100"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="height"
+      values="100;80;100"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Fața din spate interioară -->
+  <rect id="inner-back-face" x="196" y="196" width="120" height="120" fill="none" stroke="#FFD700" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="width"
+      values="120;100;120"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="height"
+      values="120;100;120"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Linii de conectare interioare -->
+  <!-- Linia 1 (stânga sus) -->
+  <line id="inner-connect-1" x1="206" y1="206" x2="196" y2="196" stroke="#FFD700" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (dreapta sus) -->
+  <line id="inner-connect-2" x1="306" y1="206" x2="316" y2="196" stroke="#FFD700" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (stânga jos) -->
+  <line id="inner-connect-3" x1="206" y1="306" x2="196" y2="316" stroke="#FFD700" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (dreapta jos) -->
+  <line id="inner-connect-4" x1="306" y1="306" x2="316" y2="316" stroke="#FFD700" stroke-width="1">
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linii de conectare între dimensiuni (reprezentând a 4-a dimensiune) -->
+  <!-- Linia 1 (centru stânga sus) -->
+  <line id="dimension-line-1" x1="176" y1="176" x2="206" y2="206" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (centru dreapta sus) -->
+  <line id="dimension-line-2" x1="336" y1="176" x2="306" y2="206" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 (centru stânga jos) -->
+  <line id="dimension-line-3" x1="176" y1="336" x2="206" y2="306" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 (centru dreapta jos) -->
+  <line id="dimension-line-4" x1="336" y1="336" x2="306" y2="306" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 5 (spate stânga sus) -->
+  <line id="dimension-line-5" x1="156" y1="156" x2="196" y2="196" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 6 (spate dreapta sus) -->
+  <line id="dimension-line-6" x1="356" y1="156" x2="316" y2="196" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 7 (spate stânga jos) -->
+  <line id="dimension-line-7" x1="156" y1="356" x2="196" y2="316" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 8 (spate dreapta jos) -->
+  <line id="dimension-line-8" x1="356" y1="356" x2="316" y2="316" stroke="#FF0000" stroke-width="1" stroke-dasharray="5,5">
+    <animate
+      attributeName="stroke"
+      values="#FF0000;#FFD700;#FF0000"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x1"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y1"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="x2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="y2"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Puncte de intersecție (vârfurile cubului) -->
+  <!-- Punctele cubului exterior -->
+  <circle id="vertex-1" cx="176" cy="176" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-2" cx="336" cy="176" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-3" cx="176" cy="336" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="176;186;176"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-4" cx="336" cy="336" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="336;326;336"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-5" cx="156" cy="156" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-6" cx="356" cy="156" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-7" cx="156" cy="356" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="156;166;156"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="vertex-8" cx="356" cy="356" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="356;346;356"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctele cubului interior -->
+  <circle id="inner-vertex-1" cx="206" cy="206" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="inner-vertex-2" cx="306" cy="206" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="inner-vertex-3" cx="206" cy="306" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="206;216;206"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="inner-vertex-4" cx="306" cy="306" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="306;296;306"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="inner-vertex-5" cx="196" cy="196" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="inner-vertex-6" cx="316" cy="196" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="inner-vertex-7" cx="196" cy="316" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="196;206;196"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle id="inner-vertex-8" cx="316" cy="316" r="3" fill="#FFD700">
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cx"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="cy"
+      values="316;306;316"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Text "CUBUL HIPERDIMENSIONAL" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">CUBUL HIPERDIMENSIONAL</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Cubul Hiperdimensional</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>O reprezentare a unui cub 4D (tesseract) care se transformă. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

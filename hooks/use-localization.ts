@@ -197,61 +197,101 @@ export function useLocalization() {
     // Auto-detect user location and set appropriate defaults
     const detectUserLocation = async () => {
       try {
-        // Try to get user's country from IP
-        const response = await fetch('https://ipapi.co/json/')
+        // Try to get user's country from IP with timeout
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+        
+        const response = await fetch('https://ipapi.co/json/', {
+          signal: controller.signal,
+          headers: {
+            'Accept': 'application/json',
+          }
+        })
+        
+        clearTimeout(timeoutId)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
         const data = await response.json()
         const country = data.country_code
         
         // Set currency to USD for all locations
         setCurrentCurrency('USD')
       } catch (error) {
+        // Log error for debugging but don't throw
+        console.warn('Failed to detect user location:', error)
         // Fallback to USD
         setCurrentCurrency('USD')
       }
     }
 
-    // Load saved preferences from localStorage
-    const savedLocale = localStorage.getItem("preferred-locale") as Locale
-    const savedCurrency = localStorage.getItem("preferred-currency") as Currency
-    
-    if (savedLocale && ["en", "ro"].includes(savedLocale)) {
-      setCurrentLocale(savedLocale)
+    // Only run in browser environment
+    if (typeof window !== 'undefined') {
+      // Load saved preferences from localStorage
+      const savedLocale = localStorage.getItem("preferred-locale") as Locale
+      const savedCurrency = localStorage.getItem("preferred-currency") as Currency
+      
+      if (savedLocale && ["en", "ro"].includes(savedLocale)) {
+        setCurrentLocale(savedLocale)
+      } else {
+        // Default to English for all users
+        setCurrentLocale("en")
+      }
+      
+      if (savedCurrency && ["EUR", "USD", "RON"].includes(savedCurrency)) {
+        setCurrentCurrency(savedCurrency)
+      } else {
+        // Auto-detect currency if no saved preference
+        detectUserLocation()
+      }
     } else {
-      // Default to English for all users
+      // Server-side defaults
       setCurrentLocale("en")
-    }
-    
-    if (savedCurrency && ["EUR", "USD", "RON"].includes(savedCurrency)) {
-      setCurrentCurrency(savedCurrency)
-    } else {
-      // Auto-detect currency if no saved preference
-      detectUserLocation()
+      setCurrentCurrency("USD")
     }
   }, [])
 
   const changeLocale = (locale: Locale) => {
     setCurrentLocale(locale)
-    localStorage.setItem("preferred-locale", locale)
     
-    // Track locale change
-    if (typeof window !== "undefined" && (window as any).gtag) {
-      (window as any).gtag("event", "locale_change", {
-        locale,
-        page: "pricing",
-      })
+    // Only access localStorage in browser environment
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("preferred-locale", locale)
+      } catch (error) {
+        console.warn('Failed to save locale preference:', error)
+      }
+      
+      // Track locale change
+      if ((window as any).gtag) {
+        (window as any).gtag("event", "locale_change", {
+          locale,
+          page: "pricing",
+        })
+      }
     }
   }
 
   const changeCurrency = (currency: Currency) => {
     setCurrentCurrency(currency)
-    localStorage.setItem("preferred-currency", currency)
     
-    // Track currency change
-    if (typeof window !== "undefined" && (window as any).gtag) {
-      (window as any).gtag("event", "currency_change", {
-        currency,
-        page: "pricing",
-      })
+    // Only access localStorage in browser environment
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("preferred-currency", currency)
+      } catch (error) {
+        console.warn('Failed to save currency preference:', error)
+      }
+      
+      // Track currency change
+      if ((window as any).gtag) {
+        (window as any).gtag("event", "currency_change", {
+          currency,
+          page: "pricing",
+        })
+      }
     }
   }
 

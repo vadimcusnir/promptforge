@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Runa Digitală - un simbol care combină elemente runice tradiționale cu estetica digitală -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru rună -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Runa principală (forma de bază) -->
+  <path id="main-rune" d="M256 136 L256 376 M216 176 L296 176 M216 336 L296 336" fill="none" stroke="#E0E0E0" stroke-width="4" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Runa secundară (elemente diagonale) -->
+  <path id="secondary-rune" d="M216 176 L296 336 M296 176 L216 336" fill="none" stroke="#E0E0E0" stroke-width="3" stroke-linecap="round" stroke-dasharray="400" stroke-dashoffset="400">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="400;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Elemente digitale (linii de cod) -->
+  <!-- Linia 1 -->
+  <line id="digital-line-1" x1="156" y1="156" x2="216" y2="156" stroke="#FFD700" stroke-width="1" stroke-dasharray="60" stroke-dashoffset="60">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="60;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 -->
+  <line id="digital-line-2" x1="296" y1="156" x2="356" y2="156" stroke="#FFD700" stroke-width="1" stroke-dasharray="60" stroke-dashoffset="60">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="60;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5.2s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6.2s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 -->
+  <line id="digital-line-3" x1="156" y1="356" x2="216" y2="356" stroke="#FFD700" stroke-width="1" stroke-dasharray="60" stroke-dashoffset="60">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="60;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5.4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6.4s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 -->
+  <line id="digital-line-4" x1="296" y1="356" x2="356" y2="356" stroke="#FFD700" stroke-width="1" stroke-dasharray="60" stroke-dashoffset="60">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="60;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5.6s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="6.6s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 5 (verticală stânga) -->
+  <line id="digital-line-5" x1="156" y1="156" x2="156" y2="356" stroke="#FFD700" stroke-width="1" stroke-dasharray="200" stroke-dashoffset="200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="200;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="5.8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="7.3s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 6 (verticală dreapta) -->
+  <line id="digital-line-6" x1="356" y1="156" x2="356" y2="356" stroke="#FFD700" stroke-width="1" stroke-dasharray="200" stroke-dashoffset="200">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="200;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="6s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="7.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Puncte de intersecție -->
+  <!-- Punctul central -->
+  <circle id="center-point" cx="256" cy="256" r="6" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="6;8;6"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul superior -->
+  <circle id="top-point" cx="256" cy="136" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul inferior -->
+  <circle id="bottom-point" cx="256" cy="376" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="3.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul stânga sus -->
+  <circle id="top-left-point" cx="216" cy="176" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul dreapta sus -->
+  <circle id="top-right-point" cx="296" cy="176" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul stânga jos -->
+  <circle id="bottom-left-point" cx="216" cy="336" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Punctul dreapta jos -->
+  <circle id="bottom-right-point" cx="296" cy="336" r="4" fill="#E0E0E0">
+    <animate
+      attributeName="fill"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      begin="5.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Cod binar în jurul runei -->
+  <!-- Rândul 1 (sus) -->
+  <text id="binary-row-1" x="256" y="116" font-family="'JetBrains Mono', monospace" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">01010010 01010101 01001110 01000001
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0.8;0"
+      keyTimes="0;0.2;0.8;1"
+      dur="8s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Rândul 2 (jos) -->
+  <text id="binary-row-2" x="256" y="396" font-family="'JetBrains Mono', monospace" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">01000100 01001001 01000111 01001001 01010100 01000001 01001100
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0.8;0"
+      keyTimes="0;0.2;0.4;0.8;1"
+      dur="8s"
+      begin="7s"
+      repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Efecte de pulsație pentru rună -->
+  <path id="pulse-rune" d="M256 136 L256 376 M216 176 L296 176 M216 336 L296 336 M216 176 L296 336 M296 176 L216 336" fill="none" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de glitch pentru rună -->
+  <path id="glitch-rune" d="M256 136 L256 376 M216 176 L296 176 M216 336 L296 336 M216 176 L296 336 M296 176 L216 336" fill="none" stroke="#FF0000" stroke-width="4" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="3s;7s;11s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Efecte de scanare -->
+  <rect id="scan-line" x="156" y="136" width="200" height="2" fill="#FF0000" opacity="0.7">
+    <animate
+      attributeName="y"
+      values="136;376;136"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.7;0.9;0.7"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Simboluri runice care apar și dispar -->
+  <!-- Simbol 1 -->
+  <text id="rune-symbol-1" x="196" y="256" font-family="'Space Grotesk', sans-serif" font-size="24" fill="#FFD700" text-anchor="middle" opacity="0">ᚠ
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="9s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 -->
+  <text id="rune-symbol-2" x="316" y="256" font-family="'Space Grotesk', sans-serif" font-size="24" fill="#FFD700" text-anchor="middle" opacity="0">ᚢ
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 -->
+  <text id="rune-symbol-3" x="256" y="196" font-family="'Space Grotesk', sans-serif" font-size="24" fill="#FFD700" text-anchor="middle" opacity="0">ᚦ
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 4 -->
+  <text id="rune-symbol-4" x="256" y="316" font-family="'Space Grotesk', sans-serif" font-size="24" fill="#FFD700" text-anchor="middle" opacity="0">ᚨ
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.1;0.4;0.7;0.95;1"
+      dur="3s"
+      begin="18s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "RUNA DIGITALĂ" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">RUNA DIGITALĂ</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Runa Digitală</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol care combină elemente runice tradiționale cu estetica digitală. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+

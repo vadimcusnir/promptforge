@@ -1,0 +1,2237 @@
+{
+  "version": "3.1.0",
+  "modules": {
+    "M01": {
+      "id": "M01",
+      "title": "SOP FORGE™",
+      "slug": "sop-forge",
+      "summary": "Standard Operating Procedure generation with comprehensive workflow documentation",
+      "vectors": [
+        "strategic",
+        "analytics"
+      ],
+      "difficulty": 1,
+      "minPlan": "free",
+      "tags": [
+        "operations",
+        "documentation",
+        "workflow"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "context": {
+            "type": "string",
+            "required": true,
+            "description": "Organizational context"
+          },
+          "deadline": {
+            "type": "string",
+            "required": false,
+            "description": "Implementation deadline"
+          },
+          "sources": {
+            "type": "array",
+            "required": true,
+            "description": "Minimum 6 authoritative sources"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 90,
+          "custom_metrics": {
+            "steps_completeness": {
+              "target": 95,
+              "measurement": "percentage complete"
+            }
+          }
+        },
+        "constraints": [
+          "No speculation without citations",
+          "Minimum 6 authoritative sources",
+          "Step-by-step validation"
+        ]
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M02": {
+      "id": "M02",
+      "title": "LATENT MAP™",
+      "slug": "latent-map",
+      "summary": "Multi-scale cognitive maps with predictive trajectories",
+      "vectors": [
+        "cognitive",
+        "analytics",
+        "strategic"
+      ],
+      "difficulty": 1,
+      "minPlan": "free",
+      "tags": [
+        "mapping",
+        "cognitive",
+        "prediction"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "domain": {
+            "type": "string",
+            "required": true,
+            "description": "Domain to map"
+          },
+          "scale": {
+            "type": "string",
+            "required": true,
+            "description": "Mapping scale"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M03": {
+      "id": "M03",
+      "title": "SEVEN-TO-ONE™",
+      "slug": "seven-to-one",
+      "summary": "Rhetorical amplification framework for content optimization",
+      "vectors": [
+        "rhetoric",
+        "branding",
+        "content"
+      ],
+      "difficulty": 2,
+      "minPlan": "free",
+      "tags": [
+        "rhetoric",
+        "amplification",
+        "content"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "content": {
+            "type": "string",
+            "required": true,
+            "description": "Content to amplify"
+          },
+          "target_audience": {
+            "type": "string",
+            "required": true,
+            "description": "Target audience"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M04": {
+      "id": "M04",
+      "title": "SEMIOTIC DICTIONARY 8VULTUS™",
+      "slug": "semiotic-dictionary-8vultus",
+      "summary": "Map symbols to rhetorical functions with memetic testing",
+      "vectors": [
+        "branding",
+        "cognitive",
+        "rhetoric"
+      ],
+      "difficulty": 2,
+      "minPlan": "free",
+      "tags": [
+        "semiotics",
+        "symbols",
+        "rhetoric"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "domain": {
+            "type": "string",
+            "required": true,
+            "description": "Domain for symbol mapping"
+          },
+          "symbols": {
+            "type": "array",
+            "required": true,
+            "description": "Symbols to analyze"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M05": {
+      "id": "M05",
+      "title": "ORAKON MEMORY GRID™",
+      "slug": "orakon-memory-grid",
+      "summary": "Multi-layer memory system with TTL and priority management",
+      "vectors": [
+        "analytics",
+        "cognitive",
+        "strategic"
+      ],
+      "difficulty": 2,
+      "minPlan": "free",
+      "tags": [
+        "memory",
+        "cognitive",
+        "layers"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "layers": {
+            "type": "array",
+            "required": true,
+            "description": "Memory layers configuration"
+          },
+          "ttl": {
+            "type": "number",
+            "required": true,
+            "description": "Time to live in hours"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M06": {
+      "id": "M06",
+      "title": "AGENTIC GPT SALES™",
+      "slug": "agentic-gpt-sales",
+      "summary": "Autonomous sales agent with conversation management",
+      "vectors": [
+        "strategic",
+        "rhetoric",
+        "cognitive"
+      ],
+      "difficulty": 2,
+      "minPlan": "creator",
+      "tags": [
+        "sales",
+        "automation",
+        "conversation"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "product": {
+            "type": "string",
+            "required": true,
+            "description": "Product to sell"
+          },
+          "target_audience": {
+            "type": "string",
+            "required": true,
+            "description": "Target customer segment"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M07": {
+      "id": "M07",
+      "title": "TRUST REVERSAL PROTOCOL™",
+      "slug": "trust-reversal-protocol",
+      "summary": "Build trust through strategic vulnerability and transparency",
+      "vectors": [
+        "rhetoric",
+        "strategic",
+        "crisis"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "trust",
+        "transparency",
+        "vulnerability"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "situation": {
+            "type": "string",
+            "required": true,
+            "description": "Trust situation to address"
+          },
+          "stakeholders": {
+            "type": "array",
+            "required": true,
+            "description": "Key stakeholders involved"
+          }
+        },
+        "kpis": {
+          "clarity_min": 75,
+          "execution_min": 70,
+          "business_fit_min": 80
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M08": {
+      "id": "M08",
+      "title": "STATUS-TIER LOYALTY™",
+      "slug": "status-tier-loyalty",
+      "summary": "Create hierarchical loyalty systems with exclusive benefits",
+      "vectors": [
+        "branding",
+        "cognitive",
+        "strategic"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "loyalty",
+        "status",
+        "hierarchy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "business_model": {
+            "type": "string",
+            "required": true,
+            "description": "Business model context"
+          },
+          "customer_segments": {
+            "type": "array",
+            "required": true,
+            "description": "Customer segments to tier"
+          }
+        },
+        "kpis": {
+          "clarity_min": 75,
+          "execution_min": 70,
+          "business_fit_min": 80
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M09": {
+      "id": "M09",
+      "title": "AUTHORITY POSITIONING™",
+      "slug": "authority-positioning",
+      "summary": "Build systematic authority in target domain with content strategy",
+      "vectors": [
+        "strategic",
+        "rhetoric",
+        "content"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "authority",
+        "positioning",
+        "content"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "domain": {
+            "type": "string",
+            "required": true,
+            "description": "Domain to establish authority in"
+          },
+          "credentials": {
+            "type": "array",
+            "required": true,
+            "description": "Existing credentials and proof points"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M10": {
+      "id": "M10",
+      "title": "CRISIS COMMUNICATION PLAYBOOK™",
+      "slug": "crisis-communication-playbook",
+      "summary": "Rapid response system for brand/business crisis situations",
+      "vectors": [
+        "crisis",
+        "rhetoric",
+        "strategic"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "crisis",
+        "communication",
+        "response"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "crisis_type": {
+            "type": "string",
+            "required": true,
+            "description": "Type of crisis"
+          },
+          "stakeholders": {
+            "type": "array",
+            "required": true,
+            "description": "Affected stakeholders"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 90
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M11": {
+      "id": "M11",
+      "title": "VIRAL CONTENT ENGINE™",
+      "slug": "viral-content-engine",
+      "summary": "Create content designed for maximum shareability and engagement",
+      "vectors": [
+        "branding",
+        "content",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "viral",
+        "content",
+        "engagement"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "topic": {
+            "type": "string",
+            "required": true,
+            "description": "Content topic"
+          },
+          "platform": {
+            "type": "string",
+            "required": true,
+            "description": "Target platform"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M12": {
+      "id": "M12",
+      "title": "BRAND VOICE CODEX™",
+      "slug": "brand-voice-codex",
+      "summary": "Comprehensive brand voice system with tone and style guidelines",
+      "vectors": [
+        "content",
+        "strategic",
+        "branding"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "brand",
+        "voice",
+        "tone"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "brand_values": {
+            "type": "array",
+            "required": true,
+            "description": "Core brand values"
+          },
+          "target_audience": {
+            "type": "string",
+            "required": true,
+            "description": "Primary audience"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M13": {
+      "id": "M13",
+      "title": "EMAIL SEQUENCE ARCHITECT™",
+      "slug": "email-sequence-architect",
+      "summary": "Design automated email sequences for maximum conversion",
+      "vectors": [
+        "content",
+        "cognitive",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "email",
+        "automation",
+        "conversion"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "goal": {
+            "type": "string",
+            "required": true,
+            "description": "Email sequence goal"
+          },
+          "audience": {
+            "type": "string",
+            "required": true,
+            "description": "Target audience"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M14": {
+      "id": "M14",
+      "title": "SOCIAL CONTENT GRID™",
+      "slug": "social-content-grid",
+      "summary": "Systematic social media content planning and execution",
+      "vectors": [
+        "content",
+        "branding",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "creator",
+      "tags": [
+        "social",
+        "content",
+        "planning"
+      ],
+      "outputs": [
+        "txt",
+        "md"
+      ],
+      "spec": {
+        "inputs": {
+          "platforms": {
+            "type": "array",
+            "required": true,
+            "description": "Social media platforms"
+          },
+          "content_themes": {
+            "type": "array",
+            "required": true,
+            "description": "Content themes"
+          }
+        },
+        "kpis": {
+          "clarity_min": 75,
+          "execution_min": 70,
+          "business_fit_min": 80
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M15": {
+      "id": "M15",
+      "title": "LANDING PAGE ALCHEMIST™",
+      "slug": "landing-page-alchemist",
+      "summary": "Create high-converting landing pages with psychological triggers",
+      "vectors": [
+        "content",
+        "cognitive",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "landing",
+        "conversion",
+        "psychology"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "offer": {
+            "type": "string",
+            "required": true,
+            "description": "Landing page offer"
+          },
+          "target_audience": {
+            "type": "string",
+            "required": true,
+            "description": "Target audience"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M16": {
+      "id": "M16",
+      "title": "CONTENT REPURPOSING ENGINE™",
+      "slug": "content-repurposing-engine",
+      "summary": "Transform single content pieces into multiple formats and platforms",
+      "vectors": [
+        "content",
+        "branding",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "repurposing",
+        "content",
+        "efficiency"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "source_content": {
+            "type": "string",
+            "required": true,
+            "description": "Original content"
+          },
+          "target_formats": {
+            "type": "array",
+            "required": true,
+            "description": "Desired output formats"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M17": {
+      "id": "M17",
+      "title": "INFLUENCE PARTNERSHIP FRAME™",
+      "slug": "influence-partnership-frame",
+      "summary": "Strategic framework for building influencer partnerships",
+      "vectors": [
+        "branding",
+        "cognitive",
+        "strategic"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "influence",
+        "partnerships",
+        "strategy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "brand_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Brand partnership goals"
+          },
+          "target_influencers": {
+            "type": "array",
+            "required": true,
+            "description": "Potential influencer partners"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M18": {
+      "id": "M18",
+      "title": "CONTENT ANALYTICS DASHBOARD™",
+      "slug": "content-analytics-dashboard",
+      "summary": "Comprehensive content performance tracking and optimization",
+      "vectors": [
+        "analytics",
+        "content",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "analytics",
+        "content",
+        "optimization"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "content_types": {
+            "type": "array",
+            "required": true,
+            "description": "Types of content to track"
+          },
+          "metrics": {
+            "type": "array",
+            "required": true,
+            "description": "Key performance metrics"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M19": {
+      "id": "M19",
+      "title": "AUDIENCE SEGMENT PERSONALIZER™",
+      "slug": "audience-segment-personalizer",
+      "summary": "Create personalized content for different audience segments",
+      "vectors": [
+        "content",
+        "cognitive",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "personalization",
+        "audience",
+        "segmentation"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "audience_segments": {
+            "type": "array",
+            "required": true,
+            "description": "Audience segments"
+          },
+          "content_base": {
+            "type": "string",
+            "required": true,
+            "description": "Base content to personalize"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M20": {
+      "id": "M20",
+      "title": "MOMENTUM CAMPAIGN BUILDER™",
+      "slug": "momentum-campaign-builder",
+      "summary": "Build campaigns that create and sustain momentum",
+      "vectors": [
+        "strategic",
+        "content",
+        "branding"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "campaigns",
+        "momentum",
+        "strategy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "campaign_goal": {
+            "type": "string",
+            "required": true,
+            "description": "Campaign objective"
+          },
+          "timeline": {
+            "type": "string",
+            "required": true,
+            "description": "Campaign timeline"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M21": {
+      "id": "M21",
+      "title": "API DOCS GENERATOR™",
+      "slug": "api-docs-generator",
+      "summary": "Generate comprehensive API documentation with examples",
+      "vectors": [
+        "analytics",
+        "strategic",
+        "content"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "api",
+        "documentation",
+        "technical"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "api_spec": {
+            "type": "string",
+            "required": true,
+            "description": "API specification"
+          },
+          "examples": {
+            "type": "array",
+            "required": true,
+            "description": "Usage examples"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M22": {
+      "id": "M22",
+      "title": "SYSTEM BLUEPRINT™",
+      "slug": "system-blueprint",
+      "summary": "Create comprehensive system architecture blueprints",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "architecture",
+        "system",
+        "blueprint"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "system_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "System requirements"
+          },
+          "constraints": {
+            "type": "array",
+            "required": true,
+            "description": "Technical constraints"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M23": {
+      "id": "M23",
+      "title": "DEVOPS PIPELINE ARCHITECT™",
+      "slug": "devops-pipeline-architect",
+      "summary": "Design automated DevOps pipelines for continuous delivery",
+      "vectors": [
+        "analytics",
+        "strategic",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "devops",
+        "pipeline",
+        "automation"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "deployment_targets": {
+            "type": "array",
+            "required": true,
+            "description": "Deployment environments"
+          },
+          "quality_gates": {
+            "type": "array",
+            "required": true,
+            "description": "Quality checkpoints"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M24": {
+      "id": "M24",
+      "title": "DATA SCHEMA OPTIMIZER™",
+      "slug": "data-schema-optimizer",
+      "summary": "Optimize database schemas for performance and scalability",
+      "vectors": [
+        "analytics",
+        "strategic",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "database",
+        "schema",
+        "optimization"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "current_schema": {
+            "type": "string",
+            "required": true,
+            "description": "Current database schema"
+          },
+          "performance_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "Performance targets"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M25": {
+      "id": "M25",
+      "title": "MICROSERVICES GRID™",
+      "slug": "microservices-grid",
+      "summary": "Design microservices architecture with service mesh",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "microservices",
+        "architecture",
+        "grid"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "business_domains": {
+            "type": "array",
+            "required": true,
+            "description": "Business domain boundaries"
+          },
+          "service_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "Service specifications"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M26": {
+      "id": "M26",
+      "title": "SECURITY FORTRESS FRAME™",
+      "slug": "security-fortress-frame",
+      "summary": "Comprehensive security framework for applications and infrastructure",
+      "vectors": [
+        "strategic",
+        "crisis",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "security",
+        "framework",
+        "fortress"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "threat_model": {
+            "type": "string",
+            "required": true,
+            "description": "Threat model analysis"
+          },
+          "compliance_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "Compliance standards"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M27": {
+      "id": "M27",
+      "title": "PERFORMANCE ENGINE™",
+      "slug": "performance-engine",
+      "summary": "Optimize application performance across all layers",
+      "vectors": [
+        "analytics",
+        "strategic",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "performance",
+        "optimization",
+        "engine"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "performance_metrics": {
+            "type": "array",
+            "required": true,
+            "description": "Current performance metrics"
+          },
+          "optimization_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Performance targets"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M28": {
+      "id": "M28",
+      "title": "API GATEWAY DESIGNER™",
+      "slug": "api-gateway-designer",
+      "summary": "Design API gateways with routing, security, and monitoring",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "api",
+        "gateway",
+        "design"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "api_services": {
+            "type": "array",
+            "required": true,
+            "description": "Backend API services"
+          },
+          "routing_rules": {
+            "type": "array",
+            "required": true,
+            "description": "Routing requirements"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M29": {
+      "id": "M29",
+      "title": "ORCHESTRATION MATRIX™",
+      "slug": "orchestration-matrix",
+      "summary": "Design service orchestration and workflow management",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "orchestration",
+        "workflow",
+        "matrix"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "workflow_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "Workflow specifications"
+          },
+          "service_dependencies": {
+            "type": "array",
+            "required": true,
+            "description": "Service dependency map"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M30": {
+      "id": "M30",
+      "title": "CLOUD INFRA MAP™",
+      "slug": "cloud-infra-map",
+      "summary": "Map cloud infrastructure with cost optimization and scaling",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "cloud",
+        "infrastructure",
+        "mapping"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "infrastructure_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "Infrastructure needs"
+          },
+          "cost_constraints": {
+            "type": "array",
+            "required": true,
+            "description": "Budget limitations"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M31": {
+      "id": "M31",
+      "title": "SALES FLOW ARCHITECT™",
+      "slug": "sales-flow-architect",
+      "summary": "Design optimized sales processes and conversion funnels",
+      "vectors": [
+        "strategic",
+        "rhetoric",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "sales",
+        "flow",
+        "conversion"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "sales_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Sales objectives"
+          },
+          "customer_journey": {
+            "type": "string",
+            "required": true,
+            "description": "Customer journey map"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M32": {
+      "id": "M32",
+      "title": "CUSTOMER JOURNEY MAPPER™",
+      "slug": "customer-journey-mapper",
+      "summary": "Map complete customer journeys with touchpoint optimization",
+      "vectors": [
+        "analytics",
+        "cognitive",
+        "strategic"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "customer",
+        "journey",
+        "mapping"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "customer_personas": {
+            "type": "array",
+            "required": true,
+            "description": "Customer personas"
+          },
+          "touchpoints": {
+            "type": "array",
+            "required": true,
+            "description": "Customer touchpoints"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M33": {
+      "id": "M33",
+      "title": "ENABLEMENT FRAME™",
+      "slug": "enablement-frame",
+      "summary": "Create customer success and enablement frameworks",
+      "vectors": [
+        "strategic",
+        "cognitive",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "enablement",
+        "success",
+        "framework"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "success_metrics": {
+            "type": "array",
+            "required": true,
+            "description": "Success criteria"
+          },
+          "enablement_tools": {
+            "type": "array",
+            "required": true,
+            "description": "Enablement resources"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M34": {
+      "id": "M34",
+      "title": "ACCOUNT-BASED STRATEGY™",
+      "slug": "account-based-strategy",
+      "summary": "Design account-based marketing and sales strategies",
+      "vectors": [
+        "strategic",
+        "rhetoric",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "account",
+        "strategy",
+        "marketing"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "target_accounts": {
+            "type": "array",
+            "required": true,
+            "description": "Target account list"
+          },
+          "engagement_strategy": {
+            "type": "string",
+            "required": true,
+            "description": "Engagement approach"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M35": {
+      "id": "M35",
+      "title": "FORECAST ENGINE™",
+      "slug": "forecast-engine",
+      "summary": "Build predictive forecasting models for business metrics",
+      "vectors": [
+        "analytics",
+        "strategic",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "forecast",
+        "prediction",
+        "analytics"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "historical_data": {
+            "type": "array",
+            "required": true,
+            "description": "Historical metrics"
+          },
+          "forecast_horizon": {
+            "type": "string",
+            "required": true,
+            "description": "Forecast timeframe"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M36": {
+      "id": "M36",
+      "title": "COMPENSATION DESIGNER™",
+      "slug": "compensation-designer",
+      "summary": "Design fair and motivating compensation structures",
+      "vectors": [
+        "strategic",
+        "cognitive",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "compensation",
+        "design",
+        "motivation"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "role_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "Role specifications"
+          },
+          "market_data": {
+            "type": "array",
+            "required": true,
+            "description": "Market compensation data"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M37": {
+      "id": "M37",
+      "title": "CUSTOMER SUCCESS PLAYBOOK™",
+      "slug": "customer-success-playbook",
+      "summary": "Create comprehensive customer success strategies and playbooks",
+      "vectors": [
+        "strategic",
+        "cognitive",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "success",
+        "playbook",
+        "strategy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "success_metrics": {
+            "type": "array",
+            "required": true,
+            "description": "Success KPIs"
+          },
+          "intervention_points": {
+            "type": "array",
+            "required": true,
+            "description": "Intervention triggers"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M38": {
+      "id": "M38",
+      "title": "PARTNER ECOSYSTEM GRID™",
+      "slug": "partner-ecosystem-grid",
+      "summary": "Design and manage partner ecosystem strategies",
+      "vectors": [
+        "strategic",
+        "branding",
+        "analytics"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "partners",
+        "ecosystem",
+        "strategy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "partner_types": {
+            "type": "array",
+            "required": true,
+            "description": "Partner categories"
+          },
+          "ecosystem_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Ecosystem objectives"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M39": {
+      "id": "M39",
+      "title": "INTELLIGENCE ENGINE™",
+      "slug": "intelligence-engine",
+      "summary": "Build competitive intelligence and market analysis systems",
+      "vectors": [
+        "analytics",
+        "strategic",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "intelligence",
+        "competitive",
+        "analysis"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "competitors": {
+            "type": "array",
+            "required": true,
+            "description": "Competitor list"
+          },
+          "intelligence_sources": {
+            "type": "array",
+            "required": true,
+            "description": "Data sources"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M40": {
+      "id": "M40",
+      "title": "NEGOTIATION DYNAMICS™",
+      "slug": "negotiation-dynamics",
+      "summary": "Master negotiation strategies and psychological dynamics",
+      "vectors": [
+        "rhetoric",
+        "cognitive",
+        "strategic"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "negotiation",
+        "psychology",
+        "strategy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "negotiation_context": {
+            "type": "string",
+            "required": true,
+            "description": "Negotiation scenario"
+          },
+          "stakeholders": {
+            "type": "array",
+            "required": true,
+            "description": "Negotiation parties"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M41": {
+      "id": "M41",
+      "title": "PROCESS AUTOMATION BLUEPRINT™",
+      "slug": "process-automation-blueprint",
+      "summary": "Design automated business processes for efficiency",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "automation",
+        "process",
+        "blueprint"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "current_processes": {
+            "type": "array",
+            "required": true,
+            "description": "Existing processes"
+          },
+          "automation_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Automation objectives"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M42": {
+      "id": "M42",
+      "title": "QUALITY SYSTEM MAP™",
+      "slug": "quality-system-map",
+      "summary": "Map quality assurance systems and improvement processes",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "quality",
+        "system",
+        "improvement"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "quality_standards": {
+            "type": "array",
+            "required": true,
+            "description": "Quality requirements"
+          },
+          "improvement_areas": {
+            "type": "array",
+            "required": true,
+            "description": "Areas for improvement"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M43": {
+      "id": "M43",
+      "title": "SUPPLY FLOW OPTIMIZER™",
+      "slug": "supply-flow-optimizer",
+      "summary": "Optimize supply chain and logistics operations",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "supply",
+        "logistics",
+        "optimization"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "supply_chain": {
+            "type": "array",
+            "required": true,
+            "description": "Supply chain components"
+          },
+          "optimization_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Optimization targets"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M44": {
+      "id": "M44",
+      "title": "PORTFOLIO MANAGER™",
+      "slug": "portfolio-manager",
+      "summary": "Manage product and project portfolios strategically",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "portfolio",
+        "management",
+        "strategy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "portfolio_items": {
+            "type": "array",
+            "required": true,
+            "description": "Portfolio components"
+          },
+          "strategic_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Strategic objectives"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M45": {
+      "id": "M45",
+      "title": "CHANGE FORCE FIELD™",
+      "slug": "change-force-field",
+      "summary": "Manage organizational change with force field analysis",
+      "vectors": [
+        "strategic",
+        "cognitive",
+        "rhetoric"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "change",
+        "management",
+        "analysis"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "change_initiative": {
+            "type": "string",
+            "required": true,
+            "description": "Change project"
+          },
+          "stakeholders": {
+            "type": "array",
+            "required": true,
+            "description": "Affected stakeholders"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M46": {
+      "id": "M46",
+      "title": "CREATIVE STRATEGY ENGINE™",
+      "slug": "creative-strategy-engine",
+      "summary": "Generate creative strategies and innovative solutions",
+      "vectors": [
+        "branding",
+        "cognitive",
+        "content"
+      ],
+      "difficulty": 3,
+      "minPlan": "pro",
+      "tags": [
+        "creative",
+        "strategy",
+        "innovation"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "creative_challenge": {
+            "type": "string",
+            "required": true,
+            "description": "Creative problem"
+          },
+          "constraints": {
+            "type": "array",
+            "required": true,
+            "description": "Creative constraints"
+          }
+        },
+        "kpis": {
+          "clarity_min": 80,
+          "execution_min": 75,
+          "business_fit_min": 85
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M47": {
+      "id": "M47",
+      "title": "PROMPT SYSTEM ARCHITECT™",
+      "slug": "prompt-system-architect",
+      "summary": "Design comprehensive prompt engineering systems",
+      "vectors": [
+        "strategic",
+        "cognitive",
+        "analytics"
+      ],
+      "difficulty": 4,
+      "minPlan": "enterprise",
+      "tags": [
+        "prompt",
+        "system",
+        "architecture"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "system_requirements": {
+            "type": "array",
+            "required": true,
+            "description": "System specifications"
+          },
+          "prompt_patterns": {
+            "type": "array",
+            "required": true,
+            "description": "Prompt patterns"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M48": {
+      "id": "M48",
+      "title": "FRACTAL IDENTITY MAP™",
+      "slug": "fractal-identity-map",
+      "summary": "Map organizational identity across all levels and touchpoints",
+      "vectors": [
+        "branding",
+        "strategic",
+        "cognitive"
+      ],
+      "difficulty": 4,
+      "minPlan": "pro",
+      "tags": [
+        "identity",
+        "fractal",
+        "mapping"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "identity_elements": {
+            "type": "array",
+            "required": true,
+            "description": "Identity components"
+          },
+          "touchpoints": {
+            "type": "array",
+            "required": true,
+            "description": "Brand touchpoints"
+          }
+        },
+        "kpis": {
+          "clarity_min": 85,
+          "execution_min": 80,
+          "business_fit_min": 88
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M49": {
+      "id": "M49",
+      "title": "EXECUTIVE PROMPT DOSSIER™",
+      "slug": "executive-prompt-dossier",
+      "summary": "Create executive-level prompt strategies and frameworks",
+      "vectors": [
+        "strategic",
+        "rhetoric",
+        "cognitive"
+      ],
+      "difficulty": 5,
+      "minPlan": "enterprise",
+      "tags": [
+        "executive",
+        "prompt",
+        "strategy"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf"
+      ],
+      "spec": {
+        "inputs": {
+          "executive_context": {
+            "type": "string",
+            "required": true,
+            "description": "Executive situation"
+          },
+          "strategic_goals": {
+            "type": "array",
+            "required": true,
+            "description": "Strategic objectives"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    },
+    "M50": {
+      "id": "M50",
+      "title": "PROMPT LICENSING MANAGER™",
+      "slug": "prompt-licensing-manager",
+      "summary": "Manage prompt licensing, IP protection, and commercialization",
+      "vectors": [
+        "strategic",
+        "analytics",
+        "cognitive"
+      ],
+      "difficulty": 5,
+      "minPlan": "enterprise",
+      "tags": [
+        "licensing",
+        "IP",
+        "commercialization"
+      ],
+      "outputs": [
+        "txt",
+        "md",
+        "pdf",
+        "json"
+      ],
+      "spec": {
+        "inputs": {
+          "prompt_portfolio": {
+            "type": "array",
+            "required": true,
+            "description": "Prompt assets"
+          },
+          "licensing_strategy": {
+            "type": "string",
+            "required": true,
+            "description": "Licensing approach"
+          }
+        },
+        "kpis": {
+          "clarity_min": 90,
+          "execution_min": 85,
+          "business_fit_min": 92
+        }
+      },
+      "version": "3.1.0",
+      "deprecated": false
+    }
+  }
+}

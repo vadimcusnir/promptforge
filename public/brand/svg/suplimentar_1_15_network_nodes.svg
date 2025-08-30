@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Network Nodes - 5 puncte conectate prin linii, fiecare pulsează pe rând ca un pachet transmis -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Linii de conexiune între noduri -->
+  <!-- Linie 1-2 -->
+  <line id="line-1-2" x1="156" y1="196" x2="256" y2="136" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie 1-3 -->
+  <line id="line-1-3" x1="156" y1="196" x2="256" y2="256" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie 1-5 -->
+  <line id="line-1-5" x1="156" y1="196" x2="156" y2="316" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie 2-3 -->
+  <line id="line-2-3" x1="256" y1="136" x2="256" y2="256" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie 2-4 -->
+  <line id="line-2-4" x1="256" y1="136" x2="356" y2="196" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie 3-4 -->
+  <line id="line-3-4" x1="256" y1="256" x2="356" y2="196" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie 3-5 -->
+  <line id="line-3-5" x1="256" y1="256" x2="156" y2="316" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Linie 4-5 -->
+  <line id="line-4-5" x1="356" y1="196" x2="156" y2="316" stroke="#5a5a5a" stroke-width="2"/>
+  
+  <!-- Pachete de date care se mișcă de-a lungul liniilor -->
+  <!-- Pachet pe linia 1-2 -->
+  <circle id="packet-1-2" r="4" fill="#FFD700">
+    <animateMotion
+      path="M156,196 L256,136"
+      dur="0.5s"
+      begin="0s;packet-5-1.end"
+      fill="freeze"
+      id="packet-1-2-motion"/>
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="0.5s"
+      begin="0s;packet-5-1.end"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Pachet pe linia 2-3 -->
+  <circle id="packet-2-3" r="4" fill="#FFD700">
+    <animateMotion
+      path="M256,136 L256,256"
+      dur="0.5s"
+      begin="packet-1-2-motion.end"
+      fill="freeze"
+      id="packet-2-3-motion"/>
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="0.5s"
+      begin="packet-1-2-motion.end"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Pachet pe linia 3-4 -->
+  <circle id="packet-3-4" r="4" fill="#FFD700">
+    <animateMotion
+      path="M256,256 L356,196"
+      dur="0.5s"
+      begin="packet-2-3-motion.end"
+      fill="freeze"
+      id="packet-3-4-motion"/>
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="0.5s"
+      begin="packet-2-3-motion.end"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Pachet pe linia 4-5 -->
+  <circle id="packet-4-5" r="4" fill="#FFD700">
+    <animateMotion
+      path="M356,196 L156,316"
+      dur="0.5s"
+      begin="packet-3-4-motion.end"
+      fill="freeze"
+      id="packet-4-5-motion"/>
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="0.5s"
+      begin="packet-3-4-motion.end"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Pachet pe linia 5-1 -->
+  <circle id="packet-5-1" r="4" fill="#FFD700">
+    <animateMotion
+      path="M156,316 L156,196"
+      dur="0.5s"
+      begin="packet-4-5-motion.end"
+      fill="freeze"
+      id="packet-5-1"/>
+    <animate
+      attributeName="opacity"
+      values="0;1;0"
+      keyTimes="0;0.5;1"
+      dur="0.5s"
+      begin="packet-4-5-motion.end"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Noduri de rețea -->
+  <!-- Nod 1 (stânga sus) -->
+  <circle id="node1" cx="156" cy="196" r="12" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="2">
+    <!-- Animație de pulsație pentru nod -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.1;0.2"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="12;14;12"
+      keyTimes="0;0.1;0.2"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 2 (sus centru) -->
+  <circle id="node2" cx="256" cy="136" r="12" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="2">
+    <!-- Animație de pulsație pentru nod -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.2;0.3;0.4"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="12;12;14;12"
+      keyTimes="0;0.2;0.3;0.4"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 3 (centru) -->
+  <circle id="node3" cx="256" cy="256" r="12" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="2">
+    <!-- Animație de pulsație pentru nod -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.4;0.4;0.5;0.6"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="12;12;12;14;12"
+      keyTimes="0;0.4;0.4;0.5;0.6"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 4 (dreapta) -->
+  <circle id="node4" cx="356" cy="196" r="12" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="2">
+    <!-- Animație de pulsație pentru nod -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.6;0.6;0.6;0.7;0.8"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="12;12;12;12;14;12"
+      keyTimes="0;0.6;0.6;0.6;0.7;0.8"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Nod 5 (jos) -->
+  <circle id="node5" cx="156" cy="316" r="12" fill="#5a5a5a" stroke="#E0E0E0" stroke-width="2">
+    <!-- Animație de pulsație pentru nod -->
+    <animate
+      attributeName="fill"
+      values="#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#5a5a5a;#FF0000;#5a5a5a"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="12;12;12;12;12;14;12"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de pulsație pentru linii când pachetul trece -->
+  <!-- Pulsație pentru linia 1-2 -->
+  <line id="line-1-2-pulse" x1="156" y1="196" x2="256" y2="136" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.5;0"
+      keyTimes="0;0.1;0.2"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Pulsație pentru linia 2-3 -->
+  <line id="line-2-3-pulse" x1="256" y1="136" x2="256" y2="256" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.5;0"
+      keyTimes="0;0.2;0.3;0.4"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Pulsație pentru linia 3-4 -->
+  <line id="line-3-4-pulse" x1="256" y1="256" x2="356" y2="196" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.5;0"
+      keyTimes="0;0.4;0.4;0.5;0.6"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Pulsație pentru linia 4-5 -->
+  <line id="line-4-5-pulse" x1="356" y1="196" x2="156" y2="316" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.5;0"
+      keyTimes="0;0.6;0.6;0.6;0.7;0.8"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Pulsație pentru linia 5-1 -->
+  <line id="line-5-1-pulse" x1="156" y1="316" x2="156" y2="196" stroke="#FFD700" stroke-width="2" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0;0.5;0"
+      keyTimes="0;0.8;0.8;0.8;0.8;0.9;1.0"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Text "NETWORK NODES" -->
+  <text x="256" y="376" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">NETWORK NODES</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Network Nodes</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>5 puncte conectate prin linii, fiecare pulsează pe rând ca un pachet transmis. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>
+
