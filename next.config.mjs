@@ -1,6 +1,36 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['@prisma/client'],
+  
+  // Webpack configuration to fix module loading issues
+  webpack: (config, { dev, isServer }) => {
+    // Fix module loading issues in development
+    if (dev && !isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
+        stream: false,
+        util: false,
+        buffer: false,
+        process: false,
+        path: false,
+        os: false,
+        url: false,
+        querystring: false,
+        http: false,
+        https: false,
+        zlib: false,
+        assert: false,
+        events: false,
+        child_process: false,
+      }
+    }
+    
+    return config
+  },
   images: {
     domains: ['localhost', 'promptforge.ai'],
     remotePatterns: [
