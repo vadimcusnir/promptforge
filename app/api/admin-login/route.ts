@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 }
 
 // Logout endpoint
-export async function DELETE(req: NextRequest) {
+export async function DELETE(_req: NextRequest) {
   const res = NextResponse.json({ ok: true, message: "Logged out" });
 
   // Clear admin cookies

@@ -10,9 +10,10 @@ export async function generateStaticParams() {
 }
 
 // Fetch module metadata at build time
-export async function generateMetadata({ params }: { params: { moduleId?: string } }) {
-  if (params?.moduleId) {
-    const module = MODULES[parseInt(params.moduleId)];
+export async function generateMetadata({ params }: { params: Promise<{ moduleId?: string }> }) {
+  const resolvedParams = await params;
+  if (resolvedParams?.moduleId) {
+    const module = MODULES[parseInt(resolvedParams.moduleId)];
     if (module) {
       return {
         title: `${module.name} - PromptForge Generator`,

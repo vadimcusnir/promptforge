@@ -12,13 +12,6 @@ import path from "node:path";
 // ————————————————————————————————————————————————
 // Tipuri canonice
 // ————————————————————————————————————————————————
-type FileSpec = {
-  path?: string;
-  paths?: string[];
-  role: string;
-  interaction: "read_only" | "compile_apply" | "reference_apply" | "reference_generate";
-};
-
 type CursorInit = {
   meta: { project: string; source_of_truth: string; last_updated: string };
   directories: { root: string; docs_root: string; docs_subfolders: string[] };

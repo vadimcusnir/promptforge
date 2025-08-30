@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { publicAPIManager, type APIScope } from '@/lib/api-public';
-import { validateSACFHeaders, assertMembership, assertRole, handleSecurityError } from '@/lib/security/assert';
+import { validateSACFHeaders, assertRole, handleSecurityError } from '@/lib/security/assert';
 
 // GET - Listează API keys pentru organizație
 export async function GET(req: NextRequest) {

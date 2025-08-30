@@ -8,8 +8,7 @@ import {
   Shield, 
   Sparkles, 
   Eye,
-  ArrowRight,
-  Star
+  ArrowRight
 } from "lucide-react";
 
 export default function AboutPage() {
