@@ -1,232 +1,231 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { NavBar } from "@/components/ui/navbar"
-import { BadgePlan } from "@/components/ui/badge-plan"
-import { TelemetryBadge } from "@/components/ui/telemetry-badge"
-import { ForgeGlyph } from "@/components/ui/forge-glyph"
-import { cn } from "@/lib/utils"
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { AnimatedCodeBlock } from "@/components/ui/animated-code-block";
+import { Hero } from "@/components/Hero";
+
+import { SkipLink } from "@/components/SkipLink";
+import { brandLinter } from "@/lib/brand-linter";
+import {
+  Zap,
+  Crown,
+  Download,
+  Brain,
+  TrendingUp,
+  Award,
+} from "lucide-react";
+import { BrandLinterAlert } from "@/components/ui/brand-linter-alert";
 
 export default function HomePage() {
-  const [currentPlan] = useState<'free' | 'creator' | 'pro' | 'enterprise'>('free')
+  const [demoInput, setDemoInput] = useState("marketing strategy");
+  const [demoOutput, setDemoOutput] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const demoBundles = [
-    {
-      id: 'bundle_001',
-      title: 'Content Optimization',
-      score: 87,
-      duration: 1250,
-      vectors: ['prompt', 'context', 'output']
-    },
-    {
-      id: 'bundle_002', 
-      title: 'Technical Documentation',
-      score: 92,
-      duration: 2100,
-      vectors: ['prompt', 'context', 'output', 'guardrails']
-    },
-    {
-      id: 'bundle_003',
-      title: 'Marketing Copy Generator', 
-      score: 89,
-      duration: 1800,
-      vectors: ['prompt', 'context', 'output', 'metrics', 'feedback']
+  const handleDemoGenerate = async () => {
+    if (!demoInput.trim()) return;
+    setIsGenerating(true);
+    try {
+      const result = brandLinter.validatePrompt(demoInput);
+      setDemoOutput(JSON.stringify(result, null, 2));
+    } catch (error) {
+      setDemoOutput("Error generating demo output");
+    } finally {
+    setIsGenerating(false);
     }
-  ]
-  
+  };
+
   return (
-    <div className="min-h-screen bg-bg">
-      <NavBar plan={currentPlan} />
-      
-      {/* Hero Section */}
-      <section className="relative py-24 px-4">
-        <div className="container mx-auto text-center">
-          <div className="mb-8">
-            <div className="mx-auto mb-6">
-              <ForgeGlyph variant="pulse" size="xl" />
-            </div>
-            
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-surfaceAlt border border-border mb-6">
-              <span className="text-brand font-ui text-sm font-medium">
-                Industrial Prompt Engineering
-              </span>
-            </div>
-            
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-text mb-6">
-              Your Operational
-              <br />
-              <span className="text-brand">Prompt Generator</span>
-            </h1>
-            
-            <p className="text-xl text-textMuted font-ui max-w-3xl mx-auto mb-8">
-              50 modules. 7 vectors. Export in {"<"}60s.
-              <br />
-              Build auditable, reproducible prompt systems for professional workflows.
-            </p>
-          </div>
+    <>
+      <SkipLink />
+      <main className="min-h-screen" role="main" id="main" tabIndex={-1}>
+        <Hero />
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button
-              onClick={() => window.location.href = '/generator'}
-              className="px-8 py-4 bg-brand text-bg rounded-lg font-ui font-semibold hover:bg-brand/90 transition-all duration-200 focus-ring"
-            >
-              Start the Forge
-            </button>
-            <button
-              onClick={() => window.location.href = '/pricing'}
-              className="px-8 py-4 bg-surface border border-border text-text rounded-lg font-ui font-semibold hover:border-brand/50 transition-all duration-200 focus-ring"
-            >
-              View Pricing
-            </button>
-          </div>
-
-          {/* Proof Bar */}
-          <div className="flex flex-wrap justify-center gap-8 p-6 bg-surface border border-border rounded-xl max-w-2xl mx-auto">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-brand rounded-full" />
-              <span className="text-textMuted font-ui text-sm">TTA {"<"} 60s</span>
+        {/* Demo Section */}
+        <section className="py-20 bg-gradient-to-b from-black to-gray-900" aria-labelledby="demo-heading">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 id="demo-heading" className="text-4xl font-bold text-white mb-4">
+                Try the Brand Linter
+              </h2>
+              <p className="text-xl text-gray-300">
+                Test our AI-powered brand consistency checker
+              </p>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-brand rounded-full" />
-              <span className="text-textMuted font-ui text-sm">Score ≥ 80</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-brand rounded-full" />
-              <span className="text-textMuted font-ui text-sm">Export .md/.json/.pdf</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Demo Bundles */}
-      <section className="py-24 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl font-bold text-text mb-4">
-              Live Demo Bundles
-            </h2>
-            <p className="text-textMuted font-ui text-lg">
-              See PromptForge in action with real telemetry data
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {demoBundles.map((bundle: any) => (
-              <div
-                key={bundle.id}
-                className="bg-surface border border-border rounded-xl p-6 hover:border-brand/50 transition-all duration-200"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-ui text-lg font-semibold text-text">
-                    {bundle.title}
-                  </h3>
-                  <TelemetryBadge 
-                    runId={bundle.id} 
-                    score={bundle.score}
-                    duration={bundle.duration}
-                  />
-                </div>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {bundle.vectors.map((vector: string) => (
-                    <span
-                      key={vector}
-                      className="px-2 py-1 bg-surfaceAlt border border-border rounded text-xs font-mono text-textMuted"
+            <div className="max-w-4xl mx-auto">
+              <Card className="bg-gray-800 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Live Demo</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Enter any text to see how our brand linter analyzes it
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex gap-4">
+                    <Input
+                      value={demoInput}
+                      onChange={(e) => setDemoInput(e.target.value)}
+                      placeholder="Enter text to analyze..."
+                      className="flex-1 bg-gray-700 border-gray-600 text-white"
+                      aria-label="Text to analyze"
+                    />
+                    <Button 
+                      onClick={handleDemoGenerate}
+                      disabled={isGenerating}
+                      className="bg-blue-600 hover:bg-blue-700 min-w-[44px] min-h-[44px]"
+                      aria-label={isGenerating ? "Analyzing text" : "Analyze text"}
                     >
-                      {vector}
-                    </span>
-                  ))}
-                </div>
-                
-                <button
-                  onClick={() => window.location.href = '/generator'}
-                  className="w-full py-2 px-4 bg-surfaceAlt border border-border rounded-md text-text hover:border-brand/50 transition-colors focus-ring font-ui text-sm"
-                >
-                  Try This Module
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+                      {isGenerating ? "Analyzing..." : "Analyze"}
+                    </Button>
+                  </div>
 
-      {/* How It Works */}
-      <section className="py-24 px-4 bg-surfaceAlt">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl font-bold text-text mb-4">
-              How It Works
+                  {demoOutput && (
+                    <div className="mt-6" role="region" aria-labelledby="result-heading">
+                      <h3 id="result-heading" className="text-lg font-semibold text-white mb-2">Analysis Result:</h3>
+                      <AnimatedCodeBlock
+                        code={demoOutput}
+                        language="json"
+                        className="bg-gray-900"
+                      />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Grid */}
+        <section className="py-20 bg-gray-900" aria-labelledby="features-heading">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 id="features-heading" className="text-4xl font-bold text-white mb-4">
+                Why Choose PromptForge?
+              </h2>
+              <p className="text-xl text-gray-300">
+                Enterprise-grade prompt engineering with military precision
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <Card className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-colors">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+                    <Zap className="w-6 h-6 text-white" />
+                  </div>
+                  <CardTitle className="text-white">Lightning Fast</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Generate production-ready prompts in seconds, not hours
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700 hover:border-green-500 transition-colors">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mb-4">
+                    <Crown className="w-6 h-6 text-white" />
+                  </div>
+                  <CardTitle className="text-white">Enterprise Ready</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Built for scale with enterprise-grade security and compliance
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700 hover:border-purple-500 transition-colors">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mb-4">
+                    <Download className="w-6 h-6 text-white" />
+                  </div>
+                  <CardTitle className="text-white">Export Anywhere</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Multiple export formats for any workflow integration
+                  </CardDescription>
+                </CardHeader>
+                </Card>
+
+              <Card className="bg-gray-800 border-gray-700 hover:border-red-500 transition-colors">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mb-4">
+                    <Brain className="w-6 h-6 text-white" />
+              </div>
+                  <CardTitle className="text-white">AI-Powered</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Advanced AI algorithms optimize prompts for maximum effectiveness
+                  </CardDescription>
+                </CardHeader>
+                    </Card>
+
+              <Card className="bg-gray-800 border-gray-700 hover:border-yellow-500 transition-colors">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center mb-4">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <CardTitle className="text-white">Performance Metrics</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Track and optimize prompt performance with detailed analytics
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700 hover:border-indigo-500 transition-colors">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center mb-4">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <CardTitle className="text-white">Quality Assured</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Every prompt meets our strict quality standards
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+          <div className="container mx-auto px-6 text-center">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Ready to Transform Your AI Workflow?
             </h2>
-            <p className="text-textMuted font-ui text-lg">
-              Three steps to professional prompt generation
+            <p className="text-xl text-blue-100 mb-8">
+              Join thousands of professionals who trust PromptForge for their AI needs
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="mx-auto mb-6">
-                <ForgeGlyph variant="pulse" size="lg" />
-              </div>
-              <h3 className="font-ui text-xl font-semibold text-text mb-3">
-                Configure 7D Parameters
-              </h3>
-              <p className="text-textMuted font-ui">
-                Set domain, scale, urgency, complexity, resources, application, and output format
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="mx-auto mb-6">
-                <ForgeGlyph variant="animated" size="lg" />
-              </div>
-              <h3 className="font-ui text-xl font-semibold text-text mb-3">
-                Run Selected Module
-              </h3>
-              <p className="text-textMuted font-ui">
-                Choose from 50 specialized modules across 7 semantic vectors for your use case
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="mx-auto mb-6">
-                <ForgeGlyph variant="static" size="lg" />
-              </div>
-              <h3 className="font-ui text-xl font-semibold text-text mb-3">
-                Export Professional Bundle
-              </h3>
-              <p className="text-textMuted font-ui">
-                Get structured outputs with checksums, manifests, and telemetry data
-              </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                Get Started Free
+              </Button>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+                View Documentation
+              </Button>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="font-display text-3xl font-bold text-text mb-6">
-            Ready to Build Industrial-Grade Prompts?
-          </h2>
-          <p className="text-xl text-textMuted font-ui mb-8 max-w-2xl mx-auto">
-            Join professionals who demand auditable, reproducible prompt systems.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => window.location.href = '/generator'}
-              className="px-8 py-4 bg-brand text-bg rounded-lg font-ui font-semibold hover:bg-brand/90 transition-all duration-200 focus-ring"
-            >
-              Start Building Now
-            </button>
-            <button
-              onClick={() => window.location.href = '/pricing'}
-              className="px-8 py-4 bg-surface border border-border text-text rounded-lg font-ui font-semibold hover:border-brand/50 transition-all duration-200 focus-ring"
-            >
-              View Pricing
-            </button>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
+        {/* Brand Linter Alert */}
+        <BrandLinterAlert 
+          result={{
+            score: 85,
+            breaches: [],
+            fixes: [],
+            cta: "Continue with current action",
+            has_metric: true,
+            has_kpi: true,
+            voice_compliant: true,
+            structure_complete: true
+          }}
+        />
+        </main>
+    </>
+  );
 }

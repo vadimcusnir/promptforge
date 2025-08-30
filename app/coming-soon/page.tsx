@@ -1,191 +1,171 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { User, Mail, AlertCircle, Loader2, CheckCircle } from "lucide-react"
+import { useState, useEffect } from "react";
+import { ClientOnly } from "@/components/ClientOnly";
+import { DigitalRune } from "@/components/background/DigitalRune";
 
 export default function ComingSoonPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const validateForm = () => {
-    if (!formData.name.trim()) {
-      return "Please enter your name"
-    }
-    if (!formData.email.trim()) {
-      return "Please enter your email"
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(formData.email)) {
-      return "Please enter a valid email"
-    }
-    return null
-  }
+  useEffect(() => {
+    // Check if user is admin (has admin cookies)
+    const adminRole = document.cookie.includes("pf_role=admin");
+    setIsAdmin(adminRole);
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (isLoading) return;
 
-    const validationError = validateForm()
-    if (validationError) {
-      setError(validationError)
-      return
-    }
-
-    setIsLoading(true)
+    setIsLoading(true);
+    setError("");
 
     try {
-      const response = await fetch("/api/waitlist", {
+      const res = await fetch("/api/waitlist", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.toLowerCase().trim(),
+          name: name.trim(),
+          org_id: null, // For future multi-tenant support
+        }),
+      });
 
-      if (response.ok) {
-        window.location.href = "/thankyou"
+      const data = await res.json();
+
+      if (res.ok && data.ok) {
+        setSubmitted(true);
       } else {
-        const data = await response.json()
-        setError(data.error || "Something went wrong. Please try again.")
+        setError(data.error || "An error occurred. Please try again.");
       }
-    } catch {
-      setError("Network error. Please try again.")
+    } catch (err) {
+      console.error("Waitlist error:", err);
+      setError("An error occurred. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    if (error) setError("")
   }
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Fixed two-layer background */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.05)_1px,transparent_0)] bg-[length:20px_20px]" />
-      <div className="fixed inset-0 bg-gradient-to-br from-[#0e0e0e] via-[#1a1a1a] to-[#0e0e0e]" />
+    <div className="min-h-screen bg-[#0a0a0a] text-white relative overflow-hidden">
+      {/* Background now handled by global BackgroundRoot */}
 
-      {/* Animated grid elements */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-500/30 rounded-full " />
-        <div
-          className="absolute top-1/3 right-1/3 w-1 h-1 bg-yellow-400/40 rounded-full animate-ping"
-          style={{ animationDelay: "1s" }}
-        />
-        <div
-          className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-yellow-300/30 rounded-full "
-          style={{ animationDelay: "2s" }}
-        />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-1 h-1 bg-yellow-500/40 rounded-full animate-ping"
-          style={{ animationDelay: "0.5s" }}
-        />
-      </div>
+      {/* Digital Rune - Central Symbol */}
+      <ClientOnly>
+        <DigitalRune />
+      </ClientOnly>
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className="w-full max-w-md">
-          <Card className="bg-black/40 backdrop-blur-sm border-gray-800/50 shadow-md border border-yellow-500/20">
-            <CardHeader className="text-center space-y-4">
-              <CardTitle className="text-3xl font-bold text-white font-serif">
-                We&apos;re forging something powerful.
-              </CardTitle>
-              <p className="text-gray-400 font-sans">Join the waitlist to be among the first</p>
-            </CardHeader>
+      {/* Main Content */}
+      <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 text-center">
+        {!submitted ? (
+          <>
+            <h1
+              className="text-4xl md:text-6xl font-bold mb-6 text-white"
+              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+            >
+              The 1st Cognitive OS for Prompts
+            </h1>
+            <p
+              className="mt-4 text-lg md:text-xl text-white/90 max-w-3xl leading-relaxed"
+              style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.6)" }}
+            >
+              50 Semantic Modules × 7D Parameter Engine → From Chaos to
+              Execution in 30 Minutes.
+            </p>
 
-            <CardContent className="space-y-6">
-              {error && (
-                <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                  <span>{error}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-gray-300 font-sans">
-                    Name
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
-                    <Input
-                      id="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
-                      className="pl-10 bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-yellow-500 focus:ring-yellow-500/20"
-                      placeholder="Enter your name"
-                      required
-                      disabled={isLoading}
-                    />
+            <form
+              onSubmit={handleSubmit}
+              className="mt-12 flex flex-col gap-3 w-full max-w-sm mx-auto"
+            >
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                required
+                disabled={isLoading}
+              />
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full h-10 px-3 text-sm rounded border bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d1a954] focus:border-transparent transition-all"
+                required
+                disabled={isLoading}
+              />
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full h-11 px-4 rounded bg-[#d1a954] hover:bg-[#d1a954]/90 text-black font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#d1a954]/50 focus:ring-offset-2 focus:ring-offset-black"
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full"></div>
+                    Processing...
                   </div>
-                </div>
+                ) : (
+                  "Join Waitlist"
+                )}
+              </button>
+            </form>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-300 font-sans">
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      className="pl-10 bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-yellow-500 focus:ring-yellow-500/20"
-                      placeholder="Enter your email"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
+            {error && (
+              <p className="mt-4 text-red-400 text-sm bg-red-400/10 px-4 py-2 rounded-lg border border-red-400/20">
+                {error}
+              </p>
+            )}
 
-                <Button
-                  type="submit"
-                  disabled={isLoading || !formData.name.trim() || !formData.email.trim()}
-                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-black font-semibold py-2.5 disabled:opacity-50 disabled:cursor-not-allowed font-sans"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Joining Waitlist...
-                    </>
-                  ) : (
-                    "Join the Waitlist"
-                  )}
-                </Button>
-              </form>
+            <p className="mt-4 text-xs text-white/60 max-w-sm">
+              No spam. Just launch updates.
+            </p>
 
-              {/* Proof Bar */}
-              <div className="pt-6 border-t border-gray-800/50">
-                <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    TTA &lt; 60s
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    Score ≥ 80
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    Export .md/.json/.pdf
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+            {/* Demo Bundle Link - Only show for admin users */}
+            {isAdmin && (
+              <a
+                href="/demo-bundle"
+                className="mt-4 inline-block text-sm text-[#d1a954] hover:text-[#d1a954]/80 underline transition-colors"
+              >
+                Preview Demo Bundle →
+              </a>
+            )}
+          </>
+        ) : (
+          <div className="max-w-md bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8 text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-4 text-white">
+              Thank you for joining!
+            </h2>
+            <p className="text-white/80 leading-relaxed">
+              You&apos;ll be among the first to access PromptForge and receive the
+              free demo bundle.
+            </p>
+            <p className="mt-4 text-sm text-white/60">
+              Check your email for registration confirmation.
+            </p>
+          </div>
+        )}
+      </section>
     </div>
-  )
+  );
 }

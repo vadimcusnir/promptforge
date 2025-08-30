@@ -31,8 +31,8 @@ export function TelemetryBadge({ runId, score, duration, className }: TelemetryB
   }
 
   const getScoreColor = (score?: number) => {
-    if (!score) return 'text-textMuted'
-    if (score >= 80) return 'text-brand'
+    if (!score) return 'text-fg-secondary'
+    if (score >= 80) return 'text-accent'
     if (score >= 60) return 'text-gold'
     return 'text-accent'
   }
@@ -45,7 +45,7 @@ export function TelemetryBadge({ runId, score, duration, className }: TelemetryB
       {/* Run ID */}
       <button
         onClick={handleCopy}
-        className="flex items-center space-x-1 text-textMuted hover:text-text transition-colors focus-ring rounded"
+        className="flex items-center space-x-1 text-fg-secondary hover:text-fg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 rounded"
         title="Copy run ID"
       >
         <span className="truncate max-w-20">{runId}</span>
@@ -61,14 +61,14 @@ export function TelemetryBadge({ runId, score, duration, className }: TelemetryB
 
       {/* Duration */}
       {duration && (
-        <span className="text-textMuted">
+        <span className="text-fg-secondary">
           {formatDuration(duration)}
         </span>
       )}
 
       {/* Copy feedback */}
       {copied && (
-        <span className="text-brand text-xs animate-fade-in">
+        <span className="text-accent text-xs animate-fade-in">
           Copied!
         </span>
       )}

@@ -1,17 +1,21 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://chatgpt-prompting.com'
-  
+  const baseUrl = "https://chatgpt-prompting.com";
+
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/_next/', '/admin/'],
+        userAgent: "*",
+        allow: "/",
+        disallow: [
+          "/api/*",
+          "/dashboard/*",
+          "/coming-soon", // Conform documentației - Disallow: /coming-soon
+          "/tmp/*",
+        ],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
-  }
+  };
 }

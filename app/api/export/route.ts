@@ -1,192 +1,420 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
-import { requireAuth } from '@/lib/auth/server-auth'
-import { validateOrgMembership } from '@/lib/billing/entitlements'
-import { getEffectiveEntitlements } from '@/lib/billing/entitlements'
-import { ENTITLEMENT_ERROR_CODES } from '@/lib/entitlements/types'
+/**
+ * Export Bundle API
+ * POST /api/export - Generate auditable bundles from validated runs
+ */
 
-// Export request schema
-const exportRequestSchema = z.object({
-  format: z.enum(['txt', 'md', 'json', 'pdf', 'bundle']),
-  content: z.string().min(1, 'Content is required'),
-  filename: z.string().optional(),
-  orgId: z.string().uuid('Valid organization ID required')
-})
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { getUserFromCookies } from '@/lib/auth';
 
-export async function POST(request: NextRequest) {
+// Import export modules
+import { composeTxt, composeMd, composeJson, composeTelemetry, normalizeContent } from '@/lib/export/composeArtifacts';
+import { renderPdf, isUserInTrial } from '@/lib/export/renderPdf';
+import { buildManifest, validateManifest } from '@/lib/export/buildManifest';
+import { sha256, canonicalChecksum, generateChecksumFile } from '@/lib/export/hash';
+import { uploadArtifacts, generateStoragePath, getContentType, createZipArchive, validateStorageConfig } from '@/lib/export/storage';
+import { planAllowsFormat, type PlanCode } from '@/lib/export/license';
+
+// Import telemetry
+import { trackEvent } from '@/lib/telemetry';
+
+interface ExportRequest {
+  runId: string;
+  formats: string[];
+  orgId: string;
+  userId: string;
+}
+
+interface ExportResponse {
+  bundleId: string;
+  paths: Record<string, string>;
+  license_notice: string;
+  checksum: string;
+  formats: string[];
+}
+
+export async function POST(req: NextRequest) {
+  const startTime = Date.now();
+  let traceId = crypto.randomUUID();
+  
   try {
-    // Require authentication
-    const user = await requireAuth(request)
+    // Validate environment
+    validateStorageConfig();
     
-    // Parse request body
-    const body = await request.json()
-    const validation = exportRequestSchema.safeParse(body)
-    
-    if (!validation.success) {
+    // Get current user from cookies
+    const user = await getUserFromCookies();
+    if (!user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Parse request
+    const body: ExportRequest = await req.json();
+    const { runId, formats, orgId } = body;
+    const userId = user.email; // Use current user's email
+
+    if (!runId || !formats?.length || !orgId) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Invalid request data', 
-          details: validation.error.errors 
-        },
+        { error: 'Missing required fields: runId, formats, orgId' },
         { status: 400 }
-      )
+      );
     }
 
-    const { format, content, filename, orgId } = validation.data
-    
-    // Validate organization membership
-    const isMember = await validateOrgMembership(user.id, orgId)
-    if (!isMember) {
+    // Create Supabase client
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Verify user membership
+    const { data: membership } = await supabase
+      .from('org_members')
+      .select('role')
+      .eq('org_id', orgId)
+      .eq('user_id', userId)
+      .single();
+
+    if (!membership) {
+      return NextResponse.json({ error: 'Not a member of this organization' }, { status: 403 });
+    }
+
+    // Get user entitlements
+    const { data: entitlementsData } = await supabase
+      .from('entitlements_effective_user')
+      .select('flag, value')
+      .eq('org_id', orgId)
+      .eq('user_id', userId);
+
+    const entitlements = entitlementsData?.reduce((acc, ent) => {
+      acc[ent.flag] = ent.value;
+      return acc;
+    }, {} as Record<string, boolean>) || {};
+
+    // Get subscription info
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('plan_code, trial_end')
+      .eq('org_id', orgId)
+      .single();
+
+    const plan: PlanCode = subscription?.plan_code || 'pilot';
+
+    // Track export started
+    await trackEvent({
+      event: 'export.started',
+      orgId,
+      userId,
+      payload: {
+        run_id: runId,
+        formats: formats,
+        org_id: orgId,
+        user_id: userId,
+        plan: plan,
+        trace_id: traceId,
+        timestamp: startTime
+      }
+    });
+
+    // Check entitlements for each requested format
+    for (const format of formats) {
+      if (!planAllowsFormat(plan, format)) {
+        return NextResponse.json(
+          { 
+            error: 'ENTITLEMENT_REQUIRED',
+            message: `Format '${format}' requires ${format === 'zip' ? 'Enterprise' : 'Pro'} plan`
+          },
+          { status: 403 }
+        );
+      }
+
+      // Check specific entitlements
+      const entitlementChecks: Record<string, string> = {
+        'pdf': 'canExportPDF',
+        'json': 'canExportJSON',
+        'zip': 'canExportBundleZip'
+      };
+
+      const requiredEntitlement = entitlementChecks[format];
+      if (requiredEntitlement && !entitlements[requiredEntitlement]) {
+        return NextResponse.json(
+          {
+            error: 'ENTITLEMENT_REQUIRED',
+            message: `Missing entitlement: ${requiredEntitlement}`
+          },
+          { status: 403 }
+        );
+      }
+    }
+
+    // Load run data and validate DoD
+    const { data: run, error: runError } = await supabase
+      .from('runs')
+      .select(`
+        *,
+        prompt_scores(*)
+      `)
+      .eq('id', runId)
+      .eq('org_id', orgId)
+      .single();
+
+    if (runError || !run) {
+      return NextResponse.json({ error: 'Run not found' }, { status: 404 });
+    }
+
+    // DoD Validation: Score >= 80
+    const score = run.prompt_scores?.[0];
+    if (!score || score.overall_score < 80) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Access denied to organization',
-          code: 'ACCESS_DENIED'
+        {
+          error: 'DOD_NOT_MET',
+          message: 'Run score must be >= 80 for export'
         },
-        { status: 403 }
-      )
+        { status: 422 }
+      );
     }
 
-    // Get organization entitlements
-    const entitlements = await getEffectiveEntitlements(orgId)
-    
-    // Check entitlements based on export format
-    let hasPermission = false
-    let requiredPlan = 'pilot'
-    
-    switch (format) {
-      case 'txt':
-      case 'md':
-        hasPermission = true // Basic formats always allowed
-        break
-      case 'json':
-        hasPermission = entitlements.canExportJSON === true
-        requiredPlan = 'pro'
-        break
-      case 'pdf':
-        hasPermission = entitlements.canExportPDF === true
-        requiredPlan = 'pro'
-        break
-      case 'bundle':
-        hasPermission = entitlements.canExportBundleZip === true
-        requiredPlan = 'enterprise'
-        break
-      default:
-        hasPermission = false
-    }
-
-    if (!hasPermission) {
+    // DoD Validation: Complete output
+    if (run.status !== 'success' || !run.telemetry) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'ENTITLEMENT_REQUIRED',
-          message: `${format.toUpperCase()} export requires ${requiredPlan} plan or higher`,
-          code: ENTITLEMENT_ERROR_CODES.ENTITLEMENT_REQUIRED,
-          requiredPlan,
-          currentPlan: 'pilot' // This would come from user's actual plan
+        {
+          error: 'DOD_NOT_MET', 
+          message: 'Run must be successful with complete output'
         },
-        { status: 403 }
-      )
+        { status: 422 }
+      );
     }
 
-    // Process the export based on format
-    const exportResult = await processExport(format, content, filename)
+    // Get module info
+    const { data: module } = await supabase
+      .from('modules')
+      .select('*')
+      .eq('module_id', run.module_id)
+      .single();
+
+    if (!module) {
+      return NextResponse.json({ error: 'Module not found' }, { status: 404 });
+    }
+
+    // Get prompt history for content
+    const { data: promptHistory } = await supabase
+      .from('prompt_history')
+      .select('*')
+      .eq('id', run.prompt_history_id)
+      .single();
+
+    if (!promptHistory) {
+      return NextResponse.json({ error: 'Prompt history not found' }, { status: 404 });
+    }
+
+    // Generate artifacts
+    const bundleId = crypto.randomUUID();
+    const artifacts: Record<string, string | Uint8Array> = {};
+    const fileHashes: Record<string, string> = {};
+
+    // Always generate core files
+    const promptContent = promptHistory.output;
+    const normalizedPrompt = normalizeContent(promptContent);
     
-    // Set appropriate headers for download
-    const headers = new Headers()
-    headers.set('Content-Type', getContentType(format))
-    headers.set('Content-Disposition', `attachment; filename="${exportResult.filename}"`)
-    
-    return new NextResponse(exportResult.content, {
-      status: 200,
-      headers
-    })
+    // Generate txt
+    artifacts['prompt.txt'] = composeTxt({ prompt: normalizedPrompt });
+    fileHashes['prompt.txt'] = sha256(artifacts['prompt.txt'] as string);
+
+    // Generate json
+    const jsonContent = composeJson({
+      sevenD: promptHistory.config,
+      output: promptContent,
+      meta: run.telemetry,
+      moduleId: run.module_id,
+      domain: promptHistory.parameter_set_id || 'general'
+    });
+    artifacts['prompt.json'] = JSON.stringify(jsonContent, null, 2);
+    fileHashes['prompt.json'] = sha256(artifacts['prompt.json'] as string);
+
+    // Generate md if requested
+    if (formats.includes('md')) {
+      artifacts['prompt.md'] = composeMd({
+        title: module.name,
+        kpi: module.kpi,
+        spec: module.spec,
+        guardrails: module.guardrails,
+        moduleId: run.module_id,
+        domain: promptHistory.parameter_set_id || 'general',
+        prompt: normalizedPrompt
+      });
+      fileHashes['prompt.md'] = sha256(artifacts['prompt.md'] as string);
+    }
+
+    // Generate PDF if requested
+    if (formats.includes('pdf')) {
+      const isTrialUser = isUserInTrial(subscription);
+      artifacts['prompt.pdf'] = await renderPdf({
+        title: module.name,
+        content: normalizedPrompt,
+        moduleId: run.module_id,
+        domain: promptHistory.parameter_set_id || 'general',
+        isTrialUser
+      });
+      fileHashes['prompt.pdf'] = sha256(Buffer.from(artifacts['prompt.pdf'] as Uint8Array));
+    }
+
+    // Generate telemetry
+    artifacts['telemetry.json'] = JSON.stringify(composeTelemetry({
+      score: {
+        clarity: score.clarity,
+        execution: score.execution,
+        ambiguity: score.ambiguity,
+        business_fit: score.business_fit,
+        overall_score: score.overall_score
+      },
+      tokens: {
+        input: run.telemetry.tokens_input || 0,
+        output: run.telemetry.tokens_output || 0,
+        total: run.tokens_used || 0
+      },
+      tta: run.duration_ms || 0,
+      cost_usd: parseFloat(run.cost_usd || '0'),
+      model: run.model || 'unknown'
+    }), null, 2);
+    fileHashes['telemetry.json'] = sha256(artifacts['telemetry.json'] as string);
+
+    // Generate manifest
+    const manifest = buildManifest({
+      bundleId,
+      runId,
+      moduleId: run.module_id,
+      domain: promptHistory.parameter_set_id || 'general',
+      signature7d: promptHistory.hash,
+      score: {
+        total: score.overall_score,
+        clarity: score.clarity,
+        execution: score.execution,
+        ambiguity: score.ambiguity,
+        business_fit: score.business_fit
+      },
+      formats: formats.filter(f => f !== 'zip'),
+      artifacts: Object.keys(fileHashes).map(filename => ({
+        file: filename,
+        checksum: `sha256:${fileHashes[filename]}`,
+        bytes: typeof artifacts[filename] === 'string' 
+          ? new TextEncoder().encode(artifacts[filename] as string).length
+          : (artifacts[filename] as Uint8Array).length
+      })),
+      plan,
+      version: '1.0.0'
+    });
+
+    if (!validateManifest(manifest)) {
+      throw new Error('Invalid manifest generated');
+    }
+
+    artifacts['manifest.json'] = JSON.stringify(manifest, null, 2);
+    fileHashes['manifest.json'] = sha256(artifacts['manifest.json'] as string);
+
+    // Generate checksum
+    const canonicalChecksumValue = canonicalChecksum(
+      Object.keys(fileHashes).map(filename => `${filename}:${fileHashes[filename]}`)
+    );
+    artifacts['checksum.txt'] = generateChecksumFile(fileHashes);
+
+    // Create ZIP if Enterprise
+    if (formats.includes('zip')) {
+      artifacts['bundle.zip'] = await createZipArchive(artifacts);
+    }
+
+    // Upload to storage
+    const basePath = generateStoragePath({
+      orgId,
+      domain: promptHistory.parameter_set_id || 'general',
+      moduleId: run.module_id,
+      runId,
+      filename: '' // Will be appended per file
+    }).replace(/\/$/, ''); // Remove trailing slash
+
+    const uploadArtifactsList = Object.entries(artifacts).map(([filename, content]) => ({
+      filename,
+      content,
+      contentType: getContentType(filename)
+    }));
+
+    const uploadResults = await uploadArtifacts(basePath, uploadArtifactsList);
+
+    // Save bundle to database
+    const { data: bundleRecord, error: bundleError } = await supabase
+      .from('bundles')
+      .insert({
+        id: bundleId,
+        run_id: runId,
+        formats: formats,
+        paths: Object.fromEntries(
+          Object.entries(uploadResults).map(([filename, result]) => [
+            filename.split('.')[0], // Remove extension for key
+            result.url
+          ])
+        ),
+        checksum: canonicalChecksumValue,
+        version: '1.0.0',
+        license_notice: manifest.license_notice
+      })
+      .select()
+      .single();
+
+    if (bundleError) {
+      console.error('Failed to save bundle:', bundleError);
+      throw new Error('Failed to save bundle record');
+    }
+
+    // Calculate total bytes
+    const totalBytes = Object.values(uploadResults).reduce((sum, result) => sum + result.bytes, 0);
+
+    // Track export finished
+    await trackEvent({
+      event: 'export.finished',
+      orgId,
+      userId,
+      payload: {
+        run_id: runId,
+        bundle_id: bundleId,
+        formats: formats,
+        org_id: orgId,
+        user_id: userId,
+        plan: plan,
+        trace_id: traceId,
+        duration_ms: Date.now() - startTime,
+        bytes_total: totalBytes,
+        checksum: canonicalChecksumValue
+      }
+    });
+
+    // Return response
+    const response: ExportResponse = {
+      bundleId,
+      paths: Object.fromEntries(
+        Object.entries(uploadResults).map(([filename, result]) => [
+          filename,
+          result.url
+        ])
+      ),
+      license_notice: manifest.license_notice,
+      checksum: canonicalChecksumValue,
+      formats
+    };
+
+    return NextResponse.json(response);
 
   } catch (error) {
-    console.error('Export API error:', error)
+    console.error('[Export API] Error:', error);
     
-    if (error instanceof Error && error.message.includes('Authentication required')) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      )
-    }
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid request parameters', details: error.errors },
-        { status: 400 }
-      )
+    if (error instanceof Error) {
+      if (error.message.includes('ENTITLEMENT_REQUIRED')) {
+        return NextResponse.json({ error: error.message }, { status: 403 });
+      }
+      if (error.message.includes('DOD_NOT_MET')) {
+        return NextResponse.json({ error: error.message }, { status: 422 });
+      }
     }
     
     return NextResponse.json(
-      { success: false, error: 'Failed to process export' },
+      { error: 'EXPORT_FAILED', message: 'Internal server error' },
       { status: 500 }
-    )
-  }
-}
-
-// Process export based on format
-async function processExport(
-  format: string, 
-  content: string, 
-  filename?: string
-): Promise<{ content: string; filename: string }> {
-  const baseFilename = filename || `export-${Date.now()}`
-  
-  switch (format) {
-    case 'txt':
-      return {
-        content,
-        filename: `${baseFilename}.txt`
-      }
-    
-    case 'md':
-      return {
-        content: `# Export\n\n${content}`,
-        filename: `${baseFilename}.md`
-      }
-    
-    case 'json':
-      return {
-        content: JSON.stringify({ content, exportedAt: new Date().toISOString() }, null, 2),
-        filename: `${baseFilename}.json`
-      }
-    
-    case 'pdf':
-      // In production, this would use a PDF library like puppeteer or jsPDF
-      return {
-        content: `PDF content would be generated here for: ${content}`,
-        filename: `${baseFilename}.pdf`
-      }
-    
-    case 'bundle':
-      // In production, this would create a ZIP file with multiple formats
-      return {
-        content: `Bundle export would be generated here for: ${content}`,
-        filename: `${baseFilename}.zip`
-      }
-    
-    default:
-      throw new Error(`Unsupported export format: ${format}`)
-  }
-}
-
-// Get content type for export format
-function getContentType(format: string): string {
-  switch (format) {
-    case 'txt':
-      return 'text/plain'
-    case 'md':
-      return 'text/markdown'
-    case 'json':
-      return 'application/json'
-    case 'pdf':
-      return 'application/pdf'
-    case 'bundle':
-      return 'application/zip'
-    default:
-      return 'text/plain'
+    );
   }
 }

@@ -1,627 +1,451 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
-import { 
-  CheckCircle, 
-  XCircle, 
-  AlertCircle, 
-  Zap, 
-  Play, 
-  Brain, 
-  Target,
-  BarChart3,
-  Lightbulb,
-  ArrowRight,
-  Lock,
-  RefreshCw
-} from 'lucide-react'
-import { EntitlementGate, EntitlementGateButton } from '@/components/entitlement-gate'
-import { useEntitlements } from '@/hooks/use-entitlements'
-import { useToast } from '@/hooks/use-toast'
-import { LoadingSpinner } from '@/components/loading-spinner'
-import { Skeleton, SkeletonCard, SkeletonText } from '@/components/ui/skeleton'
-import { 
-  EmptyState
-} from '@/components/ui/empty-state'
+import { useState, useRef } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import {
+  IndustrialCard,
+  IndustrialButton,
+  IndustrialBadge,
+} from "@/components/industrial-ui";
+import {
+  GPTLiveEngine,
+  type GPTLiveOptions,
+  type GPTStreamChunk,
+  type GPTLiveResult,
+} from "@/lib/gpt-live";
+import { PremiumGate } from "@/lib/premium-features";
+import type { GeneratedPrompt } from "@/types/promptforge";
+import {
+  Bot,
+  Square,
+  Activity,
+  TrendingUp,
+  Copy,
+  Download,
+  Settings,
+  Sparkles,
+  Clock,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
-interface SevenDParams {
-  domain?: string
-  scale?: string
-  urgency?: string
-  complexity?: string
-  resources?: string
-  application?: string
-  outputFormat?: string
+interface GPTLiveEditorProps {
+  generatedPrompt: GeneratedPrompt | null;
+  onEditComplete?: (result: GPTLiveResult) => void;
 }
 
-interface TestResult {
-  response: string
-  model: string
-  scores: {
-    clarity: number
-    specificity: number
-    completeness: number
-    relevance: number
-    overall: number
-  }
-  breakdown: {
-    strengths: string[]
-    weaknesses: string[]
-    recommendations: string[]
-  }
-  verdict: 'pass' | 'fail' | 'needs_improvement'
-  tightenedPrompt?: string
-  usage: {
-    promptTokens: number
-    completionTokens: number
-    totalTokens: number
-  }
-  latency: number
-  testType: string
-}
+export function GPTLiveEditor({
+  generatedPrompt,
+  onEditComplete,
+}: GPTLiveEditorProps) {
+  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [streamingContent, setStreamingContent] = useState<string>("");
+  const [improvements, setImprovements] = useState<string[]>([]);
+  const [metrics, setMetrics] = useState<any>(null);
+  const [result, setResult] = useState<GPTLiveResult | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [options, setOptions] = useState<GPTLiveOptions>({
+    focus: "comprehensive",
+    tone: "professional",
+    length: "detailed",
+    streaming: true,
+    model: "gpt-4o",
+    temperature: 0.7,
+    maxTokens: 4000,
+  });
 
-interface EditorResult {
-  editedPrompt: string
-  scores: {
-    clarity: number
-    specificity: number
-    completeness: number
-    overall: number
-  }
-  suggestions: string[]
-}
+  const { toast } = useToast();
+  const gptEngine = GPTLiveEngine.getInstance();
+  const premiumGate = PremiumGate.getInstance();
+  const sessionIdRef = useRef<string | null>(null);
 
-export function GptLiveEditor({ orgId }: { orgId: string }) {
-  const [activeTab, setActiveTab] = useState<'editor' | 'test'>('editor')
-  const [prompt, setPrompt] = useState('')
-  const [sevenD, setSevenD] = useState<SevenDParams>({})
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [editorResult, setEditorResult] = useState<EditorResult | null>(null)
-  const [testResult, setTestResult] = useState<TestResult | null>(null)
-  const [testType, setTestType] = useState<'mock' | 'real'>('mock')
-  const [autoTighten, setAutoTighten] = useState(false)
-  const [editorError, setEditorError] = useState<string | null>(null)
-  const [testError, setTestError] = useState<string | null>(null)
-  
-  const { hasEntitlement } = useEntitlements(orgId)
-  const { toast } = useToast()
-
-  const handleEditorSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!prompt.trim() || prompt.length < 64) {
+  const handleOptimize = async () => {
+    if (!generatedPrompt) {
       toast({
-        title: "Prompt too short",
-        description: "Please enter a prompt with at least 64 characters",
-        variant: "destructive"
-      })
-      return
+        title: "Error",
+        description: "No prompt to optimize!",
+      });
+      return;
     }
 
-    setIsProcessing(true)
-    setEditorError(null)
-    
-    try {
-      const response = await fetch('/api/gpt-editor', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          prompt: prompt.trim(),
-          sevenD,
-          orgId
-        })
-      })
-
-      if (!response.ok) {
-        if (response.status === 403) {
-          const errorData = await response.json()
-          if (errorData.error === 'ENTITLEMENT_REQUIRED') {
-            setEditorError('Pro plan required for AI prompt optimization')
-            toast({
-              title: "Pro plan required",
-              description: "AI prompt optimization requires Pro plan or higher",
-              variant: "destructive"
-            })
-            return
-          }
-        }
-        throw new Error(`Editor failed: ${response.status}`)
-      }
-
-      const data = await response.json()
-      setEditorResult(data)
-      
+    // Check premium access
+    const canUse = premiumGate.canUseGPTOptimization();
+    if (!canUse.allowed) {
       toast({
-        title: "Prompt optimized!",
-        description: `Score: ${data.scores.overall}/100`,
-      })
+        title: "Premium Feature",
+        description: canUse.reason,
+      });
+      return;
+    }
+
+    setIsOptimizing(true);
+    setStreamingContent("");
+    setImprovements([]);
+    setMetrics(null);
+    setResult(null);
+    setProgress(0);
+
+    try {
+      const optimizationResult = await gptEngine.optimizeWithStreaming(
+        generatedPrompt.prompt,
+        options,
+        handleStreamChunk,
+      );
+
+      setResult(optimizationResult);
+      onEditComplete?.(optimizationResult);
+      premiumGate.consumeGPTOptimization();
+
+      toast({
+        title: "Live optimization complete!",
+        description: `Confidence: ${optimizationResult.confidence}% | Model: ${optimizationResult.model}`,
+      });
     } catch (error) {
-      console.error('Editor error:', error)
-      setEditorError('Failed to optimize prompt. Please try again.')
       toast({
         title: "Optimization failed",
-        description: "Please try again later",
-        variant: "destructive"
-      })
+        description:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
     } finally {
-      setIsProcessing(false)
+      setIsOptimizing(false);
+      setProgress(100);
     }
-  }
+  };
 
-  const handleTestSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!prompt.trim()) {
-      toast({
-        title: "Prompt required",
-        description: "Please enter a prompt to test",
-        variant: "destructive"
-      })
-      return
-    }
-
-    setIsProcessing(true)
-    setTestError(null)
-    
-    try {
-      const response = await fetch('/api/gpt-test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          prompt: prompt.trim(),
-          testType,
-          sevenD,
-          orgId,
-          options: {
-            autoTighten
-          }
-        })
-      })
-
-      if (!response.ok) {
-        if (response.status === 403) {
-          const errorData = await response.json()
-          if (errorData.error === 'ENTITLEMENT_REQUIRED') {
-            setTestError('Pro plan required for real GPT testing')
-            toast({
-              title: "Pro plan required",
-              description: "Real GPT testing requires Pro plan or higher",
-              variant: "destructive"
-            })
-            return
-          }
+  const handleStreamChunk = (chunk: GPTStreamChunk) => {
+    switch (chunk.type) {
+      case "start":
+        setProgress(10);
+        setStreamingContent(chunk.content || "");
+        break;
+      case "content":
+        setProgress((prev) => Math.min(prev + 20, 80));
+        setStreamingContent(chunk.content || "");
+        break;
+      case "improvement":
+        if (chunk.improvement) {
+          setImprovements((prev) => [...prev, chunk.improvement!]);
         }
-        throw new Error(`Test failed: ${response.status}`)
-      }
+        setProgress((prev) => Math.min(prev + 15, 85));
+        break;
+      case "metrics":
+        setMetrics(chunk.metrics);
+        setProgress(95);
+        break;
+      case "complete":
+        setProgress(100);
+        setStreamingContent("Optimization complete!");
+        break;
+      case "error":
+        toast({
+          title: "Streaming error",
+          description: chunk.error,
+        });
+        break;
+    }
+  };
 
-      const data = await response.json()
-      setTestResult(data.result)
-      
+  const handleCancel = () => {
+    if (sessionIdRef.current) {
+      gptEngine.cancelOptimization(sessionIdRef.current);
+    }
+    setIsOptimizing(false);
+    setProgress(0);
+    setStreamingContent("");
+  };
+
+  const handleCopy = async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result.editedPrompt);
       toast({
-        title: "Test completed!",
-        description: `Score: ${data.result.scores.overall}/100 - ${data.result.verdict.toUpperCase()}`,
-      })
+        title: "Copied!",
+        description: "Optimized prompt copied to clipboard.",
+      });
     } catch (error) {
-      console.error('Test error:', error)
-      setTestError('Failed to run test. Please try again.')
       toast({
-        title: "Test failed",
-        description: "Please try again later",
-        variant: "destructive"
-      })
-    } finally {
-      setIsProcessing(false)
+        title: "Copy failed",
+        description: "Could not copy prompt.",
+      });
     }
-  }
+  };
 
-  const retryEditor = () => {
-    setEditorError(null)
-    handleEditorSubmit({ preventDefault: () => {} } as React.FormEvent)
-  }
-
-  const retryTest = () => {
-    setTestError(null)
-    handleTestSubmit({ preventDefault: () => {} } as React.FormEvent)
-  }
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600'
-    if (score >= 60) return 'text-yellow-600'
-    return 'text-red-600'
-  }
-
-  const getVerdictColor = (verdict: string) => {
-    switch (verdict) {
-      case 'pass': return 'bg-green-100 text-green-800 border-green-200'
-      case 'needs_improvement': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      case 'fail': return 'bg-red-100 text-red-800 border-red-200'
-      default: return 'bg-gray-100 text-gray-800 border-gray-200'
-    }
-  }
+  const handleDownload = () => {
+    if (!result) return;
+    const blob = new Blob([result.editedPrompt], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `prompt_gpt_live_${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast({
+      title: "Downloaded!",
+      description: "Optimized prompt saved to file.",
+    });
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">GPT Live Editor & Test</h2>
-        <p className="text-gray-600">
-          Optimize your prompts and test them with AI-powered analysis
-        </p>
+    <IndustrialCard variant="elevated" glow className="p-8">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-400 rounded-lg flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
+            GPT Live Engine
+          </h2>
+        </div>
+        {result && (
+          <IndustrialBadge variant="success" className="neon-glow-green">
+            <TrendingUp className="w-3 h-3 mr-1" />
+            {result.confidence}% Confidence
+          </IndustrialBadge>
+        )}
       </div>
 
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'editor' | 'test')}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="editor" className="flex items-center gap-2">
-            <Brain className="h-4 w-4" />
-            Prompt Editor
-          </TabsTrigger>
-          <TabsTrigger value="test" className="flex items-center gap-2">
-            <Target className="h-4 w-4" />
-            Prompt Test
-          </TabsTrigger>
-        </TabsList>
+      <IndustrialCard className="p-6 mb-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Settings className="w-5 h-5 text-cyan-400" />
+          <h3 className="text-lg font-semibold text-white">
+            Live Optimization Settings
+          </h3>
+        </div>
 
-        {/* Editor Tab */}
-        <TabsContent value="editor" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="h-5 w-5 text-blue-600" />
-                AI Prompt Optimizer
-                <Badge variant="secondary" className="ml-auto">Free</Badge>
-              </CardTitle>
-              <p className="text-sm text-gray-600">
-                Get AI-powered suggestions to improve your prompt quality and structure
-              </p>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleEditorSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="prompt">Your Prompt</Label>
-                  <Textarea
-                    id="prompt"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Enter your prompt here (minimum 64 characters)..."
-                    className="min-h-32"
-                    required
-                  />
-                  <div className="text-xs text-gray-500">
-                    {prompt.length}/64 characters minimum
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-cyan-300">Model</label>
+            <Select
+              value={options.model}
+              onValueChange={(value: any) =>
+                setOptions({ ...options, model: value })
+              }
+            >
+              <SelectTrigger className="industrial-input">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gpt-4o">GPT-4o (Latest)</SelectItem>
+                <SelectItem value="gpt-4-turbo">GPT-4 Turbo</SelectItem>
+                <SelectItem value="gpt-4">GPT-4</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-cyan-300">Focus</label>
+            <Select
+              value={options.focus}
+              onValueChange={(value: any) =>
+                setOptions({ ...options, focus: value })
+              }
+            >
+              <SelectTrigger className="industrial-input">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="clarity">Clarity</SelectItem>
+                <SelectItem value="structure">Structure</SelectItem>
+                <SelectItem value="specificity">Specificity</SelectItem>
+                <SelectItem value="comprehensive">Comprehensive</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-cyan-300">
+              Temperature
+            </label>
+            <div className="px-3">
+              <Slider
+                value={[options.temperature]}
+                onValueChange={([value]) =>
+                  setOptions({ ...options, temperature: value })
+                }
+                max={1}
+                min={0}
+                step={0.1}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <span>Precise</span>
+                <span>{options.temperature}</span>
+                <span>Creative</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-cyan-300">
+              Max Tokens
+            </label>
+            <Select
+              value={options.maxTokens.toString()}
+              onValueChange={(value) =>
+                setOptions({ ...options, maxTokens: Number.parseInt(value) })
+              }
+            >
+              <SelectTrigger className="industrial-input">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2000">2K Tokens</SelectItem>
+                <SelectItem value="4000">4K Tokens</SelectItem>
+                <SelectItem value="8000">8K Tokens</SelectItem>
+                <SelectItem value="16000">16K Tokens</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </IndustrialCard>
+
+      <div className="flex gap-3 mb-6">
+        <IndustrialButton
+          variant="primary"
+          onClick={handleOptimize}
+          disabled={!generatedPrompt || isOptimizing}
+          loading={isOptimizing}
+        >
+          {isOptimizing ? (
+            <>
+              <Activity className="w-4 h-4 mr-2 animate-pulse" />
+              Live Optimizing...
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 mr-2" />
+              Start Live Optimization
+            </>
+          )}
+        </IndustrialButton>
+
+        {isOptimizing && (
+          <IndustrialButton variant="danger" onClick={handleCancel}>
+            <Square className="w-4 h-4 mr-2" />
+            Cancel
+          </IndustrialButton>
+        )}
+
+        {result && (
+          <>
+            <IndustrialButton variant="secondary" onClick={handleCopy}>
+              <Copy className="w-4 h-4 mr-2" />
+              Copy
+            </IndustrialButton>
+            <IndustrialButton variant="secondary" onClick={handleDownload}>
+              <Download className="w-4 h-4 mr-2" />
+              Download
+            </IndustrialButton>
+          </>
+        )}
+      </div>
+
+      {isOptimizing && (
+        <IndustrialCard className="p-6 mb-6 border-l-4 border-purple-400">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center animate-pulse">
+              <Bot className="w-4 h-4 text-white" />
+            </div>
+            <h4 className="text-lg font-semibold text-white">
+              Live Processing Status
+            </h4>
+          </div>
+
+          <Progress value={progress} className="mb-4 h-2" />
+
+          <div className="space-y-3">
+            <div className="text-sm text-slate-300">{streamingContent}</div>
+
+            {improvements.length > 0 && (
+              <div className="space-y-2">
+                <h5 className="text-sm font-semibold text-green-400">
+                  Live Improvements:
+                </h5>
+                {improvements.map((improvement, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 text-sm animate-fade-in"
+                  >
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    <span className="text-slate-300">{improvement}</span>
                   </div>
-                </div>
+                ))}
+              </div>
+            )}
 
-                <Button
-                  type="submit"
-                  disabled={isProcessing || prompt.length < 64}
-                  className="w-full"
-                >
-                  {isProcessing ? (
-                    <>
-                      <LoadingSpinner size="sm" />
-                      Optimizing...
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="h-4 w-4 mr-2" />
-                      Optimize Prompt
-                    </>
-                  )}
-                </Button>
-              </form>
-
-              {/* Error State */}
-              {editorError && (
-                <EmptyState
-                  title="Optimization Failed"
-                  description={editorError}
-                  primaryAction={{
-                    label: "Retry",
-                    href: "#"
-                  }}
-                />
-              )}
-
-              {/* Results */}
-              {editorResult && !editorError && (
-                <div className="mt-6 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <div className={`text-2xl font-bold ${getScoreColor(editorResult.scores.overall)}`}>
-                        {editorResult.scores.overall}
-                      </div>
-                      <div className="text-sm text-gray-600">Overall Score</div>
+            {metrics && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                {Object.entries(metrics).map(([key, value]) => (
+                  <div key={key} className="text-center">
+                    <div className="text-lg font-bold text-cyan-400">
+                      {value as number}%
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span>Clarity</span>
-                        <span className={getScoreColor(editorResult.scores.clarity)}>
-                          {editorResult.scores.clarity}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span>Specificity</span>
-                        <span className={getScoreColor(editorResult.scores.specificity)}>
-                          {editorResult.scores.specificity}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span>Completeness</span>
-                        <span className={getScoreColor(editorResult.scores.completeness)}>
-                          {editorResult.scores.completeness}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Optimized Prompt</h4>
-                    <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                      <p className="text-sm whitespace-pre-wrap">{editorResult.editedPrompt}</p>
-                    </div>
-                  </div>
-
-                  {editorResult.suggestions.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Suggestions</h4>
-                      <ul className="space-y-2">
-                        {editorResult.suggestions.map((suggestion, index) => (
-                          <li key={index} className="flex items-start gap-2 text-sm">
-                            <Lightbulb className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
-                            <span>{suggestion}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Empty State */}
-              {!editorResult && !editorError && !isProcessing && (
-                <EmptyState
-                  title="No prompt to optimize"
-                  description="Enter a prompt above to get AI-powered optimization suggestions"
-                />
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Test Tab */}
-        <TabsContent value="test" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-green-600" />
-                Prompt Testing
-                <Badge variant="secondary" className="ml-auto">
-                  {testType === 'real' ? 'Pro' : 'Free'}
-                </Badge>
-              </CardTitle>
-              <p className="text-sm text-gray-600">
-                Test your prompts with AI analysis and get detailed feedback
-              </p>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleTestSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="test-prompt">Prompt to Test</Label>
-                  <Textarea
-                    id="test-prompt"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Enter the prompt you want to test..."
-                    className="min-h-32"
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Test Type</Label>
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        variant={testType === 'mock' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setTestType('mock')}
-                      >
-                        Mock Test
-                      </Button>
-                      <EntitlementGateButton
-                        flag="canUseGptTestReal"
-                        featureName="Real GPT Testing"
-                        planRequired="pro"
-                        variant={testType === 'real' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setTestType('real')}
-                      >
-                        Real Test
-                      </EntitlementGateButton>
+                    <div className="text-xs text-slate-400 capitalize">
+                      {key}
                     </div>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </IndustrialCard>
+      )}
 
-                  <div className="space-y-2">
-                    <Label>Options</Label>
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="auto-tighten"
-                        checked={autoTighten}
-                        onChange={(e) => setAutoTighten(e.target.checked)}
-                        className="rounded"
-                      />
-                      <Label htmlFor="auto-tighten" className="text-sm">
-                        Auto-tighten prompt
-                      </Label>
-                    </div>
-                  </div>
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-lg font-semibold text-white">
+              Original Prompt
+            </h4>
+            {generatedPrompt && (
+              <IndustrialBadge variant="default">
+                {generatedPrompt.prompt.length} chars
+              </IndustrialBadge>
+            )}
+          </div>
+          <Textarea
+            value={generatedPrompt?.prompt || ""}
+            placeholder="Original prompt will appear here..."
+            className="min-h-[500px] font-mono text-sm industrial-input"
+            readOnly
+          />
+        </div>
 
-                <Button
-                  type="submit"
-                  disabled={isProcessing || !prompt.trim()}
-                  className="w-full"
-                >
-                  {isProcessing ? (
-                    <>
-                      <LoadingSpinner size="sm" />
-                      Testing...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-4 w-4 mr-2" />
-                      Run Test
-                    </>
-                  )}
-                </Button>
-              </form>
-
-              {/* Error State */}
-              {testError && (
-                <EmptyState
-                  title="Test Failed"
-                  description={testError}
-                  primaryAction={{
-                    label: "Retry",
-                    href: "#"
-                  }}
-                />
-              )}
-
-              {/* Results */}
-              {testResult && !testError && (
-                <div className="mt-6 space-y-6">
-                  {/* Score Summary */}
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    <div className="text-center">
-                      <div className={`text-2xl font-bold ${getScoreColor(testResult.scores.overall)}`}>
-                        {testResult.scores.overall}
-                      </div>
-                      <div className="text-sm text-gray-600">Overall</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={`text-xl font-semibold ${getScoreColor(testResult.scores.clarity)}`}>
-                        {testResult.scores.clarity}
-                      </div>
-                      <div className="text-xs text-gray-600">Clarity</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={`text-xl font-semibold ${getScoreColor(testResult.scores.specificity)}`}>
-                        {testResult.scores.specificity}
-                      </div>
-                      <div className="text-xs text-gray-600">Specificity</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={`text-xl font-semibold ${getScoreColor(testResult.scores.completeness)}`}>
-                        {testResult.scores.completeness}
-                      </div>
-                      <div className="text-xs text-gray-600">Completeness</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={`text-xl font-semibold ${getScoreColor(testResult.scores.relevance)}`}>
-                        {testResult.scores.relevance}
-                      </div>
-                      <div className="text-xs text-gray-600">Relevance</div>
-                    </div>
-                  </div>
-
-                  {/* Verdict */}
-                  <div className="text-center">
-                    <Badge className={`px-4 py-2 text-lg ${getVerdictColor(testResult.verdict)}`}>
-                      {testResult.verdict.toUpperCase()}
-                    </Badge>
-                  </div>
-
-                  {/* Detailed Breakdown */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Strengths</h4>
-                      <ul className="space-y-2">
-                        {testResult.breakdown.strengths.map((strength, index) => (
-                          <li key={index} className="flex items-start gap-2 text-sm">
-                            <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                            <span>{strength}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Areas for Improvement</h4>
-                      <ul className="space-y-2">
-                        {testResult.breakdown.weaknesses.map((weakness, index) => (
-                          <li key={index} className="flex items-start gap-2 text-sm">
-                            <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                            <span>{weakness}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Recommendations */}
-                  {testResult.breakdown.recommendations.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Recommendations</h4>
-                      <ul className="space-y-2">
-                        {testResult.breakdown.recommendations.map((rec, index) => (
-                          <li key={index} className="flex items-start gap-2 text-sm">
-                            <Lightbulb className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
-                            <span>{rec}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Usage Stats */}
-                  <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                    <h4 className="font-medium mb-3">Test Details</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Model:</span>
-                        <div className="font-medium">{testResult.model}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Latency:</span>
-                        <div className="font-medium">{testResult.latency}ms</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Tokens:</span>
-                        <div className="font-medium">{testResult.usage.totalTokens}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Type:</span>
-                        <div className="font-medium capitalize">{testResult.testType}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Empty State */}
-              {!testResult && !testError && !isProcessing && (
-                <EmptyState
-                  title="No test results yet"
-                  description="Enter a prompt and run a test to see detailed analysis"
-                />
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  )
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-lg font-semibold text-white">
+              GPT Live Optimized
+            </h4>
+            {result && (
+              <div className="flex gap-2">
+                <IndustrialBadge variant="success">
+                  {result.editedPrompt.length} chars
+                </IndustrialBadge>
+                <IndustrialBadge variant="info">
+                  <Clock className="w-3 h-3 mr-1" />
+                  {result.streamingTime}ms
+                </IndustrialBadge>
+              </div>
+            )}
+          </div>
+          <Textarea
+            value={result?.editedPrompt || ""}
+            placeholder="Live optimized prompt will stream here..."
+            className="min-h-[500px] font-mono text-sm industrial-input border-purple-400/50"
+            readOnly
+          />
+        </div>
+      </div>
+    </IndustrialCard>
+  );
 }

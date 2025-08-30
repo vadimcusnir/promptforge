@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { NavBar } from '@/components/ui/navbar'
+import { Header } from '@/components/header'
 import { cn } from '@/lib/utils'
 
 export default function ApiDocsPage() {
@@ -111,7 +111,7 @@ export default function ApiDocsPage() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <NavBar plan={currentPlan} />
+      <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}

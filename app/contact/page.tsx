@@ -1,279 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ForgeGlyphInteractive } from "@/components/forge/ForgeGlyphInteractive"
-import { Send, Mail, MessageSquare, HelpCircle } from "lucide-react"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ContactForm } from "@/components/contact/ContactForm";
+import { RitualHero } from "@/components/contact/RitualHero";
+import { DigitalRune } from "@/components/contact/DigitalRune";
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    category: "",
-    message: ""
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-  }
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
-
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-black text-fg-primary flex items-center justify-center">
-        <Card className="w-full max-w-md bg-card border border-border">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
-              <Send className="w-8 h-8 text-green-400" />
-            </div>
-            <h2 className="text-2xl font-bold font-serif text-fg-primary mb-4">
-              Message Sent
-            </h2>
-            <p className="text-fg-secondary mb-6">
-              Thank you for contacting us. We&apos;ll get back to you within 24 hours.
-            </p>
-            <Button
-              onClick={() => {
-                setIsSubmitted(false)
-                setFormData({ name: "", email: "", subject: "", category: "", message: "" })
-              }}
-              className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
-            >
-              Send Another Message
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-black text-fg-primary">
-      {/* Header */}
-      <div className="border-b border-border bg-bg-primary">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center mb-6">
-            <ForgeGlyphInteractive 
-              status="ready" 
-              size="md"
-            />
-          </div>
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4">
-              Contact Us
-            </h1>
-            <p className="text-xl text-fg-secondary max-w-3xl mx-auto">
-              Ready to forge your prompts? Get in touch with our team.
-            </p>
-          </div>
-        </div>
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 border border-[var(--pf-gold-500)]/20 rotate-45 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 border border-[var(--pf-gold-500)]/30 -rotate-12 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-32 left-1/4 w-16 h-16 border border-[var(--pf-gold-500)]/40 rotate-90 animate-pulse delay-500"></div>
+        <div className="absolute bottom-20 right-1/3 w-20 h-20 border border-[var(--pf-gold-500)]/25 -rotate-45 animate-pulse delay-1500"></div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Contact Form */}
-          <Card className="bg-card border border-border">
-            <CardHeader>
-              <CardTitle className="text-2xl font-serif text-fg-primary">Send us a Message</CardTitle>
-              <CardDescription className="text-fg-secondary">
-                                     Fill out the form below and we&apos;ll get back to you as soon as possible.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-fg-primary mb-2">
-                      Name *
-                    </label>
-                    <Input
-                      id="name"
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
-                      className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-fg-primary mb-2">
-                      Email *
-                    </label>
-                    <Input
-                      id="email"
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                </div>
+      <div className="relative z-10 container mx-auto px-4 py-12">
+        <RitualHero />
+        
+        <div className="mt-16 max-w-4xl mx-auto">
+          <ContactForm />
+        </div>
 
-                <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-fg-primary mb-2">
-                    Category
-                  </label>
-                  <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-fg-primary">
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-zinc-800 border-zinc-700">
-                      <SelectItem value="general" className="text-fg-primary hover:bg-zinc-700">General Inquiry</SelectItem>
-                      <SelectItem value="support" className="text-fg-primary hover:bg-zinc-700">Technical Support</SelectItem>
-                      <SelectItem value="billing" className="text-fg-primary hover:bg-zinc-700">Billing Question</SelectItem>
-                      <SelectItem value="enterprise" className="text-fg-primary hover:bg-zinc-700">Enterprise Sales</SelectItem>
-                      <SelectItem value="partnership" className="text-fg-primary hover:bg-zinc-700">Partnership</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-fg-primary mb-2">
-                    Subject *
-                  </label>
-                  <Input
-                    id="subject"
-                    type="text"
-                    required
-                    value={formData.subject}
-                    onChange={(e) => handleInputChange("subject", e.target.value)}
-                    className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
-                    placeholder="Brief subject line"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-fg-primary mb-2">
-                    Message *
-                  </label>
-                  <Textarea
-                    id="message"
-                    required
-                    rows={6}
-                    value={formData.message}
-                    onChange={(e) => handleInputChange("message", e.target.value)}
-                    className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
-                    placeholder="Tell us how we can help you..."
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-black border-t-transparent" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          {/* Contact Information */}
-          <div className="space-y-6">
-            <Card className="bg-card border border-border">
-              <CardHeader>
-                <CardTitle className="text-xl font-serif text-fg-primary flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-yellow-500" />
-                  Email Support
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-sm text-fg-secondary">General Inquiries</p>
-                    <p className="text-fg-primary font-mono">hello@promptforge.ai</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-fg-secondary">Technical Support</p>
-                    <p className="text-fg-primary font-mono">support@promptforge.ai</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-fg-secondary">Enterprise Sales</p>
-                    <p className="text-fg-primary font-mono">enterprise@promptforge.ai</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border border-border">
-              <CardHeader>
-                <CardTitle className="text-xl font-serif text-fg-primary flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5 text-yellow-500" />
-                  Response Time
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-sm text-fg-secondary">General Inquiries</p>
-                    <p className="text-fg-primary">Within 24 hours</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-fg-secondary">Technical Support</p>
-                    <p className="text-fg-primary">Within 12 hours</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-fg-secondary">Enterprise Sales</p>
-                    <p className="text-fg-primary">Within 4 hours</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border border-border">
-              <CardHeader>
-                <CardTitle className="text-xl font-serif text-fg-primary flex items-center gap-2">
-                  <HelpCircle className="w-5 h-5 text-yellow-500" />
-                  FAQ
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-fg-secondary mb-4">
-                  Check our documentation and guides for quick answers to common questions.
-                </p>
-                <Button
-                  variant="outline"
-                  className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
-                  onClick={() => window.location.href = '/docs'}
-                >
-                  View Documentation
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="mt-20 text-center">
+          <DigitalRune />
         </div>
       </div>
     </div>
-  )
+  );
 }

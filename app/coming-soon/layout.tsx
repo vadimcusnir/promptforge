@@ -1,47 +1,23 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Coming Soon - PromptForge Industrial Prompt Engineering",
-  description: "PromptForge is launching soon. Join our waitlist to be the first to experience industrial prompt engineering with 50 modules and 7D parameters.",
-  keywords: ["prompt engineering", "coming soon", "waitlist", "industrial AI", "launch"],
-  authors: [{ name: "PromptForge Team" }],
-  creator: "PromptForge",
-  publisher: "PromptForge",
-  alternates: {
-    canonical: "/coming-soon",
-  },
+  title: "Coming Soon - PromptForge v3 | 50 Module 7-D Parameter Engine",
+  description:
+    "PromptForge v3 se lansează în curând. 50 de module semantice, 7-D Parameter Engine și export bundle deterministic. Înregistrează-te pentru early access.",
+  robots: "noindex, nofollow", // Conform documentației - noindex pentru coming-soon
   openGraph: {
-    title: "Coming Soon - PromptForge Industrial Prompt Engineering",
-    description: "PromptForge is launching soon. Join our waitlist to be the first to experience industrial prompt engineering with 50 modules and 7D parameters.",
+    title: "Coming Soon - PromptForge v3",
+    description:
+      "Prima platformă Cognitive-OS pentru prompts cu 50 module semantice și 7-D Parameter Engine",
     type: "website",
-    url: "/coming-soon",
-    siteName: "PromptForge",
     images: [
       {
-        url: "/og/coming-soon.webp",
+        url: "/og-image-coming-soon.png",
         width: 1200,
         height: 630,
-        alt: "PromptForge Coming Soon",
+        alt: "PromptForge v3 - Coming Soon",
       },
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Coming Soon - PromptForge Industrial Prompt Engineering",
-    description: "PromptForge is launching soon. Join our waitlist to be the first to experience industrial prompt engineering with 50 modules and 7D parameters.",
-    images: ["/og/coming-soon.webp"],
-    creator: "@promptforge",
-  },
-  robots: {
-    index: false, // noindex for coming soon page
-    follow: true,
-    googleBot: {
-      index: false,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
   },
 };
 

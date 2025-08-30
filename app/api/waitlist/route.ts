@@ -1,76 +1,63 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
+// app/api/waitlist/route.ts
+import { NextResponse, NextRequest } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
+// Create supabase client only if environment variables are available
+function getSupabaseClient() {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE;
 
-// Waitlist schema - kept for potential future validation
-// const waitlistSchema = z.object({
-//   email: z.string().email('Invalid email format'),
-//   name: z.string().min(1, 'Name is required'),
-//   company: z.string().optional(),
-//   role: z.string().optional(),
-//   source: z.string().optional()
-// })
-
-// Lazy Supabase client creation
-  async function getSupabase() {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      // Return mock client for build-time operations
-      return {
-        from: () => ({
-          insert: () => ({
-            select: () => Promise.resolve({ data: null, error: null })
-          })
-        })
-      } as unknown
-    }
-    
-    const { createClient } = await import('@supabase/supabase-js')
-    return createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    )
+  if (!supabaseUrl || !supabaseServiceRole) {
+    return null;
   }
 
-export async function POST(request: NextRequest) {
+  return createClient(supabaseUrl, supabaseServiceRole);
+}
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export async function POST(req: NextRequest) {
   try {
-    const supabase = await getSupabase() as any
+    const supabase = getSupabaseClient();
 
-    const { name, email } = await request.json()
-
-    if (!name || !email) {
-      return NextResponse.json({ error: "Name and email are required" }, { status: 400 })
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Waitlist service temporarily unavailable." },
+        { status: 503 },
+      );
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: "Please enter a valid email address" }, { status: 400 })
+    const { email, name, org_id } = await req.json();
+
+    if (!email || !isValidEmail(email)) {
+      return NextResponse.json({ error: "Invalid email." }, { status: 400 });
     }
 
-    const { data, error } = await supabase
+    // Upsert-like behavior with unique(email)
+    const { error } = await supabase
       .from("waitlist_signups")
       .insert([
         {
-          name: name.trim(),
-          email: email.toLowerCase().trim(),
-          created_at: new Date().toISOString(),
+          email: String(email).toLowerCase().trim(),
+          name: name?.trim() || null,
         },
-      ])
-      .select()
+      ]);
 
-    if (error) {
-      if (error.code === "23505") {
-        return NextResponse.json({ error: "This email is already on our waitlist" }, { status: 409 })
-      }
-
-      console.error("Supabase error:", error)
-      return NextResponse.json({ error: "Failed to join waitlist. Please try again." }, { status: 500 })
+    // If duplicate, treat as success (idempotent UX)
+    if (error && !String(error.message || "").includes("duplicate key")) {
+      return NextResponse.json(
+        { error: "Database error.", detail: error.message },
+        { status: 500 },
+      );
     }
 
-    return NextResponse.json({ message: "Successfully joined waitlist", data }, { status: 201 })
-  } catch (error) {
-    console.error("API error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ ok: true });
+  } catch (e: any) {
+    return NextResponse.json(
+      { error: "Bad request.", detail: e?.message },
+      { status: 400 },
+    );
   }
 }

@@ -1,58 +1,42 @@
-import { NextRequest, NextResponse } from 'next/server'
+// app/api/toggle-coming-soon/route.ts
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-  try {
-    // Check for admin authorization (you can implement your own auth logic)
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    const token = authHeader.substring(7)
-    // TODO: Implement proper admin token validation
-    // For now, using a basic check - replace with your auth system
-    if (token !== process.env.ADMIN_API_TOKEN) {
-      return NextResponse.json(
-        { error: 'Forbidden' },
-        { status: 403 }
-      )
-    }
-
-    const body = await request.json()
-    const { enabled } = body
-
-    if (typeof enabled !== 'boolean') {
-      return NextResponse.json(
-        { error: 'Invalid request body. Expected { enabled: boolean }' },
-        { status: 400 }
-      )
-    }
-
-    // TODO: Store the state in your database
-    // For now, this is just a response - implement persistence as needed
-    console.log(`Coming soon mode ${enabled ? 'enabled' : 'disabled'}`)
-
-    return NextResponse.json({
-      success: true,
-      message: `Coming soon mode ${enabled ? 'enabled' : 'disabled'}`,
-      enabled
-    })
-
-  } catch (error) {
-    console.error('Error toggling coming soon mode:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
+function isAdmin(req: NextRequest) {
+  return req.cookies.get("pf_role")?.value === "admin";
 }
 
-export async function GET() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
+export async function POST(req: NextRequest) {
+  // Optional: require admin
+  if (!isAdmin(req)) {
+    return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
+  }
+
+  const body = await req.json().catch(() => ({}));
+  const on = body?.on ?? true; // if nothing sent => turn on
+
+  const res = NextResponse.json({ ok: true, coming_soon: on ? "on" : "off" });
+  res.cookies.set("coming_soon", on ? "on" : "off", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+  });
+  return res;
+}
+
+// GET endpoint to check current status
+export async function GET(req: NextRequest) {
+  if (!isAdmin(req)) {
+    return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
+  }
+
+  const comingSoonCookie = req.cookies.get("coming_soon")?.value === "on";
+  const comingSoonEnv = process.env.COMING_SOON === "true";
+
+  return NextResponse.json({
+    coming_soon_env: comingSoonEnv,
+    coming_soon_cookie: comingSoonCookie,
+    active: comingSoonEnv || comingSoonCookie,
+  });
 }

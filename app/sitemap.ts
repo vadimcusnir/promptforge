@@ -1,307 +1,70 @@
-import { MetadataRoute } from 'next'
-import { getAllPublicPages } from '@/lib/site-structure'
+import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://chatgpt-prompting.com'
-  const now = new Date()
+  const baseUrl = "https://chatgpt-prompting.com";
 
-  // Get all public pages from site structure
-  const publicPages = getAllPublicPages()
-  
-  // Generate sitemap entries from site structure
-  const siteStructurePages = publicPages.map(page => ({
-    url: `${baseUrl}${page.path}`,
-    lastModified: now,
-    changeFrequency: getChangeFrequency(page.category),
-    priority: getPriority(page.path, page.category),
-  }))
-  
-  // Core pages with high priority
-  const corePages = [
+  return [
     {
       url: baseUrl,
-      lastModified: now,
-      changeFrequency: 'daily' as const,
+      lastModified: new Date(),
+      changeFrequency: "daily",
       priority: 1,
     },
     {
       url: `${baseUrl}/generator`,
-      lastModified: now,
-      changeFrequency: 'weekly' as const,
+      lastModified: new Date(),
+      changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/modules`,
-      lastModified: now,
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/pricing`,
-      lastModified: now,
-      changeFrequency: 'monthly' as const,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
       priority: 0.8,
     },
-  ]
-
-  // Documentation pages
-  const documentationPages: Array<{
-    url: string
-    lastModified: Date
-    changeFrequency: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
-    priority: number
-  }> = [
     {
-      url: `${baseUrl}/docs`,
-      lastModified: now,
-      changeFrequency: 'monthly' as const,
+      url: `${baseUrl}/dashboard`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
       priority: 0.7,
     },
+    // Coming-soon page - temporar, până la lansare
+    // Conform documentației: "/coming-soon după lansare → 410 (Gone) + elimină din sitemap."
     {
-      url: `${baseUrl}/guides`,
-      lastModified: now,
-      changeFrequency: 'monthly' as const,
+      url: `${baseUrl}/coming-soon`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
       priority: 0.7,
     },
-  ]
-
-    // Individual guide pages (static) - temporarily disabled
-  const guidePages: any[] = []
-  // [
-  //   'first-prompt',
-  //   'platform-overview',
-  //   'account-setup',
-  //   'module-selection',
-  //   'module-combinations',
-  //   'module-optimization',
-  //   '7d-parameters',
-  //   'domain-selection',
-  //   'scale-urgency-config',
-  //   'test-simulate',
-  //   'quality-scoring',
-  //   'a-b-testing',
-  //   'export-bundles',
-  //   'format-selection',
-  //   'batch-export',
-  //   'api-integration',
-  //   'api-authentication',
-  //   'webhook-integration'
-  // ].map(slug => ({
-  //   url: `${baseUrl}/guides/${slug}`,
-  //   lastModified: now,
-  //   changeFrequency: 'monthly' as const,
-  //   priority: 0.6,
-  // }))
-
-  // Individual module pages (static) - using new slugs
-  const modulePages = [
-    'sop-forge',
-    'trust-reversal-protocol',
-    'crisis-communication-playbook',
-    'social-content-grid',
-    'landing-page-alchemist',
-    'influence-partnership-frame',
-    'content-analytics-dashboard',
-    'audience-segment-personalizer',
-    'momentum-campaign-builder',
-    'data-schema-optimizer',
-    'microservices-grid',
-    'security-fortress-frame',
-    'performance-engine',
-    'orchestration-matrix',
-    'cloud-infra-map',
-    'sales-flow-architect',
-    'enablement-frame',
-    'customer-success-playbook',
-    'intelligence-engine',
-    'negotiation-dynamics',
-    'quality-system-map',
-    'supply-flow-optimizer',
-    'change-force-field',
-    'executive-prompt-dossier'
-  ].map(slug => ({
-    url: `${baseUrl}/modules/${slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-  }))
-
-  // Blog pages (static)
-  const blogPages = [
-    'complete-guide-prompt-engineering',
-    '7d-framework-business-communication-ai'
-  ].map(slug => ({
-    url: `${baseUrl}/blog/${slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly' as const,
-    priority: 0.5,
-  }))
-
-            // Secondary pages
-          const secondaryPages = [
-            {
-              url: `${baseUrl}/about`,
-              lastModified: now,
-              changeFrequency: 'monthly' as const,
-              priority: 0.5,
-            },
-            {
-              url: `${baseUrl}/contact`,
-              lastModified: now,
-              changeFrequency: 'monthly' as const,
-              priority: 0.5,
-            },
-            {
-              url: `${baseUrl}/blog`,
-              lastModified: now,
-              changeFrequency: 'weekly' as const,
-              priority: 0.6,
-            },
-            // Temporarily disabled due to build issues
-            // {
-            //   url: `${baseUrl}/launch`,
-            //   lastModified: now,
-            //   changeFrequency: 'monthly' as const,
-            //   priority: 0.4,
-            // },
-          ]
-
-  // Legal pages
-  const legalPages = [
     {
       url: `${baseUrl}/legal`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     {
-      url: `${baseUrl}/legal/privacy`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     {
-      url: `${baseUrl}/legal/terms`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
-    {
-      url: `${baseUrl}/legal/security`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/legal/gdpr`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/legal/dpa`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-  ]
-
-  // Auth and utility pages (lower priority)
-  const utilityPages = [
-    {
-      url: `${baseUrl}/login`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.2,
-    },
-    {
-      url: `${baseUrl}/signup`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.2,
-    },
-    {
-      url: `${baseUrl}/thankyou`,
-      lastModified: now,
-      changeFrequency: 'yearly' as const,
-      priority: 0.1,
-    },
-  ]
-
-  // Coming soon page (noindex but included for completeness)
-  const comingSoonPage = {
-    url: `${baseUrl}/coming-soon`,
-    lastModified: now,
-    changeFrequency: 'weekly' as const,
-    priority: 0.1,
-  }
-
-  return [
-    ...corePages,
-    ...siteStructurePages,
-    ...documentationPages,
-    ...modulePages,
-    ...blogPages,
-    ...guidePages,
-    ...secondaryPages,
-    ...legalPages,
-    ...utilityPages,
-    comingSoonPage,
-  ]
-}
-
-// Helper function to determine change frequency based on category
-function getChangeFrequency(category?: string): 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' {
-  switch (category) {
-    case 'main':
-      return 'weekly'
-    case 'learning':
-      return 'weekly'
-    case 'business':
-      return 'monthly'
-    case 'legal':
-      return 'yearly'
-    case 'auth':
-      return 'monthly'
-    case 'special':
-      return 'monthly'
-    default:
-      return 'monthly'
-  }
-}
-
-// Helper function to determine priority based on path and category
-function getPriority(path: string, category?: string): number {
-  // Homepage gets highest priority
-  if (path === '/') {
-    return 1.0
-  }
-
-  // Main application pages
-  if (path === '/generator' || path === '/modules') {
-    return 0.9
-  }
-
-  // Important business pages
-  if (path === '/pricing' || path === '/about') {
-    return 0.8
-  }
-
-  // Learning and documentation
-  if (category === 'learning') {
-    return 0.7
-  }
-
-  // Business pages
-  if (category === 'business') {
-    return 0.6
-  }
-
-  // Legal pages
-  if (category === 'legal') {
-    return 0.3
-  }
-
-  // Default priority
-  return 0.5
+  ];
 }

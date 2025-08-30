@@ -1,270 +1,411 @@
-'use client'
+"use client";
+import React, { useState } from "react";
+import { Check, Star, Zap, Shield, Users, Database, BarChart3, Download, Globe, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Header } from "@/components/Header";
+import { SkipLink } from "@/components/SkipLink";
+import { toast } from "@/hooks/use-toast";
 
-import { useState } from 'react'
-import { NavBar } from '@/components/ui/navbar'
-import { BadgePlan } from '@/components/ui/badge-plan'
-import { cn } from '@/lib/utils'
-
-interface PricingFeature {
-  name: string
-  free: boolean | string
-  creator: boolean | string
-  pro: boolean | string
-  enterprise: boolean | string
+interface PlanFeature {
+  name: string;
+  description: string;
+  free: boolean | string;
+  creator: boolean | string;
+  pro: boolean | string;
+  enterprise: boolean | string;
 }
 
-const pricingFeatures: PricingFeature[] = [
-  {
-    name: 'Module Access',
-    free: '5 modules',
-    creator: '15 modules',
-    pro: '50 modules',
-    enterprise: 'Unlimited'
-  },
-  {
-    name: 'Export Formats',
-    free: 'Text only',
-    creator: 'Text + Markdown',
-    pro: 'Text + Markdown + PDF + JSON',
-    enterprise: 'All formats + Bundle ZIP'
-  },
-  {
-    name: 'Real Test Execution',
-    free: false,
-    creator: false,
-    pro: true,
-    enterprise: true
-  },
-  {
-    name: 'API Access',
-    free: false,
-    creator: false,
-    pro: false,
-    enterprise: true
-  },
-  {
-    name: 'Custom Integrations',
-    free: false,
-    creator: false,
-    pro: false,
-    enterprise: true
-  },
-  {
-    name: 'Priority Support',
-    free: false,
-    creator: false,
-    pro: true,
-    enterprise: true
-  },
-  {
-    name: 'Advanced Analytics',
-    free: false,
-    creator: false,
-    pro: true,
-    enterprise: true
-  }
-]
+interface PlanTier {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  monthlyPrice: number;
+  annualPrice: number;
+  popular?: boolean;
+  features: string[];
+}
 
-const plans = [
+const PLAN_FEATURES: PlanFeature[] = [
   {
-    id: 'free',
-    name: 'Free',
-    price: { monthly: 0, annual: 0 },
-    description: 'Get started with basic prompt engineering',
-    features: ['5 modules', 'Text export', 'Community support'],
-    cta: 'Get Started',
-    popular: false
+    name: "Prompt Generation",
+    description: "Generate prompts using our 7-D parameter engine",
+    free: true,
+    creator: true,
+    pro: true,
+    enterprise: true,
   },
   {
-    id: 'creator',
-    name: 'Creator',
-    price: { monthly: 29, annual: 290 },
-    description: 'Perfect for content creators and writers',
-    features: ['15 modules', 'Markdown export', 'Email support'],
-    cta: 'Start Creator',
-    popular: false
+    name: "Module Access",
+    description: "Access to prompt modules (M01-M50)",
+    free: true,
+    creator: true,
+    pro: true,
+    enterprise: true,
   },
   {
-    id: 'pro',
-    name: 'Pro',
-    price: { monthly: 99, annual: 990 },
-    description: 'Full-featured for professionals and teams',
-    features: ['50 modules', 'All exports', 'Real tests', 'Priority support'],
-    cta: 'Go Pro',
-    popular: true
+    name: "Basic Export (.txt)",
+    description: "Export prompts as plain text files",
+    free: true,
+    creator: true,
+    pro: true,
+    enterprise: true,
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: { monthly: 299, annual: 2990 },
-    description: 'Custom solutions for large organizations',
-    features: ['Unlimited modules', 'API access', 'Custom integrations', 'Dedicated support'],
-    cta: 'Contact Sales',
-    popular: false
-  }
-]
+    name: "Markdown Export (.md)",
+    description: "Export prompts as formatted markdown",
+    free: false,
+    creator: true,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "JSON Export (.json)",
+    description: "Export prompts with metadata and configuration",
+    free: false,
+    creator: true,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "PDF Export (.pdf)",
+    description: "Export prompts as professional PDF documents",
+    free: false,
+    creator: false,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "Bundle Export (.zip)",
+    description: "Export complete prompt packages with manifests",
+    free: false,
+    creator: false,
+    pro: false,
+    enterprise: true,
+  },
+  {
+    name: "GPT Optimization",
+    description: "AI-powered prompt testing and optimization",
+    free: false,
+    creator: true,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "Cloud History",
+    description: "Store and manage prompt history in the cloud",
+    free: false,
+    creator: true,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "Advanced Analytics",
+    description: "Detailed performance metrics and insights",
+    free: false,
+    creator: false,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "Custom Modules",
+    description: "Create and manage custom prompt modules",
+    free: false,
+    creator: false,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "Team Collaboration",
+    description: "Share prompts and collaborate with team members",
+    free: false,
+    creator: false,
+    pro: true,
+    enterprise: true,
+  },
+  {
+    name: "Priority Support",
+    description: "24/7 priority customer support",
+    free: false,
+    creator: false,
+    pro: false,
+    enterprise: true,
+  },
+  {
+    name: "Enterprise API",
+    description: "Access to high-performance API endpoints",
+    free: false,
+    creator: false,
+    pro: false,
+    enterprise: true,
+  },
+  {
+    name: "Rate Limits",
+    description: "Monthly generation and export limits",
+    free: "10 prompts, 5 exports",
+    creator: "100 prompts, 50 exports",
+    pro: "1000 prompts, 500 exports",
+    enterprise: "Unlimited",
+  },
+];
+
+const PLAN_TIERS: PlanTier[] = [
+  {
+    id: "free",
+    name: "Free",
+    description: "Perfect for getting started with prompt engineering",
+    icon: <Star className="h-6 w-6" />,
+    color: "text-gray-600",
+    monthlyPrice: 0,
+    annualPrice: 0,
+    features: ["10 prompts/month", "Basic exports", "Community support"],
+  },
+  {
+    id: "creator",
+    name: "Creator",
+    description: "Ideal for content creators and freelancers",
+    icon: <Zap className="h-6 w-6" />,
+    color: "text-blue-600",
+    monthlyPrice: 19,
+    annualPrice: 190,
+    features: ["100 prompts/month", "Markdown & JSON exports", "GPT optimization", "Cloud history"],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    description: "Built for professional teams and agencies",
+    icon: <Shield className="h-6 w-6" />,
+    color: "text-purple-600",
+    monthlyPrice: 49,
+    annualPrice: 490,
+    popular: true,
+    features: ["1000 prompts/month", "PDF exports", "Advanced analytics", "Custom modules", "Team collaboration"],
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    description: "For large organizations with advanced needs",
+    icon: <Users className="h-6 w-6" />,
+    color: "text-green-600",
+    monthlyPrice: 199,
+    annualPrice: 1990,
+    features: ["Unlimited prompts", "Bundle exports", "Enterprise API", "Priority support", "Dedicated account manager"],
+  },
+];
 
 export default function PricingPage() {
-  const [isAnnual, setIsAnnual] = useState(false)
-  const [currentPlan] = useState<'free' | 'creator' | 'pro' | 'enterprise'>('free')
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
+  const [loading, setLoading] = useState<string | null>(null);
 
-  const formatPrice = (price: number) => {
-    if (price === 0) return 'Free'
-    return `$${price}`
-  }
-
-  const getFeatureValue = (feature: PricingFeature, planId: string) => {
-    const value = feature[planId as keyof PricingFeature]
-    if (typeof value === 'boolean') {
-      return value ? '✓' : '✗'
+  const handleSubscribe = async (planId: string) => {
+    if (planId === "free") {
+      toast({
+        title: "Free Plan",
+        description: "You&apos;re already on the free plan!",
+      });
+      return;
     }
-    return value
-  }
 
-  const getFeatureColor = (feature: PricingFeature, planId: string) => {
-    const value = feature[planId as keyof PricingFeature]
-    if (typeof value === 'boolean') {
-      return value ? 'text-brand' : 'text-textMuted'
+    setLoading(planId);
+    
+    try {
+      const response = await fetch("/api/billing/create-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          planId,
+          billingCycle,
+          successUrl: `${window.location.origin}/dashboard?upgrade=success`,
+          cancelUrl: `${window.location.origin}/pricing`,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create checkout session. Please try again.",
+      });
+    } finally {
+      setLoading(null);
     }
-    return 'text-text'
-  }
+  };
+
+  const getPrice = (plan: PlanTier) => {
+    const price = billingCycle === "annual" ? plan.annualPrice : plan.monthlyPrice;
+    if (price === 0) return "Free";
+    
+    const savings = billingCycle === "annual" ? Math.round((plan.monthlyPrice * 12 - plan.annualPrice) / (plan.monthlyPrice * 12) * 100) : 0;
+    
+    return (
+      <div className="text-center">
+        <div className="text-3xl font-bold">
+          ${price}
+          <span className="text-lg text-muted-foreground">
+            /{billingCycle === "annual" ? "year" : "month"}
+          </span>
+        </div>
+        {billingCycle === "annual" && savings > 0 && (
+          <Badge variant="secondary" className="mt-2">
+            Save {savings}%
+          </Badge>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-bg">
-      <NavBar plan={currentPlan} />
+    <div className="min-h-screen bg-background">
+      <SkipLink />
+      <Header />
       
-      <div className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="font-display text-4xl font-bold text-text mb-4">
-            Choose Your Plan
-          </h1>
-          <p className="text-xl text-textMuted font-ui max-w-2xl mx-auto mb-8">
-            Scale your prompt engineering with our comprehensive module library
+          <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            Choose the plan that fits your needs. All plans include our core prompt generation features.
           </p>
-
-            {/* Billing Toggle */}
+          
+          {/* Billing Toggle */}
           <div className="flex items-center justify-center space-x-4 mb-8">
-            <span className={cn('font-ui text-sm', !isAnnual ? 'text-text' : 'text-textMuted')}>
+            <span className={`text-sm ${billingCycle === "monthly" ? "text-foreground" : "text-muted-foreground"}`}>
               Monthly
-              </span>
+            </span>
             <button
-              onClick={() => setIsAnnual(!isAnnual)}
-              className="relative inline-flex h-6 w-11 items-center rounded-full bg-surfaceAlt border border-border transition-colors focus-ring"
+              onClick={() => setBillingCycle(billingCycle === "monthly" ? "annual" : "monthly")}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                billingCycle === "annual" ? "bg-primary" : "bg-muted"
+              }`}
             >
               <span
-                className={cn(
-                  'inline-block h-4 w-4 transform rounded-full bg-brand transition-transform',
-                  isAnnual ? 'translate-x-6' : 'translate-x-1'
-                )}
+                className={`inline-block h-4 w-4 transform rounded-full bg-background transition-transform ${
+                  billingCycle === "annual" ? "translate-x-6" : "translate-x-1"
+                }`}
               />
             </button>
-            <span className={cn('font-ui text-sm', isAnnual ? 'text-text' : 'text-textMuted')}>
+            <span className={`text-sm ${billingCycle === "annual" ? "text-foreground" : "text-muted-foreground"}`}>
               Annual
+              <Badge variant="secondary" className="ml-2">
+                Save up to 20%
+              </Badge>
             </span>
-            {isAnnual && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand/10 text-brand border border-brand/20">
-                Save 17%
-              </span>
-              )}
           </div>
         </div>
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {plans.map((plan) => (
-            <div
-                key={plan.id}
-              className={cn(
-                'relative rounded-xl border p-6 transition-all duration-200',
-                plan.popular
-                  ? 'border-brand bg-surfaceAlt shadow-glow'
-                  : 'border-border bg-surface hover:border-brand/50'
+          {PLAN_TIERS.map((plan) => (
+            <Card key={plan.id} className={`relative ${plan.popular ? "ring-2 ring-primary" : ""}`}>
+              {plan.popular && (
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  Most Popular
+                </Badge>
               )}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand text-bg">
-                    Most Popular
-                  </span>
-                  </div>
-                )}
-
-              <div className="text-center mb-6">
-                <BadgePlan plan={plan.id as any} className="mb-3" />
-                <h3 className="font-display text-xl font-semibold text-text mb-2">
-                  {plan.name}
-                </h3>
-                <p className="text-textMuted font-ui text-sm mb-4">
-                  {plan.description}
-                </p>
-                <div className="mb-4">
-                  <span className="font-display text-3xl font-bold text-text">
-                    {formatPrice(isAnnual ? plan.price.annual : plan.price.monthly)}
-                  </span>
-                  {plan.price.monthly > 0 && (
-                    <span className="font-ui text-textMuted">
-                      /{isAnnual ? 'year' : 'month'}
-                    </span>
-                  )}
+              
+              <CardHeader className="text-center">
+                <div className={`mx-auto mb-4 ${plan.color}`}>
+                  {plan.icon}
                 </div>
-                <button
-                  className={cn(
-                    'w-full py-3 px-4 rounded-md font-ui font-medium transition-all duration-200 focus-ring',
-                    plan.popular
-                      ? 'bg-brand text-bg hover:bg-brand/90 active:scale-98'
-                      : 'bg-surfaceAlt text-text border border-border hover:border-brand/50'
-                  )}
+                <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                <CardDescription className="text-sm">{plan.description}</CardDescription>
+              </CardHeader>
+              
+              <CardContent className="text-center">
+                <div className="mb-6">
+                  {getPrice(plan)}
+                </div>
+                
+                <ul className="space-y-3 mb-6 text-left">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-center space-x-2">
+                      <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <Button
+                  onClick={() => handleSubscribe(plan.id)}
+                  disabled={loading === plan.id}
+                  className="w-full"
+                  variant={plan.popular ? "default" : "outline"}
                 >
-                  {plan.cta}
-                </button>
-              </div>
-
-              <ul className="space-y-2">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center space-x-2">
-                    <div className="rune-executable w-4 h-4 flex-shrink-0">
-                      <div className="star-8 w-2 h-2" />
-                    </div>
-                    <span className="text-textMuted font-ui text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                      </div>
+                  {loading === plan.id ? (
+                    "Processing..."
+                  ) : plan.id === "free" ? (
+                    "Current Plan"
+                  ) : (
+                    "Subscribe Now"
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
-        {/* Feature Comparison Table */}
-        <div className="bg-surface border border-border rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-border">
-            <h2 className="font-display text-2xl font-semibold text-text">
-              Feature Comparison
-            </h2>
-                </div>
-          
+        {/* Feature Comparison */}
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold text-center mb-8">Feature Comparison</h2>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left p-4 font-ui font-medium text-text">Features</th>
-                  {plans.map((plan) => (
-                    <th key={plan.id} className="text-center p-4 font-ui font-medium text-text">
-                      {plan.name}
-                    </th>
-                  ))}
+                <tr className="border-b">
+                  <th className="text-left p-4 font-semibold">Feature</th>
+                  <th className="text-center p-4">Free</th>
+                  <th className="text-center p-4">Creator</th>
+                  <th className="text-center p-4">Pro</th>
+                  <th className="text-center p-4">Enterprise</th>
                 </tr>
               </thead>
               <tbody>
-                {pricingFeatures.map((feature, index) => (
-                  <tr key={index} className="border-b border-border last:border-b-0">
-                    <td className="p-4 font-ui text-text">{feature.name}</td>
-                    {plans.map((plan) => (
-                      <td key={plan.id} className="text-center p-4">
-                        <span className={cn('font-ui text-sm', getFeatureColor(feature, plan.id))}>
-                          {getFeatureValue(feature, plan.id)}
-                        </span>
-                      </td>
-                    ))}
+                {PLAN_FEATURES.map((feature, index) => (
+                  <tr key={index} className="border-b hover:bg-muted/50">
+                    <td className="p-4">
+                      <div>
+                        <div className="font-medium">{feature.name}</div>
+                        <div className="text-sm text-muted-foreground">{feature.description}</div>
+                      </div>
+                    </td>
+                    <td className="text-center p-4">
+                      {typeof feature.free === "boolean" ? (
+                        feature.free ? <Check className="h-5 w-5 text-green-600 mx-auto" /> : <span className="text-muted-foreground">—</span>
+                      ) : (
+                        <span className="text-sm">{feature.free}</span>
+                      )}
+                    </td>
+                    <td className="text-center p-4">
+                      {typeof feature.creator === "boolean" ? (
+                        feature.creator ? <Check className="h-5 w-5 text-green-600 mx-auto" /> : <span className="text-muted-foreground">—</span>
+                      ) : (
+                        <span className="text-sm">{feature.creator}</span>
+                      )}
+                    </td>
+                    <td className="text-center p-4">
+                      {typeof feature.pro === "boolean" ? (
+                        feature.pro ? <Check className="h-5 w-5 text-green-600 mx-auto" /> : <span className="text-muted-foreground">—</span>
+                      ) : (
+                        <span className="text-sm">{feature.pro}</span>
+                      )}
+                    </td>
+                    <td className="text-center p-4">
+                      {typeof feature.enterprise === "boolean" ? (
+                        feature.enterprise ? <Check className="h-5 w-5 text-green-600 mx-auto" /> : <span className="text-muted-foreground">—</span>
+                      ) : (
+                        <span className="text-sm">{feature.enterprise}</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -272,47 +413,76 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* FAQ Section */}
-        <div className="mt-16">
-          <h2 className="font-display text-2xl font-semibold text-text text-center mb-8">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div>
-              <h3 className="font-ui font-semibold text-text mb-2">
-                Can I change plans anytime?
-              </h3>
-              <p className="text-textMuted font-ui text-sm">
-                Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-ui font-semibold text-text mb-2">
-                What's included in the free plan?
-              </h3>
-              <p className="text-textMuted font-ui text-sm">
-                The free plan includes access to 5 basic modules and text export functionality.
-            </p>
+        {/* FAQ */}
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Can I change plans anytime?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">What happens if I exceed my limits?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  You&apos;ll receive a notification when approaching limits. Upgrade your plan to continue generating prompts.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Is there a free trial?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Yes! Start with our free plan and upgrade when you need more features or higher limits.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">How do Enterprise API limits work?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Enterprise plans include dedicated API endpoints with higher rate limits and priority processing.
+                </p>
+              </CardContent>
+            </Card>
           </div>
-            <div>
-              <h3 className="font-ui font-semibold text-text mb-2">
-                Do you offer refunds?
-              </h3>
-              <p className="text-textMuted font-ui text-sm">
-                We offer a 30-day money-back guarantee for all paid plans.
-              </p>
         </div>
-            <div>
-              <h3 className="font-ui font-semibold text-text mb-2">
-                Is there a team discount?
-              </h3>
-              <p className="text-textMuted font-ui text-sm">
-                Yes, Enterprise plans include volume discounts for teams of 10+ users.
+
+        {/* CTA */}
+        <div className="text-center">
+          <Card className="max-w-2xl mx-auto">
+            <CardContent className="pt-6">
+              <h3 className="text-2xl font-bold mb-4">Ready to get started?</h3>
+              <p className="text-muted-foreground mb-6">
+                Join thousands of users who are already creating better prompts with PromptForge.
               </p>
-      </div>
-          </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button onClick={() => handleSubscribe("creator")} size="lg">
+                  Start with Creator Plan
+                </Button>
+                <Button variant="outline" size="lg">
+                  Contact Sales
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
+      </main>
     </div>
-  )
+  );
 }

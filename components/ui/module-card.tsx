@@ -90,17 +90,17 @@ export function ModuleCard({
 
   return (
     <div className={cn(
-      'bg-surface border border-border rounded-xl p-6 hover:border-brand/30 transition-all duration-200 group',
+      'bg-card border border-border rounded-xl p-6 hover:border-accent/30 transition-all duration-200 group',
       !canAccess && 'opacity-60',
       className
     )}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="font-display text-lg font-semibold text-text group-hover:text-brand transition-colors mb-2">
+          <h3 className="font-sans text-lg font-semibold text-fg-primary group-hover:text-accent transition-colors mb-2">
             {title}
           </h3>
-          <p className="text-textMuted font-ui text-sm leading-relaxed">
+          <p className="text-fg-secondary font-sans text-sm leading-relaxed">
             {summary}
           </p>
         </div>
@@ -137,17 +137,17 @@ export function ModuleCard({
       <div className="flex gap-2">
         <button
           onClick={onView}
-          className="flex-1 px-4 py-2 bg-surfaceAlt border border-border text-text hover:border-brand/50 transition-colors rounded-md font-ui text-sm"
+          className="flex-1 px-4 py-2 bg-muted border border-border text-fg-primary hover:border-accent/50 transition-colors rounded-md font-sans text-sm"
         >
           View Details
         </button>
         <button
           disabled={!canAccess}
           className={cn(
-            'flex-1 px-4 py-2 rounded-md font-ui text-sm transition-all',
+            'flex-1 px-4 py-2 rounded-md font-sans text-sm transition-all',
             canAccess 
-              ? 'bg-brand text-bg hover:bg-brand/90 active:scale-98' 
-              : 'bg-surfaceAlt text-textMuted cursor-not-allowed opacity-50'
+              ? 'bg-accent text-accent-foreground hover:bg-accent/90 active:scale-98' 
+              : 'bg-muted text-fg-secondary cursor-not-allowed opacity-50'
           )}
         >
           {canAccess ? 'Simulate' : 'Upgrade'}
@@ -155,7 +155,7 @@ export function ModuleCard({
       </div>
 
       {!canAccess && (
-        <p className="text-xs text-textMuted mt-2 text-center">
+        <p className="text-xs text-fg-secondary mt-2 text-center">
           Requires {getPlanDisplayName(minPlan)} plan
         </p>
       )}

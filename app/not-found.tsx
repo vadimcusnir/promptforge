@@ -1,277 +1,187 @@
-"use client"
+"use client";
 
-// app/not-found.tsx
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
-export default function NotFound() {
-  return (
-    <main className="pf-ctr" role="main" aria-labelledby="pf-404-title">
-      {/* background layers */}
-      <div className="pf-bg" aria-hidden="true" />
-      <div className="pf-noise" aria-hidden="true" />
+// Glitch SVG Component
+const GlitchMask = () => (
+  <svg
+    className="absolute inset-0 w-full h-full pointer-events-none opacity-20"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+  >
+    <defs>
+      <filter id="glitch" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" />
+        <feColorMatrix
+          type="matrix"
+          values="1 0 0 0 0
+                  0 1 0 0 0
+                  0 0 1 0 0
+                  0 0 0 1 0"
+        />
+      </filter>
+    </defs>
+    <path
+      d="M0,50 Q25,25 50,50 T100,50 L100,100 L0,100 Z"
+      fill="url(#goldGradient)"
+      filter="url(#glitch)"
+      className="cyber-pulse"
+    />
+    <defs>
+      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#d1a954" stopOpacity="0.3" />
+        <stop offset="50%" stopColor="#b5965c" stopOpacity="0.2" />
+        <stop offset="100%" stopColor="#c7a869" stopOpacity="0.1" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
 
-      {/* spinner */}
-      <div className="pf-spin" aria-hidden="true">
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          role="img"
-          aria-label="Loading"
-        >
-          <g>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <rect
-                key={i}
-                x="11"
-                y="1.25"
-                width="2"
-                height="5.5"
-                rx="1"
-                style={{ opacity: i ? i / 10 : 1 }}
-                transform={`rotate(${i * 36} 12 12)`}
-              />
-            ))}
-          </g>
-        </svg>
+// Pulsing LED Component
+const PulsingLED = () => (
+  <div className="fixed top-8 right-8 z-50">
+    <div className="w-3 h-3 bg-[#d1a954] rounded-full cyber-pulse shadow-lg shadow-[#d1a954]/50" />
+    <div className="absolute inset-0 w-3 h-3 bg-[#d1a954] rounded-full animate-ping opacity-75" />
+  </div>
+);
+
+// Fractured Code Animation
+const FracturedCode = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+    <div className="absolute top-20 left-10 font-mono text-xs text-[#d1a954] cyber-pulse">
+      <span className="block">ERR_404</span>
+      <span className="block">RITUAL_FAILED</span>
+      <span className="block">PAGE_NOT_FOUND</span>
+    </div>
+    <div className="absolute bottom-20 right-10 font-mono text-xs text-[#d1a954] cyber-pulse delay-1000">
+      <span className="block">FORGE_ACTIVE</span>
+      <span className="block">PROMPT_READY</span>
+      <span className="block">EVOLUTION_CONTINUES</span>
+    </div>
+    <div className="absolute top-1/2 left-1/4 font-mono text-xs text-[#d1a954] cyber-pulse delay-500">
+      <span className="block">CYBER_RITUAL</span>
+      <span className="block">BRUTALIST_DESIGN</span>
+    </div>
+  </div>
+);
+
+export default function NotFound() {
+  const [countdown, setCountdown] = useState(15);
+  const [showRedirect, setShowRedirect] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    
+    // Start countdown for auto-redirect
+    intervalRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          setShowRedirect(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Set timeout for actual redirect
+    timeoutRef.current = setTimeout(() => {
+      window.location.href = "/";
+    }, 16000); // 15s + 1s for animation
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  // Reset countdown on user interaction
+  const resetCountdown = () => {
+    setCountdown(15);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      window.location.href = "/";
+    }, 16000);
+  };
+
+  if (!mounted) return null;
+
+  return (
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Background Elements */}
+      <GlitchMask />
+      <FracturedCode />
+      <PulsingLED />
+
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center">
+        <div className="max-w-4xl mx-auto animate-in slide-in-from-bottom-8 duration-1000">
+          {/* Glitch H1 */}
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 text-[#d1a954] relative animate-in fade-in duration-1000 delay-300">
+            <span className="block glitch-text" data-text="Ritual Failed:">Ritual Failed:</span>
+            <span className="block glitch-text" data-text="Page Not Found">Page Not Found</span>
+            {/* Enhanced glitch effect layers */}
+            <span className="absolute inset-0 text-[#d1a954] opacity-75 blur-[1px] cyber-pulse">
+              Ritual Failed: Page Not Found
+            </span>
+            <span className="absolute inset-0 text-[#d1a954] opacity-50 blur-[2px] translate-x-1 cyber-pulse delay-500">
+              Ritual Failed: Page Not Found
+            </span>
+          </h1>
+
+          {/* Subtext */}
+          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in duration-1000 delay-600">
+            The prompt you seek does not exist. But the Forge remains.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8 animate-in slide-in-from-bottom-8 duration-1000 delay-900">
+            {/* Primary CTA */}
+            <Link
+              href="/generator"
+              onClick={resetCountdown}
+              className="px-8 py-4 bg-[#d1a954] text-black font-bold text-lg rounded-lg hover:bg-[#b5965c] transition-all duration-300 transform hover:scale-105 shadow-lg shadow-[#d1a954]/25 brutalist-border"
+            >
+              Return to Generator
+            </Link>
+
+            {/* Secondary CTA */}
+            <Link
+              href="/modules"
+              onClick={resetCountdown}
+              className="px-8 py-4 border-2 border-[#d1a954] text-[#d1a954] font-bold text-lg rounded-lg hover:bg-[#d1a954] hover:text-black transition-all duration-300 transform hover:scale-105 brutalist-border"
+            >
+              Browse Modules
+            </Link>
+          </div>
+
+          {/* Microcopy */}
+          <p className="text-sm text-gray-400 mb-8 max-w-md mx-auto animate-in fade-in duration-1000 delay-1200">
+            Don't let a broken link halt your evolution.
+          </p>
+
+          {/* Countdown */}
+          <div className="text-xs text-gray-500 mb-4 animate-in fade-in duration-1000 delay-1500 cyber-pulse">
+            Auto-redirect in {countdown}s
+          </div>
+        </div>
       </div>
 
-      {/* title + subtitle */}
-      <h1 id="pf-404-title" className="pf-title" data-text="404">
-        404
-      </h1>
-      <p className="pf-sub">
-        Page not found. The page you're looking for doesn't exist.
-      </p>
-
-      {/* actions */}
-      <nav className="pf-actions" aria-label="Quick actions">
-        <Link href="/" className="pf-btn pf-btn--primary" aria-label="Back to homepage">
-          ← Start Forge
-        </Link>
-        <Link href="/modules" className="pf-btn pf-btn--ghost" aria-label="View all modules">
-          View Modules
-        </Link>
-        <Link href="/generator" className="pf-btn pf-btn--ghost" aria-label="Open 7-D Generator">
-          Open Generator
-        </Link>
-      </nav>
-
-      {/* small help */}
-      <p className="pf-hint">
-        If you arrived here from a link, check the address or return to the main pages.
-      </p>
-
-      <style jsx>{`
-        :root {
-          /* brand tokens */
-          --pf-bg: #0a0a0a;
-          --pf-fg: rgba(255, 255, 255, 0.88);
-          --pf-muted: rgba(255, 255, 255, 0.62);
-          --pf-accent: #cda434; /* auriu PromptForge™ */
-          --pf-teal: #0891b2;
-          --pf-crimson: #be123c;
-          --pf-card: rgba(255, 255, 255, 0.06);
-          --pf-border: rgba(255, 255, 255, 0.16);
-        }
-        @media (prefers-color-scheme: light) {
-          :root {
-            --pf-bg: #ffffff;
-            --pf-fg: #111111;
-            --pf-muted: #4b5563;
-            --pf-card: rgba(17, 24, 39, 0.06);
-            --pf-border: rgba(17, 24, 39, 0.14);
-          }
-        }
-
-        .pf-ctr {
-          min-height: 100dvh;
-          display: grid;
-          place-items: center;
-          background: var(--pf-bg);
-          color: var(--pf-fg);
-          position: relative;
-          isolation: isolate;
-          text-align: center;
-          padding: 48px 20px;
-          overflow: hidden;
-        }
-
-        /* background glow layers */
-        .pf-bg {
-          position: absolute;
-          inset: 0;
-          z-index: -2;
-          background:
-            radial-gradient(60% 35% at 50% 0%,
-              color-mix(in oklab, var(--pf-teal) 28%, transparent) 0%,
-              transparent 70%),
-            radial-gradient(55% 25% at 50% 100%,
-              color-mix(in oklab, var(--pf-crimson) 22%, transparent) 0%,
-              transparent 70%),
-            linear-gradient(0deg, var(--pf-bg), var(--pf-bg));
-          filter: saturate(1.1);
-        }
-        .pf-noise {
-          position: absolute;
-          inset: -100px;
-          z-index: -1;
-          opacity: 0.07;
-          background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>\
-<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter>\
-<rect width='120' height='120' filter='url(%23n)' opacity='1'/>\
-</svg>");
-          background-size: 300px 300px;
-          mix-blend-mode: overlay;
-          animation: pf-noise 14s linear infinite;
-        }
-        @keyframes pf-noise {
-          0% { transform: translate3d(0,0,0); }
-          50% { transform: translate3d(-25px, 20px, 0); }
-          100% { transform: translate3d(0,0,0); }
-        }
-
-        /* spinner */
-        .pf-spin {
-          display: grid;
-          place-items: center;
-          width: 64px;
-          height: 64px;
-          border-radius: 14px;
-          background: color-mix(in oklab, var(--pf-card) 86%, transparent);
-          border: 1px solid var(--pf-border);
-          box-shadow:
-            0 0 0 1px rgba(255,255,255,0.02) inset,
-            0 20px 60px rgba(0,0,0,0.35);
-          animation: pf-rotate 1s steps(10, end) infinite;
-          margin-bottom: 18px;
-        }
-        .pf-spin svg rect {
-          fill: var(--pf-accent);
-        }
-        @keyframes pf-rotate {
-          to { transform: rotate(360deg); }
-        }
-
-        /* glitch title */
-        .pf-title {
-          position: relative;
-          display: inline-block;
-          font-size: clamp(42px, 10vw, 128px);
-          font-weight: 900;
-          letter-spacing: 0.04em;
-          margin: 0;
-          line-height: 1;
-          text-shadow: 0 0 18px rgba(205,164,52,0.18);
-        }
-        .pf-title::before,
-        .pf-title::after {
-          content: attr(data-text);
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          mix-blend-mode: screen;
-          clip-path: polygon(0 0,100% 0,100% 45%,0 45%);
-        }
-        .pf-title::before {
-          color: var(--pf-teal);
-          transform: translate(2px, 0);
-          animation: pf-gl1 2.2s infinite linear;
-        }
-        .pf-title::after {
-          color: var(--pf-crimson);
-          transform: translate(-2px, 0);
-          animation: pf-gl2 2.2s infinite linear;
-        }
-        @keyframes pf-gl1 {
-          0% { clip-path: inset(0 0 55% 0); }
-          50% { clip-path: inset(0 0 35% 0); transform: translate(1px, 0); }
-          100% { clip-path: inset(0 0 55% 0); }
-        }
-        @keyframes pf-gl2 {
-          0% { clip-path: inset(55% 0 0 0); }
-          50% { clip-path: inset(65% 0 0 0); transform: translate(-1px, 0); }
-          100% { clip-path: inset(55% 0 0 0); }
-        }
-
-        .pf-sub {
-          margin: 10px auto 20px;
-          max-width: 720px;
-          font-size: clamp(14px, 2vw, 18px);
-          color: var(--pf-muted);
-        }
-
-        .pf-actions {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          justify-content: center;
-          margin: 8px 0 10px;
-        }
-
-        .pf-btn {
-          min-height: 44px;
-          padding: 10px 16px;
-          border-radius: 10px;
-          border: 1px solid var(--pf-border);
-          background: var(--pf-card);
-          color: var(--pf-fg);
-          text-decoration: none;
-          font-weight: 600;
-          transition: transform 180ms ease, box-shadow 180ms ease,
-            background 180ms ease, border-color 180ms ease;
-          outline: none;
-        }
-        .pf-btn:focus-visible {
-          box-shadow:
-            0 0 0 2px color-mix(in oklab, var(--pf-accent) 65%, transparent),
-            0 0 0 4px rgba(17,24,39,0.75);
-        }
-        .pf-btn:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 0 24px color-mix(in oklab, var(--pf-teal) 30%, transparent);
-        }
-
-        .pf-btn--primary {
-          background: linear-gradient(
-            180deg,
-            color-mix(in oklab, var(--pf-accent) 38%, transparent),
-            color-mix(in oklab, var(--pf-accent) 14%, transparent)
-          );
-          border-color: color-mix(in oklab, var(--pf-accent) 50%, var(--pf-border));
-        }
-        .pf-btn--primary:hover {
-          box-shadow:
-            0 0 0 1px color-mix(in oklab, var(--pf-accent) 60%, transparent) inset,
-            0 16px 50px rgba(205,164,52,0.22);
-        }
-        .pf-btn--ghost {
-          background: transparent;
-        }
-
-        .pf-hint {
-          margin-top: 10px;
-          font-size: 13px;
-          color: var(--pf-muted);
-        }
-
-        /* accessibility: reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-          .pf-noise,
-          .pf-spin,
-          .pf-title::before,
-          .pf-title::after {
-            animation: none !important;
-          }
-        }
-
-        /* mobile */
-        @media (max-width: 420px) {
-          .pf-actions { gap: 10px; }
-          .pf-btn { width: 100%; }
-        }
-      `}</style>
-    </main>
+      {/* Redirect Animation Overlay */}
+      {showRedirect && (
+        <div className="fixed inset-0 bg-black z-50 flex items-center justify-center animate-in fade-in duration-500">
+          <div className="text-center animate-in zoom-in duration-500">
+            <div className="text-[#d1a954] text-4xl mb-4 cyber-pulse">
+              ⚡
+            </div>
+            <p className="text-white text-xl mb-2">Redirecting to Forge...</p>
+            <p className="text-gray-400 text-sm">Your evolution continues</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

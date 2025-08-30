@@ -1,0 +1,37 @@
+:root {
+  /* Matrix Animation Variables */
+  --matrix-token-color: #00ff7f; /* Changed to proper green color */
+  --matrix-token-size: 10px;
+  --matrix-animation-duration: 8s;
+  --matrix-spawn-delay-min: 100ms;
+  --matrix-spawn-delay-max: 800ms;
+
+  /* Layer Z-Index Variables */
+  --layer-base-canvas: 1;
+  --layer-grid-lines: 2;
+  --layer-matrix-tokens: 3;
+  --layer-background-figures: 4;
+  --layer-matrix-quotes: 5;
+  --layer-noise-layer: 6;
+  --layer-hero-content: 10;
+  --layer-micro-ui: 20;
+
+  /* Performance Variables */
+  --reduced-motion: 0;
+}
+
+/* Improved reduced motion support - tokens remain visible */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --reduced-motion: 1;
+    --matrix-animation-duration: 0s; /* No animation duration */
+    --matrix-token-color: rgba(0, 255, 127, 0.6); /* Dimmed but visible */
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --matrix-token-color: #00ff7f; /* Keep bright green in dark mode */
+  }
+}
