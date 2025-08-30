@@ -48,6 +48,8 @@ export const tokens = {
     ritual: {
       obsidian: 'oklch(0.05 0 0)', // #0a0a0a - Deep black
       glitch: 'oklch(0.7 0.2 180)', // #00ffe7 - Glitch cyan
+      pulse: 'oklch(0.8 0.189 84.429)', // Gold pulse animation
+      initiation: 'oklch(0.9 0.189 84.429)', // Initiation mode gold
       crimson: 'oklch(0.6 0.2 15)', // #ff003c - Decision red
       forge: 'oklch(0.708 0.189 84.429)', // #F4B001 - Forge gold
     },
@@ -228,6 +230,47 @@ export const tokens = {
     reducedMotion: {
       transition: 'none',
       animation: 'none',
+    },
+  },
+
+  // Brand-aligned micro-interactions
+  microInteractions: {
+    // Gold pulse animation for ritualized affordances
+    pulse: {
+      keyframes: {
+        '0%': { boxShadow: '0 0 0 0 oklch(0.8 0.189 84.429 / 0.7)' },
+        '70%': { boxShadow: '0 0 0 10px oklch(0.8 0.189 84.429 / 0)' },
+        '100%': { boxShadow: '0 0 0 0 oklch(0.8 0.189 84.429 / 0)' },
+      },
+      duration: '2s',
+      iteration: 'infinite',
+    },
+    // Initiation mode glow
+    initiation: {
+      keyframes: {
+        '0%': { 
+          boxShadow: '0 0 5px oklch(0.9 0.189 84.429 / 0.5)',
+          transform: 'scale(1)',
+        },
+        '50%': { 
+          boxShadow: '0 0 20px oklch(0.9 0.189 84.429 / 0.8)',
+          transform: 'scale(1.02)',
+        },
+        '100%': { 
+          boxShadow: '0 0 5px oklch(0.9 0.189 84.429 / 0.5)',
+          transform: 'scale(1)',
+        },
+      },
+      duration: '3s',
+      iteration: 'infinite',
+    },
+    // Ritualized hover states
+    ritualHover: {
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 10px 25px oklch(0.8 0.189 84.429 / 0.3)',
+      },
     },
   },
 } as const;

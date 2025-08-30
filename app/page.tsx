@@ -80,7 +80,7 @@ export default function HomePage() {
           <div className="hero-buttons">
             <Button 
               size="lg" 
-              className="hero-primary-button" 
+              className="hero-primary-button ritual-hover ritual-pulse" 
               ariaLabel="Start using PromptForge generator"
               onClick={handleStartForgeClick}
             >
@@ -90,7 +90,7 @@ export default function HomePage() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="hero-secondary-button" 
+              className="hero-secondary-button ritual-hover" 
               ariaLabel="Explore modules catalog"
               onClick={() => window.location.href = '/modules'}
             >
@@ -122,45 +122,45 @@ export default function HomePage() {
       </Suspense>
 
       {/* How It Works - Simplified for better performance */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-950/50">
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">How It Works</h2>
-            <p className="text-zinc-500 text-lg">Three steps to professional prompt generation</p>
+            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4 text-fg-primary">How It Works</h2>
+            <p className="text-fg-secondary text-lg">Three steps to professional prompt generation</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
-                  <Settings className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+                  <Settings className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="font-serif">Configure 7D Parameters</CardTitle>
-                <CardDescription className="text-zinc-500">
+                <CardTitle className="font-serif text-fg-primary">Configure 7D Parameters</CardTitle>
+                <CardDescription className="text-fg-secondary">
                   Set domain, scale, urgency, complexity, resources, application, and output format
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="font-serif">Run Selected Module</CardTitle>
-                <CardDescription className="text-zinc-500">
+                <CardTitle className="font-serif text-fg-primary">Run Selected Module</CardTitle>
+                <CardDescription className="text-fg-secondary">
                   Choose from 50 specialized modules across 7 semantic vectors for your use case
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
-                  <Download className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+                  <Download className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="font-serif">Export Professional Bundle</CardTitle>
-                <CardDescription className="text-zinc-500">
+                <CardTitle className="font-serif text-fg-primary">Export Professional Bundle</CardTitle>
+                <CardDescription className="text-fg-secondary">
                   Get structured outputs with checksums, manifests, and telemetry data
                 </CardDescription>
               </CardHeader>
@@ -173,42 +173,42 @@ export default function HomePage() {
       <section id="features" className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">Core Features</h2>
-            <p className="text-zinc-500 text-lg">Industrial-grade prompt engineering tools</p>
+            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4 text-fg-primary">Core Features</h2>
+            <p className="text-fg-secondary text-lg">Industrial-grade prompt engineering tools</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="font-serif">7D Scoring Engine</CardTitle>
-                <CardDescription className="text-zinc-500">
+                <CardTitle className="font-serif text-fg-primary">7D Scoring Engine</CardTitle>
+                <CardDescription className="text-fg-secondary">
                   Advanced evaluation system that tests prompts across 7 dimensions for optimal performance
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
-                  <Settings className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+                  <Settings className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="font-serif">50 Specialized Modules</CardTitle>
-                <CardDescription className="text-zinc-500">
+                <CardTitle className="font-serif text-fg-primary">50 Specialized Modules</CardTitle>
+                <CardDescription className="text-fg-secondary">
                   Comprehensive library of prompt modules across 7 semantic vectors for every use case
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <div className="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center mb-4">
-                  <Download className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+                  <Download className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="font-serif">Professional Export</CardTitle>
-                <CardDescription className="text-zinc-500">
+                <CardTitle className="font-serif text-fg-primary">Professional Export</CardTitle>
+                <CardDescription className="text-fg-secondary">
                   Export prompts in multiple formats with checksums, manifests, and telemetry data
                 </CardDescription>
               </CardHeader>
@@ -218,44 +218,44 @@ export default function HomePage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-950/50">
+      <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">Choose Your Plan</h2>
-            <p className="text-zinc-500 text-lg">Scale from pilot to enterprise with clear upgrade paths</p>
+            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4 text-fg-primary">Choose Your Plan</h2>
+            <p className="text-fg-secondary text-lg">Scale from pilot to enterprise with clear upgrade paths</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Pilot Plan */}
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            {/* Free Plan */}
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <CardTitle className="font-serif">Pilot</CardTitle>
-                <CardDescription className="text-zinc-500">Perfect for getting started</CardDescription>
-                <div className="text-3xl font-bold font-serif">Free</div>
+                <CardTitle className="font-serif text-fg-primary">Free</CardTitle>
+                <CardDescription className="text-fg-secondary">Perfect for getting started</CardDescription>
+                <div className="text-3xl font-bold font-serif text-fg-primary">Free</div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Modules M01-M10</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Modules M01-M10</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Export .txt, .md</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Export .txt, .md</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Local history</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Local history</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Community support</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Community support</span>
                   </li>
                 </ul>
-                <Button 
-                  className="w-full bg-transparent" 
-                  variant="outline" 
-                  ariaLabel="Start free pilot plan"
+                <Button
+                  className="w-full bg-transparent border-border text-fg-primary hover:bg-accent/10"
+                  variant="outline"
+                  ariaLabel="Start free plan"
                   onClick={() => analytics.landingCtaClick('start_free_plan', 'pricing_free')}
                 >
                   Start Free
@@ -264,42 +264,42 @@ export default function HomePage() {
             </Card>
 
             {/* Pro Plan */}
-            <Card className="bg-zinc-900/80 border border-yellow-600 relative">
+            <Card className="bg-card border border-accent relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-yellow-600 text-white">Most Popular</Badge>
+                <Badge className="bg-accent text-accent-contrast">Most Popular</Badge>
               </div>
               <CardHeader>
-                <CardTitle className="font-serif">Pro</CardTitle>
-                <CardDescription className="text-zinc-500">For professionals and teams</CardDescription>
-                <div className="text-3xl font-bold font-serif">
-                  $49<span className="text-lg font-normal text-zinc-500">/month</span>
+                <CardTitle className="font-serif text-fg-primary">Pro</CardTitle>
+                <CardDescription className="text-fg-secondary">For professionals and teams</CardDescription>
+                <div className="text-3xl font-bold font-serif text-fg-primary">
+                  $49<span className="text-lg font-normal text-fg-secondary">/month</span>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">All 50 modules</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">All 50 modules</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Export .pdf, .json</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Export .pdf, .json</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Live Test Engine</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Live Test Engine</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Cloud history</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Cloud history</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Advanced Evaluator</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Advanced Evaluator</span>
                   </li>
                 </ul>
-                <Button 
-                  className="w-full bg-yellow-600 hover:bg-yellow-700" 
+                <Button
+                  className="w-full bg-accent hover:bg-accent-hover text-accent-contrast ritual-hover"
                   ariaLabel="Start Pro plan trial"
                   onClick={() => analytics.landingCtaClick('start_pro_trial', 'pricing_pro')}
                 >
@@ -309,38 +309,38 @@ export default function HomePage() {
             </Card>
 
             {/* Enterprise Plan */}
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <CardTitle className="font-serif">Enterprise</CardTitle>
-                <CardDescription className="text-zinc-500">For organizations at scale</CardDescription>
-                <div className="text-3xl font-bold font-serif">
-                  $299<span className="text-lg font-normal text-zinc-500">/month</span>
+                <CardTitle className="font-serif text-fg-primary">Enterprise</CardTitle>
+                <CardDescription className="text-fg-secondary">For organizations at scale</CardDescription>
+                <div className="text-3xl font-bold font-serif text-fg-primary">
+                  $299<span className="text-lg font-normal text-fg-secondary">/month</span>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Everything in Pro</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Everything in Pro</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Public API access</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Public API access</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Bundle.zip exports</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">Bundle.zip exports</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">White-label options</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">White-label options</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">5 seats included</span>
+                    <Check className="w-4 h-4 text-state-success" />
+                    <span className="text-sm text-fg-primary">5 seats included</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-transparent" variant="outline">
+                <Button className="w-full bg-transparent border-border text-fg-primary hover:bg-accent/10" variant="outline">
                   Contact Sales
                 </Button>
               </CardContent>
@@ -352,16 +352,16 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold font-serif mb-6">Ready to Build Industrial-Grade Prompts?</h2>
-          <p className="text-xl text-zinc-500 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold font-serif mb-6 text-fg-primary">Ready to Build Industrial-Grade Prompts?</h2>
+          <p className="text-xl text-fg-secondary mb-8">
             Join professionals who demand auditable, reproducible prompt systems.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6">
+            <Button size="lg" className="bg-accent hover:bg-accent-hover text-accent-contrast text-lg px-8 py-6 ritual-hover ritual-pulse">
               Start Building Now
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-zinc-700 text-lg px-8 py-6 bg-transparent">
+            <Button size="lg" variant="outline" className="border-border text-fg-primary hover:bg-accent/10 text-lg px-8 py-6 bg-transparent ritual-hover">
               Schedule Demo
             </Button>
           </div>

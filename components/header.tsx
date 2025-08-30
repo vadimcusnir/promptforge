@@ -25,7 +25,6 @@ export function Header() {
     { name: "Pricing", href: "/pricing" },
     { name: "Docs", href: "/docs" },
     { name: "Guides", href: "/guides" },
-    { name: "Dashboard", href: "/dashboard" },
   ]
 
   const navigation: NavigationItem[] = isComingSoon
@@ -37,7 +36,7 @@ export function Header() {
   const isActive = (href: string) => pathname === href
 
   return (
-    <header role="banner" className="sticky top-0 z-50 w-full border-b border-gray-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
+    <header role="banner" className="sticky top-0 z-50 w-full border-b border-border bg-bg-primary/95 backdrop-blur supports-[backdrop-filter]:bg-bg-primary/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2 group" aria-label="PromptForge - Go to homepage">
           <div className="relative">
@@ -56,13 +55,13 @@ export function Header() {
               </div>
             </div>
           </div>
-          <span className="font-montserrat font-bold text-xl text-white">Forge</span>
+          <span className="font-montserrat font-bold text-xl text-fg-primary">Forge</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
           {navigation.map((item) =>
             item.disabled ? (
-              <span key={item.name} className="font-montserrat text-sm font-medium text-gray-500 cursor-not-allowed" aria-disabled="true">
+              <span key={item.name} className="font-montserrat text-sm font-medium text-fg-tertiary cursor-not-allowed" aria-disabled="true">
                 {item.name}
               </span>
             ) : (
@@ -70,7 +69,7 @@ export function Header() {
                 key={item.name}
                 href={item.href}
                 className={`font-montserrat text-sm font-medium transition-colors duration-200 relative ${
-                  isActive(item.href) ? "text-accent" : "text-muted-foreground hover:text-accent"
+                  isActive(item.href) ? "text-accent" : "text-fg-secondary hover:text-accent"
                 }`}
                 aria-current={isActive(item.href) ? "page" : undefined}
               >
@@ -85,7 +84,7 @@ export function Header() {
 
         <div className="hidden md:flex items-center space-x-4">
           <Link href="/login">
-            <Button variant="ghost" className="text-muted-foreground hover:text-accent hover:bg-accent/10" ariaLabel="Log in to your account">
+            <Button variant="ghost" className="text-fg-secondary hover:text-accent hover:bg-accent/10" ariaLabel="Log in to your account">
               Log in
             </Button>
           </Link>
@@ -97,7 +96,7 @@ export function Header() {
         </div>
 
         <button
-          className="md:hidden p-2 text-muted-foreground hover:text-accent transition-colors"
+          className="md:hidden p-2 text-fg-secondary hover:text-accent transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-expanded={isMenuOpen}
           aria-controls="mobile-menu"
@@ -110,7 +109,7 @@ export function Header() {
       {isMenuOpen && (
         <div 
           id="mobile-menu"
-          className="md:hidden absolute top-16 left-0 right-0 bg-black/95 backdrop-blur border-b border-gray-800"
+          className="md:hidden absolute top-16 left-0 right-0 bg-bg-primary/95 backdrop-blur border-b border-border"
           role="navigation"
           aria-label="Mobile navigation"
         >
@@ -119,7 +118,7 @@ export function Header() {
               item.disabled ? (
                 <span
                   key={item.name}
-                  className="block font-montserrat text-sm font-medium text-gray-500 cursor-not-allowed"
+                  className="block font-montserrat text-sm font-medium text-fg-tertiary cursor-not-allowed"
                   aria-disabled="true"
                 >
                   {item.name}
@@ -129,7 +128,7 @@ export function Header() {
                   key={item.name}
                   href={item.href}
                   className={`block font-montserrat text-sm font-medium transition-colors duration-200 ${
-                    isActive(item.href) ? "text-accent" : "text-muted-foreground hover:text-accent"
+                    isActive(item.href) ? "text-accent" : "text-fg-secondary hover:text-accent"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                   aria-current={isActive(item.href) ? "page" : undefined}
@@ -138,9 +137,9 @@ export function Header() {
                 </Link>
               ),
             )}
-            <div className="pt-4 border-t border-gray-800 space-y-2">
+            <div className="pt-4 border-t border-border space-y-2">
               <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="ghost" className="w-full text-muted-foreground hover:text-accent hover:bg-accent/10" ariaLabel="Log in to your account">
+                <Button variant="ghost" className="w-full text-fg-secondary hover:text-accent hover:bg-accent/10" ariaLabel="Log in to your account">
                   Log in
                 </Button>
               </Link>

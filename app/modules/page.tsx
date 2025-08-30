@@ -70,7 +70,7 @@ export default function ModulesPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header with Forge Glyph */}
-      <div className="border-b border-gray-800 bg-black/95 backdrop-blur">
+      <div className="border-b border-border bg-bg-primary">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center mb-6">
             <ForgeGlyphInteractive 
@@ -80,11 +80,11 @@ export default function ModulesPage() {
             />
           </div>
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4 text-fg-primary">
               50 Industrial Modules
             </h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Organized across 7 semantic vectors for maximum precision. 
+            <p className="text-xl text-fg-secondary max-w-3xl mx-auto">
+              Organized across 7 semantic vectors for maximum precision.
               Each module is a ritual of prompt engineering.
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function ModulesPage() {
 
         {/* Results Count */}
         <div className="mb-6">
-          <p className="text-gray-400">
+          <p className="text-fg-secondary">
             Showing {filteredModules.length} of {modules.length} modules
           </p>
         </div>
@@ -117,21 +117,26 @@ export default function ModulesPage() {
           {filteredModules.map((module) => (
               <Card
                 key={module.id}
-              className="bg-zinc-900/80 border border-zinc-700 hover:border-yellow-600/50 transition-all duration-300 cursor-pointer group"
+              className="relative bg-card border border-border hover:border-accent/50 transition-all duration-300 cursor-pointer group"
               >
               <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-2">
-                  <div className="text-yellow-500 font-mono font-bold text-lg">
+                  <div className="text-accent font-mono font-bold text-lg">
                     {module.id}
                   </div>
                   {module.requiresPro && (
-                    <Lock className="w-4 h-4 text-yellow-500" />
+                    <div className="absolute top-2 right-2 bg-accent text-accent-contrast text-xs px-2 py-1 rounded font-medium">
+                      Pro Required
+                    </div>
+                  )}
+                  {module.requiresPro && (
+                    <Lock className="w-4 h-4 text-accent" />
                   )}
                 </div>
-                <CardTitle className="text-lg font-serif text-white group-hover:text-yellow-400 transition-colors">
+                <CardTitle className="text-lg font-serif text-fg-primary group-hover:text-accent transition-colors">
                   {module.name}
                 </CardTitle>
-                <CardDescription className="text-gray-400 text-sm">
+                <CardDescription className="text-fg-secondary text-sm">
                   {module.description}
                 </CardDescription>
               </CardHeader>
@@ -149,7 +154,7 @@ export default function ModulesPage() {
                   </div>
 
                   {/* Duration */}
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <div className="flex items-center gap-2 text-sm text-fg-secondary">
                     <Clock className="w-4 h-4" />
                     <span>{module.duration}</span>
                   </div>
@@ -158,8 +163,8 @@ export default function ModulesPage() {
                   <Button
                     className={`w-full mt-4 ${
                       module.requiresPro
-                        ? 'bg-yellow-600/20 text-yellow-400 border border-yellow-600/30 hover:bg-yellow-600/30'
-                        : 'bg-yellow-600 hover:bg-yellow-700 text-black font-semibold'
+                        ? 'bg-accent/20 text-accent border border-accent/30 hover:bg-accent/30'
+                        : 'bg-accent hover:bg-accent-hover text-accent-contrast font-semibold'
                     }`}
                     disabled={module.requiresPro}
                   >

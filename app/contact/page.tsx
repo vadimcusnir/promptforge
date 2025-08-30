@@ -37,16 +37,16 @@ export default function ContactPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <Card className="w-full max-w-md bg-zinc-900/80 border border-zinc-700">
+      <div className="min-h-screen bg-black text-fg-primary flex items-center justify-center">
+        <Card className="w-full max-w-md bg-card border border-border">
           <CardContent className="p-8 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
               <Send className="w-8 h-8 text-green-400" />
             </div>
-            <h2 className="text-2xl font-bold font-serif text-white mb-4">
+            <h2 className="text-2xl font-bold font-serif text-fg-primary mb-4">
               Message Sent
             </h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-fg-secondary mb-6">
               Thank you for contacting us. We&apos;ll get back to you within 24 hours.
             </p>
             <Button
@@ -65,9 +65,9 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-fg-primary">
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/95 backdrop-blur">
+      <div className="border-b border-border bg-bg-primary">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center mb-6">
             <ForgeGlyphInteractive 
@@ -79,7 +79,7 @@ export default function ContactPage() {
             <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4">
               Contact Us
             </h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-fg-secondary max-w-3xl mx-auto">
               Ready to forge your prompts? Get in touch with our team.
             </p>
           </div>
@@ -90,10 +90,10 @@ export default function ContactPage() {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form */}
-          <Card className="bg-zinc-900/80 border border-zinc-700">
+          <Card className="bg-card border border-border">
             <CardHeader>
-              <CardTitle className="text-2xl font-serif text-white">Send us a Message</CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardTitle className="text-2xl font-serif text-fg-primary">Send us a Message</CardTitle>
+              <CardDescription className="text-fg-secondary">
                                      Fill out the form below and we&apos;ll get back to you as soon as possible.
               </CardDescription>
             </CardHeader>
@@ -101,7 +101,7 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-fg-primary mb-2">
                       Name *
                     </label>
                     <Input
@@ -110,12 +110,12 @@ export default function ContactPage() {
                       required
                       value={formData.name}
                       onChange={(e) => handleInputChange("name", e.target.value)}
-                      className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                      className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
                       placeholder="Your name"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-fg-primary mb-2">
                       Email *
                     </label>
                     <Input
@@ -124,32 +124,32 @@ export default function ContactPage() {
                       required
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
-                      className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                      className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
                       placeholder="your@email.com"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-white mb-2">
+                  <label htmlFor="category" className="block text-sm font-medium text-fg-primary mb-2">
                     Category
                   </label>
                   <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-fg-primary">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-800 border-zinc-700">
-                      <SelectItem value="general" className="text-white hover:bg-zinc-700">General Inquiry</SelectItem>
-                      <SelectItem value="support" className="text-white hover:bg-zinc-700">Technical Support</SelectItem>
-                      <SelectItem value="billing" className="text-white hover:bg-zinc-700">Billing Question</SelectItem>
-                      <SelectItem value="enterprise" className="text-white hover:bg-zinc-700">Enterprise Sales</SelectItem>
-                      <SelectItem value="partnership" className="text-white hover:bg-zinc-700">Partnership</SelectItem>
+                      <SelectItem value="general" className="text-fg-primary hover:bg-zinc-700">General Inquiry</SelectItem>
+                      <SelectItem value="support" className="text-fg-primary hover:bg-zinc-700">Technical Support</SelectItem>
+                      <SelectItem value="billing" className="text-fg-primary hover:bg-zinc-700">Billing Question</SelectItem>
+                      <SelectItem value="enterprise" className="text-fg-primary hover:bg-zinc-700">Enterprise Sales</SelectItem>
+                      <SelectItem value="partnership" className="text-fg-primary hover:bg-zinc-700">Partnership</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-white mb-2">
+                  <label htmlFor="subject" className="block text-sm font-medium text-fg-primary mb-2">
                     Subject *
                   </label>
                   <Input
@@ -158,13 +158,13 @@ export default function ContactPage() {
                     required
                     value={formData.subject}
                     onChange={(e) => handleInputChange("subject", e.target.value)}
-                    className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                    className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
                     placeholder="Brief subject line"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-fg-primary mb-2">
                     Message *
                   </label>
                   <Textarea
@@ -173,7 +173,7 @@ export default function ContactPage() {
                     rows={6}
                     value={formData.message}
                     onChange={(e) => handleInputChange("message", e.target.value)}
-                    className="bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+                    className="bg-zinc-800 border-zinc-700 text-fg-primary placeholder-gray-400"
                     placeholder="Tell us how we can help you..."
                   />
                 </div>
@@ -201,9 +201,9 @@ export default function ContactPage() {
 
           {/* Contact Information */}
           <div className="space-y-6">
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <CardTitle className="text-xl font-serif text-white flex items-center gap-2">
+                <CardTitle className="text-xl font-serif text-fg-primary flex items-center gap-2">
                   <Mail className="w-5 h-5 text-yellow-500" />
                   Email Support
                 </CardTitle>
@@ -211,24 +211,24 @@ export default function ContactPage() {
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-gray-400">General Inquiries</p>
-                    <p className="text-white font-mono">hello@promptforge.ai</p>
+                    <p className="text-sm text-fg-secondary">General Inquiries</p>
+                    <p className="text-fg-primary font-mono">hello@promptforge.ai</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Technical Support</p>
-                    <p className="text-white font-mono">support@promptforge.ai</p>
+                    <p className="text-sm text-fg-secondary">Technical Support</p>
+                    <p className="text-fg-primary font-mono">support@promptforge.ai</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Enterprise Sales</p>
-                    <p className="text-white font-mono">enterprise@promptforge.ai</p>
+                    <p className="text-sm text-fg-secondary">Enterprise Sales</p>
+                    <p className="text-fg-primary font-mono">enterprise@promptforge.ai</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <CardTitle className="text-xl font-serif text-white flex items-center gap-2">
+                <CardTitle className="text-xl font-serif text-fg-primary flex items-center gap-2">
                   <MessageSquare className="w-5 h-5 text-yellow-500" />
                   Response Time
                 </CardTitle>
@@ -236,30 +236,30 @@ export default function ContactPage() {
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-gray-400">General Inquiries</p>
-                    <p className="text-white">Within 24 hours</p>
+                    <p className="text-sm text-fg-secondary">General Inquiries</p>
+                    <p className="text-fg-primary">Within 24 hours</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Technical Support</p>
-                    <p className="text-white">Within 12 hours</p>
+                    <p className="text-sm text-fg-secondary">Technical Support</p>
+                    <p className="text-fg-primary">Within 12 hours</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Enterprise Sales</p>
-                    <p className="text-white">Within 4 hours</p>
+                    <p className="text-sm text-fg-secondary">Enterprise Sales</p>
+                    <p className="text-fg-primary">Within 4 hours</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
-                <CardTitle className="text-xl font-serif text-white flex items-center gap-2">
+                <CardTitle className="text-xl font-serif text-fg-primary flex items-center gap-2">
                   <HelpCircle className="w-5 h-5 text-yellow-500" />
                   FAQ
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400 mb-4">
+                <p className="text-fg-secondary mb-4">
                   Check our documentation and guides for quick answers to common questions.
                 </p>
                 <Button

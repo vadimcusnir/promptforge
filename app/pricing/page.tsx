@@ -33,6 +33,7 @@ interface Plan {
 
 export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(false)
+  const [currency, setCurrency] = useState<'USD' | 'EUR'>('USD')
   const [showLoginModal, setShowLoginModal] = useState(false)
   
   // Hooks
@@ -232,9 +233,15 @@ export default function PricingPage() {
   // Functions are now memoized above
 
   const getPrice = (plan: Plan): string => {
-    if (plan.price_monthly === 0) return `$0`
-    const price = isAnnual ? plan.price_annual : plan.price_monthly
-    return `$${price}`
+    if (plan.price_monthly === 0) return currency === 'EUR' ? '€0' : '$0'
+    let price = isAnnual ? plan.price_annual : plan.price_monthly
+
+    // Convert to EUR if needed (approximate conversion rate)
+    if (currency === 'EUR') {
+      price = Math.round(price * 0.85) // 1 USD = 0.85 EUR approximation
+    }
+
+    return currency === 'EUR' ? `€${price}` : `$${price}`
   }
 
   const getPeriod = (plan: Plan): string => {
@@ -283,33 +290,60 @@ export default function PricingPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold font-serif mb-4">{t("pricing.title")}</h1>
-          <p className="text-xl text-gray-400 mb-8">{t("pricing.subtitle")}</p>
+          <h1 className="text-4xl font-bold font-serif mb-4 text-fg-primary">{t("pricing.title")}</h1>
+          <p className="text-xl text-fg-secondary mb-8">{t("pricing.subtitle")}</p>
 
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <span className={`${!isAnnual ? 'text-white' : 'text-gray-400'}`}>
-              {t("pricing.monthly")}
-            </span>
-            <div className="relative">
-              <input 
-                type="checkbox" 
-                className="sr-only" 
-                checked={isAnnual}
-                onChange={() => handleToggleBilling()}
-              />
-              <div className={`w-12 h-6 rounded-full cursor-pointer transition-colors ${
-                isAnnual ? 'bg-yellow-600' : 'bg-gray-700'
-              }`}></div>
-              <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                isAnnual ? 'translate-x-7' : 'translate-x-1'
-              }`}></div>
+          <div className="flex flex-col gap-6 mb-8">
+            {/* Currency Toggle */}
+            <div className="flex items-center justify-center gap-4">
+              <span className={`${currency === 'USD' ? 'text-fg-primary' : 'text-fg-secondary'}`}>
+                USD ($)
+              </span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={currency === 'EUR'}
+                  onChange={() => setCurrency(currency === 'USD' ? 'EUR' : 'USD')}
+                />
+                <div className={`w-12 h-6 rounded-full cursor-pointer transition-colors ${
+                  currency === 'EUR' ? 'bg-accent' : 'bg-muted'
+                }`}></div>
+                <div className={`absolute top-1 w-4 h-4 bg-fg-primary rounded-full transition-transform ${
+                  currency === 'EUR' ? 'translate-x-7' : 'translate-x-1'
+                }`}></div>
+              </div>
+              <span className={`${currency === 'EUR' ? 'text-fg-primary' : 'text-fg-secondary'}`}>
+                EUR (€)
+              </span>
             </div>
-            <span className={`${isAnnual ? 'text-white' : 'text-gray-400'}`}>
-              {t("pricing.annual")}
-            </span>
-            {isAnnual && (
-              <Badge className="bg-yellow-600 text-black">{t("pricing.save")}</Badge>
-            )}
+
+            {/* Billing Toggle */}
+            <div className="flex items-center justify-center gap-4">
+              <span className={`${!isAnnual ? 'text-fg-primary' : 'text-fg-secondary'}`}>
+                {t("pricing.monthly")}
+              </span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={isAnnual}
+                  onChange={() => handleToggleBilling()}
+                />
+                <div className={`w-12 h-6 rounded-full cursor-pointer transition-colors ${
+                  isAnnual ? 'bg-accent' : 'bg-muted'
+                }`}></div>
+                <div className={`absolute top-1 w-4 h-4 bg-fg-primary rounded-full transition-transform ${
+                  isAnnual ? 'translate-x-7' : 'translate-x-1'
+                }`}></div>
+              </div>
+              <span className={`${isAnnual ? 'text-fg-primary' : 'text-fg-secondary'}`}>
+                {t("pricing.annual")}
+              </span>
+              {isAnnual && (
+                <Badge className="bg-accent text-accent-contrast">{t("pricing.save")}</Badge>
+              )}
+            </div>
           </div>
         </div>
 

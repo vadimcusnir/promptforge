@@ -149,12 +149,33 @@ const config = {
             boxShadow: '0 0 30px rgba(209, 169, 84, 0.2)' 
           },
         },
+        'ritual-pulse': {
+          '0%': { boxShadow: '0 0 0 0 oklch(0.8 0.189 84.429 / 0.7)' },
+          '70%': { boxShadow: '0 0 0 10px oklch(0.8 0.189 84.429 / 0)' },
+          '100%': { boxShadow: '0 0 0 0 oklch(0.8 0.189 84.429 / 0)' },
+        },
+        'initiation-glow': {
+          '0%': { 
+            boxShadow: '0 0 5px oklch(0.9 0.189 84.429 / 0.5)',
+            transform: 'scale(1)',
+          },
+          '50%': { 
+            boxShadow: '0 0 20px oklch(0.9 0.189 84.429 / 0.8)',
+            transform: 'scale(1.02)',
+          },
+          '100%': { 
+            boxShadow: '0 0 5px oklch(0.9 0.189 84.429 / 0.5)',
+            transform: 'scale(1)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-in': 'fade-in 0.3s ease-out',
         'glass-glow': 'glass-glow 2s ease-in-out infinite',
+        'ritual-pulse': 'ritual-pulse 2s infinite',
+        'initiation-glow': 'initiation-glow 3s infinite',
       },
       
       // Glass effect utilities
@@ -193,6 +214,20 @@ const config = {
             transform: 'translateY(-2px)',
             boxShadow: tokens.shadow.lg,
           },
+        },
+        // Ritualized affordances
+        '.ritual-hover': {
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 10px 25px oklch(0.8 0.189 84.429 / 0.3)',
+          },
+        },
+        '.ritual-pulse': {
+          animation: 'ritual-pulse 2s infinite',
+        },
+        '.initiation-glow': {
+          animation: 'initiation-glow 3s infinite',
         },
         // Focus ring utilities - WCAG 2.1 AA compliant
         '.focus-ring': {

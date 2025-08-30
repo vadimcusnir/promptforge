@@ -47,10 +47,11 @@ function generateCurrentSlug(name: string): string {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
     // Parse path parameters
+    const params = await context.params
     const { slug } = pathSchema.parse(params)
 
     // Check if Supabase is configured

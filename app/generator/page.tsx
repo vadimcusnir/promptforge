@@ -23,6 +23,8 @@ import {
   Copy,
   CheckCircle,
   Info,
+  ChevronRight,
+  ChevronLeft,
 } from "lucide-react"
 import { EntitlementGate } from "@/components/entitlement-gate"
 import { useEntitlements } from "@/hooks/use-entitlements"
@@ -69,6 +71,8 @@ function GeneratorPage() {
   const [currentPromptRun, setCurrentPromptRun] = useState<PromptRun | null>(null)
   const [isLoadingHistory, setIsLoadingHistory] = useState(true)
   const [historyError, setHistoryError] = useState<string | null>(null)
+  const [currentStep, setCurrentStep] = useState(1)
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
   
   interface TestResults {
     type: "live" | "simulation"
@@ -132,6 +136,66 @@ function GeneratorPage() {
 
   const updateParam = (key: keyof Params7D, value: string) => {
     setParams7D((prev) => ({ ...prev, [key]: value }))
+    // Clear validation error for this field
+    if (validationErrors[key]) {
+      setValidationErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[key]
+        return newErrors
+      })
+    }
+  }
+
+  const validateStep = (step: number): boolean => {
+    const errors: Record<string, string> = {}
+    
+    switch (step) {
+      case 1:
+        if (!selectedModule) {
+          errors.module = "Please select a module"
+        }
+        break
+      case 2:
+        if (!params7D.domain) {
+          errors.domain = "Domain is required"
+        }
+        if (!params7D.scale) {
+          errors.scale = "Scale is required"
+        }
+        if (!params7D.urgency) {
+          errors.urgency = "Urgency is required"
+        }
+        break
+      case 3:
+        if (!params7D.complexity) {
+          errors.complexity = "Complexity is required"
+        }
+        if (!params7D.resources) {
+          errors.resources = "Resources are required"
+        }
+        break
+      case 4:
+        if (!params7D.application) {
+          errors.application = "Application is required"
+        }
+        if (!params7D.output) {
+          errors.output = "Output format is required"
+        }
+        break
+    }
+    
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, 4))
+    }
+  }
+
+  const prevStep = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1))
   }
 
   // New handler for dynamic form submission
@@ -314,17 +378,17 @@ function GeneratorPage() {
 
 
   return (
-    <div className="min-h-screen pattern-bg text-white">
+    <div className="min-h-screen pattern-bg text-fg-primary">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold font-serif mb-4">Prompt Generator</h1>
-          <p className="text-xl text-gray-400">Configure, generate, and export industrial-grade prompts</p>
+          <p className="text-xl text-fg-secondary">Configure, generate, and export industrial-grade prompts</p>
         </div>
 
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Left Panel - Module Selection */}
           <div className="lg:col-span-1">
-            <Card className="bg-zinc-900/80 border border-zinc-700">
+            <Card className="bg-card border border-border">
               <CardHeader>
                 <CardTitle className="font-serif flex items-center gap-2">
                   <Filter className="w-5 h-5 text-yellow-400" />
@@ -334,7 +398,7 @@ function GeneratorPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-3 w-4 h-4 text-fg-secondary" />
                   <Input placeholder="Search modules..." className="pl-10 bg-black/50 border-gray-700" />
                 </div>
 
@@ -418,31 +482,68 @@ function GeneratorPage() {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
+            {/* Stepper UI */}
+            <Card className="mb-6 bg-card border border-border">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-fg-primary">Configuration Steps</h3>
+                  <span className="text-sm text-fg-secondary">Step {currentStep} of 4</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  {[1, 2, 3, 4].map((step) => (
+                    <div key={step} className="flex items-center">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                        step <= currentStep 
+                          ? 'bg-accent text-accent-contrast' 
+                          : 'bg-muted text-fg-secondary'
+                      }`}>
+                        {step}
+                      </div>
+                      {step < 4 && (
+                        <div className={`w-12 h-0.5 mx-2 ${
+                          step < currentStep ? 'bg-accent' : 'bg-muted'
+                        }`} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between mt-2 text-xs text-fg-secondary">
+                  <span>Module</span>
+                  <span>Context</span>
+                  <span>Complexity</span>
+                  <span>Output</span>
+                </div>
+              </CardContent>
+            </Card>
+
             <Tabs defaultValue="config" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4 bg-black/50">
+              <TabsList className="grid w-full grid-cols-4 bg-card border border-border">
                 <TabsTrigger
                   value="config"
-                  className="data-[state=active]:bg-yellow-400 data-[state=active]:text-black"
+                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
                 >
-                  <Settings className="w-4 h-4 mr-2" />
+                  <Settings className="w-4 h-4 mr-2" aria-hidden="true" />
                   7D Config
                 </TabsTrigger>
                 <TabsTrigger
                   value="generator"
-                  className="data-[state=active]:bg-yellow-400 data-[state=active]:text-black"
+                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
                 >
-                  <Zap className="w-4 h-4 mr-2" />
+                  <Zap className="w-4 h-4 mr-2" aria-hidden="true" />
                   Generator
                 </TabsTrigger>
-                <TabsTrigger value="test" className="data-[state=active]:bg-yellow-400 data-[state=active]:text-black">
-                  <TestTube className="w-4 h-4 mr-2" />
+                <TabsTrigger
+                  value="test"
+                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
+                >
+                  <TestTube className="w-4 h-4 mr-2" aria-hidden="true" />
                   Test Engine
                 </TabsTrigger>
                 <TabsTrigger
                   value="history"
-                  className="data-[state=active]:bg-yellow-400 data-[state=active]:text-black"
+                  className="data-[state=active]:bg-accent data-[state=active]:text-accent-contrast text-fg-primary"
                 >
-                  <History className="w-4 h-4 mr-2" />
+                  <History className="w-4 h-4 mr-2" aria-hidden="true" />
                   History
                 </TabsTrigger>
               </TabsList>
@@ -450,24 +551,24 @@ function GeneratorPage() {
               <TabsContent value="config">
                 <div className="space-y-6">
                   {/* Step-by-step workflow */}
-                  <Card className="bg-zinc-900/80 border border-zinc-700">
+                  <Card className="bg-card border border-border">
                     <CardHeader>
-                      <CardTitle className="font-serif flex items-center gap-2">
-                        <Settings className="w-5 h-5 text-yellow-400" />
-                        7D Parameter Configuration
-                      </CardTitle>
-                      <CardDescription>Configure the seven dimensions for optimal prompt generation</CardDescription>
+                                              <CardTitle className="font-serif flex items-center gap-2 text-fg-primary">
+                          <Settings className="w-5 h-5 text-accent" />
+                          7D Parameter Configuration
+                        </CardTitle>
+                        <CardDescription className="text-fg-secondary">Configure the seven dimensions for optimal prompt generation</CardDescription>
                     </CardHeader>
                     <CardContent>
                       {/* Progress indicator */}
                       <div className="mb-6">
-                        <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+                        <div className="flex items-center justify-between text-sm text-fg-secondary mb-2">
                           <span>Configuration Progress</span>
                           <span>{Object.values(params7D).filter(v => v && v !== '').length}/7 Complete</span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div 
-                            className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div
+                            className="bg-accent h-2 rounded-full transition-all duration-300"
                             style={{ width: `${(Object.values(params7D).filter(v => v && v !== '').length / 7) * 100}%` }}
                           />
                         </div>
@@ -480,21 +581,34 @@ function GeneratorPage() {
                           return (
                             <div key={key} className="space-y-3">
                               <div className="flex items-center gap-2">
-                                <Label className="capitalize text-white font-medium">{key.replace('_', ' ')}</Label>
-                                {isComplete && <CheckCircle className="w-4 h-4 text-green-400" />}
+                                <Label
+                                  htmlFor={`${key}-select`}
+                                  className="capitalize text-fg-primary font-medium"
+                                >
+                                  {key.replace('_', ' ')}
+                                </Label>
+                                {isComplete && <CheckCircle className="w-4 h-4 text-state-success" aria-hidden="true" />}
                               </div>
                               <Select
                                 value={params7D[key as keyof Params7D]}
                                 onValueChange={(value) => updateParam(key as keyof Params7D, value)}
                               >
-                                <SelectTrigger className={`bg-zinc-800 border-zinc-700 text-white ${
-                                  isComplete ? 'border-green-500/50' : 'border-zinc-700'
-                                }`}>
+                                <SelectTrigger
+                                  id={`${key}-select`}
+                                  className={`bg-input border-input text-fg-primary focus-ring ${
+                                    isComplete ? 'border-state-success/50' : 'border-border'
+                                  }`}
+                                  aria-describedby={`${key}-help`}
+                                >
                                   <SelectValue placeholder={`Select ${key.replace('_', ' ')}`} />
                                 </SelectTrigger>
-                                <SelectContent className="bg-zinc-800 border-zinc-700">
+                                <SelectContent className="bg-card border-border">
                                   {options.map((option) => (
-                                    <SelectItem key={option.value} value={option.value} className="text-white hover:bg-zinc-700">
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}
+                                      className="text-fg-primary hover:bg-accent/10 focus:bg-accent/10"
+                                    >
                                       <div>
                                         <div className="font-medium">{option.label}</div>
                                       </div>
@@ -503,41 +617,71 @@ function GeneratorPage() {
                                 </SelectContent>
                               </Select>
                               {/* Tooltip/help text */}
-                              <p className="text-xs text-gray-400">
+                              <p
+                                id={`${key}-help`}
+                                className="text-xs text-fg-secondary"
+                                role="tooltip"
+                              >
                                 {key === 'domain' && 'The specific field or industry context for your prompt'}
                                 {key === 'scale' && 'The scope and complexity level of the task'}
                                 {key === 'urgency' && 'Time sensitivity and priority level'}
-                                {key === 'audience' && 'Target audience and their expertise level'}
-                                {key === 'format' && 'Desired output format and structure'}
-                                {key === 'constraints' && 'Limitations and requirements to consider'}
-                                {key === 'success_metrics' && 'How to measure prompt effectiveness'}
+                                {key === 'complexity' && 'The complexity level of the task'}
+                                {key === 'resources' && 'Available resources and constraints'}
+                                {key === 'application' && 'How the prompt will be used'}
+                                {key === 'output' && 'Desired output format and structure'}
                               </p>
                             </div>
                           )
                         })}
                       </div>
 
-                      {/* Generate button */}
-                      <div className="mt-8 pt-6 border-t border-zinc-700">
-                        <Button
-                          size="lg"
-                          className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
-                          onClick={() => {
-                            // Switch to generator tab
-                            const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
-                            if (generatorTab) generatorTab.click()
-                          }}
-                          disabled={Object.values(params7D).some(v => !v || v === '')}
-                        >
-                          <Zap className="w-5 h-5 mr-2" />
-                          {Object.values(params7D).some(v => !v || v === '') 
-                            ? 'Complete All Parameters' 
-                            : 'Generate Prompt'
-                          }
-                        </Button>
+                      {/* Navigation buttons */}
+                      <div className="mt-8 pt-6 border-t border-border">
+                        <div className="flex justify-between">
+                          <Button
+                            variant="outline"
+                            onClick={prevStep}
+                            disabled={currentStep === 1}
+                            className="border-border text-fg-secondary hover:bg-muted"
+                          >
+                            <ChevronLeft className="w-4 h-4 mr-2" />
+                            Previous
+                          </Button>
+                          <Button
+                            size="lg"
+                            className={`font-semibold ${
+                              Object.values(params7D).some(v => !v || v === '')
+                                ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                                : 'bg-accent hover:bg-accent-hover text-accent-contrast ritual-hover'
+                            }`}
+                            onClick={() => {
+                              if (currentStep < 4) {
+                                nextStep()
+                              } else {
+                                // Switch to generator tab
+                                const generatorTab = document.querySelector('[value="generator"]') as HTMLElement
+                                if (generatorTab) generatorTab.click()
+                              }
+                            }}
+                            disabled={Object.values(params7D).some(v => !v || v === '')}
+                            aria-describedby="generate-help"
+                          >
+                            {currentStep < 4 ? (
+                              <>
+                                Next
+                                <ChevronRight className="w-4 h-4 ml-2" />
+                              </>
+                            ) : (
+                              <>
+                                Generate Prompt
+                                <Zap className="w-4 h-4 ml-2" />
+                              </>
+                            )}
+                          </Button>
+                        </div>
                         {Object.values(params7D).some(v => !v || v === '') && (
-                          <p className="text-sm text-gray-400 mt-2 text-center">
-                            Please complete all 7 parameters to generate your prompt
+                          <p id="generate-help" className="text-sm text-fg-secondary mt-2 text-center">
+                            Complete all 7D parameters to generate your prompt
                           </p>
                         )}
                       </div>
@@ -565,7 +709,7 @@ function GeneratorPage() {
 
                   {/* Generated Prompt Display */}
                   {generatedPrompt && (
-                    <Card className="bg-zinc-900/80 border border-zinc-700">
+                    <Card className="bg-card border border-border">
                       <CardHeader>
                         <CardTitle className="font-serif">Generated Prompt</CardTitle>
                         <CardDescription>
@@ -573,7 +717,7 @@ function GeneratorPage() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-6">
-                        <div className="bg-black/50 border border-gray-700 rounded-lg p-4 min-h-96">
+                        <div className="bg-card border border-border rounded-lg p-4 min-h-96">
                           <div className="text-sm whitespace-pre-wrap">
                             {generatedPrompt.content}
                           </div>
@@ -581,7 +725,7 @@ function GeneratorPage() {
 
                         {/* Prompt Metadata */}
                         <div className="flex items-center justify-between">
-                          <div className="text-sm text-gray-400 space-y-1">
+                          <div className="text-sm text-fg-secondary space-y-1">
                             <div>Run ID: #{generatedPrompt.hash}</div>
                             <div>Generated: {new Date(generatedPrompt.timestamp).toLocaleString()}</div>
                             {currentPromptRun && (
@@ -624,7 +768,7 @@ function GeneratorPage() {
               </TabsContent>
 
               <TabsContent value="test">
-                <Card className="bg-zinc-900/80 border border-zinc-700">
+                <Card className="bg-card border border-border">
                   <CardHeader>
                     <CardTitle className="font-serif">Test Engine</CardTitle>
                     <CardDescription>Validate prompt quality with simulated or live testing</CardDescription>
@@ -643,7 +787,7 @@ function GeneratorPage() {
                           <TestTube className="w-6 h-6 mb-2" />
                         )}
                         <span>{isTesting ? "Testing..." : "Simulate Test"}</span>
-                        <span className="text-xs text-gray-400">Available on all plans</span>
+                        <span className="text-xs text-fg-secondary">Available on all plans</span>
                       </Button>
                       <EntitlementGate flag="canUseGptTestReal" featureName="Live GPT Testing" planRequired="pro">
                         <Button
@@ -665,39 +809,39 @@ function GeneratorPage() {
                             <Zap className="w-6 h-6 mb-2" />
                           )}
                           <span>{isTesting ? "Testing..." : "Live GPT Test"}</span>
-                          <span className="text-xs text-gray-400">Real AI validation</span>
+                          <span className="text-xs text-fg-secondary">Real AI validation</span>
                         </Button>
                       </EntitlementGate>
                     </div>
 
-                    <div className="bg-black/50 border border-gray-700 rounded-lg p-4">
+                    <div className="bg-card border border-border rounded-lg p-4">
                       <h4 className="font-medium mb-4">Test Results</h4>
                       {testResults ? (
                         <div className="space-y-4">
-                          <div className="flex items-center gap-2 text-sm text-gray-400">
+                          <div className="flex items-center gap-2 text-sm text-fg-secondary">
                             <CheckCircle className="w-4 h-4 text-green-400" />
                             {testResults.type === "live" ? "Live GPT Test" : "Simulation Test"} completed
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="text-center">
                               <div className="text-2xl font-bold text-yellow-400">{testResults.scores.structure}</div>
-                              <div className="text-sm text-gray-400">Structure</div>
+                              <div className="text-sm text-fg-secondary">Structure</div>
                             </div>
                             <div className="text-center">
                               <div className="text-2xl font-bold text-yellow-400">{testResults.scores.clarity}</div>
-                              <div className="text-sm text-gray-400">Clarity</div>
+                              <div className="text-sm text-fg-secondary">Clarity</div>
                             </div>
                             <div className="text-center">
                               <div className="text-2xl font-bold text-yellow-400">
                                 {testResults.scores.kpi_compliance}
                               </div>
-                              <div className="text-sm text-gray-400">KPI Compliance</div>
+                              <div className="text-sm text-fg-secondary">KPI Compliance</div>
                             </div>
                             <div className="text-center">
                               <div className="text-2xl font-bold text-yellow-400">
                                 {testResults.scores.executability}
                               </div>
-                              <div className="text-sm text-gray-400">Executability</div>
+                              <div className="text-sm text-fg-secondary">Executability</div>
                             </div>
                           </div>
                           
@@ -754,7 +898,7 @@ function GeneratorPage() {
               </TabsContent>
 
               <TabsContent value="history">
-                <Card className="bg-zinc-900/80 border border-zinc-700">
+                <Card className="bg-card border border-border">
                   <CardHeader>
                     <CardTitle className="font-serif">Generation History</CardTitle>
                     <CardDescription>View and manage your previous prompt generations</CardDescription>
@@ -785,9 +929,9 @@ function GeneratorPage() {
                                   <Badge variant="outline" className="text-xs">
                                     {prompt.module}
                                   </Badge>
-                                  <span className="text-sm text-gray-400">#{prompt.hash}</span>
+                                  <span className="text-sm text-fg-secondary">#{prompt.hash}</span>
                                 </div>
-                                <span className="text-xs text-gray-400">
+                                <span className="text-xs text-fg-secondary">
                                   {new Date(prompt.timestamp).toLocaleString()}
                                 </span>
                               </div>

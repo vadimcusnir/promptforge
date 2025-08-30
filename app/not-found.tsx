@@ -41,7 +41,7 @@ export default function NotFound() {
         404
       </h1>
       <p className="pf-sub">
-        Artifact not found. The requested prompt does not exist or has expired.
+        Page not found. The page you're looking for doesn't exist.
       </p>
 
       {/* actions */}
