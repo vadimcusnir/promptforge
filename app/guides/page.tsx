@@ -1,4 +1,4 @@
-"use client"
+import type { Metadata } from "next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -6,6 +6,36 @@ import { BookOpen, Zap, Settings, TestTube, Download, Code, CheckCircle, Play, C
 import Link from "next/link"
 import { Suspense } from "react"
 import dynamic from "next/dynamic"
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'PromptForge Guides - Master Industrial Prompt Engineering',
+    description: 'Comprehensive guides to master PromptForge industrial prompt engineering. From first generation to enterprise integration. Learn the 7D parameter engine, module mastery, and advanced workflows.',
+    keywords: ['prompt engineering guides', 'AI prompt tutorials', 'industrial prompt engineering', '7D parameter engine', 'prompt generation training'],
+    openGraph: {
+      title: 'PromptForge Guides - Master Industrial Prompt Engineering',
+      description: 'Comprehensive guides to master PromptForge industrial prompt engineering. From first generation to enterprise integration.',
+      type: 'website',
+      images: [
+        {
+          url: '/og/guides.webp',
+          width: 1200,
+          height: 630,
+          alt: 'PromptForge Learning Guides',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'PromptForge Guides - Master Industrial Prompt Engineering',
+      description: 'Comprehensive guides to master PromptForge industrial prompt engineering. From first generation to enterprise integration.',
+      images: ['/og/guides.webp'],
+    },
+    alternates: {
+      canonical: '/guides',
+    },
+  }
+}
 
 // Lazy load the client-side interactive components
 const GuidesClient = dynamic(() => import("@/components/guides/GuidesClient"), {

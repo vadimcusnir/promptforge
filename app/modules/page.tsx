@@ -1,6 +1,4 @@
 "use client"
-
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -8,6 +6,8 @@ import { Search, Filter, Lock, ArrowRight, Info, Clock, Tag, Building, AlertCirc
 import Link from "next/link"
 import { Suspense } from "react"
 import dynamic from "next/dynamic"
+
+
 
 // Lazy load the client-side interactive components
 const ModulesClient = dynamic(() => import("@/components/modules/ModulesClient"), {
