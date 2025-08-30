@@ -55,7 +55,8 @@ export default function LoginPage() {
       
       if (result.success) {
         setError(null);
-        alert('Password reset email sent! Check your inbox.');
+        console.log('Password reset email sent! Check your inbox.');
+        // TODO: Replace with proper toast notification
       } else {
         setError(result.error?.message || 'Failed to send reset email');
       }

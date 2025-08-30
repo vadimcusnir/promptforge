@@ -111,7 +111,8 @@ export function UpgradePaywall({ isOpen, onClose, feature, currentPlan, required
     } catch (error) {
       console.error('Error creating checkout session:', error);
       // Fallback to manual upgrade flow
-      alert('Please contact support to upgrade your plan.');
+      console.log('Please contact support to upgrade your plan.');
+      // TODO: Replace with proper toast notification
     }
   };
 

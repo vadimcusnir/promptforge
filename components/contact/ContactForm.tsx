@@ -69,12 +69,14 @@ export function ContactForm() {
     e.preventDefault();
     
     if (!formData.acceptTerms) {
-      alert("Trebuie să accepți termenii pentru a continua.");
+      console.error("Trebuie să accepți termenii pentru a continua.");
+      // TODO: Replace with proper toast notification
       return;
     }
 
     if (formData.message.length < 150) {
-      alert("Mesajul trebuie să aibă cel puțin 150 de caractere.");
+      console.error("Mesajul trebuie să aibă cel puțin 150 de caractere.");
+      // TODO: Replace with proper toast notification
       return;
     }
 

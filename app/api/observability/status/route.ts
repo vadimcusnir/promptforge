@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     const { action, ...params } = body;
 
     switch (action) {
-      case "trigger_kill_switch":
+      case "trigger_kill_switch": {
         const { reason } = params;
         if (!reason) {
           return NextResponse.json(
@@ -56,8 +56,9 @@ export async function POST(request: NextRequest) {
           reason,
           timestamp: new Date().toISOString(),
         });
+      }
 
-      case "enable_degradation_mode":
+      case "enable_degradation_mode": {
         const { agentWatch: aw } = await import("@/lib/observability");
         aw.enableDegradationMode();
 
@@ -65,8 +66,9 @@ export async function POST(request: NextRequest) {
           status: "degradation_mode_enabled",
           timestamp: new Date().toISOString(),
         });
+      }
 
-      case "disable_degradation_mode":
+      case "disable_degradation_mode": {
         const { agentWatch: aw2 } = await import("@/lib/observability");
         aw2.disableDegradationMode();
 
@@ -74,6 +76,7 @@ export async function POST(request: NextRequest) {
           status: "degradation_mode_disabled",
           timestamp: new Date().toISOString(),
         });
+      }
 
       default:
         return NextResponse.json(

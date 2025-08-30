@@ -65,8 +65,9 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
   };
 
   const handleClearHistory = () => {
+    // TODO: Replace with proper confirmation dialog
     if (
-      confirm(
+      window.confirm(
         "Are you sure you want to delete the entire history? This action cannot be undone.",
       )
     ) {

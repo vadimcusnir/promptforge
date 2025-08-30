@@ -38,10 +38,12 @@ export default function AdminPage() {
         // Now check the coming soon status after successful login
         checkAuthentication();
       } else {
-        alert("Invalid password");
+        console.error("Invalid password");
+        // TODO: Replace with proper toast notification
       }
     } catch {
-      alert("Login failed");
+      console.error("Login failed");
+      // TODO: Replace with proper toast notification
     } finally {
       setIsLoading(false);
     }
@@ -94,12 +96,15 @@ export default function AdminPage() {
 
       if (res.ok) {
         checkAuthentication();
-        alert(`Coming Soon ${on ? "enabled" : "disabled"} successfully!`);
+        console.log(`Coming Soon ${on ? "enabled" : "disabled"} successfully!`);
+        // TODO: Replace with proper toast notification
       } else {
-        alert("Failed to toggle Coming Soon");
+        console.error("Failed to toggle Coming Soon");
+        // TODO: Replace with proper toast notification
       }
     } catch {
-      alert("Error toggling Coming Soon");
+      console.error("Error toggling Coming Soon");
+      // TODO: Replace with proper toast notification
     } finally {
       setIsLoading(false);
     }

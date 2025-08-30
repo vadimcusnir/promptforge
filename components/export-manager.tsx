@@ -205,7 +205,8 @@ export function ExportManager({
         exportAsTXT();
         break;
       case "pdf":
-        alert("Export PDF will be available in the next version.");
+        console.log("Export PDF will be available in the next version.");
+        // TODO: Replace with proper toast notification
         break;
     }
   };

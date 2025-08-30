@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
     const { action, ...params } = body;
 
     switch (action) {
-      case 'save':
+      case 'save': {
         // Salvează un nou entry în istoric
         const {
           moduleId, presetId, domain, sevenDConfig, promptText,
@@ -128,8 +128,9 @@ export async function POST(req: NextRequest) {
           historyId,
           message: 'Entry saved to cloud history'
         });
+      }
 
-      case 'toggle_favorite':
+      case 'toggle_favorite': {
         // Marchează/demarchează ca favorit
         const { historyId: favoriteHistoryId } = params;
 
@@ -148,8 +149,9 @@ export async function POST(req: NextRequest) {
           is_favorite: newFavoriteStatus,
           message: newFavoriteStatus ? 'Added to favorites' : 'Removed from favorites'
         });
+      }
 
-      case 'delete':
+      case 'delete': {
         // Șterge entry din istoric
         const { historyId: deleteHistoryId } = params;
 
@@ -167,6 +169,7 @@ export async function POST(req: NextRequest) {
           historyId: deleteHistoryId,
           message: 'Entry deleted from history'
         });
+      }
 
       default:
         return NextResponse.json(

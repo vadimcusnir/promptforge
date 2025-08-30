@@ -172,7 +172,7 @@ export function NarrativeLayer({
           }
           break;
 
-        case "fadeout":
+        case "fadeout": {
           // Fade out animation
           const fadeProgress = timeSincePhaseStart / activeQuote.out;
           updatedQuote.opacity = Math.max(0, 1 - fadeProgress);
@@ -203,6 +203,7 @@ export function NarrativeLayer({
             }
           }
           break;
+        }
       }
 
       if (updatedQuote !== activeQuote) {
