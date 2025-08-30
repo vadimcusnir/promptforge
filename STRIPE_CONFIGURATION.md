@@ -1,16 +1,18 @@
 # Stripe Configuration for PromptForge
 
+⚠️ **IMPORTANT**: This file contains placeholder values. Replace them with your actual Stripe API keys from your Stripe dashboard.
+
 ## Environment Variables Setup
 
 Copy these environment variables to your `.env.local` file or deployment platform:
 
 ```bash
 # Stripe Configuration
-STRIPE_SECRET=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
-STRIPE_SECRET_KEY=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
-STRIPE_PUBLISHABLE_KEY=pk_live_51RnpkGGcCmkUZPV6SHA1YkmOhd30qN2kAxm5n6iE4ZHNjzU84ZFWifiZQ22cKntXM38KfRkIriTeOHqiBrdPHWWG00dw7WcY9p
-STRIPE_WEBHOOK_SECRET=whsec_LABaaLypGKgyw6qnPt0ugpOT6ozDQvrq
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_51RnpkGGcCmkUZPV6SHA1YkmOhd30qN2kAxm5n6iE4ZHNjzU84ZFWifiZQ22cKntXM38KfRkIriTeOHqiBrdPHWWG00dw7WcY9p
+STRIPE_SECRET=your_stripe_secret_key_here
+STRIPE_SECRET_KEY=your_stripe_secret_key_here
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key_here
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret_here
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key_here
 
 # Stripe Product IDs
 STRIPE_PILOT_PRODUCT_ID=prod_Sv2lfPu3n8I60C
