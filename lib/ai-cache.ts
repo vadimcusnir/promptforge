@@ -74,10 +74,22 @@ export class AICache {
   } = { hits: 0, misses: 0, totalSavings: 0 }
 
   constructor() {
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    // Lazy initialization to avoid build-time errors
+    this.supabase = null
+  }
+
+  private getSupabaseClient() {
+    if (!this.supabase) {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+      
+      if (!url || !key) {
+        throw new Error('Supabase configuration missing. Please check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.')
+      }
+      
+      this.supabase = createClient(url, key)
+    }
+    return this.supabase
   }
 
   // Generate cache key from parameters
@@ -151,7 +163,7 @@ export class AICache {
       
       if (!entry) {
         // Check database cache
-        const { data, error } = await this.supabase
+        const { data, error } = await this.getSupabaseClient()
           .from('ai_cache')
           .select('*')
           .eq('key', key)
@@ -181,7 +193,7 @@ export class AICache {
       entry.lastAccessed = new Date()
       
       // Update database
-      await this.supabase
+      await this.getSupabaseClient()
         .from('ai_cache')
         .update({
           hit_count: entry.hitCount,
@@ -240,7 +252,7 @@ export class AICache {
       this.memoryCache.set(key, entry)
       
       // Store in database
-      await this.supabase
+      await this.getSupabaseClient()
         .from('ai_cache')
         .insert([{
           id: entry.id,
@@ -306,13 +318,13 @@ export class AICache {
       }
       
       // Clean database cache
-      await this.supabase
+      await this.getSupabaseClient()
         .from('ai_cache')
         .delete()
         .lt('expires_at', now.toISOString())
       
       // Remove old entries if cache is too large
-      const { data: entries } = await this.supabase
+      const { data: entries } = await this.getSupabaseClient()
         .from('ai_cache')
         .select('id, created_at')
         .order('created_at', { ascending: true })
@@ -321,7 +333,7 @@ export class AICache {
         const entriesToDelete = entries.slice(0, entries.length - CACHE_CONFIG.maxCacheSize)
         const idsToDelete = entriesToDelete.map((entry: any) => entry.id)
         
-        await this.supabase
+        await this.getSupabaseClient()
           .from('ai_cache')
           .delete()
           .in('id', idsToDelete)
@@ -334,7 +346,7 @@ export class AICache {
   // Get cache statistics
   async getStats(): Promise<CacheStats> {
     try {
-      const { data: entries } = await this.supabase
+      const { data: entries } = await this.getSupabaseClient()
         .from('ai_cache')
         .select('*')
       
@@ -414,7 +426,7 @@ export class AICache {
   async clear(): Promise<void> {
     try {
       this.memoryCache.clear()
-      await this.supabase
+      await this.getSupabaseClient()
         .from('ai_cache')
         .delete()
         .neq('id', '00000000-0000-0000-0000-000000000000') // Delete all entries
