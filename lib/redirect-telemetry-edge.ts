@@ -84,6 +84,18 @@ class RedirectTelemetryEdge {
       topSlugs: this.getTopLegacySlugs()
     };
   }
+
+  async generateReport() {
+    return {
+      summary: {
+        totalRedirects: this.getTotalRedirects(),
+        legacyRedirectShare: this.getLegacyRedirectShare(),
+        topLegacySlugs: this.getTopLegacySlugs()
+      },
+      redirects: this.getRedirects(),
+      timestamp: new Date()
+    };
+  }
 }
 
 export const redirectTelemetry = new RedirectTelemetryEdge();

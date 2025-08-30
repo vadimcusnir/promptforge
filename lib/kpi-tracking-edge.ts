@@ -67,12 +67,41 @@ class KPITrackerEdge {
   async getDashboard() {
     return {
       metrics: this.getLatestMetrics(),
-      trends: this.getTrends(),
       summary: {
         totalRedirects: this.getTotalRedirects(),
         legacyRedirects: this.getLegacyRedirects()
       }
     };
+  }
+
+  async generateReport() {
+    const latest = this.getLatestMetrics();
+    return {
+      summary: {
+        totalRedirects: this.getTotalRedirects(),
+        legacyRedirects: this.getLegacyRedirects(),
+        legacyRedirectShare: this.getLegacyRedirectShare()
+      },
+      metrics: latest,
+      timestamp: new Date()
+    };
+  }
+
+  async updateMetric(metricId: string, value: number, additionalData?: any) {
+    // For the edge version, we just update the metrics
+    this.updateMetrics();
+  }
+
+  async updatePerformanceMetrics(data?: any) {
+    this.updateMetrics();
+  }
+
+  async updateLegacyRedirectShare(data?: any) {
+    this.updateMetrics();
+  }
+
+  async resetMetrics() {
+    this.clearMetrics();
   }
 }
 
