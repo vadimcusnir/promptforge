@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from 'react'
-import { Module } from '@/lib/modules'
+import { ExtendedModule } from '@/lib/modules'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Search, Filter, Download } from 'lucide-react'
-import { analytics } from '@/lib/analytics'
+// import { analytics } from '@/lib/analytics'
 
 export function ModuleBrowser() {
-  const [modules, setModules] = useState<Module[]>([])
+  const [modules, setModules] = useState<ExtendedModule[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -33,7 +33,7 @@ export function ModuleBrowser() {
 
       const response = await fetch(`/api/modules?${params}`)
       const data = await response.json()
-      setModules(data.modules || [])
+      setModules(data.data?.modules || [])
     } catch (error) {
       console.error('Error fetching modules:', error)
     } finally {
@@ -80,7 +80,12 @@ export function ModuleBrowser() {
       
       if (data.data) {
         // Create download link
-        const blob = new Blob([Buffer.from(data.data, 'base64')], { 
+        const binaryString = atob(data.data)
+        const bytes = new Uint8Array(binaryString.length)
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i)
+        }
+        const blob = new Blob([bytes], { 
           type: data.mimeType 
         })
         const url = URL.createObjectURL(blob)
@@ -97,11 +102,13 @@ export function ModuleBrowser() {
     }
   }
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty: number) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-500/20 text-green-400'
-      case 'intermediate': return 'bg-yellow-500/20 text-yellow-400'
-      case 'advanced': return 'bg-red-500/20 text-red-400'
+      case 1: return 'bg-green-500/20 text-green-400'
+      case 2: return 'bg-yellow-500/20 text-yellow-400'
+      case 3: return 'bg-red-500/20 text-red-400'
+      case 4: return 'bg-purple-500/20 text-purple-400'
+      case 5: return 'bg-orange-500/20 text-orange-400'
       default: return 'bg-gray-500/20 text-gray-400'
     }
   }
@@ -205,9 +212,9 @@ export function ModuleBrowser() {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-pf-text text-lg">{module.name}</CardTitle>
+                  <CardTitle className="text-pf-text text-lg">{module.title}</CardTitle>
                   <Badge className={`mt-2 ${getDifficultyColor(module.difficulty)}`}>
-                    {module.difficulty}
+                    Level {module.difficulty}
                   </Badge>
                 </div>
                 <input
@@ -220,7 +227,7 @@ export function ModuleBrowser() {
             </CardHeader>
             <CardContent>
               <CardDescription className="text-pf-text-muted mb-4">
-                {module.description}
+                {module.summary}
               </CardDescription>
               <div className="flex flex-wrap gap-1">
                 {module.tags.map(tag => (

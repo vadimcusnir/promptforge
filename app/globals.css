@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+/* Fonts loaded via Next.js font optimization in layout.tsx */
 
 @tailwind base;
 @tailwind components;
@@ -9,6 +9,9 @@
   --pf-black: #0A0A0A;
   --pf-surface: #111214;
   --gold-industrial: #d1a954;
+  
+  /* Single source of truth for fonts */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Inter", "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
 
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;
@@ -57,12 +60,13 @@
 /* ===== GLOBAL RESET & BASE ===== */
 @layer base {
   *, ::before, ::after {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   html {
     @apply dark h-full bg-background text-foreground antialiased;
     background: hsl(var(--background));
+    font-family: var(--font-sans);
   }
 
   body {
@@ -72,14 +76,6 @@
 
 /* ===== FONT UTILITIES ===== */
 @layer utilities {
-  .font-montserrat {
-    font-family: 'Montserrat', sans-serif;
-  }
-  
-  .font-open-sans {
-    font-family: 'Open Sans', sans-serif;
-  }
-  
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;

@@ -1,3 +1,5 @@
+"use client";
+
 import ComingSoonInteractive from "@/components/coming-soon-interactive";
 import HomeInteractive from "@/components/home-interactive";
 import MainContentInteractive from "@/components/main-content-interactive";

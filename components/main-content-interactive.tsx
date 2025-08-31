@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Zap, Cpu, Download } from "lucide-react";
+import { ArrowRight, Zap, Cpu, Download, Crown, Brain, Users } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
@@ -54,7 +54,7 @@ export default function MainContentInteractive() {
         </Card>
       </div>
       {/* Call to action */}
-      <div className="mt-16 space-y-4">
+      <div className="mt-16 space-y-6">
         <a
           href="/dashboard"
           className="inline-flex items-center gap-2 bg-gold-industrial hover:bg-gold-industrial-dark text-pf-black font-bold px-8 py-4 text-lg transition-all shadow-[0_0_20px_rgba(209,169,84,0.3)] hover:shadow-[0_0_30px_rgba(209,169,84,0.5)] rounded-lg"
@@ -62,6 +62,32 @@ export default function MainContentInteractive() {
           Accesează Dashboard-ul
           <ArrowRight className="w-5 h-5" />
         </a>
+        
+        {/* Advanced Features */}
+        <div className="flex flex-wrap justify-center gap-4 mt-6">
+          <a
+            href="/pricing"
+            className="inline-flex items-center px-6 py-3 bg-pf-surface border border-gold-industrial/30 text-gold-industrial font-medium rounded-lg hover:bg-gold-industrial/10 transition-colors"
+          >
+            <Crown className="w-4 h-4 mr-2" />
+            Pricing Plans
+          </a>
+          <a
+            href="/ai-editor"
+            className="inline-flex items-center px-6 py-3 bg-pf-surface border border-purple-500/30 text-purple-400 font-medium rounded-lg hover:bg-purple-500/10 transition-colors"
+          >
+            <Brain className="w-4 h-4 mr-2" />
+            AI Editor
+          </a>
+          <a
+            href="/collaborate"
+            className="inline-flex items-center px-6 py-3 bg-pf-surface border border-blue-500/30 text-blue-400 font-medium rounded-lg hover:bg-blue-500/10 transition-colors"
+          >
+            <Users className="w-4 h-4 mr-2" />
+            Collaborate
+          </a>
+        </div>
+        
         <div>
           <button
             onClick={() => setShowDemo(true)}

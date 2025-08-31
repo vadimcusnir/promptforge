@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
 import { AuthProvider } from "@/lib/auth";
+import { Header } from "@/components/header";
 
 // Define font variables for headings and body text.
 const montserrat = Montserrat({
@@ -39,6 +40,7 @@ export default function RootLayout({
         className={`${montserrat.variable} ${openSans.variable} font-sans antialiased min-h-screen bg-pf-black`}
       >
         <AuthProvider>
+          <Header />
           {children}
         </AuthProvider>
       </body>

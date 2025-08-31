@@ -96,3 +96,72 @@ export function searchModules(query: string): Module[] {
     module.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
   )
 }
+
+// Extended module schema for API compatibility
+export const ExtendedModuleSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  summary: z.string(),
+  vectors: z.array(z.string()),
+  difficulty: z.number(),
+  minPlan: z.string(),
+  tags: z.array(z.string()),
+  outputs: z.array(z.string()),
+  version: z.string(),
+  deprecated: z.boolean().optional(),
+})
+
+export type ExtendedModule = z.infer<typeof ExtendedModuleSchema>
+
+export const catalogData = {
+  version: "1.0.0",
+  modules: {
+    'M01': {
+      id: 'M01',
+      title: 'Content Generator',
+      slug: 'content-generator',
+      summary: 'Generate high-quality content for any topic',
+      vectors: ['content', 'strategic'],
+      difficulty: 1,
+      minPlan: 'free',
+      tags: ['content', 'writing', 'generation'],
+      outputs: ['text', 'markdown'],
+      version: '1.0.0',
+      deprecated: false,
+    },
+    'M02': {
+      id: 'M02',
+      title: 'Text Analyzer',
+      slug: 'text-analyzer',
+      summary: 'Analyze text for sentiment, keywords, and structure',
+      vectors: ['analytics', 'content'],
+      difficulty: 2,
+      minPlan: 'creator',
+      tags: ['analysis', 'sentiment', 'keywords'],
+      outputs: ['json', 'report'],
+      version: '1.0.0',
+      deprecated: false,
+    },
+    'M03': {
+      id: 'M03',
+      title: 'Prompt Optimizer',
+      slug: 'prompt-optimizer',
+      summary: 'Optimize prompts for better AI responses',
+      vectors: ['strategic', 'cognitive'],
+      difficulty: 3,
+      minPlan: 'pro',
+      tags: ['optimization', 'prompting', 'efficiency'],
+      outputs: ['text', 'json'],
+      version: '1.0.0',
+      deprecated: false,
+    },
+  }
+}
+
+export function validateModuleCatalog(catalog: any) {
+  return {
+    version: catalog.version,
+    modules: catalog.modules
+  }
+}

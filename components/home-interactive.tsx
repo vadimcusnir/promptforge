@@ -18,6 +18,12 @@ export default function HomeInteractive() {
 
     const checkComingSoon = async () => {
       try {
+        // Check if we're in a browser environment and the API endpoint exists
+        if (typeof window === 'undefined') {
+          if (!unmounted) setComingSoonEnabled(false);
+          return;
+        }
+        
         const res = await fetch("/api/toggle-coming-soon", { cache: "no-store" });
         const json = res.ok ? await res.json() : null;
         if (!unmounted) setComingSoonEnabled(Boolean(json?.data?.enabled));
