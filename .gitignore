@@ -116,3 +116,4 @@ env.ai-gateway
 env.example
 
 apps/site-v4-manus/build
+apps/site-v4-manus/promptforge_production/build
