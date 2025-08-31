@@ -112,10 +112,21 @@ export default function PricingPage() {
                   </div>
                   <CardTitle className="text-2xl text-pf-text">{planData.name}</CardTitle>
                   <div className="mt-4">
-                    <span className="text-4xl font-bold text-pf-text">
-                      ${planData.price}
-                    </span>
-                    {!isFree && <span className="text-pf-text-muted">/month</span>}
+                    <div className="flex items-baseline justify-center space-x-2">
+                      <span className="text-4xl font-bold text-pf-text">
+                        ${planData.price}
+                      </span>
+                      {!isFree && <span className="text-pf-text-muted">/month</span>}
+                    </div>
+                    {!isFree && (
+                      <div className="mt-2 text-center">
+                        <span className="text-sm text-pf-text-muted">Annual: </span>
+                        <span className="text-lg font-semibold text-gold-industrial">
+                          ${planData.price * 10}
+                        </span>
+                        <span className="text-xs text-pf-text-muted ml-1">(10× monthly)</span>
+                      </div>
+                    )}
                   </div>
                 </CardHeader>
                 
@@ -147,6 +158,54 @@ export default function PricingPage() {
                         <span>AI Generations:</span>
                         <span>{planData.limits.aiGenerations === -1 ? 'Unlimited' : planData.limits.aiGenerations}</span>
                       </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-pf-text font-semibold mb-3">Export Formats:</h4>
+                    <div className="space-y-1 text-sm">
+                      {plan.key === 'FREE' && (
+                        <div className="flex items-center text-pf-text-muted">
+                          <Check className="w-3 h-3 text-gold-industrial mr-2" />
+                          <span>.txt files</span>
+                        </div>
+                      )}
+                      {plan.key === 'CREATOR' && (
+                        <>
+                          <div className="flex items-center text-pf-text-muted">
+                            <Check className="w-3 h-3 text-gold-industrial mr-2" />
+                            <span>.txt, .md files</span>
+                          </div>
+                        </>
+                      )}
+                      {plan.key === 'PRO' && (
+                        <>
+                          <div className="flex items-center text-pf-text-muted">
+                            <Check className="w-3 h-3 text-gold-industrial mr-2" />
+                            <span>.txt, .md files</span>
+                          </div>
+                          <div className="flex items-center text-pf-text-muted">
+                            <Check className="w-3 h-3 text-gold-industrial mr-2" />
+                            <span>.pdf, .json (score ≥80)</span>
+                          </div>
+                        </>
+                      )}
+                      {plan.key === 'ENTERPRISE' && (
+                        <>
+                          <div className="flex items-center text-pf-text-muted">
+                            <Check className="w-3 h-3 text-gold-industrial mr-2" />
+                            <span>.txt, .md files</span>
+                          </div>
+                          <div className="flex items-center text-pf-text-muted">
+                            <Check className="w-3 h-3 text-gold-industrial mr-2" />
+                            <span>.pdf, .json (score ≥80)</span>
+                          </div>
+                          <div className="flex items-center text-pf-text-muted">
+                            <Check className="w-3 h-3 text-gold-industrial mr-2" />
+                            <span>.zip bundles</span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                   

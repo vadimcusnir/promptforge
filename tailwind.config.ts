@@ -52,13 +52,13 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // PromptForge custom colors
+        // PromptForge Design System
         "pf-black": "var(--pf-black)",
         "pf-surface": "var(--pf-surface)",
         "pf-text": "hsl(var(--foreground))",
         "pf-text-muted": "hsl(var(--muted-foreground))",
         "gold-industrial": "var(--gold-industrial)",
-        "gold-industrial-dark": "#b8941f",
+        "gold-industrial-dark": "var(--gold-industrial-dark)",
       },
       borderRadius: {
         lg: "var(--radius)",

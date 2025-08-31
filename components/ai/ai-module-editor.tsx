@@ -31,11 +31,13 @@ interface AIGenerationResult {
 
 export function AIModuleEditor() {
   const [inputs, setInputs] = useState({
-    topic: '',
-    requirements: '',
-    tone: 'Professional',
-    length: '500 words',
-    audience: 'General'
+    context: '',
+    objective: '',
+    audience: '',
+    constraints: '',
+    domain: '',
+    depth: 'Medium',
+    deliverable: 'Text'
   })
   
   const [generatedContent, setGeneratedContent] = useState('')
@@ -46,10 +48,13 @@ export function AIModuleEditor() {
   const [optimizedContent, setOptimizedContent] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisResult, setAnalysisResult] = useState<AIGenerationResult | null>(null)
+  const [currentPlan, setCurrentPlan] = useState<'FREE' | 'CREATOR' | 'PRO' | 'ENTERPRISE'>('FREE')
+  const [score, setScore] = useState<number | null>(null)
 
   const handleGenerate = async () => {
     setIsGenerating(true)
     setGenerationResult(null)
+    setScore(null)
     
     try {
       const response = await fetch('/api/ai/generate', {
@@ -70,6 +75,9 @@ export function AIModuleEditor() {
       
       if (result.success && result.result) {
         setGeneratedContent(result.result)
+        // Calculate score based on content quality (mock implementation)
+        const calculatedScore = Math.floor(Math.random() * 30) + 70 // 70-100 range
+        setScore(calculatedScore)
       }
     } catch (error) {
       console.error('Generation error:', error)
@@ -345,6 +353,15 @@ export function AIModuleEditor() {
                 <CardTitle className="text-pf-text flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-400" />
                   Generated Content
+                  {score !== null && (
+                    <Badge className={`ml-2 ${
+                      score >= 80 ? 'bg-green-500 text-white' : 
+                      score >= 60 ? 'bg-yellow-500 text-black' : 
+                      'bg-red-500 text-white'
+                    }`}>
+                      Score: {score}%
+                    </Badge>
+                  )}
                 </CardTitle>
                 {generationResult?.usage && (
                   <div className="flex gap-4 text-sm text-pf-text-muted">
@@ -379,7 +396,39 @@ export function AIModuleEditor() {
                     className="bg-pf-text-muted/20 text-pf-text-muted hover:bg-pf-text-muted/30"
                   >
                     <Download className="w-4 h-4 mr-2" />
-                    Download
+                    .txt
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const blob = new Blob([generatedContent], { type: 'text/markdown' })
+                      const url = URL.createObjectURL(blob)
+                      const a = document.createElement('a')
+                      a.href = url
+                      a.download = 'generated-content.md'
+                      a.click()
+                      URL.revokeObjectURL(url)
+                    }}
+                    disabled={currentPlan === 'FREE'}
+                    className={currentPlan === 'FREE' ? 'opacity-50 cursor-not-allowed' : 'bg-pf-text-muted/20 text-pf-text-muted hover:bg-pf-text-muted/30'}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    .md {currentPlan === 'FREE' && '(Creator+)'}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const blob = new Blob([generatedContent], { type: 'application/json' })
+                      const url = URL.createObjectURL(blob)
+                      const a = document.createElement('a')
+                      a.href = url
+                      a.download = 'generated-content.json'
+                      a.click()
+                      URL.revokeObjectURL(url)
+                    }}
+                    disabled={currentPlan === 'FREE' || currentPlan === 'CREATOR' || (score !== null && score < 80)}
+                    className={(currentPlan === 'FREE' || currentPlan === 'CREATOR' || (score !== null && score < 80)) ? 'opacity-50 cursor-not-allowed' : 'bg-pf-text-muted/20 text-pf-text-muted hover:bg-pf-text-muted/30'}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    .json {currentPlan === 'FREE' && '(Pro+)'} {currentPlan === 'CREATOR' && '(Pro+)'} {score !== null && score < 80 && '(Score ≥80)'}
                   </Button>
                 </div>
               </CardContent>

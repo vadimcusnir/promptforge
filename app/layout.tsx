@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
 import { AuthProvider } from "@/lib/auth";
-import { Header } from "@/components/header";
+import { Header } from "@/components/Header";
 
 // Define font variables for headings and body text.
 const montserrat = Montserrat({

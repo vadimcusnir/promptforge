@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, Play, Download, Zap } from 'lucide-react';
+import { ExportMenu } from '@/components/ExportMenu';
 
 export default function GeneratorPage() {
   const [searchQuery, setSearchQuery] = useState('');

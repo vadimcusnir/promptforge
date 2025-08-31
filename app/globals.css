@@ -4,15 +4,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== THEME VARIABLES ===== */
+/* ===== PROMPTFORGE TOKEN SHEET ===== */
 :root {
+  /* Core PF Colors */
   --pf-black: #0A0A0A;
   --pf-surface: #111214;
   --gold-industrial: #d1a954;
+  --gold-industrial-dark: #b8941f;
   
-  /* Single source of truth for fonts */
+  /* Font System */
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Inter", "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
 
+  /* Shadcn/UI Compatible HSL Variables */
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;
   --card: 0 0% 10%;
