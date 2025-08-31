@@ -2,19 +2,10 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { FileText, FileJson, Archive, Lock } from 'lucide-react';
 import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger,
-  DropdownMenuSeparator 
-} from '@/components/ui/dropdown-menu';
-import { Download, FileText, FileJson, Archive, Lock } from 'lucide-react';
-import { 
-  checkEntitlement, 
   canExportFormat, 
-  getEntitlementReason,
-  getAvailableExportFormats 
+  getEntitlementReason
 } from '@/lib/entitlements';
 import { PlanType } from '@/lib/entitlements/types';
 import { exportToPDF, exportToJSON, exportToMarkdown, exportToZip, downloadFile } from '@/lib/export';
@@ -23,7 +14,7 @@ interface ExportMenuProps {
   modules: any[];
   plan: PlanType;
   score?: number;
-  metadata?: {
+  metadata: {
     title: string;
     description: string;
     author: string;
@@ -90,48 +81,30 @@ export function ExportMenu({ modules, plan, score = 0, metadata }: ExportMenuPro
   ];
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="border-pf-text-muted/30 text-pf-text hover:bg-pf-text-muted/10"
-          disabled={isExporting !== null}
-        >
-          <Download className="w-4 h-4 mr-2" />
-          {isExporting ? `Exporting ${isExporting.toUpperCase()}...` : 'Export'}
-        </Button>
-      </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        className="bg-pf-surface border-pf-text-muted/30 text-pf-text"
-        align="end"
-      >
-        {formats.map((format, index) => {
-          const isAvailable = canExportFormat(plan, format.key, score);
-          const reason = getEntitlementReason(plan, format.key, score);
-          const Icon = format.icon;
-          
-          return (
-            <div key={format.key}>
-              <DropdownMenuItem
-                className={`flex items-center space-x-2 ${
-                  isAvailable 
-                    ? 'hover:bg-pf-text-muted/10 cursor-pointer' 
-                    : 'opacity-50 cursor-not-allowed'
-                }`}
-                onClick={() => isAvailable && handleExport(format.key)}
-                disabled={!isAvailable || isExporting !== null}
-                title={!isAvailable ? reason : ''}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{format.label}</span>
-                {!isAvailable && <Lock className="w-3 h-3 ml-auto" />}
-              </DropdownMenuItem>
-              {index < formats.length - 1 && <DropdownMenuSeparator className="bg-pf-text-muted/20" />}
-            </div>
-          );
-        })}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex flex-wrap gap-2">
+      {formats.map((format) => {
+        const isAvailable = canExportFormat(plan, format.key, score);
+        const reason = getEntitlementReason(plan, format.key, score);
+        const Icon = format.icon;
+        
+        return (
+          <Button
+            key={format.key}
+            variant="outline"
+            size="sm"
+            className={`border-pf-text-muted/30 text-pf-text hover:bg-pf-text-muted/10 ${
+              !isAvailable ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            onClick={() => isAvailable && handleExport(format.key)}
+            disabled={!isAvailable || isExporting !== null}
+            title={!isAvailable ? reason : ''}
+          >
+            <Icon className="w-4 h-4 mr-2" />
+            {format.label}
+            {!isAvailable && <Lock className="w-3 h-3 ml-2" />}
+          </Button>
+        );
+      })}
+    </div>
   );
 }

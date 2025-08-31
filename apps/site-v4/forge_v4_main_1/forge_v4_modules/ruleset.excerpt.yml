@@ -1,0 +1,28 @@
+# ruleset.yml — SSOT (excerpt)
+guardrails:
+  english_only: true
+  no_pii: true
+  min_score_for_export: 80
+  enum_only: true
+  raise_on_invalid: true
+
+plans:
+  free:
+    exports: [".txt"]
+    live_test: false
+  creator:
+    exports: [".txt", ".md"]
+    live_test: false
+  pro:
+    exports: [".txt", ".md", ".pdf", ".json"]
+    live_test: true
+  enterprise:
+    exports: [".txt", ".md", ".pdf", ".json", ".zip"]
+    live_test: true
+    api_access: true
+
+gating:
+  modules:
+    # UI must enforce: user_plan >= module.minPlan
+    enforce_on_api: true
+    enforce_on_ui: true

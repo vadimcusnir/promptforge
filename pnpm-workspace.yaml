@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+
+ignoredBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - core-js
+  - sharp
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - esbuild

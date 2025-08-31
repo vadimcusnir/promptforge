@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Play, Download, Zap } from 'lucide-react';
+import { Search, Play, Zap } from 'lucide-react';
 import { ExportMenu } from '@/components/ExportMenu';
 
 export default function GeneratorPage() {
@@ -64,10 +64,8 @@ export default function GeneratorPage() {
     console.log('Running real test...');
   };
 
-  const handleExport = () => {
-    // Export results (gated)
-    console.log('Exporting results...');
-  };
+  const currentPlan = 'CREATOR' as const; // This would come from auth context
+  const currentScore = 85; // This would come from module scoring
 
   return (
     <div className="min-h-screen bg-pf-black py-8">
@@ -114,18 +112,17 @@ export default function GeneratorPage() {
               </label>
               <div className="flex flex-wrap gap-2">
                 {vectors.map((vector) => (
-                  <Badge
+                  <button
                     key={vector}
-                    variant={selectedVectors.includes(vector) ? "default" : "outline"}
-                    className={`cursor-pointer ${
+                    onClick={() => handleVectorToggle(vector)}
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                       selectedVectors.includes(vector)
                         ? 'bg-gold-industrial text-pf-black'
-                        : 'border-pf-text-muted/30 text-pf-text-muted hover:border-gold-industrial'
+                        : 'border border-pf-text-muted/30 text-pf-text-muted hover:border-gold-industrial'
                     }`}
-                    onClick={() => handleVectorToggle(vector)}
                   >
                     {vector}
-                  </Badge>
+                  </button>
                 ))}
               </div>
             </div>
@@ -137,20 +134,19 @@ export default function GeneratorPage() {
               </label>
               <div className="flex flex-wrap gap-2">
                 {difficulties.map((difficulty) => (
-                  <Badge
+                  <button
                     key={difficulty}
-                    variant={selectedDifficulty === difficulty ? "default" : "outline"}
-                    className={`cursor-pointer ${
-                      selectedDifficulty === difficulty
-                        ? 'bg-gold-industrial text-pf-black'
-                        : 'border-pf-text-muted/30 text-pf-text-muted hover:border-gold-industrial'
-                    }`}
                     onClick={() => setSelectedDifficulty(
                       selectedDifficulty === difficulty ? '' : difficulty
                     )}
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                      selectedDifficulty === difficulty
+                        ? 'bg-gold-industrial text-pf-black'
+                        : 'border border-pf-text-muted/30 text-pf-text-muted hover:border-gold-industrial'
+                    }`}
                   >
                     {difficulty}
-                  </Badge>
+                  </button>
                 ))}
               </div>
             </div>
@@ -162,20 +158,19 @@ export default function GeneratorPage() {
               </label>
               <div className="flex flex-wrap gap-2">
                 {plans.map((plan) => (
-                  <Badge
+                  <button
                     key={plan}
-                    variant={selectedPlan === plan ? "default" : "outline"}
-                    className={`cursor-pointer ${
-                      selectedPlan === plan
-                        ? 'bg-gold-industrial text-pf-black'
-                        : 'border-pf-text-muted/30 text-pf-text-muted hover:border-gold-industrial'
-                    }`}
                     onClick={() => setSelectedPlan(
                       selectedPlan === plan ? '' : plan
                     )}
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                      selectedPlan === plan
+                        ? 'bg-gold-industrial text-pf-black'
+                        : 'border border-pf-text-muted/30 text-pf-text-muted hover:border-gold-industrial'
+                    }`}
                   >
                     {plan}
-                  </Badge>
+                  </button>
                 ))}
               </div>
             </div>
@@ -240,14 +235,16 @@ export default function GeneratorPage() {
             <Zap className="w-4 h-4 mr-2" />
             Run Real Test (Pro+)
           </Button>
-          <Button
-            onClick={handleExport}
-            variant="outline"
-            className="border-pf-text-muted/30 text-pf-text hover:bg-pf-text-muted/10"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Export (Gated)
-          </Button>
+          <ExportMenu 
+            modules={modules}
+            plan={currentPlan}
+            score={currentScore}
+            metadata={{
+              title: 'PromptForge Generator Export',
+              description: 'Generated prompts from 7D framework',
+              author: 'PromptForge User'
+            }}
+          />
         </div>
 
         {/* Modal Overlay */}

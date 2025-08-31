@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "project": "PromptForge v4",
+    "date": "2025-08-30"
+  },
+  "color": {
+    "brand": {
+      "bg": "#05010A",
+      "primary": "#00FF7F",
+      "accent": "#FF2F2F",
+      "gold": "#CDA434",
+      "muted": "#1B1424"
+    },
+    "text": {
+      "high": "#F5F7FA",
+      "muted": "#C9CDD4",
+      "inverse": "#0C0C0C"
+    },
+    "ui": {
+      "surface": "#0B0712",
+      "surfaceAlt": "#100A18",
+      "border": "#2A2036",
+      "focus": "#7FFFD4"
+    },
+    "states": {
+      "success": "#19C37D",
+      "warning": "#F7B955",
+      "error": "#F35B66",
+      "info": "#5B9BFF"
+    }
+  },
+  "typography": {
+    "display": {
+      "family": "Cinzel, serif",
+      "weight": [
+        600,
+        700
+      ]
+    },
+    "ui": {
+      "family": "Space Grotesk, ui-sans-serif",
+      "weight": [
+        400,
+        500,
+        600,
+        700
+      ]
+    },
+    "mono": {
+      "family": "JetBrains Mono, ui-monospace",
+      "weight": [
+        400,
+        600
+      ]
+    },
+    "sizes": {
+      "xs": 12,
+      "sm": 14,
+      "md": 16,
+      "lg": 18,
+      "xl": 22,
+      "2xl": 28,
+      "3xl": 36,
+      "4xl": 48
+    }
+  },
+  "radii": {
+    "xs": 4,
+    "sm": 6,
+    "md": 10,
+    "lg": 14,
+    "xl": 20,
+    "pill": 999
+  },
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "shadow": {
+    "sm": "0 1px 2px rgba(0,0,0,.25)",
+    "md": "0 8px 24px rgba(0,0,0,.35)",
+    "lg": "0 20px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03)",
+    "glow": "0 0 0 2px rgba(0,255,127,.2), 0 0 24px rgba(0,255,127,.35)"
+  },
+  "motion": {
+    "duration": {
+      "fast": 120,
+      "normal": 220,
+      "slow": 360
+    },
+    "easing": {
+      "inout": "cubic-bezier(.2,.6,.2,1)"
+    }
+  }
+}

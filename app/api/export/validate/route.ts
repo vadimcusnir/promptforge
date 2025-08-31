@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkEntitlement, canExportFormat } from '@/lib/entitlements';
+import { canExportFormat } from '@/lib/entitlements';
 import { PlanType } from '@/lib/entitlements/types';
 
 export async function POST(request: NextRequest) {

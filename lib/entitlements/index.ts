@@ -53,7 +53,7 @@ export function checkEntitlement(plan: PlanType, feature: keyof typeof ENTITLEME
 }
 
 export function getAvailableExportFormats(plan: PlanType): string[] {
-  return ENTITLEMENTS_CONFIG.EXPORT_FORMATS[plan]
+  return [...ENTITLEMENTS_CONFIG.EXPORT_FORMATS[plan]]
 }
 
 export function canExportFormat(plan: PlanType, format: string, score?: number): boolean {

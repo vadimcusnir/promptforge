@@ -1,0 +1,1984 @@
+#!/usr/bin/env python3
+import os
+import json
+from datetime import datetime
+from collections import defaultdict
+
+def analyze_project_structure(metadata_file):
+    """Analizează structura proiectului și identifică componentele cheie"""
+    
+    with open(metadata_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    files = data['fisiere']
+    
+    # Analizează directoarele principale
+    directories = defaultdict(list)
+    for file_info in files:
+        path_parts = file_info['cale_relativa'].split('/')
+        if len(path_parts) > 1:
+            main_dir = path_parts[0]
+            directories[main_dir].append(file_info)
+    
+    # Identifică componentele principale ale site-ului
+    site_components = {
+        'frontend_apps': [],
+        'backend_apis': [],
+        'config_files': [],
+        'content_files': [],
+        'media_assets': [],
+        'documentation': []
+    }
+    
+    # Analizează fiecare director
+    for dir_name, dir_files in directories.items():
+        dir_analysis = analyze_directory(dir_name, dir_files)
+        
+        # Clasifică directorul
+        if 'promptforge' in dir_name.lower() or 'app' in dir_name.lower():
+            site_components['frontend_apps'].extend(dir_files)
+        elif 'api' in dir_name.lower() or 'server' in dir_name.lower():
+            site_components['backend_apis'].extend(dir_files)
+        elif any(f['categorie'] == 'config' for f in dir_files):
+            site_components['config_files'].extend([f for f in dir_files if f['categorie'] == 'config'])
+        elif any(f['categorie'] == 'content' for f in dir_files):
+            site_components['content_files'].extend([f for f in dir_files if f['categorie'] == 'content'])
+        elif any(f['categorie'] == 'media' for f in dir_files):
+            site_components['media_assets'].extend([f for f in dir_files if f['categorie'] == 'media'])
+    
+    return directories, site_components
+
+def analyze_directory(dir_name, files):
+    """Analizează un director specific"""
+    analysis = {
+        'nume': dir_name,
+        'total_fisiere': len(files),
+        'categorii': defaultdict(int),
+        'relevanta': defaultdict(int),
+        'marime_totala_mb': 0,
+        'fisiere_cheie': []
+    }
+    
+    for file_info in files:
+        analysis['categorii'][file_info['categorie']] += 1
+        analysis['relevanta'][file_info['relevanta']] += 1
+        analysis['marime_totala_mb'] += file_info['marime_bytes'] / (1024 * 1024)
+        
+        # Identifică fișierele cheie
+        if file_info['relevanta'] == 'active' and file_info['categorie'] in ['cod', 'config']:
+            analysis['fisiere_cheie'].append(file_info)
+    
+    analysis['marime_totala_mb'] = round(analysis['marime_totala_mb'], 2)
+    return analysis
+
+def identify_mvp_components(files):
+    """Identifică componentele esențiale pentru MVP"""
+    mvp_components = {
+        'core_app': [],
+        'api_routes': [],
+        'ui_components': [],
+        'config_essential': [],
+        'assets_critical': []
+    }
+    
+    active_files = [f for f in files if f['relevanta'] == 'active']
+    
+    for file_info in active_files:
+        filename = file_info['nume_fisier'].lower()
+        path = file_info['cale_relativa'].lower()
+        
+        # Core app files
+        if any(x in filename for x in ['page.tsx', 'layout.tsx', 'app.tsx', 'index.tsx', 'main.tsx']):
+            mvp_components['core_app'].append(file_info)
+        
+        # API routes
+        elif 'route.ts' in filename or '/api/' in path:
+            mvp_components['api_routes'].append(file_info)
+        
+        # UI Components
+        elif 'component' in path or filename.endswith('.tsx') and 'component' in path:
+            mvp_components['ui_components'].append(file_info)
+        
+        # Essential config
+        elif filename in ['package.json', 'next.config.mjs', 'tsconfig.json', '.env']:
+            mvp_components['config_essential'].append(file_info)
+        
+        # Critical assets
+        elif file_info['categorie'] == 'media' and file_info['marime_kb'] < 500:  # Assets sub 500KB
+            mvp_components['assets_critical'].append(file_info)
+    
+    return mvp_components
+
+def generate_priority_matrix(files):
+    """Generează matricea de prioritate pentru lansare"""
+    priority_matrix = {
+        'CRITICA': [],      # Fără acestea site-ul nu funcționează
+        'IMPORTANTA': [],   # Afectează UX major
+        'UTILA': [],        # Nice to have
+        'OPTIONALA': []     # Poate fi adăugată post-lansare
+    }
+    
+    for file_info in files:
+        if file_info['relevanta'] != 'active':
+            continue
+            
+        filename = file_info['nume_fisier'].lower()
+        path = file_info['cale_relativa'].lower()
+        category = file_info['categorie']
+        
+        # CRITICA - fișiere esențiale pentru funcționare
+        if (filename in ['package.json', 'next.config.mjs', 'page.tsx', 'layout.tsx'] or
+            'route.ts' in filename or
+            (category == 'cod' and any(x in path for x in ['/app/', '/api/', '/components/']))):
+            priority_matrix['CRITICA'].append(file_info)
+        
+        # IMPORTANTA - afectează UX
+        elif (category == 'cod' and filename.endswith(('.tsx', '.ts', '.css')) or
+              category == 'media' and file_info['marime_kb'] < 200):
+            priority_matrix['IMPORTANTA'].append(file_info)
+        
+        # UTILA - îmbunătățește experiența
+        elif category in ['content', 'media'] and file_info['marime_kb'] < 1000:
+            priority_matrix['UTILA'].append(file_info)
+        
+        # OPTIONALA - restul
+        else:
+            priority_matrix['OPTIONALA'].append(file_info)
+    
+    return priority_matrix
+
+def create_deployment_checklist(mvp_components, priority_matrix):
+    """Creează checklist pentru deployment"""
+    checklist = {
+        'pre_deployment': [],
+        'core_files': [],
+        'testing_required': [],
+        'post_deployment': []
+    }
+    
+    # Pre-deployment
+    checklist['pre_deployment'] = [
+        "Verifică toate fișierele CRITICA sunt prezente",
+        "Testează build-ul local",
+        "Verifică configurările de producție",
+        "Backup fișierelor existente"
+    ]
+    
+    # Core files pentru deployment
+    critical_files = priority_matrix['CRITICA']
+    important_files = priority_matrix['IMPORTANTA']
+    
+    checklist['core_files'] = [f['cale_relativa'] for f in critical_files + important_files]
+    
+    # Testing required
+    checklist['testing_required'] = [
+        "Testează toate rutele API",
+        "Verifică responsive design",
+        "Testează funcționalitatea de bază",
+        "Verifică performanța de încărcare"
+    ]
+    
+    # Post-deployment
+    checklist['post_deployment'] = [
+        "Monitorizează logs pentru erori",
+        "Testează în producție",
+        "Adaugă fișierele UTILA gradual",
+        "Optimizează performanța"
+    ]
+    
+    return checklist
+
+if __name__ == "__main__":
+    metadata_file = "/home/ubuntu/audit_project/audit_metadata.json"
+    
+    print("Încep analiza avansată...")
+    
+    with open(metadata_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    files = data['fisiere']
+    
+    # Analizează structura
+    directories, site_components = analyze_project_structure(metadata_file)
+    
+    # Identifică componentele MVP
+    mvp_components = identify_mvp_components(files)
+    
+    # Generează matricea de prioritate
+    priority_matrix = generate_priority_matrix(files)
+    
+    # Creează checklist-ul de deployment
+    deployment_checklist = create_deployment_checklist(mvp_components, priority_matrix)
+    
+    # Salvează rezultatele
+    advanced_analysis = {
+        'directories_analysis': {name: analyze_directory(name, files) for name, files in directories.items()},
+        'site_components': {k: len(v) for k, v in site_components.items()},
+        'mvp_components': {k: len(v) for k, v in mvp_components.items()},
+        'priority_matrix': {k: len(v) for k, v in priority_matrix.items()},
+        'deployment_checklist': deployment_checklist,
+        'detailed_priority_files': priority_matrix
+    }
+    
+    with open('/home/ubuntu/audit_project/advanced_analysis.json', 'w', encoding='utf-8') as f:
+        json.dump(advanced_analysis, f, ensure_ascii=False, indent=2)
+    
+    # Afișează rezultatele
+    print(f"\n=== ANALIZA AVANSATĂ COMPLETĂ ===")
+    print(f"Directoare analizate: {len(directories)}")
+    print(f"Componente site identificate: {sum(len(v) for v in site_components.values())}")
+    print(f"Componente MVP: {sum(len(v) for v in mvp_components.values())}")
+    print(f"\nMatricea de prioritate:")
+    for priority, files in priority_matrix.items():
+        print(f"  {priority}: {len(files)} fișiere")
+    
+    print(f"\nAnaliza a fost salvată în: /home/ubuntu/audit_project/advanced_analysis.json")
+
+
+
+
+
+
+
+#!/usr/bin/env python3
+import os
+import json
+from datetime import datetime
+from pathlib import Path
+
+def load_relevance_analysis(analysis_path):
+    """Încarcă analiza de relevanță"""
+    with open(analysis_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def load_manifests(manifest_old_path, manifest_new_path):
+    """Încarcă ambele manifeste"""
+    with open(manifest_old_path, 'r', encoding='utf-8') as f:
+        manifest_old = json.load(f)
+    
+    with open(manifest_new_path, 'r', encoding='utf-8') as f:
+        manifest_new = json.load(f)
+    
+    return manifest_old, manifest_new
+
+def build_base_active(relevance_analysis, manifest_old, manifest_new):
+    """Construiește BASE_ACTIVE prin fuziune"""
+    
+    base_active = {
+        'metadata': {
+            'generated_at': datetime.now().isoformat(),
+            'source_old_files': manifest_old['metadata']['total_files'],
+            'source_new_files': manifest_new['metadata']['total_files'],
+            'total_base_active_files': 0,
+            'fusion_strategy': '1067_new ∪ (valid_from_old) - redundancies'
+        },
+        'files': [],
+        'statistics': {
+            'from_new_version': 0,
+            'from_old_version': 0,
+            'total_size_bytes': 0,
+            'by_type': {}
+        },
+        'fusion_log': []
+    }
+    
+    print("Construiesc BASE_ACTIVE prin fuziune...")
+    
+    # Adaugă toate fișierele NECESARE din versiunea nouă
+    necessary_files = relevance_analysis['categories']['NECESAR']
+    new_files_dict = {f['path']: f for f in manifest_new['files']}
+    
+    for necessary_file in necessary_files:
+        file_path = necessary_file['path']
+        if file_path in new_files_dict:
+            file_info = new_files_dict[file_path]
+            
+            base_active_file = {
+                'path': file_path,
+                'filename': file_info['filename'],
+                'type': file_info['type'],
+                'size': file_info['size'],
+                'mtime': file_info['mtime'],
+                'sha256': file_info.get('sha256', 'N/A'),
+                'source': 'new_version',
+                'necessity_reason': necessary_file['reason'],
+                'priority': 'CRITICAL'
+            }
+            
+            base_active['files'].append(base_active_file)
+            base_active['statistics']['from_new_version'] += 1
+            base_active['statistics']['total_size_bytes'] += file_info['size']
+            
+            # Statistici pe tip
+            file_type = file_info['type']
+            base_active['statistics']['by_type'][file_type] = base_active['statistics']['by_type'].get(file_type, 0) + 1
+            
+            base_active['fusion_log'].append({
+                'action': 'INCLUDE_NEW_NECESSARY',
+                'file': file_path,
+                'reason': necessary_file['reason']
+            })
+    
+    # Adaugă fișiere valide din versiunea veche care nu există în noua versiune
+    old_files_dict = {f['path']: f for f in manifest_old['files']}
+    old_necessary_files = [f for f in relevance_analysis['categories']['NECESAR'] if f['path'] in old_files_dict and f['path'] not in new_files_dict]
+    
+    for old_file_info in old_necessary_files:
+        file_path = old_file_info['path']
+        old_file = old_files_dict[file_path]
+        
+        base_active_file = {
+            'path': file_path,
+            'filename': old_file['filename'],
+            'type': old_file['type'],
+            'size': old_file['size'],
+            'mtime': old_file['mtime'],
+            'sha256': old_file.get('sha256', 'N/A'),
+            'source': 'old_version',
+            'necessity_reason': old_file_info['reason'],
+            'priority': 'IMPORTANT',
+            'note': 'Recovered from old version - missing in new'
+        }
+        
+        base_active['files'].append(base_active_file)
+        base_active['statistics']['from_old_version'] += 1
+        base_active['statistics']['total_size_bytes'] += old_file['size']
+        
+        # Statistici pe tip
+        file_type = old_file['type']
+        base_active['statistics']['by_type'][file_type] = base_active['statistics']['by_type'].get(file_type, 0) + 1
+        
+        base_active['fusion_log'].append({
+            'action': 'RECOVER_OLD_NECESSARY',
+            'file': file_path,
+            'reason': f"Missing in new version but {old_file_info['reason']}"
+        })
+    
+    # Actualizează metadatele
+    base_active['metadata']['total_base_active_files'] = len(base_active['files'])
+    base_active['statistics']['total_size_mb'] = round(base_active['statistics']['total_size_bytes'] / (1024 * 1024), 2)
+    
+    # Sortează fișierele după prioritate și cale
+    priority_order = {'CRITICAL': 0, 'IMPORTANT': 1, 'USEFUL': 2}
+    base_active['files'].sort(key=lambda x: (priority_order.get(x['priority'], 3), x['path']))
+    
+    return base_active
+
+def create_base_active_list(base_active):
+    """Creează lista text a fișierelor BASE_ACTIVE"""
+    
+    content = f"""# BASE_ACTIVE - Lista Finală pentru MVP
+
+**Generated:** {base_active['metadata']['generated_at']}
+**Total fișiere:** {base_active['metadata']['total_base_active_files']}
+**Mărime totală:** {base_active['statistics']['total_size_mb']} MB
+
+## Statistici Fuziune
+- **Din versiunea nouă:** {base_active['statistics']['from_new_version']} fișiere
+- **Recuperate din versiunea veche:** {base_active['statistics']['from_old_version']} fișiere
+
+## Distribuția pe Tipuri
+"""
+    
+    for file_type, count in sorted(base_active['statistics']['by_type'].items()):
+        content += f"- **{file_type}:** {count} fișiere\n"
+    
+    content += "\n## Lista Completă de Fișiere\n\n"
+    
+    current_priority = None
+    for file_info in base_active['files']:
+        if file_info['priority'] != current_priority:
+            current_priority = file_info['priority']
+            content += f"\n### {current_priority} PRIORITY\n\n"
+        
+        content += f"**{file_info['path']}**\n"
+        content += f"- Tip: {file_info['type']}\n"
+        content += f"- Mărime: {file_info['size']} bytes\n"
+        content += f"- Sursă: {file_info['source']}\n"
+        content += f"- Motiv: {file_info['necessity_reason']}\n"
+        if file_info.get('note'):
+            content += f"- Notă: {file_info['note']}\n"
+        content += "\n"
+    
+    return content
+
+def create_structure_tree(base_active):
+    """Creează arborele de structură pentru BASE_ACTIVE"""
+    
+    # Construiește arborele de directoare
+    tree_structure = {}
+    
+    for file_info in base_active['files']:
+        path_parts = file_info['path'].split('/')
+        current_level = tree_structure
+        
+        # Navighează prin directoare
+        for i, part in enumerate(path_parts[:-1]):
+            if part not in current_level:
+                current_level[part] = {'_dirs': {}, '_files': []}
+            current_level = current_level[part]['_dirs']
+        
+        # Adaugă fișierul
+        dir_name = path_parts[-2] if len(path_parts) > 1 else '.'
+        if dir_name not in current_level:
+            current_level[dir_name] = {'_dirs': {}, '_files': []}
+        
+        current_level[dir_name]['_files'].append({
+            'name': path_parts[-1],
+            'type': file_info['type'],
+            'size': file_info['size'],
+            'priority': file_info['priority']
+        })
+    
+    # Generează reprezentarea text a arborelui
+    def render_tree(structure, prefix="", is_last=True):
+        result = ""
+        items = list(structure.items())
+        
+        for i, (name, content) in enumerate(items):
+            is_last_item = (i == len(items) - 1)
+            current_prefix = "└── " if is_last_item else "├── "
+            result += f"{prefix}{current_prefix}{name}/\n"
+            
+            # Adaugă fișierele din acest director
+            if '_files' in content and content['_files']:
+                files = sorted(content['_files'], key=lambda x: x['name'])
+                for j, file_info in enumerate(files):
+                    is_last_file = (j == len(files) - 1) and not content['_dirs']
+                    file_prefix = "└── " if is_last_file else "├── "
+                    next_prefix = prefix + ("    " if is_last_item else "│   ")
+                    
+                    priority_symbol = "🔴" if file_info['priority'] == 'CRITICAL' else "🟡" if file_info['priority'] == 'IMPORTANT' else "🟢"
+                    result += f"{next_prefix}{file_prefix}{file_info['name']} {priority_symbol} ({file_info['type']}, {file_info['size']} bytes)\n"
+            
+            # Recursiv pentru subdirectoare
+            if '_dirs' in content and content['_dirs']:
+                next_prefix = prefix + ("    " if is_last_item else "│   ")
+                result += render_tree(content['_dirs'], next_prefix, is_last_item)
+        
+        return result
+    
+    tree_content = f"""# STRUCTURE_TREE - Arhitectura BASE_ACTIVE
+
+**Generated:** {base_active['metadata']['generated_at']}
+**Total fișiere:** {base_active['metadata']['total_base_active_files']}
+
+## Legenda
+- 🔴 CRITICAL: Esențial pentru funcționare
+- 🟡 IMPORTANT: Important pentru UX
+- 🟢 USEFUL: Util pentru dezvoltare
+
+## Structura Directorelor
+
+\`\`\`
+BASE_ACTIVE/
+{render_tree(tree_structure)}
+\`\`\`
+
+## Recomandări de Organizare
+
+1. **Păstrează structura existentă** pentru fișierele CRITICAL
+2. **Organizează în module** fișierele IMPORTANT  
+3. **Grupează pe funcționalitate** fișierele USEFUL
+4. **Elimină dependențele** către fișierele DROP
+
+**Rezultat:** Structură curată și modulară pentru MVP lansabil.
+"""
+    
+    return tree_content
+
+if __name__ == "__main__":
+    base_path = "/home/ubuntu/final_audit"
+    
+    # Încarcă datele necesare
+    relevance_analysis = load_relevance_analysis(os.path.join(base_path, "relevance_analysis.json"))
+    manifest_old, manifest_new = load_manifests(
+        os.path.join(base_path, "manifest_old.json"),
+        os.path.join(base_path, "manifest_new.json")
+    )
+    
+    # Construiește BASE_ACTIVE
+    base_active = build_base_active(relevance_analysis, manifest_old, manifest_new)
+    
+    # Salvează BASE_ACTIVE
+    base_active_path = os.path.join(base_path, "base_active.json")
+    with open(base_active_path, 'w', encoding='utf-8') as f:
+        json.dump(base_active, f, ensure_ascii=False, indent=2)
+    
+    # Creează lista text
+    base_active_list = create_base_active_list(base_active)
+    list_path = os.path.join(base_path, "base_active.txt")
+    with open(list_path, 'w', encoding='utf-8') as f:
+        f.write(base_active_list)
+    
+    # Creează arborele de structură
+    structure_tree = create_structure_tree(base_active)
+    tree_path = os.path.join(base_path, "structure_tree.md")
+    with open(tree_path, 'w', encoding='utf-8') as f:
+        f.write(structure_tree)
+    
+    print(f"\n=== BASE_ACTIVE CONSTRUIT ===")
+    print(f"Fișier JSON: {base_active_path}")
+    print(f"Lista text: {list_path}")
+    print(f"Arbore structură: {tree_path}")
+    print(f"\nStatistici finale:")
+    print(f"  Total fișiere: {base_active['metadata']['total_base_active_files']}")
+    print(f"  Din versiunea nouă: {base_active['statistics']['from_new_version']}")
+    print(f"  Din versiunea veche: {base_active['statistics']['from_old_version']}")
+    print(f"  Mărime totală: {base_active['statistics']['total_size_mb']} MB")
+
+
+
+
+
+
+
+# DIFF REPORT SUMMARY
+
+**Generated:** 2025-08-29T01:45:58.966992
+
+## Overview
+- **Old Version:** 925 files
+- **New Version:** 857 files
+- **Net Change:** -68 files
+
+## Changes Summary
+
+| Change Type | Count | Description |
+|-------------|-------|-------------|
+| **ADDED** | 856 | New files in current version |
+| **REMOVED** | 924 | Files deleted from old version |
+| **MODIFIED** | 1 | Files changed between versions |
+| **RENAMED** | 0 | Files moved or renamed |
+| **DUPLICATES** | 153 | Duplicate files detected |
+| **UNCHANGED** | 0 | Files with no changes |
+
+## Key Insights
+
+### Most Significant Changes
+
+**Top Added Files:**
+- `cursor/f_v3_logo_branding/f_v3_brand_html_gif/logo_animation.gif` (20748566 bytes, media)
+- `public/f_v3_brand_html_gif/logo_animation.gif` (20748566 bytes, media)
+- `cursor/f_v3_logo_branding/f_v3_brand_videos/aparatul_de_vizualizare.mp4` (7394851 bytes, media)
+- `public/f_v3_brand_videos/aparatul_de_vizualizare.mp4` (7394851 bytes, media)
+- `cursor/f_v3_logo_branding/f_v3_brand_videos/lumina_din_tacere.mp4` (4310029 bytes, media)
+
+**Top Removed Files:**
+- `Manus. Forge Research/promptforge.zip` (621947933 bytes, necategorizat)
+- `cusnir_prompt_forge_3/f_v3_logo_branding/f_v3_brand_html_gif/logo_animation.gif` (20748566 bytes, media)
+- `Manus. Forge $50k Plan/logo_animation.gif` (20748566 bytes, media)
+- `cusnir_prompt_forge_3/forge-homepage.zip` (15102484 bytes, necategorizat)
+- `Manus. Forge $50k Plan/forge-homepage.zip` (15102484 bytes, necategorizat)
+
+**Top Modified Files:**
+- `.DS_Store` (-2048 bytes change)
+
+
+
+
+
+#!/usr/bin/env python3
+import os
+import json
+from datetime import datetime
+from difflib import SequenceMatcher
+
+def load_manifest(manifest_path):
+    """Încarcă un manifest din fișier"""
+    with open(manifest_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def calculate_similarity(str1, str2):
+    """Calculează similaritatea între două string-uri"""
+    return SequenceMatcher(None, str1, str2).ratio()
+
+def find_similar_files(file_path, file_list, threshold=0.95):
+    """Găsește fișiere similare pe baza numelui"""
+    similar_files = []
+    for other_file in file_list:
+        similarity = calculate_similarity(file_path, other_file['path'])
+        if similarity >= threshold:
+            similar_files.append({
+                'file': other_file,
+                'similarity': similarity
+            })
+    return similar_files
+
+def generate_diff_report(manifest_old_path, manifest_new_path):
+    """Generează raportul de diff între două manifeste"""
+    
+    # Încarcă manifestele
+    manifest_old = load_manifest(manifest_old_path)
+    manifest_new = load_manifest(manifest_new_path)
+    
+    old_files = {f['path']: f for f in manifest_old['files']}
+    new_files = {f['path']: f for f in manifest_new['files']}
+    
+    # Inițializează raportul diff
+    diff_report = {
+        'metadata': {
+            'generated_at': datetime.now().isoformat(),
+            'old_manifest': manifest_old['metadata']['manifest_name'],
+            'new_manifest': manifest_new['metadata']['manifest_name'],
+            'old_total_files': manifest_old['metadata']['total_files'],
+            'new_total_files': manifest_new['metadata']['total_files'],
+            'files_difference': manifest_new['metadata']['total_files'] - manifest_old['metadata']['total_files']
+        },
+        'changes': {
+            'added': [],
+            'removed': [],
+            'modified': [],
+            'renamed': [],
+            'duplicates': []
+        },
+        'statistics': {
+            'added_count': 0,
+            'removed_count': 0,
+            'modified_count': 0,
+            'renamed_count': 0,
+            'duplicates_count': 0,
+            'unchanged_count': 0
+        }
+    }
+    
+    print("Generez diff-ul între versiuni...")
+    
+    # Identifică fișierele adăugate
+    for path, file_info in new_files.items():
+        if path not in old_files:
+            diff_report['changes']['added'].append({
+                'path': path,
+                'size': file_info['size'],
+                'type': file_info['type'],
+                'mtime': file_info['mtime']
+            })
+            diff_report['statistics']['added_count'] += 1
+    
+    # Identifică fișierele eliminate
+    for path, file_info in old_files.items():
+        if path not in new_files:
+            diff_report['changes']['removed'].append({
+                'path': path,
+                'size': file_info['size'],
+                'type': file_info['type'],
+                'mtime': file_info['mtime']
+            })
+            diff_report['statistics']['removed_count'] += 1
+    
+    # Identifică fișierele modificate
+    for path, old_file in old_files.items():
+        if path in new_files:
+            new_file = new_files[path]
+            
+            # Compară hash-urile (dacă sunt disponibile)
+            if old_file.get('sha256') and new_file.get('sha256'):
+                if old_file['sha256'] != new_file['sha256']:
+                    diff_report['changes']['modified'].append({
+                        'path': path,
+                        'old_size': old_file['size'],
+                        'new_size': new_file['size'],
+                        'size_change': new_file['size'] - old_file['size'],
+                        'old_mtime': old_file['mtime'],
+                        'new_mtime': new_file['mtime'],
+                        'type': new_file['type']
+                    })
+                    diff_report['statistics']['modified_count'] += 1
+                else:
+                    diff_report['statistics']['unchanged_count'] += 1
+            else:
+                # Compară pe baza mărimii și datei de modificare
+                if (old_file['size'] != new_file['size'] or 
+                    old_file.get('mtime') != new_file.get('mtime')):
+                    diff_report['changes']['modified'].append({
+                        'path': path,
+                        'old_size': old_file['size'],
+                        'new_size': new_file['size'],
+                        'size_change': new_file['size'] - old_file['size'],
+                        'old_mtime': old_file.get('mtime', 'unknown'),
+                        'new_mtime': new_file.get('mtime', 'unknown'),
+                        'type': new_file['type'],
+                        'note': 'Compared by size and mtime (no hash available)'
+                    })
+                    diff_report['statistics']['modified_count'] += 1
+                else:
+                    diff_report['statistics']['unchanged_count'] += 1
+    
+    # Identifică fișierele redenumite (similaritate ≥ 0.95)
+    removed_files = [f for f in diff_report['changes']['removed']]
+    added_files = [f for f in diff_report['changes']['added']]
+    
+    for removed_file in removed_files[:]:  # Copiază lista pentru a putea modifica
+        for added_file in added_files[:]:
+            similarity = calculate_similarity(removed_file['path'], added_file['path'])
+            if similarity >= 0.95:
+                diff_report['changes']['renamed'].append({
+                    'old_path': removed_file['path'],
+                    'new_path': added_file['path'],
+                    'similarity': similarity,
+                    'size': added_file['size'],
+                    'type': added_file['type']
+                })
+                diff_report['statistics']['renamed_count'] += 1
+                
+                # Elimină din listele de adăugate/eliminate
+                if removed_file in diff_report['changes']['removed']:
+                    diff_report['changes']['removed'].remove(removed_file)
+                    diff_report['statistics']['removed_count'] -= 1
+                if added_file in diff_report['changes']['added']:
+                    diff_report['changes']['added'].remove(added_file)
+                    diff_report['statistics']['added_count'] -= 1
+                
+                removed_files.remove(removed_file)
+                added_files.remove(added_file)
+                break
+    
+    # Identifică duplicatele pe baza hash-ului
+    hash_groups = {}
+    for file_info in manifest_new['files']:
+        if file_info.get('sha256'):
+            hash_val = file_info['sha256']
+            if hash_val not in hash_groups:
+                hash_groups[hash_val] = []
+            hash_groups[hash_val].append(file_info)
+    
+    for hash_val, files in hash_groups.items():
+        if len(files) > 1:
+            diff_report['changes']['duplicates'].append({
+                'hash': hash_val,
+                'files': [{'path': f['path'], 'size': f['size']} for f in files],
+                'count': len(files)
+            })
+            diff_report['statistics']['duplicates_count'] += len(files) - 1  # Primul nu e duplicat
+    
+    return diff_report
+
+def create_summary_report(diff_report):
+    """Creează un raport sumar în format text"""
+    summary = f"""# DIFF REPORT SUMMARY
+
+**Generated:** {diff_report['metadata']['generated_at']}
+
+## Overview
+- **Old Version:** {diff_report['metadata']['old_total_files']} files
+- **New Version:** {diff_report['metadata']['new_total_files']} files
+- **Net Change:** {diff_report['metadata']['files_difference']} files
+
+## Changes Summary
+
+| Change Type | Count | Description |
+|-------------|-------|-------------|
+| **ADDED** | {diff_report['statistics']['added_count']} | New files in current version |
+| **REMOVED** | {diff_report['statistics']['removed_count']} | Files deleted from old version |
+| **MODIFIED** | {diff_report['statistics']['modified_count']} | Files changed between versions |
+| **RENAMED** | {diff_report['statistics']['renamed_count']} | Files moved or renamed |
+| **DUPLICATES** | {diff_report['statistics']['duplicates_count']} | Duplicate files detected |
+| **UNCHANGED** | {diff_report['statistics']['unchanged_count']} | Files with no changes |
+
+## Key Insights
+
+### Most Significant Changes
+"""
+    
+    # Adaugă detalii despre cele mai mari modificări
+    if diff_report['changes']['added']:
+        summary += f"\n**Top Added Files:**\n"
+        for file_info in sorted(diff_report['changes']['added'], key=lambda x: x['size'], reverse=True)[:5]:
+            summary += f"- `{file_info['path']}` ({file_info['size']} bytes, {file_info['type']})\n"
+    
+    if diff_report['changes']['removed']:
+        summary += f"\n**Top Removed Files:**\n"
+        for file_info in sorted(diff_report['changes']['removed'], key=lambda x: x['size'], reverse=True)[:5]:
+            summary += f"- `{file_info['path']}` ({file_info['size']} bytes, {file_info['type']})\n"
+    
+    if diff_report['changes']['modified']:
+        summary += f"\n**Top Modified Files:**\n"
+        for file_info in sorted(diff_report['changes']['modified'], key=lambda x: abs(x['size_change']), reverse=True)[:5]:
+            change_sign = "+" if file_info['size_change'] > 0 else ""
+            summary += f"- `{file_info['path']}` ({change_sign}{file_info['size_change']} bytes change)\n"
+    
+    return summary
+
+if __name__ == "__main__":
+    base_path = "/home/ubuntu/final_audit"
+    
+    # Generează diff-ul
+    manifest_old_path = os.path.join(base_path, "manifest_old.json")
+    manifest_new_path = os.path.join(base_path, "manifest_new.json")
+    
+    diff_report = generate_diff_report(manifest_old_path, manifest_new_path)
+    
+    # Salvează raportul diff
+    diff_report_path = os.path.join(base_path, "diff_report.json")
+    with open(diff_report_path, 'w', encoding='utf-8') as f:
+        json.dump(diff_report, f, ensure_ascii=False, indent=2)
+    
+    # Creează și salvează sumarul
+    summary = create_summary_report(diff_report)
+    summary_path = os.path.join(base_path, "diff_summary.md")
+    with open(summary_path, 'w', encoding='utf-8') as f:
+        f.write(summary)
+    
+    print(f"\n=== DIFF REPORT GENERAT ===")
+    print(f"Raport complet: {diff_report_path}")
+    print(f"Sumar: {summary_path}")
+    print(f"\nStatistici:")
+    for change_type, count in diff_report['statistics'].items():
+        print(f"  {change_type}: {count}")
+
+
+
+
+
+
+
+#!/usr/bin/env python3
+import os
+import json
+import csv
+from datetime import datetime
+from pathlib import Path
+import hashlib
+
+def get_file_hash(filepath):
+    """Calculează hash MD5 pentru detectarea duplicatelor"""
+    try:
+        with open(filepath, 'rb') as f:
+            return hashlib.md5(f.read()).hexdigest()
+    except:
+        return None
+
+def categorize_file(filepath, filename, extension):
+    """Categorizează fișierul pe baza extensiei și numelui"""
+    extension = extension.lower()
+    filename_lower = filename.lower()
+    
+    # Categorii de cod
+    code_extensions = {'.py', '.js', '.jsx', '.ts', '.tsx', '.html', '.htm', '.css', '.scss', '.sass', '.php', '.java', '.cpp', '.c', '.h', '.rb', '.go', '.rs', '.swift', '.kt', '.dart', '.vue', '.svelte'}
+    
+    # Categorii de configurare
+    config_extensions = {'.json', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.conf', '.env', '.gitignore', '.gitattributes', '.dockerignore', '.editorconfig'}
+    config_names = {'dockerfile', 'makefile', 'rakefile', 'package.json', 'composer.json', 'requirements.txt', 'pipfile', 'gemfile'}
+    
+    # Categorii de conținut
+    content_extensions = {'.md', '.txt', '.rtf', '.doc', '.docx', '.pdf', '.tex'}
+    
+    # Categorii media
+    media_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.ico', '.bmp', '.tiff', '.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm', '.mp3', '.wav', '.ogg', '.flac', '.aac'}
+    
+    # Categorii documentație
+    docs_extensions = {'.md', '.rst', '.txt'}
+    docs_names = {'readme', 'license', 'changelog', 'contributing', 'authors', 'install', 'usage'}
+    
+    if extension in code_extensions:
+        return 'cod'
+    elif extension in config_extensions or filename_lower in config_names:
+        return 'config'
+    elif extension in content_extensions:
+        return 'content'
+    elif extension in media_extensions:
+        return 'media'
+    elif extension in docs_extensions and any(doc in filename_lower for doc in docs_names):
+        return 'docs'
+    elif extension == '.ds_store' or 'thumbs.db' in filename_lower:
+        return 'redundant'
+    else:
+        return 'necategorizat'
+
+def assess_relevance(filepath, file_stats, category):
+    """Evaluează relevanța fișierului"""
+    now = datetime.now()
+    file_date = datetime.fromtimestamp(file_stats.st_mtime)
+    days_old = (now - file_date).days
+    
+    filename = os.path.basename(filepath).lower()
+    
+    # Fișiere redundante
+    if category == 'redundant' or '.ds_store' in filename or 'thumbs.db' in filename:
+        return 'redundant'
+    
+    # Fișiere active (ultimii 14 zile și relevante pentru site)
+    if days_old <= 14:
+        site_keywords = ['chatgpt', 'prompt', 'forge', 'main', 'index', 'home', 'landing', 'api', 'frontend', 'backend']
+        if any(keyword in filename for keyword in site_keywords) or category in ['cod', 'config']:
+            return 'active'
+    
+    # Fișiere cu versiuni în nume (probabil expirate)
+    version_indicators = ['v1', 'v2', 'v3', 'old', 'backup', 'copy', 'temp', 'draft']
+    if any(indicator in filename for indicator in version_indicators):
+        return 'expirat'
+    
+    # Fișiere de arhivă (mai vechi dar potențial utile)
+    if days_old > 14 and category in ['content', 'docs', 'media']:
+        return 'arhiva'
+    
+    return 'arhiva'
+
+def index_files(root_path):
+    """Indexează toate fișierele din proiect"""
+    files_data = []
+    file_hashes = {}
+    
+    for root, dirs, files in os.walk(root_path):
+        for file in files:
+            filepath = os.path.join(root, file)
+            try:
+                file_stats = os.stat(filepath)
+                file_size = file_stats.st_size
+                file_date = datetime.fromtimestamp(file_stats.st_mtime)
+                
+                # Extrage extensia
+                _, extension = os.path.splitext(file)
+                
+                # Calculează hash pentru detectarea duplicatelor
+                file_hash = get_file_hash(filepath)
+                
+                # Categorizează fișierul
+                category = categorize_file(filepath, file, extension)
+                
+                # Evaluează relevanța
+                relevance = assess_relevance(filepath, file_stats, category)
+                
+                # Detectează duplicatele
+                is_duplicate = False
+                if file_hash and file_hash in file_hashes:
+                    is_duplicate = True
+                    relevance = 'redundant'
+                elif file_hash:
+                    file_hashes[file_hash] = filepath
+                
+                # Calculează calea relativă
+                rel_path = os.path.relpath(filepath, root_path)
+                
+                file_info = {
+                    'nume_fisier': file,
+                    'cale_relativa': rel_path,
+                    'cale_completa': filepath,
+                    'extensie': extension,
+                    'marime_bytes': file_size,
+                    'marime_kb': round(file_size / 1024, 2),
+                    'data_modificare': file_date.strftime('%Y-%m-%d %H:%M:%S'),
+                    'zile_vechime': (datetime.now() - file_date).days,
+                    'categorie': category,
+                    'relevanta': relevance,
+                    'hash_md5': file_hash,
+                    'duplicat': is_duplicate,
+                    'observatii': ''
+                }
+                
+                # Adaugă observații specifice
+                if is_duplicate:
+                    file_info['observatii'] = 'Duplicat detectat'
+                elif file_size == 0:
+                    file_info['observatii'] = 'Fișier gol'
+                elif file_size > 10 * 1024 * 1024:  # > 10MB
+                    file_info['observatii'] = 'Fișier mare (>10MB)'
+                
+                files_data.append(file_info)
+                
+            except Exception as e:
+                print(f"Eroare la procesarea {filepath}: {e}")
+    
+    return files_data
+
+def generate_reports(files_data, output_dir):
+    """Generează rapoartele de audit"""
+    
+    # Statistici generale
+    total_files = len(files_data)
+    total_size = sum(f['marime_bytes'] for f in files_data)
+    
+    categories = {}
+    relevance = {}
+    
+    for file_data in files_data:
+        cat = file_data['categorie']
+        rel = file_data['relevanta']
+        
+        categories[cat] = categories.get(cat, 0) + 1
+        relevance[rel] = relevance.get(rel, 0) + 1
+    
+    # Salvează JSON complet
+    with open(os.path.join(output_dir, 'audit_metadata.json'), 'w', encoding='utf-8') as f:
+        json.dump({
+            'statistici_generale': {
+                'total_fisiere': total_files,
+                'marime_totala_mb': round(total_size / (1024 * 1024), 2),
+                'categorii': categories,
+                'relevanta': relevance
+            },
+            'fisiere': files_data
+        }, f, ensure_ascii=False, indent=2)
+    
+    # Salvează CSV pentru tabel
+    with open(os.path.join(output_dir, 'audit_tabel.csv'), 'w', newline='', encoding='utf-8') as f:
+        fieldnames = ['nume_fisier', 'cale_relativa', 'extensie', 'marime_kb', 'data_modificare', 'categorie', 'relevanta', 'observatii']
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        
+        for file_data in files_data:
+            row = {k: file_data[k] for k in fieldnames}
+            writer.writerow(row)
+    
+    # Lista fișierelor ACTIVE pentru MVP
+    active_files = [f for f in files_data if f['relevanta'] == 'active']
+    with open(os.path.join(output_dir, 'fisiere_active_mvp.txt'), 'w', encoding='utf-8') as f:
+        f.write(f"FIȘIERE ACTIVE PENTRU LANSAREA SITE-ULUI ({len(active_files)} fișiere)\n")
+        f.write("=" * 60 + "\n\n")
+        
+        for file_data in sorted(active_files, key=lambda x: x['categorie']):
+            f.write(f"{file_data['cale_relativa']}\n")
+            f.write(f"  Categorie: {file_data['categorie']}\n")
+            f.write(f"  Mărime: {file_data['marime_kb']} KB\n")
+            f.write(f"  Modificat: {file_data['data_modificare']}\n\n")
+    
+    return {
+        'total_files': total_files,
+        'total_size_mb': round(total_size / (1024 * 1024), 2),
+        'categories': categories,
+        'relevance': relevance,
+        'active_files': len(active_files)
+    }
+
+if __name__ == "__main__":
+    project_path = "/home/ubuntu/audit_project/Main Forge v3"
+    output_path = "/home/ubuntu/audit_project"
+    
+    print("Începe indexarea fișierelor...")
+    files_data = index_files(project_path)
+    
+    print("Generez rapoartele...")
+    stats = generate_reports(files_data, output_path)
+    
+    print(f"\n=== REZULTATE AUDIT ===")
+    print(f"Total fișiere: {stats['total_files']}")
+    print(f"Mărime totală: {stats['total_size_mb']} MB")
+    print(f"Fișiere ACTIVE (MVP): {stats['active_files']}")
+    print(f"\nCategorii:")
+    for cat, count in stats['categories'].items():
+        print(f"  {cat}: {count}")
+    print(f"\nRelevanță:")
+    for rel, count in stats['relevance'].items():
+        print(f"  {rel}: {count}")
+    
+    print(f"\nRapoartele au fost salvate în: {output_path}")
+
+
+
+
+
+
+#!/usr/bin/env python3
+import os
+import json
+from datetime import datetime
+
+def generate_tasks_jsonl(base_active_path, output_path):
+    """Generează fișierul tasks.jsonl"""
+    
+    with open(base_active_path, 'r', encoding='utf-8') as f:
+        base_active = json.load(f)
+    
+    tasks = []
+    task_id = 1
+    
+    # Task-uri pentru fișierele CRITICAL
+    for file_info in [f for f in base_active['files'] if f['priority'] == 'CRITICAL']:
+        task = {
+            'id': task_id,
+            'path': file_info['path'],
+            'action': 'VERIFY_AND_INTEGRATE',
+            'priority': 'P1_CRITICAL',
+            'estimate_h': 2,
+            'owner': 'dev_team',
+            'deps': [],
+            'risk': 'High - essential for functionality',
+            'mitigation': 'Peer review and automated testing',
+            'status': 'TODO'
+        }
+        tasks.append(task)
+        task_id += 1
+    
+    # Task-uri pentru fișierele IMPORTANTE
+    for file_info in [f for f in base_active['files'] if f['priority'] == 'IMPORTANT']:
+        task = {
+            'id': task_id,
+            'path': file_info['path'],
+            'action': 'REVIEW_AND_OPTIMIZE',
+            'priority': 'P2_IMPORTANT',
+            'estimate_h': 1,
+            'owner': 'dev_team',
+            'deps': [],
+            'risk': 'Medium - affects UX',
+            'mitigation': 'Design review and user testing',
+            'status': 'TODO'
+        }
+        tasks.append(task)
+        task_id += 1
+    
+    # Task-uri generale
+    general_tasks = [
+        {'id': task_id, 'path': 'N/A', 'action': 'SETUP_CI_CD_PIPELINE', 'priority': 'P1_CRITICAL', 'estimate_h': 8, 'owner': 'devops', 'deps': [], 'risk': 'High - deployment process', 'mitigation': 'Incremental setup and testing', 'status': 'TODO'},
+        {'id': task_id+1, 'path': 'N/A', 'action': 'IMPLEMENT_7_ASSISTANTS', 'priority': 'P1_CRITICAL', 'estimate_h': 16, 'owner': 'dev_team', 'deps': [], 'risk': 'Medium - quality assurance', 'mitigation': 'Phased implementation', 'status': 'TODO'},
+        {'id': task_id+2, 'path': 'N/A', 'action': 'CONFIGURE_DEMO_LEGACY', 'priority': 'P3_LOW', 'estimate_h': 4, 'owner': 'dev_team', 'deps': [], 'risk': 'Low - non-production', 'mitigation': 'Isolate from production environment', 'status': 'TODO'}
+    ]
+    tasks.extend(general_tasks)
+    
+    # Salvează în format JSONL
+    with open(output_path, 'w', encoding='utf-8') as f:
+        for task in tasks:
+            f.write(json.dumps(task) + '\n')
+
+def generate_timeline_md(tasks_path, output_path):
+    """Generează fișierul timeline.md"""
+    
+    with open(tasks_path, 'r', encoding='utf-8') as f:
+        tasks = [json.loads(line) for line in f]
+    
+    # Sortează task-urile după prioritate
+    priority_order = {'P1_CRITICAL': 0, 'P2_IMPORTANT': 1, 'P3_LOW': 2}
+    tasks.sort(key=lambda x: priority_order.get(x['priority'], 3))
+    
+    timeline_content = """# Timeline Proiect: Lansare MVP
+
+**Data:** 29 August 2025
+
+## Faza 1: Setup și Integrare Core (Săptămâna 1)
+
+| Task ID | Acțiune | Prioritate | Estimare (ore) | Owner |
+|---|---|---|---|---|
+"""
+    
+    for task in tasks[:10]: # Primele 10 task-uri critice
+        timeline_content += f"| {task['id']} | {task['action']} | {task['priority']} | {task['estimate_h']} | {task['owner']} |\n"
+    
+    timeline_content += """## Faza 2: Optimizare și Finalizare (Săptămâna 2)
+
+| Task ID | Acțiune | Prioritate | Estimare (ore) | Owner |
+|---|---|---|---|---|
+"""
+    
+    for task in tasks[10:20]: # Următoarele 10 task-uri
+        timeline_content += f"| {task['id']} | {task['action']} | {task['priority']} | {task['estimate_h']} | {task['owner']} |\n"
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(timeline_content)
+
+def generate_raci_md(output_path):
+    """Generează fișierul RACI.md"""
+    
+    raci_content = """# Matrice RACI
+
+**R** - Responsible | **A** - Accountable | **C** - Consulted | **I** - Informed
+
+| Activitate | Project Manager | Dev Team | DevOps | QA Team | Product Owner |
+|---|---|---|---|---|---|
+| Definire Cerințe | C | R | C | C | A |
+| Dezvoltare Cod | I | R | C | C | A |
+| Code Review | I | R | I | C | I |
+| Setup CI/CD | A | C | R | I | I |
+| Testare | A | C | I | R | C |
+| Deployment | A | C | R | I | C |
+| Management Proiect | A | I | I | I | R |
+"""
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(raci_content)
+
+def generate_risks_md(output_path):
+    """Generează fișierul risks_top5.md"""
+    
+    risks_content = """# Top 5 Riscuri ale Proiectului
+
+| Risc | Probabilitate | Impact | Nivel Risc | Mitigare |
+|---|---|---|---|---|
+| **1. Întârzieri în dezvoltare** | Medie | Mare | Ridicat | Planificare agilă, prioritizare task-uri, monitorizare constantă |
+| **2. Probleme de securitate neprevăzute** | Mică | Critic | Ridicat | Audit de securitate extern, implementare strictă a politicilor de securitate |
+| **3. Depășirea bugetului** | Medie | Mediu | Mediu | Monitorizare atentă a costurilor, optimizare resurse |
+| **4. Feedback negativ de la utilizatori** | Medie | Mare | Ridicat | Testare A/B, colectare feedback constant, iterare rapidă |
+| **5. Probleme de performanță la scară** | Mică | Mare | Mediu | Testare de stres, optimizare constantă, arhitectură scalabilă |
+"""
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(risks_content)
+
+if __name__ == "__main__":
+    base_path = "/home/ubuntu/final_audit"
+    
+    # Generează tasks.jsonl
+    base_active_path = os.path.join(base_path, "base_active.json")
+    tasks_path = os.path.join(base_path, "tasks.jsonl")
+    generate_tasks_jsonl(base_active_path, tasks_path)
+    
+    # Generează timeline.md
+    timeline_path = os.path.join(base_path, "timeline.md")
+    generate_timeline_md(tasks_path, timeline_path)
+    
+    # Generează RACI.md
+    raci_path = os.path.join(base_path, "RACI.md")
+    generate_raci_md(raci_path)
+    
+    # Generează risks_top5.md
+    risks_path = os.path.join(base_path, "risks_top5.md")
+    generate_risks_md(risks_path)
+    
+    print(f"\n=== OUTPUT-URI FINALE GENERATE ===")
+    print(f"Tasks: {tasks_path}")
+    print(f"Timeline: {timeline_path}")
+    print(f"RACI Matrix: {raci_path}")
+    print("Toate livrabilele au fost generate cu succes!")
+
+
+
+
+
+
+# GHID DEPLOYMENT CHATGPT-PROMPTING.COM
+
+## 1. FIȘIERE CRITICE PENTRU LANSARE
+
+Aceste fișiere sunt **OBLIGATORII** pentru funcționarea site-ului:
+
+- `Manus. Forge $50k Plan/package.json`
+- `Manus. Forge $50k Plan/route.ts`
+- `Manus. Forge Research/page.tsx`
+- `Manus. Forge Research/route.ts`
+- `cusnir_prompt_forge/promptforge/app/api/gpt-editor/route.ts`
+- `cusnir_prompt_forge/promptforge/app/globals.css`
+- `cusnir_prompt_forge/promptforge/app/layout.tsx`
+- `cusnir_prompt_forge/promptforge/app/page.tsx`
+- `cusnir_prompt_forge/promptforge/components/export-manager.tsx`
+- `cusnir_prompt_forge/promptforge/components/gpt-editor.tsx`
+- `cusnir_prompt_forge/promptforge/components/history-panel.tsx`
+- `cusnir_prompt_forge/promptforge/components/keyboard-shortcuts.tsx`
+- `cusnir_prompt_forge/promptforge/components/loading-states.tsx`
+- `cusnir_prompt_forge/promptforge/components/module-card.tsx`
+- `cusnir_prompt_forge/promptforge/components/module-grid.tsx`
+- `cusnir_prompt_forge/promptforge/components/prompt-generator.tsx`
+- `cusnir_prompt_forge/promptforge/components/test-engine.tsx`
+- `cusnir_prompt_forge/promptforge/components/theme-provider.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/accordion.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/alert-dialog.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/alert.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/aspect-ratio.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/avatar.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/badge.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/breadcrumb.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/button.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/calendar.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/card.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/carousel.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/chart.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/checkbox.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/collapsible.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/command.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/context-menu.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/dialog.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/drawer.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/dropdown-menu.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/form.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/hover-card.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/input-otp.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/input.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/label.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/menubar.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/navigation-menu.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/pagination.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/popover.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/progress.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/radio-group.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/resizable.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/scroll-area.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/select.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/separator.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/sheet.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/sidebar.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/skeleton.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/slider.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/sonner.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/switch.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/table.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/tabs.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/textarea.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/toast.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/toaster.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/toggle-group.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/toggle.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/tooltip.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/use-mobile.tsx`
+- `cusnir_prompt_forge/promptforge/components/ui/use-toast.ts`
+- `cusnir_prompt_forge/promptforge/package.json`
+
+## 2. FIȘIERE IMPORTANTE PENTRU UX
+
+Aceste fișiere îmbunătățesc semnificativ experiența utilizatorului:
+
+- `Manus. Forge $50k Plan/entitlements.ts`
+- `Manus. Forge $50k Plan/globals.css`
+- `Manus. Forge $50k Plan/middleware.ts`
+- `Manus. Forge $50k Plan/paywall-modal.tsx`
+- `Manus. Forge Research/agent.ts`
+- `Manus. Forge Research/rate-limit.ts`
+- `Manus. Forge Research/server-auth.ts`
+- `cusnir_prompt_forge/promptforge/lib/gpt-editor.ts`
+- `cusnir_prompt_forge/promptforge/lib/history-manager.ts`
+- `cusnir_prompt_forge/promptforge/lib/modules.ts`
+- `cusnir_prompt_forge/promptforge/lib/prompt-generator.ts`
+- `cusnir_prompt_forge/promptforge/lib/test-engine.ts`
+- `cusnir_prompt_forge/promptforge/lib/utils.ts`
+- `cusnir_prompt_forge/promptforge/styles/globals.css`
+- `cusnir_prompt_forge/promptforge/types/promptforge.ts`
+- `cusnir_prompt_forge_3/f_v3_files/screens/forge_v3_00002.png`
+- `cusnir_prompt_forge_3/f_v3_files/screens/forge_v3_00003.png`
+- `cusnir_prompt_forge_3/f_v3_files/screens/forge_v3_00004.png`
+- `cusnir_prompt_forge_3/f_v3_files/screens/forge_v3_00006.png`
+- `cusnir_prompt_forge_3/f_v3_files/screens/forge_v3_00008.png`
+- `cusnir_prompt_forge_3/f_v3_files/screens/forge_v3_00009.png`
+- `cusnir_prompt_forge_3/f_v3_files/screens/forge_v3_00010.png`
+- `cusnir_prompt_forge_3/f_v3_logo_branding/App.css`
+- `cusnir_prompt_forge_3/f_v3_logo_branding/f_v3_brand_svg_2d/forge_logo.svg`
+- `cusnir_prompt_forge_3/f_v3_logo_branding/f_v3_brand_svg_2d/interesante_05_buton_start_forge.svg`
+- `cusnir_prompt_forge_3/f_v3_logo_branding/f_v3_brand_svg_2d/suplimentar_1_02_cursor_prompt.svg`
+
+## 3. CHECKLIST DEPLOYMENT
+
+### Pre-Deployment
+- [ ] Verifică toate fișierele CRITICE sunt prezente
+- [ ] Testează build-ul local (`npm run build`)
+- [ ] Verifică configurările de producție
+- [ ] Backup fișierelor existente
+
+### Core Deployment
+- [ ] Deploy fișierele din `01_ACTIVE_MVP/frontend/`
+- [ ] Deploy fișierele din `01_ACTIVE_MVP/backend/`
+- [ ] Configurează variabilele de mediu din `01_ACTIVE_MVP/config/`
+- [ ] Upload assets din `01_ACTIVE_MVP/assets/`
+
+### Post-Deployment Testing
+- [ ] Testează toate rutele principale
+- [ ] Verifică responsive design (mobile + desktop)
+- [ ] Testează funcționalitatea de bază
+- [ ] Monitorizează logs pentru erori
+
+### Optimizare Graduală
+- [ ] Adaugă fișierele UTILE gradual
+- [ ] Optimizează performanța
+- [ ] Monitorizează metrici de utilizare
+
+## 4. STRUCTURA FINALĂ RECOMANDATĂ
+
+\`\`\`
+chatgpt-prompting.com/
+├── src/                    # Din 01_ACTIVE_MVP/frontend/
+├── api/                    # Din 01_ACTIVE_MVP/backend/
+├── public/                 # Din 01_ACTIVE_MVP/assets/
+├── config/                 # Din 01_ACTIVE_MVP/config/
+└── docs/                   # Din 03_CONTENT/docs/
+\`\`\`
+
+## 5. COMENZI ESENȚIALE
+
+\`\`\`bash
+# Build pentru producție
+npm run build
+
+# Start server local
+npm run start
+
+# Verificare dependențe
+npm audit
+
+# Deploy (după configurarea CI/CD)
+npm run deploy
+\`\`\`
+
+## 6. MONITORIZARE POST-LANSARE
+
+- Verifică logs zilnic primele 7 zile
+- Monitorizează performanța de încărcare
+- Colectează feedback utilizatori
+- Planifică următoarele iterații
+
+---
+**IMPORTANT**: Nu deploiați fișierele din `06_REDUNDANT/` - acestea sunt duplicate sau obsolete.
+
+
+
+
+
+
+#!/usr/bin/env python3
+import os
+import json
+import hashlib
+from datetime import datetime
+from pathlib import Path
+import mimetypes
+
+def get_file_hash(filepath):
+    """Calculează hash SHA256 pentru fișier"""
+    try:
+        with open(filepath, 'rb') as f:
+            return hashlib.sha256(f.read()).hexdigest()
+    except Exception as e:
+        print(f"Eroare la calcularea hash pentru {filepath}: {e}")
+        return None
+
+def get_file_type(filepath):
+    """Determină tipul fișierului"""
+    _, extension = os.path.splitext(filepath)
+    extension = extension.lower()
+    
+    # Categorii de cod
+    code_extensions = {'.py', '.js', '.jsx', '.ts', '.tsx', '.html', '.htm', '.css', '.scss', '.sass', '.php', '.java', '.cpp', '.c', '.h', '.rb', '.go', '.rs', '.swift', '.kt', '.dart', '.vue', '.svelte'}
+    
+    # Categorii de configurare
+    config_extensions = {'.json', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.conf', '.env', '.gitignore', '.gitattributes', '.dockerignore', '.editorconfig'}
+    
+    # Categorii de conținut
+    content_extensions = {'.md', '.txt', '.rtf', '.doc', '.docx', '.pdf', '.tex'}
+    
+    # Categorii media
+    media_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.ico', '.bmp', '.tiff', '.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm', '.mp3', '.wav', '.ogg', '.flac', '.aac'}
+    
+    # Categorii documentație
+    docs_extensions = {'.md', '.rst', '.txt'}
+    
+    if extension in code_extensions:
+        return 'code'
+    elif extension in config_extensions:
+        return 'config'
+    elif extension in content_extensions:
+        return 'content'
+    elif extension in media_extensions:
+        return 'media'
+    elif extension in docs_extensions:
+        return 'docs'
+    elif extension == '.lock' or 'lock' in os.path.basename(filepath).lower():
+        return 'lock'
+    elif extension == '':
+        return 'no_extension'
+    else:
+        return 'other'
+
+def generate_manifest(root_path, manifest_name):
+    """Generează manifestul pentru un director"""
+    manifest = {
+        'metadata': {
+            'generated_at': datetime.now().isoformat(),
+            'root_path': root_path,
+            'manifest_name': manifest_name,
+            'total_files': 0,
+            'total_size_bytes': 0
+        },
+        'files': []
+    }
+    
+    # Directoare de exclus
+    exclude_dirs = {
+        'node_modules', '.git', '__pycache__', '.next', 'dist', 'build', 
+        '.vercel', '.cache', 'coverage', '.nyc_output', 'logs', '.DS_Store',
+        '__MACOSX', '.vscode', '.idea', 'tmp', 'temp'
+    }
+    
+    print(f"Generez manifestul pentru {root_path}...")
+    
+    for root, dirs, files in os.walk(root_path):
+        # Exclude directoarele irelevante
+        dirs[:] = [d for d in dirs if d not in exclude_dirs]
+        for file in files:
+            filepath = os.path.join(root, file)
+            try:
+                file_stats = os.stat(filepath)
+                file_size = file_stats.st_size
+                file_mtime = datetime.fromtimestamp(file_stats.st_mtime)
+                
+                # Calculează hash SHA256
+                file_hash = get_file_hash(filepath)
+                
+                # Determină tipul fișierului
+                file_type = get_file_type(filepath)
+                
+                # Calculează calea relativă
+                rel_path = os.path.relpath(filepath, root_path)
+                
+                file_info = {
+                    'path': rel_path,
+                    'absolute_path': filepath,
+                    'size': file_size,
+                    'mtime': file_mtime.isoformat(),
+                    'mtime_timestamp': file_stats.st_mtime,
+                    'sha256': file_hash,
+                    'type': file_type,
+                    'extension': os.path.splitext(file)[1].lower(),
+                    'filename': file
+                }
+                
+                manifest['files'].append(file_info)
+                manifest['metadata']['total_files'] += 1
+                manifest['metadata']['total_size_bytes'] += file_size
+                
+            except Exception as e:
+                print(f"Eroare la procesarea {filepath}: {e}")
+    
+    # Sortează fișierele după cale
+    manifest['files'].sort(key=lambda x: x['path'])
+    
+    # Calculează mărimea totală în MB
+    manifest['metadata']['total_size_mb'] = round(manifest['metadata']['total_size_bytes'] / (1024 * 1024), 2)
+    
+    return manifest
+
+def load_old_manifest_from_audit(audit_metadata_path):
+    """Încarcă manifestul vechi din datele de audit anterioare"""
+    with open(audit_metadata_path, 'r', encoding='utf-8') as f:
+        audit_data = json.load(f)
+    
+    # Convertește datele de audit în format manifest
+    old_manifest = {
+        'metadata': {
+            'generated_at': datetime.now().isoformat(),
+            'root_path': 'Main Forge v3',
+            'manifest_name': 'manifest_old',
+            'total_files': audit_data['statistici_generale']['total_fisiere'],
+            'total_size_bytes': int(audit_data['statistici_generale']['marime_totala_mb'] * 1024 * 1024),
+            'total_size_mb': audit_data['statistici_generale']['marime_totala_mb']
+        },
+        'files': []
+    }
+    
+    for file_info in audit_data['fisiere']:
+        # Calculează hash SHA256 dacă există MD5
+        sha256_hash = None
+        if file_info.get('hash_md5'):
+            # Pentru comparație, vom folosi MD5 convertit conceptual
+            # În practică, ar trebui recalculat SHA256
+            sha256_hash = f"md5_converted_{file_info['hash_md5']}"
+        
+        manifest_file = {
+            'path': file_info['cale_relativa'],
+            'absolute_path': file_info['cale_completa'],
+            'size': file_info['marime_bytes'],
+            'mtime': file_info['data_modificare'],
+            'mtime_timestamp': 0,  # Nu avem timestamp exact
+            'sha256': sha256_hash,
+            'type': file_info['categorie'],
+            'extension': file_info['extensie'],
+            'filename': file_info['nume_fisier']
+        }
+        
+        old_manifest['files'].append(manifest_file)
+    
+    return old_manifest
+
+def save_manifest(manifest, output_path):
+    """Salvează manifestul în fișier JSON"""
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+    
+    print(f"Manifest salvat: {output_path}")
+    print(f"  Total fișiere: {manifest['metadata']['total_files']}")
+    print(f"  Mărime totală: {manifest['metadata']['total_size_mb']} MB")
+
+if __name__ == "__main__":
+    base_path = "/home/ubuntu/final_audit"
+    
+    # Generează manifestul pentru versiunea nouă
+    new_root = os.path.join(base_path, "promptforge")
+    manifest_new = generate_manifest(new_root, "manifest_new")
+    save_manifest(manifest_new, os.path.join(base_path, "manifest_new.json"))
+    
+    # Încarcă și convertește manifestul vechi din audit
+    audit_metadata_path = os.path.join(base_path, "audit_metadata.json")
+    manifest_old = load_old_manifest_from_audit(audit_metadata_path)
+    save_manifest(manifest_old, os.path.join(base_path, "manifest_old.json"))
+    
+    print(f"\n=== MANIFESTE GENERATE ===")
+    print(f"Versiunea veche: {manifest_old['metadata']['total_files']} fișiere")
+    print(f"Versiunea nouă: {manifest_new['metadata']['total_files']} fișiere")
+    print(f"Diferența: {manifest_new['metadata']['total_files'] - manifest_old['metadata']['total_files']} fișiere")
+
+
+
+
+
+
+# Matrice RACI
+
+**R** - Responsible | **A** - Accountable | **C** - Consulted | **I** - Informed
+
+| Activitate | Project Manager | Dev Team | DevOps | QA Team | Product Owner |
+|---|---|---|---|---|---|
+| Definire Cerințe | C | R | C | C | A |
+| Dezvoltare Cod | I | R | C | C | A |
+| Code Review | I | R | I | C | I |
+| Setup CI/CD | A | C | R | I | I |
+| Testare | A | C | I | R | C |
+| Deployment | A | C | R | I | C |
+| Management Proiect | A | I | I | I | R |
+
+
+
+
+
+#!/usr/bin/env python3
+import os
+import json
+import re
+from datetime import datetime, timedelta
+from pathlib import Path
+
+def load_active_files_list(active_files_path):
+    """Încarcă lista fișierelor active din MVP anterior"""
+    active_files = set()
+    try:
+        with open(active_files_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            # Extrage căile fișierelor din conținut
+            lines = content.split('\n')
+            for line in lines:
+                line = line.strip()
+                if line and not line.startswith('=') and not line.startswith('FIȘIERE') and not line.startswith('Categorie:') and not line.startswith('Mărime:') and not line.startswith('Modificat:'):
+                    # Elimină prefixele de director vechi
+                    if line.startswith('Manus. Forge Research/'):
+                        line = line.replace('Manus. Forge Research/', '')
+                    elif line.startswith('cusnir_prompt_forge/promptforge/'):
+                        line = line.replace('cusnir_prompt_forge/promptforge/', '')
+                    elif line.startswith('cusnir_prompt_forge_3/'):
+                        line = line.replace('cusnir_prompt_forge_3/', '')
+                    
+                    if '/' in line or '.' in line:
+                        active_files.add(line)
+    except Exception as e:
+        print(f"Eroare la încărcarea fișierelor active: {e}")
+    
+    return active_files
+
+def is_referenced_by_code(file_path, all_files):
+    """Verifică dacă fișierul este referențiat de cod activ"""
+    filename = os.path.basename(file_path)
+    file_stem = os.path.splitext(filename)[0]
+    
+    # Caută referințe în fișierele de cod
+    for other_file in all_files:
+        if other_file['type'] in ['code', 'config'] and other_file['path'] != file_path:
+            # Simulează căutarea de referințe (în practică ar trebui să citim conținutul)
+            other_filename = os.path.basename(other_file['path'])
+            
+            # Verifică dacă este un fișier de routing sau config important
+            if any(keyword in other_filename.lower() for keyword in ['route', 'router', 'config', 'index', 'main', 'app']):
+                # Simulează că fișierele din aceleași directoare sunt referențiate
+                if os.path.dirname(file_path) == os.path.dirname(other_file['path']):
+                    return True
+                
+                # Verifică dacă numele fișierului apare în numele altui fișier
+                if file_stem.lower() in other_filename.lower() or other_filename.lower() in file_stem.lower():
+                    return True
+    
+    return False
+
+def is_router_or_config_file(file_path, filename):
+    """Verifică dacă fișierul este un router sau config important"""
+    router_patterns = [
+        r'route\.ts$', r'router\.ts$', r'routes\.ts$',
+        r'page\.tsx?$', r'layout\.tsx?$', r'loading\.tsx?$', r'error\.tsx?$',
+        r'middleware\.ts$', r'next\.config\.',
+        r'package\.json$', r'tsconfig\.json$', r'tailwind\.config\.',
+        r'\.env', r'\.gitignore$', r'README\.md$'
+    ]
+    
+    config_dirs = ['app', 'pages', 'api', 'config', 'lib', 'utils', 'components', 'hooks']
+    
+    # Verifică pattern-urile
+    for pattern in router_patterns:
+        if re.search(pattern, filename, re.IGNORECASE):
+            return True
+    
+    # Verifică dacă este în directoare importante
+    path_parts = file_path.split('/')
+    if any(dir_name in path_parts for dir_name in config_dirs):
+        return True
+    
+    return False
+
+def analyze_relevance_hard_criteria(manifest_path, active_files_path, diff_report_path):
+    """Analizează relevanța cu criterii dure"""
+    
+    # Încarcă datele
+    with open(manifest_path, 'r', encoding='utf-8') as f:
+        manifest = json.load(f)
+    
+    with open(diff_report_path, 'r', encoding='utf-8') as f:
+        diff_report = json.load(f)
+    
+    active_files_list = load_active_files_list(active_files_path)
+    
+    # Data limită pentru fișiere (12 luni)
+    twelve_months_ago = datetime.now() - timedelta(days=365)
+    
+    relevance_analysis = {
+        'metadata': {
+            'generated_at': datetime.now().isoformat(),
+            'total_files_analyzed': len(manifest['files']),
+            'active_files_reference_count': len(active_files_list),
+            'criteria_date_threshold': twelve_months_ago.isoformat()
+        },
+        'categories': {
+            'NECESAR': [],
+            'ARHIVA': [],
+            'DROP': []
+        },
+        'statistics': {
+            'NECESAR_count': 0,
+            'ARHIVA_count': 0,
+            'DROP_count': 0
+        },
+        'reasoning': {
+            'NECESAR_reasons': {
+                'in_active_mvp_list': 0,
+                'referenced_by_code': 0,
+                'router_or_config': 0,
+                'recent_and_important': 0
+            },
+            'ARHIVA_reasons': {
+                'historical_docs': 0,
+                'useful_reference': 0,
+                'old_but_valuable': 0
+            },
+            'DROP_reasons': {
+                'duplicate_hash': 0,
+                'unreferenced_and_old': 0,
+                'system_files': 0,
+                'temp_files': 0
+            }
+        }
+    }
+    
+    # Creează un set de hash-uri pentru detectarea duplicatelor
+    hash_counts = {}
+    for file_info in manifest['files']:
+        if file_info.get('sha256'):
+            hash_val = file_info['sha256']
+            hash_counts[hash_val] = hash_counts.get(hash_val, 0) + 1
+    
+    print("Analizez relevanța cu criterii dure...")
+    
+    for file_info in manifest['files']:
+        file_path = file_info['path']
+        filename = file_info['filename']
+        file_type = file_info['type']
+        file_mtime = datetime.fromisoformat(file_info['mtime'].replace('Z', '+00:00')) if file_info.get('mtime') else datetime.now()
+        
+        # Normalizează calea pentru comparație
+        normalized_path = file_path
+        for prefix in ['Manus. Forge Research/', 'cusnir_prompt_forge/promptforge/', 'cusnir_prompt_forge_3/']:
+            if normalized_path.startswith(prefix):
+                normalized_path = normalized_path.replace(prefix, '')
+                break
+        
+        relevance_category = None
+        reason = None
+        
+        # Criterii pentru NECESAR
+        if normalized_path in active_files_list:
+            relevance_category = 'NECESAR'
+            reason = 'in_active_mvp_list'
+            relevance_analysis['reasoning']['NECESAR_reasons']['in_active_mvp_list'] += 1
+        
+        elif is_router_or_config_file(file_path, filename):
+            relevance_category = 'NECESAR'
+            reason = 'router_or_config'
+            relevance_analysis['reasoning']['NECESAR_reasons']['router_or_config'] += 1
+        
+        elif is_referenced_by_code(file_path, manifest['files']):
+            relevance_category = 'NECESAR'
+            reason = 'referenced_by_code'
+            relevance_analysis['reasoning']['NECESAR_reasons']['referenced_by_code'] += 1
+        
+        elif file_mtime > twelve_months_ago and file_type in ['code', 'config']:
+            relevance_category = 'NECESAR'
+            reason = 'recent_and_important'
+            relevance_analysis['reasoning']['NECESAR_reasons']['recent_and_important'] += 1
+        
+        # Criterii pentru DROP
+        elif file_info.get('sha256') and hash_counts.get(file_info['sha256'], 0) > 1:
+            relevance_category = 'DROP'
+            reason = 'duplicate_hash'
+            relevance_analysis['reasoning']['DROP_reasons']['duplicate_hash'] += 1
+        
+        elif filename.startswith('.') or filename.lower() in ['thumbs.db', '.ds_store']:
+            relevance_category = 'DROP'
+            reason = 'system_files'
+            relevance_analysis['reasoning']['DROP_reasons']['system_files'] += 1
+        
+        elif any(keyword in filename.lower() for keyword in ['temp', 'tmp', 'backup', 'copy', 'old']):
+            relevance_category = 'DROP'
+            reason = 'temp_files'
+            relevance_analysis['reasoning']['DROP_reasons']['temp_files'] += 1
+        
+        elif file_mtime < twelve_months_ago and not is_referenced_by_code(file_path, manifest['files']):
+            relevance_category = 'DROP'
+            reason = 'unreferenced_and_old'
+            relevance_analysis['reasoning']['DROP_reasons']['unreferenced_and_old'] += 1
+        
+        # Criterii pentru ARHIVA (tot ce nu e NECESAR sau DROP)
+        else:
+            if file_type in ['docs', 'content'] or 'readme' in filename.lower():
+                relevance_category = 'ARHIVA'
+                reason = 'historical_docs'
+                relevance_analysis['reasoning']['ARHIVA_reasons']['historical_docs'] += 1
+            elif file_type == 'media' and file_info['size'] < 5 * 1024 * 1024:  # < 5MB
+                relevance_category = 'ARHIVA'
+                reason = 'useful_reference'
+                relevance_analysis['reasoning']['ARHIVA_reasons']['useful_reference'] += 1
+            else:
+                relevance_category = 'ARHIVA'
+                reason = 'old_but_valuable'
+                relevance_analysis['reasoning']['ARHIVA_reasons']['old_but_valuable'] += 1
+        
+        # Adaugă în categoria corespunzătoare
+        file_analysis = {
+            'path': file_path,
+            'filename': filename,
+            'type': file_type,
+            'size': file_info['size'],
+            'mtime': file_info['mtime'],
+            'reason': reason,
+            'sha256': file_info.get('sha256', 'N/A')
+        }
+        
+        relevance_analysis['categories'][relevance_category].append(file_analysis)
+        relevance_analysis['statistics'][f'{relevance_category}_count'] += 1
+    
+    return relevance_analysis
+
+def create_relevance_summary(relevance_analysis):
+    """Creează un sumar al analizei de relevanță"""
+    
+    total_files = relevance_analysis['metadata']['total_files_analyzed']
+    
+    summary = f"""# ANALIZĂ RELEVANȚĂ - CRITERII DURE
+
+**Generated:** {relevance_analysis['metadata']['generated_at']}
+**Total fișiere analizate:** {total_files}
+
+## Distribuția pe Categorii
+
+| Categorie | Count | Procentaj | Acțiune |
+|-----------|-------|-----------|---------|
+| **NECESAR** | {relevance_analysis['statistics']['NECESAR_count']} | {relevance_analysis['statistics']['NECESAR_count']/total_files*100:.1f}% | **Include în BASE_ACTIVE** |
+| **ARHIVĂ** | {relevance_analysis['statistics']['ARHIVA_count']} | {relevance_analysis['statistics']['ARHIVA_count']/total_files*100:.1f}% | Păstrează pentru referință |
+| **DROP** | {relevance_analysis['statistics']['DROP_count']} | {relevance_analysis['statistics']['DROP_count']/total_files*100:.1f}% | **Elimină din proiect** |
+
+## Motivele Clasificării
+
+### NECESAR - Fișiere Critice pentru MVP
+- **În lista MVP anterioară:** {relevance_analysis['reasoning']['NECESAR_reasons']['in_active_mvp_list']} fișiere
+- **Router/Config important:** {relevance_analysis['reasoning']['NECESAR_reasons']['router_or_config']} fișiere  
+- **Referențiat de cod:** {relevance_analysis['reasoning']['NECESAR_reasons']['referenced_by_code']} fișiere
+- **Recent și important:** {relevance_analysis['reasoning']['NECESAR_reasons']['recent_and_important']} fișiere
+
+### ARHIVĂ - Păstrează pentru Istoric
+- **Documentație istorică:** {relevance_analysis['reasoning']['ARHIVA_reasons']['historical_docs']} fișiere
+- **Referință utilă:** {relevance_analysis['reasoning']['ARHIVA_reasons']['useful_reference']} fișiere
+- **Vechi dar valoros:** {relevance_analysis['reasoning']['ARHIVA_reasons']['old_but_valuable']} fișiere
+
+### DROP - Elimină din Proiect  
+- **Hash duplicat:** {relevance_analysis['reasoning']['DROP_reasons']['duplicate_hash']} fișiere
+- **Nereferențiat și vechi:** {relevance_analysis['reasoning']['DROP_reasons']['unreferenced_and_old']} fișiere
+- **Fișiere sistem:** {relevance_analysis['reasoning']['DROP_reasons']['system_files']} fișiere
+- **Fișiere temporare:** {relevance_analysis['reasoning']['DROP_reasons']['temp_files']} fișiere
+
+## Recomandări de Acțiune
+
+1. **Focusează pe NECESAR:** Aceste {relevance_analysis['statistics']['NECESAR_count']} fișiere formează nucleul MVP-ului
+2. **Arhivează ARHIVA:** Păstrează separat pentru consultare viitoare  
+3. **Elimină DROP:** Șterge pentru a curăța proiectul
+
+**Rezultat:** Proiect curat cu {relevance_analysis['statistics']['NECESAR_count']} fișiere esențiale pentru lansare.
+"""
+    
+    return summary
+
+if __name__ == "__main__":
+    base_path = "/home/ubuntu/final_audit"
+    
+    # Analizează relevanța
+    manifest_path = os.path.join(base_path, "manifest_new.json")
+    active_files_path = os.path.join(base_path, "fisiere_active_mvp.txt")
+    diff_report_path = os.path.join(base_path, "diff_report.json")
+    
+    relevance_analysis = analyze_relevance_hard_criteria(manifest_path, active_files_path, diff_report_path)
+    
+    # Salvează analiza
+    analysis_path = os.path.join(base_path, "relevance_analysis.json")
+    with open(analysis_path, 'w', encoding='utf-8') as f:
+        json.dump(relevance_analysis, f, ensure_ascii=False, indent=2)
+    
+    # Creează și salvează sumarul
+    summary = create_relevance_summary(relevance_analysis)
+    summary_path = os.path.join(base_path, "relevance_summary.md")
+    with open(summary_path, 'w', encoding='utf-8') as f:
+        f.write(summary)
+    
+    print(f"\n=== ANALIZĂ RELEVANȚĂ COMPLETĂ ===")
+    print(f"Analiză detaliată: {analysis_path}")
+    print(f"Sumar: {summary_path}")
+    print(f"\nStatistici finale:")
+    for category, count in relevance_analysis['statistics'].items():
+        print(f"  {category}: {count}")
+
+
+
+
+
+
+
+# Timeline Proiect: Lansare MVP
+
+**Data:** 29 August 2025
+
+## Faza 1: Setup și Integrare Core (Săptămâna 1)
+
+| Task ID | Acțiune | Prioritate | Estimare (ore) | Owner |
+|---|---|---|---|---|
+| 1 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 2 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 3 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 4 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 5 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 6 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 7 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 8 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 9 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 10 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+## Faza 2: Optimizare și Finalizare (Săptămâna 2)
+
+| Task ID | Acțiune | Prioritate | Estimare (ore) | Owner |
+|---|---|---|---|---|
+| 11 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 12 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 13 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 14 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 15 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 16 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 17 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 18 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 19 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+| 20 | VERIFY_AND_INTEGRATE | P1_CRITICAL | 2 | dev_team |
+
+
+
+
+
+
+
+# Top 5 Riscuri ale Proiectului
+
+| Risc | Probabilitate | Impact | Nivel Risc | Mitigare |
+|---|---|---|---|---|
+| **1. Întârzieri în dezvoltare** | Medie | Mare | Ridicat | Planificare agilă, prioritizare task-uri, monitorizare constantă |
+| **2. Probleme de securitate neprevăzute** | Mică | Critic | Ridicat | Audit de securitate extern, implementare strictă a politicilor de securitate |
+| **3. Depășirea bugetului** | Medie | Mediu | Mediu | Monitorizare atentă a costurilor, optimizare resurse |
+| **4. Feedback negativ de la utilizatori** | Medie | Mare | Ridicat | Testare A/B, colectare feedback constant, iterare rapidă |
+| **5. Probleme de performanță la scară** | Mică | Mare | Mediu | Testare de stres, optimizare constantă, arhitectură scalabilă |

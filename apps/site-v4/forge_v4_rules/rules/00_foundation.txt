@@ -1,0 +1,11 @@
+TITLE: Foundation — PromptForge v3
+TYPE: Always
+SCOPE: Continue from CURRENT repo state (Next.js App Router + Supabase + OpenAI + Analytics + QA).
+
+DECISIONS
+1) Un singur Hub la /dashboard. Taburi: Tools, Analytics, QA, History, Resources.
+2) Orice generare ⇒ ARTIFACT. Exportul este canonic (.txt/.md/.json/.pdf; ZIP pe Enterprise).
+3) Validări și gating doar pe server (API). UI doar reflectă (paywall/CTA).
+
+ACCEPTANCE
+- ruleset.yml prezent/valid; fiecare endpoint are input schema, gating, responses, telemetry.

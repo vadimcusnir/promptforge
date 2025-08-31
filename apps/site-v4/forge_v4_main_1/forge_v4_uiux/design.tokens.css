@@ -1,0 +1,17 @@
+:root{
+  --bg:#05010A;
+  --brand:#00FF7F;
+  --accent:#FF2F2F;
+  --gold:#CDA434;
+  --surface:#0B0712;
+  --surfaceAlt:#100A18;
+  --border:#2A2036;
+  --text:#F5F7FA;
+  --textMuted:#C9CDD4;
+  --focus:#7FFFD4;
+  --r-md:10px; --r-xl:20px;
+  --shadow-glow:0 0 0 2px rgba(0,255,127,.2),0 0 24px rgba(0,255,127,.35);
+}
+body{background:var(--bg);color:var(--text);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-glow);}
+.badge--plan{border-radius:999px;padding:.25rem .5rem;border:1px solid var(--border);}

@@ -1,0 +1,2088 @@
+# OMUL VIITORULUI // OS
+## Misiunea Programului
+### De la Zero la Creator AI
+- În 60–90 zile elevul devine arhitect de sisteme autonome care generează bani și timp fără echipă sau șefi, pornind de la simpla înțelegere a unui copil de 12 ani.
+
+
+### Rezultatele Stratificate
+- Cursul oferă trei niveluri de victorie: minim – asistent AI pentru 3 taskuri zilnice; mediu – 300 € și 30 ore câștigate; maxim – 3 sisteme autonome și identitate publică.
+
+
+### Ritualuri, nu Lecții
+- Cele 200 de micro-lecții de 9–14 minute sunt ritualuri zilnice care livrează câte un artefact real: prompt, automatizare, fișier sau vânzare, cu puncte XP și trofee.
+
+
+## Arhitectura OS
+### Tripla Sistem Learn-Build-Sell
+- LearnOS livrează cunoștințele, BuildOS pune uneltele în mână, SellOS convertește munca în bani; cele trei straturi formează un Operator System complet.
+
+
+### Formula Model-Prompt-Librărie-Automatizare
+- Modelul definește schema de bani, Promptul controlează execuția AI, Librăria stochează materiale reutilizabile, Automatizarea multiplică fără efort uman.
+
+
+### Mintea, Vocea, Memoria, Mâna
+- Analogia umană: Modelul e creierul strategic, Promptul e limba de comandă, Librăria e memoria colectivă, Automatizarea e mâna invizibilă care lucrează non-stop.
+
+
+## Cele 8 Module
+### Fabrica de Roboței – ChatGPT
+- Modul 1: creezi cont, configurezi primele 3 roluri, salvezi primele texte și termini cu mini-proiectul „GPT-ul meu personal” gata de comenzi.
+
+
+### Trusa de Comandant – Prompturi
+- Modul 2: construiești cartea ta de comenzi magice cu formule 7→1, sandwich, salată și testezi 20 de prompturi validate pentru scriere și analiză.
+
+
+### Transformatorul de Timp – Automatizare
+- Modul 3: reduci taskurile zilnice folosind GPT pentru email, programări, liste și jurnal, obținând prima economie reală de 5 ore pe săptămână.
+
+
+### Pozele Vorbitoare – Midjourney
+- Modul 4: transformi cuvinte în imagini de impact, creezi avatar propriu, 10 vizuale de brand și termini cu albumul vizual AI fără să folosești camera.
+
+
+### Magazinul de Idei – Copy & Funnel
+- Modul 5: scrii titluri, reclame și povești care vând; construiești un scroll de vânzare complet și 5 emailuri gata de lansat în 7 zile.
+
+
+### Armata de Asistenți – GPT Specializați
+- Modul 6: clonezi 10 roboți diferiți pentru ads, SEO, ecommerce și suport, testezi performanța și îți formezi propria echipă digitală.
+
+
+### Butonul Invizibil – Zapier & Make
+- Modul 7: conectezi aplicațiile într-un flow complet fără click-uri, creezi 5 butoane care trimit mailuri, actualizează CRM și publică conținut.
+
+
+### Lumea Ta Digitală – Lansarea Finală
+- Modul 8: combini toate modulele într-un ecosistem live: site, ofertă, avatar, funnel și provocare de monetizare – proiect final „Omul Viitorului”.
+
+
+## Gamificare & Măsurare
+### XP, Trofee și Micro-Victorii
+- Fiecare lecție aduce 3 puncte XP: vezi, aplici, salvezi. La fiecare 5 lecții primești un fișier bonus, iar la final de modul obții un trofeu demonstrativ.
+
+
+### Dashboard Copil-Proof
+- Monitorizezi progresul prin 4 metrici simple: ROI Score, Automation Depth, Consistență și Publicare, toate calculate automat în Notion sau Google Sheet.
+
+
+### Checkpointuri Monetizabile
+- Ziua 14 – primul euro, ziua 30 – prima ofertă reală, ziua 60 – abonament sau client 1:1; fiecare bornă are template și dovadă de reușită.
+
+
+## Librăria BuildOS
+### 100+ Artefacte Gata de Folosit
+- Primești PDF-uri cu reguli de siguranță, Excel-uri cu calcul ROI, DOCX cu emailuri și pitch-uri, PNG cu template-uri vizuale, plus 12 scenarii Zapier.
+
+
+### GPT-uri și Promptbook
+- Biblioteca conține 10 GPT-uri pre-antrenați și 300 de prompts structurate pe rol, context, constrângeri și exemple, gata de copiat și personalizat.
+
+
+### Șabloane de Vânzare și CRM
+- Ai la dispoziție pagini de vânzare, scroll-uri LinkedIn, caruseluri Instagram și un CRM simplu în Google Sheets conectat prin Zapier.
+
+
+## Upsell & Licențiere
+### 10 Proiecte Post-Curs
+- După absolvire poți accesa GPT personalizat, Builder Kit pentru propria academie, consultanță 1:1, AI Pack lunar, licență white-label și mentorat tokenizat.
+
+
+### Pachete de Preț și Garanție
+- Core 1490 €, Pro 2490 €, Elite 5900 €, Black-Box 15000 €; garanție „Dovezi sau Done-With-You” – dacă nu ai rezultate concrete primești sprinturi suplimentare.
+
+
+### Licențiere și Scalare
+- Poți revinde cursul sub brand propriu, oferi training corporate sau participa la marketplace-ul de micro-servicii AI, plătind un comision de 15 %.
+
+
+## Sensul și Impactul
+### Transformare Identitară
+- Programul nu doar învață AI, ci te transformă din consumator în creator, din executant în operator de sisteme, cu identitate publică clară și venituri recurente.
+
+
+### Omul Viitorului – Operator System
+- Finalul este un ciclu închis: LearnOS te educă, BuildOS te înarmează, SellOS te plătește; devii un sistem viu, antifragil și independent în lumea digitală.
+
+
+
+
+
+
+
+
+PromptForge v3 – Descriere Completă.
+
+
+
+Secțiunea 1: Viziune 
+
+1. Viziune
+1.1 Scop Fundamental
+
+PromptForge v3 este conceput ca o platformă duală:
+
+Produs SaaS – unelte enterprise pentru prompting, testare și automatizare AI.
+
+Ecosistem educațional și de brand personal – resurse, cursuri, funneluri, comunități care transformă utilizatorii în creatori și arhitecți cognitivi.
+
+Scopul central: să ofere un nucleu tehnic stabil (MVP) pe care se pot construi straturi de creștere și monetizare (branding, marketing, educație, comunitate).
+
+1.2 Obiective Strategice
+
+Stabilitate tehnică
+– Nucleu MVP lansabil cu arhitectură scalabilă, testare stratificată și observabilitate completă.
+– Garanția că orice fișier critic trece prin ruleset.yml (gardian unic) și CI/CD.
+
+Scalabilitate comercială
+– Monetizare prin abonamente, pachete de prompts, GPTs custom, cursuri și workshopuri.
+– Straturi de upsell: de la diagnostic gratuit → abonament → curs premium → licențiere enterprise.
+
+Putere educațională
+– Biblioteca standard de prompts și frameworkuri.
+– Cursuri și programe („Voice on Auto”, „Omul Viitorului”, „Intelligentia”) integrate direct în platformă.
+– Funneluri live: workshopuri 4D, onboarding AI, programe modulare.
+
+Ecosistem comunitar
+– Gamificare: avatar AI, puncte, niveluri cognitive, badges.
+– Comunități tematice (Notadoi, 8VULTUS).
+– Evenimente periodice: Q&A, hackathoane, „ritualuri de inițiere” AI.
+
+Poziționare identitară
+– Brand unic (Cusnir.OS / Nota Doi) cu estetică fractalică, semiotică și storytelling „Retorică Fără Anestezie”.
+– Mesaje puternice: „Sinus. Cosinus. Cușnirus.”, „Codul 7:1™”.
+– Vizibilitate globală, pornind din Moldova → România → piață internațională.
+
+1.3 Structura pe Straturi
+
+Nucleu Tehnic (MVP):
+Cod surse FE/BE, ruleset, API GPT-editor, CI/CD, Observabilitate, Testare, Legal.
+
+Strat Educațional:
+Frameworkuri, librării de prompts, cursuri online, funneluri, workshopuri.
+
+Strat Comercial:
+Planuri de abonamente (Free, Plus, VIP), licențiere GPTs, marketplace AI Commands.
+
+Strat Comunitar:
+Gamificare, avatar AI, comunități tematice, ritualuri.
+
+Strat de Branding:
+Identitate vizuală (glyph, logo, animații), storytelling, media assets, podcast, Substack.
+
+1.4 Impact Așteptat
+
+Pentru utilizatori: acces la unelte AI profesioniste + ghidare educațională + comunitate de suport.
+
+Pentru brand: poziționare ca lider în „AI personal branding & automation” în regiunea Moldova/România, cu scalare internațională.
+
+Pentru piață: o nouă paradigmă — „AI ca fabrică personală de vizibilitate și venit”.
+
+1.5 Principiul Director
+
+„PromptForge v3 nu este doar un produs, ci o forjă de identități.
+Forjezi prompts, dar și o voce publică. Rulezi cod, dar și un brand. Lansezi API-uri, dar și o autoritate.”
+
+
+
+
+
+
+
+
+2. Arhitectura Tehnică
+2.1 Frontend (Next.js + TypeScript/React)
+Structură & routing
+
+App Router cu entry-points clare: app/layout.tsx, app/page.tsx, stiluri globale în globals.css. Acestea sunt nucleul UI pentru pagina principală și compun restul modulelor.
+
+Design System propriu în components/ui/* (accordion, table, card, form, dialog, tabs, tooltip, menubar, pagination, etc.) – colecție mare, gata de re-folosit între module.
+
+Module interactive
+
+export-manager – orchestrator de export care citește/scrie după contractele din export.manifest.json + export.manifest.schema.json. Controlul de consistență vine din schemă și din ruleset.
+
+gpt-editor – editorul de prompturi cu logică în lib/gpt-editor.ts și endpoint dedicat app/api/gpt-editor/route.ts. Păstrează istoricul în lib/history-manager.ts.
+
+test-engine – rulează evaluări, scoruri și praguri de calitate pe baza evaluator_config.yaml, prompt_scores_schema.json și exemplare de scoruri. Integrare cu ruleset pentru gating.
+
+prompt-generator – generator de prompturi care utilizează specificații: prompt.json, prompt.chained.json, prompt.run.schema.json.
+
+UX, accesibilitate, performanță
+
+State & compoziție: folosește starea locală și hooks pentru module; nu introduce librării grele de state înainte de nevoie; componentele din components/ui/* asigură ergonomie și ARIA corectă.
+
+Loading/Error/Empty: componente dedicate (skeleton, alert, toast/sonner) pentru feedback rapid, cu fallback-uri vizibile și non-intruzive.
+
+Optimizare: code-splitting pe module, dynamic() pentru editor/test-engine, imagini și SVG-uri optimizate (logo/glyph).
+
+2.2 Backend & API
+Rute & politici
+
+Rute securizate: route.ts (entry), auth în server-auth.ts, rate-limit în rate-limit.ts, gardă middleware pentru cookies/headers/politici.
+
+API intern GPT-editor: app/api/gpt-editor/route.ts expune operațiile editorului (read/validate/save/export) pe contract validat cu JSON-Schema.
+
+Entitlements & gating: entitlements.ts + UI (paywall-modal.tsx) mapează planurile (Free/Plus/VIP/Enterprise) la capabilități, în corelație cu plans.json / feature_flags.json / stripe_products_seed.json / license.json.
+
+Validare & contracte
+
+SSOT: ruleset.yml blochează execuția când input/output nu respectă politicile; schemes: module.spec.schema.json, prompt.run.schema.json, export.manifest.schema.json sunt contractele oficiale.
+
+DoR/DoD & release gates: dor_dod.rules.yml definește praguri/condiții; build-urile și rutele se opresc când scorurile sau verificările eșuează.
+
+Observabilitate & telemetrie
+
+Measurement & logs: measurement_observability.json definește metricele cheie; execuțiile sunt urmărite în Research/telemetry/execution_log.json. Integrarea cu APM/alerts vine la nivel de platformă.
+
+Flux securizat (pe scurt)
+
+middleware aplică headers/CSP + citește identitatea; 2) rate-limit pe route; 3) server-auth verifică sesiunile; 4) entitlements mapează capabilitățile; 5) validator (JSON-Schema) înainte de business; 6) handler; 7) audit/telemetry la final.
+
+2.3 Control strict al agentului (Cursor)
+
+agent.ts impune reguli de acces la fișiere și căi „allow-list”, prevenind generarea/alterarea de resurse în afara domeniului permis. Este ancorat în Research și rulat ca gardian în workshop-urile Cursor.
+
+Practic: orice operațiune (scriere/generare) este refuzată dacă ruta/rolul nu se potrivește cu specificația orchestrat în agent.ts + ruleset.yml.
+
+2.4 Librării interne (layer de servicii)
+
+lib/gpt-editor.ts – contracte și servicii pentru editor (parsing, validare UI, delegare spre API).
+
+lib/history-manager.ts – operații pe istoric, versiuni, undo/redo.
+
+lib/modules.ts – maparea „module key → funcționalitate UI/API”.
+
+lib/test-engine.ts – execuție teste, agregare scoruri, praguri.
+
+lib/prompt-generator.ts – generare/chain pe baza schemelor.
+
+types/promptforge.ts – tipuri partajate (DTO-uri), pentru a nu duplica interfețe.
+
+2.5 Contracte & date (chei tehnice)
+
+Prompt lifecycle: prompt.json / prompt.chained.json → validare cu prompt.run.schema.json → testare cu evaluator_config.yaml + prompt_scores_schema.json → export validat de export.manifest.schema.json.
+
+Pachete/planuri: plans.json, feature_flags.json, license.json, creator_commerce_pack.json → sincronizate cu entitlements.ts și UI (paywall).
+
+Research & business: jtbd.json, icp.json, conversion_channel.json, compliance.json, commercial_package.json, proof_assets.json, timely_delivery.json → folosite în modulele de marketing/automatizare.
+
+2.6 Flux end-to-end (diagramă textuală)
+UI (components/ui/*, module-*) 
+  -> lib/* (servicii tipate)
+    -> fetch('/app/api/gpt-editor/route.ts')
+      -> middleware -> rate-limit -> server-auth -> entitlements
+        -> validator(JSON-Schema) -> handler
+          -> telemetry(measurement_observability.json)
+            -> răspuns tipat către UI
+
+
+2.7 Non-funcționale (DoD minime)
+
+Performanță: code-split pe module mari (editor/test-engine); latență sub pragurile definite de SLO (p95).
+
+Accesibilitate: toate componentele interactive din components/ui/* au ARIA + focus management; fallback „prefers-reduced-motion”.
+
+Securitate: CSP strict + rate-limit + auth + entitlements + audit trail; orice neconformitate blochează execuția prin ruleset.yml.
+
+Testare: unit/comp + contract/API + E2E/Smoke + SEO/A11y în pipeline; rutele critice nu se livrează fără check-uri verzi.
+
+2.8 Acceptanță pe module (exemplu rapid)
+
+gpt-editor: (a) validează promptul contra prompt.run.schema.json; (b) salvează versiuni; (c) testează cu test-engine și returnează scor + erori; (d) respectă entitlements (scriere/export).
+
+test-engine: (a) încarcă evaluator_config.yaml; (b) produce rezultat compatibil prompt_scores_schema.json; (c) semnalizează FAIL în pipeline dacă scor < pragul DoD.
+
+export-manager: (a) generează manifest conform export.manifest.schema.json; (b) atașează checksum + metadata; (c) salvează doar pe căi „allow-list” (agent.ts).
+
+
+
+
+
+
+3. Config & SSOT
+3.1 ruleset.yml – Single Source of Truth (SSOT)
+
+Rol: gardian unic pentru securitate, gating și validare. Orice încălcare → build/exec STOP (pre-commit, CI, runtime). Fișierul există în proiect (atât în Research, cât și în bundle-urile v3).
+
+Domenii obligatorii în ruleset.yml
+
+security: CSP, allowlist domenii/API, antiexfiltrare, blocări de export pe date sensibile.
+
+rate_limits: pe rute/actor (anon, user, admin) + burst control.
+
+validation: “schema-first” (JSON-Schema/OpenAPI) pentru input/output; enum_only: true, raise_on_invalid: true.
+
+entitlements: mapare plan→capabilități (Free/Plus/VIP/Enterprise).
+
+export_policies: formate permise, watermark trial, checksum sha256, manifest obligatoriu.
+
+DoR/DoD gates: scor minim la evaluatori, test-suite verzi, manifest valid → altfel blocare.
+
+perf & a11y: bugete (p95, LCP), prefers-reduced-motion, size caps.
+
+Schelet recomandat
+version: 1
+security:
+  csp:
+    default-src: ["'self'"]
+    img-src: ["'self'", "data:"]
+    connect-src: ["'self'", "https://api.example.com"]
+  allowlist_hosts: ["api.example.com"]
+  block_pii_export: true
+
+rate_limits:
+  routes:
+    "/api/gpt-editor": { window_s: 60, max: 30 }
+    "/api/export":     { window_s: 60, max: 10 }
+
+validation:
+  input_schemas:
+    - name: prompt.run.schema.json
+    - name: module.spec.schema.json
+  output_schemas:
+    - name: export.manifest.schema.json
+  enum_only: true
+  raise_on_invalid: true
+
+entitlements:
+  plans:
+    Free:        ["read", "simulate"]
+    Plus:        ["read", "simulate", "save"]
+    VIP:         ["read", "simulate", "save", "export"]
+    Enterprise:  ["*"]
+
+export_policies:
+  formats_allowed: ["md", "json", "zip"]
+  require_manifest: true
+  watermark_trial: true
+  checksum: "sha256"
+
+gates:
+  min_scores:
+    prompt_quality: 80
+    test_engine_pass: true
+  require:
+    - tests_unit
+    - tests_contract
+    - tests_e2e_smoke
+    - seo_a11y_checks
+perf:
+  p95_latency_ms: 300
+  lcp_ms: 2500
+a11y:
+  reduced_motion_supported: true
+
+
+Acest fișier e “cablul” dintre cod, CI/CD și runtime; există referințe la ruleset.yml în arborele actual.
+
+3.2 Tooling (build & discipline)
+
+Fișiere: package.json, tsconfig.json, pnpm-lock.yaml – controlul dependențelor, scripturi standard (dev, build, lint, test, e2e, typecheck). Toate sunt în repo-ul activ.
+
+Scripturi recomandate în package.json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run src --reporter=verbose",
+    "test:contract": "tsx scripts/contract-validate.ts",
+    "test:e2e": "playwright test --reporter=line",
+    "seo:a11y": "node scripts/seo_a11y_check.mjs",
+    "ci": "npm run lint && npm run typecheck && npm run test && npm run test:contract && npm run test:e2e && npm run seo:a11y"
+  }
+}
+
+3.3 Contracte & Scheme (schema-first)
+
+Fișiere cheie:
+
+module.spec.schema.json – contract pentru module.
+
+prompt.run.schema.json – contract pentru rularea prompturilor.
+
+export.manifest.schema.json – contract pentru exporturi/manifest.
+Toate sunt prezente în structura v3.
+
+Exemplu: prompt.run.schema.json (nucleu)
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PromptRun",
+  "type": "object",
+  "required": ["id", "role", "context", "constraints", "examples"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9\\-_]{3,64}$" },
+    "role": { "type": "string", "enum": ["strategist","architect","operator"] },
+    "context": { "type": "string", "minLength": 1, "maxLength": 5000 },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 280 }
+    },
+    "examples": {
+      "type": "array",
+      "items": { "type": "object", "required": ["input","output"] }
+    }
+  },
+  "additionalProperties": false
+}
+
+Exemplu: validare export.manifest.json
+{
+  "name": "promptforge-pack",
+  "version": "3.0.0",
+  "files": [
+    { "path": "prompts/intro.md", "sha256": "..." },
+    { "path": "schemas/prompt.run.schema.json", "sha256": "..." }
+  ],
+  "meta": {
+    "generatedAt": "2025-08-30T17:00:00Z",
+    "generator": "export-manager@3.0.0"
+  }
+}
+
+
+— validat contra export.manifest.schema.json + verificat în ruleset.yml.
+
+Implementare practică: în handler-ele API se rulează mai întâi validarea JSON-Schema; abia apoi logică business. Contractele sunt listate în repo-ul tău.
+
+3.4 Licensing & Entitlements
+
+Fișiere: plans.json, feature_flags.json, stripe_products_seed.json, license.json – sursa unică pentru planuri, capabilități și produse Stripe. Sunt prezente în bundle-ul v3.
+
+Model de date (minimal)
+
+plans.json – planuri (Free/Plus/VIP/Enterprise) + limite (ex. export/zi, module premium).
+
+feature_flags.json – capabilități pe feature (on/off per plan sau rollout %).
+
+stripe_products_seed.json – produse/price IDs pentru Stripe (seed în medii).
+
+license.json – stare licență (cheie, expirare, scope), pentru Enterprise.
+
+Mapare runtime (UI + API)
+
+UI: paywall-modal.tsx citește capabilitățile din entitlements → afișează upsell/upgrade.
+
+API: entitlements.ts verifică la fiecare rută dacă planul curent are permisiunea (e.g., export doar VIP/Enterprise). Ambele fișiere sunt în proiect.
+
+Regulă de aur: niciun if (email) sau “hard-coding” pe user. Totul se citește din config-ul de licențe/planuri & ruleset.yml.
+
+3.5 Conectare în CI/CD (gates)
+
+Install & typecheck → eșec = STOP.
+
+Validare JSON-Schema (prompt/module/export) → eșec = STOP.
+
+Testare: unit + contract + e2e + SEO/A11y → eșec = STOP.
+
+Ruleset gates: scoruri minime, perf/a11y bugete, entitlements coerente → eșec = STOP.
+
+Build & preview (staging) → smoke tests.
+
+Prod deploy doar dacă 1–5 sunt verzi. (Acest mod de operare este descris în șablonul de structură al proiectului.)
+
+3.6 Checklist „executabil” (astăzi)
+
+Leagă ruleset.yml în: pre-commit (husky), CI (pas dedicat), runtime (middleware/guard).
+
+Adaugă script test:contract (validează JSON-Schema pe prompt, module, export).
+
+Conectează entitlements la plans.json/feature_flags.json + Stripe seed din stripe_products_seed.json.
+
+Blochează export fără manifest valid + checksum sha256 (policy în ruleset.yml).
+
+Activează paywall-modal în UI pentru capabilități non-permise pe plan curent.
+
+Configurează rate-limit pe app/api/gpt-editor/route.ts (bursts scurte, fereastră 60s).
+
+3.7 Anti-deraiere (practic)
+
+“Schema înainte de cod.” Creezi/actualizezi schema → abia apoi implementezi.
+
+“Config, nu if-uri.” Orice plan/feature/licență se schimbă în fișierele de config, nu în cod.
+
+“Ruleset ca barieră.” Orice exec care ocolește ruleset.yml e un bug de pipeline (nu continuă).
+
+Unde sunt toate, în proiectul tău
+
+ruleset.yml – în Research și bundle-uri v3.
+
+package.json, tsconfig.json, pnpm-lock.yaml – tooling central.
+
+module.spec.schema.json, prompt.run.schema.json, export.manifest.schema.json – în setul de fișiere v3.
+
+plans.json, feature_flags.json, stripe_products_seed.json, license.json – în licensing/ pentru v3.
+
+Dacă vrei, îți livrez acum:
+
+un ruleset.yml complet (prod-ready) personalizat pe ritmul tău,
+
+un scripts/contract-validate.ts (validator JSON-Schema)
+— ca să închizi cap-coadă SSOT/Gates dintr-un foc.
+
+
+
+
+
+4. CI/CD & Operațiuni
+4.1 Pipeline – flux complet (gated)
+
+Ordine: install → typecheck → lint → unit → contract/API → e2e → seo/a11y → sec-scan → build → preview(staging) → smoke → prod.
+Reguli: fiecare etapă e „gate”. Dacă pică, fluxul se oprește (inclusiv din ruleset.yml: DoR/DoD, min_scores, perf/a11y budgets, manifest valid).
+
+YAML de referință (GitHub Actions – schematic)
+name: ci
+on: [push, pull_request]
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --frozen-lockfile
+
+  checks:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - run: pnpm run typecheck
+      - run: pnpm run lint
+      - run: pnpm run test:unit
+      - run: pnpm run test:contract     # validează JSON-Schema (prompt/module/export):contentReference[oaicite:2]{index=2}
+      - run: pnpm run test:e2e          # Playwright/Cypress E2E
+      - run: pnpm run seo:a11y          # Lighthouse/Pa11y budgets:contentReference[oaicite:3]{index=3}
+      - run: pnpm run sec:scan || true  # SCA/SAST; dacă găsește critical → FAIL
+
+  build:
+    runs-on: ubuntu-latest
+    needs: checks
+    steps:
+      - run: pnpm run build             # Next.js build (SSOT + ruleset gates):contentReference[oaicite:4]{index=4}
+
+  preview_staging:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: staging
+    steps:
+      - run: pnpm run deploy:staging
+      - run: pnpm run test:smoke        # Sanity în staging
+
+  release_prod:
+    runs-on: ubuntu-latest
+    needs: preview_staging
+    if: ${{ success() }}
+    environment: production
+    steps:
+      - run: pnpm run deploy:prod
+      - run: pnpm run postdeploy        # recrawl sitemap, CDN purge, Lighthouse CI:contentReference[oaicite:5]{index=5}
+
+
+Unde se ancorează „gates”: ruleset.yml (min scores, perf/a11y, manifest checks), validatorul de contracte, test-engine + evaluator_config, plus entitlements/planuri pentru capabilități la runtime.
+
+4.2 Medii & secrete (dev / staging / prod)
+
+Separare strictă de variabile: 3 environment groups (dev, staging, prod).
+
+Secret-vault (provider cloud sau GitHub Environments) pentru API keys (OpenAI, Stripe), DB URLs, JWT/NextAuth, Sentry DSN.
+
+Rotație chei trimestrial sau la incident; cheile se re-injectează prin pipeline, nu prin commit.
+
+Matrice minimă de variabile
+NEXT_PUBLIC_APP_ENV=dev|staging|prod
+DATABASE_URL=...
+AUTH_SECRET=...
+STRIPE_SECRET_KEY=...
+SENTRY_DSN=...
+OTEL_EXPORTER_OTLP_ENDPOINT=...
+RULESET_PATH=ruleset.yml              # citit de build/runtime-gate:contentReference[oaicite:9]{index=9}
+PLANS_FILE=licensing/plans.json       # folosit de entitlements:contentReference[oaicite:10]{index=10}
+FEATURE_FLAGS=licensing/feature_flags.json
+LICENSE_FILE=licensing/license.json
+
+4.3 Rate-limit & CSP (din SSOT)
+
+Politicile de rate-limit și CSP se definesc în ruleset.yml și se aplică în middleware/gateway pentru toate rutele (ex. /app/api/gpt-editor/route.ts).
+
+Aplicare (conceptual, server):
+// middleware.ts (schematic)
+import { readRuleset } from "./lib/ruleset";
+import { applyCSPHeaders, rateLimit } from "./lib/security";
+
+export async function middleware(req: Request) {
+  const ruleset = await readRuleset(process.env.RULESET_PATH);
+  applyCSPHeaders(ruleset.security.csp);            // CSP strict (default-src 'self', connect-src allowlist etc.):contentReference[oaicite:13]{index=13}
+  await rateLimit(req, ruleset.rate_limits.routes); // ex: /api/gpt-editor: 30/min:contentReference[oaicite:14]{index=14}
+  // continue → auth → entitlements → schema-validate → handler:contentReference[oaicite:15]{index=15}
+}
+
+
+Important: rutele sensibile (export, GPT-editor) au ferestre și burst mai mici + verificare entitlements (planul curent permite acțiunea?).
+
+4.4 Gates operaționale (DoR/DoD)
+
+DoR (Definition of Ready): schema actualizată, contracte generate, test-cases definite, feature flags setate, plan/entitlements mappate.
+
+DoD (Definition of Done): toate suitele verzi, scor minim la test-engine (≥ 80), manifest de export valid + checksum, perf p95 ≤ buget, a11y ok, changelog + runbook actualizate.
+
+4.5 Observabilitate după deploy (hook-uri)
+
+OTel + Sentry conectate în build (release tags).
+
+Hook post-deploy: recrawl sitemap, CDN purge, lighthouse CI în capul principalelor rute, trimitere smoke E2E + ping de sănătate.
+
+Dashboards: p95 latency, error-rate, throughput, funnel conversion (din measurement_observability.json).
+
+4.6 Runbooks (execuție disciplinată)
+
+GO/NO-GO: checklist cu gates (tests, scores, perf, a11y, licențe) – dacă un singur punct e roșu → NO-GO.
+
+RELEASE PLAYBOOK: pași și rollback idempotent (etichete, migrații, feature flags).
+
+ON-CALL GUIDE: rotație, severități, SLO încălcate → „freeze releases” până la revenirea în bugetul de erori.
+
+QA STRATEGY: definire test suites per modul (editor, export, test-engine).
+
+PERF BUDGETS & A11Y: praguri și tooluri ca parte din CI.
+
+4.7 Anti-regresie & siguranță
+
+Contract-first: schema înainte de cod (API/prompt/export).
+
+Blocking rules: ruleset.yml oprește build/exec la:
+– output ne-validat,
+– export fără manifest și checksum,
+– scoruri sub prag,
+– încălcări perf/a11y,
+– capabilities nepermise (entitlements).
+
+4.8 Checklist „gata de aplicat” (azi)
+
+Adaugă joburile typecheck/lint/unit/contract/e2e/seo+a11y/sec-scan/build în CI + condiții needs:.
+
+Injectează RULESET_PATH + legăturile la plans.json/feature_flags.json/license.json în medii; elimină orice hard-coding.
+
+Montează CSP + rate-limit din ruleset în middleware și testează burst pe rutele sensibile.
+
+Activează post-deploy hooks (sitemap recrawl, CDN purge, Lighthouse CI, smoke).
+
+Publică GO/NO-GO.md, RELEASE_PLAYBOOK.md, ROLLBACK.md, ONCALL_GUIDE.md și le include în PR template.
+
+
+
+
+
+
+
+5. Observabilitate
+5.1 Ținta de observabilitate (ce „vezi” și când oprești)
+
+Semnale primare: p95 latency, error-rate (5xx + logical errors), throughput (RPS), apdex/conversii (pentru modulele cheie).
+
+Ținte SLO/SLA: uptime ≥ 99.9%, p95 < 300ms pe rutele critice (UI & API), error-rate < 1%.
+
+Error budgets: buget lunar de erori (ex. 0.1% downtime / 1% erori). Dacă e depășit → freeze lansări până revenim în buget.
+
+5.2 Stack & integrare: OpenTelemetry + Sentry
+
+OpenTelemetry (OTel) pentru tracing + metrics + logs la nivel de UI (Next.js) & API (route handlers).
+
+Sentry pentru error tracking (stacktraces, release tagging, replays opțional), linkat în OTel (span linking).
+
+Measurement catalog: folosește measurement_observability.json ca sursă unică de metrice, thresholds, denumiri.
+
+Inițializare OTel (schematic)
+// otel.ts
+import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ERROR);
+
+export const sdk = new NodeSDK({
+  traceExporter: new OTLPTraceExporter({ url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT }),
+  metricExporter: new OTLPMetricExporter({ url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT }),
+  serviceName: 'promptforge-v3',
+  resource: { attributes: { 'service.version': process.env.NEXT_PUBLIC_APP_VERSION } },
+});
+
+Inițializare Sentry (schematic)
+// sentry.client.ts / sentry.server.ts
+import * as Sentry from '@sentry/nextjs';
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 0.2, // ajustat în funcție de cost
+  replaysSessionSampleRate: 0.0,
+  integrations: [], // adaugă browserTracing / httpTracing după caz
+  release: process.env.NEXT_PUBLIC_APP_VERSION,
+  environment: process.env.NEXT_PUBLIC_APP_ENV, // dev|staging|prod
+});
+
+
+Note: leagă OTel + Sentry prin traceparent (propagare) și etichete comune: service.name, service.version, route.id, plan, user_tier (fără PII). Ghidul de măsurători e în fișierele de Research/observability.
+
+5.3 Ce măsurăm (taxonomie)
+
+Dimensiuni comune (labels): route, method, status, plan, entitlement, module (editor/export/test-engine), region, env.
+
+Metrice API (exemplu):
+
+http_server_duration_ms{route="/api/gpt-editor"} – histogram → p95.
+
+http_server_errors_total{route,reason} – rate → <1%.
+
+http_requests_total{route} – throughput.
+
+export_jobs_duration_ms{format} – p95/p99 pentru export-manager.
+
+test_engine_score{module} – medie + distribuție (gates DoD).
+
+Metrice UI:
+
+web_vitals_lcp_ms, web_vitals_cls, web_vitals_ttfb_ms (Next + web-vitals).
+
+ui_error_events_total{module} (non-fatal, boundary-caught).
+
+ui_latency_ms{interaction} (măsurat prin spans custom).
+
+Surse & naming: păstrezi nomenclatorul în measurement_observability.json; rutele critice sunt definite deja în proiect.
+
+5.4 Dashboards (minim 3)
+
+Stare Prod (Exec): p95 per rută, error-rate, throughput, uptime; semafor SLO; ultimele deploy-uri (release tag); buget de erori rămas.
+
+UX/Perf (Frontend): LCP/TTFB/CLS pe pagini & segmente (desktop/mobile), error events per modul UI, trenduri.
+
+Module (Business): editor/test-engine/export – timp execuție p95, scoruri medii, fail-rate pe DoD, conversii pe funnel (unde există).
+
+Dashboards și praguri sunt menționate în structura Observability & SLO/SLA din cuprinsul consolidat.
+
+5.5 SLO/SLA & alerte
+Definiții
+
+SLO p95 latency: < 300ms pe rutele critice (UI page, /api/gpt-editor, /api/export).
+
+SLO uptime: ≥ 99.9% (măsurat la health + rute critice).
+
+SLO error-rate: < 1% pe 5xx + erori logice marcate error=true.
+
+Regulile de alertă (exemple Prometheus/Grafana – schematic)
+groups:
+- name: promptforge-slo
+  rules:
+  - alert: P95LatencyBreached
+    expr: histogram_quantile(0.95, sum(rate(http_server_duration_ms_bucket{route=~"/api/(gpt-editor|export)"}[5m])) by (le)) > 0.3
+    for: 10m
+    labels: { severity: "page" }
+    annotations:
+      summary: "p95 latency >300ms pe rute critice"
+      runbook: "RUNBOOK: PERF_BUDGETS.md"
+
+  - alert: ErrorRateHigh
+    expr: sum(rate(http_server_errors_total[5m])) / sum(rate(http_requests_total[5m])) > 0.01
+    for: 10m
+    labels: { severity: "page" }
+    annotations:
+      summary: "error-rate >1% (5xx + logical errors)"
+      runbook: "RUNBOOK: ONCALL_GUIDE.md"
+
+Alerte Sentry (schematic JSON)
+{
+  "name": "PFv3 - API spike",
+  "conditions": [{"id":"sentry.rules.conditions.EventFrequencyCondition","value":100}],
+  "actions": [{"id":"sentry.rules.actions.NotifyServiceAction","service":"slack","#channel":"#oncall"}],
+  "filters": [{"id":"sentry.rules.filters.ByReleaseFilter","match":"not","release":"-alpha"}]
+}
+
+5.6 Politica de „error budgets” (automatizare freeze)
+
+Calcul: lunar/săptămânal pe baza SLO (ex. 43.2 min/lună downtime permis la 99.9%).
+
+Regulă: dacă bugetul < 0 (încălcare):
+
+Blochează deploy-urile (job „release_prod” condiționat de un check „budget_ok=true”).
+
+Activează „stability sprint”: task-uri numai pentru erori/perf (vezi RUNBOOK).
+
+Ridici pragul de sampling OTel temporar (pentru diagnostic fin).
+
+Deblocare: după 48h sub praguri + trend descendent al erorilor.
+(Freeze-ul ca gate e deja în modelul CI/CD din secțiunea 4; implementarea stă în ruleset + pipeline conditions.)
+
+5.7 Guardrails (privacy & cost)
+
+Fără PII în logs/traces (doar id-uri opace: user_id_hash, tenant_id).
+
+Sampling adaptiv (0.1–0.2 trafic normal; ↑ la incident).
+
+Retenție diferențiată: traces scurt, metrics 30-90 zile, erori 90-180 zile (conform politicilor).
+
+Corelare cu entitlements: etichete plan, feature_flag pentru a vedea probleme specifice planurilor (fără expunere date sensibile).
+
+5.8 Integrare cu gates (SSOT)
+
+ruleset.yml: definește bugete perf/a11y, min-scores, rute sensibile, rate-limits; build/runtime se oprește când pragurile sunt depășite.
+
+test-engine: scorurile sub DoD marchează FAIL (nu se livrează).
+
+export-manager: fără manifest valid + checksum → FAIL (înregistrează tentativă în telemetrie).
+
+5.9 Checklist „astăzi”
+
+Pornesc OTel SDK + Sentry cu service.name=promptforge-v3, service.version = release.
+
+Măsor p95 pe rutele critice + web-vitals în UI; adaug labels plan, module, route.
+
+Construiesc 3 dashboards: Exec, UX/Perf, Module.
+
+Activez alerte pe p95>300ms 10m și error-rate>1% 10m; notificare Slack/Telegram.
+
+Conectez error budget la pipeline (job „budget_ok”); dacă eșuează → freeze.
+
+Actualizez RUNBOOK-uri: GO/NO-GO, ONCALL_GUIDE, PERF_BUDGETS – linkate în alerte.
+
+
+
+
+
+
+
+6. Testare stratificată
+
+Ținta: să prinzi bug-urile unde apar, cu gates clare în CI/CD. Ordinea e obligatorie: Unit/Component → Contract/API → E2E → SEO & A11y. Orice etapă pică ⇒ blocare deploy (gates ancorate în ruleset.yml și pipeline).
+
+6.1 Unit & Component (Jest/Vitest + Testing Library)
+Ce testezi
+
+Logică pură (parsers, utils, scoruri) din lib/* – rapid, granular.
+
+Componente UI din components/ui/* (accordion, dialog, form, table etc.) – randare, ARIA, interacțiuni de bază.
+
+Module interactive (gpt-editor, export-manager, test-engine) – stări, edge cases, erori vizibile în UI.
+(Structurile sunt în repo: components/ui/*, lib/*, components/module-* etc.)
+
+Setup minim (Vitest)
+// vitest.config.ts
+import { defineConfig } from 'vitest/config';
+export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./tests/setup.ts'],
+    coverage: { reporter: ['text', 'lcov'], branches: 85, functions: 90, lines: 90 }
+  }
+});
+
+Exemple
+
+lib/test-engine.ts: calcule p95, medii, praguri DoD → testează „scor < 80 = FAIL”, „scor ≥ 80 = PASS”.
+
+components/ui/dialog.tsx: focus-trap, escape, tab-order; role-uri și atribute ARIA corecte.
+
+gpt-editor: validare locală (schema minimală) înainte de apel API; assert pe mesajele de eroare.
+
+Praguri & reguli
+
+Coverage gate: branches ≥ 85%, lines/functions ≥ 90% (minim).
+
+Interdicții: fără network real; mock pentru fetch/axios; fără timere infinite.
+
+Timp: fiecare suită < 60s; total unit ≤ 3 min la CI.
+
+6.2 Contract/API (JSON Schema + OpenAPI)
+Ce validezi
+
+Input/Output pentru rute cheie:
+/app/api/gpt-editor/route.ts (create/update/validate), /api/export (manifest + checksum).
+
+Scheme oficiale:
+prompt.run.schema.json, module.spec.schema.json, export.manifest.schema.json (SSOT).
+
+Flux
+
+Generezi/OpenAPI (sau ții unul canonic).
+
+Contract tests: serializare + validare JSON-Schema la request & response.
+
+Negative cases: câmp lipsă, enum invalid, payload prea mare → 4xx.
+
+Script CI dedicat
+// package.json (fragment)
+{
+  "scripts": {
+    "test:contract": "tsx scripts/contract-validate.ts"
+  }
+}
+
+// scripts/contract-validate.ts (schematic)
+import Ajv from "ajv";
+import * as promptRun from "../schemas/prompt.run.schema.json";
+import * as exportManifest from "../schemas/export.manifest.schema.json";
+
+const ajv = new Ajv({ allErrors: true, strict: true });
+const validatePrompt = ajv.compile(promptRun);
+const validateManifest = ajv.compile(exportManifest);
+
+// exemple minime valide + negative...
+// fail => process.exit(1)
+
+Gates
+
+Orice răspuns API neconform pică build-ul (Stop prin ruleset.yml: validation.raise_on_invalid: true).
+
+Export fără manifest valid + checksum sha256 ⇒ FAIL (policy export_policies din ruleset).
+
+6.3 E2E (Playwright/Cypress)
+Ce acoperi
+
+User Journeys critice:
+
+GPT-Editor: creează → validează → salvează → vede scor din test-engine.
+
+Export-Manager: pregătește pachet → generează manifest → verifică checksum.
+
+Entitlements/Paywall: utilizator Free vede modal la acțiuni premium; VIP poate exporta.
+
+Stări: loading/skeletons, empty/error states (sunt componente în repo).
+
+Playwright – schelet
+import { test, expect } from '@playwright/test';
+
+test('gpt-editor flow', async ({ page }) => {
+  await page.goto('/');
+
+  // deschide editor
+  await page.getByRole('button', { name: /Open GPT Editor/i }).click();
+
+  // completează formular valid (role/context/constraints/examples)
+  await page.getByLabel('Role').selectOption('architect');
+  await page.getByLabel('Context').fill('Short context...');
+  await page.getByRole('button', { name: /Validate/i }).click();
+
+  // așteaptă scor de la test-engine
+  await expect(page.getByTestId('score')).toHaveText(/8\d|9\d|100/);
+
+  // salvează + confirmă toast
+  await page.getByRole('button', { name: /Save/i }).click();
+  await expect(page.getByText(/Saved/)).toBeVisible();
+});
+
+Practici
+
+Fixtures: seed utilizatori (Free/VIP), date minime valide pentru fiecare schemă.
+
+Network control: intercept la rute externe; testele E2E rulează pe staging după build.
+
+Timp: fiecare scenariu < 30s; smoke-suite separat pentru post-deploy (2–3 probe/flux).
+
+Gates
+
+E2E smoke trebuie să treacă în staging înainte de release_prod (vezi CI din Secțiunea 4).
+
+6.4 SEO & Accesibilitate (Lighthouse, Pa11y)
+Ce rulezi în pipeline
+
+Lighthouse CI pe rutele principale (home, editor, docs). Ținte minime:
+
+Performance ≥ 90
+
+Accessibility ≥ 95
+
+Best Practices ≥ 95
+
+SEO ≥ 95
+
+Pa11y: a11y WCAG2AA – zero erori critice; warnings permise ≤ 5 (configurabil).
+
+Script CI
+{
+  "scripts": {
+    "seo:a11y": "lighthouse-ci && pa11y-ci"
+  }
+}
+
+Gates
+
+Pragurile se pun în ruleset.yml la perf și a11y (bugete). Depășire ⇒ STOP la build/run.
+
+6.5 Integrare cu SSOT & CI/CD
+
+ruleset.yml:
+
+validation.enum_only/raise_on_invalid ⇒ oprește dacă payload-urile nu corespund schemelor.
+
+gates.min_scores (ex. prompt_quality ≥ 80), export_policies.checksum ⇒ oprește pe scor mic/manifest invalid.
+
+perf/a11y budgets ⇒ oprește dacă Lighthouse/Pa11y sub prag.
+
+Pipeline: test:unit → test:contract → test:e2e → seo:a11y înainte de build/release.
+
+Module map (ce testăm, unde):
+
+gpt-editor: unit (UI state) + contract (schema prompt) + E2E (flow).
+
+test-engine: unit (scoring) + contract (format rezultate).
+
+export-manager: unit (manifest builder) + contract (schema) + E2E (export complet).
+
+6.6 Matrice DoR/DoD (pe test)
+Nivel	DoR (Ready)	DoD (Done)
+Unit/Comp	cazuri definite, fixtures	coverage ok, timpi sub 60s/suite, fără network
+Contract/API	schema actualizată, exemple valide/negative	toate rutele validează; negative returnează corect 4xx
+E2E	seed date, users Free/VIP	smoke verde pe staging; timp < 2 min total
+SEO/A11y	liste rute, praguri	LH ≥90/95/95/95; Pa11y fără erori critice
+6.7 Checklist „gata de aplicat” (azi)
+
+Configurează Vitest/Jest + Testing Library; setează coverage gates.
+
+Scrie test:contract cu Ajv (JSON-Schema) pentru prompt/module/export (SSOT).
+
+Adaugă Playwright cu 3 scenarii critice (editor, export, paywall).
+
+Rulează Lighthouse + Pa11y în CI cu praguri; conectează la ruleset.yml.
+
+Leagă totul în pipeline în ordinea corectă; eșec ⇒ STOP deploy.
+
+
+
+
+
+7. Conținut Strategic
+7.1 Audituri (ce măsoară, cum se fac, ce livrează)
+A) Infrastructure & Security Audit
+
+Scop: confirmă că arhitectura, accesul și politicile de securitate respectă SSOT (ruleset.yml) și bunele practici.
+Domenii: configurare hosting, headers/CSP, rate-limit, autentificare, secret-vault, rotație chei, permisiuni, backup & DR.
+Pași executabili:
+
+Rulează checklistul de securitate (CSP, HSTS, COOP/COEP, CORP).
+
+Testează rate-limit pe rutele sensibile (editor/export).
+
+Verifică izolarea mediilor (dev/staging/prod) + rotația cheilor.
+
+Scan SCA/SAST (minim la CI) + dependency review.
+Livrabile: raport cu riscuri clasificate, remediere pe 30/7/2 zile, „GO/NO-GO” pentru release. (Structura și fișierele aferente sunt în pachetul de conținut strategic al proiectului.)
+
+B) Business Layer & Compliance Audit
+
+Scop: mapează fluxurile comerciale la planuri/licențe și la cerințe legale (privacy, TOS, cookies, RBAC & audit trail).
+Domenii: plans.json, feature_flags.json, license.json, Stripe seed, pagini legale & data governance.
+Pași:
+
+Verifică maparea entitlements ↔ UI/API (paywall, export, test-engine).
+
+Audit trail pentru acțiuni sensibile (cine exportă ce).
+
+Politici de retenție/ștergere/export date.
+Livrabile: matrice capabilități-plan, checklist conformitate, gap-analysis pe legal & GRC.
+
+7.2 Protocoale (proceduri pregătite „gata de rulat”)
+A) Security Fortification Plan
+
+Scop: plan de întărire în 3 valuri (rapid/mediu/strategic).
+Val 1 (0–48h): CSP strict, rate-limit pe rute, secret-vault, revoke chei vechi.
+Val 2 (7 zile): SAST + policies, RBAC minim + audit trail, hardening headers; test DDoS de laborator.
+Val 3 (30 zile): threat-modeling, runbooks incidente, procese de rotație automată.
+Gates: „no export fără manifest + checksum”, „fail build la schema invalidă”, „freeze deploy dacă SLO încălcat”. Documentul există în setul tău strategic.
+
+B) Penetration Test Report
+
+Scop: validează practic suprafața de atac (auth bypass, IDOR, CSRF, SSRF, rate-limit evasion).
+Execuție: scenarii black/grey box pe rutele critice (editor/export), asset-uri publice (SVG/HTML animații), configurări.
+Rezultat: listă CVSS, POC-uri și fix-plan mapat la issues; retest obligatoriu. (Raportul este inclus în pachet.)
+
+C) Launch Strategy: 48 Hours to Market
+
+Scop: pus live în 48h cu QoS controlat.
+T-48 → T-24: freeze de feature, verificări gates (unit/contract/e2e, SEO/A11y), seed Stripe, entitlements.
+T-24 → T-12: deploy staging, smoke E2E, Lighthouse budget, pregătire conținut (landing, postări, email).
+T-12 → T-0: prod deploy, CDN purge, sitemap recrawl, anunț, monitorizare p95/err în dashboard.
+Post-T0: retro, backlog de optimizări, activare campanii. (Protocolul e în setul tău de lansare.)
+
+D) Monetization & Growth Hacking
+
+Scop: convertește traficul în venit + învață rapid din date.
+Pilonii:
+
+Planuri & pachete (Free/Plus/VIP/Enterprise) mapate la capabilități (export, bundle-uri, scoring avansat).
+
+Funneluri: diagnostic gratuit → mini-produs → curs/program → licențiere.
+
+Canale: blog/SEO (keywords_top500), newsletter, Telegram, social, video scurt.
+
+Măsurare: evenimente conversie, cohort analysis, LTV/CAC, test A/B (titluri, „AI-Commands”).
+(Structura și fișierele sunt deja în repo-ul tău.)
+
+7.3 Librării Prompting (standard neuron, baze comune, reguli)
+A) Standard Neuron Library
+
+Conținut: pattern-uri de rol, context, constrângeri, exemple; schemele pentru rulare (prompt.run.schema.json) + scorare (prompt_scores_schema.json) + config evaluator.
+Utilizare:
+
+gpt-editor consumă schema;
+
+test-engine produce scoruri vs. DoD (ex. ≥80 pentru OK).
+Livrabil: colecție versionată, validată la build; orice abatere → FAIL.
+
+B) Baze comune de template-uri
+
+Conținut: prompts generice (SEO, email, research, structuri narative), cadre (APE/RACE etc.), variante pe industrii (fintech/edu/ecommerce).
+Utilizare: selectoare în UI (module-grid) + export manager; „industry_packs_bundle/*” pentru grupare.
+Politică: fără PII, fără chain instabil; standardizează tag-urile & metadata pentru căutare/analytics.
+
+C) Reguli (Rulebook & Guardrails)
+
+Conținut: convenții de stil, tone-of-voice, format output, „ce nu facem”, enumerări strict validate (enum_only: true).
+Integrare:
+
+În ruleset.yml (validation & gates).
+
+În CI (test:contract) – orice prompt/template neconform oprește build.
+
+În UI (hints + tooltips) pentru consistență.
+
+7.4 Ordonare practică (cum rulezi azi)
+
+Rulează cele 2 audituri (Infra/Sec + Business/Compliance) → obții lista de riscuri & gaps.
+
+Aplică Security Fortification (Val 1): CSP strict, rate-limit, secrete în vault, revoke chei vechi.
+
+Verifică Pen-Test fixes critice → retest.
+
+Pregătește Launch 48h: freeze, gates verzi, staging smoke, content & anunțuri.
+
+Activează Growth: pachete & funnels, măsurare rozete (SLO/err/conv), iterează săptămânal.
+
+7.5 Deliverables „gata de folosit”
+
+Audit reports (PDF/MD) + backlog issues cu SLA de remediere.
+
+Security Fortification Plan (3 valuri) + checklists.
+
+Pen-Test Report + POC + retest note.
+
+Launch Strategy 48h (calendar + tasklist) + post-deploy hooks.
+
+Monetization & Growth (pricing, bundles, funnels, KPIs).
+
+Standard Neuron + Templates + Rules (scheme validate, pachete industrie).
+
+7.6 Checklist „astăzi”
+
+ Rulează Infrastructure & Security Audit și Business & Compliance Audit.
+
+ Aplică Val 1 din Security Fortification (CSP, rate-limit, secrete).
+
+ Confirmă export cu manifest + checksum în ruleset (gates active).
+
+ Re-rulează Pen-Test după fix-uri critice.
+
+ Închide Launch 48h (staging smoke, Lighthouse budgets, anunț).
+
+ Publică Neuron + Templates + Rules (schema-first, test:contract în CI).
+
+Rezultat: stratul strategic devine operabil: audit-driven, securizat, lansabil în 48h, cu monetizare și librării de prompting standardizate — toate ancorate în fișierele deja prezente în proiect.
+
+
+
+
+
+
+
+8. Research
+8.1 Ce conține „Research” în PromptForge v3
+
+JTBD (Jobs-To-Be-Done): cazuri reale de utilizare, împărțite pe stadii și rezultate măsurabile.
+
+ICP (Ideal Customer Profile): segmente țintă, criterii de eligibilitate, semnale de cumpărare.
+
+Canale de conversie: surse trafic → mesaje → oferte → evenimente de conversie.
+
+Compliance: zone cu risc (date, licențe, export), politici și procese de conformitate.
+
+Asset-uri de dovadă: cataloage JSON pentru credibilitate comercială și livrare la timp.
+
+Fișierele sunt prezente în proiect: Research/artifacts/jtbd.json, icp.json, conversion_channel.json, compliance.json, proof_assets.json, timely_delivery.json, iar integrarea lor în „Cuprins Final” e documentată.
+
+8.2 JTBD – structură, colectare, folosire
+
+Scop: aliniază produsul la „munca” pe care utilizatorul vrea să o termine (nu doar la persona).
+Structură propusă (există fișier dedicat): Research/artifacts/jtbd.json
+
+job: formularea neutru-contextuală („Generează conținut autoritativ zilnic fără editor uman”).
+
+situation: context declanșator („lansare produs în 48h”, „calendar editorial blocat”).
+
+desired_outcome: criterii măsurabile (timp/efort/consistență/scor calitate).
+
+barriers: ce blochează („prompturi neconsistente”, „lipsă entitlements”, „latency mare”).
+
+switching_cost: ce îl ține în vechiul mod (timp de învățare, tooluri deja plătite).
+
+proof_hooks: dovezi cerute (demo 48h, rezultate mAInd, studii caz).
+
+Colectare: interviuri scurte, repetiții comportamentale, loguri de utilizare → mapate în jtbd.json.
+Folosire: fiecare modul (editor, test-engine, export) își mapează UI copy + metri ci la 1–2 JTBD dominante.
+
+8.3 ICP – definire și semnale
+
+Fișier: Research/artifacts/icp.json
+
+segments: (ex.) experți/consultanți, creatori de cursuri, SMB SaaS, agenții.
+
+hard_criteria: mărime listă, frecvență publicare, buget lunar, toolstack minim (Stripe/ClickUp/Telegram).
+
+soft_signals: ton, maturitate AI, toleranță la automatizare, nevoi de autoritate publică.
+
+buying_triggers: deadline lansare, valuri de conținut, audit „rău” (scor <80 în test-engine).
+
+risk_flags: compliance strict (PII), lock-in la vendor, cerințe on-prem.
+
+Folosire: entitlements și upsell → personalizezi limitele (export, scor avansat, bundle-uri). Copy-ul din UI/landing se mulează pe ICP activ din sesiune.
+
+8.4 Canale de conversie – de la sursă la venit
+
+Fișier: Research/artifacts/conversion_channel.json
+
+source → message → offer → metrics → events.
+
+Surse inițiale: organic (blog/SEO — keywords_top500.json), newsletter, Telegram, social video, interviuri/podcast.
+
+Oferte: audit gratuit → mini-produs → abonament Plus/VIP → licențe enterprise.
+
+Evenimente măsurate: page_view, prompt_edit, test_score, export_ok, upgrade_click, checkout_success.
+
+KPIs: CTR, CVR per canal, TTV (time-to-value), LTV/CAC.
+
+Folosire: fiecare canal are landing + „mesaj JTBD specific”; conținutul (demo, studiu caz, șabloane) se leagă de asset-urile de dovadă (mai jos).
+
+8.5 Compliance – risc, politici, procese
+
+Fișier: Research/artifacts/compliance.json
+
+Domenii: privacy (PII), licențiere (planuri, exporturi), logging (fără PII), retenție/ștergere date, audit trail, cookies/consimțământ.
+
+Procese: request export/ștergere (SLA), incident handling, rotație chei (medii separate).
+
+Legături în produs: ruleset.yml (validare, export_policies), entitlements (plan-capabilitate), pagini legale (ToS/Privacy/Cookies).
+
+Folosire: CI/CD citește politicile (gates). Orice încălcare (manifest invalid, output cu PII) → build STOP, conform SSOT.
+
+8.6 Asset-uri de dovadă – credibilitate operațională & comercială
+
+Fișiere:
+
+Research/artifacts/proof_assets.json – dovada rezultatelor (studii de caz, scoruri, demo-uri, testimoniale, „before/after”).
+
+Research/artifacts/timely_delivery.json – dovezi de livrare „la timp” (timeline-uri, milestone-uri, loguri).
+
+Structură recomandată:
+
+proof_assets.json: type (case, metric, award), title, context, metric (ex. „p95 210ms”, „CTR +38%”), link, verifier (intern/extern).
+
+timely_delivery.json: project, SLA, milestones (date reale), deviation%, root_causes, fixes.
+
+Folosire în funnel & UI:
+
+Landing/Paywall: randare dinamică a 3–5 „dovezi” relevante pentru ICP curent.
+
+Editor/Test-engine: după scor ≥ DoD, sugerează „asset de dovadă” potrivit (ex. studiu caz „48h Launch”).
+
+Sales/Enterprise: export rapid PDF/MD cu dovezi + timeline livrare.
+
+8.7 Integrare în produs (SSOT-driven)
+
+ruleset.yml rămâne gardian: nu se publică asset-uri fără metadate complete; nu se exportă fără manifest + checksum; nu se încalcă privacitatea.
+
+Measurement/observability: evenimentele de consum ale research-ului (ex. „asset_viewed”, „case_downloaded”) intră în dashboards pentru analiză de conversie.
+
+Contract-first: orice schimbare în structura jtbd/icp/conversion_channel/compliance → PR cu validare JSON-Schema în test:contract.
+
+8.8 Checklist „gata de aplicat” (azi)
+
+ Actualizează jtbd.json cu top 5 „munci” pe care le deservești în MVP.
+
+ Rafinează icp.json cu 2 segmente „A/B” (criterii dure + semnale).
+
+ Leagă conversion_channel.json de rutele reale (home/editor/export) și evenimentele din analytics.
+
+ Revizuiește compliance.json: confirmă export fără PII + procesele de ștergere/retenție.
+
+ Populează proof_assets.json și timely_delivery.json cu 6–8 intrări; expune 3 pe landing + 1 în paywall.
+
+ Adaugă validare în CI (script test:contract) pentru toate aceste artefacte și oprește build-ul la neconformitate.
+
+Rezultat: Research-ul devine operabil și măsurabil — JTBD/ICP alimentează copy-ul și ofertele, canalele livrează trafic calificat, compliance previne riscul, iar asset-urile de dovadă convertesc încrederea în venit. Totul ancorat în fișierele din proiect și în SSOT-ul tău.
+
+
+
+
+
+
+
+9. Branding & Media
+9.1 Inventar (ce avem în proiect)
+
+Logo & glyph: SVG/PNG (ex.: forge_logo.svg, forge_v3_logo_transparent.png, forge_logo_primary.png) în pachetul de branding v3.
+
+Animații HTML/CSS (ready-to-embed): glyph_reveal.html, magnetic_sigil.html, neon_trail.html, plus alte efecte (time_pulse, ink_spread, hover_breathing, scroll_reveal, triumph_lines, outline_fill, click_ignition).
+
+Screenshots & mockups: seria forge_v3_00001.png … forge_v3_00010.png pentru pagini/hero/preview.
+
+Documente: „FORGE – Sistem complet de branding interactiv” + „Ghid de Implementare Componente Interactive”.
+
+SVG suplimentare: butoane/icoane (ex. interesante_05_buton_start_forge.svg, suplimentar_1_02_cursor_prompt.svg).
+
+9.2 Arhitectură & structură recomandată
+/public/brand/
+  /logo/            # SVG + PNG (primar, monocrom, negativ)
+  /glyph/           # simbol fractalic, variante 2D
+  /og/              # OG images dinamice (1200x630) + statice fallback
+  /favicons/        # 16/32/48/96/180/512 + manifest
+  /screens/         # forge_v3_00001–00010.png
+  /animations/      # *.html (glyph_reveal, magnetic_sigil, neon_trail, …)
+  /tokens/          # brand-tokens.json (culori, fonturi, spacing, radir)
+
+
+Toate artefactele de mai sus există deja în repo-urile tale ale v3; regruparea lor în această structură clarifică importurile și OG/favicons.
+
+9.3 Brand tokens (un singur adevăr vizual)
+
+SSOT vizual: un fișier brand-tokens.json (culori, tipografie, spațieri, raze, umbre), consumat în UI + animații.
+
+Exemplu minimal:
+
+{
+  "colors": {
+    "bg": "#05010A",
+    "gold": "#CDA434",
+    "neonGreen": "#00FF66",
+    "neonMagenta": "#FF2FB2"
+  },
+  "typography": { "head": "Cinzel", "ui": "Space Grotesk", "mono": "JetBrains Mono" },
+  "radius": { "sm": 6, "md": 12, "lg": 24 }
+}
+
+
+Integrare: import în design system (components/ui/*) și în HTML-animations prin CSS custom properties. Fișierele de UI și animații din v3 suportă această integrare.
+
+9.4 Reguli de utilizare (consistență & accesibilitate)
+
+Logo
+
+Folosește SVG implicit; PNG doar pentru fallback (e-mail clients).
+
+Clearspace = 0.5× înălțime siglă; min-width 24px (favicon exclus).
+
+Versiuni: primar (auriu/negru), negativ (alb pe închis), monocrom (pentru embos/laser).
+
+Glyph fractalic
+
+Rol: semn distinctiv (nu înlocuiește logo pe prima încărcare).
+
+Nu roti/întinde; scalează proporțional; păstrează stroke-width în SVG.
+
+Animații HTML/CSS
+
+Perf budget: ≤16ms/frame, 60fps; fallback static dacă prefers-reduced-motion.
+
+Nu bloca LCP: încarcă lazy/loading="lazy" sau IntersectionObserver.
+
+Derivează culorile din brand tokens (CSS vars).
+Efectele din pachet (glyph_reveal, magnetic_sigil, neon_trail etc.) respectă modelul și pot fi montate în secțiuni hero/hover/scroll.
+
+Accesibilitate
+
+Contrast ≥ 4.5:1 pentru text; focus states vizibile; aria-labels pe controale animate.
+
+prefers-reduced-motion: reduce → dezactivează animațiile; oferă poster static.
+
+9.5 Integrare în Next.js (practic)
+
+Logo & glyph
+
+import Image from "next/image";
+import Logo from "@/public/brand/logo/forge_logo.svg";
+
+export function BrandMark() {
+  return <Logo aria-label="PromptForge" role="img" />;
+}
+// PNG fallback
+// <Image src="/brand/logo/forge_v3_logo_transparent.png" alt="PromptForge" width={240} height={72} priority />
+
+
+OG images
+
+Statice în /public/brand/og/*.
+
+Pentru dinamice, Next.js OG Image (Edge) cu brand tokens injectate (culori, titlu, glyph).
+
+Reguli SEO sunt deja acoperite în secțiunile SEO/CI; OG este verificat în pipeline.
+
+Animații HTML
+
+Servește fișierele din /public/brand/animations/*.html în iframe (lazy) sau importă markup în componente „Client” (cu guard pe reduced-motion). Artefactele există în bundle-ul tău.
+
+9.6 Pipeline & calitate (gates)
+
+Lighthouse budgets pe paginile cu animații (Performance ≥ 90; A11y ≥ 95). Fail ⇒ STOP deploy (gates setate în SSOT).
+
+Optim image: toate PNG-urile din screens/ trec prin optim și next/image (sizes srcset).
+
+SVG lint: rulează SVGO (remove metadata, combine paths, minify).
+
+A11y: Pa11y rule pe paginile cu componente interactive (dialog/tooltip/hover-card).
+
+9.7 Usage map (unde pui ce)
+
+Landing/Hero: logo SVG + animație glyph_reveal; poster static pentru reduced-motion.
+
+CTA principal: buton SVG interesante_05_buton_start_forge.svg + hover micro-motion.
+
+Secțiuni modulare: magnetic_sigil la trecerea dintre blocuri; neon_trail pentru highlight la testimoniale/„proof”.
+
+Doc/Brand page: randarea integrală a „FORGE – Sistem complet de branding interactiv” + „Ghid Componente Interactive” (link intern).
+
+Screens/Mockups: forge_v3_00001–00010.png în carusel light, lazy-loaded.
+
+9.8 Livrabile & checklist
+
+Livrabile:
+
+Pachet /public/brand/ conform structurii.
+
+Brand tokens JSON + export CSS vars.
+
+Animații montate (hero + 1 secțiune secundară) cu fallback.
+
+OG/favicons complete + manifest.
+
+Brand doc public (pagina „Brand & Media Kit”) cu descărcări.
+
+Checklist:
+
+ SVGO pe toate SVG-urile; PNG optimizat.
+
+ prefers-reduced-motion implementat pe toate animațiile.
+
+ Lighthouse (Perf ≥90; A11y ≥95) verde pe paginile cu animații.
+
+ OG validate (tags + preview), favicons corecte.
+
+ „Brand & Media Kit” publicat cu link la „FORGE – Sistem complet de branding interactiv”.
+
+9.9 De ce contează (legătură cu restul sistemului)
+
+Consistență: tokens → UI, animații, OG, doc; un singur punct de schimbare.
+
+Performanță & SLO: animațiile respectă bugetele (CI blochează dacă nu).
+
+Conversie: screens + animații susțin „proof assets” și „Launch 48h” din playbook-urile strategice.
+
+Cu inventarul actual și regulile de mai sus, brandul devine „executabil”: identitate unitară, performantă și accesibilă, fidelă esteticii PromptForge v3 — deja susținută de fișierele din proiectul tău.
+
+
+
+
+
+
+10. Instrucțiuni & Operațiuni
+
+Mai jos ai „cartea de bord” operațională: playbookuri (ce, de ce, cum), runbookuri (pași concreți în incident/lansare), plus planul de după lansare în 6 etape. Toate se ancorează în fișierele și regulile deja prezente în proiect: ruleset.yml, schemele JSON, entitlements/licensing, rapoartele de audit și planul post-lansare.
+
+10.1 Playbookuri (reguli & rutină)
+A) Rulebook (SSOT de operare zilnică)
+
+Rol: standardizează cum se scrie, testează, validează, lansează.
+Ancore: ruleset.yml (gates), scheme (prompt.run.schema.json, export.manifest.schema.json), entitlements/licensing.
+
+Conținut minim:
+
+Stil commit/PR, politici branch, convenții naming module/DTO.
+
+„Schema înainte de cod”: orice schimbare → actualizezi schema + test:contract.
+
+Exporturi doar cu manifest valid + checksum (definit în ruleset).
+
+B) Checklist lansare (build-test-gate-deploy)
+
+Scop: prevenție; se rulează la fiecare release.
+Gates obligatorii (STOP dacă pică):
+
+Unit/Component, Contract/API, E2E, SEO/A11y → verzi.
+
+ruleset.yml: min_scores, perf/a11y budgets, export_policies → respectate.
+
+Entitlements vs. planuri/licențe: OK.
+
+Artefacte de verificat: timeline, RACI, risks (sunt în pachetul de audit).
+
+C) Runtime Frontend/Backend (operare curentă)
+
+Frontend: versionare UI, lazy-load animații, web-vitals pe dashboard.
+
+Backend: middleware (CSP + rate-limit), auth, entitlements, validare JSON-Schema la intrare/ieșire.
+
+Observabilitate: p95/err/throughput + alerte; error budgets legate de pipeline (freeze).
+
+10.2 Runbooks (pași executabili)
+A) GO/NO-GO (cu 2 ore înainte de release)
+
+CI „verde” pe toate suitele (unit/contract/e2e/seo+a11y).
+
+Ruleset gates: min_scores ≥ 80, export manifest + checksum OK, perf/a11y în buget.
+
+Health & SLO: p95 < 300ms, error-rate < 1% în ultimele 24h.
+
+On-Call activ, ROLLBACK pregătit, change ticket aprobat.
+→ Orice roșu ⇒ NO-GO.
+
+B) Release (staging → prod)
+
+Staging: deploy + smoke E2E + Lighthouse budgets.
+
+Seed/licensing verificate (Stripe, entitlements).
+
+Prod: deploy, CDN purge, sitemap recrawl, post-deploy hooks (Lighthouse CI, smoke).
+
+Marcare release + dashboards în oglindă (p95/err).
+
+C) Rollback (sub 10 minute)
+
+Oprești rollout (freeze).
+
+Reveniți la ultimul tag stabil (atomic), rulezi migrație inversă dacă e cazul.
+
+Scazi sampling OTel la diagnostic, menții Sentry paging.
+
+Comunicare: status update + ETA + post-mortem programat.
+
+D) On-Call Guide (sev-routing & răspuns)
+
+Sev-1 (prod down / p95 > 2× SLO / error-rate > 5%): pager, rollback sau feature-flag OFF, comunicare status.
+
+Sev-2 (degradare controlată): throttling, rule changes în ruleset (rate-limit), hotfix planificat.
+
+Sev-3 (bug non-critic): ticket, triere în „stability sprint”.
+Reguli: fără PII în loguri; etichete plan, module, route pentru diagnostic tintit.
+
+E) QA Strategy (stratificat)
+
+Unit/Component: coverage gates ≥ 85/90%.
+
+Contract/API: JSON-Schema la request/response; negative → 4xx corect.
+
+E2E: 3 fluxuri critice (editor, export, paywall).
+
+SEO/A11y: LH ≥ 90/95/95/95; Pa11y fără erori critice.
+Toate mapate pe module (gpt-editor, test-engine, export-manager).
+
+F) Perf Budgets
+
+P95 API < 300ms pe rute critice; LCP < 2.5s; size caps pe bundle/animații.
+
+Fără 60fps? fallback „reduced motion”.
+
+Încalcă bugetul ⇒ FAIL gate + potențial freeze prin error-budget.
+
+10.3 Plan după lansare – 6 etape
+
+Documentul „plan 6 etape” există în pachetul v3; mai jos e versiunea operațională.
+
+Etapa 1 — Stabilizare (Săpt. 1–2)
+
+Monitorizare p95/err; fix rapid pe crash/top errors; tuning rate-limit/CSP; triere feedback early adopters.
+
+Etapa 2 — Hardening & Compliance (Săpt. 2–3)
+
+Aplici valul 2 din Security Fortification; închizi gap-urile din audituri; retest Pen-Test.
+
+Etapa 3 — Conținut & SEO (Săpt. 3–5)
+
+Publici 6–10 articole din keywords_top500.json; OG dinamice; capturi/animatii optimizate.
+
+Etapa 4 — Funnel & Monetizare (Săpt. 4–6)
+
+Activezi pachete/planuri, oferte tripwire; measurement clar pe evenimente (upgrade, checkout).
+
+Etapa 5 — Comunitate & Gamificare (Luna 2–3)
+
+Avatar AI, badges, Q&A săptămânale, ritualuri inițiere; integrare Telegram/Newsletter.
+
+Etapa 6 — Scalare & Licențiere (Luna 3+)
+
+Bundle-uri industrie, white-label/enterprise, parteneriate; SLO + error budgets pe tenant.
+
+10.4 Artefacte operaționale (de inclus în repo)
+
+PLAYBOOK_RULES.md – canonul zilnic (schema-first, gates, export rules).
+
+CHECKLIST_RELEASE.md – check-listul obligatoriu.
+
+RUNBOOK_GO_NO_GO.md, RUNBOOK_RELEASE.md, RUNBOOK_ROLLBACK.md, RUNBOOK_ONCALL.md.
+
+QA_STRATEGY.md, PERF_BUDGETS.md.
+
+POST_LAUNCH_PLAN.md (6 etape).
+Legătură cu rapoarte: timeline.md, RACI.md, risks_top5.md pentru responsabilități și risc.
+
+10.5 Checklist „gata de aplicat” (azi)
+
+ Publică Rulebook + Checklist lansare în repo.
+
+ Adaugă Runbooks și le menționezi în alertele Sentry/Grafana (link la fișier).
+
+ Leagă gates din ruleset.yml la CI: min_scores, perf/a11y, export_policies.
+
+ Verifică RACI și timeline pentru release curent.
+
+ Activează Plan după lansare: backloguri pe etape, KPI pe dashboard.
+
+Rezultat: operațiuni disciplinate, cu reguli explicite, pași de intervenție documentați și un traseu post-lansare care leagă stabilitatea de creștere — toate ancorate în fișierele deja existente în proiect.
+
+
+
+
+
+
+11. Automatizare & Marketing
+11.1 Sisteme Python (ce fac, cum se leagă)
+
+Pachete prezente în proiect (gata de folosit/adaptat):
+
+content_generation_system.py – generează articole/outlines/postări pe baza schemelor PromptForge.
+
+content_discovery_system.py + content_discovery_demo.py – descoperă subiecte, clustere și gap-uri de conținut.
+
+complete_automation_system.py – orchestrează generare → programare → publicare.
+
+telegram_bot_implementation.py + telegram_bot_test_simple.py – livrare către canale Telegram.
+
+clickup_integration.py – creează/actualizează taskuri, liste, stări (calendar editorial).
+
+content_generation_openai.py – wrapper OpenAI pentru generare controlată.
+
+Flux recomandat (E2E):
+discovery → generation → QA (test-engine) → packaging (manifest) → schedule (ClickUp) → distribute (Telegram/Newsletter).
+
+La fiecare pas, scrie telemetrie (eventuri simple: topic_found, draft_ready, score_passed, scheduled, published).
+
+Integrează test-engine: nu publici dacă scor < DoD (≥80) – același gate ca în produs.
+
+Joburi programate (schematic):
+
+# Discovery – zilnic 08:00
+python Marketing,\ Blog/content_discovery_system.py --out /data/topics.json
+
+# Draft – zilnic 09:00
+python Marketing,\ Blog/content_generation_system.py --topics /data/topics.json --out /data/drafts/
+
+# QA + Score – zilnic 09:30
+python Marketing,\ Blog/complete_automation_system.py --qa --min-score 80
+
+# Planificare – zilnic 10:00 (ClickUp)
+python Marketing,\ Blog/clickup_integration.py --from /data/drafts/ --list Editorial
+
+# Distribuție – la orele programate
+python Marketing,\ Blog/telegram_bot_implementation.py --from /data/published/today.json
+
+
+11.2 Keywords top500 → plan editorial
+
+Fișier existent: Marketing, Blog/keywords_top500.json.
+
+Metodă în 4 pași:
+
+Clusterizare: grupezi pe intenție (informational / how-to / commercial), pe subiect (prompting, automation, branding, GPTs).
+
+Mapping JTBD/ICP: pentru fiecare cluster, atașezi JTBD (din jtbd.json) și segmente (din icp.json).
+
+Calendar editorial: 3–4 postări/săptămână → 12–16/săpt. pentru 4 canale (blog, newsletter, Telegram, social).
+
+Șabloane & export: fiecare draft trece prin content_generation_system.py, este validat de test-engine și pus în ClickUp cu due date, owner, status.
+
+Format minim plan (CSV/JSON):
+
+[
+  {
+    "keyword": "prompt engineering frameworks",
+    "cluster": "Prompting/Frameworks",
+    "intent": "informational",
+    "jtbd": "Create consistent prompts at scale",
+    "icp": "Consultants / Course creators",
+    "title": "The 5 Frameworks That Make Prompts Sell",
+    "due_date": "2025-09-05",
+    "channel": ["blog","newsletter","telegram"]
+  }
+]
+
+
+→ se încarcă în ClickUp prin clickup_integration.py.
+
+11.3 Webhooks post-deploy (automatizări „după ce live-uiești”)
+
+Ce rulezi după fiecare deploy:
+
+Recrawl sitemap (ping motoare)
+
+CDN purge (invalidează cache)
+
+Lighthouse CI pe rutele cheie (hero, editor, brand kit) cu bugete (Perf ≥90, A11y ≥95) → dacă pică, marchezi build „degraded” / deschizi issue automat.
+
+Unde sunt definite: parte din playbook-ul de lansare și pipeline (secțiunea CI/CD).
+
+YAML schematic (post-deploy step):
+
+- name: Post-Deploy Hooks
+  run: |
+    curl https://www.google.com/ping?sitemap=https://site/sitemap.xml
+    curl -X POST https://cdn.example.com/purge -H "Auth: $CDN_KEY" -d '{"paths":["/*"]}'
+    pnpm run lighthouse:ci
+
+
+(Pragurile sunt gate-uri în ruleset.yml → build „STOP” la depășire, dacă policy așa spune.)
+
+11.4 Conectare la SSOT & gates
+
+ruleset.yml rămâne gardianul:
+– perf/a11y budgets pentru pagini cu animații & conținut nou,
+– min_scores (test-engine) pentru conținutul generat,
+– export_policies (manifest + checksum) pentru pachete de content.
+
+Entitlements: distribuția unor pachete (ex. „AI-Commands”) este corelată cu planul (Free/Plus/VIP/Enterprise).
+
+11.5 Telemetrie „de marketing” (ce înregistrezi)
+
+Discovery: topics_count, coverage_gap.
+
+Draft: drafts_ready, avg_score, fail_below_threshold.
+
+Schedule: tasks_created, eta_days.
+
+Publish: telegram_sent, newsletter_sent, blog_published.
+Toate apar în dashboards (Module/Business) alături de p95/err/throughput.
+
+11.6 Checklist „gata de aplicat” (azi)
+
+ Configurează crons/jobs pentru discovery → generation → QA → schedule → distribute.
+
+ Leagă keywords_top500.json la plan editorial (ClickUp), mapează JTBD/ICP per cluster.
+
+ Activează post-deploy hooks: recrawl, CDN purge, Lighthouse CI cu praguri.
+
+ Conectează test-engine ca gate: nu publici conținut sub scorul DoD (≥80).
+
+ Emite telemetrie pentru fiecare pas și adaugă 2 alerte: „no drafts today”, „Lighthouse budget breached”.
+
+Rezultat: ai o linie automată de conținut (descoperă → produce → verifică → publică), alimentată de keywords și închisă cu webhooks post-deploy – totul controlat de SSOT/gates, cu măsurare clară a eficienței.
+
+
+
+
+
+
+12. Legal & GRC
+12.1 Politici publice (Privacy, ToS, Cookies + Consent Mode)
+
+Ce sunt: contractul cu utilizatorul și cadrul de prelucrare a datelor.
+Unde se ancorează: în SSOT (ruleset.yml) și în artefactele de compliance; build-ul/execuția se pot opri dacă politicile nu sunt prezente sau dacă apare scurgere de PII la export.
+
+Privacy Policy (schelet minim)
+
+Ce colectezi (categorii date), temei (consimțământ/contract/interes legitim), scopuri, stocare, transfer, drepturi persoană (acces/ștergere/portare), contacte DPO.
+
+Link din footer + în toate formularele care colectează date.
+
+Terms of Service (ToS)
+
+Licențe, limitări de utilizare, proprietate intelectuală, răspunderi/garanții, limitarea răspunderii, soluționarea disputelor, guvernanță.
+
+Secțiune dedicată conținutului generat de AI (disclaimer, restricții).
+
+Cookies & Consent Mode
+
+Banner și preferințe granulare (strict necesare, funcționale, analiză, marketing).
+
+Consent Mode activ: trimitere evenimente numai după consimțământ; log de consimțământ (timestamp, scope, versiunile politicilor).
+
+Politicile pot fi legate ca gate în ruleset.yml (ex.: interzicere trackere fără consimțământ).
+
+12.2 DPA / DPIA, RBAC și audit trail
+
+DPA (Data Processing Addendum): obligații între operator–persoană împuternicită (ex. Stripe, Sentry, furnizor hosting).
+DPIA (Data Protection Impact Assessment): evaluare impact pentru fluxuri cu risc (logging, export pachete, telemetrie, 3rd-party).
+RBAC minim: roluri „anon”, „user”, „admin”; entitlements pe plan (Free/Plus/VIP/Enterprise) mapează capabilitățile (ex.: export doar VIP/Enterprise).
+Audit trail: înregistrări pentru acțiuni sensibile (export, schimbare plan, modificare setări), cu who, what, when, where (ip/agent), păstrate pe durata definită în data governance.
+Aceste norme pot fi verificate/oprite prin gates (SSOT) și integrate în runbooks de incident și conformitate.
+
+12.3 Data governance (retenție, export, ștergere)
+
+Sursă de adevăr: fișierul de compliance și regulile din ruleset.yml; exporturile sunt validate de export.manifest.schema.json + checksum și pot fi blocate dacă conțin PII.
+
+Politici recomandate
+
+Retenție:
+
+Telemetrie: 30–90 zile (fără PII).
+
+Erori/SLO: 90–180 zile (minimizate, fără payload sensibil).
+
+Documente/Exporturi: conform scopului (ex.: 180 zile) și ștergere automată după TTL.
+
+Export (portabilitate):
+
+Pachet semnat cu manifest (listă fișiere, hashuri) + verificare la cerere; canal securizat.
+
+Interdicție PII în exporturile publice (politică în ruleset.yml: block_pii_export: true).
+
+Ștergere (right to erasure):
+
+Endpoint dedicat sau proces manual cu SLA; log „erasure_request” în audit trail.
+
+Ștergere din sursa primară + replici + backup (marcare „tombstone” dacă ștergerea fizică imediată nu e posibilă).
+
+12.4 Integrare în produs (SSOT & gates)
+
+ruleset.yml:
+
+validation.enum_only/raise_on_invalid pentru contracte (nu intră payload neconform).
+
+export_policies (manifest obligatoriu + checksum sha256, no-PII) – altfel STOP la export.
+
+rate-limits/CSP/allow-list pentru reducerea suprafeței de atac.
+
+gates de calitate & performanță (perf/a11y) – utile și pentru zona legală (minimizarea datelor).
+
+Licensing & Entitlements: planurile din plans.json/feature_flags.json/license.json guvernează capabilitățile (ex. acces la module premium); evitați „hard-coding”, citiți din config.
+
+Compliance artefacts: compliance.json definește politicile de privacy/retention și legăturile către procesatori (DPA); folosit de audituri și de pipeline pentru verificări automate unde e posibil.
+
+12.5 CI/CD & Operare (automatizări de conformitate)
+
+Pre-merge gates: existența paginilor legale în build + linkuri în footer; test e2e pentru banner cookies și Consent Mode.
+
+Pre-deploy: versiuni de politici și bannere verificate; entitlements/planuri coerente; export-policies verzi.
+
+Post-deploy: recrawl (politici indexabile), Lighthouse CI + Pa11y (a11y legal), verificare că ID-urile analytics respectă consimțământul.
+
+12.6 Artefacte & livrabile
+
+Policies: PRIVACY_POLICY.md, TERMS_OF_SERVICE.md, COOKIES_POLICY.md + pagini publice.
+
+Procesare: DPA_REGISTER.md, DPIA_<flux>.md.
+
+Acces: RBAC_MATRIX.md, ENTITLEMENTS_MAP.md (legătură plan → capabilități).
+
+Audit: AUDIT_TRAIL_GUIDE.md (ce logăm, cât ținem, cum exportăm).
+
+Data lifecycle: DATA_RETENTION_POLICY.md, DATA_EXPORT_POLICY.md, DATA_ERASURE_RUNBOOK.md.
+Acestea completează playbookurile și runbookurile operaționale din secțiunea 10.
+
+12.7 Checklist „gata de aplicat” (azi)
+
+ Publică Privacy/ToS/Cookies și conectează bannerul cu Consent Mode (granular).
+
+ Încheie și inventariază DPA cu toți procesatorii (Stripe, Sentry etc.); rulează DPIA pe fluxuri riscante.
+
+ Activează RBAC minim + audit trail pentru export și schimbări de plan.
+
+ Configurează retenția pe fiecare tip de date; adaugă endpoint/proces de ștergere cu SLA.
+
+ Blochează exporturile fără manifest/checksum și fără verificare de PII (gate în ruleset.yml).
+
+ Adaugă teste E2E pentru banner cookies și linkurile de politici; include verificări în CI/CD.
+
+Rezultat: un cadru Legal & GRC executabil, conectat la SSOT și pipeline, cu export sigur, minimizare de date, auditabilitate și consimțământ controlat — exact pe structura artefactelor și regulilor deja prezente în proiectul tău.
+
+
+
+
+
+
+
+13. UX de avarie
+13.1 Pagini 404/500 custom
+
+Obiectiv: să „aterizezi” utilizatorul înapoi pe traseu, fără frustrare, păstrând brandul.
+
+Standard minim:
+
+404: mesaj scurt, „de ce ești aici” + 1–2 CTA mari (Home, Module/Editor), căutare, link Brand & Help.
+
+500: recunoaștere probleme server, ETA/încercare automată reîncărcare (10–15s), buton „Încearcă din nou”, link status.
+
+Integrează brand tokens (culori, fonturi) + glyph static; dacă există animații, respectă prefers-reduced-motion.
+
+Metrice: evenimente not_found_view / server_error_view + route de origine (pentru debug).
+Componentizarea UI există (alert, card, button, toast) – reutilizează din components/ui/*.
+
+Schematic Next.js (server component):
+
+// app/not-found.tsx
+export default function NotFound() {
+  return (
+    <main className="mx-auto max-w-xl py-20 text-center">
+      <h1 className="text-3xl font-bold">Pagina nu există</h1>
+      <p className="mt-3 opacity-80">Link vechi sau tastare greșită.</p>
+      <div className="mt-6 flex gap-3 justify-center">
+        <a className="btn-primary" href="/">Înapoi acasă</a>
+        <a className="btn-ghost" href="/editor">Deschide GPT-Editor</a>
+      </div>
+    </main>
+  );
+}
+
+13.2 Empty & error states explicite
+
+Obiectiv: să nu lași „ecrane moarte”; fiecare modul spune clar „ce s-a întâmplat” și „ce faci acum”.
+
+Reguli:
+
+Empty (fără date): icon/glyph mic, 1 frază utilă, 1 CTA (ex. „Creează primul prompt”), link spre documentație.
+
+Error (controlat): Alert cu titlu + descriere + „Detalii tehnice” (expand), acțiune principală („Reîncearcă”), fallback offline (dacă e posibil).
+
+Auth/Entitlements: pentru acțiuni interzise, folosește paywall-modal când planul nu permite (component existent) + mesaje non-acuzatoare.
+
+Componente reutilizabile: components/ui/alert.tsx, components/ui/empty.tsx (poți crea), paywall-modal.tsx.
+
+Pattern copy (1 frază + 1 acțiune):
+
+Empty editor: „Nu există încă niciun draft. Creează unul nou.” [Creează draft]
+
+Error export: „Exportul a eșuat. Manifestul nu este valid.” [Vezi detalii] [Reîncearcă]
+
+Entitlement: „Exportul e disponibil din planul Plus.” [Vezi planuri]
+
+13.3 Skeletons & loading states (percepție de viteză)
+
+Obiectiv: să simți sistemul „viu” în <100ms, chiar dacă răspunsul real vine mai târziu.
+
+Reguli:
+
+Skeletons pe zone mari (listă module, card editor, tabel rezultate) – componente gata în components/ui/skeleton.tsx.
+
+Spinners doar pentru acțiuni punctuale ≤1s; altfel skeleton sau „optimistic UI”.
+
+„Optimistic” la acțiuni CRUD scurte (ex. salvare draft), cu „undo” posibil.
+
+Motion budget: ≤16ms/frame, prefers-reduced-motion dezactivează tranzițiile.
+Setul vast de UI din proiect include skeleton, toast/sonner, progress, alert, dialog pentru aceste scenarii.
+
+Schematic (client component):
+
+const [loading, setLoading] = useState(true);
+useEffect(() => { fetch(...).finally(() => setLoading(false)); }, []);
+return loading ? <Skeleton className="h-48 w-full" /> : <EditorPanel data={data} />;
+
+13.4 Telemetrie & gates (legat de SSOT)
+
+Loghează evenimente standard: empty_view, error_view{code}, skeleton_shown{ms}, retry_clicked, paywall_shown.
+
+SLO UX: p95 „time-to-first-paint-useful” pentru editor/listări; alerte dacă crește.
+
+Lighthouse/Pa11y rulează pe paginile 404/500 și pe ecranele grele; dacă accesibilitatea/perf scad sub bugete, STOP deploy (gates din ruleset.yml).
+
+13.5 Checklist „gata de aplicat” (azi)
+
+ Adaugă app/not-found.tsx și app/error.tsx (404/500) cu CTA utile + link status/help.
+
+ Definește EmptyState și ErrorState ca primitives; folosește-le în editor, export, test-engine.
+
+ Montează Skeleton pe liste/tablouri/panouri mari; folosește „optimistic UI” la salvări rapide.
+
+ Alerte: p95 „UX-load” > prag, error_view spike, paywall_shown anormal; linkează runbook.
+
+ În CI: Lighthouse ≥90 perf, ≥95 a11y pe paginile de avarie; Pa11y fără erori critice. Fail ⇒ STOP.
+
+Rezultat: produsul „cade frumos” și se ridică rapid: utilizatorul primește direcție clară, percepe viteză (skeletons/optimistic), iar sistemul rămâne guvernat de gates și telemetrie — cu toate componentele UI deja în proiectul tău.
+
+
+
+
+
+
+14. Audituri & Rapoarte
+
+Mai jos ai „panoul rece” al proiectului—ce livrează fiecare raport, cum a fost generat, ce verifici rapid și cum îl folosești în execuție.
+
+14.1 Inventar de fișiere
+
+audit_tabel.csv – tabel complet (nume, cale, extensie, mărime, dată, categorie, relevanță, observații) rezultat din indexarea proiectului. Util: filtrări rapide (ex.: fișiere mari, redundante, nevalidate).
+
+fisiere_active_mvp.txt – lista fișierelor marcate „ACTIVE” pentru lansare (MVP). Util: verificare pre-deploy și „ce nu trebuie să lipsească”.
+
+14.2 BASE_ACTIVE (nucleu MVP)
+
+Ce este: fuziune între necesarul din versiunea nouă și elementele valide din cea veche, curățată de duplicate; marcată pe priorități: CRITICAL și IMPORTANT.
+
+Conținut: base_active.json (metadate, statistici, fișiere ordonate) + base_active.txt (listă „umană”) + structure_tree.md (arbore vizual).
+
+De ce contează: definește pachetul minim lansabil; tot ce e în afara lui e post-lansare.
+
+14.3 Diferențe între versiuni
+
+diff_report.json – comparație „vechi vs. nou”: ADDED, REMOVED, MODIFIED, RENAMED, DUPLICATES, plus sumar text (diff_summary.md).
+
+Util: descoperi schimbări masive, duplicate pe hash și „alunecări” (ex. fișiere mari media re-adăugate).
+
+14.4 Arbore curat pentru MVP
+
+structure_tree.md – randare a directorilor/fișierelor din BASE_ACTIVE, cu pictograme: 🔴 CRITICAL / 🟡 IMPORTANT / 🟢 USEFUL.
+
+Util: orientare instant la code-review și în sesiunile cu agenți (limitarea scrierii la căi allow-list).
+
+14.5 Timeline & RACI & Riscuri
+
+timeline.md – plan pe 2 faze, ~20 taskuri critice, ancorat la 29 aug și întins pe ~2 săptămâni (Faza 1: setup & core; Faza 2: optimizări).
+
+RACI.md – responsabilități clare pe activități (PM, Dev, DevOps, QA, PO). Util: elimină ambiguitățile la release/rollback.
+
+risks_top5.md – top riscuri: întârzieri, securitate, buget, feedback negativ, performanță + mitigări. Se revizuiește săptămânal.
+
+14.6 Cum au fost generate (pipeline „audit → bază activă → plan”)
+
+Indexare & clasificare → scrieri automate care scanează repo-ul, calculează hash-uri, categorii (cod/config/content/media), relevanță (active/arhivă/drop), detectează duplicate. Output: audit_tabel.csv, fisiere_active_mvp.txt.
+
+Manifeste & diff → se generează manifest_old.json (din audit) și manifest_new.json (din noua structură), apoi diff_report.json + diff_summary.md.
+
+Relevanță cu criterii dure → clasifică în NECESAR / ARHIVĂ / DROP; pe baza asta se construiește BASE_ACTIVE și arborele (structure_tree.md).
+
+Plan operațional → tasks.jsonl → timeline.md, RACI.md, risks_top5.md.
+
+Toate scripturile și artefactele de generare sunt incluse în pachetul de audit (vezi secțiunile cu cod din raportul tehnic).
+
+14.7 Ce verifici în 5 minute înainte de un release
+
+Inventarul ACTIV: fisiere_active_mvp.txt nu are goluri pe rutele critice (page/layout/api/editor/export).
+
+Diff sănătos: diff_summary.md → să nu intre asset-uri media mari inutile sau fișiere „backup/copy”.
+
+Arborele: structure_tree.md → CRITICAL toate prezente; IMPORTANT fără „junk”.
+
+Timeline: taskurile P1 finalizate; RACI complet; riscuri fără elemente roșii neadresate.
+
+14.8 Integrare cu SSOT & CI/CD
+
+ruleset.yml rămâne gardian**:** build/exec STOP dacă: schema invalidă, export fără manifest + checksum, score sub DoD, bugete perf/a11y încălcate. (Auditul confirmă că fișierele/gardurile există și sunt verzi.)
+
+Entitlements: verifică maparea plan→capabilități (ex. export în VIP/Enterprise) pentru fișierele/modelele implicate.
+
+14.9 Checklist „gata de aplicat” (azi)
+
+ Deschide diff_summary.md → confirmă că Nu s-au urcat fișiere media >10MB nejustificate.
+
+ Rulează ochiometric structure_tree.md → CRITICAL toate prezente.
+
+ Confirmă că BASE_ACTIVE = singurul pachet care intră în release.
+
+ Marchează RACI pe taskurile P1 din timeline.md.
+
+ Revizuiește risks_top5.md și aliniază mitigările la sprintul curent.
+
+Rezultat: ai un circuit controlat: inventar → bază activă → diferențe → arbore → plan → responsabilități → riscuri. Cu aceste rapoarte, lansările devin previzibile și auditate, iar curățenia de proiect este verificabilă în orice moment.

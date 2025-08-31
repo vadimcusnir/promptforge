@@ -1,0 +1,64 @@
+{
+  "redirects": [
+    {
+      "source": "/collaborate",
+      "destination": "/docs/api",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/api",
+      "destination": "/docs/api",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/modules",
+      "destination": "/generator",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/prompts",
+      "destination": "/generator",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/editor",
+      "destination": "/ai-editor",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/workspace",
+      "destination": "/dashboard",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/account",
+      "destination": "/dashboard",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/profile",
+      "destination": "/dashboard",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/billing",
+      "destination": "/pricing",
+      "permanent": true,
+      "statusCode": 308
+    },
+    {
+      "source": "/plans",
+      "destination": "/pricing",
+      "permanent": true,
+      "statusCode": 308
+    }
+  ]
+}

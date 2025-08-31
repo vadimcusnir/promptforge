@@ -1,0 +1,7 @@
+TITLE: GPT Editor & Test — /api/gpt-editor, /api/gpt-test
+TYPE: Auto-Attached
+
+EDITOR
+- min_plan: pro; input: {prompt≥64, sevenD}; scor ≥80; return editedPrompt+scores.
+TEST
+- min_plan: pro; input: {prompt, testType, sevenD}; DoR; feedback & score; DoD ≥80.

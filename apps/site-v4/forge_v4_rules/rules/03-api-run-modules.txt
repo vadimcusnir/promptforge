@@ -1,0 +1,11 @@
+TITLE: Unified Module Executor — POST /api/run/{moduleId}
+TYPE: Auto-Attached
+
+CONTRACT
+Input:  { params7D: SevenD, variant?, seed? }
+Gates:  api_access + module_allowlist
+200 →   { hash, artifacts[], telemetry, score?, status }
+400/403 corespunzător eșecurilor DoR/entitlements.
+
+FLOW
+Validate SevenD → check plan → telemetry.start → exec module → build artifacts → checksum → telemetry.finish.

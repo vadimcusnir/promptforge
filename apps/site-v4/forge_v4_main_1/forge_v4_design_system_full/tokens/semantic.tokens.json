@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "source": "raw.tokens.json",
+    "date": "2025-08-30"
+  },
+  "semantic": {
+    "bg": "{color.black}",
+    "text.default": "{color.textHigh}",
+    "text.muted": "{color.textMuted}",
+    "brand.default": "{color.brand}",
+    "accent.default": "{color.accent}",
+    "border.default": "{color.border}",
+    "surface.default": "{color.surface}",
+    "surface.alt": "{color.surfaceAlt}",
+    "state.success": "{color.success}",
+    "state.warning": "{color.warning}",
+    "state.error": "{color.error}",
+    "state.info": "{color.info}",
+    "focus.ring": "{color.focus}"
+  }
+}
