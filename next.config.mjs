@@ -27,6 +27,15 @@ const nextConfig = {
         events: false,
         child_process: false,
       }
+      
+      // Completely exclude Sentry from webpack bundling in development
+      config.externals = config.externals || []
+      config.externals.push({
+        '@sentry/nextjs': 'commonjs @sentry/nextjs',
+        '@sentry/browser': 'commonjs @sentry/browser',
+        '@sentry/utils': 'commonjs @sentry/utils',
+        '@sentry/replay': 'commonjs @sentry/replay',
+      })
     }
     
     return config

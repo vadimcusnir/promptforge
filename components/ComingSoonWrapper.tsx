@@ -16,6 +16,14 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
   useEffect(() => {
     const checkAccess = () => {
       try {
+        // Always allow access in development mode
+        if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+          console.log(`[ComingSoonWrapper] Development mode (localhost), allowing access`);
+          setIsAdmin(true);
+          setIsChecking(false);
+          return;
+        }
+
         // Skip check for coming-soon page itself, API routes, blog pages, about page, and contact page
         if (pathname === "/coming-soon" || pathname.startsWith("/api/") || pathname.startsWith("/blog") || pathname === "/about" || pathname === "/contact") {
           console.log(`[ComingSoonWrapper] Skipping check for: ${pathname}`);
@@ -41,29 +49,6 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
         const adminRole = document.cookie.includes("pf_role=admin");
         console.log(`[ComingSoonWrapper] Path: ${pathname}, Admin role found: ${adminRole}`);
         
-        // TEMPORARY: Bypass admin check for development
-        // Check if we're in development by looking for localhost in the URL
-        if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-          console.log(`[ComingSoonWrapper] Development mode (localhost), bypassing admin check`);
-          setIsAdmin(true);
-          setIsChecking(false);
-          return;
-        }
-        
-        // Force bypass for development - always allow access in development
-        console.log(`[ComingSoonWrapper] Development mode detected, bypassing admin check`);
-        setIsAdmin(true);
-        setIsChecking(false);
-        return;
-        
-        // TEMPORARY: Force bypass for contact page in development
-        if (pathname === '/contact') {
-          console.log(`[ComingSoonWrapper] Force bypassing contact page access in development`);
-          setIsAdmin(true);
-          setIsChecking(false);
-          return;
-        }
-        
         if (!adminRole) {
           console.log(`[ComingSoonWrapper] Not admin, showing coming-soon content for ${pathname}`);
           setIsAdmin(false);
@@ -75,9 +60,14 @@ export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
         }
       } catch (error) {
         console.error("[ComingSoonWrapper] Error checking access:", error);
-        // On error, show coming-soon for safety
-        setIsAdmin(false);
-        setIsChecking(false);
+        // On error, allow access in development
+        if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+          setIsAdmin(true);
+          setIsChecking(false);
+        } else {
+          setIsAdmin(false);
+          setIsChecking(false);
+        }
       }
     };
 
