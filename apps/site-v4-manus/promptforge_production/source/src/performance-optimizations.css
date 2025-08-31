@@ -1,0 +1,420 @@
+/* Performance & Media Optimizations for Mobile */
+
+/* Image Optimization */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Lazy loading for images */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* Responsive images with srcset support */
+.responsive-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  background-color: var(--muted);
+}
+
+/* Video optimization */
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* GPU acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize scrolling performance */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Optimize font loading */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Inter'), url('/fonts/inter-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Inter SemiBold'), url('/fonts/inter-semibold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Inter Bold'), url('/fonts/inter-bold.woff2') format('woff2');
+}
+
+/* Critical CSS for above-the-fold content */
+.critical-content {
+  contain: layout style paint;
+}
+
+/* Optimize background images for mobile */
+.hero-background {
+  background-image: none;
+}
+
+@media (min-width: 768px) {
+  .hero-background {
+    background-image: url('/images/hero-bg-tablet.webp');
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-background {
+    background-image: url('/images/hero-bg-desktop.webp');
+  }
+}
+
+/* Optimize gradients for performance */
+.gradient-optimized {
+  background: linear-gradient(135deg, #00FF84 0%, #FF00C8 100%);
+  background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+  .gradient-optimized {
+    background-attachment: scroll;
+  }
+}
+
+/* Intersection Observer loading states */
+.fade-in-observer {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-observer.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optimize card animations */
+.card-hover-optimized {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  will-change: transform;
+}
+
+.card-hover-optimized:hover {
+  transform: translateY(-2px);
+}
+
+/* Mobile-specific performance optimizations */
+@media (max-width: 768px) {
+  /* Reduce expensive effects on mobile */
+  .expensive-effect {
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+  
+  /* Simplify animations on mobile */
+  .complex-animation {
+    animation: none;
+  }
+  
+  /* Optimize touch interactions */
+  .touch-optimized {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Content loading optimization */
+.skeleton-loader {
+  background: linear-gradient(90deg, 
+    var(--muted) 25%, 
+    var(--muted-foreground/10) 50%, 
+    var(--muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Optimize table layouts for mobile */
+.responsive-table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .responsive-table table {
+    font-size: 14px;
+  }
+  
+  .responsive-table th,
+  .responsive-table td {
+    padding: 8px 4px;
+  }
+}
+
+/* Optimize form performance */
+.form-optimized input,
+.form-optimized textarea,
+.form-optimized select {
+  will-change: border-color, box-shadow;
+}
+
+/* Optimize modal performance */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+  .modal-backdrop {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Optimize grid layouts */
+.grid-optimized {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .grid-optimized {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Battery and data saving optimizations */
+@media (prefers-reduced-data: reduce) {
+  .data-heavy {
+    display: none;
+  }
+  
+  .background-image {
+    background-image: none;
+  }
+  
+  video {
+    display: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card-industrial {
+    border-width: 2px;
+    border-color: var(--foreground);
+  }
+  
+  .btn-primary {
+    border: 2px solid var(--foreground);
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  .image-dark-optimized {
+    filter: brightness(0.8) contrast(1.1);
+  }
+}
+
+/* Print optimizations */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-optimized {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Focus optimizations for keyboard navigation */
+.focus-optimized:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Optimize loading states */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--muted);
+  border-top: 2px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  will-change: transform;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Optimize sticky elements */
+.sticky-optimized {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@media (max-width: 768px) {
+  .sticky-optimized {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: var(--background/95);
+  }
+}
+
+/* Memory optimization for large lists */
+.virtual-list-item {
+  contain: layout style paint;
+  height: 60px;
+  overflow: hidden;
+}
+
+/* Optimize text rendering */
+.text-optimized {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize button interactions */
+.button-optimized {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button-optimized:active {
+  transform: scale(0.98);
+}
+
+/* Optimize scroll performance */
+.scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Critical path optimization */
+.above-fold {
+  contain: layout style paint;
+  content-visibility: visible;
+}
+
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Network-aware optimizations */
+@media (max-width: 768px) and (max-resolution: 1.5dppx) {
+  .high-res-image {
+    display: none;
+  }
+}
+
+/* Optimize CSS animations for 60fps */
+.smooth-animation {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimize transforms for hardware acceleration */
+.hardware-accelerated {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize layout shifts */
+.layout-stable {
+  aspect-ratio: 16 / 9;
+  background-color: var(--muted);
+}
+
+/* Optimize critical rendering path */
+.critical-css {
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  color: #333;
+  background: #fff;
+}
+
+/* Service worker cache optimization hints */
+.cache-optimized {
+  /* This class indicates content that should be cached */
+}
+
+/* Prefetch optimization */
+.prefetch-hint::before {
+  content: '';
+  display: none;
+  background-image: url('/images/next-page-hero.webp');
+}
+
+/* Optimize for Core Web Vitals */
+.cwv-optimized {
+  /* Largest Contentful Paint optimization */
+  contain: layout style paint;
+  
+  /* First Input Delay optimization */
+  touch-action: manipulation;
+  
+  /* Cumulative Layout Shift optimization */
+  aspect-ratio: attr(width) / attr(height);
+}
+

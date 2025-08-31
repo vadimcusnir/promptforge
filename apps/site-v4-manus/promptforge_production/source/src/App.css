@@ -1,0 +1,241 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* PromptForge Industrial Theme */
+  --color-pf-primary: #00FF84;
+  --color-pf-secondary: #FF00C8;
+  --color-pf-dark: #0A0A0A;
+  --color-pf-surface: #1A1A1A;
+  --color-pf-surface-light: #2A2A2A;
+  --color-pf-text: #FFFFFF;
+  --color-pf-text-muted: #A0A0A0;
+  --color-pf-border: #333333;
+  --color-pf-accent: #FFD700;
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: var(--color-pf-surface);
+  --foreground: var(--color-pf-text);
+  --card: var(--color-pf-surface);
+  --card-foreground: var(--color-pf-text);
+  --popover: var(--color-pf-surface);
+  --popover-foreground: var(--color-pf-text);
+  --primary: var(--color-pf-primary);
+  --primary-foreground: var(--color-pf-dark);
+  --secondary: var(--color-pf-surface-light);
+  --secondary-foreground: var(--color-pf-text);
+  --muted: var(--color-pf-surface-light);
+  --muted-foreground: var(--color-pf-text-muted);
+  --accent: var(--color-pf-secondary);
+  --accent-foreground: var(--color-pf-text);
+  --destructive: #EF4444;
+  --border: var(--color-pf-border);
+  --input: var(--color-pf-surface-light);
+  --ring: var(--color-pf-primary);
+  --chart-1: var(--color-pf-primary);
+  --chart-2: var(--color-pf-secondary);
+  --chart-3: var(--color-pf-accent);
+  --chart-4: #8B5CF6;
+  --chart-5: #06B6D4;
+  --sidebar: var(--color-pf-surface);
+  --sidebar-foreground: var(--color-pf-text);
+  --sidebar-primary: var(--color-pf-primary);
+  --sidebar-primary-foreground: var(--color-pf-dark);
+  --sidebar-accent: var(--color-pf-surface-light);
+  --sidebar-accent-foreground: var(--color-pf-text);
+  --sidebar-border: var(--color-pf-border);
+  --sidebar-ring: var(--color-pf-primary);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  /* Industrial Typography */
+  .font-industrial {
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+  }
+  
+  .font-mono-industrial {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  
+  /* Gradient Text Effects */
+  .text-gradient-primary {
+    background: linear-gradient(135deg, var(--color-pf-primary), var(--color-pf-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Industrial Glow Effects */
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(0, 255, 132, 0.3);
+  }
+  
+  .glow-secondary {
+    box-shadow: 0 0 20px rgba(255, 0, 200, 0.3);
+  }
+  
+  /* Industrial Animations */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse-glow {
+    from {
+      box-shadow: 0 0 20px rgba(0, 255, 132, 0.3);
+    }
+    to {
+      box-shadow: 0 0 30px rgba(0, 255, 132, 0.6);
+    }
+  }
+  
+  /* Industrial Grid Pattern */
+  .grid-pattern {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--color-pf-surface);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-pf-primary);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-pf-secondary);
+  }
+}
+
+/* Component Specific Styles */
+.nav-link {
+  @apply relative px-4 py-2 text-sm font-medium transition-all duration-200;
+  @apply hover:text-[var(--color-pf-primary)] hover:bg-[var(--color-pf-surface-light)];
+  @apply rounded-md;
+}
+
+.nav-link.active {
+  @apply text-[var(--color-pf-primary)] bg-[var(--color-pf-surface-light)];
+}
+
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  @apply font-semibold px-6 py-3 rounded-lg transition-all duration-200;
+  @apply shadow-lg hover:shadow-xl hover:scale-105;
+  background-color: #00FF84 !important;
+  color: #0A0A0A !important;
+}
+
+.btn-primary:hover {
+  background-color: rgba(0, 255, 132, 0.9) !important;
+  color: #0A0A0A !important;
+}
+
+.btn-secondary {
+  @apply bg-accent text-accent-foreground hover:bg-accent/90;
+  @apply font-semibold px-6 py-3 rounded-lg transition-all duration-200;
+  @apply shadow-lg hover:shadow-xl hover:scale-105;
+  background-color: #FF00C8 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(255, 0, 200, 0.9) !important;
+  color: #FFFFFF !important;
+}
+
+.btn-outline {
+  @apply border-2 border-primary text-primary bg-transparent;
+  @apply hover:bg-primary hover:text-primary-foreground;
+  @apply font-semibold px-6 py-3 rounded-lg transition-all duration-200;
+  border-color: #00FF84 !important;
+  color: #00FF84 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline:hover {
+  background-color: #00FF84 !important;
+  color: #0A0A0A !important;
+}
+
+.card-industrial {
+  @apply bg-[var(--color-pf-surface)] border border-[var(--color-pf-border)];
+  @apply rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-200;
+  @apply hover:border-[var(--color-pf-primary)]/50;
+}
+
+.input-industrial {
+  @apply bg-[var(--color-pf-surface-light)] border border-[var(--color-pf-border)];
+  @apply text-[var(--color-pf-text)] placeholder-[var(--color-pf-text-muted)];
+  @apply rounded-lg px-4 py-3 focus:border-[var(--color-pf-primary)] focus:ring-2 focus:ring-[var(--color-pf-primary)]/20;
+  @apply transition-all duration-200;
+}
+
+.badge-primary {
+  @apply bg-[var(--color-pf-primary)] text-[var(--color-pf-dark)] px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-secondary {
+  @apply bg-[var(--color-pf-secondary)] text-white px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-outline {
+  @apply border border-[var(--color-pf-border)] text-[var(--color-pf-text-muted)] px-3 py-1 rounded-full text-xs;
+}
+

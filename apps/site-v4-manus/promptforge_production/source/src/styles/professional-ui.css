@@ -1,0 +1,274 @@
+/* PromptForge™ Professional UI/UX Fixes */
+
+/* =================================
+   TYPOGRAPHY HIERARCHY - DESKTOP
+   ================================= */
+
+/* Hero Headlines */
+.hero-headline {
+  font-size: clamp(2.5rem, 5vw, 4rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Section Headlines */
+.section-headline {
+  font-size: clamp(2rem, 4vw, 3rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Subheadlines */
+.subheadline {
+  font-size: clamp(1.125rem, 2vw, 1.5rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  color: var(--color-pf-text-muted) !important;
+  margin-bottom: 2rem !important;
+}
+
+/* Body Text */
+.body-text {
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  color: var(--color-pf-text) !important;
+}
+
+/* =================================
+   BUTTON SYSTEM - PROFESSIONAL
+   ================================= */
+
+/* Primary Button */
+.btn-primary-pro {
+  background: linear-gradient(135deg, #00FF84 0%, #00E676 100%) !important;
+  color: #0A0A0A !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 0.875rem 2rem !important;
+  border-radius: 0.75rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 14px rgba(0, 255, 132, 0.25) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  min-height: 48px !important;
+}
+
+.btn-primary-pro:hover {
+  background: linear-gradient(135deg, #00E676 0%, #00C853 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 255, 132, 0.4) !important;
+  color: #0A0A0A !important;
+}
+
+.btn-primary-pro:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(0, 255, 132, 0.3) !important;
+}
+
+/* Secondary Button */
+.btn-secondary-pro {
+  background: transparent !important;
+  color: #00FF84 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 0.875rem 2rem !important;
+  border-radius: 0.75rem !important;
+  border: 2px solid #00FF84 !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  min-height: 48px !important;
+}
+
+.btn-secondary-pro:hover {
+  background: #00FF84 !important;
+  color: #0A0A0A !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 255, 132, 0.3) !important;
+}
+
+/* Tertiary Button */
+.btn-tertiary-pro {
+  background: rgba(255, 0, 200, 0.1) !important;
+  color: #FF00C8 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 0.875rem 2rem !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid rgba(255, 0, 200, 0.3) !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  min-height: 48px !important;
+}
+
+.btn-tertiary-pro:hover {
+  background: rgba(255, 0, 200, 0.2) !important;
+  border-color: #FF00C8 !important;
+  transform: translateY(-1px) !important;
+  color: #FF00C8 !important;
+}
+
+/* =================================
+   SPACING SYSTEM - PROFESSIONAL
+   ================================= */
+
+/* Section Spacing */
+.section-spacing {
+  padding: 5rem 0 !important;
+}
+
+.section-spacing-sm {
+  padding: 3rem 0 !important;
+}
+
+.section-spacing-lg {
+  padding: 7rem 0 !important;
+}
+
+/* Container Spacing */
+.container-pro {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 1.5rem !important;
+}
+
+/* Grid Spacing */
+.grid-pro {
+  display: grid !important;
+  gap: 2rem !important;
+}
+
+.grid-pro-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+}
+
+.grid-pro-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+}
+
+.grid-pro-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+}
+
+/* =================================
+   CARD SYSTEM - PROFESSIONAL
+   ================================= */
+
+.card-pro {
+  background: rgba(26, 26, 26, 0.8) !important;
+  border: 1px solid rgba(51, 51, 51, 0.5) !important;
+  border-radius: 1rem !important;
+  padding: 2rem !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.card-pro:hover {
+  border-color: rgba(0, 255, 132, 0.5) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+.card-pro-featured {
+  border-color: #00FF84 !important;
+  box-shadow: 0 0 30px rgba(0, 255, 132, 0.2) !important;
+}
+
+/* =================================
+   VISUAL HIERARCHY - PROFESSIONAL
+   ================================= */
+
+/* Text Alignment */
+.text-center-pro {
+  text-align: center !important;
+}
+
+.text-left-pro {
+  text-align: left !important;
+}
+
+/* Visual Emphasis */
+.emphasis-primary {
+  color: #00FF84 !important;
+  font-weight: 600 !important;
+}
+
+.emphasis-secondary {
+  color: #FF00C8 !important;
+  font-weight: 600 !important;
+}
+
+.emphasis-accent {
+  color: #FFD700 !important;
+  font-weight: 600 !important;
+}
+
+/* =================================
+   ANIMATIONS - PROFESSIONAL
+   ================================= */
+
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  opacity: 0 !important;
+  transform: translateY(30px) !important;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+}
+
+.stagger-1 { animation-delay: 0.1s !important; }
+.stagger-2 { animation-delay: 0.2s !important; }
+.stagger-3 { animation-delay: 0.3s !important; }
+.stagger-4 { animation-delay: 0.4s !important; }
+
+/* =================================
+   RESPONSIVE UTILITIES
+   ================================= */
+
+@media (max-width: 768px) {
+  .hero-headline {
+    font-size: 2.5rem !important;
+  }
+  
+  .section-headline {
+    font-size: 2rem !important;
+  }
+  
+  .section-spacing {
+    padding: 3rem 0 !important;
+  }
+  
+  .container-pro {
+    padding: 0 1rem !important;
+  }
+  
+  .grid-pro {
+    gap: 1.5rem !important;
+  }
+  
+  .card-pro {
+    padding: 1.5rem !important;
+  }
+}
+
