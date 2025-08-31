@@ -5,14 +5,20 @@ import type { ReactNode } from "react";
 interface CardProps {
   children: ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 /**
  * Basic Card component for grouping content with a border and padding.
  */
-export function Card({ children, className = "" }: CardProps) {
+export function Card({ children, className = "", onClick }: CardProps) {
   return (
-    <div className={`rounded-lg p-6 bg-pf-surface ${className}`}>{children}</div>
+    <div 
+      className={`rounded-lg p-6 bg-pf-surface ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </div>
   );
 }
 
