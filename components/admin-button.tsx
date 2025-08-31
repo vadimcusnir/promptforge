@@ -1,0 +1,19 @@
+"use client";
+
+interface AdminButtonProps {
+  onClick?: () => void;
+}
+
+/**
+ * Button used within the admin panel overlay to close the panel.
+ */
+export function AdminButton({ onClick }: AdminButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 bg-pf-surface border border-pf-text-muted/30 text-pf-text hover:text-gold-industrial"
+    >
+      Close
+    </button>
+  );
+}

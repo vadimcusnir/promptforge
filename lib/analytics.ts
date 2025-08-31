@@ -1,219 +1,151 @@
-// GA4 Analytics Tracking System
-declare global {
-  interface Window {
-    gtag?: (
-      _command: 'consent' | 'config' | 'event' | 'js' | 'set',
-      _targetId: string,
-      _config?: Record<string, any>
-    ) => void;
-    dataLayer: any[]
-  }
+import { supabase } from './supabase'
+
+export interface AnalyticsEvent {
+  event_type: string
+  user_id?: string
+  session_id: string
+  properties: Record<string, any>
+  timestamp: string
 }
 
-// GA4 Event Types
-export type GA4EventType = 
-  | 'PF_LANDING_CTA_CLICK'
-  | 'PF_PRICING_VIEW'
-  | 'PF_CHECKOUT_STARTED'
-  | 'PF_CHECKOUT_COMPLETED'
-  | 'PF_GATE_HIT'
-  | 'PF_FEATURE_USAGE'
-  | 'PF_ERROR_OCCURRED'
-  | 'PF_PERFORMANCE_METRIC'
-  | 'PF_ALERT_CREATED'
-
-// GA4 Event Interface
-export interface GA4Event {
-  event: GA4EventType
-  parameters?: Record<string, any>
-  timestamp?: number
+export interface UserMetrics {
+  total_sessions: number
+  modules_used: number
+  exports_created: number
+  time_spent: number
+  last_active: string
 }
 
-// Initialize GA4
-export const initGA4 = () => {
-  if (typeof window === 'undefined' || !process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) {
-    return
+class Analytics {
+  private sessionId: string
+  private userId?: string
+
+  constructor() {
+    this.sessionId = this.generateSessionId()
   }
 
-  // Load GA4 script if not already loaded
-  if (!window.gtag) {
-    const script = document.createElement('script')
-    script.async = true
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`
-    document.head.appendChild(script)
+  private generateSessionId(): string {
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  }
 
-    window.dataLayer = window.dataLayer || []
-    window.gtag = function() {
-      window.dataLayer.push(arguments)
+  setUserId(userId: string) {
+    this.userId = userId
+  }
+
+  async track(eventType: string, properties: Record<string, any> = {}) {
+    const event: AnalyticsEvent = {
+      event_type: eventType,
+      user_id: this.userId,
+      session_id: this.sessionId,
+      properties,
+      timestamp: new Date().toISOString(),
     }
 
-    window.gtag?.('js', new Date().toISOString())
-    window.gtag?.('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '', {
-      page_title: document.title,
-      page_location: window.location.href,
-    })
-  }
-}
+    try {
+      // Only store in Supabase if we have a valid client
+      if (supabase) {
+        const { error } = await supabase
+          .from('analytics_events')
+          .insert([event])
 
-// Track GA4 event
-export const trackGA4Event = (event: GA4Event) => {
-  if (typeof window === 'undefined' || !window.gtag) {
-    console.warn('GA4 not initialized or not available')
-    return
-  }
-
-  try {
-    const { event: eventName, parameters = {}, timestamp } = event
-    
-    // Add timestamp if not provided
-    const eventParams = {
-      ...parameters,
-      timestamp: timestamp || Date.now(),
-      event_time: new Date().toISOString(),
+        if (error) {
+          console.error('Analytics tracking error:', error)
+        }
+      }
+    } catch (error) {
+      console.error('Analytics tracking error:', error)
     }
 
-    // Send to GA4
-    window.gtag('event', eventName, eventParams)
-    
-    // Log in development
+    // Always log to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.log('📊 GA4 Event:', eventName, eventParams)
+      console.log('Analytics Event:', event)
     }
-  } catch (error) {
-    console.error('Failed to track GA4 event:', error)
+  }
+
+  async trackPageView(page: string) {
+    await this.track('page_view', { page })
+  }
+
+  async trackModuleUse(moduleId: string, moduleName: string) {
+    await this.track('module_used', { module_id: moduleId, module_name: moduleName })
+  }
+
+  async trackExport(format: string, moduleCount: number) {
+    await this.track('export_created', { format, module_count: moduleCount })
+  }
+
+  async trackUserAction(action: string, details: Record<string, any> = {}) {
+    await this.track('user_action', { action, ...details })
+  }
+
+  async getUserMetrics(userId: string): Promise<UserMetrics | null> {
+    try {
+      // Only fetch from Supabase if we have a valid client
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('user_metrics')
+          .select('*')
+          .eq('user_id', userId)
+          .single()
+
+        if (error) {
+          console.error('Error fetching user metrics:', error)
+          return null
+        }
+
+        return data
+      }
+      
+      // Return mock data for demo
+      return {
+        total_sessions: 1,
+        modules_used: 0,
+        exports_created: 0,
+        time_spent: 0,
+        last_active: new Date().toISOString(),
+      }
+    } catch (error) {
+      console.error('Error fetching user metrics:', error)
+      return null
+    }
+  }
+
+  async getModuleUsageStats(): Promise<Record<string, number>> {
+    try {
+      // Only fetch from Supabase if we have a valid client
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('analytics_events')
+          .select('properties')
+          .eq('event_type', 'module_used')
+
+        if (error) {
+          console.error('Error fetching module stats:', error)
+          return {}
+        }
+
+        const stats: Record<string, number> = {}
+        data?.forEach(event => {
+          const moduleId = event.properties?.module_id
+          if (moduleId) {
+            stats[moduleId] = (stats[moduleId] || 0) + 1
+          }
+        })
+
+        return stats
+      }
+      
+      // Return mock data for demo
+      return {
+        'M01': 5,
+        'M02': 3,
+        'M03': 2,
+      }
+    } catch (error) {
+      console.error('Error fetching module stats:', error)
+      return {}
+    }
   }
 }
 
-// Convenience functions for specific events
-export const trackLandingCTAClick = (ctaType: string, location: string) => {
-  trackGA4Event({
-    event: 'PF_LANDING_CTA_CLICK',
-    parameters: {
-      cta_type: ctaType,
-      location,
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-export const trackPricingView = (planViewed?: string) => {
-  trackGA4Event({
-    event: 'PF_PRICING_VIEW',
-    parameters: {
-      plan_viewed: planViewed || 'all',
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-export const trackCheckoutStarted = (planId: string, amount: number) => {
-  trackGA4Event({
-    event: 'PF_CHECKOUT_STARTED',
-    parameters: {
-      plan_id: planId,
-      amount,
-      currency: 'USD',
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-export const trackCheckoutCompleted = (planId: string, amount: number, transactionId: string) => {
-  trackGA4Event({
-    event: 'PF_CHECKOUT_COMPLETED',
-    parameters: {
-      plan_id: planId,
-      amount,
-      currency: 'USD',
-      transaction_id: transactionId,
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-export const trackGateHit = (gateType: string, userId?: string, organizationId?: string) => {
-  trackGA4Event({
-    event: 'PF_GATE_HIT',
-    parameters: {
-      gate_type: gateType,
-      user_id: userId ? hashUserId(userId) : undefined,
-      organization_id: organizationId,
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-export const trackFeatureUsage = (feature: string, userId?: string) => {
-  trackGA4Event({
-    event: 'PF_FEATURE_USAGE',
-    parameters: {
-      feature_name: feature,
-      user_id: userId ? hashUserId(userId) : undefined,
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-export const trackError = (errorType: string, errorMessage: string, userId?: string) => {
-  trackGA4Event({
-    event: 'PF_ERROR_OCCURRED',
-    parameters: {
-      error_type: errorType,
-      error_message: errorMessage,
-      user_id: userId ? hashUserId(userId) : undefined,
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-export const trackPerformanceMetric = (metricName: string, value: number, unit?: string) => {
-  trackGA4Event({
-    event: 'PF_PERFORMANCE_METRIC',
-    parameters: {
-      metric_name: metricName,
-      metric_value: value,
-      metric_unit: unit,
-      page_path: window.location.pathname,
-    }
-  })
-}
-
-// Hash user ID for privacy (no PII exposure)
-function hashUserId(userId: string): string {
-  // Simple hash function - in production, use crypto-js or similar
-  let hash = 0
-  for (let i = 0; i < userId.length; i++) {
-    const char = userId.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash // Convert to 32-bit integer
-  }
-  return Math.abs(hash).toString(36)
-}
-
-// Track page views
-export const trackPageView = (pagePath: string, pageTitle?: string) => {
-  if (typeof window === 'undefined' || !window.gtag) return
-
-  try {
-    window.gtag?.('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '', {
-      page_path: pagePath,
-      page_title: pageTitle || document.title,
-    })
-  } catch (error) {
-    console.error('Failed to track page view:', error)
-  }
-}
-
-// Enhanced ecommerce tracking
-export const trackEcommerceEvent = (eventName: string, ecommerce: any) => {
-  if (typeof window === 'undefined' || !window.gtag) return
-
-  try {
-    window.gtag('event', eventName, {
-      ecommerce,
-      page_path: window.location.pathname,
-    })
-  } catch (error) {
-    console.error('Failed to track ecommerce event:', error)
-  }
-}
+export const analytics = new Analytics()

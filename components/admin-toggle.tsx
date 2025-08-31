@@ -1,0 +1,9 @@
+"use client";
+
+/**
+ * Placeholder AdminToggle component used by HomeInteractive.
+ * Replace this with actual toggle logic when implementing the admin panel.
+ */
+export function AdminToggle() {
+  return <div className="text-pf-text">Admin toggle placeholder</div>;
+}

@@ -1,57 +1,98 @@
-export interface ModuleDefinition {
-  id: number;
-  name: string;
-  description: string;
-  domain: string;
-  vectors: string[];
-  difficulty: string;
-  plan: string;
-  kpi: string;
-  spec: string;
-  output_template: string;
-  estimated_tokens: number;
-  vector?: string;
-}
+import { z } from 'zod'
 
-// Mock modules data
-const mockModules: ModuleDefinition[] = [
+export const ModuleSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  category: z.enum(['content', 'analysis', 'optimization', 'integration']),
+  difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
+  tags: z.array(z.string()),
+  prompt: z.string(),
+  parameters: z.record(z.any()),
+  examples: z.array(z.object({
+    input: z.string(),
+    output: z.string(),
+  })),
+})
+
+export type Module = z.infer<typeof ModuleSchema>
+
+export const MODULES: Module[] = [
   {
-    id: 1,
-    name: "Creative Writing",
-    description: "Generate creative content and stories",
-    domain: "creative",
-    vectors: ["V1"],
-    difficulty: "beginner",
-    plan: "free",
-    kpi: "engagement",
-    spec: "creative-writing-spec",
-    output_template: "story-template",
-    estimated_tokens: 500,
-    vector: "V1"
+    id: 'M01',
+    name: 'Content Generator',
+    description: 'Generate high-quality content for any topic',
+    category: 'content',
+    difficulty: 'beginner',
+    tags: ['content', 'writing', 'generation'],
+    prompt: 'Generate comprehensive content about {topic} with the following requirements: {requirements}',
+    parameters: {
+      topic: 'string',
+      requirements: 'string',
+      tone: 'string',
+      length: 'string',
+    },
+    examples: [
+      {
+        input: 'Topic: AI, Requirements: Technical but accessible, Tone: Professional, Length: 500 words',
+        output: 'Artificial Intelligence (AI) represents one of the most transformative technologies of our time...'
+      }
+    ]
   },
   {
-    id: 2,
-    name: "Technical Documentation",
-    description: "Create technical documentation and guides",
-    domain: "technical",
-    vectors: ["V2"],
-    difficulty: "intermediate",
-    plan: "pro",
-    kpi: "clarity",
-    spec: "tech-doc-spec",
-    output_template: "doc-template",
-    estimated_tokens: 800,
-    vector: "V2"
-  }
-];
+    id: 'M02',
+    name: 'Text Analyzer',
+    description: 'Analyze text for sentiment, keywords, and structure',
+    category: 'analysis',
+    difficulty: 'intermediate',
+    tags: ['analysis', 'sentiment', 'keywords'],
+    prompt: 'Analyze the following text: {text}. Provide sentiment analysis, key themes, and structural insights.',
+    parameters: {
+      text: 'string',
+      analysis_type: 'string',
+    },
+    examples: [
+      {
+        input: 'Text: "This product is amazing! I love it so much."',
+        output: 'Sentiment: Positive (0.8), Key themes: Product satisfaction, emotional attachment'
+      }
+    ]
+  },
+  {
+    id: 'M03',
+    name: 'Prompt Optimizer',
+    description: 'Optimize prompts for better AI responses',
+    category: 'optimization',
+    difficulty: 'advanced',
+    tags: ['optimization', 'prompting', 'efficiency'],
+    prompt: 'Optimize this prompt for better AI performance: {original_prompt}. Consider clarity, specificity, and context.',
+    parameters: {
+      original_prompt: 'string',
+      optimization_goals: 'array',
+    },
+    examples: [
+      {
+        input: 'Original: "Write about cats"',
+        output: 'Optimized: "Write a comprehensive 300-word article about domestic cats, focusing on their behavior, care requirements, and benefits as pets. Use a friendly, informative tone suitable for pet owners."'
+      }
+    ]
+  },
+  // Add more modules as needed
+]
 
-export const modules = mockModules;
-export const MODULES = mockModules;
-export const COMPLETE_MODULES_CATALOG = mockModules;
-export const searchModules = (query?: string) => {
-  if (!query) return mockModules;
-  return mockModules.filter(module => 
-    module.name.toLowerCase().includes(query.toLowerCase()) ||
-    module.description.toLowerCase().includes(query.toLowerCase())
-  );
-};
+export function getModuleById(id: string): Module | undefined {
+  return MODULES.find(module => module.id === id)
+}
+
+export function getModulesByCategory(category: string): Module[] {
+  return MODULES.filter(module => module.category === category)
+}
+
+export function searchModules(query: string): Module[] {
+  const lowercaseQuery = query.toLowerCase()
+  return MODULES.filter(module => 
+    module.name.toLowerCase().includes(lowercaseQuery) ||
+    module.description.toLowerCase().includes(lowercaseQuery) ||
+    module.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+  )
+}
