@@ -1,5 +1,0 @@
-TITLE: Security & Guardrails
-TYPE: Always
-
-Sanitize input, blochează patterns periculoase; fără log PII în clar; RLS strict.
-Rate limiting by plan (see ruleset.yml). OPENAI_API_KEY obligatoriu în production.

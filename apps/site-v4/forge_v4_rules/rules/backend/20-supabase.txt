@@ -1,5 +1,0 @@
-TITLE: Supabase Model & Access
-TYPE: Always
-
-Service role doar server-side; tabele: orgs, org_members, plans, subscriptions, runs, bundles, telemetry_events.
-RLS prin org_members; analytics filtrat pe org/user.

@@ -1,7 +1,0 @@
-TITLE: Export Bundle System
-TYPE: Auto-Attached
-
-ORDER: prompt.txt, prompt.json, prompt.md, prompt.pdf, manifest.json, telemetry.json, checksum.txt
-GATES: Pilot txt/md; Pro +json/pdf; Enterprise +zip(bunde).
-
-Manifest minim: project, module, run_id, sevenD, files(map), score, kpi, license_notice, bundle_checksum, path_prefix, visibility, branding, plan_restrictions.

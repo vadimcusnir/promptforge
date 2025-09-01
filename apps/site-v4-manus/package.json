@@ -1,7 +1,0 @@
-if [ -f apps/site-v4-manus/source/package.json ]; then
-  APPDIR="apps/site-v4-manus/source"
-elif [ -f apps/site-v4-manus/package.json ]; then
-  APPDIR="apps/site-v4-manus"
-else
-  echo "NU EXISTĂ package.json în nivelurile așteptate. Spune-mi ce întoarce comanda 'find' de mai sus."
-fi

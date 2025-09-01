@@ -1,251 +1,208 @@
 "use client";
 
-import { useState, useEffect } from 'react'
-import { ExtendedModule } from '@/lib/modules'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Search, Filter, Download } from 'lucide-react'
-// import { analytics } from '@/lib/analytics'
+import { useState, useEffect, useCallback } from 'react';
+import { FilterBar } from './filter-bar';
+import { ModuleGrid } from './module-grid';
+import { ModuleOverlay } from './module-overlay';
+import { useEntitlements } from '@/hooks/use-entitlements';
+import { useAnalytics } from '@/hooks/use-analytics';
+import type { Module, FilterState } from '@/types/modules';
 
 export function ModuleBrowser() {
-  const [modules, setModules] = useState<ExtendedModule[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [selectedModules, setSelectedModules] = useState<string[]>([])
+  const [modules, setModules] = useState<Module[]>([]);
+  const [filteredModules, setFilteredModules] = useState<Module[]>([]);
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    vectors: [],
+    difficulty: null,
+    plan: 'all'
+  });
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const categories = ['all', 'content', 'analysis', 'optimization', 'integration']
+  const { plan, canUseGptTestReal, canExportFormat } = useEntitlements();
+  const { track } = useAnalytics();
 
+  // Fetch modules on mount
   useEffect(() => {
-    fetchModules()
-  }, [])
+    fetchModules();
+  }, []);
+
+  // Apply filters when filters change
+  useEffect(() => {
+    applyFilters();
+  }, [filters, modules]);
 
   const fetchModules = async () => {
     try {
-      const params = new URLSearchParams()
-      if (selectedCategory !== 'all') {
-        params.append('category', selectedCategory)
-      }
-      if (searchQuery) {
-        params.append('search', searchQuery)
-      }
-
-      const response = await fetch(`/api/modules?${params}`)
-      const data = await response.json()
-      setModules(data.data?.modules || [])
-    } catch (error) {
-      console.error('Error fetching modules:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchModules()
-  }, [selectedCategory, searchQuery])
-
-  const handleModuleSelect = (moduleId: string) => {
-    setSelectedModules(prev => 
-      prev.includes(moduleId) 
-        ? prev.filter(id => id !== moduleId)
-        : [...prev, moduleId]
-    )
-  }
-
-  const handleExport = async (format: string) => {
-    if (selectedModules.length === 0) {
-      alert('Please select at least one module to export')
-      return
-    }
-
-    try {
-      const response = await fetch('/api/export', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          format,
-          moduleIds: selectedModules,
-          metadata: {
-            title: 'PromptForge Module Export',
-            description: `Exported ${selectedModules.length} modules`,
-            author: 'PromptForge User',
-          },
-        }),
-      })
-
-      const data = await response.json()
+      setIsLoading(true);
+      setError(null);
       
-      if (data.data) {
-        // Create download link
-        const binaryString = atob(data.data)
-        const bytes = new Uint8Array(binaryString.length)
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i)
-        }
-        const blob = new Blob([bytes], { 
-          type: data.mimeType 
-        })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = data.filename
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
+      const response = await fetch('/api/modules');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    } catch (error) {
-      console.error('Export error:', error)
+      
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to fetch modules');
+      }
+      
+      setModules(data.data.modules);
+      
+      // Validate catalog size (must be exactly 50 modules)
+      if (data.data.modules.length !== 50) {
+        console.error(`Catalog validation failed: expected 50 modules, got ${data.data.modules.length}`);
+        setError('Catalog validation failed. Please contact support.');
+      }
+      
+    } catch (err) {
+      console.error('Failed to fetch modules:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch modules');
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
-  const getDifficultyColor = (difficulty: number) => {
-    switch (difficulty) {
-      case 1: return 'bg-green-500/20 text-green-400'
-      case 2: return 'bg-yellow-500/20 text-yellow-400'
-      case 3: return 'bg-red-500/20 text-red-400'
-      case 4: return 'bg-purple-500/20 text-purple-400'
-      case 5: return 'bg-orange-500/20 text-orange-400'
-      default: return 'bg-gray-500/20 text-gray-400'
+  const applyFilters = useCallback(() => {
+    let filtered = [...modules];
+
+    // Search filter
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      filtered = filtered.filter(module =>
+        module.title.toLowerCase().includes(searchLower) ||
+        module.summary.toLowerCase().includes(searchLower) ||
+        module.tags.some(tag => tag.toLowerCase().includes(searchLower))
+      );
     }
-  }
 
-  if (loading) {
+    // Vectors filter
+    if (filters.vectors.length > 0) {
+      filtered = filtered.filter(module =>
+        filters.vectors.some(vector => module.vectors.includes(vector))
+      );
+    }
+
+    // Difficulty filter
+    if (filters.difficulty !== null) {
+      filtered = filtered.filter(module => module.difficulty === filters.difficulty);
+    }
+
+    // Plan filter
+    if (filters.plan !== 'all') {
+      const planHierarchy = { free: 0, creator: 1, pro: 2, enterprise: 3 };
+      const userPlanLevel = planHierarchy[filters.plan as keyof typeof planHierarchy] || 0;
+      
+      filtered = filtered.filter(module => {
+        const modulePlanLevel = planHierarchy[module.minPlan as keyof typeof planHierarchy] || 0;
+        return userPlanLevel >= modulePlanLevel;
+      });
+    }
+
+    setFilteredModules(filtered);
+
+    // Track filter change
+    track('filter_change', {
+      q: filters.search,
+      vectors: filters.vectors,
+      difficulty: filters.difficulty,
+      plan: filters.plan,
+      results_count: filtered.length
+    });
+  }, [filters, modules, track]);
+
+  const handleFilterChange = (newFilters: Partial<FilterState>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      search: '',
+      vectors: [],
+      difficulty: null,
+      plan: 'all'
+    });
+  };
+
+  const handleModuleSelect = (module: Module) => {
+    setSelectedModule(module);
+    setIsOverlayOpen(true);
+    
+    // Track module selection
+    track('module_card_open', {
+      module_id: module.id,
+      module_title: module.title,
+      user_plan: plan
+    });
+  };
+
+  const handleOverlayClose = () => {
+    setIsOverlayOpen(false);
+    setSelectedModule(null);
+  };
+
+  if (error) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-pf-text-muted">Loading modules...</div>
+      <div className="text-center py-12">
+        <div className="text-pf-text-muted mb-4">
+          <p className="text-lg font-medium mb-2">Unable to load modules</p>
+          <p className="text-sm">{error}</p>
+        </div>
+        <button
+          onClick={fetchModules}
+          className="px-4 py-2 bg-gold-industrial text-pf-black rounded hover:bg-gold-industrial-dark transition-colors"
+        >
+          Try Again
+        </button>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-pf-text mb-4">Module Browser</h1>
-        <p className="text-pf-text-muted text-lg">
-          Browse and export from our collection of 50+ prompt modules
-        </p>
-      </div>
+    <div className="space-y-8">
+      <FilterBar
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+        availableVectors={['strategic', 'rhetoric', 'content', 'analytics', 'branding', 'crisis', 'cognitive']}
+        availableDifficulties={[1, 2, 3, 4, 5]}
+        availablePlans={['free', 'creator', 'pro', 'enterprise']}
+      />
 
-      {/* Search and Filter */}
-      <div className="mb-8 flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-pf-text-muted w-4 h-4" />
-          <Input
-            placeholder="Search modules..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-pf-black border-pf-text-muted/30 text-pf-text"
-          />
+      {filteredModules.length === 0 && !isLoading ? (
+        <div className="text-center py-12">
+          <p className="text-pf-text-muted text-lg mb-4">
+            No modules found for the current filters.
+          </p>
+          <button
+            onClick={handleClearFilters}
+            className="px-4 py-2 bg-gold-industrial text-pf-black rounded hover:bg-gold-industrial-dark transition-colors"
+          >
+            Reset Filters
+          </button>
         </div>
-        <div className="flex gap-2">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                selectedCategory === category
-                  ? 'bg-gold-industrial text-pf-black'
-                  : 'bg-pf-surface text-pf-text-muted hover:text-pf-text'
-              }`}
-            >
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Export Controls */}
-      {selectedModules.length > 0 && (
-        <div className="mb-6 p-4 bg-pf-surface border border-pf-text-muted/30 rounded-lg">
-          <div className="flex items-center justify-between">
-            <span className="text-pf-text">
-              {selectedModules.length} module(s) selected
-            </span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleExport('pdf')}
-                className="px-4 py-2 bg-red-500/20 text-red-400 rounded-md hover:bg-red-500/30 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                PDF
-              </button>
-              <button
-                onClick={() => handleExport('json')}
-                className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-md hover:bg-blue-500/30 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                JSON
-              </button>
-              <button
-                onClick={() => handleExport('md')}
-                className="px-4 py-2 bg-green-500/20 text-green-400 rounded-md hover:bg-green-500/30 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Markdown
-              </button>
-              <button
-                onClick={() => handleExport('zip')}
-                className="px-4 py-2 bg-gold-industrial/20 text-gold-industrial rounded-md hover:bg-gold-industrial/30 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Bundle
-              </button>
-            </div>
-          </div>
-        </div>
+      ) : (
+        <ModuleGrid
+          modules={filteredModules}
+          onModuleSelect={handleModuleSelect}
+          userPlan={plan}
+          canUseGptTestReal={canUseGptTestReal}
+        />
       )}
 
-      {/* Modules Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {modules.map(module => (
-          <Card
-            key={module.id}
-            className={`bg-pf-surface border-pf-text-muted/30 cursor-pointer transition-all hover:border-gold-industrial/50 ${
-              selectedModules.includes(module.id) ? 'border-gold-industrial' : ''
-            }`}
-            onClick={() => handleModuleSelect(module.id)}
-          >
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-pf-text text-lg">{module.title}</CardTitle>
-                  <Badge className={`mt-2 ${getDifficultyColor(module.difficulty)}`}>
-                    Level {module.difficulty}
-                  </Badge>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={selectedModules.includes(module.id)}
-                  onChange={() => handleModuleSelect(module.id)}
-                  className="w-4 h-4 text-gold-industrial"
-                />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-pf-text-muted mb-4">
-                {module.summary}
-              </CardDescription>
-              <div className="flex flex-wrap gap-1">
-                {module.tags.map(tag => (
-                  <Badge key={tag} className="bg-pf-black text-pf-text-muted text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {modules.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-pf-text-muted">No modules found matching your criteria.</p>
-        </div>
+      {selectedModule && (
+        <ModuleOverlay
+          module={selectedModule}
+          isOpen={isOverlayOpen}
+          onClose={handleOverlayClose}
+          userPlan={plan}
+          canUseGptTestReal={canUseGptTestReal}
+          canExportFormat={canExportFormat}
+        />
       )}
     </div>
-  )
+  );
 }

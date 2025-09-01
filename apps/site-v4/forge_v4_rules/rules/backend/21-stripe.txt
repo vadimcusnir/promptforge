@@ -1,4 +1,0 @@
-TITLE: Stripe Integration (MVP)
-TYPE: Auto-Attached
-
-Webhook → upsert subscriptions + entitlements; aplici gates imediat după plată.

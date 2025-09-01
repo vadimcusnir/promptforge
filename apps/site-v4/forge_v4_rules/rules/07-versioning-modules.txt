@@ -1,5 +1,0 @@
-TITLE: Module Versioning & Registry
-TYPE: Agent-Requested
-
-Fiecare Mxx are: spec (inputs/outputs/kpi/guardrails), semver, changelog.
-Registry Mxx→ endpoint; breaking=MAJOR; nonbreaking=MINOR.

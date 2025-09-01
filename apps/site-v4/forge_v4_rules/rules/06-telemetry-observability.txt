@@ -1,9 +1,0 @@
-TITLE: Telemetry & Observability
-TYPE: Auto-Attached
-
-EVENTS: run_start, run_finish, score_eval, bundle_export, gate_hit.
-SLOs: p95 TTA <60s; pass-rate ≥80%.
-
-CHECKLIST
-- Loghezi gate_hit la orice validare/entitlement eșuat.
-- Loghezi tokens & responseTime pentru GPT; UI Analytics le afișează.
