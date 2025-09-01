@@ -6,13 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ModuleCard } from "./module-card";
-import { MODULES, searchModules } from "@/lib/modules";
-import { VECTORS } from "@/types/promptforge";
+import { allModules, searchModules, Module } from "@/lib/modules";
 import { Search, Filter, Grid, List } from "lucide-react";
 
+// Define vectors mapping for the new module system
+const VECTORS = {
+  'strategic': { id: 'strategic', name: 'Strategic', description: 'Strategic planning and positioning', color: '#3B82F6' },
+  'rhetoric': { id: 'rhetoric', name: 'Rhetoric', description: 'Persuasive communication and argumentation', color: '#10B981' },
+  'content': { id: 'content', name: 'Content', description: 'Content creation and management', color: '#F59E0B' },
+  'analytics': { id: 'analytics', name: 'Analytics', description: 'Data analysis and insights', color: '#EF4444' },
+  'branding': { id: 'branding', name: 'Branding', description: 'Brand development and management', color: '#8B5CF6' },
+  'crisis': { id: 'crisis', name: 'Crisis', description: 'Crisis management and response', color: '#EC4899' },
+  'cognitive': { id: 'cognitive', name: 'Cognitive', description: 'Cognitive enhancement and learning', color: '#06B6D4' },
+};
+
 interface ModuleGridProps {
-  selectedModule?: number | null;
-  onSelectModule?: (moduleId: number) => void;
+  selectedModule?: string | null;
+  onSelectModule?: (moduleId: string) => void;
   vectorFilter?: string;
   onVectorFilterChange?: (vector: string) => void;
   selectedVector?: string;
@@ -29,36 +39,47 @@ export function ModuleGrid({
 }: ModuleGridProps) {
   const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showDetails, setShowDetails] = useState<number | null>(null);
+  const [showDetails, setShowDetails] = useState<string | null>(null);
   
   // Use external props if provided, otherwise use internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
   const effectiveVectorFilter = selectedVector ?? vectorFilter;
 
   const filteredModules = useMemo(() => {
-    let modules = Object.values(MODULES);
+    let modules = allModules;
 
     // Apply search filter
     if (searchQuery.trim()) {
-      modules = searchModules(searchQuery);
+      modules = modules.filter(module => 
+        module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        module.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        module.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
     }
 
-    return modules.sort((a, b) => a.id - b.id);
-  }, [searchQuery]);
+    // Apply vector filter
+    if (effectiveVectorFilter && effectiveVectorFilter !== 'all') {
+      modules = modules.filter(module => 
+        module.vectors.includes(effectiveVectorFilter)
+      );
+    }
+
+    return modules.sort((a, b) => a.id.localeCompare(b.id));
+  }, [searchQuery, effectiveVectorFilter]);
 
   const modulesByVector = useMemo(() => {
-    const grouped: Record<string, typeof filteredModules> = {};
+    const grouped: Record<string, Module[]> = {};
 
     Object.entries(VECTORS).forEach(([key, vector]) => {
       grouped[key] = filteredModules.filter((module) =>
-        module.vectors.includes(Number.parseInt(key)),
+        module.vectors.includes(key)
       );
     });
 
     return grouped;
   }, [filteredModules]);
 
-  const handleViewDetails = (moduleId: number) => {
+  const handleViewDetails = (moduleId: string) => {
     setShowDetails(showDetails === moduleId ? null : moduleId);
   };
 

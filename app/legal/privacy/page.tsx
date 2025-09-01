@@ -1,335 +1,71 @@
-import Link from "next/link"
-import { ChevronRight, Shield, Lock, Eye, Download, Trash2 } from "lucide-react"
-import { AnalyticsPrivacyDocumentation, AnalyticsEventDetails } from "@/components/analytics/privacy-documentation"
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy - PromptForge',
+  description: 'Privacy Policy for PromptForge AI prompt engineering platform',
+}
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Breadcrumb */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <nav className="flex items-center space-x-2 text-sm text-gray-400">
-            <Link href="/" className="hover:text-gold-400 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link href="/legal" className="hover:text-gold-400 transition-colors">
-              Legal
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-white">Privacy</span>
-          </nav>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+            <h1 className="text-4xl font-bold text-white mb-8">Privacy Policy</h1>
+            
+            <div className="prose prose-invert max-w-none">
+              <p className="text-lg text-gray-300 mb-6">
+                <strong>Last updated:</strong> {new Date().toLocaleDateString()}
+              </p>
 
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <Shield className="w-16 h-16 text-gold-400 " />
-              <div className="absolute inset-0 bg-gold-400/20 rounded-full blur-xl " />
-            </div>
-          </div>
-          <p className="text-gray-400 text-lg mb-4 italic">"Your prompts are your power. We guard it."</p>
-          <h1 className="text-5xl font-bold font-sans text-white mb-4">Privacy Policy</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">We protect your data like it's semantic gold.</p>
-        </div>
-
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-8 gap-12 max-w-5xl mx-auto">
-          <div className="lg:col-span-8 space-y-12">
-            {/* What We Collect */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Eye className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-sans">What We Collect</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>We collect only what's necessary to make PromptForge work effectively:</p>
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Prompt metadata:</strong> Module selections, parameter configurations, and generation timestamps (not the actual prompt content)
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Usage telemetry:</strong> Performance metrics, error logs, and feature usage patterns
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Account information:</strong> Email, workspace name, and subscription details
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Why We Collect */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Lock className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-sans">Why We Collect It</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>Every piece of data serves a specific purpose:</p>
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Functionality:</strong> Enable cloud history of your module selections and parameter configurations (not prompt content)
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Analytics:</strong> Understand which modules are most valuable and improve the platform
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Security:</strong> Detect abuse, prevent unauthorized access, and maintain system
-                      integrity
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Support:</strong> Troubleshoot issues and provide personalized assistance
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* How We Store It */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Shield className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-sans">How We Store It</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>Your data is protected with enterprise-grade security:</p>
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Encrypted storage:</strong> All data encrypted at rest using Supabase's AES-256 encryption
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Secure transmission:</strong> TLS 1.3 encryption for all data in transit
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Access controls:</strong> Row-level security ensures you only see your own data
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Regular backups:</strong> Automated backups with point-in-time recovery
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* What We Don't Store */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Trash2 className="w-6 h-6 text-red-400 mr-3" />
-                <h2 className="text-2xl font-bold text-red-400 font-sans">What We Don't Store</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>We explicitly do NOT store the following data:</p>
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="text-red-400 mr-2">•</span>
-                    <span>
-                      <strong>Actual prompt content:</strong> Your generated prompts are never stored on our servers
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-400 mr-2">•</span>
-                    <span>
-                      <strong>Input text:</strong> Any text you input into the system is processed locally and not stored
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-400 mr-2">•</span>
-                    <span>
-                      <strong>Personal information in prompts:</strong> We don't store any personal data that might be in your prompts
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* What We Never Do */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Trash2 className="w-6 h-6 text-red-400 mr-3" />
-                <h2 className="text-2xl font-bold text-red-400 font-sans">What We Never Do</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>Your trust is sacred. We will never:</p>
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="text-red-400 mr-2">•</span>
-                    <span>
-                      <strong>Sell your data:</strong> Your prompts and usage patterns are never sold to third parties
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-400 mr-2">•</span>
-                    <span>
-                      <strong>Share without consent:</strong> No data sharing except with explicit permission or legal
-                      requirement
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-400 mr-2">•</span>
-                    <span>
-                      <strong>Train AI on your prompts:</strong> Your creative work remains yours, not training data
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-400 mr-2">•</span>
-                    <span>
-                      <strong>Track across sites:</strong> No third-party tracking pixels or cross-site surveillance
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Legal Basis */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Shield className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-sans">Legal Basis for Data Processing</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>Our data processing is based on GDPR Article 6 and other applicable privacy laws:</p>
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Legitimate Interest (Art. 6(1)(f)):</strong> System optimization, security monitoring, and service improvement
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Contract Performance (Art. 6(1)(b)):</strong> Providing the services you've subscribed to
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Consent (Art. 6(1)(a)):</strong> Optional analytics and marketing communications
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Legal Obligation (Art. 6(1)(c)):</strong> Compliance with applicable laws and regulations
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Analytics & Telemetry */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Eye className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-sans">Analytics & Telemetry</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>We collect analytics data to improve our service and understand usage patterns:</p>
-                <div className="mt-6">
-                  <AnalyticsPrivacyDocumentation />
-                </div>
-                <div className="mt-6">
-                  <AnalyticsEventDetails />
-                </div>
-              </div>
-            </section>
-
-            {/* Your Rights */}
-            <section>
-              <div className="flex items-center mb-6">
-                <Download className="w-6 h-6 text-gold-400 mr-3" />
-                <h2 className="text-2xl font-bold text-gold-400 font-sans">Your Rights</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>You have complete control over your data:</p>
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Export everything:</strong> Download all your prompts, history, and metadata in JSON
-                      format
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Delete your account:</strong> Permanent deletion within 30 days of request
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Anonymize data:</strong> Remove personal identifiers while keeping usage analytics
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold-400 mr-2">•</span>
-                    <span>
-                      <strong>Access transparency:</strong> See exactly what data we have about you
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Legal Links */}
-            <section className="border-t border-gray-800 pt-8">
-              <div className="space-y-4 text-gray-300">
-                <p>
-                  This policy complies with GDPR, CCPA, and other privacy regulations. For questions or data requests,
-                  contact us at{" "}
-                  <a
-                    href="mailto:legal@[EXAMPLE_DOMAIN_yourdomain.com]"
-                    className="text-gold-400 hover:text-gold-300 transition-colors"
-                  >
-                    legal@[EXAMPLE_DOMAIN_yourdomain.com]
-                  </a>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold text-white mb-4">1. Introduction</h2>
+                <p className="text-gray-300 mb-4">
+                  PromptForge is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI prompt engineering platform.
                 </p>
-                <div className="flex items-center space-x-4 text-sm">
-                  <Link href="/legal" className="text-gold-400 hover:text-gold-300 transition-colors">
-                    ← Back to Legal Center
-                  </Link>
-                  <Link href="/legal/terms" className="text-gold-400 hover:text-gold-300 transition-colors">
-                    Terms of Use →
-                  </Link>
+                <p className="text-gray-300 mb-4">
+                  This policy complies with applicable data protection laws, including GDPR and CCPA.
+                </p>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold text-white mb-4">2. Information We Collect</h2>
+                <p className="text-gray-300 mb-4">
+                  We collect personal information including email address, usage data, technical data, and payment information (processed by Stripe).
+                </p>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold text-white mb-4">3. How We Use Your Information</h2>
+                <p className="text-gray-300 mb-4">
+                  We use your information to provide our service, manage your account, communicate with you, analyze usage patterns, and ensure security.
+                </p>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold text-white mb-4">4. Your Rights (GDPR)</h2>
+                <p className="text-gray-300 mb-4">
+                  You have rights to access, rectify, erase, restrict, port, and object to processing of your personal data. Contact us at privacy@promptforge.ai to exercise these rights.
+                </p>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold text-white mb-4">5. Data Security</h2>
+                <p className="text-gray-300 mb-4">
+                  We implement encryption, access controls, and other security measures to protect your personal information.
+                </p>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold text-white mb-4">6. Contact Us</h2>
+                <div className="bg-white/5 rounded-lg p-4">
+                  <p className="text-gray-300">
+                    <strong>Data Protection Officer:</strong> privacy@promptforge.ai<br />
+                    <strong>General Inquiries:</strong> support@promptforge.ai
+                  </p>
                 </div>
-                <p className="text-sm text-gray-500">Last updated: January 2025</p>
-              </div>
-            </section>
+              </section>
+            </div>
           </div>
         </div>
       </div>

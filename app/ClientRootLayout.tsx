@@ -4,6 +4,7 @@ import type React from "react";
 import { Montserrat } from "next/font/google";
 import { Open_Sans } from "next/font/google";
 import { ComingSoonWrapper } from "@/components/ComingSoonWrapper";
+import { MotionProvider } from "@/lib/motion/provider";
 import { useEffect } from "react";
 import "./globals.css";
 import "./styles/variables.css";
@@ -56,7 +57,9 @@ export default function ClientRootLayout({
       data-motion-mode={motionMode}
     >
       <body className="font-sans antialiased">
-        <ComingSoonWrapper>{children}</ComingSoonWrapper>
+        <MotionProvider>
+          <ComingSoonWrapper>{children}</ComingSoonWrapper>
+        </MotionProvider>
       </body>
     </html>
   );

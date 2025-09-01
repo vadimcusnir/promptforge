@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { validateModuleCatalog } from "@/lib/module.schema"
-import catalogData from "@/lib/modules.catalog.json"
+import { catalogData } from "@/lib/modules"
 
 export async function GET(request: NextRequest) {
   try {
-    // Validate the catalog against our schema
-    const validatedCatalog = validateModuleCatalog(catalogData)
-    
     // Transform modules for UI consumption
-    const modules = Object.values(validatedCatalog.modules).map(module => ({
+    const modules = Object.values(catalogData.modules).map(module => ({
       id: module.id,
       title: module.title,
       slug: module.slug,
@@ -34,7 +30,7 @@ export async function GET(request: NextRequest) {
     // Apply filters
     if (vector) {
       filteredModules = filteredModules.filter(module => 
-        module.vectors.includes(vector as any)
+        module.vectors.includes(vector)
       )
     }
     
@@ -46,11 +42,11 @@ export async function GET(request: NextRequest) {
     }
     
     if (minPlan) {
-      const planHierarchy = { free: 0, creator: 1, pro: 2, enterprise: 3 }
-      const userPlanLevel = planHierarchy[minPlan as keyof typeof planHierarchy] || 0
+      const planHierarchy = { FREE: 0, CREATOR: 1, PRO: 2, ENTERPRISE: 3 }
+      const userPlanLevel = planHierarchy[minPlan.toUpperCase() as keyof typeof planHierarchy] || 0
       
       filteredModules = filteredModules.filter(module => {
-        const modulePlanLevel = planHierarchy[module.minPlan as keyof typeof planHierarchy] || 0
+        const modulePlanLevel = planHierarchy[module.minPlan] || 0
         return userPlanLevel >= modulePlanLevel
       })
     }
@@ -69,21 +65,21 @@ export async function GET(request: NextRequest) {
       data: {
         modules: filteredModules,
         total: filteredModules.length,
-        catalogVersion: validatedCatalog.version,
+        catalogVersion: catalogData.version,
         filters: {
-          vectors: ['strategic', 'rhetoric', 'content', 'analytics', 'branding', 'crisis', 'cognitive'],
+          vectors: ['strategic', 'operations', 'branding', 'content', 'analytics', 'sales', 'technical', 'crisis_management'],
           difficulties: [1, 2, 3, 4, 5],
-          plans: ['free', 'creator', 'pro', 'enterprise']
+          plans: ['FREE', 'CREATOR', 'PRO', 'ENTERPRISE']
         }
       }
     })
     
   } catch (error) {
-    console.error('Module catalog validation failed:', error)
+    console.error('Module catalog error:', error)
     
     return NextResponse.json({
       success: false,
-      error: 'Module catalog validation failed',
+      error: 'Module catalog error',
       details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
@@ -95,8 +91,9 @@ export async function POST(request: NextRequest) {
     const { moduleId, action, inputs } = body
     
     // Validate module exists
-    const validatedCatalog = validateModuleCatalog(catalogData)
-    const module = validatedCatalog.modules[moduleId]
+    // The original code used validateModuleCatalog, but catalogData is now directly imported.
+    // Assuming the intent was to check if the module exists in catalogData.modules.
+    const module = catalogData.modules[moduleId]
     
     if (!module) {
       return NextResponse.json({

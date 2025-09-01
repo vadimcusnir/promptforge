@@ -1,559 +1,544 @@
-"use client";
-
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { 
-  Clock, 
-  User, 
-  Calendar, 
-  ArrowLeft, 
-  Share2, 
-  ExternalLink,
-  ChevronRight,
-  Check
-} from "lucide-react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft, Calendar, User, Clock, Tag, Share2 } from "lucide-react";
+import { generateArticleJSONLD } from "@/lib/json-ld";
+import { CodeBlock } from "@/components/docs/CodeBlock";
+import { Callout } from "@/components/docs/Callout";
 
-// Mock article data - in real app this would come from CMS/API
-const mockArticle = {
-  slug: "7d-engine-revolutionizes-prompt-engineering",
-  title: "How the 7D Engine Revolutionizes Prompt Engineering",
-  subtitle: "Discover how our proprietary 7D methodology transforms complex prompt creation into a systematic, repeatable process that guarantees quality and consistency.",
-  excerpt: "The 7D Engine represents a paradigm shift in prompt engineering, moving from ad-hoc creation to systematic, measurable generation. This article explores how each dimension contributes to prompt quality and how the system ensures consistency across all outputs.",
-  coverImage: "/blog/7d-engine-cover.jpg",
-  domain: "AI Engineering",
-  vectors: ["Clarity", "Execution", "Business Fit", "Measurement"],
+interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  cover: string;
+  categories: string[];
+  tags: string[];
+  published_at: string;
+  updated_at?: string;
   author: {
-    name: "Alex Chen",
-    avatar: "/authors/alex-chen.jpg",
-    bio: "Lead AI Engineer at PromptForge with 8+ years in machine learning and prompt optimization. Specializes in enterprise-scale AI workflows and quality assurance systems.",
-    social: {
-      twitter: "https://twitter.com/alexchen_ai",
-      linkedin: "https://linkedin.com/in/alexchen-ai",
-      github: "https://github.com/alexchen-ai"
-    }
-  },
-  publishDate: "2024-08-25",
-  readTime: "8 min",
+    name: string;
+    avatar: string;
+    bio?: string;
+  };
+  read_time: string;
+  canonical_url?: string;
+  og_image?: string;
+  noindex?: boolean;
+}
+
+// Mock blog post data - in production this would come from a CMS or database
+const getBlogPost = async (slug: string): Promise<BlogPost | null> => {
+  const posts: Record<string, BlogPost> = {
+    "introduction-to-7d-framework": {
+      slug: "introduction-to-7d-framework",
+      title: "Introduction to the 7D Framework for Prompt Engineering",
+      excerpt: "Learn how the 7D framework revolutionizes prompt engineering with structured parameters for consistent, high-quality AI outputs.",
   content: `
-## TL;DR
+# Introduction to the 7D Framework for Prompt Engineering
 
-The 7D Engine transforms prompt engineering from an art to a science by implementing seven quantifiable dimensions: Clarity, Context, Constraints, Creativity, Consistency, Completeness, and Compliance. This systematic approach reduces prompt creation time from 4 hours to 30 minutes while ensuring quality scores ≥80 and export-ready outputs.
+The 7D framework represents a paradigm shift in how we approach prompt engineering. By providing seven key dimensions for structured prompt development, it ensures consistency, quality, and scalability across all AI interactions.
 
-## Table of Contents
+## What is the 7D Framework?
 
-- [The Problem with Traditional Prompt Engineering](#the-problem)
-- [Introducing the 7D Framework](#7d-framework)
-- [Dimension 1: Clarity](#clarity)
-- [Dimension 2: Context](#context)
-- [Dimension 3: Constraints](#constraints)
-- [Dimension 4: Creativity](#creativity)
-- [Dimension 5: Consistency](#consistency)
-- [Dimension 6: Completeness](#completeness)
-- [Dimension 7: Compliance](#compliance)
-- [Implementation in PromptForge](#implementation)
-- [Results and Metrics](#results)
-- [Conclusion](#conclusion)
+The 7D framework is a comprehensive approach to prompt engineering that addresses the common challenges of inconsistency, poor quality, and lack of scalability in AI prompt development.
 
-## The Problem with Traditional Prompt Engineering
+### The Seven Dimensions
 
-Traditional prompt engineering relies heavily on intuition and trial-and-error. Engineers spend hours crafting prompts, testing them manually, and iterating based on subjective feedback. This approach has several critical flaws:
+1. **Domain**: The specific field or industry context
+2. **Scale**: The scope and complexity of the task
+3. **Urgency**: The time sensitivity of the output
+4. **Complexity**: The technical difficulty level
+5. **Resources**: Available computational and human resources
+6. **Application**: The intended use case or deployment scenario
+7. **Output**: The desired format and structure of results
 
-- **Inconsistent Quality**: Without standardized criteria, prompt quality varies dramatically
-- **Time Inefficiency**: 4+ hours per prompt is unsustainable for enterprise teams
-- **Lack of Measurability**: No objective way to assess prompt effectiveness
-- **Scalability Issues**: Manual processes don't scale with team growth
+## Benefits of the 7D Framework
 
-## Introducing the 7D Framework
+<Callout type="info" title="Key Benefits">
+The 7D framework provides structured parameters for consistent prompt engineering across all modules, ensuring high-quality outputs and scalable workflows.
+</Callout>
 
-The 7D Engine addresses these challenges through a systematic, quantifiable approach. Each dimension represents a measurable aspect of prompt quality, allowing engineers to optimize systematically rather than intuitively.
+### Consistency
+By standardizing the approach to prompt engineering, the 7D framework eliminates the guesswork and ensures consistent results across different use cases.
 
-### How It Works
+### Quality
+The structured approach leads to higher quality outputs by considering all relevant factors before prompt generation.
 
-1. **Input Analysis**: The system analyzes the initial prompt against all 7 dimensions
-2. **Gap Identification**: Identifies which dimensions need improvement
-3. **Automated Enhancement**: Applies optimization algorithms to strengthen weak areas
-4. **Quality Validation**: Ensures the final prompt meets all quality thresholds
-5. **Export Preparation**: Formats the prompt for immediate use
+### Scalability
+The framework scales from individual use cases to enterprise-wide deployments, making it suitable for any organization size.
 
-## Dimension 1: Clarity
+## Implementation Example
 
-Clarity measures how easily the AI understands the intended output. High clarity prompts produce consistent, accurate results.
+Here's how you would implement the 7D framework in your prompts:
 
-**Key Metrics:**
-- Ambiguity score (target: <10%)
-- Instruction specificity (target: >90%)
-- Output format clarity (target: 100%)
-
-**Example Improvement:**
-
-\`\`\`
-Before: "Write a marketing email"
-After: "Write a marketing email for a SaaS product launch, targeting CTOs, with a professional tone, 150-200 words, including a clear CTA button"
+\`\`\`json
+{
+  "7d": {
+    "domain": "technical",
+    "scale": "team",
+    "urgency": "normal",
+    "complexity": "medium",
+    "resources": "standard",
+    "application": "content_generation",
+    "output": "markdown"
+  }
+}
 \`\`\`
 
-## Dimension 2: Context
+## Getting Started
 
-Context ensures the AI has sufficient background information to generate relevant outputs.
+To get started with the 7D framework:
 
-**Key Metrics:**
-- Context completeness (target: >85%)
-- Relevance score (target: >90%)
-- Background depth (target: appropriate to task)
-
-**Implementation:**
-The system automatically analyzes the prompt and suggests additional context elements:
-- Industry-specific terminology
-- Target audience details
-- Historical performance data
-- Competitive landscape
-
-## Dimension 3: Constraints
-
-Constraints define the boundaries and limitations of the AI's output.
-
-**Key Metrics:**
-- Constraint specificity (target: >95%)
-- Boundary clarity (target: 100%)
-- Compliance verification (target: 100%)
-
-**Types of Constraints:**
-- **Length**: Word count, character limits
-- **Style**: Tone, voice, formatting
-- **Content**: Topics to avoid, required elements
-- **Technical**: API limitations, output formats
-
-## Dimension 4: Creativity
-
-Creativity balances innovation with consistency, ensuring outputs are both original and aligned with brand guidelines.
-
-**Key Metrics:**
-- Innovation score (target: 70-85%)
-- Brand alignment (target: >95%)
-- Uniqueness factor (target: >60%)
-
-**Creativity Enhancement:**
-The system suggests creative elements while maintaining brand consistency:
-- Alternative phrasing approaches
-- Metaphor and analogy suggestions
-- Storytelling frameworks
-- Visual language integration
-
-## Dimension 5: Consistency
-
-Consistency ensures that similar prompts produce similar quality outputs across different contexts.
-
-**Key Metrics:**
-- Output variance (target: <15%)
-- Quality stability (target: >90%)
-- Brand voice consistency (target: >95%)
-
-**Consistency Mechanisms:**
-- Template standardization
-- Quality checkpoints
-- Automated validation
-- Performance tracking
-
-## Dimension 6: Completeness
-
-Completeness ensures that all necessary elements are included for successful execution.
-
-**Key Metrics:**
-- Requirement coverage (target: 100%)
-- Dependency identification (target: 100%)
-- Success criteria clarity (target: 100%)
-
-**Completeness Checklist:**
-- [ ] Clear objective statement
-- [ ] Required inputs specified
-- [ ] Output format defined
-- [ ] Success metrics included
-- [ ] Error handling specified
-- [ ] Fallback options provided
-
-## Dimension 7: Compliance
-
-Compliance ensures that prompts adhere to legal, ethical, and organizational standards.
-
-**Key Metrics:**
-- Legal compliance (target: 100%)
-- Ethical alignment (target: 100%)
-- Policy adherence (target: 100%)
-
-**Compliance Areas:**
-- Data privacy regulations
-- Industry standards
-- Company policies
-- Ethical AI guidelines
-
-## Implementation in PromptForge
-
-The 7D Engine is fully integrated into PromptForge's workflow:
-
-### 1. **Module Integration**
-Each of the 50 operational modules automatically applies the 7D framework:
-- M01-M10: Basic 7D implementation
-- M11-M25: Advanced 7D with industry-specific optimizations
-- M26-M40: Enterprise 7D with compliance automation
-- M41-M50: Custom 7D configurations
-
-### 2. **Real-time Optimization**
-The system continuously optimizes prompts as you type:
-- Live quality scoring
-- Instant improvement suggestions
-- Automated enhancement options
-- Performance predictions
-
-### 3. **Quality Gates**
-Every prompt must pass quality thresholds before export:
-- Minimum score: 80/100
-- All 7 dimensions must meet minimum standards
-- Automated quality validation
-- Manual override options for edge cases
-
-## Results and Metrics
-
-Since implementing the 7D Engine, PromptForge has achieved remarkable results:
-
-### **Efficiency Improvements**
-- **Time Reduction**: 85% faster prompt creation (4h → 30m)
-- **Quality Increase**: 40% improvement in output consistency
-- **Error Reduction**: 75% fewer prompt failures
-- **Scalability**: 10x increase in team productivity
-
-### **Quality Metrics**
-- **Average Score**: 87/100 (vs. industry average of 62)
-- **Consistency**: 94% output stability
-- **Compliance**: 100% regulatory adherence
-- **User Satisfaction**: 96% positive feedback
-
-### **Enterprise Impact**
-- **Cost Savings**: $50K+ annually per team
-- **Time to Market**: 60% faster deployment
-- **Risk Reduction**: 80% fewer compliance issues
-- **Team Growth**: 3x faster onboarding
+1. **Identify your domain**: Determine the specific field or industry context
+2. **Assess scale**: Consider the scope and complexity of your task
+3. **Set urgency**: Define the time sensitivity requirements
+4. **Evaluate complexity**: Determine the technical difficulty level
+5. **Review resources**: Assess available computational and human resources
+6. **Define application**: Specify the intended use case
+7. **Choose output format**: Select the desired output structure
 
 ## Conclusion
 
-The 7D Engine represents the future of prompt engineering—a systematic, measurable, and scalable approach that transforms intuition into science. By implementing this framework, organizations can achieve:
+The 7D framework provides a robust foundation for prompt engineering that ensures consistency, quality, and scalability. By following this structured approach, you can create more effective prompts and achieve better results from your AI interactions.
 
-- **Predictable Quality**: Every prompt meets established standards
-- **Operational Efficiency**: Dramatic time and cost savings
-- **Scalable Growth**: Consistent results across teams and projects
-- **Competitive Advantage**: Superior AI outputs that drive business value
-
-The transition from traditional prompt engineering to the 7D methodology isn't just an improvement—it's a fundamental shift that positions organizations for success in the AI-first economy.
-
-Ready to experience the 7D Engine? [Start your free trial](/generator) and see the transformation in action.
-  `,
-  relatedPosts: [
-    {
-      title: "Module M25: Advanced Content Strategy for Enterprise",
-      excerpt: "Deep dive into our most sophisticated content strategy module...",
-      slug: "module-m25-advanced-content-strategy",
-      domain: "Content Strategy",
-      readTime: "12 min"
+Ready to implement the 7D framework in your projects? [Get started with PromptForge™ v3](/docs) today.
+      `,
+      cover: "/blog/7d-framework-intro.jpg",
+      categories: ["Tutorial", "7D Framework"],
+      tags: ["prompt-engineering", "7d-framework", "ai-optimization"],
+      published_at: "2024-12-20T10:00:00Z",
+      updated_at: "2024-12-20T10:00:00Z",
+      author: {
+        name: "PromptForge Team",
+        avatar: "/authors/promptforge-team.jpg",
+        bio: "The PromptForge team consists of AI researchers and engineers dedicated to advancing prompt engineering practices.",
+      },
+      read_time: "8 min read",
     },
-    {
-      title: "Test Engine Deep Dive: From Simulation to Live GPT Testing",
-      excerpt: "Understanding the four quantifiable rubrics...",
-      slug: "test-engine-deep-dive-simulation-live-gpt",
-      domain: "Quality Assurance",
-      readTime: "10 min"
+    "optimizing-prompt-performance": {
+      slug: "optimizing-prompt-performance",
+      title: "Optimizing Prompt Performance: A Complete Guide",
+      excerpt: "Discover advanced techniques for improving prompt performance, including parameter tuning and quality validation strategies.",
+      content: `
+# Optimizing Prompt Performance: A Complete Guide
+
+Performance optimization is crucial for achieving the best results from your AI prompts. This comprehensive guide covers advanced techniques for improving prompt performance across different use cases.
+
+## Understanding Prompt Performance
+
+Prompt performance is measured by several key metrics:
+
+- **Accuracy**: How well the output matches the intended result
+- **Consistency**: Reliability across multiple runs
+- **Efficiency**: Resource usage and response time
+- **Relevance**: Alignment with the specific use case
+
+## Key Optimization Strategies
+
+### 1. Parameter Tuning
+
+Fine-tuning parameters is essential for optimal performance:
+
+\`\`\`json
+{
+  "temperature": 0.7,
+  "max_tokens": 1000,
+  "top_p": 0.9,
+  "frequency_penalty": 0.1,
+  "presence_penalty": 0.1
+}
+\`\`\`
+
+### 2. Context Management
+
+Proper context management ensures relevant and focused outputs:
+
+<Callout type="warning" title="Context Length">
+Be mindful of context length limits. Longer contexts don't always lead to better results.
+</Callout>
+
+### 3. Quality Validation
+
+Implement quality validation to ensure consistent outputs:
+
+- Automated scoring systems
+- Human review processes
+- A/B testing methodologies
+
+## Advanced Techniques
+
+### Chain-of-Thought Prompting
+
+Chain-of-thought prompting improves reasoning capabilities:
+
+\`\`\`text
+Let's think step by step:
+1. First, identify the key requirements
+2. Then, analyze the available options
+3. Finally, provide a reasoned recommendation
+\`\`\`
+
+### Few-Shot Learning
+
+Provide examples to improve performance:
+
+\`\`\`text
+Example 1: Input: "Write a product description" → Output: "Premium wireless headphones with noise cancellation..."
+Example 2: Input: "Create a marketing tagline" → Output: "Innovation that connects the world..."
+\`\`\`
+
+## Performance Monitoring
+
+### Key Metrics to Track
+
+1. **Response Time**: Measure how quickly prompts are processed
+2. **Token Usage**: Monitor computational resource consumption
+3. **Quality Scores**: Track output quality over time
+4. **User Satisfaction**: Collect feedback on prompt effectiveness
+
+### Monitoring Tools
+
+- Real-time dashboards
+- Automated alerting systems
+- Performance analytics
+- Cost tracking
+
+## Best Practices
+
+<Callout type="success" title="Best Practices">
+- Start with simple prompts and gradually add complexity
+- Test thoroughly before deploying to production
+- Monitor performance continuously
+- Iterate based on real-world feedback
+</Callout>
+
+## Conclusion
+
+Optimizing prompt performance is an ongoing process that requires careful attention to parameters, context, and quality validation. By following these strategies and continuously monitoring performance, you can achieve better results from your AI interactions.
+
+For more advanced optimization techniques, explore our [API documentation](/docs/api) and [test engine](/docs#test-engine).
+      `,
+      cover: "/blog/prompt-optimization.jpg",
+      categories: ["Performance", "Optimization"],
+      tags: ["performance", "optimization", "prompt-tuning"],
+      published_at: "2024-12-18T14:30:00Z",
+      updated_at: "2024-12-18T14:30:00Z",
+      author: {
+        name: "Alex Chen",
+        avatar: "/authors/alex-chen.jpg",
+        bio: "Alex is a senior AI engineer with expertise in prompt optimization and performance tuning.",
+      },
+      read_time: "12 min read",
     },
-    {
-      title: "Export Pipeline: From txt to Enterprise Bundle",
-      excerpt: "Comprehensive guide to our multi-format export system...",
-      slug: "export-pipeline-txt-enterprise-bundle",
-      domain: "Technical",
-      readTime: "9 min"
-    }
-  ]
+  };
+
+  return posts[slug] || null;
 };
 
-export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const [copied, setCopied] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+const getRelatedPosts = async (currentSlug: string, categories: string[]): Promise<BlogPost[]> => {
+  // Mock related posts - in production this would be based on categories/tags
+  const allPosts = await Promise.all([
+    getBlogPost("introduction-to-7d-framework"),
+    getBlogPost("optimizing-prompt-performance"),
+  ]);
 
-  // In Next.js 15, params is a Promise
-  const { slug } = await params;
+  return allPosts
+    .filter(post => post && post.slug !== currentSlug)
+    .slice(0, 3) as BlogPost[];
+};
 
-  // In real app, fetch article data based on slug
-  // For now, we'll use mock data, but in production this would be:
-  // const article = await fetchArticleBySlug(slug);
-  const article = mockArticle;
-  
-  // Log the slug for debugging (will be used in production)
-  console.log('Blog article requested for slug:', slug);
-
-  const handleCopyLink = async () => {
-    await navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+interface BlogPostPageProps {
+  params: {
+    slug: string;
   };
+}
 
-  const handleSectionClick = (sectionId: string) => {
-    setActiveSection(sectionId);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const post = await getBlogPost(params.slug);
+
+  if (!post) {
+    return {
+      title: "Post Not Found",
+    };
+  }
+
+  return {
+    title: `${post.title} — PromptForge™ v3 Blog`,
+    description: post.excerpt,
+    keywords: post.tags.join(", "),
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      publishedTime: post.published_at,
+      modifiedTime: post.updated_at,
+      authors: [post.author.name],
+      images: [
+        {
+          url: post.og_image || post.cover,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [post.og_image || post.cover],
+    },
+    alternates: {
+      canonical: post.canonical_url || `https://chatgpt-prompting.com/blog/${post.slug}`,
+    },
+    robots: post.noindex ? "noindex,nofollow" : "index,follow",
   };
+}
 
-  // Extract headings for Table of Contents
-  const headings = article.content
-    .split('\n')
-    .filter(line => line.startsWith('## '))
-    .map(line => {
-      const text = line.replace('## ', '');
-      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      return { text, id };
-    });
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const post = await getBlogPost(params.slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  const relatedPosts = await getRelatedPosts(params.slug, post.categories);
 
   return (
-    <main className="min-h-screen bg-black">
-      {/* Breadcrumb Navigation */}
-      <section className="py-6 bg-gray-900 border-b border-gray-800">
-        <div className="container mx-auto px-6">
-          <nav className="flex items-center space-x-2 text-sm text-gray-400">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-white">{article.title}</span>
-          </nav>
-        </div>
-      </section>
-
-      {/* Article Header */}
-      <section className="py-12 bg-gradient-to-b from-gray-900 to-black">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            {/* Back to Blog Button */}
-            <Link href="/blog">
-              <Button variant="ghost" className="text-[#d1a954] hover:text-[#e6c200] mb-6">
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <div className="border-b border-[#5a5a5a]/30 bg-[#0e0e0e]">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center gap-4 mb-4">
+            <Link
+              href="/blog"
+              className="inline-flex items-center text-[#d1a954] hover:text-[#d1a954]/80 transition-colors font-sans"
+            >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Blog
-              </Button>
             </Link>
-
-            {/* Article Meta */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Badge variant="secondary" className="bg-gray-800 text-[#d1a954] border-gray-700">
-                  {article.domain}
-                </Badge>
-                {article.vectors.map((vector, index) => (
-                  <Badge key={index} variant="outline" className="text-gray-300 border-gray-600">
-                    {vector}
-                  </Badge>
-                ))}
+          </div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-[#d1a954] rounded" />
+            <span className="font-mono font-bold text-[#d1a954] text-xl">PromptForge™ v3</span>
+          </div>
               </div>
             </div>
 
-            {/* Title and Subtitle */}
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 font-sans leading-tight">
-              {article.title}
-            </h1>
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-              {article.subtitle}
-            </p>
-
-            {/* Author and Meta Info */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-gray-400" />
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <article className="prose prose-invert max-w-none">
+              {/* Article Header */}
+              <header className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  {post.categories.map((category) => (
+                    <span
+                      key={category}
+                      className="px-2 py-1 bg-[#d1a954] text-black text-xs font-mono font-semibold rounded"
+                    >
+                      {category}
+                    </span>
+                  ))}
                 </div>
-                <div>
-                  <div className="text-white font-medium">{article.author.name}</div>
-                  <div className="text-gray-400 text-sm">Lead AI Engineer</div>
-                </div>
+                <h1 className="font-sans text-4xl font-bold text-white mb-4">
+                  {post.title}
+                </h1>
+                <p className="text-xl text-[#a0a0a0] font-sans mb-6">
+                  {post.excerpt}
+                </p>
+                <div className="flex items-center gap-6 text-sm text-[#a0a0a0] font-sans mb-6">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    <span>{post.author.name}</span>
               </div>
-              <div className="flex items-center gap-6 text-sm text-gray-400">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  {new Date(article.publishDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+                    <span>{new Date(post.published_at).toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
-                  {article.readTime}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCopyLink}
-                  className="text-gray-400 hover:text-[#d1a954]"
-                >
-                  {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-                </Button>
-              </div>
-            </div>
-
-            {/* Cover Image Placeholder */}
-            <div className="aspect-video bg-gray-800 rounded-lg mb-8 flex items-center justify-center">
-              <div className="text-gray-400 text-lg">Article Cover Image</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-12 bg-black">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Article Content */}
-            <div className="lg:col-span-3">
-              <article className="prose prose-invert prose-lg max-w-none">
-                {/* TL;DR Section */}
-                <div className="bg-gray-900 border-l-4 border-[#d1a954] p-6 mb-8 rounded-r-lg">
-                  <h3 className="text-[#d1a954] font-semibold mb-2">TL;DR</h3>
-                  <p className="text-gray-300 leading-relaxed">{article.excerpt}</p>
-                </div>
-
-                {/* Table of Contents */}
-                <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-                  <h3 className="text-white font-semibold mb-4">Table of Contents</h3>
-                  <nav className="space-y-2">
-                    {headings.map((heading, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleSectionClick(heading.id)}
-                        className={`block text-left w-full p-2 rounded transition-colors ${
-                          activeSection === heading.id
-                            ? 'bg-[#d1a954] text-black'
-                            : 'text-gray-300 hover:text-white hover:bg-gray-800'
-                        }`}
-                      >
-                        {heading.text}
-                      </button>
-                    ))}
-                  </nav>
-                </div>
-
-                {/* Article Body */}
-                <div className="text-gray-300 leading-relaxed space-y-6">
-                  {article.content.split('\n').map((line, index) => {
-                    if (line.startsWith('## ')) {
-                      const text = line.replace('## ', '');
-                      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                      return (
-                        <h2 key={index} id={id} className="text-2xl font-bold text-white mt-12 mb-6 pt-8 border-t border-gray-800">
-                          {text}
-                        </h2>
-                      );
-                    } else if (line.startsWith('### ')) {
-                      const text = line.replace('### ', '');
-                      return (
-                        <h3 key={index} className="text-xl font-semibold text-white mt-8 mb-4">
-                          {text}
-                        </h3>
-                      );
-                    } else if (line.startsWith('- ')) {
-                      const text = line.replace('- ', '');
-                      return (
-                        <li key={index} className="text-gray-300 ml-6">
-                          {text}
-                        </li>
-                      );
-                    } else if (line.startsWith('**')) {
-                      const text = line.replace(/\*\*/g, '');
-                      return (
-                        <p key={index} className="font-semibold text-white">
-                          {text}
-                        </p>
-                      );
-                    } else if (line.trim() === '') {
-                      return <div key={index} className="h-4"></div>;
-                    } else if (line.trim()) {
-                      return (
-                        <p key={index} className="text-gray-300 leading-relaxed">
-                          {line}
-                        </p>
-                      );
-                    }
-                    return null;
-                  })}
-                </div>
-
-                {/* Call to Action */}
-                <div className="bg-gradient-to-r from-[#d1a954] to-[#e6c200] rounded-lg p-8 mt-12 text-center">
-                  <h3 className="text-2xl font-bold text-black mb-4">
-                    Ready to Experience the 7D Engine?
-                  </h3>
-                  <p className="text-black/80 mb-6">
-                    Start creating enterprise-grade prompts in minutes, not hours
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button size="lg" className="bg-black text-white hover:bg-gray-800">
-                      Try Generator Free
-                    </Button>
-                    <Button size="lg" variant="outline" className="border-black text-black hover:bg-black hover:text-white">
-                      View All Modules
-                    </Button>
+                    <span>{post.read_time}</span>
                   </div>
                 </div>
-              </article>
+                <div className="flex items-center gap-4">
+                  <button className="flex items-center gap-2 px-4 py-2 bg-[#2a2a2a] border border-[#5a5a5a]/30 rounded-md text-white hover:bg-[#2a2a2a]/80 transition-colors font-sans text-sm">
+                    <Share2 className="w-4 h-4" />
+                    Share
+                  </button>
+                </div>
+              </header>
+
+              {/* Article Cover */}
+              <div className="relative h-64 md:h-96 mb-8 rounded-lg overflow-hidden">
+                <Image
+                  src={post.cover}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+
+              {/* Article Content */}
+              <div className="prose prose-invert max-w-none">
+                <div
+                  className="font-sans text-[#e0e0e0] leading-relaxed"
+                  dangerouslySetInnerHTML={{
+                    __html: post.content
+                      .replace(/```json\n([\s\S]*?)\n```/g, (match, code) => {
+                        return `<div class="code-block-wrapper"><pre><code class="language-json">${code}</code></pre></div>`;
+                      })
+                      .replace(/```text\n([\s\S]*?)\n```/g, (match, code) => {
+                        return `<div class="code-block-wrapper"><pre><code class="language-text">${code}</code></pre></div>`;
+                      })
+                      .replace(/```([\s\S]*?)```/g, (match, code) => {
+                        return `<div class="code-block-wrapper"><pre><code>${code}</code></pre></div>`;
+                      })
+                      .replace(/#{1,6}\s+(.+)/g, (match, heading) => {
+                        const level = match.match(/^#+/)?.[0].length || 1;
+                        return `<h${level} class="font-sans font-bold text-white mt-8 mb-4">${heading}</h${level}>`;
+                      })
+                      .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>')
+                      .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
+                      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[#d1a954] hover:text-[#d1a954]/80 transition-colors">$1</a>')
+                      .replace(/\n\n/g, '</p><p class="mb-4">')
+                      .replace(/^/, '<p class="mb-4">')
+                      .replace(/$/, '</p>'),
+                  }}
+                />
+            </div>
+
+              {/* Tags */}
+              <div className="mt-8 pt-8 border-t border-[#5a5a5a]/30">
+                <div className="flex items-center gap-2 mb-4">
+                  <Tag className="w-4 h-4 text-[#d1a954]" />
+                  <span className="font-sans font-medium text-white">Tags</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 bg-[#2a2a2a] border border-[#5a5a5a]/30 rounded-full text-[#a0a0a0] font-sans text-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </article>
+
+            {/* Related Posts */}
+            {relatedPosts.length > 0 && (
+              <section className="mt-12">
+                <h2 className="font-sans text-2xl font-bold text-white mb-6">
+                  Related Posts
+                        </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {relatedPosts.map((relatedPost) => (
+                    <article
+                      key={relatedPost.slug}
+                      className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg overflow-hidden hover:border-[#d1a954]/50 transition-all duration-200"
+                    >
+                      <div className="relative h-32 bg-gradient-to-r from-[#2a2a2a] to-[#1a1a1a]">
+                        <div className="absolute inset-0 bg-black/20" />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-sans text-sm font-semibold text-white mb-2 line-clamp-2">
+                          <Link
+                            href={`/blog/${relatedPost.slug}`}
+                            className="hover:text-[#d1a954] transition-colors"
+                          >
+                            {relatedPost.title}
+                          </Link>
+                        </h3>
+                        <p className="text-[#a0a0a0] font-sans text-xs line-clamp-2">
+                          {relatedPost.excerpt}
+                        </p>
+                </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
             </div>
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              {/* Author Box */}
-              <Card className="bg-gray-900 border-gray-800 mb-8">
-                <CardHeader>
-                  <h3 className="text-lg font-semibold text-white">About the Author</h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-gray-800 rounded-full mx-auto mb-3 flex items-center justify-center">
-                      <User className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <div className="text-white font-medium">{article.author.name}</div>
-                    <div className="text-gray-400 text-sm">{article.author.bio}</div>
+            <div className="sticky top-24 space-y-6">
+              {/* Author Bio */}
+              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-6">
+                <h3 className="font-sans text-lg font-semibold text-white mb-4">
+                  About the Author
+                </h3>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-[#d1a954] rounded-full" />
+                  <div>
+                    <h4 className="font-sans font-medium text-white">{post.author.name}</h4>
+                    <p className="text-[#a0a0a0] font-sans text-sm">{post.read_time}</p>
                   </div>
-                  <div className="flex justify-center space-x-3">
-                    <a href={article.author.social.twitter} className="text-gray-400 hover:text-[#d1a954] transition-colors">
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <a href={article.author.social.linkedin} className="text-gray-400 hover:text-[#d1a954] transition-colors">
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <a href={article.author.social.github} className="text-gray-400 hover:text-[#d1a954] transition-colors">
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+                {post.author.bio && (
+                  <p className="text-[#a0a0a0] font-sans text-sm">
+                    {post.author.bio}
+                  </p>
+                )}
+              </div>
 
-              {/* Related Posts */}
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <h3 className="text-lg font-semibold text-white">Related Posts</h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {article.relatedPosts.map((post, index) => (
-                      <div key={index} className="group cursor-pointer">
-                        <div className="text-sm text-gray-400 mb-1">{post.domain}</div>
-                        <div className="text-white group-hover:text-[#d1a954] transition-colors font-medium text-sm">
-                          {post.title}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">{post.readTime}</div>
-                      </div>
-                    ))}
+              {/* Table of Contents */}
+              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-6">
+                <h3 className="font-sans text-lg font-semibold text-white mb-4">
+                  Table of Contents
+                </h3>
+                <nav className="space-y-2">
+                  <a href="#introduction" className="block text-[#a0a0a0] hover:text-white transition-colors font-sans text-sm">
+                    Introduction
+                  </a>
+                  <a href="#framework" className="block text-[#a0a0a0] hover:text-white transition-colors font-sans text-sm">
+                    The 7D Framework
+                  </a>
+                  <a href="#benefits" className="block text-[#a0a0a0] hover:text-white transition-colors font-sans text-sm">
+                    Benefits
+                  </a>
+                  <a href="#implementation" className="block text-[#a0a0a0] hover:text-white transition-colors font-sans text-sm">
+                    Implementation
+                  </a>
+                  <a href="#conclusion" className="block text-[#a0a0a0] hover:text-white transition-colors font-sans text-sm">
+                    Conclusion
+                  </a>
+                </nav>
                   </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateArticleJSONLD({
+            headline: post.title,
+            description: post.excerpt,
+            url: `https://chatgpt-prompting.com/blog/${post.slug}`,
+            image: post.og_image || post.cover,
+            author: post.author.name,
+            datePublished: post.published_at,
+            dateModified: post.updated_at || post.published_at,
+          }))
+        }}
+      />
+    </div>
   );
+}
+
+export async function generateStaticParams() {
+  // In production, this would fetch all published blog post slugs
+  return [
+    { slug: "introduction-to-7d-framework" },
+    { slug: "optimizing-prompt-performance" },
+  ];
 }

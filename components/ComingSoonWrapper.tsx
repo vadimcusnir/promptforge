@@ -10,15 +10,28 @@ interface ComingSoonWrapperProps {
 
 export function ComingSoonWrapper({ children }: ComingSoonWrapperProps) {
   const pathname = usePathname();
-  const [isChecking, setIsChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  // Direct bypass for modules page, pricing page, and checkout pages - no access check needed
+  if (pathname === "/modules" || pathname.startsWith("/modules/") || pathname === "/pricing" || pathname.startsWith("/checkout/")) {
+    return <>{children}</>;
+  }
 
   useEffect(() => {
     const checkAccess = () => {
       try {
-        // Skip check for coming-soon page itself, API routes, blog pages, about page, and contact page
-        if (pathname === "/coming-soon" || pathname.startsWith("/api/") || pathname.startsWith("/blog") || pathname === "/about" || pathname === "/contact") {
+        // Skip check for coming-soon page itself, API routes, blog pages, about page, contact page, and modules page
+        if (pathname === "/coming-soon" || pathname.startsWith("/api/") || pathname.startsWith("/blog") || pathname === "/about" || pathname === "/contact" || pathname === "/modules") {
           console.log(`[ComingSoonWrapper] Skipping check for: ${pathname}`);
+          setIsAdmin(true);
+          setIsChecking(false);
+          return;
+        }
+
+        // TEMPORARY: Allow access to generator and pricing pages
+        if (pathname === "/generator" || pathname === "/pricing") {
+          console.log(`[ComingSoonWrapper] Allowing access to ${pathname}`);
           setIsAdmin(true);
           setIsChecking(false);
           return;

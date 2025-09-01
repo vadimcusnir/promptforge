@@ -2,13 +2,13 @@
 
 const vectors = [
   { id: "all", name: "All Modules", color: "text-white", count: 50 },
-  { id: "V1", name: "SaaS Marketing", color: "text-red-400", count: 8 },
-  { id: "V2", name: "Content & PR", color: "text-blue-400", count: 7 },
-  { id: "V3", name: "Sales & CRM", color: "text-green-400", count: 6 },
-  { id: "V4", name: "Product & UX", color: "text-yellow-400", count: 8 },
-  { id: "V5", name: "Operations", color: "text-purple-400", count: 7 },
-  { id: "V6", name: "Analytics", color: "text-pink-400", count: 6 },
-  { id: "V7", name: "Innovation", color: "text-cyan-400", count: 8 },
+  { id: "strategic", name: "Strategic", color: "text-blue-400", count: 25 },
+  { id: "rhetoric", name: "Rhetoric", color: "text-green-400", count: 18 },
+  { id: "content", name: "Content", color: "text-yellow-400", count: 22 },
+  { id: "analytics", name: "Analytics", color: "text-red-400", count: 20 },
+  { id: "branding", name: "Branding", color: "text-purple-400", count: 15 },
+  { id: "crisis", name: "Crisis", color: "text-pink-400", count: 8 },
+  { id: "cognitive", name: "Cognitive", color: "text-cyan-400", count: 12 },
 ];
 
 interface VectorFilterProps {

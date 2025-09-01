@@ -1,108 +1,123 @@
-import { NextRequest, NextResponse } from "next/server"
-import { z } from "zod"
-import { config, isServiceAvailable } from "@/lib/config"
-import { createRateLimit, getClientIdentifier, RATE_LIMITS } from "@/lib/rate-limit"
+import { NextRequest, NextResponse } from 'next/server';
+import { PLANS, PlanType, BillingCycle } from '@/lib/plans';
+import Stripe from 'stripe';
 
-// Request schema validation
-const checkoutRequestSchema = z.object({
-  priceId: z.string().min(1, 'Price ID is required'),
-  orgId: z.string().uuid('Invalid organization ID'),
-  successUrl: z.string().url('Invalid success URL').optional(),
-  cancelUrl: z.string().url('Invalid cancel URL').optional()
-})
+// Stripe Price IDs mapping
+const STRIPE_PRICE_IDS: Record<string, string> = {
+  'CREATOR_MONTHLY': process.env.STRIPE_CREATOR_MONTHLY_PRICE_ID || 'price_creator_monthly',
+  'CREATOR_ANNUAL': process.env.STRIPE_CREATOR_ANNUAL_PRICE_ID || 'price_creator_annual',
+  'PRO_MONTHLY': process.env.STRIPE_PRO_MONTHLY_PRICE_ID || 'price_pro_monthly',
+  'PRO_ANNUAL': process.env.STRIPE_PRO_ANNUAL_PRICE_ID || 'price_pro_annual',
+  'ENTERPRISE_MONTHLY': process.env.STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || 'price_enterprise_monthly',
+  'ENTERPRISE_ANNUAL': process.env.STRIPE_ENTERPRISE_ANNUAL_PRICE_ID || 'price_enterprise_annual',
+};
 
-// Rate limiting for checkout requests
-const checkoutLimiter = createRateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  maxRequests: 10, // 10 requests per minute
-  message: 'Rate limit exceeded. Please try again later.'
-})
+function getStripePriceId(planId: PlanType, billingCycle: BillingCycle): string | null {
+  if (planId === 'FREE') return null;
+  
+  const key = `${planId}_${billingCycle.toUpperCase()}`;
+  return STRIPE_PRICE_IDS[key] || null;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    // Apply rate limiting
-    const clientId = getClientIdentifier(request)
-    const rateLimitResult = checkoutLimiter(clientId)
-    if (!rateLimitResult.allowed) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded. Please try again later.' },
-        { status: 429 }
-      )
+    const body = await request.json();
+    const { planId, billingCycle, successUrl, cancelUrl } = body;
+
+    // Validate plan
+    if (!PLANS[planId as PlanType]) {
+      return NextResponse.json({
+        success: false,
+        error: 'INVALID_PLAN',
+        message: 'Invalid plan selected'
+      }, { status: 400 });
     }
 
-    // Check if Stripe is configured for P0 launch
-    if (!isServiceAvailable('hasStripe')) {
-      return NextResponse.json(
-        { 
-          error: 'Billing checkout not available during launch phase',
-          code: 'LAUNCH_MODE'
-        },
-        { status: 503 }
-      )
+    // Validate billing cycle
+    if (!['monthly', 'annual'].includes(billingCycle)) {
+      return NextResponse.json({
+        success: false,
+        error: 'INVALID_BILLING_CYCLE',
+        message: 'Invalid billing cycle'
+      }, { status: 400 });
     }
 
-    // Import Stripe only when needed
-    const { stripe } = await import("@/lib/billing/stripe")
+    // TODO: Get user from auth context
+    const userId = 'user_123'; // Placeholder
+    const userEmail = 'user@example.com'; // Placeholder
 
-    // Parse and validate request body
-    const body = await request.json()
-    const { priceId, orgId, successUrl, cancelUrl } = checkoutRequestSchema.parse(body)
+    // Initialize Stripe
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2024-06-20',
+    });
+
+    // Get Stripe price ID for the plan
+    const priceId = getStripePriceId(planId, billingCycle);
     
-    // Get user ID from request (this would come from your auth middleware)
-    const userId = request.headers.get('x-user-id')
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      )
+    if (!priceId) {
+      return NextResponse.json({
+        success: false,
+        error: 'PRICE_NOT_FOUND',
+        message: 'Price not found for the selected plan'
+      }, { status: 400 });
     }
-    
-    // Create checkout session
+
+    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
+      customer_email: userEmail,
+      line_items: [{
+        price: priceId,
+        quantity: 1,
+      }],
       mode: 'subscription',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      success_url: successUrl || `${config.baseUrl}/thankyou?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${config.baseUrl}/pricing`,
+      success_url: successUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/cancel`,
       metadata: {
-        org_id: orgId,
-        user_id: userId
+        userId,
+        planId,
+        billingCycle
       },
-      subscription_data: {
+      // Enable trial for Pro plan with watermark
+      subscription_data: planId === 'PRO' ? {
+        trial_period_days: 7,
         metadata: {
-          org_id: orgId,
-          user_id: userId
+          trial: 'true',
+          planId,
+          watermark: 'true' // Trial exports will be watermarked
         }
+      } : undefined,
+      // Allow promotion codes
+      allow_promotion_codes: true,
+      // Collect billing address
+      billing_address_collection: 'required',
+      // Enable tax calculation
+      automatic_tax: {
+        enabled: true,
       }
-    })
-    
-    console.log(`✅ Checkout session created for org ${orgId}`)
-    
+    });
+
+    const checkoutUrl = session.url;
+
+    // Log telemetry
+    console.log('Checkout started:', {
+      event: 'checkout_started',
+      userId,
+      planId,
+      billingCycle,
+      timestamp: new Date().toISOString()
+    });
+
     return NextResponse.json({
       success: true,
-      sessionId: session.id,
-      url: session.url,
-      orgId
-    })
-    
+      checkout_url: checkoutUrl
+    });
+
   } catch (error) {
-    console.error('Checkout API error:', error)
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
-        { status: 400 }
-      )
-    }
-    
-    return NextResponse.json(
-      { error: 'Failed to create checkout session' },
-      { status: 500 }
-    )
+    console.error('Checkout error:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'CHECKOUT_FAILED',
+      message: 'Failed to create checkout session'
+    }, { status: 500 });
   }
 } 

@@ -221,13 +221,118 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
-  // In newer Stripe versions, we need to get subscription ID from the subscription object
-  // For now, we'll skip this handler until we can determine the correct approach
-  console.log("Payment succeeded - subscription ID handling needs update for current Stripe version");
+  try {
+    const subscriptionId = invoice.subscription as string;
+    if (!subscriptionId) {
+      console.log("No subscription ID found in invoice");
+      return;
+    }
+
+    // Get subscription details
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    const userId = subscription.metadata.supabase_user_id;
+    const planId = subscription.metadata.plan_id;
+    const isTrial = subscription.metadata.trial === 'true';
+
+    if (!userId || !planId) {
+      console.error("Missing metadata in payment succeeded:", subscription.metadata);
+      return;
+    }
+
+    // If this is a trial conversion (first payment after trial), remove watermark
+    if (isTrial && subscription.status === 'active') {
+      console.log(`Trial converted to paid for user ${userId}, removing watermark`);
+      
+      // Update user entitlements to remove watermark
+      await supabase
+        .from("user_entitlements")
+        .update({
+          watermark: false,
+          trial_converted: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("user_id", userId);
+
+      // Log conversion event
+      console.log('Trial converted:', {
+        event: 'trial_converted',
+        userId,
+        planId,
+        subscriptionId,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Update subscription status
+    await supabase
+      .from("subscriptions")
+      .update({
+        status: subscription.status,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("stripe_subscription_id", subscriptionId);
+
+    console.log(`Payment succeeded for user ${userId}, subscription ${subscriptionId}`);
+  } catch (error) {
+    console.error("Error handling payment succeeded:", error);
+  }
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
-  // In newer Stripe versions, we need to get subscription ID from the subscription object
-  // For now, we'll skip this handler until we can determine the correct approach
-  console.log("Payment failed - subscription ID handling needs update for current Stripe version");
+  try {
+    const subscriptionId = invoice.subscription as string;
+    if (!subscriptionId) {
+      console.log("No subscription ID found in failed invoice");
+      return;
+    }
+
+    // Get subscription details
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    const userId = subscription.metadata.supabase_user_id;
+    const planId = subscription.metadata.plan_id;
+
+    if (!userId || !planId) {
+      console.error("Missing metadata in payment failed:", subscription.metadata);
+      return;
+    }
+
+    // If trial payment fails, degrade to Creator plan
+    if (subscription.metadata.trial === 'true') {
+      console.log(`Trial payment failed for user ${userId}, degrading to Creator plan`);
+      
+      // Update user to Creator plan entitlements
+      const creatorEntitlements = PLAN_ENTITLEMENTS.creator;
+      await supabase
+        .from("user_entitlements")
+        .update({
+          plan_code: "creator",
+          ...creatorEntitlements,
+          trial_failed: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("user_id", userId);
+
+      // Log trial failure event
+      console.log('Trial payment failed:', {
+        event: 'trial_payment_failed',
+        userId,
+        planId,
+        subscriptionId,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Update subscription status
+    await supabase
+      .from("subscriptions")
+      .update({
+        status: subscription.status,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("stripe_subscription_id", subscriptionId);
+
+    console.log(`Payment failed for user ${userId}, subscription ${subscriptionId}`);
+  } catch (error) {
+    console.error("Error handling payment failed:", error);
+  }
 }

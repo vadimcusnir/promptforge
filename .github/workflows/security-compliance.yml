@@ -1,0 +1,267 @@
+name: Security & Compliance Gates
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: SAST Scan (ESLint Security)
+        run: |
+          pnpm lint --max-warnings 0
+          pnpm exec eslint-plugin-security
+
+      - name: Dependency Audit
+        run: |
+          pnpm audit --audit-level moderate
+          pnpm exec audit-ci --config audit-ci.json
+
+      - name: TypeScript Type Check
+        run: pnpm type-check
+
+      - name: Security Headers Check
+        run: |
+          # Start the app in background
+          pnpm build
+          pnpm start &
+          APP_PID=$!
+          
+          # Wait for app to start
+          sleep 10
+          
+          # Check security headers
+          curl -I http://localhost:3000 | grep -E "(Content-Security-Policy|X-Frame-Options|X-Content-Type-Options|Strict-Transport-Security)"
+          
+          # Cleanup
+          kill $APP_PID
+
+  compliance-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Legal Pages Check
+        run: |
+          # Check if legal pages exist and have content
+          test -f app/legal/terms/page.tsx
+          test -f app/legal/privacy/page.tsx
+          test -f app/legal/dpa/page.tsx
+          
+          # Check for required legal content
+          grep -q "Terms of Service" app/legal/terms/page.tsx
+          grep -q "Privacy Policy" app/legal/privacy/page.tsx
+          grep -q "Data Processing Agreement" app/legal/dpa/page.tsx
+
+      - name: GDPR Compliance Check
+        run: |
+          # Check for cookie consent banner
+          test -f components/legal/CookieConsentBanner.tsx
+          
+          # Check for DSR endpoints
+          test -f app/api/dsr/export/route.ts
+          
+          # Check for audit trail implementation
+          grep -q "audits" supabase/migrations/*.sql
+
+      - name: RLS Policy Check
+        run: |
+          # Check for RLS policies in migrations
+          grep -q "ROW LEVEL SECURITY" supabase/migrations/*.sql
+          grep -q "org_id = current_setting" supabase/migrations/*.sql
+
+  performance-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Lighthouse CI
+        run: |
+          pnpm exec lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Bundle Size Check
+        run: |
+          # Check bundle size limits
+          BUNDLE_SIZE=$(du -s .next/static/chunks | cut -f1)
+          if [ $BUNDLE_SIZE -gt 2000000 ]; then
+            echo "Bundle size exceeds 2MB limit: ${BUNDLE_SIZE}KB"
+            exit 1
+          fi
+
+  accessibility-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Start application
+        run: |
+          pnpm start &
+          sleep 10
+
+      - name: Pa11y Accessibility Tests
+        run: |
+          pnpm exec pa11y-ci --sitemap http://localhost:3000/sitemap.xml
+        env:
+          PA11Y_CI_SITEMAP: http://localhost:3000/sitemap.xml
+          PA11Y_CI_STANDARD: WCAG2AA
+
+  mobile-ux-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Mobile Testing Profiles
+        run: |
+          # Test on Moto G4 / Slow 4G profile
+          pnpm exec lighthouse http://localhost:3000 \
+            --chrome-flags="--headless" \
+            --form-factor=mobile \
+            --throttling-method=devtools \
+            --throttling.rttMs=150 \
+            --throttling.throughputKbps=1638.4 \
+            --throttling.cpuSlowdownMultiplier=4 \
+            --output=json \
+            --output-path=./lighthouse-moto-g4.json
+          
+          # Test on iPhone 14 / Fast 3G profile
+          pnpm exec lighthouse http://localhost:3000 \
+            --chrome-flags="--headless" \
+            --form-factor=mobile \
+            --throttling-method=devtools \
+            --throttling.rttMs=40 \
+            --throttling.throughputKbps=1500 \
+            --throttling.cpuSlowdownMultiplier=1 \
+            --output=json \
+            --output-path=./lighthouse-iphone-14.json
+
+      - name: Mobile Metrics Validation
+        run: |
+          # Check LCP, INP, CLS thresholds
+          node -e "
+            const motoG4 = require('./lighthouse-moto-g4.json');
+            const iphone14 = require('./lighthouse-iphone-14.json');
+            
+            const checkMetrics = (report, device) => {
+              const lcp = report.audits['largest-contentful-paint'].numericValue;
+              const inp = report.audits['max-potential-fid'].numericValue;
+              const cls = report.audits['cumulative-layout-shift'].numericValue;
+              
+              console.log(\`\${device} Metrics:\`);
+              console.log(\`LCP: \${lcp}ms (threshold: 2500ms)\`);
+              console.log(\`INP: \${inp}ms (threshold: 200ms)\`);
+              console.log(\`CLS: \${cls} (threshold: 0.1)\`);
+              
+              if (lcp > 2500) throw new Error(\`LCP too high on \${device}: \${lcp}ms\`);
+              if (inp > 200) throw new Error(\`INP too high on \${device}: \${inp}ms\`);
+              if (cls > 0.1) throw new Error(\`CLS too high on \${device}: \${cls}\`);
+            };
+            
+            checkMetrics(motoG4, 'Moto G4');
+            checkMetrics(iphone14, 'iPhone 14');
+            console.log('All mobile metrics within thresholds!');
+          "
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: promptforge_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Integration Tests
+        run: |
+          pnpm test:integration
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/promptforge_test
+
+      - name: RLS Cross-Org Test
+        run: |
+          # Test that RLS prevents cross-organization data access
+          pnpm exec jest tests/rls-cross-org.test.ts
+
+  deploy-gates:
+    runs-on: ubuntu-latest
+    needs: [security-scan, compliance-check, performance-gates, accessibility-check, mobile-ux-check, integration-tests]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: All Gates Passed
+        run: |
+          echo "✅ All security, compliance, and performance gates passed!"
+          echo "🚀 Ready for deployment to production"

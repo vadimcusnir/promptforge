@@ -14,6 +14,9 @@ export default function robots(): MetadataRoute.Robots {
           "/coming-soon", // Conform documentației - Disallow: /coming-soon
           "/tmp/*",
         ],
+        allow: [
+          "/docs/*",
+        ],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

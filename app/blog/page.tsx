@@ -1,293 +1,316 @@
-"use client";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight, Calendar, User, Tag } from "lucide-react";
+import { generateBlogIndexJSONLD } from "@/lib/json-ld";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Search, Clock, User, ArrowRight, BookOpen } from "lucide-react";
+export const metadata: Metadata = {
+  title: "Blog — PromptForge™ v3",
+  description: "Latest insights, tutorials, and updates on prompt engineering, AI workflows, and the 7D framework",
+  keywords: "prompt engineering blog, AI tutorials, 7D framework, prompt optimization, AI workflows",
+  openGraph: {
+    title: "Blog — PromptForge™ v3",
+    description: "Latest insights, tutorials, and updates on prompt engineering, AI workflows, and the 7D framework",
+    type: "website",
+    images: [
+      {
+        url: "/og-blog.png",
+        width: 1200,
+        height: 630,
+        alt: "PromptForge™ v3 Blog",
+      },
+    ],
+  },
+  alternates: {
+    canonical: "https://chatgpt-prompting.com/blog",
+  },
+};
 
-// Mock data for demonstration
-const mockArticles = [
+// Mock blog posts data - in production this would come from a CMS or database
+const blogPosts = [
   {
-    id: 1,
-    title: "How the 7D Engine Revolutionizes Prompt Engineering",
-    excerpt: "Discover how our proprietary 7D methodology transforms complex prompt creation into a systematic, repeatable process that guarantees quality and consistency.",
-    coverImage: "/blog/7d-engine-cover.jpg",
-    domain: "AI Engineering",
-    vectors: ["Clarity", "Execution", "Business Fit"],
-    author: "Alex Chen",
-    readTime: "8 min",
-    publishDate: "2024-08-25",
-    slug: "7d-engine-revolutionizes-prompt-engineering"
+    slug: "introduction-to-7d-framework",
+    title: "Introduction to the 7D Framework for Prompt Engineering",
+    excerpt: "Learn how the 7D framework revolutionizes prompt engineering with structured parameters for consistent, high-quality AI outputs.",
+    cover: "/blog/7d-framework-intro.jpg",
+    categories: ["Tutorial", "7D Framework"],
+    tags: ["prompt-engineering", "7d-framework", "ai-optimization"],
+    published_at: "2024-12-20T10:00:00Z",
+    author: {
+      name: "PromptForge Team",
+      avatar: "/authors/promptforge-team.jpg",
+    },
+    read_time: "8 min read",
   },
   {
-    id: 2,
-    title: "The SKRE Design System: Dark Industrial Aesthetics in Web Design",
-    excerpt: "Explore how our 70/20/10 color palette creates a premium, industrial feel that enhances user experience while maintaining perfect readability.",
-    coverImage: "/blog/skre-design-system.jpg",
-    domain: "Design",
-    vectors: ["Visual", "User Experience", "Branding"],
-    author: "Maria Rodriguez",
-    readTime: "6 min",
-    publishDate: "2024-08-24",
-    slug: "skre-design-system-dark-industrial-aesthetics"
+    slug: "optimizing-prompt-performance",
+    title: "Optimizing Prompt Performance: A Complete Guide",
+    excerpt: "Discover advanced techniques for improving prompt performance, including parameter tuning and quality validation strategies.",
+    cover: "/blog/prompt-optimization.jpg",
+    categories: ["Performance", "Optimization"],
+    tags: ["performance", "optimization", "prompt-tuning"],
+    published_at: "2024-12-18T14:30:00Z",
+    author: {
+      name: "Alex Chen",
+      avatar: "/authors/alex-chen.jpg",
+    },
+    read_time: "12 min read",
   },
   {
-    id: 3,
-    title: "Module M25: Advanced Content Strategy for Enterprise",
-    excerpt: "Deep dive into our most sophisticated content strategy module, designed for enterprise teams requiring scalable, measurable content operations.",
-    coverImage: "/blog/module-m25-content-strategy.jpg",
-    domain: "Content Strategy",
-    vectors: ["Strategy", "Execution", "Measurement"],
-    author: "David Kim",
-    readTime: "12 min",
-    publishDate: "2024-08-23",
-    slug: "module-m25-advanced-content-strategy"
+    slug: "api-integration-best-practices",
+    title: "API Integration Best Practices for PromptForge",
+    excerpt: "Learn how to effectively integrate PromptForge APIs into your applications with real-world examples and best practices.",
+    cover: "/blog/api-integration.jpg",
+    categories: ["API", "Integration"],
+    tags: ["api", "integration", "best-practices"],
+    published_at: "2024-12-15T09:15:00Z",
+    author: {
+      name: "Sarah Johnson",
+      avatar: "/authors/sarah-johnson.jpg",
+    },
+    read_time: "10 min read",
   },
   {
-    id: 4,
-    title: "Entitlement Gating: Building Premium User Experiences",
-    excerpt: "Learn how we implement sophisticated gating mechanisms that provide value at every tier while encouraging upgrades through strategic feature reveals.",
-    coverImage: "/blog/entitlement-gating.jpg",
-    domain: "Product Design",
-    vectors: ["User Experience", "Business Model", "Conversion"],
-    author: "Sarah Johnson",
-    readTime: "7 min",
-    publishDate: "2024-08-22",
-    slug: "entitlement-gating-premium-user-experiences"
+    slug: "understanding-prompt-scoring",
+    title: "Understanding Prompt Scoring and Quality Metrics",
+    excerpt: "Deep dive into how PromptForge evaluates prompt quality and what metrics matter most for your use cases.",
+    cover: "/blog/prompt-scoring.jpg",
+    categories: ["Quality", "Metrics"],
+    tags: ["scoring", "quality-metrics", "evaluation"],
+    published_at: "2024-12-12T16:45:00Z",
+    author: {
+      name: "Dr. Michael Rodriguez",
+      avatar: "/authors/michael-rodriguez.jpg",
+    },
+    read_time: "15 min read",
   },
   {
-    id: 5,
-    title: "Test Engine Deep Dive: From Simulation to Live GPT Testing",
-    excerpt: "Understanding the four quantifiable rubrics that ensure every prompt meets our ≥80 quality threshold before reaching production.",
-    coverImage: "/blog/test-engine-deep-dive.jpg",
-    domain: "Quality Assurance",
-    vectors: ["Testing", "Quality", "Validation"],
-    author: "Michael Chen",
-    readTime: "10 min",
-    publishDate: "2024-08-21",
-    slug: "test-engine-deep-dive-simulation-live-gpt"
+    slug: "export-pipeline-deep-dive",
+    title: "Export Pipeline Deep Dive: From Prompt to Production",
+    excerpt: "Explore the complete export pipeline that transforms your prompts into production-ready formats with quality validation.",
+    cover: "/blog/export-pipeline.jpg",
+    categories: ["Export", "Production"],
+    tags: ["export", "pipeline", "production"],
+    published_at: "2024-12-10T11:20:00Z",
+    author: {
+      name: "Emma Wilson",
+      avatar: "/authors/emma-wilson.jpg",
+    },
+    read_time: "9 min read",
   },
   {
-    id: 6,
-    title: "Export Pipeline: From txt to Enterprise Bundle",
-    excerpt: "Comprehensive guide to our multi-format export system, including manifest generation, checksum validation, and enterprise bundle creation.",
-    coverImage: "/blog/export-pipeline-guide.jpg",
-    domain: "Technical",
-    vectors: ["Export", "Integration", "Enterprise"],
-    author: "Lisa Wang",
-    readTime: "9 min",
-    publishDate: "2024-08-20",
-    slug: "export-pipeline-txt-enterprise-bundle"
-  }
+    slug: "prompt-engineering-trends-2024",
+    title: "Prompt Engineering Trends to Watch in 2024",
+    excerpt: "Stay ahead of the curve with our analysis of emerging trends in prompt engineering and AI workflow optimization.",
+    cover: "/blog/trends-2024.jpg",
+    categories: ["Trends", "Analysis"],
+    tags: ["trends", "2024", "future-of-ai"],
+    published_at: "2024-12-08T13:00:00Z",
+    author: {
+      name: "David Kim",
+      avatar: "/authors/david-kim.jpg",
+    },
+    read_time: "7 min read",
+  },
 ];
 
-const recommendedArticles = [
-  mockArticles[0],
-  mockArticles[2],
-  mockArticles[4]
+const categories = [
+  { name: "All", slug: "all", count: blogPosts.length },
+  { name: "Tutorial", slug: "tutorial", count: 1 },
+  { name: "Performance", slug: "performance", count: 1 },
+  { name: "API", slug: "api", count: 1 },
+  { name: "Quality", slug: "quality", count: 1 },
+  { name: "Export", slug: "export", count: 1 },
+  { name: "Trends", slug: "trends", count: 1 },
 ];
-
-const domains = ["All", "AI Engineering", "Design", "Content Strategy", "Product Design", "Quality Assurance", "Technical"];
-const vectors = ["All", "Clarity", "Execution", "Business Fit", "Visual", "User Experience", "Strategy", "Measurement", "Testing", "Quality", "Export", "Integration"];
 
 export default function BlogPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDomain, setSelectedDomain] = useState("All");
-  const [selectedVector, setSelectedVector] = useState("All");
-
-  const filteredArticles = mockArticles.filter(article => {
-    const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         article.author.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesDomain = selectedDomain === "All" || article.domain === selectedDomain;
-    const matchesVector = selectedVector === "All" || article.vectors.includes(selectedVector);
-    
-    return matchesSearch && matchesDomain && matchesVector;
-  });
-
   return (
-    <main className="min-h-screen bg-black">
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900 border-b border-gray-800">
-        <div className="container mx-auto px-6 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 font-sans">
-              Blog <span className="text-[#d1a954]">PromptForge™</span>
-            </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Insights, strategies, and deep dives into AI prompt engineering, 
-              design systems, and enterprise-grade workflows
-            </p>
-            <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
-              <BookOpen className="w-4 h-4" />
-              <span>50+ Articles</span>
-              <span>•</span>
-              <span>Expert Contributors</span>
-              <span>•</span>
-              <span>Weekly Updates</span>
-            </div>
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <div className="border-b border-[#5a5a5a]/30 bg-[#0e0e0e]">
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-[#d1a954] rounded" />
+            <span className="font-mono font-bold text-[#d1a954] text-xl">PromptForge™ v3</span>
           </div>
-        </div>
-      </section>
-
-      {/* Filtering and Search */}
-      <section className="py-8 bg-gray-900 border-b border-gray-800">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="Search articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-400"
-              />
-            </div>
-
-            {/* Filters */}
-            <div className="flex flex-wrap gap-3">
-              <select
-                value={selectedDomain}
-                onChange={(e) => setSelectedDomain(e.target.value)}
-                className="px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md text-sm"
-              >
-                {domains.map(domain => (
-                  <option key={domain} value={domain}>{domain}</option>
-                ))}
-              </select>
-              <select
-                value={selectedVector}
-                onChange={(e) => setSelectedVector(e.target.value)}
-                className="px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md text-sm"
-              >
-                {vectors.map(vector => (
-                  <option key={vector} value={vector}>{vector}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-12 bg-black">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Articles Grid */}
-            <div className="lg:col-span-3">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {filteredArticles.map((article) => (
-                  <Card key={article.id} className="bg-gray-900 border-gray-800 hover:border-[#d1a954] transition-all duration-300 hover:shadow-lg hover:shadow-[#d1a954]/10">
-                    <div className="aspect-video bg-gray-800 rounded-t-lg mb-4 flex items-center justify-center">
-                      <div className="text-gray-400 text-sm">Cover Image</div>
-                    </div>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary" className="bg-gray-800 text-[#d1a954] border-gray-700">
-                          {article.domain}
-                        </Badge>
-                        {article.vectors.slice(0, 2).map((vector, index) => (
-                          <Badge key={index} variant="outline" className="text-gray-300 border-gray-600">
-                            {vector}
-                          </Badge>
-                        ))}
-                      </div>
-                      <CardTitle className="text-xl text-white hover:text-[#d1a954] transition-colors cursor-pointer">
-                        {article.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <CardDescription className="text-gray-300 mb-4 line-clamp-3">
-                        {article.excerpt}
-                      </CardDescription>
-                      <div className="flex items-center justify-between text-sm text-gray-400">
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-1">
-                            <User className="w-3 h-3" />
-                            {article.author}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {article.readTime}
-                          </div>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-[#d1a954] hover:text-[#e6c200] hover:bg-[#d1a954]/10"
-                        >
-                          Read More <ArrowRight className="w-3 h-3 ml-1" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {filteredArticles.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="text-gray-400 text-lg mb-2">No articles found</div>
-                  <div className="text-gray-500">Try adjusting your search or filters</div>
-                </div>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              {/* Recommended Articles */}
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-                <h3 className="text-lg font-semibold text-white mb-4">Recommended</h3>
-                <div className="space-y-4">
-                  {recommendedArticles.map((article) => (
-                    <div key={article.id} className="group cursor-pointer">
-                      <div className="text-sm text-gray-400 mb-1">{article.domain}</div>
-                      <div className="text-white group-hover:text-[#d1a954] transition-colors font-medium">
-                        {article.title}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">{article.readTime}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Newsletter CTA */}
-              <div className="bg-gradient-to-r from-[#d1a954] to-[#e6c200] rounded-lg p-6 text-center">
-                <h3 className="text-lg font-semibold text-black mb-2">Stay Updated</h3>
-                <p className="text-black/80 text-sm mb-4">
-                  Get the latest insights on AI prompt engineering
-                </p>
-                <Button className="w-full bg-black text-white hover:bg-gray-800">
-                  Subscribe to Newsletter
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Bottom CTA */}
-      <section className="py-20 bg-gray-900 border-t border-gray-800">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Transform Your AI Workflow?
-          </h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Experience the power of 50+ operational modules and the 7D engine
+          <h1 className="font-sans text-4xl font-bold text-white mb-4">
+            Blog
+          </h1>
+          <p className="text-xl text-[#a0a0a0] font-sans max-w-3xl">
+            Latest insights, tutorials, and updates on prompt engineering, AI workflows, and the 7D framework
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#d1a954] text-black hover:bg-[#e6c200]">
-              Try Generator Free
-            </Button>
-            <Button size="lg" variant="outline" className="border-[#d1a954] text-[#d1a954] hover:bg-[#d1a954] hover:text-black">
-              View Modules
-            </Button>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 space-y-6">
+              {/* Categories */}
+              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-6">
+                <h2 className="font-sans text-lg font-semibold text-white mb-4">
+                  Categories
+                </h2>
+                <nav className="space-y-2">
+                  {categories.map((category) => (
+                    <Link
+                      key={category.slug}
+                      href={`/blog?category=${category.slug}`}
+                      className="flex items-center justify-between text-[#a0a0a0] hover:text-white transition-colors font-sans text-sm"
+                    >
+                      <span>{category.name}</span>
+                      <span className="text-xs bg-[#2a2a2a] px-2 py-1 rounded">
+                        {category.count}
+                      </span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Newsletter */}
+              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg p-6">
+                <h2 className="font-sans text-lg font-semibold text-white mb-4">
+                  Stay Updated
+                </h2>
+                <p className="text-[#a0a0a0] font-sans text-sm mb-4">
+                  Get the latest posts delivered to your inbox.
+                </p>
+                <div className="space-y-3">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#5a5a5a]/30 rounded-md text-white placeholder-[#a0a0a0] font-sans text-sm focus:outline-none focus:border-[#d1a954]"
+                  />
+                  <button className="w-full bg-[#d1a954] text-black px-4 py-2 rounded-md font-sans font-medium text-sm hover:bg-[#d1a954]/90 transition-colors">
+                    Subscribe
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            {/* Featured Post */}
+            <div className="mb-12">
+              <div className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg overflow-hidden">
+                <div className="relative h-64 bg-gradient-to-r from-[#d1a954]/20 to-[#d1a954]/10">
+                  <div className="absolute inset-0 bg-black/40" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="px-2 py-1 bg-[#d1a954] text-black text-xs font-mono font-semibold rounded">
+                        FEATURED
+                      </span>
+                      <span className="text-[#d1a954] text-xs font-sans">
+                        {blogPosts[0].categories[0]}
+                      </span>
+                    </div>
+                    <h2 className="font-sans text-2xl font-bold text-white mb-2">
+                      {blogPosts[0].title}
+                    </h2>
+                    <p className="text-[#a0a0a0] font-sans text-sm mb-4 line-clamp-2">
+                      {blogPosts[0].excerpt}
+                    </p>
+                    <Link
+                      href={`/blog/${blogPosts[0].slug}`}
+                      className="inline-flex items-center text-[#d1a954] hover:text-[#d1a954]/80 transition-colors font-sans text-sm"
+                    >
+                      Read more <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Blog Posts Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              {blogPosts.slice(1).map((post) => (
+                <article
+                  key={post.slug}
+                  className="bg-[#1a1a1a] border border-[#5a5a5a]/30 rounded-lg overflow-hidden hover:border-[#d1a954]/50 transition-all duration-200"
+                >
+                  <div className="relative h-48 bg-gradient-to-r from-[#2a2a2a] to-[#1a1a1a]">
+                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute top-4 left-4">
+                      <span className="px-2 py-1 bg-[#d1a954] text-black text-xs font-mono font-semibold rounded">
+                        {post.categories[0]}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-sans text-lg font-semibold text-white mb-2 line-clamp-2">
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="hover:text-[#d1a954] transition-colors"
+                      >
+                        {post.title}
+                      </Link>
+                    </h3>
+                    <p className="text-[#a0a0a0] font-sans text-sm mb-4 line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-[#a0a0a0] font-sans">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <User className="w-3 h-3" />
+                          <span>{post.author.name}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <span>{post.read_time}</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            <div className="flex items-center justify-center space-x-2">
+              <button
+                disabled
+                className="px-3 py-2 bg-[#2a2a2a] border border-[#5a5a5a]/30 rounded-md text-[#a0a0a0] font-sans text-sm cursor-not-allowed"
+              >
+                Previous
+              </button>
+              <button className="px-3 py-2 bg-[#d1a954] text-black rounded-md font-sans font-medium text-sm">
+                1
+              </button>
+              <button className="px-3 py-2 bg-[#2a2a2a] border border-[#5a5a5a]/30 rounded-md text-white hover:bg-[#2a2a2a]/80 font-sans text-sm">
+                2
+              </button>
+              <button className="px-3 py-2 bg-[#2a2a2a] border border-[#5a5a5a]/30 rounded-md text-white hover:bg-[#2a2a2a]/80 font-sans text-sm">
+                3
+              </button>
+              <button className="px-3 py-2 bg-[#2a2a2a] border border-[#5a5a5a]/30 rounded-md text-white hover:bg-[#2a2a2a]/80 font-sans text-sm">
+                Next
+              </button>
+            </div>
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBlogIndexJSONLD({
+            title: "Blog — PromptForge™ v3",
+            description: "Latest insights, tutorials, and updates on prompt engineering, AI workflows, and the 7D framework",
+            url: "https://chatgpt-prompting.com/blog",
+            posts: blogPosts.map(post => ({
+              title: post.title,
+              url: `https://chatgpt-prompting.com/blog/${post.slug}`,
+              publishedAt: post.published_at,
+              author: post.author.name,
+              excerpt: post.excerpt,
+            }))
+          }))
+        }}
+      />
+    </div>
   );
 }

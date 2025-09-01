@@ -3,15 +3,26 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { VECTORS, type PromptModule } from "@/types/promptforge";
+import { Module } from "@/lib/modules";
 import { useState } from "react";
 import { Eye, Settings, Target, BarChart3 } from "lucide-react";
 
+// Define vectors mapping for the new module system
+const VECTORS = {
+  'strategic': { id: 'strategic', name: 'Strategic', description: 'Strategic planning and positioning', color: '#3B82F6' },
+  'rhetoric': { id: 'rhetoric', name: 'Rhetoric', description: 'Persuasive communication and argumentation', color: '#10B981' },
+  'content': { id: 'content', name: 'Content', description: 'Content creation and management', color: '#F59E0B' },
+  'analytics': { id: 'analytics', name: 'Analytics', description: 'Data analysis and insights', color: '#EF4444' },
+  'branding': { id: 'branding', name: 'Branding', description: 'Brand identity and positioning', color: '#8B5CF6' },
+  'crisis': { id: 'crisis', name: 'Crisis', description: 'Crisis management and response', color: '#DC2626' },
+  'cognitive': { id: 'cognitive', name: 'Cognitive', description: 'Cognitive psychology and behavior', color: '#06B6D4' }
+};
+
 interface ModuleCardProps {
-  module: PromptModule;
+  module: Module;
   isSelected: boolean;
-  onSelect: (moduleId: number) => void;
-  onViewDetails: (moduleId: number) => void;
+  onSelect: (moduleId: string) => void;
+  onViewDetails: (moduleId: string) => void;
   vectorColor?: string;
 }
 
@@ -40,7 +51,7 @@ export function ModuleCard({
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-xs font-bold">
-            M{module.id.toString().padStart(2, "0")}
+            {module.id}
           </Badge>
           <div className="flex gap-1">
             {module.vectors.map((v) => (
@@ -52,7 +63,7 @@ export function ModuleCard({
                   color: VECTORS[v as keyof typeof VECTORS]?.color || "#6b7280",
                 }}
               >
-                V{v}
+                {v.charAt(0).toUpperCase() + v.slice(1)}
               </Badge>
             ))}
           </div>
@@ -65,11 +76,11 @@ export function ModuleCard({
       </div>
 
       <h4 className="text-lg font-bold text-foreground mb-2 leading-tight break-words line-clamp-2">
-        {module.name}
+        {module.title}
       </h4>
 
       <p className="text-sm text-muted-foreground mb-4 line-clamp-2 break-words leading-relaxed">
-        {module.description}
+        {module.summary}
       </p>
 
       {isExpanded && (
@@ -78,11 +89,11 @@ export function ModuleCard({
             <div className="flex items-center gap-2 mb-1">
               <Settings className="w-4 h-4 text-blue-400" />
               <span className="text-xs font-semibold text-foreground">
-                ⚙️ Specification
+                ⚙️ Difficulty
               </span>
             </div>
             <p className="text-xs text-muted-foreground line-clamp-3 pl-6">
-              {module.spec}
+              Level {module.difficulty}/5 - {module.minPlan} plan required
             </p>
           </div>
 
@@ -90,11 +101,11 @@ export function ModuleCard({
             <div className="flex items-center gap-2 mb-1">
               <Target className="w-4 h-4 text-green-400" />
               <span className="text-xs font-semibold text-foreground">
-                📋 Expected Output
+                📋 Output Formats
               </span>
             </div>
             <p className="text-xs text-muted-foreground line-clamp-2 pl-6">
-              {module.output}
+              {module.outputs.join(', ')}
             </p>
           </div>
 

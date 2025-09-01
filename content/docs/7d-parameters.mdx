@@ -1,0 +1,232 @@
+---
+title: "7D Parameters"
+description: "Learn about the 7D framework for structured prompt engineering"
+sidebar_order: 2
+---
+
+# 7D Parameters
+
+The 7D framework is the foundation of PromptForge™ v3, providing seven key dimensions that ensure consistent and effective prompt engineering across all modules.
+
+## The Seven Dimensions
+
+### 1. Domain
+**Purpose**: Defines the specific field or industry context for the prompt.
+
+**Options**:
+- `generic`: General-purpose prompts
+- `technical`: Technical documentation and code
+- `marketing`: Marketing and sales content
+- `education`: Educational and training materials
+- `healthcare`: Medical and health-related content
+- `finance`: Financial and business content
+
+**Example**:
+```json
+{
+  "domain": "technical",
+  "description": "Prompts optimized for technical documentation and code generation"
+}
+```
+
+### 2. Scale
+**Purpose**: Determines the scope and complexity of the task.
+
+**Options**:
+- `individual`: Single-user, personal tasks
+- `team`: Small team collaboration
+- `department`: Department-wide initiatives
+- `organization`: Enterprise-wide deployment
+- `public`: Public-facing applications
+
+**Example**:
+```json
+{
+  "scale": "team",
+  "description": "Prompts designed for team collaboration and shared workflows"
+}
+```
+
+### 3. Urgency
+**Purpose**: Sets the time sensitivity and priority level.
+
+**Options**:
+- `low`: No immediate deadline
+- `normal`: Standard project timeline
+- `high`: Tight deadline, priority task
+- `critical`: Emergency or time-sensitive situation
+
+**Example**:
+```json
+{
+  "urgency": "normal",
+  "description": "Standard project timeline with regular milestones"
+}
+```
+
+### 4. Complexity
+**Purpose**: Defines the technical difficulty and sophistication level.
+
+**Options**:
+- `simple`: Basic, straightforward tasks
+- `medium`: Moderate complexity with some technical requirements
+- `complex`: Advanced tasks requiring expertise
+- `expert`: Highly specialized, expert-level work
+
+**Example**:
+```json
+{
+  "complexity": "medium",
+  "description": "Moderate complexity with clear requirements and some technical depth"
+}
+```
+
+### 5. Resources
+**Purpose**: Specifies available computational and human resources.
+
+**Options**:
+- `minimal`: Limited resources, basic setup
+- `standard`: Typical resources for most tasks
+- `enhanced`: Above-average resources and capabilities
+- `premium`: Maximum resources and advanced features
+
+**Example**:
+```json
+{
+  "resources": "standard",
+  "description": "Standard computational resources and typical team capabilities"
+}
+```
+
+### 6. Application
+**Purpose**: Defines the intended use case or deployment scenario.
+
+**Options**:
+- `prompt_engineering`: Core prompt development
+- `content_generation`: Content creation and optimization
+- `data_analysis`: Data processing and analysis
+- `automation`: Workflow automation and integration
+- `research`: Research and experimentation
+
+**Example**:
+```json
+{
+  "application": "content_generation",
+  "description": "Prompts optimized for content creation and optimization workflows"
+}
+```
+
+### 7. Output
+**Purpose**: Specifies the desired format and structure of results.
+
+**Options**:
+- `text`: Plain text output
+- `markdown`: Markdown-formatted content
+- `json`: Structured JSON data
+- `html`: HTML-formatted content
+- `bundle`: Multi-format bundle with multiple outputs
+
+**Example**:
+```json
+{
+  "output": "bundle",
+  "description": "Multi-format output including text, markdown, and JSON versions"
+}
+```
+
+## Using 7D Parameters
+
+### Basic Configuration
+
+```json
+{
+  "7d": {
+    "domain": "technical",
+    "scale": "team",
+    "urgency": "normal",
+    "complexity": "medium",
+    "resources": "standard",
+    "application": "content_generation",
+    "output": "markdown"
+  }
+}
+```
+
+### Advanced Configuration
+
+```json
+{
+  "7d": {
+    "domain": "marketing",
+    "scale": "organization",
+    "urgency": "high",
+    "complexity": "complex",
+    "resources": "premium",
+    "application": "automation",
+    "output": "bundle"
+  },
+  "customizations": {
+    "tone": "professional",
+    "style": "conversational",
+    "length": "medium"
+  }
+}
+```
+
+## Best Practices
+
+1. **Start Simple**: Begin with basic 7D configurations and refine based on results
+2. **Match Context**: Ensure the domain matches your specific use case
+3. **Consider Resources**: Align complexity with available resources
+4. **Plan Output**: Choose output format based on downstream requirements
+5. **Iterate**: Use the test engine to validate and refine your 7D configuration
+
+## Validation Rules
+
+The 7D framework includes built-in validation to ensure consistency:
+
+- All seven dimensions must be specified
+- Values must match predefined options
+- Combinations are validated for compatibility
+- Output format must be supported by the selected module
+
+## Examples
+
+### Technical Documentation
+```json
+{
+  "domain": "technical",
+  "scale": "team",
+  "urgency": "normal",
+  "complexity": "medium",
+  "resources": "standard",
+  "application": "content_generation",
+  "output": "markdown"
+}
+```
+
+### Marketing Campaign
+```json
+{
+  "domain": "marketing",
+  "scale": "department",
+  "urgency": "high",
+  "complexity": "complex",
+  "resources": "enhanced",
+  "application": "automation",
+  "output": "bundle"
+}
+```
+
+### Educational Content
+```json
+{
+  "domain": "education",
+  "scale": "organization",
+  "urgency": "low",
+  "complexity": "simple",
+  "resources": "standard",
+  "application": "content_generation",
+  "output": "html"
+}
+```

@@ -21,6 +21,7 @@ export interface Entitlements {
 
 export interface EntitlementStatus {
   entitlements: Entitlements | null
+  userPlan: PlanType | null
   isLoading: boolean
   error: string | null
   hasEntitlement: (flag: keyof Entitlements) => boolean
@@ -61,6 +62,7 @@ const FEATURE_PLAN_MAP: Record<keyof Entitlements, PlanType> = {
 
 export function useEntitlements(orgId?: string): EntitlementStatus {
   const [entitlements, setEntitlements] = useState<Entitlements | null>(null)
+  const [userPlan, setUserPlan] = useState<PlanType | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { user } = useAuth()
@@ -76,7 +78,7 @@ export function useEntitlements(orgId?: string): EntitlementStatus {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch(`/api/entitlements?orgId=${orgId}`, {
+      const response = await fetch('/api/entitlements', {
         headers: {
           'x-user-id': user.id,
           'Content-Type': 'application/json'
@@ -89,8 +91,9 @@ export function useEntitlements(orgId?: string): EntitlementStatus {
 
       const data = await response.json()
       
-      if (data.success && data.entitlements) {
-        setEntitlements(data.entitlements)
+      if (data.success && data.data) {
+        setEntitlements(data.data.entitlements)
+        setUserPlan(data.data.currentPlan)
       } else {
         throw new Error('Invalid entitlements response')
       }
@@ -122,6 +125,7 @@ export function useEntitlements(orgId?: string): EntitlementStatus {
 
   return {
     entitlements,
+    userPlan,
     isLoading,
     error,
     hasEntitlement,

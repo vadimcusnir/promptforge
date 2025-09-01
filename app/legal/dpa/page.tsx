@@ -1,354 +1,223 @@
-"use client"
+import { Metadata } from 'next'
+import { LegalDocument } from '@/components/legal/LegalDocument'
 
-import Link from "next/link"
-import { ChevronRight, Shield, FileText, CheckCircle, AlertTriangle, Users, Database, Lock } from "lucide-react"
+export const metadata: Metadata = {
+  title: 'Data Processing Agreement | PromptForge',
+  description: 'Data Processing Agreement for PromptForge Enterprise customers',
+  robots: 'index, follow'
+}
+
+const dpaContent = `
+# Data Processing Agreement (DPA)
+
+**Last Updated: January 27, 2025**
+
+## 1. Definitions
+
+**"Controller"** means the entity that determines the purposes and means of processing personal data.
+
+**"Processor"** means PromptForge, which processes personal data on behalf of the Controller.
+
+**"Personal Data"** means any information relating to an identified or identifiable natural person.
+
+**"Processing"** means any operation performed on personal data, including collection, storage, use, and deletion.
+
+**"Data Subject"** means the natural person to whom personal data relates.
+
+## 2. Scope and Purpose
+
+This Data Processing Agreement (DPA) governs the processing of personal data by PromptForge on behalf of Enterprise customers in accordance with applicable data protection laws, including the General Data Protection Regulation (GDPR).
+
+## 3. Processing Details
+
+### 3.1 Categories of Personal Data
+PromptForge may process the following categories of personal data:
+- Contact information (name, email address, phone number)
+- Professional information (job title, company, department)
+- Usage data (login times, feature usage, performance metrics)
+- Content data (prompts, inputs, outputs created through the Service)
+- Technical data (IP addresses, device information, browser data)
+
+### 3.2 Categories of Data Subjects
+- Employees and contractors of the Controller
+- End users of the Controller's systems
+- Business contacts and partners
+- Customer service representatives
+
+### 3.3 Processing Purposes
+- Providing and maintaining the PromptForge platform
+- Processing user requests and generating AI-powered content
+- Managing user accounts and subscriptions
+- Providing customer support and technical assistance
+- Ensuring security and preventing fraud
+- Complying with legal obligations
+
+## 4. Processor Obligations
+
+### 4.1 Processing Instructions
+PromptForge shall:
+- Process personal data only in accordance with documented instructions from the Controller
+- Not process personal data for any purpose other than those specified in this DPA
+- Immediately inform the Controller if any instruction violates applicable data protection laws
+
+### 4.2 Confidentiality
+PromptForge shall:
+- Ensure that persons authorized to process personal data are bound by confidentiality obligations
+- Maintain the confidentiality of all personal data processed under this DPA
+- Not disclose personal data to any third party without the Controller's prior written consent
+
+### 4.3 Security Measures
+PromptForge shall implement appropriate technical and organizational measures to ensure:
+- The confidentiality, integrity, and availability of personal data
+- Protection against unauthorized or unlawful processing
+- Protection against accidental loss, destruction, or damage
+- Regular testing and evaluation of security measures
+
+### 4.4 Sub-processors
+PromptForge may engage sub-processors to assist in providing the Service, including:
+- **Stripe**: Payment processing
+- **Supabase**: Database and authentication services
+- **Vercel**: Cloud hosting and content delivery
+- **Sentry**: Error monitoring and performance tracking
+- **Postmark**: Email delivery services
+
+PromptForge shall:
+- Maintain a list of sub-processors and notify the Controller of any changes
+- Ensure sub-processors are bound by the same data protection obligations
+- Remain fully liable for the performance of sub-processors
+
+## 5. Controller Obligations
+
+### 5.1 Lawful Basis
+The Controller shall ensure that:
+- It has a lawful basis for processing personal data
+- Data subjects have been informed of the processing
+- Any necessary consents have been obtained
+- Processing is necessary for the legitimate interests pursued
+
+### 5.2 Data Quality
+The Controller shall ensure that:
+- Personal data is accurate and up-to-date
+- Personal data is adequate, relevant, and not excessive
+- Personal data is processed fairly and lawfully
+
+## 6. Data Subject Rights
+
+### 6.1 Assistance with Rights
+PromptForge shall assist the Controller in responding to data subject requests, including:
+- Right of access to personal data
+- Right to rectification of inaccurate data
+- Right to erasure ("right to be forgotten")
+- Right to restrict processing
+- Right to data portability
+- Right to object to processing
+
+### 6.2 Response Timeframes
+PromptForge shall respond to data subject requests within 7 days as required by GDPR.
+
+## 7. Data Breach Notification
+
+### 7.1 Breach Detection
+PromptForge shall:
+- Implement appropriate measures to detect data breaches
+- Monitor systems for unauthorized access or data loss
+- Maintain incident response procedures
+
+### 7.2 Notification Requirements
+In the event of a data breach, PromptForge shall:
+- Notify the Controller without undue delay and within 24 hours
+- Provide detailed information about the breach
+- Assist the Controller in meeting its notification obligations
+- Cooperate with any investigation or remediation efforts
+
+## 8. Data Transfers
+
+### 8.1 International Transfers
+PromptForge may transfer personal data to countries outside the EEA, ensuring appropriate safeguards including:
+- Standard Contractual Clauses (SCCs) approved by the European Commission
+- Adequacy decisions by the European Commission
+- Binding Corporate Rules where applicable
+
+### 8.2 Transfer Impact Assessments
+PromptForge shall conduct transfer impact assessments and implement additional safeguards as necessary.
+
+## 9. Data Retention and Deletion
+
+### 9.1 Retention Periods
+Personal data shall be retained only for as long as necessary for the purposes specified in this DPA:
+- **Account Data**: Retained while the account is active
+- **Usage Data**: Retained for up to 90 days for operational purposes
+- **Audit Logs**: Retained for 18 months for compliance
+- **Export Data**: Automatically deleted after 30 days
+
+### 9.2 Deletion Procedures
+Upon termination of this DPA or at the Controller's request, PromptForge shall:
+- Delete or return all personal data to the Controller
+- Provide certification of deletion
+- Ensure that any copies are also deleted
+
+## 10. Audits and Compliance
+
+### 10.1 Audit Rights
+The Controller has the right to:
+- Audit PromptForge's compliance with this DPA
+- Request documentation of security measures
+- Conduct on-site inspections (with reasonable notice)
+
+### 10.2 Compliance Certifications
+PromptForge maintains the following certifications and compliance frameworks:
+- SOC 2 Type II
+- ISO 27001
+- GDPR compliance
+- Regular third-party security assessments
+
+## 11. Liability and Indemnification
+
+### 11.1 Liability Limitations
+Each party's liability under this DPA shall be limited to direct damages and shall not exceed the total amount paid by the Controller to PromptForge in the 12 months preceding the claim.
+
+### 11.2 Indemnification
+Each party shall indemnify the other against claims arising from its breach of this DPA or applicable data protection laws.
+
+## 12. Term and Termination
+
+### 12.1 Term
+This DPA shall remain in effect for as long as PromptForge processes personal data on behalf of the Controller.
+
+### 12.2 Termination
+Either party may terminate this DPA with 30 days' written notice. Upon termination, all personal data shall be returned or deleted as specified in Section 9.
+
+## 13. Governing Law
+
+This DPA shall be governed by and construed in accordance with the laws of [Jurisdiction], without regard to conflict of law principles.
+
+## 14. Contact Information
+
+For questions about this DPA or data protection matters, please contact:
+
+- **Data Protection Officer**: dpo@promptforge.cloud
+- **Privacy Team**: privacy@promptforge.cloud
+- **Address**: [Company Address]
+
+## 15. Amendments
+
+This DPA may be amended by mutual written agreement of the parties. Any amendments shall be documented and signed by authorized representatives of both parties.
+
+## 16. Severability
+
+If any provision of this DPA is found to be unenforceable, the remaining provisions shall remain in full force and effect.
+
+## 17. Entire Agreement
+
+This DPA, together with the Terms of Service and Privacy Policy, constitutes the entire agreement between the parties regarding data processing.
+`
 
 export default function DPAPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Breadcrumb */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <nav className="flex items-center space-x-2 text-sm text-gray-400">
-            <Link href="/" className="hover:text-gold-400 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link href="/legal" className="hover:text-gold-400 transition-colors">
-              Legal
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-white">Data Processing Agreement</span>
-          </nav>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <Shield className="w-16 h-16 text-gold-400 " />
-              <div className="absolute inset-0 bg-gold-400/20 rounded-full blur-xl " />
-            </div>
-          </div>
-          <h1 className="text-5xl font-bold font-sans text-gold-400 mb-4">Data Processing Agreement</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Enterprise-grade data protection and GDPR compliance for your organization
-          </p>
-          <div className="mt-6 flex justify-center">
-            <Badge className="bg-green-600 text-white px-4 py-2">
-              <CheckCircle className="w-4 h-4 mr-2" />
-              GDPR Article 28 Compliant
-            </Badge>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="max-w-3xl mx-auto space-y-12">
-          {/* Introduction */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Introduction</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
-                This Data Processing Agreement ("DPA") forms part of the Terms of Service between PromptForge ("Data Processor") 
-                and the Enterprise customer ("Data Controller") for the processing of personal data in connection with the 
-                PromptForge services.
-              </p>
-              <p>
-                This DPA is designed to ensure compliance with GDPR Article 28 requirements and provides the necessary 
-                safeguards for data processing activities.
-              </p>
-            </div>
-          </section>
-
-          {/* Definitions */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Definitions</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 space-y-3">
-                <div>
-                  <h4 className="font-bold text-gold-400">Personal Data</h4>
-                  <p className="text-sm">Any information relating to an identified or identifiable natural person</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gold-400">Processing</h4>
-                  <p className="text-sm">Any operation performed on personal data (collection, recording, organization, etc.)</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gold-400">Data Subject</h4>
-                  <p className="text-sm">The individual whose personal data is being processed</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gold-400">Sub-processor</h4>
-                  <p className="text-sm">Any third party engaged by PromptForge to process personal data</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Processing Details */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Processing Details</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                <h4 className="font-bold text-white mb-3">Nature and Purpose of Processing</h4>
-                <ul className="space-y-2 text-sm">
-                  <li>• Prompt generation and optimization services</li>
-                  <li>• User authentication and account management</li>
-                  <li>• Usage analytics and service improvement</li>
-                  <li>• Technical support and customer service</li>
-                </ul>
-              </div>
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                <h4 className="font-bold text-white mb-3">Types of Personal Data</h4>
-                <ul className="space-y-2 text-sm">
-                  <li>• Contact information (email, name, organization)</li>
-                  <li>• Usage data and preferences</li>
-                  <li>• Technical data (IP addresses, device information)</li>
-                  <li>• Generated prompts and configurations</li>
-                </ul>
-              </div>
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                <h4 className="font-bold text-white mb-3">Data Subject Categories</h4>
-                <ul className="space-y-2 text-sm">
-                  <li>• Enterprise users and administrators</li>
-                  <li>• End users of generated prompts</li>
-                  <li>• Technical support personnel</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* Data Processor Obligations */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Data Processor Obligations</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                  <h4 className="font-bold text-green-400 mb-3">Security Measures</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li>• Encryption at rest and in transit</li>
-                    <li>• Access controls and authentication</li>
-                    <li>• Regular security assessments</li>
-                    <li>• Incident response procedures</li>
-                  </ul>
-                </div>
-                <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                  <h4 className="font-bold text-green-400 mb-3">Data Protection</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li>• PII detection and redaction</li>
-                    <li>• Data minimization practices</li>
-                    <li>• Retention policy enforcement</li>
-                    <li>• Regular data audits</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Sub-processors */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Sub-processors</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
-                PromptForge engages the following sub-processors to provide the service:
-              </p>
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 space-y-4">
-                <div>
-                  <h4 className="font-bold text-white mb-2">Infrastructure & Hosting</h4>
-                  <ul className="text-sm space-y-1 ml-4">
-                    <li>• Vercel (hosting and CDN)</li>
-                    <li>• Supabase (database and authentication)</li>
-                    <li>• AWS (file storage and processing)</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white mb-2">Analytics & Monitoring</h4>
-                  <ul className="text-sm space-y-1 ml-4">
-                    <li>• Sentry (error monitoring)</li>
-                    <li>• Google Analytics (usage analytics)</li>
-                    <li>• Stripe (payment processing)</li>
-                  </ul>
-                </div>
-                <p className="text-sm text-gray-400">
-                  All sub-processors are bound by data protection agreements and GDPR compliance requirements.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Data Subject Rights */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Data Subject Rights</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
-                PromptForge supports the following data subject rights as required by GDPR:
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 w-5 text-green-400" />
-                  <span>Right to Access</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 w-5 text-green-400" />
-                  <span>Right to Rectification</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 w-5 text-green-400" />
-                  <span>Right to Erasure</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 w-5 text-green-400" />
-                  <span>Right to Portability</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 w-5 text-green-400" />
-                  <span>Right to Restriction</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 w-5 text-green-400" />
-                  <span>Right to Object</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Data Breach Procedures */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Data Breach Procedures</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                <h4 className="font-bold text-red-400 mb-3">Incident Response</h4>
-                <ul className="space-y-2 text-sm">
-                  <li>• Immediate containment and assessment</li>
-                  <li>• Notification within 72 hours of detection</li>
-                  <li>• Detailed incident documentation</li>
-                  <li>• Remediation and prevention measures</li>
-                </ul>
-              </div>
-              <p>
-                PromptForge will notify the Data Controller of any data breach without undue delay and provide 
-                all necessary information to comply with GDPR Article 33.
-              </p>
-            </div>
-          </section>
-
-          {/* Audit Rights */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Audit Rights</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
-                The Data Controller has the right to audit PromptForge's compliance with this DPA:
-              </p>
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 space-y-3">
-                <div>
-                  <h4 className="font-bold text-white mb-2">Audit Scope</h4>
-                  <ul className="text-sm space-y-1 ml-4">
-                    <li>• Data processing activities</li>
-                    <li>• Security measures and controls</li>
-                    <li>• Compliance documentation</li>
-                    <li>• Sub-processor agreements</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white mb-2">Audit Process</h4>
-                  <ul className="text-sm space-y-1 ml-4">
-                    <li>• 30 days advance notice required</li>
-                    <li>• Conducted during business hours</li>
-                    <li>• Confidentiality obligations apply</li>
-                    <li>• Results shared within 30 days</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Termination */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Termination</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
-                Upon termination of the service agreement:
-              </p>
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 space-y-3">
-                <div>
-                  <h4 className="font-bold text-white mb-2">Data Return</h4>
-                  <p className="text-sm">
-                    All personal data will be returned to the Data Controller in a structured, commonly used format 
-                    within 30 days of termination.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white mb-2">Data Deletion</h4>
-                  <p className="text-sm">
-                    After data return, all copies of personal data will be securely deleted from PromptForge systems 
-                    and confirmed in writing.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white mb-2">Ongoing Obligations</h4>
-                  <p className="text-sm">
-                    PromptForge will continue to protect any personal data that cannot be immediately deleted due to 
-                    technical or legal requirements.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Contact Information */}
-          <section>
-            <h2 className="text-2xl font-bold text-gold-400 font-sans mb-6">Contact Information</h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                <h4 className="font-bold text-white mb-3">Data Protection Officer</h4>
-                <p className="text-sm mb-2">
-                  For questions about this DPA or data protection matters:
-                </p>
-                <div className="space-y-2 text-sm">
-                  <p><strong>Email:</strong> dpo@[EXAMPLE_DOMAIN_yourdomain.com]</p>
-                  <p><strong>Address:</strong> [Company Address]</p>
-                  <p><strong>Phone:</strong> [Contact Number]</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Essential Links & Back to Top */}
-          <section className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-              <div className="flex flex-wrap gap-4 text-sm">
-                <Link href="/legal/privacy" className="text-gold-400 hover:text-gold-300 transition-colors">
-                  Privacy Policy
-                </Link>
-                <Link href="/legal/terms" className="text-gold-400 hover:text-gold-300 transition-colors">
-                  Terms of Use
-                </Link>
-                <Link href="/legal" className="text-gold-400 hover:text-gold-300 transition-colors">
-                  Legal Center
-                </Link>
-              </div>
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="text-gray-400 hover:text-gold-400 transition-colors text-sm flex items-center"
-              >
-                Back to top ↑
-              </button>
-            </div>
-            <p className="text-sm text-gray-500 mt-6">Last updated: January 2025</p>
-          </section>
-        </div>
-      </div>
-    </div>
+    <LegalDocument
+      title="Data Processing Agreement"
+      content={dpaContent}
+      lastUpdated="January 27, 2025"
+    />
   )
-}
-
-// Badge component for the header
-function Badge({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${className}`}>
-      {children}
-    </span>
-  );
 }

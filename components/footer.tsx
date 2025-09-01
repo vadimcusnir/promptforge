@@ -50,10 +50,13 @@ export function Footer() {
           <div className="mb-3 font-semibold">Legal</div>
           <ul className="space-y-2" role="list">
             <li>
-              <Link href="/privacy" className="text-gray-400 hover:text-white">Privacy Policy</Link>
+              <Link href="/legal/privacy" className="text-gray-400 hover:text-white">Privacy Policy</Link>
             </li>
             <li>
-              <Link href="/terms" className="text-gray-400 hover:text-white">Terms of Service</Link>
+              <Link href="/legal/terms" className="text-gray-400 hover:text-white">Terms of Service</Link>
+            </li>
+            <li>
+              <Link href="/legal/dpa" className="text-gray-400 hover:text-white">Data Processing Agreement</Link>
             </li>
           </ul>
         </div>
