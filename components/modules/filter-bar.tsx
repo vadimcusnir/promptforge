@@ -35,19 +35,20 @@ export function FilterBar({
 }: FilterBarProps) {
   const [showFilters, setShowFilters] = useState(false)
   
-  const vectors: ModuleVector[] = ['strategic', 'rhetoric', 'content', 'analytics', 'branding', 'crisis', 'cognitive']
+  const vectors: ModuleVector[] = ['strategic', 'operations', 'branding', 'content', 'analytics', 'sales', 'technical', 'crisis_management']
   const difficulties = [1, 2, 3, 4, 5]
   const plans: ModulePlan[] = ['free', 'creator', 'pro', 'enterprise']
   
   const getVectorColor = (vector: ModuleVector) => {
     const colors = {
       strategic: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      rhetoric: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+      operations: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
       content: 'bg-green-500/20 text-green-400 border-green-500/30',
       analytics: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
       branding: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
-      crisis: 'bg-red-500/20 text-red-400 border-red-500/30',
-      cognitive: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
+      sales: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+      technical: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+      crisis_management: 'bg-red-500/20 text-red-400 border-red-500/30'
     }
     return colors[vector]
   }

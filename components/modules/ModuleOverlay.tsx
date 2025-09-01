@@ -3,39 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { X, ArrowRight, Lock, Zap, Target, Settings, FileText, BarChart3, Shield, Unlock, Code } from "lucide-react"
-
-interface Module {
-  id: string
-  module_code: string
-  name: string
-  description: string
-  category: string
-  domain_slug: string
-  complexity: string
-  estimated_time_minutes: number
-  tags: string[]
-  template_prompt: string
-  example_output: string
-  best_practices: string[]
-  domain_info?: {
-    name: string
-    industry: string
-  }
-  fullDescription?: string
-  purpose?: string
-  inputSchema?: string
-  output?: string
-  kpi?: string
-  entitlements?: string
-  guardrails?: string
-}
+import { Module, PlanType } from "@/lib/modules"
 
 interface ModuleOverlayProps {
   module: Module
+  isOpen: boolean
   onClose: () => void
+  userPlan: PlanType
 }
 
-export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
+export default function ModuleOverlay({ module, isOpen, onClose, userPlan }: ModuleOverlayProps) {
   const handleUseInGenerator = () => {
     window.location.href = `/generator?module=${module.id}`
   }
@@ -44,34 +21,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
     window.location.href = "/pricing"
   }
 
-  // Enhanced module data based on the specifications
-  const getModuleDetails = (moduleId: string) => {
-    const details: Record<string, Partial<Module>> = {
-      M01: {
-        fullDescription:
-          "This module forges you to structure critical decisions through the 7-D Engine. Eliminate improvisation, obtain executable plans with optimized strategic vectors.",
-        purpose: "Transforms vague context into actionable specifications for strategic planning.",
-        inputSchema: "7-D Parameters (Domain, Scale, Urgency, Complexity, Resources, Application, Output).",
-        output: "Exportable artifact: .txt / .md (Creator+), .pdf / .json (Pro+), bundle.zip (Enterprise).",
-        kpi: "Score ≥ 80 on clarity and execution. TTA < 60s.",
-        entitlements: "Full access: Pro+. Enterprise adds API and Bundle.",
-        guardrails: "No unrealistic promises. Respects domain rules (compliance, KPI).",
-      },
-      M07: {
-        fullDescription:
-          "Advanced module for identifying and mitigating operational risks through 7-D vectorial analysis.",
-        purpose: "Detects vulnerabilities and builds protection strategies.",
-        inputSchema: "Risk context, 7-D parameters, alert thresholds.",
-        output: "Structured risk report with mitigation plan (.txt, .pdf, .json).",
-        kpi: "Detection accuracy ≥ 85%. Analysis time < 45s.",
-        entitlements: "Available Creator+. Pro adds automatic alerting.",
-        guardrails: "Respects confidentiality limits. Does not replace legal consultation.",
-      },
-    }
-    return details[moduleId] || {}
-  }
-
-  const moduleDetails = getModuleDetails(module.id)
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -84,12 +34,12 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className="font-mono text-lg text-yellow-400">{module.module_code}</span>
+                <span className="font-mono text-lg text-yellow-400">{module.id}</span>
                 <Badge variant="outline" className="border-yellow-400/50 text-yellow-400">
-                  {module.complexity} • {module.domain_slug}
+                  Difficulty {module.difficulty} • {module.minPlan}
                 </Badge>
               </div>
-              <CardTitle className="text-2xl font-serif text-white">{module.name}</CardTitle>
+              <CardTitle className="text-2xl font-serif text-white">{module.title}</CardTitle>
             </div>
             <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-400 hover:text-white">
               <X className="w-5 h-5" />
@@ -105,8 +55,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               <h3 className="text-lg font-semibold text-white">Description</h3>
             </div>
             <p className="text-gray-300 leading-relaxed">
-              {moduleDetails.fullDescription ||
-                `${module.description}. Professional module for optimizing workflows through the PromptForge 7-D Engine.`}
+              {module.summary}
             </p>
           </div>
 
@@ -117,8 +66,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               <h3 className="text-lg font-semibold text-white">Purpose</h3>
             </div>
             <p className="text-gray-300">
-              {moduleDetails.purpose ||
-                "Optimizes operational processes through advanced structuring and intelligent automation."}
+              Professional module for optimizing workflows through the PromptForge 7-D Engine.
             </p>
           </div>
 
@@ -130,8 +78,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
             </div>
             <div className="bg-black/30 rounded-lg p-4 border border-gray-700">
               <code className="text-sm text-gray-300 font-mono">
-                {moduleDetails.inputSchema ||
-                  "7-D Parameters: Domain, Scale, Urgency, Complexity, Resources, Application, Output"}
+                7-D Parameters: Domain, Scale, Urgency, Complexity, Resources, Application, Output
               </code>
             </div>
           </div>
@@ -143,8 +90,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               <h3 className="text-lg font-semibold text-white">Output</h3>
             </div>
             <p className="text-gray-300">
-              {moduleDetails.output ||
-                "Exportable artifact: .txt (Free), .md (Creator+), .pdf/.json (Pro+), bundle.zip (Enterprise)."}
+              Exportable formats: {module.outputs.join(', ')}
             </p>
           </div>
 
@@ -155,7 +101,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               <h3 className="text-lg font-semibold text-white">KPI</h3>
             </div>
             <p className="text-gray-300">
-              {moduleDetails.kpi || "Score ≥ 75 on clarity and execution. Processing time < 90s."}
+              Score ≥ 75 on clarity and execution. Processing time &lt; 90s.
             </p>
           </div>
 
@@ -166,7 +112,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               <h3 className="text-lg font-semibold text-white">Entitlements</h3>
             </div>
             <p className="text-gray-300">
-              {moduleDetails.entitlements || "Available in all plans. Pro+ adds advanced export and API access."}
+              Minimum plan required: {module.minPlan}. Available in all plans.
             </p>
           </div>
 
@@ -177,8 +123,7 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               <h3 className="text-lg font-semibold text-white">Guardrails</h3>
             </div>
             <p className="text-gray-300">
-              {moduleDetails.guardrails ||
-                "Respects compliance and confidentiality limits. Output is audited and traceable."}
+              Respects compliance and confidentiality limits. Output is audited and traceable.
             </p>
           </div>
 
@@ -192,41 +137,17 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               <pre className="text-xs text-gray-300 font-mono overflow-x-auto">
 {`{
   "module": {
-    "id": "${module.module_code}",
-    "name": "${module.name}",
-    "category": "${module.category}",
-    "domain": "${module.domain_slug}",
-    "complexity": "${module.complexity}",
-    "estimated_time_minutes": ${module.estimated_time_minutes},
+    "id": "${module.id}",
+    "title": "${module.title}",
+    "slug": "${module.slug}",
+    "summary": "${module.summary}",
+    "vectors": ${JSON.stringify(module.vectors)},
+    "difficulty": ${module.difficulty},
+    "minPlan": "${module.minPlan}",
     "tags": ${JSON.stringify(module.tags)},
-    "vector": "${module.category === 'business' ? 'Strategic' : module.category === 'marketing' ? 'Rhetoric' : 'Content'}",
-    "input_schema": {
-      "domain": "string (business|marketing|sales|analytics)",
-      "scale": "string (startup|smb|enterprise)",
-      "urgency": "string (standard|high|critical)",
-      "complexity": "string (basic|intermediate|advanced)",
-      "resources": "string (limited|standard|unlimited)",
-      "application": "string (content|strategy|analysis)",
-      "output": "string (text|structured|visual)"
-    },
-    "output_format": {
-      "txt": "always_available",
-      "md": "creator_plus",
-      "pdf": "pro_plus",
-      "json": "pro_plus",
-      "bundle_zip": "enterprise_only"
-    },
-    "scoring": {
-      "threshold": 80,
-      "criteria": ["clarity", "execution", "completeness"],
-      "export_eligible": "score >= 80"
-    },
-    "entitlements": {
-      "free": ["basic_usage", "txt_export"],
-      "creator": ["all_modules", "md_export"],
-      "pro": ["live_testing", "pdf_json_export"],
-      "enterprise": ["api_access", "bundle_export", "white_label"]
-    }
+    "outputs": ${JSON.stringify(module.outputs)},
+    "version": "${module.version}",
+    "sevenDDefaults": ${JSON.stringify(module.sevenDDefaults || {}, null, 2)}
   }
 }`}
               </pre>
@@ -247,8 +168,15 @@ export default function ModuleOverlay({ module, onClose }: ModuleOverlayProps) {
               onClick={handleUseInGenerator}
               className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black font-semibold"
             >
-              Use in Generator
+              Simulate
               <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+            <Button
+              onClick={handleUseInGenerator}
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold"
+            >
+              Run Real Test
+              <Zap className="w-4 h-4 ml-2" />
             </Button>
             <Button
               variant="outline"

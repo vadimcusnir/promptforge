@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { GeneratorClient } from '@/components/generator/GeneratorClient';
 
 export const revalidate = 60; // ISR with 60s revalidation
 
@@ -52,25 +51,25 @@ export default async function GeneratorPage() {
         </div>
         
         {/* Generator Content */}
-        <Suspense fallback={
-          <div className="space-y-8">
-            <div className="bg-pf-card rounded-lg p-6 animate-pulse">
-              <div className="h-12 bg-pf-input rounded-md"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-pf-card rounded-lg p-6 border border-pf-border animate-pulse">
-                  <div className="h-4 bg-pf-input rounded mb-4"></div>
-                  <div className="h-6 bg-pf-input rounded mb-2"></div>
-                  <div className="h-16 bg-pf-input rounded mb-4"></div>
-                  <div className="h-8 bg-pf-input rounded"></div>
-                </div>
-              ))}
-            </div>
+        {/* Generator Content - Coming Soon */}
+        <div className="bg-pf-card rounded-lg p-8 text-center">
+          <h2 className="text-2xl font-semibold text-pf-text mb-4">
+            Generator Coming Soon
+          </h2>
+          <p className="text-pf-text-muted mb-6">
+            We're building an advanced 7-D prompt generator with 50+ specialized modules.
+          </p>
+          <div className="bg-pf-input rounded-lg p-4 text-left">
+            <h3 className="font-medium text-pf-text mb-2">Features in Development:</h3>
+            <ul className="text-pf-text-muted space-y-1">
+              <li>• 7-Dimensional prompt framework</li>
+              <li>• 50+ specialized modules</li>
+              <li>• Real-time validation & scoring</li>
+              <li>• Export in multiple formats</li>
+              <li>• Plan-based access control</li>
+            </ul>
           </div>
-        }>
-          <GeneratorClient initialData={modulesData} />
-        </Suspense>
+        </div>
       </div>
     </main>
   );
