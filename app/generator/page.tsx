@@ -5,7 +5,7 @@ export const revalidate = 60; // ISR with 60s revalidation
 
 async function fetchModules() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://chatgpt-prompting.com';
     const response = await fetch(`${baseUrl}/api/modules`, {
       next: { revalidate: 60 }
     });
