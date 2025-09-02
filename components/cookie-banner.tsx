@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Cookie, Settings, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Cookie, Settings, X } from 'lucide-react';
 
 interface CookiePreferences {
   necessary: boolean;

@@ -205,7 +205,9 @@ export function ExportManager({
         exportAsTXT();
         break;
       case "pdf":
-        alert("Export PDF will be available in the next version.");
+        if (typeof window !== "undefined" && window.alert) {
+          window.alert("Export PDF will be available in the next version.");
+        }
         break;
     }
   };

@@ -18,6 +18,8 @@ export function TableOfContents({ items, className }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("")
 
   useEffect(() => {
+    if (typeof window === "undefined" || !('IntersectionObserver' in window)) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

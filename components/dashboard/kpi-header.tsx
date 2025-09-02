@@ -16,13 +16,10 @@ interface KpiData {
 }
 
 interface KpiHeaderProps {
-  totalRuns: number
-  avgScore: number
-  successRate: number
-  trend: number
+  kpis: KpiData
 }
 
-export function KpiHeader({ totalRuns, avgScore, successRate, trend }: KpiHeaderProps) {
+export function KpiHeader({ kpis }: KpiHeaderProps) {
   const formatTrend = (trend: number) => {
     if (trend > 0) return { icon: TrendingUp, color: 'text-green-500', sign: '+' }
     if (trend < 0) return { icon: TrendingDown, color: 'text-red-500', sign: '' }

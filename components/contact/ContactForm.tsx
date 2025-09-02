@@ -69,12 +69,16 @@ export function ContactForm() {
     e.preventDefault();
     
     if (!formData.acceptTerms) {
-      alert("Trebuie să accepți termenii pentru a continua.");
+      if (typeof window !== "undefined" && window.alert) {
+        window.alert("Trebuie să accepți termenii pentru a continua.");
+      }
       return;
     }
 
     if (formData.message.length < 150) {
-      alert("Mesajul trebuie să aibă cel puțin 150 de caractere.");
+      if (typeof window !== "undefined" && window.alert) {
+        window.alert("Mesajul trebuie să aibă cel puțin 150 de caractere.");
+      }
       return;
     }
 

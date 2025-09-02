@@ -65,13 +65,14 @@ export function HistoryPanel({ onRestoreEntry }: HistoryPanelProps) {
   };
 
   const handleClearHistory = () => {
-    if (
-      confirm(
+    if (typeof window !== "undefined" && window.confirm) {
+      const confirmed = window.confirm(
         "Are you sure you want to delete the entire history? This action cannot be undone.",
-      )
-    ) {
-      historyManager.clearHistory();
-      refreshHistory();
+      );
+      if (confirmed) {
+        historyManager.clearHistory();
+        refreshHistory();
+      }
     }
   };
 

@@ -19,6 +19,8 @@ export function DocsContent({ activeSection, onSectionChange }: DocsContentProps
 
   // Intersection Observer for section highlighting
   useEffect(() => {
+    if (typeof window === "undefined" || !('IntersectionObserver' in window)) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
