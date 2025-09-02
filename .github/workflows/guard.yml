@@ -1,0 +1,13 @@
+# .github/workflows/guard.yml
+name: Guard
+on: [pull_request]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - run: pnpm i --frozen-lockfile
+      - run: ANALYZE=true node -e "require('./apps/agent').guardedApply()"
+      - run: node -e "require('./apps/agent').guardedApply()"

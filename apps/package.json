@@ -6,7 +6,10 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "guard": "node -e \"require('./agent').guardedApply()\"",
+    "guard:analyze": "ANALYZE=true node -e \"require('./agent').guardedApply()\"",
+    "precommit": "pnpm run guard"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
