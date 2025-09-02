@@ -1,0 +1,309 @@
+
+
+
+
+
+în pagina API Reference pentru Enterprise trebuie să rămână doar ceea ce promiți în TOC-ul scurt:
+
+Authentication
+
+POST /api/run/{moduleId}
+
+Response Format
+
+Rate Limits & Quotas
+
+Tot ce am dezvoltat în plus (Export, Metrics, Analytics, Telegram) intră într-o pagină separată „Additional Endpoints” sau un sub-capitol „Other Endpoints”, linkuită din API Reference, dar nu în corpul principal al acestei pagini. Structura recomandată pentru /docs/api e deja trasată în IA (există secțiunea API reference în docs).
+
+Mai jos îți dau textul final (gata de pus în /docs/api/index.md) exact pe cele 4 secțiuni.
+
+API Reference
+
+Complete API documentation for Enterprise users
+
+Authentication
+
+Scheme: Bearer <API_KEY> în antetul Authorization
+
+Cine primește chei: doar planul Enterprise (entitlement hasAPI=true)
+
+Domeniu: https://chatgpt-prompting.com (sau subdomeniu dedicat)
+
+Scope: cheile sunt scoped la organizație (org). Toate cererile sunt izolate prin RLS per org_id (server-side).
+
+Securitate minimă recomandată: rotație chei, stocare în secret-vault, CSP/HSTS active, rate-limit pe rute /api/*.
+
+Erori de auth tipice:
+
+401 Unauthorized – lipsește/invalid token
+
+403 Forbidden – cheie validă dar fără entitlement Enterprise (sau acces în afara org-ului)
+
+POST /api/run/{moduleId}
+
+Rulează unul dintre cele 50 module canonice (M01–M50) cu parametrii standardizați 7D.
+Gating: Free/Creator doar Simulate (prin UI); Pro/Enterprise pot face „Run Real Test”, iar doar Enterprise are acces programatic (API).
+
+URL
+
+POST /api/run/{moduleId}
+
+
+{moduleId}: ex. M07
+
+Headers
+
+Authorization: Bearer <API_KEY>
+Content-Type: application/json
+
+
+Request body (JSON)
+
+{
+  "sevenD": {
+    "domain": "FinTech",
+    "scale": "enterprise",
+    "urgency": "crisis",
+    "complexity": "advanced",
+    "resources": "agency_stack",
+    "application": "strategy",
+    "output": "json"
+  },
+  "input": {
+    "objective": "Design a fraud detection SOP for a digital bank",
+    "constraints": ["Must comply with PSD2", "No PII leakage"],
+    "examples": ["Anti-money laundering checklist", "Baseline KYC flow"]
+  }
+}
+
+
+Notă: 7D este validat enum-only; lipsa/valoare invalidă ⇒ 422 (DoR fail).
+
+Response 200 (success)
+
+{
+  "success": true,
+  "data": {
+    "prompt": "## SOP Fraud Detection ...",
+    "metadata": {
+      "run_id": "a3e1d-44f1-9ab1",
+      "module_id": "M07",
+      "score": 87,
+      "clarity": 90,
+      "execution": 85,
+      "ambiguity": 12,
+      "business_fit": 82,
+      "signature_7d": "fintech-enterprise-crisis-advanced-agency-stack-strategy-json",
+      "version": "ruleset_v3.0.1",
+      "duration_ms": 1420,
+      "tokens_used": 987
+    }
+  },
+  "telemetry": {
+    "policy_hits": ["score_gate_passed"],
+    "fallbacks": []
+  }
+}
+
+
+Erori standard
+
+402 Payment Required – ai încercat „Run Real Test” fără entitlement Pro/Ent
+
+422 Validation Error – 7D invalid sau lipsesc câmpuri (DoR)
+
+422 SCORE_BELOW_THRESHOLD – scor < 80 ⇒ nu se califică pentru export (DoD)
+
+403 API_KEY_INVALID – cheie inexistentă/invalidă
+
+Bune practici
+
+Rulează întâi Simulate (fără cost) → apoi „Run Real Test”
+
+Păstrează run_id (legătură cu exporturi & audit)
+
+Pentru procesare ulterioară, setează output: "json"
+
+Response Format
+
+Plic de succes
+
+{
+  "success": true,
+  "data": { ... },
+  "telemetry": { ... }
+}
+
+
+Plic de eroare
+
+{
+  "success": false,
+  "error": {
+    "code": 422,
+    "message": "SCORE_BELOW_THRESHOLD",
+    "details": "Evaluator returned 72; export requires ≥80"
+  }
+}
+
+
+Conținutul „data” la /api/run
+
+prompt: artefactul generat (structurat conform modulului)
+
+metadata:
+
+run_id, module_id
+
+scoruri: score, clarity, execution, ambiguity, business_fit (DoD cere score ≥ 80)
+
+signature_7d (hash semantic al 7D)
+
+version (ruleset semver) – schimbi comportamentul doar cu versioning explicit
+
+duration_ms, tokens_used
+
+Telemetrie
+
+policy_hits: reguli aplicate (ex. score_gate_passed, pii_redacted)
+
+fallbacks: mecanisme de revenire aplicate (dacă e cazul)
+
+Principii de versiune & integritate
+
+Schimbările de contract se marchează în metadata.version; FE/integrarea refuză răspuns fără versiune.
+
+Exporturile folosesc manifest + checksum SHA-256 (integritate legală) — la run vezi doar ID-ul ce le leagă.
+
+Rate Limits & Quotas
+
+Pe planuri (valorile sunt orientative; configurezi în ruleset/entitlements):
+
+Plan	API Access	Rate limit (requests/h)	Run mode	Export formats	Notes
+Free	No	n/a	Simulate	txt	doar UI
+Creator	No	n/a	Simulate	txt, md	doar UI
+Pro	UI only	100/h (UI actions)	Live	+pdf, +json	fără API public
+Enterprise	Yes	1000/h (default)	Live	+zip bundle	API key, seats
+
+Comportament la depășire
+
+429 Too Many Requests + Retry-After
+
+Log telemetrie: rl_throttled (rate-limit) pentru monitorizare
+
+Alte limite & politici
+
+Export DoD: blocat sub scor 80; manifest+checksum obligatorii
+
+Cheltuieli/consum: urmărești tokens & cost prin telemetrie (Analytics/Metrics în pagina separată)
+
+Headere de securitate & CSP obligatorii pe rutele /api/*
+
+Unde punem restul (Export/Metrics/Analytics/Telegram)
+
+Creezi „Additional Endpoints” sau „Endpoints Catalog” sub /docs/api și listezi:
+POST /api/export/bundle, GET /api/metrics/kpi, GET /api/analytics, POST /api/telegram/config — cu exemple și gating-uri. Structura doc hub + pagina API există deja în IA (Docs Hub + API page).
+
+
+
+
+
+Authentication (Enterprise)
+
+Această secțiune definește clar cum te autentifici la API-ul PromptForge™, cine primește chei, cum sunt „scope-uite” pe organizație și care sunt bunele practici de securitate (inclusiv headere și rate-limiting).
+
+Scheme
+
+Folosește Bearer token în antetul HTTP Authorization:
+
+Authorization: Bearer <API_KEY>
+
+
+Cheile sunt folosite pe domeniul tău PromptForge (ex.: producție) conform arborelui de rute și structurii IA pentru /docs/api și /api/*.
+
+Cine primește chei
+
+Doar planul Enterprise primește chei API publice (entitlement hasAPI=true). Planurile Free/Creator/Pro pot apela funcții prin UI, dar nu au acces programatic prin token. Gatingul pe planuri și feature-flags (inclusiv hasAPI) este sursa unică de adevăr.
+
+Verificarea entitlement-urilor se face la fiecare acțiune sensibilă (pre-run, pre-export, API). Dacă lipsesc drepturile → răspuns 402/403 și afişare Paywall în UI (unde e cazul).
+
+Domeniu
+
+Producție (exemplu):
+
+https://chatgpt-prompting.com
+
+
+În IA ai și sub-rute /docs/api și /api/*, plus sitemap/robots generate din app router (Next.js), astfel încât documentația și endpointurile să fie servite corect.
+
+Scope (izolare pe organizație)
+
+Cheile sunt scoped la organizație (org). Orice cerere autenticată este izolată la nivel de org prin RLS (Row-Level Security) în baza de date: utilizatorii văd/operă doar rândurile din organizațiile în care sunt membri. Schema include tabele dedicate (ex. orgs, org_members, api_keys) care ancorează această izolare.
+
+Exemplu de RLS aplicat (pattern): bundle-urile/exporturile și execuțiile (runs) sunt vizibile doar membrilor org-ului asociat — aceeași strategie se aplică și altor tabele/fluxuri.
+
+Securitate (minim recomandat)
+
+Rotație chei – generează/roteste periodic cheile; revocă imediat cheile compromise.
+
+Secret-vault – stochează cheile doar în vault (nu în repo, nu în logs).
+
+CSP/HSTS & headere de securitate – impune CSP strict, HSTS, X-Frame-Options, X-Content-Type-Options, Permissions-Policy, Referrer-Policy la nivel de edge/middleware.
+
+Rate-limit pe rute /api/* – limitează solicitările după plan (ex.: Ent 1000/h); la depășire → 429 și Retry-After.
+
+Build gates – nu livra în producție dacă headerele/limitările nu sunt active (parte din checklistul operațional).
+
+Erori de autentificare (tipice)
+
+401 Unauthorized – lipsește tokenul sau nu respectă schema Bearer.
+
+403 Forbidden – token valid, dar:
+
+org inaccesibilă (în afara scope-ului)
+
+fără entitlement Enterprise (hasAPI=false)
+
+cheie invalidă/revocată pentru acces programatic.
+
+Fluxurile de gating și validările API (inclusiv erorile 4xx la lipsă entitlement sau cheie invalidă) sunt standardizate în layer-ul UI+API.
+
+Exemple
+cURL – cerere validă (Enterprise)
+curl -X POST "https://chatgpt-prompting.com/api/run/M07" \
+  -H "Authorization: Bearer sk_live_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{ "sevenD": { "domain":"FinTech", "scale":"enterprise", "urgency":"planned",
+                    "complexity":"advanced", "resources":"agency_stack",
+                    "application":"strategy", "output":"json" },
+        "input":{ "objective":"Design SOP", "constraints":["No PII"], "examples":[] } }'
+
+cURL – lipsă token → 401
+curl -X POST "https://chatgpt-prompting.com/api/run/M07" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+# => 401 Unauthorized
+
+cURL – token valid dar fără hasAPI → 403
+curl -X POST "https://chatgpt-prompting.com/api/run/M07" \
+  -H "Authorization: Bearer sk_live_without_api" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+# => 403 Forbidden (Enterprise entitlement required)
+
+Checklist implementare (în proiectul tău)
+
+ Endpointurile API sunt sub domeniul de producție și apar corect în /docs/api.
+
+ Entitlementurile (hasAPI, etc.) sunt verificate înainte de execuție.
+
+ RLS pe toate tabelele care stochează date de execuție/export (izolare org).
+
+ CSP/HSTS + rate-limit active în middleware/gateway.
+
+ Cheile sunt rotite și stocate exclusiv în secret-vault (niciodată în cod).
+
+
+
+
+

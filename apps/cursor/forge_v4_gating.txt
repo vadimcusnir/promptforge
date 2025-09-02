@@ -1,0 +1,2533 @@
+
+
+
+
+
+🔑 Gating Comercial Unificat (Revenue → Entitlements)
+
+1. SaaS Subscriptions (Free → Creator → Pro → Enterprise)
+Gate: plan_code + entitlements (Stripe → Supabase sync).
+Free → acces doar M01/M10/M18, export .txt, fără cloud history.
+Creator (€19) → toate modulele, .md, istoric local.
+Pro (€49) → PDF/JSON, Test Engine live, Cloud history, Evaluator AI.
+Enterprise (€299) → API, White-label, bundle.zip, multi-seat.
+Rule: orice acțiune (run test real, export PDF/JSON, acces API) verifică entitlement true; altfel → 402 + Paywall modal.
+
+2. Industry Licensing (ex. FinTech Pack – €1.990/an)
+Gate: tabele org_industry_packs + domain_config preset.
+Pro/Enterprise pot activa un pack.
+Pack-ul im pune subset module (ex. FinTech → M07, M13, M31, M44), jargon, KPIs și guardrailsstricte.
+Exporturile au cerințe minime (ex. FinTech = obligatoriu .spec + .json cu checksum).
+Rule: la /api/run/{moduleId} → verifică și pack entitlement → altfel 403 industryPack_required.
+
+3. High-Ticket Consulting (€2.5K–€10K)
+Gate: nu prin UI → prin contract/licență manuală.
+Entitlement consulting_license=true → deblochează modul custom sau acces white-glove.
+Toate exporturile marcate cu license_notice (ex: “PFv3 Consulting License”).
+Rule: doar pentru organizații cu contract validat; audit trail în entitlements.source=license.
+
+4. Course Sales (€390–€990)
+Gate: LMS / Supabase courses_enrollments.
+Acces la materiale curs → entitlement course_x_access=true.
+Exporturile din curs (templates, SOP) marcate cu watermark până la finalizare.
+Rule: verifică enrollment_id la acces /courses/*.
+
+5. Prompt Marketplace (€29–€79)
+Gate: user_addons + entitlements.source=addon.
+Prompt pack cumpărat = activează entitlements pe module (ex: addon.landing_page_pack).
+Fără addon → overlay cu „Buy Pack”.
+Rule: runtime check = dacă entitlement=false → Paywall prompt.
+
+⚙️ Gating Operațional (tehnic)
+Stripe Webhooks (invoice.paid, customer.subscription.updated) → upsert entitlements în Supabase.
+Pre-run pipeline: auth → plan_code → entitlements → feature_flags → DoR valid (7D).
+Export policy: format permis + checksum + manifest obligatoriu.
+Audit: entitlements logate cu org_id, user_id?, source(plan|pack|addon|license).
+GDPR: watermark în trial, license_notice în bundle, telemetrie fără PII.
+
+📊 Gating pe Metrici & KPI
+Free→Paid Conversion = % blocări pe PDF/JSON → upsell CTA.
+Industry Pack Adoption = nr. rulări blocate pe industry_only_module.
+Consulting ROI = revenue vs. entitlements.
+Marketplace attach rate = addon activat ÷ user activ.
+
+
+
+
+1) Entitlements per plan (SSOT)
+Plan	Module access	Export	Test Engine	Storage	Extras
+Free	M01/M10/M18	.txt	Simulated only	Local only	—
+Creator (€19)	All 50	.txt + .md	Simulated only	Local only	—
+Pro (€49)	All 50	.txt + .md + .pdf/.json	Live	Cloud history	Evaluator AI
+Enterprise (€299)	All 50	bundle.zip (manifest+checksum)	Live	Cloud	API, White-label, Multi-seat
+
+Sursa entitlements + mapping pe planuri există deja (canUseAllModules, canExportMD/PDF/JSON, canUseGptTestReal, hasCloudHistory, hasEvaluatorAI, hasAPI, hasWhiteLabel, canExportBundleZip, hasSeatsGT1).
+
+2) Model de date (Supabase/Postgres)
+
+Tabele operative (rezumat):
+
+plans(code, flags jsonb) – snapshot de capabilities per plan.
+
+subscriptions(org_id, stripe_*…, plan_code, status, seats, trial_end) – sync Stripe.
+
+entitlements(org_id, user_id?, flag, value, source, expires_at) – efectivul care se verifică la runtime.
+
+orgs / org_members – multi-tenant + roluri (owner/admin/member) pentru seats.
+
+runs, prompt_scores, bundles – telemetrie execuții și exporturi (manifest + checksum).
+
+Definițiile (inclusiv 14 tabele de bază) sunt deja stabilite în blueprintul tău, iar bundle-urile și checksum-ul sunt standardizate.
+
+3) Flux Stripe → Supabase (plan_code + entitlements)
+
+Evenimente Stripe acceptate: checkout.session.completed, invoice.paid, customer.subscription.updated, customer.subscription.deleted/past_due.
+
+Handler (pseudocod):
+
+// /api/webhooks/stripe
+switch (event.type) {
+  case 'checkout.session.completed':
+  case 'customer.subscription.updated':
+    const sub = normalize(event.data.object)
+    upsertSubscription(sub)                 // subscriptions(plan_code, seats, status...)
+    const flags = planFlags(sub.plan_code)  // plans.flags
+    materializeEntitlements(sub.org_id, flags, 'plan')  // entitlements(...)
+    break
+  case 'invoice.paid':
+    markActive(sub); break
+  case 'customer.subscription.deleted':
+    downgradeToFree(sub.org_id); break
+}
+
+
+Fluxul „plan → flags → entitlements” este exact modul recomandat (planul ca sursă, entitlements materializate). În UI există hook-uri și invalidare cache pentru entitlements.
+
+4) Middleware & API gating (pre-run / pre-export / API)
+4.1 Pre-run (simulate vs live)
+// middleware.ts (Edge) / server-auth.ts
+ctx.org = resolveOrgFromSession()
+ctx.entitlements = loadEntitlements(ctx.org, ctx.user)
+
+// gate Live Test Engine
+if (req.path.startsWith('/api/gpt-test/live')) {
+  if (!ctx.entitlements.canUseGptTestReal) return paywall(402) // Payment Required
+}
+
+
+Rutele API principale sunt deja conturate (ex: /api/gpt-test/route.ts, /api/export/route.ts, /api/run/[moduleId]/route.ts) și există librărie FE pentru entitlements (useEntitlements.ts, HOC withEntitlementGate).
+
+4.2 Pre-export (formats & score gates)
+// /api/export/route.ts
+const allow = {
+  txt: true,
+  md: ent.canExportMD,
+  pdf: ent.canExportPDF,
+  json: ent.canExportJSON,
+  zip: ent.canExportBundleZip
+}
+
+if (!allow[req.format]) return paywall(402)
+if (['pdf','json','zip'].includes(req.format)) {
+  // DoD: score ≥ 80, manifest + checksum
+  if (run.score.overall < 80) return error(422, 'SCORE_BELOW_THRESHOLD')
+}
+
+
+Regula DoD (score ≥ 80) + export policy (manifest obligatoriu, checksum SHA-256) este standardul tău oficial.
+
+4.3 API public (Enterprise)
+// /api/run/[moduleId]/route.ts
+if (!ent.hasAPI) return paywall(402)
+if (!apiKeyValid(org, req.headers)) return error(403, 'API_KEY_INVALID')
+rateLimit(org, 'api.run') // per plan
+
+
+Endpointurile publice și paywall-ul din UI sunt prevăzute în structura IA + componente Paywall*.
+
+5) Frontend gating (componente & UX)
+
+PaywallInline / PaywallModal / PaywallCTA – plasează upsell exact pe acțiuni care țin de plan (Run Real Test, Export PDF/JSON/ZIP, API).
+
+ExportDialog – afișează DOAR formatele permise de plan; restul apar disabled cu tooltip („Blocat pe {plan}. Deblochează cu Pro/Enterprise”).
+
+Hook useEntitlements + HOC withEntitlementGate – dezactivează UI fără flicker, sincronizat cu cache invalidation după upgrade.
+
+6) Seats, roluri & multi-seat (Enterprise)
+
+Entitlement hasSeatsGT1=true → activezi invitațiile; seat_count în subscriptions.
+
+org_members gestionează rolurile (owner/admin/member); RLS izolează datele pe org_id.
+
+White-label (hasWhiteLabel) → branding custom + licență; API (hasAPI) → chei în api_keys cu rate-limit per plan.
+
+7) Rate-limit & prorratare & trial/dunning
+
+Rate-limit by plan (ex.): Free 20/h, Pro 100/h, Ent 1000/h; 429 + CTA upgrade (regulă centrală în ruleset).
+
+Trial Pro: 7 zile, watermark activat în export policy (config watermark_trial: true în SSOT).
+
+Prorratare/upgrade: Stripe gestionează proration; webhook „updated” remapează entitlements imediat.
+
+Past_due/dunning: la past_due degrade → Creator sau Free (flags reduse), la paid revenire automată.
+
+8) Export & integritate (DoD/DoR)
+
+DoR (înainte să rulezi): 7D valid + entitlement valid + output spec prezent + teste minime; altfel FAIL.
+
+DoD (înainte de export): score ≥ 80, output complet, checksum valid, manifest scris, telemetrie salvată.
+
+Bundle ZIP (Enterprise): manifest.json + checksum.txt + prompt.{txt,md,json,pdf} + telemetry.json.
+
+9) Telemetrie & KPI
+
+Evenimente minime (server-side + RUM):
+pricing_view, checkout_started, checkout_paid, plan_changed, module_open, module_run_simulated, module_run_live, export_txt|md|pdf|json|zip, paywall_hit(feature), rl_throttled, api_call.
+Persistență: runs, prompt_scores, bundles (score, tokens, duration, checksum).
+
+10) Acceptanță (DoD pentru gating)
+
+UI: acțiunile blocate arată Paywall (fără crash), ExportDialog respectă plan (disable + tooltip).
+
+API:
+
+402 la lipsă entitlement (opțional, 403 dacă preferi strict).
+
+422 la export sub scor minim sau format nepermis (policy).
+
+429 la rate-limit (reguli din ruleset).
+
+Stripe: upgrade/downgrade reflectat în <30s (webhook + invalidare entitlements).
+
+Bundle: manifest + checksum verificate; zip doar Enterprise.
+
+11) Teste esențiale (matrix)
+Caz	Free	Creator	Pro	Ent	Așteptat
+Run Simulate	✅	✅	✅	✅	200
+Run Live	❌	❌	✅	✅	402/Paywall → Pro/Ent
+Export .md	❌	✅	✅	✅	200 (Creator+)
+Export .pdf/.json	❌	❌	✅	✅	200 (Pro+), 422 dacă score<80
+Export .zip	❌	❌	❌	✅	200 (Ent), 402 altfel
+Cloud history	❌	❌	✅	✅	Run saved în DB
+API call	❌	❌	❌	✅	200 sau 403 fără key
+Invite seats	❌	❌	❌	✅	200 (hasSeatsGT1)
+12) Snippets gata de lipit
+12.1 Gate FE (component)
+export function FeatureGate({ flag, children, fallback }: {
+  flag: keyof Entitlements, children: React.ReactNode, fallback?: React.ReactNode
+}) {
+  const { entitlements } = useEntitlements()
+  if (!entitlements?.[flag]) return fallback ?? <PaywallInline feature={flag}/>
+  return <>{children}</>
+}
+// Usage: <FeatureGate flag="canUseGptTestReal"><LiveTestPanel/></FeatureGate>
+
+
+(Componentele Paywall*, ExportDialog și hook-urile de entitlements există deja în kitul tău).
+
+12.2 Gate API (route handler)
+const must = (flag:boolean, code=402) => { if (!flag) throw http(code,'PAYWALL') }
+
+export async function POST(req: NextRequest) {
+  const ctx = await getCtx(req)   // auth, org, entitlements
+  const body = await req.json()
+  if (body.kind === 'live_test') must(ctx.ent.canUseGptTestReal)
+  if (body.export === 'pdf')      must(ctx.ent.canExportPDF)
+  if (body.export === 'json')     must(ctx.ent.canExportJSON)
+  if (body.export === 'zip')      must(ctx.ent.canExportBundleZip)
+  // DoD score gate
+  if (['pdf','json','zip'].includes(body.export) && body.score < 80)
+    return http(422, 'SCORE_BELOW_THRESHOLD')
+  // … run, export, write manifest+checksum …
+  return http(200,{ ok:true })
+}
+
+
+(Score/DoD/manifest sunt cerințe formale în DoD; bundle ZIP standardizat)
+
+
+
+
+
+
+1) Definește „limbajul” oficial al entitlement-urilor (canon)
+
+Listează o singură dată, într-un loc unic (SSOT), toate flag-urile binare care guvernează produsul. Acesta este vocabularul oficial, folosit identic în UI, API și DB:
+
+canUseAllModules – deblochează accesul la toate cele 50 de module.
+
+canExportMD – permite export .md.
+
+canExportPDF – permite export .pdf.
+
+canExportJSON – permite export .json.
+
+canUseGptTestReal – permite rularea Test Engine pe GPT live.
+
+hasCloudHistory – persistă istoric în DB (nu doar local).
+
+hasEvaluatorAI – activează Evaluator AI cu feedback narativ.
+
+hasAPI – deblochează /api/run/{moduleId}.
+
+hasWhiteLabel – activă branding custom + licență.
+
+canExportBundleZip – permite export bundle complet (.zip + manifest + checksum).
+
+hasSeatsGT1 – multi-seat pe organizație.
+Acest vocabular este stabilit deja în documentația ta de licențe & entitlements și rămâne neschimbat (SSOT).
+
+2) Stabilește maparea canonică „Plan → Flags” (SSOT)
+
+În SSOT pui un fișier plans.json care definește exact ce flaguri are fiecare plan. Valorile inițiale sunt:
+
+Free: subset de module (M01/M10/M18), doar .txt, fără cloud history.
+
+Creator: toate modulele, .md, istoric local (fără cloud).
+
+Pro: .pdf/.json, Test Engine live, Cloud history, Evaluator AI.
+
+Enterprise: API, White-label, bundle .zip, multi-seat.
+Acest mapping e deja validat în specificațiile tale și trebuie să rămână sursa unică de adevăr pentru tot sistemul.
+
+Exemplu minimal de SSOT:
+
+{
+  "plans": [
+    {
+      "code": "free",
+      "name": "Free",
+      "flags": {
+        "canUseAllModules": false,
+        "canExportMD": false,
+        "canExportPDF": false,
+        "canExportJSON": false,
+        "canUseGptTestReal": false,
+        "hasCloudHistory": false,
+        "hasEvaluatorAI": false,
+        "hasAPI": false,
+        "hasWhiteLabel": false,
+        "canExportBundleZip": false,
+        "hasSeatsGT1": false
+      },
+      "module_allowlist": ["M01","M10","M18"]
+    },
+    {
+      "code": "creator",
+      "name": "Creator",
+      "flags": {
+        "canUseAllModules": true,
+        "canExportMD": true,
+        "canExportPDF": false,
+        "canExportJSON": false,
+        "canUseGptTestReal": false,
+        "hasCloudHistory": false,
+        "hasEvaluatorAI": false,
+        "hasAPI": false,
+        "hasWhiteLabel": false,
+        "canExportBundleZip": false,
+        "hasSeatsGT1": false
+      }
+    },
+    {
+      "code": "pro",
+      "name": "Pro",
+      "flags": {
+        "canUseAllModules": true,
+        "canExportMD": true,
+        "canExportPDF": true,
+        "canExportJSON": true,
+        "canUseGptTestReal": true,
+        "hasCloudHistory": true,
+        "hasEvaluatorAI": true,
+        "hasAPI": false,
+        "hasWhiteLabel": false,
+        "canExportBundleZip": false,
+        "hasSeatsGT1": false
+      }
+    },
+    {
+      "code": "enterprise",
+      "name": "Enterprise",
+      "flags": {
+        "canUseAllModules": true,
+        "canExportMD": true,
+        "canExportPDF": true,
+        "canExportJSON": true,
+        "canUseGptTestReal": true,
+        "hasCloudHistory": true,
+        "hasEvaluatorAI": true,
+        "hasAPI": true,
+        "hasWhiteLabel": true,
+        "canExportBundleZip": true,
+        "hasSeatsGT1": true
+      }
+    }
+  ]
+}
+
+
+Această formă reflectă exact „rezumatul mapping” din materialele tale, doar că este pusă în SSOT JSON pentru a fi consumată automat.
+
+3) Creează structura DB minimă pentru SSOT și materializare
+
+În Postgres/Supabase ai nevoie de trei entități: planuri, abonamente, entitlements efective. Șema ta recomandată le acoperă deja:
+
+plans(code, name, flags jsonb, retention_days, created_at, updated_at) – SSOT persistat.
+
+subscriptions(org_id, stripe_*…, plan_code, seats, status, trial_end, current_period_end) – starea Stripe.
+
+entitlements(org_id, user_id?, flag, value, source, expires_at) – materializarea planului în runtime, pe care o verifică UI/APIs.
+Aceste tabele și fluxul lor sunt definite în blueprintul tău și folosite ca bază pentru gating (multi-tenant, RLS etc.).
+
+4) Seed: încarcă planurile în DB (SSOT → DB)
+
+Încarcă plans.json în tabelul plans, câmpul flags rămâne 1:1 cu SSOT.
+
+Optional, păstrează și un fișier „seed SQL” care inserează cele patru planuri cu flags JSONB.
+
+Nu scrie niciodată „if (plan === 'pro')” în cod; consumi doar flags din SSOT/DB.
+Această disciplină „config, nu if-uri” este cerută explicit în standardul tău de operare.
+
+5) Stripe: conectează planurile la Products/Prices și sincronizează
+
+Creezi Products/Prices în Stripe pentru free/creator/pro/enterprise.
+
+Webhook-urile checkout.session.completed, invoice.paid, customer.subscription.updated actualizează subscriptions.plan_code, status, seats și apoi materializează entitlements în tabelul entitlements din plans.flags (sursa plan).
+
+La downgrade/past_due, regenerezi rapid entitlements și trimiți invalidare către FE (hook de cache din UI).
+
+6) Rezolvă entitlements în runtime înaintea fiecărei acțiuni sensibile
+
+În middleware/handler (Next.js App Router), la fiecare request pui în context: org, user, entitlements (fuzionate din surse: plan + addons/packs/licențe).
+
+Orice acțiune critică verifică întâi entitlement-ul potrivit:
+
+canUseGptTestReal pentru Live Test Engine.
+
+canExportPDF/canExportJSON/canExportBundleZip înainte de export.
+
+hasAPI pentru rutele publice /api.
+
+Dacă flagul necesar este false, întorci 402 Payment Required și rinderezi Paywall în UI.
+Mecanismul de gating la nivel FE și API este deja specificat în IA/kitul de componente (PaywallModal, PaywallInline, ExportDialog, hooks).
+
+7) Impune regulile de export și pragurile de calitate (DoD)
+
+Pentru exporturi Pro/Enterprise, înainte de a genera fișierul:
+
+verifică entitlement pe format,
+
+validează scorul ≥ 80 (Evaluator AI),
+
+scrie manifest.json și checksum.txt SHA-256.
+
+Dacă scorul este sub prag, răspunzi cu 422 SCORE_BELOW_THRESHOLD; UI sugerează „Tighten & re-test”.
+Acesta este standardul DoD în ruleset și export pipeline, documentat cu manifest+checksum și rubrică de scoruri.
+
+8) Respectă politica de trial și watermark
+
+Trial Pro are watermark la export; se configurează în SSOT/ruleset ca policy (watermark_trial: true).
+
+La conversie (invoice.paid) watermarkul se ridică; la expirarea trialului, flags revin la planul de bază.
+Acest comportament este deja formalizat în ruleset/SSOT.
+
+9) Gestionează corect seats & roluri (doar Enterprise)
+
+Dacă hasSeatsGT1 este true, permiți invitații pe organizație și gestionezi roluri în org_members.
+
+RLS izolează datele pe org_id, iar seats se leagă de subscriptions.seats.
+Acest model este deja schițat în blueprintul tău pentru multi-tenant și RLS by membership.
+
+10) Aplică rate-limit pe plan (anti-abuz, cost control)
+
+Utilizezi rate-limits per rută, cu praguri diferite pe plan (ex.: Free 20/h, Pro 100/h, Enterprise 1000/h) și returnezi 429 când e depășit.
+
+Rate-limits se setează în ruleset și se verifică la gateway/edge pentru cost control previzibil.
+Politicile de rate limiting fac parte din rulesetul de producție.
+
+11) UI gating clar și consecvent
+
+În grile, butoanele nepermise apar dezactivate cu motiv („Disponibil pe Pro/Enterprise”).
+
+La acțiune blocată, apare PaywallModal cu CTA de upgrade.
+
+ExportDialog arată doar formatele permise de plan și pune tooltip pe cele blocate.
+Aceste componente și patternuri sunt deja incluse în IA și kitul UI (Paywall*, ExportDialog, useEntitlements).
+
+12) Telemetrie și măsurare a conversiei prin paywall
+
+Emite evenimente standard: paywall_hit(feature), export_*, module_run_live, checkout_*.
+
+Leagă conversia free→paid de features blocate (de ex.: click pe Export PDF / Run Live Test).
+Taxonomia de evenimente și dashboardurile recomandate sunt deja definite pentru revenue/funnel/usage/perf.
+
+13) Teste de acceptanță (esențial, fără tabele)
+
+Verifică că Free nu poate rula Live Test și nu poate exporta .md/.pdf/.json/.zip.
+
+Verifică că Creator poate exporta .md, nu .pdf/.json/.zip.
+
+Verifică că Pro poate exporta .pdf/.json, dar blochezi export sub scor 80.
+
+Verifică că Enterprise poate exporta .zip și poate accesa API; fără key valid → 403.
+
+Verifică upgrade/downgrade: entitlements se reflectă în <30s după webhook.
+
+Verifică watermark activ în trial și eliminat după plată.
+Aceste scenarii și codul de stare aferent sunt recomandate în standardele tale de DoR/DoD și gating.
+
+14) Guvernanță & schimbări controlate
+
+Orice modificare de „plan → flags” se face în SSOT (plans.json) și este propagată automat în DB; codul UI/API nu conține if-uri pe nume de plan.
+
+Versiunile de ruleset și override-urile se loghează separat pentru audit, astfel încât să poți explica oricând „de ce a fost permis/respins un export” la un anumit moment.
+
+15) Siguranță & confidențialitate
+
+Telemetria nu păstrează conținut brut (doar scoruri/tokens/durate/hituri de policy).
+
+Bundle-urile respectă manifest+checksum; în caz de leak PII, blochează export și marchează incident.
+Aceste cerințe sunt prevăzute în politicile de DoD/telemetrie și export standardizat
+
+
+
+
+
+
+“2) Model de date (Supabase/Postgres)” – îți dau arhitectura executabilă cap-coadă: ce tabele ai nevoie, de ce există, cum se leagă, ce politici RLS pui, ce indici/validări sunt critice și cum se propagă Stripe→DB→runtime. Folosesc aceeași terminologie SSOT ca la punctul 1.
+
+Obiectiv
+
+Modelează strict minimul producție-ready pentru: multi-tenant (org), planuri→entitlements, addon/pack/licențe, execuții (runs), scoruri, exporturi (manifest+checksum), istorice 7D, API keys, seats & rate-limits. Schema ta de referință deja acoperă aceste familii; mai jos este versiunea operațională, aliniată unu-la-unu cu blueprint-ul existent.
+
+A. Identitate & Tenancy (organizații, membri, RLS)
+
+orgs — container multi-tenant (workspace).
+– Câmpuri: id uuid pk, name text, slug text unique, created_at, updated_at.
+– De ce: izolezi totul pe org_id, RLS “deny-by-default” pe toate tabelele copil.
+
+org_members — legătură user↔org + rol (owner|admin|member).
+– PK compus (org_id, user_id); indici pe user_id, created_at.
+– RLS: fiecare user vede doar org-urile unde este membru; numai owner/admin pot invita/promova; “last-owner-guard” la DELETE/UPDATE pe ultimul owner.
+
+Nota: RLS by-membership este modelul canonic din blueprint; îl refolosești identic pe runs/bundles/api_keys etc. (filtre pe org_id).
+
+B. Comercial: planuri, abonamente, entitlements, addon/pack/licențe
+
+plans — SSOT de plan → flags JSONB (entitlements snapshot).
+– Conține: code, name, flags jsonb, retention_days, timbre.
+– Rol: singura sursă pentru “plan → capabilități”; nu codifici în UI/BE, doar citești flags.
+
+subscriptions — “starea Stripe” la nivel de org.
+– Câmpuri: org_id, stripe_customer_id, stripe_subscription_id, plan_code, seats, status, trial_end, current_period_end.
+– Rol: webhook Stripe actualizează asta, apoi materializezi entitlements efective (pasul următor).
+
+entitlements — adevărul de runtime (verifici aici la fiecare acțiune).
+– Cheie compusă: (org_id, coalesce(user_id,'0000…'), flag); câmpuri: value bool, source ('plan'|'addon'|'pack'|'license'), expires_at, meta.
+– Rol: fuzionezi plan + addon + packs + licențe într-o singură vedere logică (binarian). Pre-run/export/API verifică doar aici.
+
+user_addons — achiziții punctuale (prompt-packs etc.).
+– Chei: (org_id, user_id, addon_code); le proiectezi în entitlements cu source='addon'.
+– Rol: cresc ARPU fără a complica planurile, conform modelului tău comercial.
+
+industry_packs & org_industry_packs — licențe verticale (FinTech/E-com/Edu).
+– industry_packs: slug, modules[] (Mxx), domain_preset (jargon, KPIs, compliance), export_requirements, ui.upsell, stripe ids etc.
+– org_industry_packs: (org_id, pack_slug, activated_at); la runtime verifici “are pack?” pentru modul/domain vizat.
+
+api_keys — chei Enterprise pentru /api/run/{moduleId}.
+– Câmpuri: org_id, key_hash, active, rate_limit, last_used_at.
+– RLS: vizibile doar membrilor org; scriere doar service-role.
+– Rol: hasAPI → obligatoriu; altfel 402/Paywall.
+
+C. Motor 7D, module și versiuni
+
+modules — catalogul M01…M50 (SSOT public).
+– Minime: module_id 'Mxx' pk, name, vectors[], spec, output_schema, guardrails.
+– Rol: UI/Docs/SEO trebuie să bată la fix cu API (SSOT).
+
+module_versions — snapshot semver al fiecărui modul (freeze).
+– Chei: id, module_id, semver, enabled, snapshots: vectors, spec, output_schema, kpi, guardrails.
+– Rol: reproducibilitate & rollback elegant; view v_module_latest pentru “ultima versiune”.
+
+parameter_sets — instanțe 7D (domain/scale/urgency/complexity/resources/application/output_formats).
+– Rol: fixarea contextului 7D folosit la runs/prompt_history; validezi împotriva ruleset (enum-only).
+
+prompt_history — fiecare generare (simulate/live), snapshot 7D + output text.
+– Câmpuri: org_id, user_id, module_id, parameter_set_id, hash, config jsonb, output, version, created_at.
+– Rol: audit & reuse; pentru Pro/Ent → retentie în cloud, altfel doar local (flag hasCloudHistory).
+
+D. Execuție, scoruri, exporturi (DoR/DoD + manifest/checksum)
+
+runs — execuția efectivă.
+– Câmpuri: org_id, user_id, module_id, parameter_set_id, type ('generation'|'test'|'agent'), status ('queued'|'success'|'error'), model, tokens_used, cost_usd, duration_ms, telemetry jsonb, started_at, finished_at.
+– Rol: anchor pentru scoruri & bundle; principala sursă pentru KPI operaționale (TTA, cost, rate succes).
+
+prompt_scores — Evaluator AI (un-la-un cu run).
+– Câmpuri: run_id pk, clarity|execution|ambiguity|business_fit, feedback jsonb.
+– Reguli DoD: scor total ≥ 80 pentru PDF/JSON/ZIP; altfel 422 (UI → “Tighten & re-test”).
+
+bundles — exporturi verificabile (artefacte + integritate).
+– Câmpuri: id, run_id, formats[], paths jsonb, checksum 'sha256:…', exported_at, version, license_notice.
+– Constrângeri: array non-gol, paths=object, checksum format SHA-256; indici pe run_id, exported_at, formats gin.
+– Rol: standard legal & comercial; ZIP doar Enterprise (canExportBundleZip).
+
+Politica DoD/Export (impusă în API): entitlement pe format + scor ≥ 80 + manifest+checksum; altfel refuz. E fix standardul tău oficial.
+
+E. Politici RLS, indici, validări – esențial
+
+• RLS by membership pe toate tabelele cu org_id: SELECT/INSERT/UPDATE/DELETE permise doar membrilor org-ului; scrieri sensibile (ex. bundles, module_versions, api_keys) doar cu service-role.
+• Integritate semver / sha256 / enum-only: checks pentru module_versions.semver, bundles.checksum, validare 7D via ruleset (enum-only + raise on invalid).
+• Indici practici:
+– runs(org_id, module_id, started_at desc) pentru rapoarte.
+– prompt_history(org_id, created_at desc) pentru listări rapide.
+– entitlements(org_id, user_id, flag) pentru gating O(1).
+– bundles(exported_at desc) și bundles(formats gin) pentru analytics export.
+
+F. Fluxul Stripe→DB→Runtime (materializare entitlements)
+
+Stripe Checkout → subscriptions (plan_code, seats, status).
+
+Materializare: citești plans.flags → scrii în entitlements (source='plan').
+
+Aduni addon/packs/licențe → scrii/actualizezi entitlements suplimentare.
+
+Runtime: middleware/route handler încarcă entitlements și gătează:
+– Live Test → canUseGptTestReal
+– Export PDF/JSON → canExportPDF/canExportJSON
+– Bundle ZIP → canExportBundleZip
+– API → hasAPI
+– White-label → hasWhiteLabel
+Dacă flag=FALSE → 402 Payment Required + Paywall; dacă score < 80 la export → 422 (DoD).
+
+G. Ordine de migrații (pragmatic)
+
+orgs, org_members (+RLS).
+
+plans (seed din SSOT), subscriptions, entitlements, user_addons, api_keys.
+
+industry_packs, org_industry_packs (opțional P1), mapări domain preset.
+
+modules, module_versions (freeze & latest view).
+
+parameter_sets, prompt_history (7D).
+
+runs, prompt_scores (rubrică evaluator).
+
+bundles (export policy + checksum + manifest).
+
+Indici, trigger „updated_at”, funcții utilitare (insert bundle, publică versiune etc.).
+
+H. Semnale de calitate (DoR/DoD) atașate modelului
+
+• DoR: 7D complet și valid (enum-only), entitlement verificat, output_spec încărcat, testcases definite, input minim existent.
+• DoD: scor ≥ 80; output complet; checksum valid; manifest prezent (cu license_notice); telemetrie salvată (fără PII).
+
+I. De ce această schemă “ține” în producție
+
+• Tenancy clar (org + RLS) → niciun leak cross-org.
+• Gating atomic (entitlements binare) → orice acțiune e un flag verificabil, fără “if plan_name” în cod.
+• Export verificabil (manifest + checksum) → livrabile profesionale auditate.
+• Reproducibilitate (module_versions) → rollback și investigații ușoare.
+• Scalabilitate comercială (addon/packs/licențe) → creștere ARPU fără a rupe planurile.
+
+
+
+
+
+
+fluxul Stripe → Supabase „cap-coadă”, pas cu pas, astfel încât plan_code și entitlements să fie corecte, rapide și auditate. Îl scriu ca un playbook executabil: ce pregătești în Stripe, ce salvezi în DB, cum materializezi entitlements, cum invalidezi UI, ce faci la trial/prorratare/dunning, cum asiguri idempotency și cum observi fluxul în timp real.
+
+0) Premise (SSOT + API + Gating)
+
+Planurile și flag-urile (entitlements) trăiesc în SSOT (plans.json / tabelul plans.flags). Codul nu ia decizii pe nume de plan, ci doar pe flags materializate (binare).
+
+FE/BE verifică doar entitlements materializate în tabelul entitlements înaintea fiecărei acțiuni (Run Live Test, Export PDF/JSON/ZIP, API) – altfel 402 + Paywall.
+
+Stripe e autoritatea de stare financiară; Supabase e autoritatea de acces (entitlements).
+
+1) Pregătire în Stripe (o singură dată)
+
+Creează Products/Prices pentru free/creator/pro/enterprise (monthly + annual). Denumirea comercială poate varia; contează price_id ↔ plan_code în maparea ta.
+
+Activează Customer Portal (self-service) pentru upgrade/downgrade/seat-changes.
+
+În Stripe → Developers → Webhooks, creează endpoint pentru:
+
+checkout.session.completed, invoice.paid, customer.subscription.updated, customer.subscription.deleted, invoice.payment_failed.
+
+Pornește Smart Retries (dunning) și prorratarea implicită la upgrade (Stripe știe să refacă diferențele).
+Aceste evenimente sunt cele din fluxul tău standard de billing pe care le vei normaliza în handler.
+
+2) Checkout (creare sesiune)
+
+Pasul e la tine în backend (/api/billing/checkout):
+
+Primești {plan, interval, addons?, seats?} din FE.
+
+Creezi Checkout Session (mode='subscription') cu line_items = plan + addons, allow_promotion_codes=true, success_url, cancel_url.
+
+Stripe redirecționează la success_url după plată.
+
+Pe checkout.session.completed → treci la pasul 4 (webhook).
+Acest flux este deja schițat în specificațiile tale BE.
+
+3) Modelul de DB (minimul necesar pentru flux)
+
+plans(code, flags jsonb, …) – SSOT; flags conține toți entitlements pe plan.
+
+subscriptions(org_id, stripe_customer_id, stripe_subscription_id, plan_code, seats, status, trial_end, current_period_end) – „adevărul Stripe” sincronizat.
+
+entitlements(org_id, user_id?, flag, value, source, expires_at) – adevărul de runtime; aici verifică UI/BE.
+Această familie există deja în blueprint; fluxul se sprijină pe ea.
+
+4) Webhook — normalizare evenimente → upsert subscriptions
+
+Handlerul /api/webhooks/stripe:
+
+Verifică semnătura (secret) și idempotency (memorizezi event.id procesat).
+
+Normalizează payloadul în structura ta: customer_id, subscription_id, plan_code (mapat din price), seats (quantity), status (trialing|active|past_due|canceled), trial_end, current_period_end.
+
+Upsert în subscriptions cu cheia (org_id) (știai org_id din metadata la Checkout sau îl deduci din customer mapping).
+
+Materializează entitlements imediat după upsert (vezi pasul 5).
+Evenimentele minime: checkout.session.completed + customer.subscription.updated + invoice.paid + customer.subscription.deleted + invoice.payment_failed.
+
+5) Materializarea entitlements (plan → flags → entitlements)
+
+Funcție unică materializeEntitlements(org_id, plan_code):
+
+Citești flags din plans pentru plan_code (SSOT).
+
+Scrii/actualizezi rânduri în entitlements cu source='plan' pentru fiecare flag:
+
+flag, value (boolean), expires_at (ex: dacă e trial), meta (snapshot de plan).
+
+Nu ștergi alte surse (addon|pack|license), doar refaci stratul plan.
+
+După write, emiți un invalidate event (ex: Realtime channel) ca UI să refacă useEntitlements() și să-și schimbe gating-ul live.
+
+De ce: runtime-ul (FE/BE) consultă doar entitlements; mapping-ul plan→flags e rezolvat la webhook, nu la fiecare request (scazi latența și complexitatea).
+
+6) Cazuri speciale (trial, prorratare, downgrade, dunning)
+
+Trial Pro: la status='trialing' setezi flags ca Pro, dar marchezi în policy „watermark_trial=true” (se aplică la export) și setezi expires_at=trial_end; la invoice.paid scoți watermark; la trial_end fără plată → materializezi creator/free conform regulii tale default.
+
+Upgrade cu prorratare: Stripe face calculul → tu doar primești customer.subscription.updated cu plan_code nou; rulezi materializarea entitlements → UI se deblochează imediat (sub 30s).
+
+Downgrade at period end: Stripe setează cancel_at_period_end=true; până la current_period_end păstrezi flags vechi; la rollover, re-materializezi planul inferior.
+
+Past_due / dunning: la invoice.payment_failed + past_due, aplici „degrade safe”: dezactivezi exporturile plătite și Live Test (Pro) dar poți păstra minim .md (Creator) sau pur și simplu revii la free; la invoice.paid → materializezi înapoi planul corect.
+
+7) Securitate & robustețe
+
+Idempotency: păstrezi events_log cu event_id, type, processed_at; dacă vine din nou, ieși fără efecte.
+
+Row-level security: entitlements și subscriptions sunt accesibile doar membrilor org-ului (RLS by membership) – service-role pentru webhook write.
+
+Validare plan_code: CHECK (plan_code in plans) sau FK spre plans(code); fallback = free.
+
+Audit: entitlements.source='plan' și meta cu snapshot; poți explica oricând de ce a fost blocat/deblocat un feature.
+
+No PII în telemetrie: într-un flux de export, loghezi scoruri/cost/tokens, nu conținut brut; exporturile Pro/Ent au manifest + checksum obligatoriu (altfel 422).
+
+8) Invalidează FE (live) după webhook
+
+Emite un mesaj pe canalul Realtime (Supabase/WS) „entitlements.invalidate” pentru org_id.
+
+FE are useEntitlements() care ascultă evenimentul și re-face GET /api/entitlements; ExportDialog și PaywallModal re-randare instant.
+
+Acest pattern este deja în kitul tău (useEntitlements, HOC withEntitlementGate, componente Paywall/ExportDialog).
+
+9) Observabilitate (revenues & gates)
+
+Evenimente minime: checkout_started, checkout_paid, plan_changed, paywall_hit(feature), export_request(format), export_blocked(reason), module_run_live.
+
+Dashboard: Free→Paid conversion mapată pe hit-uri de paywall (ex: PDF/JSON/ZIP, Live Test) + rata de re-materializare entitlements < 30s.
+
+10) Teste critice (end-to-end)
+
+„Happy path” Pro anual: checkout → checkout.session.completed → customer.subscription.updated → materialize pro → FE vede PDF/JSON/Live Test active.
+
+Trial Pro: watermark ON; după invoice.paid watermark OFF.
+
+Upgrade Creator→Pro (prorratare): flags noi sub 30s; export PDF merge; Live Test merge.
+
+Downgrade Pro→Creator la end-of-period: până la rollover rămâne Pro; după rollover Creator; export PDF devine 402.
+
+Past_due: PDF/JSON/Live Test devin 402; după invoice.paid redevin active.
+
+API Enterprise: hasAPI true → /api/run/* 200 cu key valid; fără → 402/403 (în funcție de politică).
+Aceste stări și coduri sunt în regulile tale (402 la paywall, 422 la DoD fail, 429 la rate-limit).
+
+11) De ce modelul e sănătos
+
+Separă banii de acces: Stripe decide cashflow; SSOT + materializare decide accesul.
+
+Rapid: toate deciziile la runtime sunt O(1) pe entitlements (nu parsezi Stripe la fiecare clic).
+
+Auditabil: poți reconstrui „de ce a fost blocat PDF pe X” din entitlements.meta, runs, bundles, prompt_scores.
+
+Compatibil cu add-ons & packs: oricând adaugi surse noi (addon|pack|license) fără să atingi codul de gating (doar scrii alte rânduri în entitlements).
+
+
+
+
+
+Îți dau „4) Middleware & API gating” ca un plan de implementare, pas-cu-pas, cu fragmente gata de lipit. Acoperă trei puncte critice: pre-run (simulate vs live), pre-export (formate + DoD), și API public (Enterprise). Totul verifică doar entitlements materializate (nu numele planului) și respectă regulile de DoR/DoD, manifest+checksum, rate-limits și RLS pe org, exact cum ai standardizat în proiect.
+
+0) Principiu unic (SSOT)
+
+La fiecare cerere, middleware-ul compune Context: org, user, entitlements, module, parameter_set_7d.
+
+Gating-ul verifică doar flags binare (ex: canUseGptTestReal, canExportPDF) din tabelul entitlements; dacă lipsesc → 402 Payment Required + Paywall în UI.
+
+Nu există „if (plan === 'pro')” în cod; totul se citește din entitlements (plan/packs/addons deja materializate via Stripe→DB).
+
+1) Boot: context + RLS + rate-limit
+
+Auth & org binding: middleware extrage org_id din sesiune și atașează la context; toate query-urile au org_id → RLS by membership (deny-by-default).
+
+Entitlements: încarci entitlements fuse (plan + addon + packs + licenses) în memorie (cache 30–60s) pentru cereri succesive.
+
+Rate-limit: aplici pe rută (edge/gateway), cu praguri diferite pe plan; 429 la depășire + CTA de upgrade (config în ruleset).
+
+// middleware.ts (simplificat)
+export async function middleware(req: NextRequest) {
+  const session = await getSession(req)
+  const org = await resolveOrg(session)
+  const ent = await loadEntitlements(org.id)      // cache short-lived
+  const lim = await rateLimit(req, org.id)        // 429 dacă depășești pragul planului
+  req.headers.set('x-org-id', org.id)
+  req.nextUrl.searchParams.set('entitlements', encode(ent))
+  return NextResponse.next()
+}
+
+2) Pre-run gating (simulate vs live)
+
+Scop: să nu rulezi Live Test Engine fără drepturi; să validezi DoR (7D minim) înainte de execuție.
+
+Simulate (toți): nu cere entitlement; validezi 7D minim și schema input; rulezi ieftin determinist; marchezi module_run_simulated.
+
+Live (Pro/Ent): verifici canUseGptTestReal === true înainte de execuție; dacă nu, 402 + Paywall (FE are PaywallInline pe buton).
+
+DoR: 7D enum-only, output_spec disponibil, testcases minime; altfel returnezi 422 cu motivul lipsă („NU EXISTĂ DATE” e fallback-ul tău canonic).
+
+// app/api/gpt-test/route.ts (pseudo)
+import { checkDoR } from '@/lib/dor-dod'
+import { must } from '@/lib/gate'
+
+export async function POST(req: NextRequest) {
+  const ctx = await getCtx(req) // org, user, entitlements, 7D, module
+  const body = await req.json()
+
+  if (body.mode === 'live') must(ctx.ent.canUseGptTestReal, 402) // Paywall
+  const dor = checkDoR(ctx.module, body.params7D)                // 7D + spec + tests + inputs
+  if (!dor.ok) return fail(422, dor.reason)                      // DoR gate
+
+  const result = (body.mode === 'live')
+    ? await runLive(ctx, body)
+    : await runSimulate(ctx, body)
+
+  logRun(ctx, result) // runs + telemetry (tokens, duration etc.)
+  return ok(result)
+}
+
+
+DoR este explicit în standardul tău: 7D valid, entitlement valid, spec încărcat, testcases definite, input minim existent.
+
+3) Pre-export gating (format + DoD + manifest/checksum)
+
+Scop: să nu permiți exporturi fără drepturi sau sub calitate, și să garantezi integritatea artefactelor.
+
+Format:
+
+.txt → permis mereu;
+
+.md → canExportMD;
+
+.pdf → canExportPDF;
+
+.json → canExportJSON;
+
+.zip → canExportBundleZip (numai Enterprise).
+Dacă lipsește flag-ul cerut → 402 (Paywall).
+
+DoD: pentru .pdf/.json/.zip impui: score ≥ 80, output complet conform output_spec, checksum SHA-256 valid, manifest.json prezent (inclus license_notice) – altfel 422 (policy fail).
+
+Trial watermark: dacă e trial activ, inserezi watermark (policy din SSOT/ruleset).
+
+// app/api/export/route.ts
+import { exportBundle, writeManifest, sha256 } from '@/lib/export'
+
+export async function POST(req: NextRequest) {
+  const ctx = await getCtx(req)   // org, entitlements, run_id
+  const { runId, format } = await req.json()
+
+  const allow = {
+    txt: true,
+    md:  ctx.ent.canExportMD,
+    pdf: ctx.ent.canExportPDF,
+    json:ctx.ent.canExportJSON,
+    zip: ctx.ent.canExportBundleZip
+  }
+  if (!allow[format]) return paywall(402)
+
+  const run = await loadRun(ctx.org.id, runId)
+  if (['pdf','json','zip'].includes(format)) {
+    if (run.score.overall < 80) return fail(422,'SCORE_BELOW_THRESHOLD') // DoD
+  }
+
+  const files = await exportBundle(run, format)                  // prompt.txt/md/json/pdf
+  const manifest = await writeManifest(run, files, ctx.watermark)
+  const checksum = sha256(files)                                 // checksum.txt
+
+  await saveBundle(run.id, files, manifest, checksum)            // bundles(...)
+  return ok({ download: signedUrl(run, format) })
+}
+
+
+Structura bundle-ului și regulile de integritate (manifest + checksum) sunt standardizate în proiectul tău.
+
+4) API public (Enterprise): /api/run/{moduleId}
+
+Scop: acces programatic pentru clienții Enterprise – strict la key validă, cu rate-limit și pack-gating.
+
+Gate: hasAPI === true (altfel 402) + api_key valid (altfel 403).
+
+Rate-limit: per org/key, valori ridicate la Enterprise; 429 la depășire (config în ruleset).
+
+Industry Packs: dacă modulul e marcat „industry-only”, verifici și org_industry_packs; fără pack → 403 industryPack_required.
+
+RLS: orice citire/scriere pe org_id prin service-layer; doar service-role creează bundles.
+
+// app/api/run/[moduleId]/route.ts
+export async function POST(req: NextRequest, { params }: { params:{ moduleId:string } }) {
+  const ctx = await getCtx(req)                 // include org, entitlements
+  must(ctx.ent.hasAPI, 402)                     // Paywall dacă nu are API
+  const apikey = req.headers.get('x-api-key')
+  if (!await apiKeyValid(ctx.org.id, apikey)) return fail(403,'API_KEY_INVALID')
+
+  await rateLimitApi(ctx.org.id, 'run')         // 429 pe depășire
+
+  const mod = await loadModule(params.moduleId)
+  if (mod.industryOnly && !await hasPack(ctx.org.id, mod.pack)) return fail(403,'INDUSTRY_PACK_REQUIRED')
+
+  const body = await req.json()
+  const dor = checkDoR(mod, body.params7D)      // la fel ca în pre-run
+  if (!dor.ok) return fail(422, dor.reason)
+
+  const result = await runLive(ctx, { moduleId: params.moduleId, ...body })
+  await logRun(ctx, result)
+  return ok({ runId: result.id })
+}
+
+5) FE gating: component & UX
+
+FeatureGate: un wrapper simplu care citește useEntitlements(); dacă flagul lipsește, arată PaywallInline cu CTA (upgrade).
+
+ExportDialog: afișează DOAR formatele permise; cele blocate apar disabled cu tooltip (“Disponibil pe {nextPlan}”).
+
+Invalidare la upgrade: după webhook Stripe → „entitlements.invalidate” (Realtime); FE re-fetch și UI se deblochează instant.
+
+// withEntitlementGate.tsx (simplu)
+export function FeatureGate({flag, children, fallback}:{flag: keyof Entitlements;children:React.ReactNode;fallback?:React.ReactNode}) {
+  const { entitlements } = useEntitlements()
+  if (!entitlements?.[flag]) return fallback ?? <PaywallInline feature={flag}/>
+  return <>{children}</>
+}
+
+6) Coduri de răspuns & politici
+
+402 Payment Required: lipsește entitlement (Paywall).
+
+422 Unprocessable Entity: standarde de calitate/compat (ex: DoR/DoD fail, score < 80, manifest/ checksum lipsă).
+
+403 Forbidden: key invalidă / industry pack lipsă pe API.
+
+429 Too Many Requests: rate-limit depășit (plan-based).
+
+7) Observabilitate & audit
+
+Evenimente server: module_run_simulated, module_run_live, export_request(format), export_success, export_blocked(reason), paywall_hit(feature), api_call.
+
+Persistență: runs (tokens, cost, ms), prompt_scores, bundles (manifest, checksum, formats) pentru trasabilitate completă.
+
+8) Teste minime (fără tabele)
+
+Simulate merge pe toate planurile; Live Test 402 pe Free/Creator, 200 pe Pro/Ent.
+
+Export .md merge pe Creator+, .pdf/.json doar pe Pro+, .zip doar pe Ent; sub scor 80 → 422.
+
+API /api/run/* 402 fără hasAPI, 403 cu key invalidă, 200 cu key validă; industry-only fără pack → 403.
+
+Rate-limit: 429 la depășire, mesaj clar + CTA upgrade.
+
+
+
+
+
+
+
+„5) Frontend gating (componente & UX)” — îți pun la cheie tot front-endul de gating, din unghiul de produs + cod: cum legi entitlements de UI, ce componente folosești, ce semnale arăți, cum tratezi exportul/score-ul, cum invalidezi în timp real după upgrade, ce telemetrie emiți și cum te asiguri că totul e accesibil și solid pe mobile.
+
+1) Principiu unic
+
+UI nu decupează după nume de plan; verifică doar entitlements binare (ex. canUseGptTestReal, canExportPDF, hasAPI). Astea vin din SSOT plan→flags și sunt materializate în DB; FE doar citește și decide vizual (enable/disable/Paywall). Mappingul componentelor pentru paywall și export există deja în structura ta (PaywallModal/Inline/CTA, ExportDialog); entitlements au hook & wrapper dedicate (useEntitlements, withEntitlementGate).
+
+2) Context de ecran (state comun)
+
+La mount (layout), faci fetch la /api/entitlements și pui rezultatul într-un store client (React context/Zustand).
+
+Te abonezi la evenimentul „entitlements.invalidate” (Realtime) pentru refresh instant la upgrade/downgrade. Infra pentru invalidate e deja prevăzută în librăria ta (invalidate hook + cache).
+
+3) Pattern „Gate → Hint → Action”
+
+Gate: butonul/meniul este dezactivat dacă flagul cerut e false.
+
+Hint: tooltip explicit („Disponibil pe Pro/Enterprise”, sau „Necesită API/White-label”).
+
+Action: click pe un element blocat deschide PaywallModal cu oferta corectă și CTA. Componentele Paywall* sunt listate în kitul tău și se montează exact pe aceste acțiuni.
+
+Exemplu:
+
+„Run Real Test” (Live): necesită canUseGptTestReal; altfel Paywall.
+
+Export „PDF/JSON/ZIP”: canExportPDF/canExportJSON/canExportBundleZip; altfel Paywall.
+
+Acces API docs cu cheie: hasAPI; altfel Paywall.
+
+4) Componente standard (și unde le pui)
+
+FeatureGate (wrapper UI): redă children doar dacă entitlementul e true; altfel PaywallInline.
+
+PaywallInline (în loc): mic card informativ cu CTA (upgrade) integrat în flux.
+
+PaywallModal (blocking): apare pe acțiuni blocate (click explicit).
+
+PaywallCTA (micro): buton „Upgrade to Pro/Ent” plasat în zonele cheie.
+
+ExportDialog: arată doar formatele permise de plan; opțiunile blocate rămân vizibile dar disabled cu tooltip „Dezblochezi pe {nextPlan}”.
+
+Snippet rapid pentru wrapper:
+
+export function FeatureGate({
+  flag, children, fallback
+}: { flag: keyof Entitlements; children: React.ReactNode; fallback?: React.ReactNode }) {
+  const { entitlements } = useEntitlements();
+  if (!entitlements?.[flag]) return fallback ?? <PaywallInline feature={flag} />;
+  return <>{children}</>;
+}
+// ex: <FeatureGate flag="canUseGptTestReal"><LiveTestPanel/></FeatureGate>
+
+
+Librăria/structura acestor piese apare deja în doc-ul tău de IA (paywall/*, ExportDialog, useEntitlements, HOC gate).
+
+5) „Module Overlay” (locul cu cele mai multe blocaje)
+
+Tab Actions:
+
+„Simulate” → mereu activ.
+
+„Run Real Test” → gate pe canUseGptTestReal (altfel Paywall).
+
+„Export” → ExportDialog (formate permise) + scor vizibil după run.
+
+Dacă 7D nu e complet: copy canonic „NU EXISTĂ DATE” + link spre Inputs (DoR).
+
+Dacă scor < 80 la export PDF/JSON/ZIP: mesaj clar „Score < 80. Tighten & Re-test.” (DoD) și blochezi exportul.
+
+6) Export UX (DoD + manifest + checksum)
+
+La export „plătit” (PDF/JSON/ZIP), înaintea generării:
+
+verifici entitlementul formatului;
+
+blochezi dacă score < 80;
+
+rulezi pipeline-ul de manifest.json + checksum SHA-256 și arăți „Preparing…”;
+
+la succes → oferă Download + Copy Checksum (trasabilitate).
+Standardul tău de bundle/manifest/checksum e deja definit, iar UI trebuie doar să arate stările și erorile de policy.
+
+7) „Pricing-aware” tooltips (micro-copy)
+
+Pentru orice feature blocat, arată motivul și ce deblochează (ex.: „PDF/JSON — disponibil pe Pro”, „Bundle ZIP — Enterprise only”, „API Access — Enterprise”).
+
+Ton: scurt, decisiv, la persoana a II-a; consistent cu stilul tău.
+
+PaywallModal preumplut cu planul țintă (Pro/Enterprise) și avantajele semnificative.
+
+8) Invalidează instant după upgrade
+
+După checkout.session.completed/customer.subscription.updated (webhook), backend emite entitlements.invalidate pentru org_id.
+
+FE ascultă și face re-fetch la /api/entitlements, apoi re-randare: butoanele devin active, formatele apar „enable”, plan badge se actualizează.
+Acest mecanism (invalidate + entitlements cache) e prevăzut în kitul tău.
+
+9) Telemetrie (pentru revenue & UX)
+
+Emite: paywall_hit(feature), export_request(format), export_success, export_blocked(reason), module_run_simulated, module_run_live, checkout_started, checkout_paid.
+
+Folosește aceste evenimente în dashboard-urile de funnel & revenue (sunt deja specificate ca taxonomie).
+
+10) Error handling clar
+
+402 (paywall): modal sau inline CTA; păstrezi contextul (nu pierzi 7D).
+
+422 (DoR/DoD):
+
+DoR fail → scroll la Inputs, highlight câmpuri lipsă, copy „NU EXISTĂ DATE”;
+
+DoD fail (score) → buton „Tighten & Re-test”.
+
+429 (rate-limit): banner discret cu „Ai atins limita planului. Încarcă Pro/Ent.” (limitele sunt în ruleset).
+
+403 (API/key/industry pack): mesaj tehnic + link spre „Add API key” / „Activate Industry Pack”.
+
+11) Mobile-first (acceptanță de UI)
+
+Tap targets ≥ 44×44px, focus vizibil, CLS ≤ 0.02, LCP ≤ 2.5s, butoane principale în „thumb zone”.
+
+Toate tooltips și modalele au alternativă touch-friendly; prefers-reduced-motion respectat.
+
+ExportDialog responsive (listă → sheet).
+Aceste criterii și check-listul de mobile QA sunt deja standardizate în pachetul tău (breakpoints, a11y, motion, performance budgets).
+
+12) QA checklist (rapid)
+
+Live Test: Free/Creator blocate (Paywall), Pro/Ent active.
+
+Export .md: Creator+; .pdf/.json: Pro+ (blocate sub 80); .zip: doar Enterprise.
+
+API docs: buton „Create API key” vizibil doar pe Ent; fără hasAPI → Paywall.
+
+Invalidează în <30s după upgrade: butoane devin active fără reload.
+
+Mobile: tooltips/PaywallModal perfect tactile, fără scroll capricios; skeletons pe liste.
+
+13) Conectări cheie cu backend/politici
+
+Gating UI ↔ entitlements (SSOT flags pe plan).
+
+DoR/DoD (validări 7D & scor) aplicate consecvent în UI și enforce în API.
+
+Bundle export (manifest + checksum) — UI doar expune claritatea și verificarea.
+
+Toate componentele de paywall/entitlements/ExportDialog + rutele aferente există deja în structura proiectului și sunt punctate în „Site Structure / Libraries / Components”
+
+
+
+
+
+
+“6) Seats, roluri & multi-seat (Enterprise)” — îți pun tot mecanismul cap-coadă: model, flux Stripe↔DB, politici de acces (RLS), endpoint-uri, UX, audit, edge-cases și testare. Fără tabele, doar pași clari și bucăți gata de lipit.
+
+1) Principiu unic (SSOT → entitlement)
+
+Multi-seat se activează numai dacă entitlementul hasSeatsGT1 este true.
+
+Numărul de locuri disponibile pentru organizație este singurul „sursă de adevăr” numeric: subscriptions.seats.
+
+Orice membru în plus față de subscriptions.seats este blocat la rol sau la invitație, în funcție de politica aleasă (hard-block sau grace).
+
+2) Model minim de date
+
+subscriptions.seats – locuri licențiate Enterprise (sincronizat din Stripe la webhook).
+
+org_members(org_id, user_id, role) – fiecare membru consumă 1 loc.
+
+entitlements(org_id, flag='hasSeatsGT1', value) – activează UI/fluxurile multi-user.
+
+invitations(id, org_id, email, role, invited_by, status, expires_at) – pipeline de invitații.
+
+audits(entity='org_members'|'invitations', action, actor, diff, at) – trasabilitate.
+
+3) Roluri & autorizare
+
+owner – are toate drepturile pe org, inclusiv upgrade/downgrade, seat-count, ștergere org.
+
+admin – poate invita/gestiona membri, poate modifica roluri (nu poate șterge org).
+
+member – utilizator standard; consumă 1 loc, nu poate invita dacă nu există locuri.
+
+Reguli dure:
+
+„last owner guard”: nu poți elimina ultimul owner al organizației.
+
+Orice operațiune pe org_members e protejată de RLS by-membership + verificare de rol (owner/admin).
+
+4) Stripe ↔ Supabase (seats)
+
+La upgrade Enterprise sau la modificarea cantității de seats, Stripe trimite customer.subscription.updated.
+
+Webhook:
+
+upsert în subscriptions(...) (plan_code='enterprise', seats=n, status).
+
+materializează entitlementul hasSeatsGT1=true.
+
+emite un eveniment realtime seats.invalidate pentru org (UI reface contorul).
+
+Prorratare Stripe: când crești reducți/adaugi locuri, Stripe recalculează; tu doar sincronizezi subscriptions.seats.
+
+5) Flux de invitație (Enterprise)
+
+Invită: POST /api/orgs/:orgId/invite cu {email, role}.
+
+Gate: verifici hasSeatsGT1=true și că org_members.count() < subscriptions.seats.
+
+Emit: creezi invitations (status=‘pending’, expires_at ~7 zile) + email cu deep-link (token).
+
+Acceptă: POST /api/orgs/:orgId/invitations/:token/accept.
+
+Consumă loc: inseri org_members(..., role); dacă exact la accept a expirat locul (race), răspunzi 409 + UI arată „Seat unavailable — contact admin”.
+
+Invalidare UI: broadcast members.invalidate.
+
+Politică de expire: dacă nu e acceptată în expires_at, status='expired'; linkul devine invalid, adminul vede „Resend”.
+
+6) Alocare, supra-alocare, fereastră de grație
+
+Hard-block (recomandat): dacă org_members atinge seats, butonul „Invite member” devine disabled; API întoarce 402 „Need more seats”.
+
+Grace (opțional 72h): permiți +1 membru peste seats, marchezi overage=+1 în subscriptions.meta și trimiți banner „You’re over seat limit”. Stripe e ajustat la următoarea modificare/renew (sau rulezi imediat „Update seats”).
+
+Auto-remediere: când un membru părăsește orgul, scade org_members.count(); UI ascunde alerta „overage”.
+
+7) Schimbare rol / revocare acces
+
+PATCH /api/orgs/:orgId/members/:userId cu {role} — permis owner/admin.
+
+Gate: „last owner guard”.
+
+Dacă schimbi member → admin, nu modifică seats (rolul nu consumă extra).
+
+DELETE /api/orgs/:orgId/members/:userId — eliberează instant 1 seat.
+
+UI arată „Seat freed”; invitațiile pot fi reluate.
+
+8) API: endpoints de operare (schematic)
+
+GET /api/orgs/:orgId/members — listă membri + roluri.
+
+POST /api/orgs/:orgId/invite — trimite invitație (verifică seats).
+
+POST /api/orgs/:orgId/invitations/:token/accept — creează membership; invalidează invitația.
+
+PATCH /api/orgs/:orgId/members/:userId — schimbă rol.
+
+DELETE /api/orgs/:orgId/members/:userId — elimină membru.
+
+GET /api/orgs/:orgId/seats — allocated, licensed (din subscriptions.seats), available.
+Toate rutele verifică RLS + rol (owner|admin pentru acțiuni de admin).
+
+9) RLS & politici esențiale
+
+org_members:
+
+SELECT: vizibil doar membrilor acelei org.
+
+INSERT/UPDATE/DELETE: permis doar dacă auth.uid() este owner|admin în acea org.
+
+Trigger „guard last owner”: împiedică pierderea ultimului owner.
+
+invitations:
+
+SELECT: doar owner/admin.
+
+INSERT: doar owner/admin.
+
+UPDATE (accept): endpoint public cu token; la accept verifici token+org.
+
+subscriptions:
+
+SELECT: membri org (doar fields non-sensibile); write din webhook (service-role).
+
+10) UX (web)
+
+Badge în header: „Enterprise — Seats: 7/10”.
+
+Invite Member: deschis doar cu hasSeatsGT1=true. Dacă nu, arată CTA „Add seats” (portal Stripe).
+
+La overage: banner persistent în dashboard „You’re over your seat limit (+1). Add seats or remove members”.
+
+La limită atinsă: tooltip pe butonul de invitație: „No seats available — Add seats”.
+
+SSO (opțional): mapping „email domain allowlist” + default role pentru auto-join; tot consumă seat.
+
+11) White-label & API vs seats
+
+White-label (hasWhiteLabel) nu implică seats suplimentare, dar e legat de Enterprise.
+
+API (hasAPI) este per org: cheile nu consumă seat, însă rata și costul sunt legate de plan; doar org_members pot genera/gestiona chei.
+
+12) Audit & evenimente
+
+La invitație: audits(entity='invitations', action='create', actor, to=email, role).
+
+La accept: audits(entity='org_members', action='insert', actor=invitee).
+
+La remove/promote/demote: audits(entity='org_members', action='update'|'delete', actor, diff={role_before, role_after}).
+
+Metrici: seats_used, seats_licensed, overage_count, time_to_fill_new_seat.
+
+13) Edge-cases
+
+Race la accept: doi invitați acceptă în același timp ultimul seat → primul „wins”, al doilea primește 409 „Seat unavailable”.
+
+Downgrade Enterprise→Pro: la current_period_end, materializezi plan Pro; înainte notifici adminul să reducă membrii la 1 (sau aplici grace window).
+
+Re-invite același email: dacă pending existent, trimite „Resend”; dacă expired, regenerează token; dacă deja membru, arată mesaj „Already a member”.
+
+SSO join fără seats: blochezi cu „No seats available” și trimiți email adminului.
+
+14) Teste de acceptanță (esențiale)
+
+Activezi hasSeatsGT1=true, setezi subscriptions.seats=5.
+
+Invitații: 5 acceptate → OK; a 6-a → 402 „Need more seats”.
+
+Remove member → seats_used scade; poți invita din nou.
+
+Downgrade Enterprise→Pro → la rollover: hasSeatsGT1=false, afișezi wizard „Reduce to 1 user”; încercare de invitație → 402.
+
+Race accept → un 200, unul 409.
+
+Audit: toate acțiunile apar în audits cu actor și diff.
+
+Invalidezi FE la fiecare schimbare (seats.invalidate / members.invalidate).
+
+15) Snippets gata de lipit
+
+Check seat availability (server util):
+
+export async function assertSeatAvailable(orgId: string) {
+  const seats = await getSeats(orgId)           // from subscriptions.seats
+  const used  = await countMembers(orgId)
+  if (used >= seats) throw http(402, 'NEED_MORE_SEATS')
+}
+
+
+Invite endpoint (schematic):
+
+export async function POST(req: NextRequest, { params:{orgId} }) {
+  const ctx = await getCtx(req)                 // auth + roles + entitlements
+  mustRole(ctx, ['owner','admin'])
+  must(ctx.ent.hasSeatsGT1, 402)
+  await assertSeatAvailable(orgId)
+  const { email, role } = await req.json()
+  const inv = await createInvitation(orgId, email, role, ctx.user.id)
+  await sendInviteEmail(inv)
+  broadcast(orgId, 'members.invalidate')
+  return ok({ status: 'sent' })
+}
+
+
+Accept endpoint (schematic, tokenized):
+
+export async function POST(req: NextRequest, { params:{orgId, token} }) {
+  const inv = await verifyInvitation(orgId, token)          // pending + not expired
+  await assertSeatAvailable(orgId)
+  await addMember(orgId, inv.email, inv.role)               // creates user if needed
+  await markInvitationUsed(inv.id)
+  broadcast(orgId, 'members.invalidate')
+  return ok({ joined: true })
+}
+
+
+
+
+
+“7) Rate-limit & prorratare & trial/dunning” — plan complet, executabil, fără tabele. Îl structurez pe patru straturi: rate-limit (edge + app), prorratare (upgrade/downgrade/seats), trial (policy + UX + conversie), dunning (retry + suspendare + reactivare). Totul leagă SSOT (entitlements) de Stripe și de UX.
+
+A) Rate-limit (cost control + protecție abuz)
+
+Principiu: limitezi pe organizație, pe cheie API (dacă există) și per rută (ex. /api/gpt-test/live, /api/export, /api/run/*). Pragurile sunt derivate din plan (Free/Creator/Pro/Enterprise) și din entitlements.
+
+Arhitectură
+
+Edge/Gateway: contezi cererile scurte (HEAD/GET) și blochezi bursts timpurii (mai ieftin).
+
+App-layer: contezi rutele costisitoare (Run Live, Export PDF/JSON/ZIP, API public).
+
+Store: Redis-like (INCR + EXPIRE) pentru ferestre fixe și „token bucket” pentru burst control.
+
+Chei: rate:{org_id}:{route} și, pentru API, rate:{org_id}:{api_key}:{route}.
+
+Politici recomandate (exemplu de operare)
+
+Fereastră 60s pentru rute standard; pentru exporturi, poți folosi 5m.
+
+Token bucket: capacity, refill_rate/sec (ex. Pro: cap=100, refill=1.6/s; Ent: cap=1000, refill=16/s).
+
+Dimensiuni speciale:
+
+/api/gpt-test/live: limite mai stricte (cost LLM).
+
+/api/export: limite moderate (I/O + PDF).
+
+/api/run/* (Enterprise): limite ridicate dar previzibile.
+
+Semnătură răspuns
+
+La depășire → 429 Too Many Requests.
+
+Header-e: X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After.
+
+UI: banner discret „Ai atins limita planului. Upgrade pentru mai mult.” + link la pricing.
+
+Gating combinat cu entitlement
+
+Înainte de a calcula rate-limit, verifică entitlementul cerut (ex: canUseGptTestReal, canExportPDF).
+
+Dacă lipsește → 402 Payment Required (Paywall). Dacă există dar ai depășit limita → 429.
+
+Anti-abuz
+
+„Cold start backoff”: după 3× 429 în 60s → delay incremental.
+
+„Sliding window log” pentru API keys cu tipare suspecte (100% erroare, pattern uniform).
+
+„Circuit breaker” local 30–60s pe rută dacă upstream-ul începe să răspundă >2% 5xx.
+
+Observabilitate
+
+Emită evenimente: rl_throttled(route), rl_allowed(route), api_call.
+
+Dashboard: 429 rate pe rută/plan; corelează 429 cu free→paid conversion (e un driver solid).
+
+QA minim
+
+Saturație /api/gpt-test/live până la 429 → corect; Retry-After rezonabil.
+
+Export PDF/JSON → nu lovește 429 în mod normal pe Pro/Ent; Free/Creator vede 402 (gating).
+
+API Enterprise: 429 la flood, 200 în ritm normal; headers corecte.
+
+B) Prorratare (upgrade/downgrade/seats)
+
+Principiu: Stripe calculează banii; tu doar sincronizezi rapid accesul (entitlements) și afișezi starea în UI.
+
+Upgrade imediat (Creator → Pro, Pro → Ent)
+
+Backend creează Session; după succes, Stripe trimite checkout.session.completed / customer.subscription.updated.
+
+Handler: upsert subscriptions (plan_code, seats, status) → materialize entitlements (flags Pro/Ent) → broadcast invalidate (FE re-fetch, UI deblocat).
+
+Prorratare Stripe: credit/diferență calculată automat; tu nu blochezi accesul.
+
+Downgrade la final de perioadă
+
+Stripe setează cancel_at_period_end=true pe planul curent.
+
+Până la current_period_end, păstrezi flags vechi. La rollover, materializezi noile flags (ex: Pro→Creator).
+
+UI: badge „Downgrade scheduled”; la rollover afișezi changes (PDF/JSON devin 402, API dispare).
+
+Seats Enterprise (creștere/scădere)
+
+customer.subscription.updated cu quantity.
+
+Upsert seats → broadcast seats.invalidate.
+
+Dacă scazi seats sub org_members.count(): arăți banner „Over capacity”; membrilor noi le refuzi invitația (402 „Need more seats”) sau intri în „grace window” (dacă ai politica activată).
+
+Refunds/voids
+
+La invoice.voided sau subscription.deleted: materializezi Free; UX clar „Plan ended”.
+
+QA minim
+
+Upgrade Creator→Pro: PDF/JSON/Live Test devin active în <30s (fără reload).
+
+Downgrade Pro→Creator (at period end): UI reflectă blocajele fix la rollover.
+
+Seats + race la invitație: primul câștigă, al doilea primește 409 „Seat unavailable”.
+
+C) Trial (politici + UX + conversie)
+
+Principiu: trial = Pro cu watermark și rate-limit ușor redus, reminders clare, conversie fără frecare.
+
+Atribuire trial
+
+La checkout (sau la claim în pricing), setezi trial_period_days=7 pe Pro.
+
+subscriptions.status='trialing', trial_end salvat.
+
+Entitlements: flags Pro active, dar exporturile plătite au watermark (policy la export).
+
+Rate-limit: poți aplica un plafon Pro-trial (ex. −20%) pentru cost control.
+
+UX în trial
+
+Badge „Pro — Trial” + countdown „7 zile rămase”.
+
+Export PDF/JSON: marcaj vizibil „Trial watermark”.
+
+API: nu expui pe trial (doar Enterprise).
+
+Dashboard: card CTA „Activate Pro” + beneficii fără watermark.
+
+Comunicare & conversie
+
+Email cadence: D−5, D−2, D−0 (link direct spre portal).
+
+In-app nudges pe acțiuni premium (Run Live Test, Export PDF/JSON) → Paywall cu preț anual (10× lunar) și beneficii.
+
+La plată (invoice.paid) → ridici watermark, păstrezi entitlements Pro.
+
+Trial end fără plată
+
+La trial_end dacă nu s-a plătit: materializezi Creator sau Free (politică).
+
+UI: toast „Trial ended — exporturile plătite sunt blocate. Activează Pro”.
+
+QA minim
+
+În trial, export PDF/JSON → watermark; după invoice.paid → watermark dispare.
+
+La trial_end fără plată → Pro devine Creator/Free instant; exporturile plătite devin 402.
+
+D) Dunning (retry + suspendare + reactivare)
+
+Principiu: nu tai accesul brusc; mergi pe „suspendare soft” rapidă, „cancel” curat dacă e cazul și reactivare instant după plată.
+
+Smart Retries (Stripe)
+
+Configurezi 3–4 încercări (ex.: +1h, +48h, +5 zile).
+
+Evente cheie: invoice.payment_failed (prima), customer.subscription.updated (status: past_due), invoice.paid (recuperare).
+
+Comunicare
+
+Email automat imediat după fail (+1h), apoi la 48h, 5 zile; include link portal.
+
+In-app: banner persistent „Payment issue — update card”.
+
+Suspendare soft
+
+La +3 zile past_due:
+
+Menții accesul la Simulate și .md.
+
+Blochezi Live Test și exporturile plătite (PDF/JSON/ZIP) → 402.
+
+Nu ștergi date, păstrezi istoric (Cloud history read-only).
+
+UI: icon roșu „Past due — Limited access”.
+
+Cancel (fail final)
+
+La +14 zile fără plată: Stripe poate trece la canceled.
+
+Materializezi Free/Creator (politică) și afișezi „Subscription canceled”.
+
+Păstrezi datele conform retenției planului rezultat.
+
+Reactivare
+
+La invoice.paid → materializezi planul corect; ridici blocajele; invalidezi FE.
+
+UI: toast „Payment received — premium features restored”.
+
+Telemetry & KPI
+
+Evenimente: invoice_failed, past_due_started, soft_suspend_applied, reactivated, canceled.
+
+Dashboard: „soft-suspend to paid recovery rate”, „time-to-recover (median)”.
+
+QA minim
+
+Fail → banner + email; după +3 zile → soft suspend (Live Test & PDF/JSON/ZIP devin 402).
+
+Pay completat → restaurare în <30s.
+
+Cancel → scădere la Creator/Free; exporturi rămase devin 402; date intacte după retenția planului.
+
+E) Integrare perfectă cu UX & SSOT
+
+Rate-limit returnează 429 + CTA Upgrade; Paywall doar la lipsă entitlement (402).
+
+Trial are watermark și countdown; conversia e 1-click în portal.
+
+Dunning menține valoarea (acces minimal) și încurajează remedierea, fără penalizare dură a utilizatorului.
+
+Prorratarea nu afectează accesul; doar reflectă noul set de entitlements imediat.
+
+
+
+
+
+
+
+
+„8) Export & integritate (DoD/DoR)” = cum garantezi că orice artefact livrat (PDF/JSON/ZIP etc.) este eligibil (DoR), suficient de bun (DoD) și verificabil (manifest + checksum), cu mesaje și coduri coerente în API/UX.
+
+1) Ce înseamnă DoR (Definition of Ready) — înainte să rulezi/exporti
+
+Aplici DoR la fiecare rulare ce poate duce la export (inclusiv Live Test). Rularea este „Ready” doar dacă:
+
+7D valid: toate câmpurile necesare există, sunt în enum (schema-first, enum-only: true), semnătura 7D calculată; altfel → FAIL cu motiv explicit „NU EXISTĂ DATE” (copie standard).
+
+Entitlement valid: planul/entitlements acoperă feature-ul (ex: Live Test, PDF/JSON/ZIP); dacă lipsește → 402 + Paywall (nu e DoR fail, e gating comercial).
+
+Output Spec încărcat: module.spec.json.outputs.fields există și e complet; altfel 422 (DoR fail).
+
+Testcases definite: există cel puțin 1 test valid asupra rezultatului (contracte).
+
+Input minim: câmpurile inputs.custom cerute de schemă sunt prezente; altfel 422 (DoR fail).
+
+DoR este explicit formulat în standardul tău: 7D valid, entitlement valid, output_spec, testcases, input minim.
+
+2) Ce înseamnă DoD (Definition of Done) — înainte să permiți exportul
+
+Exportul (în special PDF/JSON/ZIP) este „Done” doar dacă:
+
+Scor ≥ 80: Evaluator (clarity, execution, ambiguity invers, business_fit) trece pragurile; sub 80 → 422 SCORE_BELOW_THRESHOLD + CTA „Tighten & Re-test”.
+
+Output complet: toate câmpurile outputs.fields marcate required=true sunt populate conform contractului.
+
+Checksum valid: calculezi SHA-256 pe artefacte; verificarea coincide cu manifest; altfel 422 (integritate).
+
+Manifest scris: export.manifest.json există și include metadate (project/module/run_id/7D/files/score/license_notice/created_at).
+
+Telemetrie salvată: runs + scoruri + ttp/tokens/duration, fără conținut brut client (PII interzis în telemetrie).
+
+Aceste condiții (score ≥80, manifest + checksum obligatorii, telemetrie) sunt cerute în DoD-ul tău oficial și în standardul de export.
+
+3) Policy pe formate & gating (înainte de export)
+
+.txt → permis tuturor (Free).
+
+.md → cere canExportMD (Creator+).
+
+.pdf → cere canExportPDF (Pro+).
+
+.json → cere canExportJSON (Pro+).
+
+.zip (bundle) → cere canExportBundleZip (Enterprise).
+Dacă entitlementul lipsește → 402 Payment Required + Paywall; dacă există dar DoD nu e îndeplinit → 422 (policy fail). ExportDialog din FE arată DOAR opțiunile permise, restul disabled + tooltip („Disponibil pe {plan}”).
+
+4) Pipeline-ul de export (pas-cu-pas)
+
+Validare DoR (schema 7D, spec, tests, inputs) și gating entitlement (Live Test / format).
+
+Evaluare (Test Engine) → scoruri + verdict; dacă <80 și format plătit → 422.
+
+Generare artefacte: prompt.txt, prompt.md, prompt.json, prompt.pdf (în funcție de plan/format).
+
+Checksum: calculezi SHA-256 per fișier + checksum de pachet (conform ordinii canonice).
+
+Manifest: scrii manifest.json cu bundle_id/run_id/module_id/version/exported_at/formats/artifacts[ file, checksum, bytes ]/license_notice.
+
+Opțional: semnătură digitală ed25519 peste manifest (Enterprise) pentru non-repudiation.
+
+Persist & index: salvezi bundle (artefacte + manifest + checksum) și metadate (bundles); întorci link de download semnat (TTL).
+
+Telemetrie: marchezi export_success și legi de run_id (score/tokens/duration), fără PII.
+
+Structura bundle-ului, formatul manifestului, checksum și (opțional) semnătura sunt standardizate la tine.
+
+5) Mesaje & coduri coerente (API/UX)
+
+402 (Paywall) → entitlement lipsă pentru format/feature; FE: PaywallModal + CTA upgrade.
+
+422 (DoR/DoD fail) →
+
+DoR: explici lipsuri (7D/inputs/spec/tests) și concentrezi UI pe secțiunea lipsă („NU EXISTĂ DATE” pe Inputs).
+
+DoD: „Score < 80. Tighten & Re-test.” sau „Checksum/manifest invalid” (rare).
+
+200 → întorci download (URL semnat) +, pentru ZIP, checksum/manifest vizibile (UI: „Copy checksum”).
+
+6) Trial & watermark (policy de livrare)
+
+Pe trial Pro, exporturile plătite includ watermark (config în ruleset/SSOT) și pot avea rate-limit ușor redus; la invoice.paid, watermark se ridică (aceeași rută de export).
+
+7) Industry packs: cerințe suplimentare (domeniu)
+
+Unele pack-uri (ex. FinTech) pot impune formate minime la export (.spec + .json) și lints suplimentare în evaluator (sursa obligatorie, datestamp, etc.). API-ul verifică entitlementul de pack, iar pipeline-ul validează cerințele înainte de finalizare; altfel 422 INDUSTRY_EXPORT_POLICY_FAIL.
+
+8) Persistență & audit (DB)
+
+runs: anchor pentru toate rapoartele (cost/time/success).
+
+prompt_scores: criterii + feedback (rubrică standard).
+
+bundles: formats[]/paths/checksum/version/license_notice/exported_at + indici pentru audit/rapoarte.
+
+RLS by org: selecție & descărcare posibile doar membrilor orgului; scrierea bundle-ului cu service-role (API).
+
+9) Observabilitate & KPI
+
+Evenimente: export_request(format), export_blocked(reason), export_success, paywall_hit(feature).
+
+Dashboard-uri: % exporturi plătite (paid mix), rata de 422 sub scor, TTA export, verificări checksum, recovery dunning/trial (corelat cu watermark).
+
+10) QA minim (fără tabele)
+
+Creator: .md OK; .pdf/.json/.zip → 402.
+
+Pro: .pdf/.json OK dacă score≥80; score<80 → 422; .zip → 402.
+
+Enterprise: .zip OK dacă toate artefactele există + checksum/manifest valide.
+
+Trial Pro: .pdf/.json cu watermark → după plată, fără watermark.
+
+FinTech Pack: export .spec + .json obligatoriu; lipsește unul → 422.
+
+Manifest corupt / checksum mismatch → 422.
+
+Pseudocod de referință (server):
+export async function POST(req) {
+  const ctx = await getCtx(req) // org, entitlements, run_id
+  const { runId, format } = await req.json()
+
+  // 1) Gate format pe entitlement (402)
+  mustFormatAllowed(ctx.ent, format) // txt:true, md:flag, pdf/json:flag, zip:flag
+
+  // 2) Încarcă run & verifică DoR/DoD
+  const run = await loadRun(ctx.org.id, runId)
+
+  // DoD doar pt formate plătite
+  if (['pdf','json','zip'].includes(format)) {
+    must(run.score.overall >= 80, 422, 'SCORE_BELOW_THRESHOLD')        // DoD
+  }
+
+  // 3) Industry policy (dacă e cazul)
+  await enforceIndustryExportPolicy(ctx.org.id, run.module_id, format) // 422 dacă lipsește .spec/.json etc. :contentReference[oaicite:26]{index=26}
+
+  // 4) Generează fișiere + manifest + checksum
+  const files = await makeArtifacts(run, format)
+  const manifest = await writeManifest(run, files)                      // fields minime + license_notice :contentReference[oaicite:27]{index=27}
+  const checksum = sha256(files)                                        // format std „sha256:…”:contentReference[oaicite:28]{index=28}
+
+  // 5) Persist & link semnat
+  await saveBundle(run.id, files, manifest, checksum)                   // bundles(...) :contentReference[oaicite:29]{index=29}
+  const url = await signedDownloadUrl(run, format)
+
+  // 6) Telemetrie
+  track('export_success', { format, runId: run.id })
+  return ok({ download: url })
+}
+
+
+
+
+
+
+„9) Telemetrie & KPI” — îți dau un design executabil cap-coadă: evenimente, corelare, schemă, ingestie (server + RUM), calcul KPI, dashboarduri, alerte, retenție și conformitate. Mă ancorez în obiectele tale deja standardizate (runs, prompt_scores, bundles) și în taxonomia de evenimente menționată de tine.
+
+1) Obiective (ce măsori și de ce)
+
+Monetizare: free→paid (pricing_view → checkout_started → checkout_paid).
+
+Produs: folosire reală (module_open/run), calitate (scores), livrabil (export_*).
+
+Gating: unde lovește paywall (paywall_hit(feature)).
+
+Cost & risc: rate-limit (rl_throttled), API load (api_call).
+
+Trasabilitate: legi evenimentele de runs, prompt_scores, bundles (artefacte verificate cu manifest+checksum).
+
+2) Chei & corelare (fără de care analitica e oarbă)
+
+run_id (uuid): generat când începe execuția; este „ancoră” pentru scoruri, exporturi și toate evenimentele pe acel flux.
+
+module_id (Mxx): cheie canonică; nu folosi titluri „prietenoase” în evenimente.
+
+org_id / user_id: multi-tenant; trecute doar server-side (RLS) — nu expune PII în client.
+
+trace_id: un id scurt pentru legat loguri distribuite (server → worker export).
+
+artifact_checksum: sha256 (la succesul exportului) pentru verificare ulterioară.
+
+3) Taxonomia minimă de evenimente (server-side + RUM)
+
+Monetizare
+
+pricing_view → când se vede pagina de preț;
+
+checkout_started → când inițiezi sesiunea Stripe;
+
+checkout_paid → după webhook invoice.paid;
+
+plan_changed → după materializarea entitlements (invalidare FE).
+
+Produs
+
+module_open (params: module_id);
+
+module_run_simulated (run_id, module_id);
+
+module_run_live (run_id, module_id, model, tokens_in/out, duration_ms) — doar dacă canUseGptTestReal.
+
+Export
+
+export_txt|md|pdf|json|zip (run_id, module_id, size_kb, checksum?); 422/402 loghează export_blocked(reason) (score<80 / paywall).
+
+Gating & cost
+
+paywall_hit(feature) (feature: canUseGptTestReal/canExportPDF/…);
+
+rl_throttled(route) — 429 la limită (route & plan);
+
+api_call (route, ok|err, duration_ms) pentru Enterprise.
+
+RUM (client)
+
+Web Vitals: LCP/INP/CLS per route; sample rate conservator (5–10%).
+
+UI hooks: click export/generate, latente vizuale (skeletons, loading) — fără PII.
+
+4) Ingestie & scriere (unde ajung)
+
+Server: scrii în events(org_id, user_id, name, props jsonb, ts) (sau pipeline extern) cu RLS (vizibil doar org-ului).
+
+Produs: persistă „adevărul executabil” în:
+
+runs (run_id, module_id, tokens, cost, duration, telemetry) — sursa KPI-urilor de performanță;
+
+prompt_scores (clarity, execution, ambiguity_inv, business_fit, verdict) — condiție DoD ≥80;
+
+bundles (formats[], paths, checksum, manifest, exported_at) — audit integritate.
+
+5) Definiții KPI (formule clare)
+
+Activation ≤10m: % signups care generează ≥1 artefact exportabil în 10 minute (first run → export_ok).
+
+Free→Paid (28d): checkout_paid / signups (cohort).
+
+Paid Export Mix: % exporturi plătite (pdf/json/zip) din total exporturi (mix de monetizare).
+
+Evaluator Score Median (live): median(score_overall) pe module_run_live — DoD target ≥80.
+
+TTA export: p95( finished_at − started_at ) pentru rute de export (SLO).
+
+RL hit rate: rl_throttled / api_call pe rută/plan (să fie <<1%).
+
+Paywall leverage: checkout_started în 24h după paywall_hit(feature) (proxy de intenție).
+
+6) Funneluri operative
+
+Monetizare: pricing_view → checkout_started → checkout_paid → plan_changed.
+
+Produs: module_open → module_run_simulated → module_run_live → export_*.
+
+Gating: paywall_hit(feature) → checkout_started → checkout_paid.
+
+API Enterprise: api_call (run) → export_zip (artefacte complete).
+
+7) Dashboarduri (minimul util)
+
+Revenue: MRR/ARR, plan mix, checkout CR, time-to-upgrade.
+
+Product Quality: score median & p95, % 422 „score<80”, TTA export.
+
+Usage: runs per module, export mix (txt/md/pdf/json/zip), WAU/MAU.
+
+Gating: heatmap paywall_hit per feature, top features care convertesc; RL 429 per rută/plan.
+
+SLO: p75 LCP/INP/CLS pe route; p95 duration pe run/export; error budget.
+
+Aceste structuri sunt deja aliniate cu „Site Structure / Libraries / Components” și evenimentele definite în proiectul tău.
+
+8) Alerte & SLO (automate)
+
+Calitate: p95(score_overall) < 80 (7d) → alert produs (DoD at-risk).
+
+Monetizare: free→paid scade >20% WoW → revizuiește paywall/flow checkout.
+
+Perf: p95(TTA export) > 120s 3×/zi → incident Sev-2 (optimizări PDF/JSON).
+
+Abuz: RL 429 > 2% pe /api/run/* → ridică plafon (Ent) sau comunică plan superior.
+
+Integritate: bundle fără manifest/checksum (0 toleranță) → Sev-1.
+
+9) Confidențialitate & retenție
+
+Fără PII în telemetrie: id-uri, scoruri, timpi, dimensiuni fișiere; niciodată conținutul promptului/artefactelor în events.
+
+Retention: events 90 zile (agregări ulterior), runs/prompt_scores/bundles conform planului (Pro 90d, Enterprise nelimitat).
+
+Trial watermark: flag în props la export; ridicat automat la checkout_paid.
+
+10) QA — ce verifici
+
+La un run live → există runs + prompt_scores; dacă score<80, export_pdf produce 422 (și export_blocked).
+
+La export zip → scrii bundles cu checksum + manifest; eveniment export_zip are checksum în props.
+
+La paywall click → paywall_hit(feature) + redirect spre checkout; după webhook → plan_changed + invalidare FE în <30s.
+
+La bursă de cereri → rl_throttled apare, cu Retry-After corect; CR nu scade anormal (altfel alert).
+
+11) Implementare (schematic, server)
+// server-telemetry.ts
+export function track(orgId:string, userId:string|null, name:string, props:Record<string,any>){
+  return db.insert('events',{ org_id:orgId, user_id:userId, name, props, ts:new Date() })
+}
+
+// exemplu: după un run live
+track(org.id, user.id, 'module_run_live', {
+  run_id, module_id, model, tokens_in, tokens_out, duration_ms
+})
+
+// după export pdf
+track(org.id, user.id, 'export_pdf', {
+  run_id, module_id, size_kb, checksum
+})
+
+// paywall
+track(org.id, user.id, 'paywall_hit', { feature: 'canExportPDF' })
+
+
+RUM Web Vitals: folosești un mic util (INP/LCP/CLS) → POST /api/rum (sample 5–10%), agregat per route.
+
+12) „Lipirea” cu sistemele tale
+
+runs / prompt_scores / bundles sunt sursele de adevăr pentru execuție, calitate și livrabile (manifest+checksum) — exact ce ai standardizat.
+
+Evenimentele propuse doar orientează deciziile; KPI-urile își iau valorile din tabelele transacționale.
+
+Entitlements & gating rămân centrul: paywall_hit și rl_throttled explică de ce userii nu avansează (și cum monetizezi).
+
+
+
+
+
+
+„10) Acceptanță (DoD pentru gating)” — ți-o dau ca listă clară de criterii, scenarii de test (pozitive/negative), coduri de răspuns, semnale UI, și ce loguri/metrics verifici, ca să poți spune “gata de producție”.
+
+A. Criterii de acceptanță — UI (vizibil, fără crash)
+
+Paywall pe acțiuni fără drepturi
+
+Orice acțiune care cere entitlement (Run Live, Export PDF/JSON/ZIP, API key) deschide Paywall (inline sau modal) fără erori și fără reload.
+
+Tooltip explicit: „Disponibil pe {Pro/Enterprise}” la butoanele dezactivate (ExportDialog).
+
+ExportDialog respectă planul
+
+Arată doar formatele permise; opțiunile nepermise sunt vizibile dar disabled + motiv (tooltip).
+
+La click pe opțiune blocată → PaywallModal cu CTA-ul corect (Pro/Ent).
+
+DoR/DoD messaging
+
+DoR fail (7D/inputs/spec/tests): mesaj „NU EXISTĂ DATE” + scroll la Inputs (fără crash).
+
+DoD fail (score < 80): mesaj „Score < 80. Tighten & Re-test.” în overlay de export.
+
+Invalidează instant UI după upgrade
+
+După plată, UI își reactualizează entitlements în <30s (broadcast + re-fetch); butoanele devin active fără refresh de pagină.
+
+B. Criterii de acceptanță — API (coduri coerente și enforce corect)
+
+Fără entitlement → 402 Payment Required (opțional 403 dacă vrei strict)
+
+Ex.: POST /api/gpt-test/live fără canUseGptTestReal; Export .pdf/.json/.zip fără flag-urile respective → 402 + payload feature.
+
+Policy/Quality fail → 422 Unprocessable Entity
+
+Export PDF/JSON/ZIP cu score < 80 → 422 SCORE_BELOW_THRESHOLD.
+
+Export format nepermis de policy (ex.: pack FinTech cere .spec + .json) → 422 INDUSTRY_EXPORT_POLICY_FAIL.
+
+Rate-limit → 429 Too Many Requests
+
+Pe rutele cu plafon (Live Test, Export, API run).
+
+Include Retry-After și headere de limită (X-RateLimit-*).
+
+Integritate bundle
+
+La generare, API scrie manifest.json și checksum SHA-256; la download, verificarea reușește; altfel 422 (CHECKSUM_INVALID/MISSING_MANIFEST).
+
+Zip (bundle complet) doar dacă entitlement canExportBundleZip (Enterprise) → altfel 402.
+
+C. Stripe & sincronizare (timp de reflecție)
+
+Upgrade/Downgrade reflectat în <30s
+
+Webhook Stripe (checkout.session.completed / customer.subscription.updated) materializează noile flags și emite invalidate → FE vede schimbarea în <30s.
+
+Test: Creator→Pro (PDF/JSON/Live) devin active; Pro→Creator (la rollover) sunt deactivate; Pro→Ent (ZIP/API) devin active imediat.
+
+D. Scenarii de test — „trebuie să treacă”
+
+Run Simulate (toți)
+
+Free/Creator/Pro/Ent → 200; eveniment module_run_simulated.
+
+Run Live (Pro/Ent)
+
+Free/Creator → 402 (Paywall).
+
+Pro/Ent → 200; eveniment module_run_live + runs salvat (tokens, duration).
+
+Export .md (Creator+)
+
+Free → 402; Creator/Pro/Ent → 200; bundles conține .md.
+
+Export .pdf/.json (Pro+)
+
+Creator → 402.
+
+Pro/Ent cu score ≥ 80 → 200 (manifest + checksum în bundles).
+
+Pro/Ent cu score < 80 → 422 (SCORE_BELOW_THRESHOLD).
+
+Export .zip (Enterprise)
+
+Non-Ent → 402.
+
+Ent → 200; bundles include manifest.json, checksum.txt; checksum valid la verificare.
+
+Rate-limit
+
+Flood pe /api/gpt-test/live sau /api/run/* peste prag → 429 cu Retry-After.
+
+Upgrade live
+
+Creator→Pro: în <30s, ExportDialog face enable la .pdf/.json, „Run Live Test” devine activ (fără reload).
+
+Trial
+
+În trial Pro, export .pdf/.json cu watermark; după invoice.paid watermark dispare la următorul export.
+
+Industry pack
+
+Modul FinTech fără pack → 403/422 (în funcție de politică); cu pack → export valid (inclus .spec + .json).
+
+E. Observabilitate & audit — „cum verifici”
+
+Evenimente: pricing_view, checkout_started, checkout_paid, plan_changed, module_open, module_run_*, export_*, paywall_hit(feature), rl_throttled, api_call — toate cu org_id, module_id, run_id după caz.
+
+Transacțional: runs (cost/time/trace), prompt_scores (criterii + verdict), bundles (formats, paths, checksum, license_notice) sunt completate corect; RLS izolează pe org_id.
+
+Dashboards: Paid export mix, %422(score<80), p95 export TTA, RL hit rate < 2%, free→paid post-paywall.
+
+F. Negative tests — „trebuie să pice elegant”
+
+Export .pdf fără entitlement → 402 + Paywall; UI rămâne stabil.
+
+Export .pdf cu entitlement, dar scor 79 → 422 cu mesaj DoD.
+
+Bundle fără manifest sau checksum mismatch (simulat) → 422.
+
+API run fără hasAPI sau cu x-api-key invalid → 402/403.
+
+Spam /api/export → 429 cu Retry-After.
+
+G. Concluzie de „gate ready”
+
+UI blochează prietenos (Paywall/tooltip), fără crash; ExportDialog filtrează corect formatele pe plan.
+
+API aplică consistent: 402 (entitlement), 422 (policy/DoR/DoD), 429 (rate-limit).
+
+Stripe → flags → invalidate <30s (observat în UI).
+
+Bundle-urile sunt verificabile (manifest + checksum) și ZIP este exclusiv Enterprise
+
+
+
+
+
+11) Teste esențiale (matrix → test-plan executabil)
+0) Setup (fixture per plan)
+
+Seed planul și entitlements în Supabase:
+
+Free: plan_code='free', allowlist {M01,M10,M18}.
+
+Creator: plan_code='creator', flags include canExportMD=true.
+
+Pro: plan_code='pro', flags include canExportPDF, canExportJSON, canUseGptTestReal, hasCloudHistory, hasEvaluatorAI true.
+
+Enterprise: plan_code='enterprise', tot Pro + hasAPI, hasWhiteLabel, canExportBundleZip, hasSeatsGT1.
+
+Aplică flags la org prin funcția de compunere (PLAN ⊕ ADDONS ⊕ PACKS ⊕ LICENSE) și folosește vederea entitlements_effective în runtime pentru gating.
+
+DB pentru rulari/istoric/scoruri/export (va fi folosit de asserts):
+
+runs, prompt_history, prompt_scores, bundles (manifest, checksum).
+
+Rubrică evaluator (pragurile DoD): Clarity ≥80, Execution ≥80, Ambiguity ≤20, Business-fit ≥75 (composite ≥80 pentru partial-pass). O folosim ca motiv de 422 când exportul Pro+ e sub prag.
+
+1) Run Simulate (toate planurile → 200)
+API
+POST /api/run/M10?mode=simulate
+Authorization: Bearer <user_jwt>
+Body: { sevenD:{domain:"saas",output:"md"}, inputs:{...} }
+
+
+Așteptat:
+
+Free/Creator/Pro/Enterprise → 200 cu payload draft (nu consumă GPT live).
+
+Telemetrie: module_run_simulated + runs.status='ok' doar pe Pro/Ent (cloud-history), la Free/Creator rămâne local (fără hasCloudHistory).
+
+Assert DB
+
+Free/Creator: niciun rând nou în runs (istoric cloud off).
+
+Pro/Ent: un rând în runs cu type='generation', plus eventual prompt_scores dacă rulezi evaluatorul.
+
+2) Run Live (Free/Creator → 402 Paywall; Pro/Ent → 200)
+API
+POST /api/run/M14?mode=live
+
+
+Gate: canUseGptTestReal (Pro+). Dacă lipsește → 402 cu missing_flag:"canUseGptTestReal" și suggested_sku:"pro". Pro/Ent → 200.
+
+Assert DB & Telemetrie
+
+Pro/Ent: runs + prompt_scores create; timeline latencies și cost/tokeni logate.
+
+Free/Creator: paywall_hit("canUseGptTestReal") în analytics (server-side event). (Structurile de telemetrie și gating sunt definite în standard + rules/gates.)
+
+3) Export .md (Creator+ → 200; Free → 402)
+API
+POST /api/export/md { run_id }
+
+
+Gate: canExportMD. Creator/Pro/Ent → 200; Free → 402 cu missing_flag:"canExportMD".
+
+Assert
+
+Artefact scris și, pentru Pro/Ent, persistat în bundles.paths.md + checksum. Creator fără cloud-history poate descărca direct fără să persiste bundle (conform flags).
+
+4) Export .pdf / .json (Pro+ → 200; sub scor → 422)
+API
+POST /api/export/pdf { run_id }   // idem /json
+
+
+Gate: canExportPDF / canExportJSON.
+Așteptat:
+
+Pro/Ent → 200 dacă ultimul scor trece pragurile; altfel 422 “SCORE_BELOW_THRESHOLD”.
+
+Free/Creator → 402 (lipsă entitlement).
+
+Assert DB
+
+bundles.formats include pdf/json, paths populate, checksum SHA-256 valid; include manifest.json conform schemelor.
+
+5) Export .zip (doar Enterprise → 200; altfel 402)
+API
+POST /api/export/bundle { run_id }
+
+
+Gate: canExportBundleZip.
+Așteptat:
+
+Enterprise → 200, bundle-<module>-<run_hash>.zip (prompt.txt/md/json/pdf + telemetry + checksum + manifest).
+
+Orice alt plan → 402.
+
+Validare Bundle
+
+Toate fișierele prezente, checksum.txt consistent, manifest.json scris; opțional semnătură ed25519 (whitelabel).
+
+6) Cloud history (Pro/Ent: 200 & persist; Free/Creator: local-only)
+
+După Run Simulate/Live:
+
+Pro/Ent: runs/prompt_history persistate.
+
+Free/Creator: nu se persistă în DB (local storage only).
+Flag decident: hasCloudHistory.
+
+7) API call (doar Enterprise; 403 fără/cheie invalidă)
+API
+POST /api/run/:moduleId
+Authorization: Bearer <org_api_key>
+
+
+Gate: hasAPI (Ent).
+Așteptat:
+
+Enterprise + cheie validă → 200.
+
+Enterprise fără/cheie invalidă → 403.
+
+Plan sub Enterprise → 402 (paywall).
+
+Cheile API sunt org-scoped, hash-uite, cu rate-limit și scopes (vezi designul de chei).
+
+8) Invite seats (doar Enterprise; 200 când hasSeatsGT1)
+API
+POST /api/orgs/:orgId/members { email, role }
+
+
+Gate: hasSeatsGT1 + rol owner|admin.
+Așteptat:
+
+Enterprise → 200; ceilalți → 402 cu missing_flag:"hasSeatsGT1".
+
+9) Negative & edge cases (scurte)
+
+Allowlist Free: POST /api/run/M14 la Free → 402 chiar dacă mode=simulate (modulul nu e în {M01,M10,M18}).
+
+FinTech Pack: domain='fintech' fără pack activ → 402; cu pack → export impune .spec + .json altfel 422 (policy de domeniu).
+
+DoD hard-gate: export Pro+ cu score<80 → 422 (fail DoD).
+
+10) E2E (Playwright) — verificări UI de gating
+
+Run Live (Free): buton vizibil → click ⇒ modal Paywall cu CTA „Upgrade to Pro” (nu crash).
+
+Export .md (Creator): buton activ + tooltip „available in Creator+”.
+
+Export .pdf/.json (Pro): activ; sub scor (<80) ⇒ toast „Export blocked (score<80)”.
+
+Export .zip (Ent): activ; prezintă link bundle.zip.
+
+Cloud History (Pro): după run, card „Saved to cloud”; la Free „Local only”.
+Aceste controale sunt guvernate de ruleset + entitlements; integrate în pipeline-ul CI (lint/type/unit/e2e) și bugete Lighthouse/A11y.
+
+11) API curl – most-used checks (exemple)
+
+Run Live (Pro)
+curl -XPOST /api/run/M14?mode=live -H "Authorization: Bearer <jwt>" -d '{...}' → 200; JSON conține scores și telemetry.
+
+Export pdf (Pro, score≥80)
+curl -XPOST /api/export/pdf -d '{"run_id":"..."}' → 200; link sau stream PDF.
+
+Export bundle.zip (Ent)
+curl -XPOST /api/export/bundle -d '{"run_id":"..."}' → 200; bundle-*.zip cu manifest + checksum.
+
+API key (Ent)
+curl -XPOST /api/run/M07 -H "Authorization: Bearer <api_key>" -d '{...}' → 200; fără key → 403.
+
+12) Acceptanță (DoD) — semnal „verde”
+
+UI: acțiuni blocate → Paywall non-blocking (fără crash); tooltipurile respectă planul.
+
+API: 402 pentru entitlement lipsă, 403 pentru auth/cheie invalidă, 422 pentru score<80 sau format nepermis; 429 la RL (dacă testezi limitarea).
+
+Stripe: upgrade/downgrade reflectate în <30s (webhook + invalidare entitlements).
+
+Bundle: manifest + checksum verificate; .zip doar Enterprise.
+
+13) Notițe de standard (ancore)
+
+DoR/DoD, rules & gates (inclusiv scor ≥80) sunt canon în PFv3.
+
+Prompt Standard + Test Engine rubric (claritate/execution etc.) folosite în testele Pro/Ent.
+
+“Entitlements” sunt SSOT pentru gating (UI/API/export).
+
+Model DB pentru rulari/scoruri/export + manifest/checksum.
+
+CI/CD include suite de test & performance gates (E2E, Lighthouse).
+
+
+
+
+
+12 SNIPETS GATA DE LIPIT
+
+12.1 Gate FE (component) export function FeatureGate({ flag, children, fallback }: { flag: keyof Entitlements, children: React.ReactNode, fallback?: React.ReactNode }) { const { entitlements } = useEntitlements() if (!entitlements?.[flag]) return fallback ?? <PaywallInline feature={flag}/> return <>{children}</> } // Usage: <FeatureGate flag="canUseGptTestReal"><LiveTestPanel/></FeatureGate> (Componentele Paywall*, ExportDialog și hook-urile de entitlements există deja în kitul tău). 12.2 Gate API (route handler) const must = (flag:boolean, code=402) => { if (!flag) throw http(code,'PAYWALL') } export async function POST(req: NextRequest) { const ctx = await getCtx(req) // auth, org, entitlements const body = await req.json() if (body.kind === 'live_test') must(ctx.ent.canUseGptTestReal) if (body.export === 'pdf') must(ctx.ent.canExportPDF) if (body.export === 'json') must(ctx.ent.canExportJSON) if (body.export === 'zip') must(ctx.ent.canExportBundleZip) // DoD score gate if (['pdf','json','zip'].includes(body.export) && body.score < 80) return http(422, 'SCORE_BELOW_THRESHOLD') // … run, export, write manifest+checksum … return http(200,{ ok:true }) }
+
+
+
+
+
+12) Snippets gata de lipit” cu piesele care-ți închid tot circuitul: entitlements hook + invalidate, ExportDialog, materializare Stripe→flags, Realtime invalidate, rate-limit, trial watermark, industry policy, export helpers (manifest+checksum), ctx/http utils, telemetry, și invite seats.
+
+12.3 useEntitlements (FE hook + invalidate realtime)
+// app/(providers)/use-entitlements.ts
+'use client'
+import useSWR from 'swr'
+import { useEffect } from 'react'
+
+type Entitlements = Record<string, boolean>
+
+async function fetcher(url: string) {
+  const r = await fetch(url, { credentials: 'include' })
+  if (!r.ok) throw new Error('ENTITLEMENTS_FETCH_FAIL')
+  return r.json() as Promise<{ entitlements: Entitlements }>
+}
+
+export function useEntitlements() {
+  const { data, mutate, error, isLoading } = useSWR('/api/entitlements', fetcher, {
+    revalidateOnFocus: false, refreshInterval: 0,
+  })
+
+  // Realtime invalidate (Supabase/WS). Schimbă pe ce folosești tu.
+  useEffect(() => {
+    const ch = (window as any).__PF_ENTITLEMENTS_CH__ ?? null
+    if (!ch) return
+    const off = ch.on('entitlements.invalidate', () => mutate())
+    return () => off?.()
+  }, [mutate])
+
+  return {
+    entitlements: data?.entitlements ?? null,
+    refresh: () => mutate(),
+    isLoading,
+    error,
+  }
+}
+
+12.4 ExportDialog.tsx (gating vizibil + DoD hint)
+// components/ExportDialog.tsx
+'use client'
+import { useState } from 'react'
+import { useEntitlements } from '@/app/(providers)/use-entitlements'
+import { PaywallModal } from '@/components/paywall/PaywallModal'
+
+const formats: Array<{key:'txt'|'md'|'pdf'|'json'|'zip'; label:string; flag?: keyof Entitlements}> = [
+  { key:'txt',  label:'TXT' },
+  { key:'md',   label:'Markdown', flag:'canExportMD' },
+  { key:'pdf',  label:'PDF',      flag:'canExportPDF' },
+  { key:'json', label:'JSON',     flag:'canExportJSON' },
+  { key:'zip',  label:'Bundle ZIP', flag:'canExportBundleZip' },
+]
+
+export function ExportDialog({ runId, score }: { runId: string, score: number }) {
+  const { entitlements } = useEntitlements()
+  const [paywall, setPaywall] = useState<null | {feature: string}>(null)
+  const [busy, setBusy] = useState(false)
+
+  async function doExport(fmt: 'txt'|'md'|'pdf'|'json'|'zip') {
+    const res = await fetch('/api/export',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body: JSON.stringify({ runId, format: fmt }),
+    })
+    if (res.status === 402) { // paywall
+      setPaywall({ feature: fmt })
+      return
+    }
+    if (res.status === 422) {
+      const { error } = await res.json()
+      alert(error ?? 'Export blocked (policy/score). Tighten & re-test.')
+      return
+    }
+    const data = await res.json()
+    window.location.href = data.download
+  }
+
+  return (
+    <div className="space-y-3">
+      {formats.map(f => {
+        const allowed = !f.flag || !!entitlements?.[f.flag]
+        const disabledByScore = ['pdf','json','zip'].includes(f.key) && score < 80
+        const disabled = !allowed || disabledByScore || busy
+        const reason = !allowed ? `Disponibil pe plan superior` :
+                       disabledByScore ? `Score < 80. Tighten & re-test.` : ''
+        return (
+          <button key={f.key}
+            aria-label={`Export ${f.label}`}
+            title={disabled ? reason : ''}
+            className={`btn ${disabled?'btn-disabled':'btn-primary'}`}
+            onClick={()=> doExport(f.key as any)}
+            disabled={disabled}>
+            {f.label}
+          </button>
+        )
+      })}
+      {paywall && <PaywallModal feature={paywall.feature} onClose={()=>setPaywall(null)} />}
+    </div>
+  )
+}
+
+12.5 stripe_webhook.ts (normalize → upsert subs → materialize → invalidate)
+// app/api/webhooks/stripe/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import Stripe from 'stripe'
+import { upsertSubscription, materializeEntitlements, broadcast } from '@/lib/billing'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' })
+
+export async function POST(req: NextRequest) {
+  const sig = req.headers.get('stripe-signature')!
+  const raw = await req.text()
+  let event: Stripe.Event
+  try {
+    event = stripe.webhooks.constructEvent(raw, sig, process.env.STRIPE_WEBHOOK_SECRET!)
+  } catch (e) { return NextResponse.json({ error: 'SIG_INVALID' }, { status: 400 }) }
+
+  const type = event.type
+  try {
+    if (type === 'checkout.session.completed' || type === 'customer.subscription.updated' || type === 'invoice.paid') {
+      const sub = await normalizeToSubscription(event)
+      await upsertSubscription(sub)                       // plan_code, seats, status, trial_end
+      await materializeEntitlements(sub.org_id, sub.plan_code, sub) // plan → flags → entitlements
+      await broadcast(sub.org_id, 'entitlements.invalidate')
+    }
+    if (type === 'customer.subscription.deleted' || type === 'invoice.payment_failed') {
+      const sub = await normalizeToSubscription(event)
+      await upsertSubscription(sub)
+      // degrade safe (ex: Creator/Free) după politicile tale
+      await materializeEntitlements(sub.org_id, sub.plan_code, sub)
+      await broadcast(sub.org_id, 'entitlements.invalidate')
+    }
+  } catch (err:any) {
+    console.error('stripe webhook error', type, err)
+    return NextResponse.json({ ok:false }, { status: 500 })
+  }
+  return NextResponse.json({ ok:true })
+}
+
+// normalizeToSubscription(): extrage org_id din session.metadata sau mapare customer→org
+
+12.6 materializeEntitlements (plan → flags → entitlements)
+// lib/billing/index.ts
+import { db } from '@/lib/db'
+
+export async function materializeEntitlements(orgId: string, planCode: string, meta?: any) {
+  const plan = await db.selectOne('select flags from plans where code=$1',[planCode])
+  const flags = plan?.flags || {}
+  // scrie binar fiecare flag; nu atinge sursele addon/pack/license
+  const entries = Object.entries(flags).map(([flag, value])=>({
+    org_id: orgId, user_id: null, flag, value: !!value, source:'plan', meta
+  }))
+  await db.tx(async t => {
+    await t.exec('delete from entitlements where org_id=$1 and source=$2',[orgId,'plan'])
+    for (const e of entries)
+      await t.exec('insert into entitlements(org_id,user_id,flag,value,source,meta) values($1,$2,$3,$4,$5,$6)',
+                   [e.org_id, e.user_id, e.flag, e.value, e.source, e.meta])
+  })
+}
+
+12.7 rateLimit helper (token-bucket)
+// lib/rl.ts
+import { redis } from '@/lib/redis'
+
+// returns { allowed:boolean, remaining:number, retryAfter?:number }
+export async function rateLimit(key: string, capacity=100, refillPerSec=1.6) {
+  const now = Math.floor(Date.now()/1000)
+  const bucketKey = `rl:${key}`
+  // simple token bucket: store {tokens, ts}
+  const state = await redis.hgetall(bucketKey) as any
+  const tokens = Math.min(capacity, (state.tokens?+state.tokens:capacity) + (now - (state.ts?+state.ts:now))*refillPerSec)
+  const allowed = tokens >= 1
+  const newTokens = Math.max(0, tokens - 1)
+  await redis.hmset(bucketKey, { tokens: newTokens.toFixed(3), ts: now })
+  await redis.expire(bucketKey, 60)
+  return allowed ? { allowed:true, remaining: Math.floor(newTokens) } :
+                   { allowed:false, remaining:0, retryAfter: Math.ceil((1 - tokens)/refillPerSec) }
+}
+
+12.8 Trial watermark helper (injectare la export)
+// lib/export/watermark.ts
+export function withTrialWatermark(buf: Buffer, enabled: boolean) {
+  if (!enabled) return buf
+  // Simplu: prepend overlay text / meta; pentru PDF folosește lib dedicată.
+  // Placeholder — folosește pipeline-ul tău existent de PDF branding.
+  return buf
+}
+
+12.9 Industry export policy (ex. FinTech)
+// lib/export/industry-policy.ts
+export async function enforceIndustryExportPolicy(orgId: string, moduleId: string, selectedFormat: string) {
+  const policy = await getPolicyFor(orgId, moduleId) // din packs/org_industry_packs
+  if (!policy) return
+  const required = policy.export_requirements as string[] // ex: ['spec','json']
+  if (!required || required.length === 0) return
+  if (selectedFormat === 'zip') return // ZIP le include pe toate
+  if (!required.includes(selectedFormat)) {
+    const err = new Error('INDUSTRY_EXPORT_POLICY_FAIL') as any
+    err.status = 422
+    throw err
+  }
+}
+
+12.10 Manifest + checksum (helpers)
+// lib/export/manifest.ts
+import crypto from 'crypto'
+
+export function sha256(bufs: Buffer[]) {
+  const h = crypto.createHash('sha256')
+  for (const b of bufs) h.update(b)
+  return `sha256:${h.digest('hex')}`
+}
+
+export function buildManifest(input: {
+  bundleId: string; runId: string; moduleId: string; version: string;
+  files: Array<{ name:string; bytes:number; checksum:string }>;
+  licenseNotice: string; exportedAt?: string;
+}) {
+  return {
+    bundle_id: input.bundleId,
+    run_id: input.runId,
+    module_id: input.moduleId,
+    version: input.version,
+    exported_at: input.exportedAt ?? new Date().toISOString(),
+    artifacts: input.files.map(f => ({ file: f.name, checksum: f.checksum, bytes: f.bytes })),
+    signature: null,
+    license_notice: input.licenseNotice,
+  }
+}
+
+12.11 getCtx + http helpers
+// lib/http.ts
+export function http(status=200, body?: any) {
+  return new Response(body ? JSON.stringify(body) : null, {
+    status, headers: { 'content-type':'application/json' }
+  })
+}
+export function must(flag: boolean, status=402, msg='PAYWALL') {
+  if (!flag) throw http(status, { error: msg })
+}
+
+// lib/ctx.ts
+import { cookies } from 'next/headers'
+import { db } from '@/lib/db'
+
+export async function getCtx(req: Request) {
+  const session = await getSessionFromCookies(cookies())
+  const org = await db.selectOne('select id from orgs where id=$1',[session.org_id])
+  const entRows = await db.select('select flag, value from entitlements where org_id=$1',[org.id])
+  const ent = Object.fromEntries(entRows.map((r:any)=>[r.flag, !!r.value]))
+  const water = session.status === 'trialing' // simplificat
+  return { user: session.user, org, ent, watermarkTrial: water }
+}
+
+12.12 Telemetrie (server track)
+// lib/telemetry.ts
+import { db } from '@/lib/db'
+export async function track(orgId:string, userId:string|null, name:string, props:Record<string,any> = {}) {
+  try { await db.exec('insert into events(org_id,user_id,name,props) values($1,$2,$3,$4)', [orgId,userId,name,props]) }
+  catch { /* no-op */ }
+}
+
+12.13 Invite seats (endpoint schematic)
+// app/api/orgs/[orgId]/invite/route.ts
+import { http } from '@/lib/http'
+import { getCtx } from '@/lib/ctx'
+import { assertSeatAvailable } from '@/lib/seats'
+
+export async function POST(_: Request, { params }: { params:{ orgId:string }}) {
+  const ctx = await getCtx(_ as any)
+  if (!ctx.ent.hasSeatsGT1) return http(402, { error:'PAYWALL', feature:'hasSeatsGT1' })
+  await assertSeatAvailable(ctx.org.id)
+  const { email, role } = await _.json()
+  await createInvitation(ctx.org.id, email, role, ctx.user.id)
+  await broadcast(ctx.org.id, 'members.invalidate')
+  return http(200, { status:'sent' })
+}
+
+12.14 Rate-limit în handler (exemplu)
+// app/api/gpt-test/route.ts
+import { rateLimit } from '@/lib/rl'
+import { http, must } from '@/lib/http'
+import { getCtx } from '@/lib/ctx'
+
+export async function POST(req: Request) {
+  const ctx = await getCtx(req)
+  const rl = await rateLimit(`live:${ctx.org.id}`, 100, 1.6)
+  if (!rl.allowed) return http(429, { error:'RATE_LIMIT', retryAfter: rl.retryAfter })
+  const body = await req.json()
+  if (body.mode === 'live') must(ctx.ent.canUseGptTestReal, 402)
+  // … run logic …
+  return http(200, { ok:true })
+}
+

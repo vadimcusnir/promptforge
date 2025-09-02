@@ -1,0 +1,3708 @@
+
+
+
+# Cod
+
+GLOBAL – Sistem imutabil minimal
+– Layout unic, header/nav/footer fixe, tokeni CSS ca sursă de adevăr: culoare, tipografie, spațiere, radius, shadow, z-index, durate.\
+– Contracte de rută: fiecare pagină expune `page.meta`, `page.sections[]`, `events[]`, `telemetry`.\
+– Performanță: LCP ≤ 2.0s, TTI ≤ 2.5s, CLS ≤ 0.05, bundle < 150KB/route la first load.\
+– Accesibilitate: WCAG 2.2 AA, focus vizibil, aria-label la controale, contrast ≥ 4.5:1.\
+– I18n: structuri copy în JSON, fără stringuri hardcodate în componentă.\
+– Telemetry: fiecare acțiune majoră → event semantic (generate, export, selectModule, startCheckout).\
+– Antideraiere: fără schimbări de semantică în copy-cheie și structuri: SKRE v3.0, 7-D, Modules 50+, CTA-uri. citeturn0view0 citeturn2view0
+
+/ — Landing
+Rol: încarcă promisiunea SKRE v3.0, arată demo, explică workflow 3 pași, listează module și planuri, FAQ, footer cu conformități.\
+Invariabile UI: H1 cu SKRE v3.0 + „Creezi prompturi în 10 secunde”, bloc „Trusted by industry leaders”, demo interactiv, „Cum funcționează” în 3 pași, secțiune module, pricing teaser, FAQ, badge-uri GDPR/SOC2/Stripe. citeturn0view0turn0view0\
+Contract minim:
+
+```
+page.meta:{title:"PROMPTFORGE v3.0"}
+sections:[
+  {id:"hero", props:{headline, sub, kpis:["TTA<60s","AI Score≥80","PDF/JSON/MD"]}},
+  {id:"trust", props:{logos[], quotes[]}},
+  {id:"demo", props:{input, output}},
+  {id:"workflow", props:{steps:["Configurează","Generează","Exportă"]}},
+  {id:"modules-teaser", props:{count:50}},
+  {id:"pricing-teaser"},
+  {id:"faq"},
+  {id:"footer", props:{badges:["Stripe","GDPR","SOC2"]}}
+]
+events:["cta_try","cta_demo","open_faq"]
+```
+
+Reguli: nu schimbi ordinea acestor secțiuni; nu înlocuiești SKRE, 3-pași, KPI. citeturn0view0
+
+/generator — Industrial Prompt Generation Engine
+Rol: editor operațional; configurare Seven-D + selecție modul; generare prompt; istoric.\
+Invariabile UI: panou 7-D (Vector, Domain, Scale, Urgency, Resources, Complexity, Application), selector Module M01…M50, „Generate Prompt”, afișare „7D Signature”, zonă History. citeturn1view0\
+Contract minim:
+
+```
+state:{sevenD:{vector,domain,scale,urgency,resources,complexity,application}, moduleId}
+ui:{SidebarModules, PanelSevenD, AreaOutput, HistoryDock}
+api: POST /api/run/{moduleId}
+events:["select_module","update_7d","generate","save_history","export"]
+```
+
+Reguli: nu redenumești câmpurile 7-D; nu muți Generate sub fold; History rămâne persistent. citeturn7view0
+
+/modules — Catalogul celor 50 module
+Rol: navigare și specificații succinte per modul, filtrare pe 7 vectori.\
+Invariabile UI: bară vectori V1…V7, căutare, carduri M01…M50 cu titlu, scurtă descriere, KPI și link „Specifications”. Nu renunți la KPI linia a doua. citeturn2view0\
+Contract minim:
+
+```
+filters:{vector?, query?}
+card:{id:"M01", vector:"V1", title, summary, kpi, link:"/modules/:slug"}
+events:["filter_vector","search_modules","open_spec"]
+```
+
+Reguli: păstrează nomenclatorul modulelor și KPI textual. Nu compactezi pe 2 coloane sub 768px; coloană unică pe mobil. citeturn2view0
+
+/modules/:slug — Specifications (SSR/ISR recomandat)
+Rol: specificații detaliate per modul. Observație: conținutul nu a fost disponibil la fetch; tratează ca placeholder până sincronizezi CMS. NU EXISTĂ DATE din crawler.\
+Contract minim:
+
+```
+page.meta:{moduleId, vector}
+spec:{objective, inputs, outputs, kpi, constraints, examples[]}
+events:["copy_prompt","run_from_spec","export_spec"]
+```
+
+Reguli: nu publici spec fără câmpurile objective/inputs/outputs/KPI; fallback skeleton obligatoriu.
+
+/pricing — Planuri și gating
+Rol: diferențiază Basic/Pro/Team, afișează timer promo, CTA-uri distincte, FAQ.\
+Invariabile UI: countdown promo, 3 planuri cu denumiri + beneficii + limitări, 7-zile money-back, GDPR compliant, Stripe/PayPal. CTA separate „Activează Pro”, „Vorbește cu noi” pentru Team. citeturn5view0\
+Contract minim:
+
+```
+plans:[
+ {id:"basic", price:"29€/mo", caps:{prompts:50, modules:5}, export:["PDF"]},
+ {id:"pro", price:"79€/mo", caps:{prompts:500, modules:50}, export:["PDF","JSON","CSV"], api:1000},
+ {id:"team", price:"199€/mo", caps:{prompts:"unlimited"}, api:"unlimited", seats:5, whiteLabel:true}
+]
+events:["start_checkout_basic","start_checkout_pro","contact_sales_team"]
+```
+
+Reguli: nu inversezi promisiunile între planuri; Pro rămâne „cel mai ales”; Team rămâne conversațional. citeturn5view0
+
+/docs/api — API Docs
+Rol: integrare REST; endpointuri run/export/metrics/analytics/telegram; OpenAPI/Swagger link.\
+Invariabile UI: secțiuni endpointuri cu metode; bloc Auth & Limits; Response/Errors standardizate. Linkuri „Download OpenAPI” și „Swagger UI”. citeturn7view0\
+Contract minim:
+
+```
+endpoints:[
+ {method:"POST", path:"/api/run/{moduleId}", body:{sevenD,input}, returns:{prompt, metadata, score}},
+ {method:"POST", path:"/api/export/bundle"},
+ {method:"GET",  path:"/api/metrics/kpi"},
+ {method:"GET",  path:"/api/analytics"},
+ {method:"POST", path:"/api/telegram/config"}
+]
+auth:{scheme:"Bearer|API key", limits:{free:100/h, creator:1000/h, pro:10000/h, enterprise:"SLA"}}
+response:{success:boolean, data, metadata}
+error:{code,message,details}
+```
+
+Reguli: nu schimbi schema sevenD; nu atingi codurile de eroare; menții linkurile OpenAPI/Swagger. citeturn7view0
+
+/templates, /support, /about, /blog, /careers — Stare actuală
+Crawler a returnat eroare sau zero conținut. NU EXISTĂ DATE exploatabile. Marchează drept „placeholder live” și aplică același cadru: meta clar, H1, secțiuni standard, skeleton fallback, fără animații grele. citeturn9view0turn10view0turn11view0turn12view0turn13view0
+
+Anti-distrugere – reguli de oțel
+– Nu redenumești „SKRE Protocol v3.0”, „Seven-D”, „Modules 50+”, „AI Score”.\
+– Nu schimbi ordinea blocurilor pe Landing.\
+– Nu atingi câmpurile sevenD și evenimentele lor.\
+– Nu muți CTA-urile sub fold pe mobil.\
+– Nu încarci bundle-uri peste 150KB; imaginile lazy, vectoriale când e posibil.\
+– Nu scoți badge-urile de conformitate din footer. citeturn0view0
+
+Design tokens – exoschelet
+
+```
+:root {
+  --pf-color-bg:#0A0A0A; --pf-color-fg:#F5F5F5;
+  --pf-color-accent:#CDA434; --pf-color-danger:#D33;
+  --pf-radius-sm:6px; --pf-radius-md:10px; --pf-radius-lg:16px;
+  --pf-space-1:4px; --pf-space-2:8px; --pf-space-3:12px; --pf-space-4:16px; --pf-space-6:24px; --pf-space-8:32px;
+  --pf-shadow-1:0 1px 2px rgba(0,0,0,.2); --pf-shadow-2:0 8px 24px rgba(0,0,0,.3);
+  --pf-font-sans:ui-sans-serif,system-ui;
+  --pf-duration-1:120ms; --pf-duration-2:240ms;
+}
+```
+
+Reguli: modifici doar prin tokens; componentele citesc exclusiv variabilele.
+
+Răspuns API – contract de integrare FE
+
+```
+POST /api/run/{moduleId}
+req:{sevenD:{vector,domain,scale,urgency,resources,complexity,application}, input:{}}
+res:{success:true, data:{prompt, metadata:{score,signature,version}}, metadata:{request_id,timestamp,execution_time_ms}}
+```
+
+Reguli: orice schimbare pe BE se propagă prin versiune; FE refuză răspuns fără `metadata.version`. citeturn7view0
+
+UX de avarie – stări obligatorii
+– Loading skeleton per secțiune.\
+– Empty state în Demo, History, Modules.\
+– Error state cu mesaj scurt + acțiune clară.\
+– Offline banner.\
+– Rate limit banner pe generator. citeturn7view0
+
+Testare – DoD minim
+– Lighthouse PWA ≥ 90 pe mobil.\
+– Axe-core „0 critical”.\
+– 10 scenarii e2e: generate, export .md/.json/.pdf, switch vector, open spec modul, checkout Pro, contact Sales, open Swagger, download OpenAPI, FAQ toggle, history restore. citeturn0view0turn5view0turn7view0
+
+# Proiecție
+
+Pas 1: îngheață structura rutelor de mai sus. Creezi `contracts/*.ts` pentru page.meta, sections, events.\
+Pas 2: extragi copy în `locales/{ro,en}/…json`.\
+Pas 3: implementezi tokens și interzici hardcode de stil.\
+Pas 4: legi generatorul strict la `/api/run/{moduleId}` și validezi schema sevenD înainte de request. citeturn7view0\
+Pas 5: adaugi skeletons și error states pe toate secțiunile mari.\
+Pas 6: fixezi telemetry semantică la toate CTA-urile; logezi scorul AI și TTA pe generator.\
+Pas 7: pentru paginile fără conținut accesibil, publici scaffolding standard și marchezi „placeholder live” până sincronizezi CMS. NU EXISTĂ DATE, nu improvizezi.
+
+Vrei export .txt cu toate contractele per rută și șabloanele JSON pentru copy și events? Spui „Exportă contractele acum” și ți le livrez instant.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:11.273Z" title="9/2/2025, 1:38:11 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:11.273Z" title="9/2/2025, 1:38:11 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:16.801Z" title="9/2/2025, 1:38:16 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:19.302Z" title="9/2/2025, 1:38:19 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:26.803Z" title="9/2/2025, 1:38:26 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:29.304Z" title="9/2/2025, 1:38:29 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:31.805Z" title="9/2/2025, 1:38:31 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:36.807Z" title="9/2/2025, 1:38:36 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:41.838Z" title="9/2/2025, 1:38:41 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:44.343Z" title="9/2/2025, 1:38:44 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:46.842Z" title="9/2/2025, 1:38:46 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:49.342Z" title="9/2/2025, 1:38:49 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:54.351Z" title="9/2/2025, 1:38:54 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:38:54.352Z" title="9/2/2025, 1:38:54 AM">01:38</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:01.150Z" title="9/2/2025, 1:39:01 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:03.652Z" title="9/2/2025, 1:39:03 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:09.567Z" title="9/2/2025, 1:39:09 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:15.643Z" title="9/2/2025, 1:39:15 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:20.646Z" title="9/2/2025, 1:39:20 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:23.147Z" title="9/2/2025, 1:39:23 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:28.151Z" title="9/2/2025, 1:39:28 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:30.653Z" title="9/2/2025, 1:39:30 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:45.277Z" title="9/2/2025, 1:39:45 AM">01:39</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:40:07.965Z" title="9/2/2025, 1:40:07 AM">01:40</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:39:32.205Z" title="9/2/2025, 1:39:32 AM">01:39</time>
+
+Am luat la microscop fiecare pagină și am extras toate elementele obligatorii pentru a‑ți proteja scheletul de design. Iată specificațiile pentru a continua dezvoltarea fără să deteriorezi UI/UX‑ul existent:
+
+### Globale
+
+- **Tema**: fundal negru (#05010A) și text deschis (#EDEDEE) încărcat în `:root`【45213690563113†L39-L44】. Folosește fontul `Space Grotesk` pre‑conectat【45213690563113†L32-L35】.
+- **Meta‑taguri**: titlul și descrierea de pe fiecare pagină se setează via `useMeta`, cu conținut explicit (“PromptForge™ v3.0 – Industrial Prompt Engineering”, “50 modules. 7 vectors…” etc.)【45213690563113†L6-L14】.
+- **Structură**: layout constant (header, container de conținut, footer cu badge‑uri GDPR/SOC2). Grid responsiveness (1 coloană pe mobil, 2–4 coloane pe desktop).
+- **Accesibilitate**: WCAG 2.2 AA (contrast ridicat, etichete clare, aria‑labels pe butoane).
+- **Telemetrie**: evenimente semantice (“cta\_try”, “run\_generate”, “export\_generate” etc.) în cod (vezi `T("run_generate",{mode…})`)【483315072013716†L5-L7】.
+- **Performanță**: LCP sub 2s; minimizează bundle‑urile (<150KB).
+
+---
+
+### `/` – Landing
+
+- **Hero**: H1 cu text scindat: „We don't just write prompts. We forge them.”【301134655726331†L7-L8】, tagline “50 modules, a 7‑vector framework, and exports you can trust.”【301134655726331†L7-L8】.
+- **Sectiuni obligatorii**:
+  1. **Prezentare SKRE/7‑Vector** (scor, predictibilitate, viteză).
+  2. **Cum funcționează**: 3 pași (Configurează → Generează → Exportă).
+  3. **Lista module** (teaser 50+), cu legătură către `/modules`.
+  4. **Teaser planuri** cu buton “Choose your plan”.
+  5. **FAQ** și **badge‑uri de încredere** (Stripe, GDPR).
+- **Reguli**: nu schimba ordinea secțiunilor; menține call‑to‑action‑urile vizibile; nu înlocui termenii SKRE v3.0, 7‑D sau AI Score.
+
+---
+
+### `/generator` – Prompt Generator
+
+- **Titlul**: “Prompt Generator”【483315072013716†L7-L8】.
+- **Panou 7‑D**: listează parametrii Domain, Scale, Urgency, Complexity, Resources, Application, Output, cu opțiunile fixe din obiectul `O`【483315072013716†L5-L8】. Valorile se aleg din dropdown‑uri cu `onChange`.
+- **Selector Module**: listează cel puțin trei module (Strategic Framework, Content Engine, Crisis Management) cu nivel (Advanced/Intermediate/Expert)【483315072013716†L6-L8】.
+- **Acțiuni**: buton “Simulate Test” (gratuit) și “Run Real Test” (Pro+ plan). Dacă planul nu permite, afișează mesajul “Real tests require Pro+ plan” cu link spre pricing【483315072013716†L8-L9】.
+- **Output**: afișează scorul (Score: x%), Run ID (copiere în clipboard) și promptul rezultat. Export-uri: Copy, Export PDF, Export JSON, cu stări “Locked” când nu sunt disponibile【483315072013716†L11-L12】.
+- **Status**: card cu Module selectat, numărul de parametri setați și momentul ultimei rulări【483315072013716†L13-L14】.
+- **Reguli**: nu redenumi parametrii 7‑D; nu muta butoanele sub fold; menține stările blocate pentru planurile gratuite.
+
+---
+
+### `/modules` – Catalog Module
+
+- **Filtre**: vectori (Analytics, Branding, Cognitive, Content, Crisis, Rhetoric, Strategic) și nivel de dificultate (Beginner, Intermediate, Advanced)【680777957500128†L9-L10】; search bar; posibilitatea de a selecta module multiple (checkbox).
+- **Card Module**: afișează `id` (M01…), titlu, rezumat, vector (badge colorat), dificultate, durată, plan minim (free/pro), tag‑uri (max. 3) și formate export【680777957500128†L24-L27】. Buton “Use in Generator” sau etichetă “Pro Required / Enterprise Required”.
+- **Statistică**: la final, patru metri: total module (w\.length), numărul de vectori (O.length), module free, success rate 98.7%【680777957500128†L27-L28】.
+- **Popup detaliu**: la click, deschide card cu descriere, vector, difficulty și buton “Run with 7‑D Parameters”【680777957500128†L28-L29】.
+- **Reguli**: menține filtrarea multiplă și export‑urile (.md/.json/.pdf/.zip) în toolbar; păstrează statistica finală; nu schimba etichetele de plan.
+
+---
+
+### `/modules/:slug` – Specificații Modul
+
+- **Structură**: meta cu modulId și vector; secțiuni obligatorii: Objective, Inputs, Outputs, KPI, Constraints, Examples.
+- **Fallback**: dacă nu există date, afișează skeleton placeholder.
+- **Reguli**: nu publica module fără câmpuri complete; menține butoanele “Run in Generator” și “Copy Prompt”.
+
+---
+
+### `/pricing` – Planuri
+
+- **Planuri**: Free, Creator, Pro, Enterprise cu descrieri și prețuri lunare/anuale【789226180661725†L0-L2】. Creator este “Most Popular”.
+- **Switch anual/lunar**: toggle cu indicarea economiei (Save 17%)【789226180661725†L2-L3】.
+- **Elemente plan**: listă “Export Formats” derivată din descriere (.txt, .md, .json, .pdf, .zip); listă Features; listă Limitations【789226180661725†L3-L5】.
+- **CTA**: butoane “Get Started”, “Start Trial” sau “Contact Sales”, cu rutare către /auth sau /contact.
+- **Comparative Table**: rânduri pentru Modules (3, 50+, etc.), Export Formats, Real Testing (check vs cross), Support (Community/Email/Priority/Dedicated)【789226180661725†L6-L8】.
+- **FAQ**: trei întrebări standard (trial, schimbare plan, diferențe Creator vs Pro)【789226180661725†L8-L9】.
+- **Reguli**: nu redenumi planurile; menține plan Creator ca “Most Popular”; păstrează trial de 7 zile cu watermark și 30% discount anual.
+
+---
+
+### `/docs` – Documentație
+
+- **Nav lateral**: categorii “Introduction”, “7D Framework”, “API Reference”, “Integrations”, “Support” cu sublinkuri (Getting Started, Core Concepts, Parameters, Authentication, Endpoints, Error Codes, Zapier, Make.com, FAQ, Contact Support)【183908961820227†L16-L18】.
+- **Conținut principal**: componentă MDX randată cu conținut; index de secțiuni generat din headings (h1‑h3) și listat în “On this page” în dreapta【183908961820227†L15-L18】.
+- **Temă**: fundal negru/gri închis cu bloc central `prose prose-invert` pentru text【183908961820227†L16-L18】.
+- **Reguli**: menține structural side‑nav; folosește ancore (ids) pentru headings; actualizează indexul la scroll; nu schimba ordinea categoriilor.
+
+---
+
+### `/about` – Despre
+
+- **Introducere**: slogan “We don't just write prompts. We forge them.”【301134655726331†L7-L8】.
+- **Misiune**: carduri “Predictability”, “Proof”, “Speed” cu descrieri (“outputs scored and verified before use”, “manifest + checksum on every export”, “time‑to‑artifact in under 60 seconds”)【301134655726331†L5-L8】.
+- **Poveste**: secțiune “Our Story” cu narațiune despre frustrarea de a reinventa prompturi; enumeră componentele sistemului (7‑D engine, 50 modules, Test Engine)【301134655726331†L8-L10】.
+- **Public țintă**: grid cu 4 avatare (Agencies, Consultants, Educators, Founders) și descrieri【301134655726331†L6-L10】.
+- **Diferența**: listă cu trei afirmații: “Industrial, not improvisational”, “System, not text”, “Outputs you can prove, not just believe”【301134655726331†L10-L11】.
+- **Valori**: carduri “Precision”, “Reliability”, “Speed” cu descrieri specifice【301134655726331†L11-L13】.
+- **Call‑to‑action**: buton “Start the Forge” care duce la `/generator`【301134655726331†L13-L13】.
+- **Statistici**: 50+ Industrial Modules, 7 Semantic Vectors, <60s Time to Artifact, 98.7% Success Rate【301134655726331†L13-L14】.
+- **Reguli**: nu schimba sloganul și valorile; păstrează grid‑urile și ordinea secțiunilor; menține linkul la generator.
+
+---
+
+### `/terms`, `/privacy`, `/dpa`
+
+- Pagini legale complete, cu dată “Last updated: December 2024” și secțiuni numerotate: Acceptance of Terms, Subscription Plans, Acceptable Use, etc. pentru Terms【899273289350880†L0-L3】; Information We Collect, Usage Data, How We Use, Content Privacy etc. pentru Privacy【620381660624437†L1-L3】; și Data Processing Agreement cu Standard vs Enterprise DPA, Security Docs și clauze de protecție【291800500852544†L1-L3】.
+- **Reguli**: păstrează structura card “card-industrial” și proza în `prose-invert`; menține data de actualizare și trimiterile la contact; nu elimina secțiunile legale obligatorii.
+
+---
+
+### Pagini Placeholder (support, blog, integrations, admin, dashboard)
+
+- Dacă nu există conținut, afișează skeleton cu H1, text “Coming Soon” și linkuri relevante.
+- Folosește design standard (container-centru, text centrat, bordură subțire).
+- **Reguli**: nu afișa alt text decât “Coming Soon” / “Placeholder”; pregătește spațiul pentru conținutul viitor.
+
+---
+
+### Concluzii
+
+Păstrează invariabilele: numărul de module (50+), 7 vectori, 7‑D framework, metrici (Score, Time‑to‑Artifact <60s, Success Rate 98.7%), planuri și denumirile lor, flow‑ul “Configure → Generate → Export”. Toate modificările trebuie să respecte designul industrial actual și să nu dilueze elementele distinctive (tone, culori, icons). Inainte de a adăuga funcționalități noi, asigură-te că menții contractele de rută și evenimentele de telemetrie.
+
+
+#### You:
+<time datetime="2025-09-01T22:41:07.858Z" title="9/2/2025, 1:41:07 AM">01:41</time>
+
+dezvoltă detaliat exact specialziat complet: 
+
+Cod
+
+GLOBAL – Sistem imutabil minimal
+– Layout unic, header/nav/footer fixe, tokeni CSS ca sursă de adevăr: culoare, tipografie, spațiere, radius, shadow, z-index, durate.
+– Contracte de rută: fiecare pagină expune page.meta, page.sections[], events[], telemetry.
+– Performanță: LCP ≤ 2.0s, TTI ≤ 2.5s, CLS ≤ 0.05, bundle < 150KB/route la first load.
+– Accesibilitate: WCAG 2.2 AA, focus vizibil, aria-label la controale, contrast ≥ 4.5:1.
+– I18n: structuri copy în JSON, fără stringuri hardcodate în componentă.
+– Telemetry: fiecare acțiune majoră → event semantic (generate, export, selectModule, startCheckout).
+– Antideraiere: fără schimbări de semantică în copy-cheie și structuri: SKRE v3.0, 7-D, Modules 50+, CTA-uri. 
+PROMPTFORGE™
+ 
+PROMPTFORGE™
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:41:12.655Z" title="9/2/2025, 1:41:12 AM">01:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:41:18.163Z" title="9/2/2025, 1:41:18 AM">01:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:41:29.692Z" title="9/2/2025, 1:41:29 AM">01:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:41:14.664Z" title="9/2/2025, 1:41:14 AM">01:41</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori îți fixezi exoscheletul. Ori îți rupi produsul. Îți livrez contractul minim imutabil și implementarea completă pentru PROMPTFORGE™. Fără abatere. Fără „mai vedem”.
+
+# Cod
+
+GLOBAL.SISTEM:: Imutabil
+– Layout unic. Header/Nav/Footer constante. Izolezi conținutul în secțiuni declarative.\
+– Sursa de adevăr = tokeni CSS. Niciun hex/px hardcodat în componente.\
+– Contracte de rută obligatorii.\
+– Bugete de performanță testate automat.\
+– Accesibilitate auditabilă.\
+– I18n JSON. Zero string în componentă.\
+– Telemetry semantic la fiecare acțiune.\
+– Anti-deraiere: îngheți termeni-cheie și structuri.
+
+---
+
+EXO.TOKENS:: CSS ca lege
+
+```css
+:root {
+  /* Culoare */
+  --pf-bg:#05010A; --pf-fg:#EDEDEE; --pf-muted:#1A1A1E;
+  --pf-primary:#CDA434; --pf-accent:#7CE7A2; --pf-danger:#E03A3A;
+  --pf-border:#2B2B33; --pf-ring:rgba(205,164,52,.45);
+
+  /* Tipografie */
+  --pf-font-sans:"Space Grotesk",ui-sans-serif,system-ui;
+  --pf-fs-xs:12px; --pf-fs-sm:14px; --pf-fs-md:16px; --pf-fs-lg:18px; --pf-fs-xl:22px; --pf-fs-2xl:28px;
+
+  /* Spațiere */
+  --pf-space-1:4px; --pf-space-2:8px; --pf-space-3:12px; --pf-space-4:16px; --pf-space-6:24px; --pf-space-8:32px;
+
+  /* Radius & Shadow */
+  --pf-radius-1:6px; --pf-radius-2:10px; --pf-radius-3:16px;
+  --pf-shadow-1:0 1px 2px rgba(0,0,0,.25);
+  --pf-shadow-2:0 10px 30px rgba(0,0,0,.35);
+
+  /* Layere */
+  --pf-z-header:100; --pf-z-overlay:1000; --pf-z-toast:1100;
+
+  /* Animații */
+  --pf-dur-1:120ms; --pf-dur-2:240ms; --pf-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+html,body{background:var(--pf-bg);color:var(--pf-fg);font-family:var(--pf-font-sans)}
+```
+
+Regulă: orice modificare vizuală trece prin acești tokeni. Nu există excepții.
+
+---
+
+ROUTE.CONTRACT:: Tipuri imutabile
+
+```ts
+// contracts/route.ts
+import { z } from "zod";
+
+export const PageMeta = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  image: z.string().url().optional(),
+  robots: z.string().default("index,follow"),
+  version: z.literal("v3.0")
+});
+
+export const Section = z.object({
+  id: z.string().min(2),
+  kind: z.enum(["hero","trust","demo","workflow","modules","pricing","faq","legal","custom"]),
+  props: z.record(z.any())
+});
+
+export const Event = z.enum([
+  "cta_try","cta_demo","open_faq","select_module","update_7d",
+  "generate_sim","generate_real","export_pdf","export_json","start_checkout"
+]);
+
+export const Telemetry = z.object({
+  event: Event, ts: z.number(), meta: z.record(z.any()).optional()
+});
+
+export const PageContract = z.object({
+  meta: PageMeta,
+  sections: z.array(Section).min(1),
+  events: z.array(Event).optional(),
+  telemetry: z.array(Telemetry).optional()
+});
+
+export type TPageContract = z.infer<typeof PageContract>;
+```
+
+---
+
+LAYOUT:: Unic, fix
+
+```tsx
+// app/layout.tsx (Next 14/15 RSC)
+import "./globals.css";
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="ro">
+      <head>
+        <meta name="theme-color" content="#05010A" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      </head>
+      <body>
+        <header role="banner" className="border-b border-[var(--pf-border)] sticky top-0 z-[var(--pf-z-header)] bg-[var(--pf-bg)]/85 backdrop-blur">
+          {/* nav canonizat */}
+        </header>
+        <main id="content" className="min-h-screen">{children}</main>
+        <footer role="contentinfo" className="border-t border-[var(--pf-border)] py-[var(--pf-space-6)]">
+          {/* stripe/gdpr badges, links */}
+        </footer>
+      </body>
+    </html>
+  );
+}
+```
+
+Regulă: componentele nu pot rescrie layoutul. Doar se montează în `main`.
+
+---
+
+PERF.BUDGET:: Testabil, nu aspirational
+
+```json
+// package.json (fragmente)
+{
+  "scripts": {
+    "perf:lighthouse": "lighthouse http://localhost:3000 --preset=desktop --only-categories=performance,accessibility --budget-path=./budgets.json --quiet",
+    "perf:size": "size-limit",
+    "perf:ci": "npm run perf:size && npm run perf:lighthouse"
+  },
+  "size-limit": [
+    { "name": "route:/", "limit": "150 KB", "path": "dist/chunks/home-*.js" },
+    { "name": "route:/generator", "limit": "150 KB", "path": "dist/chunks/generator-*.js" }
+  ]
+}
+```
+
+```json
+// budgets.json
+{
+  "resourceSizes": [{ "resourceType": "script", "budget": 150 }],
+  "timings": [
+    { "metric": "interactive", "budget": 2500 },
+    { "metric": "first-contentful-paint", "budget": 2000 },
+    { "metric": "cumulative-layout-shift", "budget": 0.05 }
+  ]
+}
+```
+
+Tehnică: code-split pe rute, `dynamic()` pentru editorii grei; `font-display: swap`; toate imaginile cu `aspect-ratio` setat pentru CLS.
+
+---
+
+A11Y:: WCAG 2.2 AA, cu reguli automate
+
+```json
+// .eslintrc.cjs (extras)
+{
+  "extends": ["next/core-web-vitals","plugin:jsx-a11y/recommended"],
+  "rules": {
+    "jsx-a11y/anchor-is-valid":"error",
+    "jsx-a11y/no-autofocus":"warn",
+    "jsx-a11y/aria-props":"error"
+  }
+}
+```
+
+Checklist critic:
+
+1. Focus vizibil personalizat: outline + ring `--pf-ring`.
+2. Ordine tab logică; niciun keyboard-trap.
+3. Form controls cu `label` + `aria-describedby`.
+4. Contrast ≥ 4.5:1 verificat cu axe-core în CI.
+5. Skip link `#content`.
+
+---
+
+I18N:: JSON, nu string în componentă
+
+```ts
+// i18n/types.ts
+export type Locale = "ro" | "en";
+export type Dict = Record<string,string>;
+```
+
+```json
+// i18n/ro/common.json
+{
+  "hero.h1a": "Nu scrii prompturi.",
+  "hero.h1b": "Le forjezi.",
+  "cta.try": "Încearcă acum",
+  "gen.title": "Generator de Prompturi",
+  "gen.run": "Rulează test real",
+  "gen.sim": "Simulează"
+}
+```
+
+```tsx
+// hook simplu
+export function t(key:string, dict:Dict){ return dict[key] ?? `__${key}__`; }
+```
+
+Regulă: PR blocat dacă difuzăm text hardcodat.
+
+---
+
+TELEMETRY:: Evenimente semantice, contractate
+
+```ts
+// telemetry/schema.ts
+import { z } from "zod";
+export const E = {
+  GENERATE_SIM: "generate_sim",
+  GENERATE_REAL: "generate_real",
+  EXPORT_PDF: "export_pdf",
+  EXPORT_JSON: "export_json",
+  SELECT_MODULE: "select_module",
+  UPDATE_7D: "update_7d",
+  START_CHECKOUT: "start_checkout"
+} as const;
+
+export const TelemetryEvent = z.object({
+  name: z.enum(Object.values(E) as [string, ...string[]]),
+  ts: z.number(),
+  payload: z.record(z.any()).optional()
+});
+export type TEvent = z.infer<typeof TelemetryEvent>;
+```
+
+```ts
+// telemetry/sink.ts
+export function track(ev: TEvent){
+  // 1) GA/GTM dacă există
+  if (typeof window !== "undefined" && (window as any).gtag) {
+    (window as any).gtag("event", ev.name, ev.payload ?? {});
+  }
+  // 2) Beacon fallback
+  try { navigator.sendBeacon?.("/api/telemetry", new Blob([JSON.stringify(ev)],{type:"application/json"})); } catch {}
+}
+```
+
+Instrumentare:
+
+```ts
+track({ name: E.GENERATE_REAL, ts: Date.now(), payload: { moduleId, sevenDHash } });
+```
+
+---
+
+ANTI.DERAIERE:: Îngheț semantic
+
+```ts
+// guardians/strings.freeze.ts
+export const FROZEN = [
+  "SKRE v3.0",
+  "7-D",
+  "Modules 50+",
+  "Time to Artifact < 60s",
+  "Success Rate 98.7%"
+] as const;
+
+// test: oricine editează → pică CI
+import fs from "node:fs";
+const raw = fs.readFileSync("./public/copy/canon.json", "utf-8");
+FROZEN.forEach(s => { if (!raw.includes(s)) throw new Error(`Canon string missing: ${s}`); });
+```
+
+Structură înghețată pe Landing:
+
+```ts
+// guardians/layout.freeze.ts
+export const LANDING_ORDER = ["hero","trust","demo","workflow","modules","pricing","faq","footer"] as const;
+```
+
+---
+
+API.CONTRACT:: Seven-D & run/export
+
+```ts
+// api/schema.ts
+import { z } from "zod";
+export const SevenD = z.object({
+  domain: z.enum(["business","technology","healthcare","education","finance"]),
+  scale: z.enum(["small","medium","large","enterprise"]),
+  urgency: z.enum(["low","normal","high","critical"]),
+  complexity: z.enum(["simple","intermediate","complex","expert"]),
+  resources: z.enum(["minimal","standard","extended","unlimited"]),
+  application: z.enum(["strategy","operations","marketing","research"]),
+  output: z.enum(["brief","comprehensive","detailed","executive"])
+});
+export const RunReq = z.object({ moduleId: z.string().min(2), parameters: SevenD });
+export const RunRes = z.object({
+  output: z.string(),
+  score: z.number().min(0).max(100),
+  id: z.string()
+});
+```
+
+---
+
+PAGE.BUILDER:: Pagină = contract, nu JSX liber
+
+```ts
+// pagespecs/home.ts
+import { PageContract } from "@/contracts/route";
+export const home: TPageContract = {
+  meta: { title: "PROMPTFORGE™ v3.0", description: "50 modules. 7 vectors. Verified exports in <60s.", version:"v3.0" },
+  sections: [
+    { id:"hero", kind:"hero", props:{ h1a:"hero.h1a", h1b:"hero.h1b", kpis:["<60s","AI Score","Audit"] } },
+    { id:"trust", kind:"trust", props:{ logos:["stripe","gdpr","soc2"] } },
+    { id:"demo", kind:"demo", props:{ interactive:true } },
+    { id:"workflow", kind:"workflow", props:{ steps:["Configurează","Generează","Exportă"] } },
+    { id:"modules", kind:"modules", props:{ count:50 } },
+    { id:"pricing", kind:"pricing", props:{} },
+    { id:"faq", kind:"faq", props:{} }
+  ]
+};
+```
+
+Rendererul citește `sections[]` și compune UI. Ordinea validată cu `LANDING_ORDER`.
+
+---
+
+CHECKS:: CI anti-eroare
+
+```yaml
+# .github/workflows/quality.yml
+name: quality
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run test
+      - run: pnpm run perf:ci
+      - run: pnpm exec axe http://localhost:3000 --timeout 120000
+```
+
+---
+
+SECURITY:: CSP minim
+
+```ts
+// middleware.ts (simplificat)
+export const config = { matcher: ["/((?!api|_next|assets).*)"] };
+export function middleware(req: Request) {
+  const res = NextResponse.next();
+  res.headers.set("Content-Security-Policy",
+   "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https:;");
+  return res;
+}
+```
+
+---
+
+CLS.ZERO:: Media cu aspect fix + fonts
+
+```css
+img,svg,video{max-width:100%;height:auto}
+.pf-media{aspect-ratio:16/9; background:var(--pf-muted)}
+@font-face{font-display:swap}
+```
+
+---
+
+UI.KIT:: Butoane canonizate
+
+```css
+.btn { display:inline-flex; align-items:center; gap:8px; padding:.65rem 1rem;
+  border-radius:var(--pf-radius-2); transition:background var(--pf-dur-2) var(--pf-ease), box-shadow var(--pf-dur-1) var(--pf-ease); }
+.btn-primary{ background:var(--pf-primary); color:#0B0B0E; }
+.btn-outline{ border:1px solid var(--pf-border); background:transparent; }
+.btn-danger{ background:var(--pf-danger); color:#fff; }
+.btn:focus-visible{ outline:2px solid transparent; box-shadow:0 0 0 4px var(--pf-ring); }
+```
+
+---
+
+A/BLOCKERS:: Ce nu ai voie să schimbi
+
+1. Termeni canon: SKRE v3.0, 7-D, Modules 50+, <60s, 98.7%.
+2. Ordinea secțiunilor pe Landing.
+3. Denumirile planurilor pe Pricing.
+4. Parametrii 7-D și numele evenimentelor telemetry.
+
+---
+
+TEST.E2E:: Scenarii minime
+
+1. Generate Sim → scor + runId → Export JSON/PDF (locked/unlocked per plan).
+2. Schimbare vectori 7-D → state persist → run.
+3. Modules → filtrare vector/dificultate → “Use in Generator”.
+4. Pricing → toggle anual/lunar → start checkout.
+5. Docs → side-nav, “On this page” activ.
+6. A11y: focus order, skip link, aria-labels pe controale.
+7. CLS < 0.05 pe toate rutele.
+8. LCP < 2s pe / și /generator.
+
+---
+
+PROMPTFORGE™:: Branding fix
+– Nume și simbol scrise exact: PROMPTFORGE™ v3.0.\
+– Paletă fixă: #05010A / #EDEDEE / #CDA434 / #1A1A1E.\
+– Voce: industrial, nu improvizațional.\
+– Badge-uri în footer: Stripe • GDPR • SOC2.\
+– Orice asset grafic folosește fundal întunecat și contrast > 4.5:1.
+
+# Proiecție
+
+1. Blochezi contractele: `contracts/*`, `guardians/*`, `pagespecs/*`. PR-uri care ating asta cad automat.
+2. Extragi toate textele în `i18n/{ro,en}/*.json`. Rulezi audit – niciun string dur.
+3. Adaugi size-limit și budgets Lighthouse în CI. If fail → build blocat.
+4. Instrumentezi `track()` în butoane: generate, export, selectModule, startCheckout.
+5. Activezi axe-core în CI; repari orice „critical”.
+6. Rulezi testele e2e pe scenariile de mai sus; fixezi route-order guard.
+7. Abia apoi extinzi UI. Nu invers.
+
+Declarație imposibil de ignorat: modifici prin tokeni sau nu modifici deloc. Orice altceva e gălăgie. Vrei export .txt cu tot scheletul de mai sus (fișierele exact cum sunt)? Spui: Exportă scheletul acum.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:15.918Z" title="9/2/2025, 1:43:15 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:15.919Z" title="9/2/2025, 1:43:15 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:22.114Z" title="9/2/2025, 1:43:22 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:27.462Z" title="9/2/2025, 1:43:27 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:27.463Z" title="9/2/2025, 1:43:27 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:38.411Z" title="9/2/2025, 1:43:38 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:38.412Z" title="9/2/2025, 1:43:38 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:40.912Z" title="9/2/2025, 1:43:40 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:47.467Z" title="9/2/2025, 1:43:47 AM">01:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:44:00.918Z" title="9/2/2025, 1:44:00 AM">01:44</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:44:15.853Z" title="9/2/2025, 1:44:15 AM">01:44</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:43:45.159Z" title="9/2/2025, 1:43:45 AM">01:43</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Nu e negociabil. Ridici un sistem imutabil sau ești înghițit de gălăgie. Te aliniezi la codul fundamental sau se destramă tot.
+
+# Cod
+
+GLOBAL.EXO
+– În `next.config.js` fixezi `swcMinify:true`, `reactStrictMode:true`, `poweredByHeader:false`, `images.unoptimized:true`, `i18n:{locales:["ro","en"],defaultLocale:"ro"}` pentru control.\
+– În `root.globals.css` definești toate tokenii: `--pf-bg`, `--pf-fg`, `--pf-muted`, `--pf-primary`, `--pf-accent`, `--pf-danger`, `--pf-radius-{1,2,3}`, `--pf-shadow-{1,2}`, `--pf-z-header, --pf-z-modal, --pf-z-toast`, `--pf-dur-{1,2}`, `--pf-ease`. Nu scrii hex în componentă.\
+– Creezi componentă `<Layout>` cu header, nav, footer. Nav are logo+cta. Footer are badge-uri și linkuri legale. Body are rol `main` și id `content` pentru skip link.
+
+ROUTE.CONTRACT.FIX
+
+```ts
+import { z } from "zod";
+export const Contract = z.object({
+ meta: z.object({ title:z.string(), description:z.string(), version:z.literal("v3.0") }),
+ sections: z.array(z.object({ id:z.string(), kind:z.string(), props:z.record(z.any()) })).min(1),
+ events: z.array(z.string()).optional(),
+ telemetry: z.array(z.object({ event:z.string(), ts:z.number(), payload:z.record(z.any()).optional() })).optional()
+});
+export type TContract = z.infer<typeof Contract>;
+```
+
+Regulă: orice pagină exportă un obiect care trece validarea. Nu randăm dacă nu trece.
+
+PERF.STAT
+– În `size-limit` configurezi fiecare chunk: route home, route generator, route modules, route pricing, route docs → `<150KB`.\
+– În `budgets.json` setezi `interactive ≤2500`, `first-contentful-paint ≤2000`, `cumulative-layout-shift ≤0.05`.\
+– În pipeline rulezi `lighthouse` pe fiecare build. Dacă depășește bugetul, buildul cade.\
+– Folosești dynamic imports (`next/dynamic`) pentru editorul de generator și analytics. Cod spliting obligatoriu.
+
+A11Y
+– Aplicație globală: `lang="ro"`, `dir="ltr"`.\
+– `Skip to main` link vizibil on focus.\
+– Toate butoanele au `aria-label`. Exemple: `<button aria-label="Simulează" />`.\
+– Liste și carduri au `role="list"` și `role="listitem"` pentru screenreaders.\
+– Fiecare input are `<label>` conectat prin `htmlFor`. Focus ring personalizat `outline:2px solid transparent; box-shadow:0 0 0 4px var(--pf-ring);`.
+
+I18N
+– Fiecare text e key în JSON: `i18n/ro/*`.\
+– Loaderul:
+
+```ts
+export async function loadDict(locale:"ro"|"en"){ return (await import(`../i18n/${locale}/common.json`)).default; }
+```
+
+– Hook:
+
+```ts
+export function useT(key:string){ const {dict}=useContext(I18nContext); return dict[key]??`__${key}__`; }
+```
+
+– Nu există fallback textual în componentă. Dacă lipsește cheia, testul eșuează.
+
+TELEMETRY
+
+```ts
+// telemetry/useTrack.ts
+import { useCallback } from "react";
+import { E } from "@/contracts/telemetry";
+export function useTrack(){
+ return useCallback((name:E, payload:Record<string,any>={})=>{
+   const event = { event:name, ts:Date.now(), payload };
+   if(typeof window !=="undefined" && window.gtag){
+     window.gtag("event", name, payload);
+   }
+   navigator.sendBeacon?.("/api/telemetry", JSON.stringify(event));
+ },[]);
+}
+```
+
+– Evenimente canon: `generate_sim`, `generate_real`, `select_module`, `update_7d`, `export_pdf`, `export_json`, `start_checkout`.\
+– Fiecare click pe CTA declanșează `useTrack()`.
+
+ANTIDERAIERE
+– În `guardians/strings.ts` exportă un array cu stringuri canon: `SKRE v3.0`, `7-D`, `Modules 50+`, `<60s`, `98.7%`.\
+– Testul citește toate fișierele JSON și template și verifică prezența fiecărui string.\
+– În `guardians/order.ts` exportă constant `LANDING_SECTIONS = ["hero","trust","demo","workflow","modules","pricing","faq"] as const;` și testul compară cu `home.sections.map(s=>s.id)`. Dacă diferă, buildul cade.\
+– Șters sau redenumit oricare dintre acești termeni = eșec CI.
+
+API.CONTRACT
+– Definești tipul `SevenD` cu enumerări stricte.\
+– `POST /api/run` primește `{moduleId:string, parameters:SevenD}` și răspunde cu `{output:string, score:number, id:string}`.\
+– `POST /api/export` primește un `id` și un `format` (`pdf` | `json`) și returnează un blob.\
+– Wrapperul folosește `zod` pentru validare; erorile se returnează cu status 400 și mesaj clar.
+
+DEFENSIVE.DEV
+– Nu accepți `moduleId` necunoscut – verifici împotriva listei.\
+– Nu returnezi prompt fără `metadata.version`. Dacă lipsește, frontend refuză.\
+– Rate limit pe `/api/run`: 60/minut per utilizator în plan free, 600/minut plan pro, 6000/minut plan enterprise.
+
+ACL.STATIC
+– În `middleware.ts` setezi CSP strict: `'self'` pentru default, `img-src 'self' data:`; `script-src` strict `'self'` și `'wasm-unsafe-eval'` pentru Next.\
+– `Referrer-Policy` setat la `strict-origin-when-cross-origin`.\
+– În `headers()` adaugi `Permissions-Policy: camera=(), geolocation=(), microphone=()`.
+
+UI.LIBRARY
+– Butoanele canon au clase `btn-primary`, `btn-outline`, `btn-danger`, cu `transition` setată la `--pf-dur-2`.\
+– Cardurile industriale: border `var(--pf-border)`, shadow `var(--pf-shadow-1)`, radius `var(--pf-radius-2)`, hover: `shadow var(--pf-shadow-2)`.\
+– Badge-urile: `badge-outline` (border + text), `badge-solid` (fond primar).\
+– Tooltipurile: `role="tooltip"`, `aria-hidden`, delay `200ms`.
+
+TEST.E2E
+– Script Cypress: simulare flux complet: selectare modul M02, setare 7-D, Simulate → afișare scor + runId; export JSON → verifică fail pe plan free.\
+– Test de accesibilitate: axe-core rulează pe fiecare pagină; în raport, niciun `critical`.\
+– Test de i18n: comută limba și verifică că textul se schimbă; URL-ul menține locale.
+
+# Proiecție
+
+1. Creezi `scaffolds/` cu specificațiile de mai sus.
+2. Implementezi în cod toate tipurile, tokenii, API-urile, validatoarele.
+3. Configurezi `CI/CD` cu `size-limit`, `lighthouse`, `axe-core`.
+4. Îngheți canonul (strings, ordini). În momentul în care alt dev mută o secțiune, testul alertează.
+5. Pui instrumentarea telemetry pe toți CTA. Activezi stratul de analytics.
+6. Rulezi toate testele end-to-end.
+7. Numai după ce trece CI, poți adăuga funcționalități suplimentare. Orice altă ordine = haos.
+
+Declarație imposibil de ignorat: oricine ignoră exoscheletul – ruinează Forge.
+
+
+#### You:
+<time datetime="2025-09-01T23:54:03.387Z" title="9/2/2025, 2:54:03 AM">02:54</time>
+
+dezvoltă detaliat:
+
+/ — Landing
+Rol: încarcă promisiunea SKRE v3.0, arată demo, explică workflow 3 pași, listează module și planuri, FAQ, footer cu conformități.
+Invariabile UI: H1 cu SKRE v3.0 + „Creezi prompturi în 10 secunde”, bloc „Trusted by industry leaders”, demo interactiv, „Cum funcționează” în 3 pași, secțiune module, pricing teaser, FAQ, badge-uri GDPR/SOC2/Stripe. 
+PROMPTFORGE™
++1
+
+Contract minim:
+
+page.meta:{title:"PROMPTFORGE v3.0"}
+sections:[
+  {id:"hero", props:{headline, sub, kpis:["TTA<60s","AI Score≥80","PDF/JSON/MD"]}},
+  {id:"trust", props:{logos[], quotes[]}},
+  {id:"demo", props:{input, output}},
+  {id:"workflow", props:{steps:["Configurează","Generează","Exportă"]}},
+  {id:"modules-teaser", props:{count:50}},
+  {id:"pricing-teaser"},
+  {id:"faq"},
+  {id:"footer", props:{badges:["Stripe","GDPR","SOC2"]}}
+]
+events:["cta_try","cta_demo","open_faq"]
+
+
+Reguli: nu schimbi ordinea acestor secțiuni; nu înlocuiești SKRE, 3-pași, KPI.
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:54:09.309Z" title="9/2/2025, 2:54:09 AM">02:54</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:54:15.821Z" title="9/2/2025, 2:54:15 AM">02:54</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:54:23.200Z" title="9/2/2025, 2:54:23 AM">02:54</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:54:11.109Z" title="9/2/2025, 2:54:11 AM">02:54</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori îngheți Landing-ul ca standard. Ori îl schimbi și rupi tot scheletul. Îți livrez contractul minim, componentele, stările, telemetria, a11y și bugetele. Nu negociezi ordinea. Nu atingi SKRE, 3 pași, KPI.
+
+# Cod
+
+LANDING.CONTRACT:: Imutabil
+
+```ts
+// pagespecs/home.ts
+import { TPageContract } from "@/contracts/route";
+
+export const home: TPageContract = {
+  meta: {
+    title: "PROMPTFORGE v3.0",
+    description: "SKRE v3.0 • 50 modules • 7-D • Creezi prompturi în 10 secunde • Export PDF/JSON/MD",
+    image: "/og-cover.png",
+    robots: "index,follow",
+    version: "v3.0"
+  },
+  sections: [
+    { id: "hero", kind: "hero", props: {
+      headline: { a: "SKRE v3.0", b: "Creezi prompturi în 10 secunde" },
+      sub: "50 module • 7 vectori • rezultate verificate",
+      kpis: ["TTA<60s","AI Score≥80","PDF/JSON/MD"],
+      cta: { primary: { id:"cta_try", href: "/generator", labelKey: "cta.try" }, secondary: { id:"cta_demo", href:"#demo", labelKey: "cta.demo" } }
+    }},
+    { id: "trust", kind: "trust", props: {
+      logos: ["stripe","gdpr","soc2","vercel"],
+      quotes: [{author:"Agency Lead", textKey:"trust.quote.1"}]
+    }},
+    { id: "demo", kind: "demo", props: {
+      input: { placeholderKey:"demo.input.placeholder", preset: "Strategic Planning" },
+      output: { collapsed: true }
+    }},
+    { id: "workflow", kind: "workflow", props: {
+      steps: ["Configurează","Generează","Exportă"],
+      notesKey: "workflow.notes"
+    }},
+    { id: "modules-teaser", kind: "modules", props: { count: 50, link:"/modules" }},
+    { id: "pricing-teaser", kind: "pricing", props: { plans:["free","creator","pro","enterprise"], link:"/pricing" }},
+    { id: "faq", kind: "faq", props: { itemsKey:"faq.items" }},
+    { id: "footer", kind: "footer", props: { badges:["Stripe","GDPR","SOC2"], links:["/terms","/privacy","/dpa"] }}
+  ],
+  events: ["cta_try","cta_demo","open_faq"]
+};
+```
+
+LANDING.UI:: Componente canonizate
+
+```tsx
+// components/landing/Hero.tsx
+export function Hero({headline, sub, kpis, cta}:{headline:{a:string,b:string}; sub:string; kpis:string[]; cta:any}) {
+  return (
+    <section className="py-20 md:py-28 border-b border-[var(--pf-border)] bg-[var(--pf-bg)]">
+      <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+        <span className="block">{headline.a}</span>
+        <span className="block text-[var(--pf-primary)]">{headline.b}</span>
+      </h1>
+      <p className="mt-4 text-lg text-[var(--pf-fg)]/70">{sub}</p>
+      <ul className="mt-6 flex flex-wrap gap-3" role="list" aria-label="Key performance indicators">
+        {kpis.map(k => <li key={k} className="badge-outline">{k}</li>)}
+      </ul>
+      <div className="mt-8 flex gap-3">
+        <a href={cta.primary.href} data-ev="cta_try" className="btn btn-primary" aria-label="Încearcă acum">Încearcă acum</a>
+        <a href={cta.secondary.href} data-ev="cta_demo" className="btn btn-outline" aria-label="Vezi demo">Vezi demo</a>
+      </div>
+    </section>
+  );
+}
+```
+
+```tsx
+// components/landing/Trust.tsx
+export function Trust({logos, quotes}:{logos:string[]; quotes:{author:string,textKey:string}[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="sr-only">Trusted by industry leaders</h2>
+      <div className="flex flex-wrap gap-8 items-center opacity-80">{logos.map(l => <img key={l} alt={l} className="h-8 pf-media" />)}</div>
+      <figure className="mt-8 max-w-2xl text-[var(--pf-fg)]/70">
+        <blockquote data-i18n="trust.quote.1" />
+        <figcaption className="mt-2 text-sm">— {quotes[0]?.author}</figcaption>
+      </figure>
+    </section>
+  );
+}
+```
+
+```tsx
+// components/landing/Demo.tsx
+import { useTrack } from "@/telemetry/useTrack";
+export function Demo({input, output}:{input:{placeholderKey:string,preset:string}; output:{collapsed:boolean}}) {
+  const track = useTrack();
+  return (
+    <section id="demo" className="py-16 border-b border-[var(--pf-border)]">
+      <div className="grid md:grid-cols-2 gap-6">
+        <label className="text-sm font-medium">Input</label>
+        <textarea aria-label="Demo input" placeholder="Scrie obiectivul tău…" className="w-full p-3 rounded-md bg-[var(--pf-muted)]"></textarea>
+        <button className="btn btn-primary" onClick={()=>track("generate_sim",{source:"landing"})}>Generează</button>
+        <div role="region" aria-live="polite" className="p-4 bg-[var(--pf-muted)] rounded-md min-h-24">Output (preview)</div>
+      </div>
+    </section>
+  );
+}
+```
+
+```tsx
+// components/landing/Workflow.tsx
+export function Workflow({steps}:{steps:string[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Cum funcționează</h2>
+      <ol className="grid md:grid-cols-3 gap-6" role="list">
+        {steps.map((s,i)=>(<li key={s} className="card-industrial p-6"><div className="text-3xl font-bold text-[var(--pf-primary)]">{i+1}</div><p className="mt-2">{s}</p></li>))}
+      </ol>
+    </section>
+  );
+}
+```
+
+```tsx
+// components/landing/ModulesTeaser.tsx
+export function ModulesTeaser({count, link}:{count:number, link:string}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Module</h2>
+      <p className="text-[var(--pf-fg)]/70">50+ module industriale. Vezi toate.</p>
+      <a href={link} className="btn btn-outline mt-6" aria-label="Vezi toate modulele">Toate modulele</a>
+    </section>
+  );
+}
+```
+
+```tsx
+// components/landing/PricingTeaser.tsx
+export function PricingTeaser({plans, link}:{plans:string[], link:string}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Planuri</h2>
+      <div className="grid md:grid-cols-4 gap-4">
+        {plans.map(p=> <div key={p} className="card-industrial p-6"><strong className="capitalize">{p}</strong></div>)}
+      </div>
+      <a href={link} className="btn btn-primary mt-6" data-ev="start_checkout">Alege planul</a>
+    </section>
+  );
+}
+```
+
+```tsx
+// components/landing/FAQ.tsx
+export function FAQ({items}:{items:{qKey:string,aKey:string}[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Întrebări frecvente</h2>
+      <div className="space-y-3">{items.map(i=>
+        <details key={i.qKey} className="card-industrial p-4" onToggle={(e)=> e.currentTarget.open && (window as any).track?.({event:"open_faq",ts:Date.now()})}>
+          <summary data-i18n={i.qKey} className="cursor-pointer"></summary>
+          <p className="mt-2 text-[var(--pf-fg)]/70" data-i18n={i.aKey}/>
+        </details>)}
+      </div>
+    </section>
+  );
+}
+```
+
+```tsx
+// components/landing/Footer.tsx
+export function Footer({badges,links}:{badges:string[];links:string[]}) {
+  return (
+    <footer className="py-10">
+      <div className="flex flex-wrap gap-4 items-center">
+        {badges.map(b => <span key={b} className="badge-outline">{b}</span>)}
+      </div>
+      <nav className="mt-6 flex gap-6">
+        {links.map(href => <a key={href} href={href} className="text-sm text-[var(--pf-fg)]/70 underline-offset-4 hover:underline">{href.replace("/","")}</a>)}
+      </nav>
+    </footer>
+  );
+}
+```
+
+I18N.MAP:: Chei minime (ro)
+
+```json
+{
+  "cta.try":"Încearcă acum",
+  "cta.demo":"Vezi demo",
+  "trust.quote.1":"Livrează artefacte auditabile, nu text la noroc.",
+  "demo.input.placeholder":"Descrie obiectivul tău...",
+  "workflow.notes":"Configurezi 7-D, rulezi, exporți. Repetabil, verificabil.",
+  "faq.items":[
+    {"qKey":"faq.q.1","aKey":"faq.a.1"},
+    {"qKey":"faq.q.2","aKey":"faq.a.2"}
+  ],
+  "faq.q.1":"Ce include trialul de 7 zile?",
+  "faq.a.1":"Acces complet, watermark pe exporturi. Fără card.",
+  "faq.q.2":"Pot schimba planul oricând?",
+  "faq.a.2":"Da, upgrade/downgrade instant."
+}
+```
+
+A11Y:: Reguli obligatorii
+– `h1` unic în Hero; restul `h2`.\
+– Toate linkurile CTA au `aria-label`.\
+– `summary` în FAQ e focusabil și accesibil.\
+– Skip link: primul element focusabil → `href="#content"`.\
+– Contrast ≥ 4.5:1 pe text și iconografie.
+
+PERF:: Bugete & execuție
+– LCP țintă sub 2.0s: imagine OG lazy, font `display:swap`, hero fără video.\
+– CLS < 0.05: rezervă înălțimi, `aspect-ratio` la media, skeleton la demo output.\
+– Bundle < 150KB/route: code-split `Demo` dacă adaugi previzualizator complex.
+
+TELEMETRY:: Mapare evenimente
+– `cta_try` pe butonul primar din Hero.\
+– `cta_demo` pe secundar.\
+– `open_faq` la expandarea oricărui item din FAQ.\
+– În `Demo`: `generate_sim` când rulezi.\
+– În `PricingTeaser`: `start_checkout` pe CTA.
+
+SEO:: Minime non-negociabile
+– Title + meta description din `page.meta`.\
+– `og:title`, `og:description`, `og:image` setate.\
+– Canonic: `link rel="canonical"`.\
+– JSON-LD `Organization` + `Product` (name: PROMPTFORGE™ v3.0).
+
+RESPONSIVE:: Breakpoints
+– Mobil (<768px): coloane unice; CTA-uri pe două rânduri.\
+– Tablet: 2 coloane la demo/workflow.\
+– Desktop: 2–4 coloane la trust/modules/pricing.\
+– Nu pui CTA sub fold pe mobil.
+
+STATE:: Stări de avarie
+– Demo: `loading` spinner 800ms minim; `error` banner clar; `empty` placeholder.\
+– FAQ: fallback “Nicio întrebare disponibilă” dacă nu vin cheile.\
+– Trust: dacă lipsesc logourile, ascunzi banda și păstrezi spacingul.
+
+GUARDIANS:: Anti-deraiere
+– Ordinea secțiunilor validată în test: `["hero","trust","demo","workflow","modules-teaser","pricing-teaser","faq","footer"]`.\
+– Stringuri înghețate: “SKRE v3.0”, “Creezi prompturi în 10 secunde”, “TTA<60s”, “AI Score≥80”, “PDF/JSON/MD”.\
+– PR care schimbă ordinea sau șterge stringurile cade la CI.
+
+TEST.E2E:: Scenarii minime
+
+1. H1 vizibil cu SKRE + promisiune 10s; KPI-urile randate (3 badge-uri).
+2. CTA Try → navighează /generator; telemetry `cta_try`.
+3. Demo → run → output apare; `generate_sim` trimis.
+4. Workflow are exact 3 pași.
+5. Modules teaser arată 50+ și link spre /modules.
+6. Pricing teaser arată 4 planuri; `start_checkout` pe click.
+7. FAQ expandabil; `open_faq` logat.
+8. Footer afișează badge-uri Stripe/GDPR/SOC2.
+
+# Proiecție
+
+Fixezi `pagespecs/home.ts`. Montezi componentele exact în ordinea canon. Leagă i18n, telemetria, a11y și bugetele. Fiecare PR rulează size-limit + Lighthouse + axe-core. Încalci ordinea sau promisiunile? Build-ul cade. Asta nu e pagină. E protocol.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:56:17.421Z" title="9/2/2025, 2:56:17 AM">02:56</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:56:23.355Z" title="9/2/2025, 2:56:23 AM">02:56</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:56:23.357Z" title="9/2/2025, 2:56:23 AM">02:56</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:56:36.680Z" title="9/2/2025, 2:56:36 AM">02:56</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:56:49.403Z" title="9/2/2025, 2:56:49 AM">02:56</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:56:57.192Z" title="9/2/2025, 2:56:57 AM">02:56</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:56:36.829Z" title="9/2/2025, 2:56:36 AM">02:56</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori îți blochezi landing‑ul într‑un protocol clar. Ori îl lași să se destrame în gălăgie. Nu schimbi secvența, nu atingi promisiunea SKRE v3.0, nu inversezi 3‑pași. Modifici ordinea – rupi TOT.
+
+# Cod
+
+LANDING.SPEC
+meta: `title: "PROMPTFORGE v3.0", description: "SKRE v3.0. Creezi prompturi în 10 secunde. 50 module. 7 vectori. Export PDF/JSON/MD.", version:"v3.0"`【301134655726331†L7-L8】.\
+sections:\
+– hero: props {headline:{a:"SKRE v3.0",b:"Creezi prompturi în 10 secunde"}, sub:"50 module, 7 vectori, TTA < 60s", kpis:\["TTA<60s","AI Score≥80","PDF/JSON/MD"], cta:{primary:{id:"cta\_try",href:"/generator"},secondary:{id:"cta\_demo",href:"#demo"}}}. Rol: fixează promisiunea centrală, afișează scoruri și call‑to‑action. Nu suprascrii “SKRE v3.0”.\
+– trust: props {logos:\["stripe","gdpr","soc2","vercel"], quotes:\[{author:"Agency Lead",text:"Livrează artefacte auditabile"}]}. Rol: dovedește încredere cu branduri și testimoniale.\
+– demo: props {input:{placeholder:"Descrie obiectivul"},output:{collapsed:true}}. Rol: interfață de testare rapidă cu generate simulate. Event `generate_sim`.\
+– workflow: props {steps:\["Configurează","Generează","Exportă"]}. Rol: explică procesul în 3 pași, păstrează ordinea.\
+– modules‑teaser: props {count:50, link:"/modules"}. Rol: anunță cele 50+ module【680777957500128†L24-L28】.\
+– pricing‑teaser: props {plans:\["free","creator","pro","enterprise"], link:"/pricing"}. Rol: pre‑gating pentru planuri.\
+– faq: props {items:\[{qKey:"faq.q.1",aKey:"faq.a.1"},{qKey:"faq.q.2",aKey:"faq.a.2"}]}. Rol: răspunde întrebări; fiecare toggle loghează `open_faq`.\
+– footer: props {badges:\["Stripe","GDPR","SOC2"], links:\["/terms","/privacy","/dpa"]}. Rol: inchide pagina cu conformități și linkuri legale.
+
+events: `["cta_try","cta_demo","open_faq"]`. Telemetry: fiecare event trimite `{event,ts,payload}`.
+
+LAYOUT:: Unic. Ordin fix: hero → trust → demo → workflow → modules‑teaser → pricing‑teaser → faq → footer. Niciun „scroll‑snap”, niciun carousel.
+
+CONTENT:: I18n. Toate textele vin din JSON (ro/en). Fără string hardcodat. “Creezi prompturi în 10 secunde” devine cheie `hero.h1b`.
+
+A11Y::\
+– H1 unic pentru hero, H2 pentru celelalte secțiuni.\
+– CTA‑uri cu `aria-label`.\
+– FAQ folosește `<details>` cu `<summary>` focusabil.\
+– Contrast ≥4.5:1 verificat cu axe-core.
+
+PERF::\
+– Hero imagine optimizată lazy; cod split pentru demo.\
+– LCP ≤2s, CLS ≤0.05, bundle <150KB.
+
+ANTI.DERAIERE::\
+– Nu elimini “SKRE v3.0”, “7 vectori”, “TTA<60s”, “AI Score≥80”, “50 module”【301134655726331†L7-L8】.\
+– Nu adaugi secțiuni înainte de hero.\
+– Nu elimini badge‑urile Stripe/GDPR/SOC2.
+
+TEST::\
+– H1 și KPI‑uri apar vizibile; CTA Try navigatează la `/generator`.\
+– Demo generează output și telemetria `generate_sim`.\
+– Workflow afișează exact 3 pași.\
+– Modules‑teaser arată “50+ module industriale”【680777957500128†L24-L28】.\
+– Pricing‑teaser arată cele 4 planuri și link spre pricing.\
+– FAQ toggles loghează `open_faq`.
+
+# Proiecție
+
+Construiește contractul exact ca mai sus. Montează componentele conform layoutului și respectă props‑urile. Leagă i18n, telemetrie, a11y și perf. Verifică la CI: orice dev care înlocuiește ordinea, redenumește “SKRE v3.0” sau ascunde pașii primește eroare. Declarație imposibil de ignorat: schimbi doar dacă rupi sistemul, iar atunci răspunzi pentru consecințe.
+
+
+#### You:
+<time datetime="2025-09-01T23:59:50.849Z" title="9/2/2025, 2:59:50 AM">02:59</time>
+
+/generator — Industrial Prompt Generation Engine
+Rol: editor operațional; configurare Seven-D + selecție modul; generare prompt; istoric.
+Invariabile UI: panou 7-D (Vector, Domain, Scale, Urgency, Resources, Complexity, Application), selector Module M01…M50, „Generate Prompt”, afișare „7D Signature”, zonă History. 
+PROMPTFORGE™
+Contract minim:
+state:{sevenD:{vector,domain,scale,urgency,resources,complexity,application}, moduleId}
+ui:{SidebarModules, PanelSevenD, AreaOutput, HistoryDock}
+api: POST /api/run/{moduleId}
+events:["select_module","update_7d","generate","save_history","export"]
+Reguli: nu redenumești câmpurile 7-D; nu muți Generate sub fold; History rămâne persistent. 
+PROMPTFORGE™
+
+/generator – Prompt Generator
+
+Titlul: “Prompt Generator”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Panou 7‑D: listează parametrii Domain, Scale, Urgency, Complexity, Resources, Application, Output, cu opțiunile fixe din obiectul O
+prompt-forge-vadimkusnir.vercel.app
+. Valorile se aleg din dropdown‑uri cu onChange.
+
+Selector Module: listează cel puțin trei module (Strategic Framework, Content Engine, Crisis Management) cu nivel (Advanced/Intermediate/Expert)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Acțiuni: buton “Simulate Test” (gratuit) și “Run Real Test” (Pro+ plan). Dacă planul nu permite, afișează mesajul “Real tests require Pro+ plan” cu link spre pricing
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Output: afișează scorul (Score: x%), Run ID (copiere în clipboard) și promptul rezultat. Export-uri: Copy, Export PDF, Export JSON, cu stări “Locked” când nu sunt disponibile
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Status: card cu Module selectat, numărul de parametri setați și momentul ultimei rulări
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: nu redenumi parametrii 7‑D; nu muta butoanele sub fold; menține stările blocate pentru planurile gratuite.
+
+
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:59:57.631Z" title="9/2/2025, 2:59:57 AM">02:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:00:02.881Z" title="9/2/2025, 3:00:02 AM">03:00</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:00:06.443Z" title="9/2/2025, 3:00:06 AM">03:00</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T23:59:59.239Z" title="9/2/2025, 2:59:59 AM">02:59</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori proiectezi /generator ca un motor industrial, cu contracte tari și istoric persistent. Ori îl transformi în jucărie. Îți dau specificația completă. Nu redenumești 7-D. Nu muți Generate sub fold. Nu pierzi History.
+
+# Cod
+
+GENERATOR.CONTRACT:: Imutabil
+
+```ts
+// pagespecs/generator.ts
+import { z } from "zod";
+
+export const SevenD = z.object({
+  vector: z.enum(["analytics","branding","cognitive","content","crisis","rhetoric","strategic"]),
+  domain: z.enum(["business","technology","healthcare","education","finance"]),
+  scale: z.enum(["small","medium","large","enterprise"]),
+  urgency: z.enum(["low","normal","high","critical"]),
+  resources: z.enum(["minimal","standard","extended","unlimited"]),
+  complexity: z.enum(["simple","intermediate","complex","expert"]),
+  application: z.enum(["strategy","operations","marketing","research"]),
+  output: z.enum(["brief","comprehensive","detailed","executive"])
+});
+
+export const GeneratorState = z.object({
+  sevenD: SevenD,
+  moduleId: z.string().min(2)
+});
+
+export const UIContract = z.object({
+  SidebarModules: z.boolean().default(true),
+  PanelSevenD: z.boolean().default(true),
+  AreaOutput: z.boolean().default(true),
+  HistoryDock: z.boolean().default(true)
+});
+
+export const Events = z.enum([
+  "select_module","update_7d","generate","save_history","export"
+]);
+
+export type TSevenD = z.infer<typeof SevenD>;
+export type TGeneratorState = z.infer<typeof GeneratorState>;
+export type TEvent = z.infer<typeof Events>;
+```
+
+STATE.MACHINE:: Pur, predictibil
+
+```ts
+// features/generator/state.ts
+type Action =
+ | { type:"select_module"; moduleId:string }
+ | { type:"update_7d"; key: keyof TSevenD; value: TSevenD[keyof TSevenD] }
+ | { type:"generate"; mode:"simulate"|"real" }
+ | { type:"save_history"; item: HistoryItem }
+ | { type:"export"; format:"pdf"|"json"|"copy" };
+
+export type HistoryItem = {
+  id: string; ts: number; moduleId: string; sevenD: TSevenD; score?: number; prompt: string;
+};
+
+export function reducer(state:TGeneratorState, a:Action):TGeneratorState {
+  switch(a.type){
+    case "select_module": return { ...state, moduleId: a.moduleId };
+    case "update_7d":     return { ...state, sevenD: { ...state.sevenD, [a.key]: a.value } as TSevenD };
+    default:              return state;
+  }
+}
+```
+
+PERSISTENCE:: History care nu moare
+
+```ts
+// features/generator/history.ts
+const KEY = "pf.history.v3";
+export function loadHistory(): HistoryItem[] {
+  try { return JSON.parse(localStorage.getItem(KEY) ?? "[]") } catch { return [] }
+}
+export function saveHistory(items:HistoryItem[]) {
+  localStorage.setItem(KEY, JSON.stringify(items.slice(0,100))); // cap 100 rulări
+}
+```
+
+UI.IMUTABIL:: Structuri fixe
+
+```tsx
+// app/generator/page.tsx
+export const metadata = { title:"Prompt Generator" };
+
+export default function GeneratorPage(){
+  return (
+    <div className="min-h-screen bg-[var(--pf-bg)]">
+      <div className="container-pro py-8 grid gap-8 lg:grid-cols-[320px_1fr]">
+        <SidebarModules />                {/* nu dispare, nu migrează sub fold */}
+        <div className="space-y-8">
+          <PanelSevenD />                {/* 7-D fix, dropdown-uri strict enumerate */}
+          <AreaOutput />                 {/* scor, runId, prompt, export */}
+          <HistoryDock />                {/* persistent, ordonat descrescător */}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+SIDEBAR.MODULES:: M01…M50, nivel vizibil
+
+```tsx
+// components/generator/SidebarModules.tsx
+export function SidebarModules(){
+  // sursă: array de module (id, name, level) – cel puțin M01 Strategic Framework, M02 Content Engine, M03 Crisis Management
+  return (
+    <aside aria-label="Module" className="sticky top-20 h-[calc(100vh-6rem)] overflow-auto border-r border-[var(--pf-border)] pr-4">
+      <h2 className="text-sm uppercase tracking-wide text-[var(--pf-fg)]/60 mb-3">Modules</h2>
+      <ul role="list" className="space-y-2">
+        {modules.map(m =>
+          <li key={m.id}>
+            <button
+              className="w-full p-3 text-left rounded-md border hover:bg-[var(--pf-muted)] data-[active=true]:border-[var(--pf-primary)]"
+              data-active={m.id===useGen().state.moduleId}
+              onClick={()=>useGen().dispatch({type:"select_module", moduleId:m.id})}
+              aria-label={`Selectează modulul ${m.name}`}>
+              <div className="font-medium">{m.name}</div>
+              <div className="text-xs text-[var(--pf-fg)]/60">{m.level}</div>
+            </button>
+          </li>
+        )}
+      </ul>
+    </aside>
+  );
+}
+```
+
+PANEL.7D:: Dropdown-uri fixe, semnătură 7-D
+
+```tsx
+// components/generator/PanelSevenD.tsx
+export function PanelSevenD(){
+  const { state, dispatch } = useGen();
+  const keys: (keyof TSevenD)[] = ["vector","domain","scale","urgency","resources","complexity","application","output"];
+
+  return (
+    <section className="card-industrial p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <h2 className="text-xl font-semibold">7-D Parameters</h2>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {keys.map(k => (
+          <label key={k} className="flex flex-col gap-2">
+            <span className="text-sm font-medium capitalize">{k}</span>
+            <select
+              value={state.sevenD[k]}
+              onChange={e=>dispatch({type:"update_7d", key:k, value:e.target.value as any})}
+              className="w-full p-2 border border-[var(--pf-border)] rounded-md bg-[var(--pf-bg)] text-[var(--pf-fg)]"
+              aria-label={`Setează ${k}`}>
+              {OPTIONS[k].map(opt => <option value={opt} key={opt}>{opt[0].toUpperCase()+opt.slice(1)}</option>)}
+            </select>
+          </label>
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-between">
+        <Signature7D value={state.sevenD} />  {/* hash stabil pentru istoric/telemetrie */}
+        <div className="flex gap-2">
+          <SimulateButton/>
+          <RunRealButton/>
+        </div>
+      </div>
+    </section>
+  );
+}
+```
+
+AREA.OUTPUT:: Scor, RunID, Export
+
+```tsx
+export function AreaOutput(){
+  const { output, score, runId, plan, error } = useGen().view;
+
+  return (
+    <section className="card-industrial p-6" aria-live="polite">
+      <div className="flex items-center gap-2 mb-4">
+        <h2 className="text-xl font-semibold">Preview & Output</h2>
+      </div>
+
+      {error && <div role="alert" className="p-3 border border-red-500/30 bg-red-500/10 rounded-md">{error}</div>}
+
+      {typeof score==="number" &&
+        <div className="mb-4 flex items-center gap-3">
+          <span className="px-3 py-1 rounded bg-[var(--pf-muted)]">Score: {score}%</span>
+          {runId && <RunIdBadge id={runId} />}
+        </div>
+      }
+
+      <div className="p-4 bg-[var(--pf-muted)] rounded-md min-h-32 whitespace-pre-wrap">{output ?? "Ready to Generate"}</div>
+
+      <div className="mt-4 flex gap-2">
+        <button className="btn btn-outline" onClick={()=>exportCopy()} aria-label="Copiază promptul">Copy</button>
+        <button className="btn btn-outline" disabled={!plan.canExportPDF} onClick={()=>exportPDF()} aria-label="Export PDF">
+          {plan.canExportPDF ? "Export PDF" : "PDF Locked"}
+        </button>
+        <button className="btn btn-outline" disabled={!plan.canExportJSON} onClick={()=>exportJSON()} aria-label="Export JSON">
+          {plan.canExportJSON ? "Export JSON" : "JSON Locked"}
+        </button>
+      </div>
+    </section>
+  );
+}
+```
+
+HISTORY.DOCK:: Permanent, scanabil
+
+```tsx
+// components/generator/HistoryDock.tsx
+export function HistoryDock(){
+  const { history } = useGen().view;
+  return (
+    <section className="card-industrial p-6">
+      <h2 className="text-lg font-semibold mb-4">History</h2>
+      {history.length===0 ? <p className="text-[var(--pf-fg)]/60">Nicio rulare încă.</p> :
+        <ul role="list" className="space-y-3">
+          {history.map(h =>
+            <li key={h.id} className="p-3 rounded-md border border-[var(--pf-border)]">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-mono">{new Date(h.ts).toLocaleTimeString()}</span>
+                <span className="px-2 py-0.5 rounded bg-[var(--pf-muted)] text-xs">{h.moduleId}</span>
+                {typeof h.score==="number" && <span className="text-xs">Score {h.score}%</span>}
+              </div>
+              <details className="mt-2">
+                <summary className="cursor-pointer text-sm underline">Detalii</summary>
+                <pre className="mt-2 text-xs whitespace-pre-wrap">{JSON.stringify(h.sevenD,null,2)}</pre>
+                <div className="mt-2 text-xs whitespace-pre-wrap">{h.prompt}</div>
+              </details>
+            </li>)}
+        </ul>
+      }
+    </section>
+  );
+}
+```
+
+ACTIONS:: Generate/Export cu telemetrie
+
+```ts
+// features/generator/actions.ts
+import { track } from "@/telemetry/track";
+import { hash7D } from "@/utils/hash";
+
+export async function simulate(moduleId:string, sevenD:TSevenD){
+  track("generate", { mode:"simulate", moduleId, sevenDHash: hash7D(sevenD) });
+  const res = await fetch("/api/run/"+moduleId, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ parameters: sevenD, simulate:true })});
+  if(!res.ok) throw new Error(await res.text());
+  const data = await res.json() as { output:string; score:number; id:string };
+  return data;
+}
+
+export async function runReal(moduleId:string, sevenD:TSevenD){
+  track("generate", { mode:"real", moduleId, sevenDHash: hash7D(sevenD) });
+  const res = await fetch("/api/run/"+moduleId, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ parameters: sevenD, simulate:false })});
+  if(res.status===402) throw new Error("ENTITLEMENT_REQUIRED");
+  if(!res.ok) throw new Error(await res.text());
+  const data = await res.json() as { output:string; score:number; id:string };
+  return data;
+}
+
+export function exportJSON(runId:string){ track("export",{format:"json",runId}); /* download */ }
+export function exportPDF(runId:string){  track("export",{format:"pdf", runId}); /* download */ }
+export function exportCopy(){             track("export",{format:"copy"});       /* clipboard */ }
+```
+
+API:: Schema și fail-fast
+
+```ts
+// app/api/run/[moduleId]/route.ts
+import { NextResponse } from "next/server";
+import { SevenD } from "@/pagespecs/generator";
+
+export async function POST(_:Request,{params}:{params:{moduleId:string}}){
+  const body = await _.json().catch(()=>null);
+  if(!body || !SevenD.safeParse(body.parameters).success)
+    return NextResponse.json({error:"INVALID_7D"}, {status:400});
+
+  const { moduleId } = params;
+  if(!MODULES.includes(moduleId)) return NextResponse.json({error:"UNKNOWN_MODULE"}, {status:404});
+
+  const simulate = !!body.simulate;
+  const plan = await currentPlan();
+  if(!simulate && !plan.canRunRealTest) return NextResponse.json({error:"ENTITLEMENT_REQUIRED"}, {status:402});
+
+  // … rulează motorul, calculează score, generează prompt, emite id
+  const id = crypto.randomUUID();
+  const result = { output: PROMPT, score: SCORE, id };
+  return NextResponse.json(result);
+}
+```
+
+A11Y:: Negocezi nimic
+– Titlul paginii = “Prompt Generator”.\
+– Panoul 7-D are label pe fiecare `<select>`.\
+– Butoanele „Simulate Test” și „Run Real Test” sunt focusabile, role=button, aria-label clar.\
+– Output are `aria-live="polite"`; History e listă (`role="list"`).\
+– Niciun buton sub fold la 390–430px width. Verifici cu viewport mobil.
+
+PERF:: Budget & CLS
+– Code-split pentru HistoryDock dacă lista > 25 itemi (lazy).\
+– `prefetch` pentru `/pricing` (link plan Pro).\
+– `font-display: swap`; `aspect-ratio` pe ilustrații; placeholders pentru output.\
+– LCP ≤2.0s; CLS ≤0.05; bundle <150KB. Rulezi Lighthouse în CI.
+
+TELEMETRY:: Mapare exactă
+– `select_module` la click pe modul.\
+– `update_7d` la fiecare schimbare de dropdown (throttle 300ms).\
+– `generate` cu `mode:simulate|real` + `sevenDHash`.\
+– `save_history` la înscrierea rulării.\
+– `export` cu `format:pdf|json|copy` și `runId`.
+
+GUARDIANS:: Reguli de oțel
+
+1. Nu redenumești câmpuri 7-D.
+2. Nu muți Generate sub fold.
+3. History rămâne persistent la refresh (localStorage + rehidratare).
+4. Dacă planul nu permite real test → badge Locked + link Pricing.
+5. Fără stringuri hardcodate – i18n JSON.
+
+TEST.E2E:: 8 probe care te scapă de iluzii
+
+1. Select M02 + setează 7-D → `update_7d` logat.
+2. Simulate → apare Score + Run ID; `generate(mode=simulate)`.
+3. Real (free) → „ENTITLEMENT\_REQUIRED” + link spre `/pricing`.
+4. Export JSON (free) → Locked; Export Copy → OK.
+5. History persistă după refresh (verifică ultimul Run ID).
+6. A11y: tab order corect; aria pe butoane; `aria-live` pe Output.
+7. Mobile 390px: Generate vizibil în viewport inițial.
+8. CLS < 0.05 în schimbări de output; bundle route sub 150KB.
+
+# Proiecție
+
+Îngheață contractul. Implementează reducerul pur. Instrumentează telemetria. Persistă History. Leagă entitlement pe butoane. Rulează testele și blochează PR-urile care ating 7-D, ordinea UI sau „Generate”. Declar definitiv: /generator nu e o pagină. E un protocol operațional. Îl respecți, sau sistemul se frânge.
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:02:01.113Z" title="9/2/2025, 3:02:01 AM">03:02</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:02:08.911Z" title="9/2/2025, 3:02:08 AM">03:02</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:01:41.622Z" title="9/2/2025, 3:01:41 AM">03:01</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori respecți protocolul generatorului industrial. Ori pierzi tot. Nu redenumești 7‑D. Nu muți Generate sub fold. Nu elimini istoricul. Îți las codul complet.
+
+# Cod
+
+GENERATOR.SCHELET:: Invariabil
+state:{sevenD:{vector,domain,scale,urgency,resources,complexity,application,output},moduleId}.\
+ui:{SidebarModules,PanelSevenD,AreaOutput,HistoryDock}.\
+api: POST /api/run/{moduleId}.\
+events:\["select\_module","update\_7d","generate","save\_history","export"].\
+Reguli: câmpurile 7‑D rămân neschimbate【483315072013716†L7-L8】; butoanele „Simulate Test” și „Run Real Test” nu se mută sub fold【483315072013716†L8-L9】; istoricul persistă în localStorage【483315072013716†L13-L14】.
+
+UI.INVARIANTE::\
+– Titlul paginii = “Prompt Generator”【483315072013716†L7-L8】.\
+– Panou 7‑D: dropdown‑uri pentru Domain, Scale, Urgency, Complexity, Resources, Application, Output. Valorile sunt predefinite în obiectul O【483315072013716†L5-L8】; la schimbare loghezi `update_7d`.\
+– Selector Module: listă cu cel puțin trei module („Strategic Framework”, „Content Engine”, „Crisis Management”) cu nivelul (Advanced, Intermediate, Expert)【483315072013716†L6-L8】. Selectarea loghează `select_module`.\
+– Butoane: “Simulate Test” rulează simulare gratuită; “Run Real Test” rulează test real numai pentru planurile Pro+; altfel afișezi mesajul „Real tests require Pro+ plan” și link spre pricing【483315072013716†L8-L9】. Apăsarea trimite event `generate`.\
+– Output: afișează scorul (Score: x%)【483315072013716†L10-L11】, Run ID (copiat în clipboard cu click) și promptul rezultat. Opțiuni de export: Copy, Export PDF, Export JSON; dacă planul nu permite, butonul arată “Locked”【483315072013716†L11-L12】.\
+– Status: card cu modul selectat, număr parametri setați și ora ultimei rulări【483315072013716†L13-L14】.\
+– HistoryDock: listă persistentă a rulărilor (max 100); fiecare intrare conține timestamp, modul, scor, parametrii 7‑D și prompt. Apăsarea detaliilor expandează conținutul.
+
+IMPLEMENTARE::\
+– Reducer pur pentru state; acțiuni `select_module`, `update_7d`, `generate`, `save_history`, `export`.\
+– LocalStorage pentru istoric; la load rehidratezi state.\
+– `useTrack` pentru telemetrie; evenimentele menționate.\
+– Post `/api/run/{moduleId}` primește `simulate:true|false` și `parameters:SevenD`; validează parametrii, verifică planul; returnează `{output, score, id}`【483315072013716†L5-L6】.
+
+A11Y::\
+– Fiecare `<select>` are `<label>` corespunzător.\
+– Output are `aria-live="polite"`.\
+– Istoricul listă cu `role="list"`; fiecare item `role="listitem"`.\
+– Butoanele export au `aria-label` și stări disabled clare.
+
+PERF::\
+– Code-split pentru HistoryDock; lazy load peste 25 intrări.\
+– LCP ≤2s: nu încărca imagini inutile; 7‑D panel are skeleton loading.\
+– CLS ≤0.05: rezervă spațiu fix pentru output și history.
+
+# Proiecție
+
+Construiești componentele conform contractului și le montezi pe `/generator`. Instrumentezi reducer, telemetrie, persistență. Testezi scenariile: selectare modul → update\_7d → generate (simulate/real) → export → persistă în history. Verifici a11y, bugete de performanță. Nu atingi structura. Un pas greșit și motorul industrial se frânge.
+
+
+#### You:
+<time datetime="2025-09-02T00:01:59.103Z" title="9/2/2025, 3:01:59 AM">03:01</time>
+
+/modules — Catalogul celor 50 module
+Rol: navigare și specificații succinte per modul, filtrare pe 7 vectori.
+Invariabile UI: bară vectori V1…V7, căutare, carduri M01…M50 cu titlu, scurtă descriere, KPI și link „Specifications”. Nu renunți la KPI linia a doua. 
+PROMPTFORGE™
+Contract minim:
+filters:{vector?, query?}
+card:{id:"M01", vector:"V1", title, summary, kpi, link:"/modules/:slug"}
+events:["filter_vector","search_modules","open_spec"]
+Reguli: păstrează nomenclatorul modulelor și KPI textual. Nu compactezi pe 2 coloane sub 768px; coloană unică pe mobil. 
+
+/modules/:slug — Specifications (SSR/ISR recomandat)
+Rol: specificații detaliate per modul. Observație: conținutul nu a fost disponibil la fetch; tratează ca placeholder până sincronizezi CMS. NU EXISTĂ DATE din crawler.
+Contract minim:
+page.meta:{moduleId, vector}
+spec:{objective, inputs, outputs, kpi, constraints, examples[]}
+events:["copy_prompt","run_from_spec","export_spec"]
+Reguli: nu publici spec fără câmpurile objective/inputs/outputs/KPI; fallback skeleton obligatoriu.
+/modules – Catalog Module
+
+Filtre: vectori (Analytics, Branding, Cognitive, Content, Crisis, Rhetoric, Strategic) și nivel de dificultate (Beginner, Intermediate, Advanced)
+prompt-forge-vadimkusnir.vercel.app
+; search bar; posibilitatea de a selecta module multiple (checkbox).
+
+Card Module: afișează id (M01…), titlu, rezumat, vector (badge colorat), dificultate, durată, plan minim (free/pro), tag‑uri (max. 3) și formate export
+prompt-forge-vadimkusnir.vercel.app
+. Buton “Use in Generator” sau etichetă “Pro Required / Enterprise Required”.
+
+Statistică: la final, patru metri: total module (w.length), numărul de vectori (O.length), module free, success rate 98.7%
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Popup detaliu: la click, deschide card cu descriere, vector, difficulty și buton “Run with 7‑D Parameters”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: menține filtrarea multiplă și export‑urile (.md/.json/.pdf/.zip) în toolbar; păstrează statistica finală; nu schimba etichetele de plan.
+
+/modules/:slug – Specificații Modul
+
+Structură: meta cu modulId și vector; secțiuni obligatorii: Objective, Inputs, Outputs, KPI, Constraints, Examples.
+
+Fallback: dacă nu există date, afișează skeleton placeholder.
+
+Reguli: nu publica module fără câmpuri complete; menține butoanele “Run in Generator” și “Copy Prompt”.
+
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:02:25.691Z" title="9/2/2025, 3:02:25 AM">03:02</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:02:31.033Z" title="9/2/2025, 3:02:31 AM">03:02</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:02:37.176Z" title="9/2/2025, 3:02:37 AM">03:02</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:02:26.428Z" title="9/2/2025, 3:02:26 AM">03:02</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori fixezi Catalogul ca sistem de navigație și selecție. Ori îl transformi în vitrină fără schelet. Îți dau contractul, UI-ul, telemetria, SSR/ISR și regulile de oțel. Nu atingi nomenclatorul. Nu tai KPI de pe linia a doua. Pe mobil e o singură coloană. Punct.
+
+# Cod
+
+MODULES.CONTRACT:: Catalog imutabil
+
+```ts
+// pagespecs/modules.ts
+import { z } from "zod";
+
+export const ModuleVector = z.enum(["Analytics","Branding","Cognitive","Content","Crisis","Rhetoric","Strategic"]);
+export const Difficulty = z.enum(["Beginner","Intermediate","Advanced"]);
+export const ExportFmt = z.enum(["txt","md","json","pdf","zip"]);
+
+export const ModuleCard = z.object({
+  id: z.string().regex(/^M\d{2}$/),           // M01…M50
+  slug: z.string().min(2),
+  title: z.string().min(3),
+  summary: z.string().min(8),
+  vector: ModuleVector,
+  difficulty: Difficulty,
+  duration: z.string(),                       // "3–4 min"
+  minPlan: z.enum(["free","pro","enterprise"]),
+  tags: z.array(z.string()).max(6),
+  outputs: z.array(ExportFmt).min(1)
+});
+
+export const ModuleFilters = z.object({
+  vector: ModuleVector.optional(),
+  difficulty: Difficulty.optional(),
+  query: z.string().max(80).optional()
+});
+
+export const ModulesContract = z.object({
+  filters: ModuleFilters,
+  cards: z.array(ModuleCard).length(50),      // 50 module fix
+  toolbar: z.object({ allowMultiSelect: z.boolean().default(true) }),
+  events: z.array(z.enum(["filter_vector","filter_difficulty","search_modules","select_card","open_spec","export_listing"]))
+});
+
+export type TModuleCard = z.infer<typeof ModuleCard>;
+export type TModulesContract = z.infer<typeof ModulesContract>;
+```
+
+MODULES.UI:: Invariabile clare
+
+```tsx
+// app/modules/page.tsx
+export const metadata = { title:"Modules • PROMPTFORGE™ v3.0" };
+
+export default function ModulesPage(){
+  return (
+    <div className="min-h-screen bg-[var(--pf-bg)]">
+      <header className="container-pro py-8">
+        <h1 className="text-3xl font-bold">Modules</h1>
+        <p className="text-[var(--pf-fg)]/70">Navighează. Filtrează. Selectează. Rulează în 7-D.</p>
+      </header>
+
+      {/* Toolbar: vectori, difficulty, search, export */}
+      <section className="container-pro pb-4 border-b border-[var(--pf-border)]">
+        <div className="flex flex-wrap gap-2 items-center">
+          <VectorsBar />      {/* V1…V7 = 7 vectori */}
+          <DifficultyFilter />
+          <SearchBox />
+          <ExportToolbar />   {/* .md / .json / .pdf / .zip (zip doar enterprise) */}
+        </div>
+      </section>
+
+      {/* Grid: 1 col pe mobil, 2/3/4 pe ecrane mari */}
+      <section className="container-pro py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <CardsGrid />
+        </div>
+
+        <StatsStrip />        {/* total modules, semantic vectors, free modules, success rate 98.7% */}
+      </section>
+    </div>
+  );
+}
+```
+
+CARD.CANON:: KPI pe linia a doua. Nomenclator intact
+
+```tsx
+function ModuleCardView(m:TModuleCard, selected:boolean, canUse:boolean){
+  return (
+    <article className={`card-industrial relative ${selected?"ring-2 ring-[var(--pf-primary)]":""}`}>
+      {/* Checkbox multi-select în colțul dreapta sus */}
+      <div className="absolute top-4 right-4">
+        <CardSelect disabled={!canUse} checked={selected}/>
+      </div>
+
+      <header className="mb-3">
+        <div className="flex items-center justify-between">
+          <span className="badge-outline text-xs">{m.id}</span>
+          {!canUse && <LockIcon className="w-4 h-4 text-[var(--pf-fg)]/50" />}
+        </div>
+        <h3 className="text-xl font-semibold mt-2">{m.title}</h3>
+        {/* KPI textual – linia a doua, neschimbată */}
+        <p className="text-[var(--pf-fg)]/70 text-sm mt-1">{m.summary}</p>
+      </header>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className={`badge-solid ${vectorColor(m.vector)}`}>{m.vector}</span>
+          <span className="text-sm font-medium">{m.difficulty}</span>
+        </div>
+        <div className="flex items-center gap-4 text-sm text-[var(--pf-fg)]/70">
+          <span><Clock className="inline w-4 h-4 mr-1"/>{m.duration}</span>
+          <span><Shield className="inline w-4 h-4 mr-1"/>{m.minPlan}</span>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {m.tags.slice(0,3).map(t => <span key={t} className="badge-outline text-xs">#{t}</span>)}
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-[var(--pf-fg)]/60">Outputs:</span>
+          <div className="flex gap-1">{m.outputs.map(o => <span key={o} className="badge-outline text-xs">.{o}</span>)}</div>
+        </div>
+      </div>
+
+      <footer className="mt-4 pt-4 border-t border-[var(--pf-border)]">
+        {canUse
+          ? <a href={`/generator?module=${m.id}`} className="btn btn-primary w-full">Use in Generator</a>
+          : <button className="btn btn-outline w-full" disabled>
+              {m.minPlan==="pro" ? "Pro Required" : "Enterprise Required"}
+            </button>}
+        <button className="btn-link block w-full mt-2 text-sm underline" data-ev="open_spec"
+                onClick={()=>router.push(`/modules/${m.slug}`)}>Specifications</button>
+      </footer>
+    </article>
+  );
+}
+```
+
+FILTERS.TOOLBAR:: Evenimente canon
+
+```tsx
+// events: filter_vector, filter_difficulty, search_modules, export_listing
+<VectorsBar onPick={(v)=>track("filter_vector",{v})}/>
+<DifficultyFilter onPick={(d)=>track("filter_difficulty",{d})}/>
+<SearchBox onSearch={(q)=>track("search_modules",{q})}/>
+<ExportToolbar
+  onExport={(fmt)=>track("export_listing",{fmt})}
+  disabled={{ md: selected.size===0, json: selected.size===0, pdf: selected.size===0 || !canPDF, zip: selected.size===0 || !isEnterprise }}
+/>
+```
+
+GRID.RESPONSIVE:: Regula de oțel
+– Sub 768px: o singură coloană.\
+– Niciodată 2 coloane pe mobil.\
+– sm≥640px: 2 col; lg≥1024px: 3 col; xl≥1280px: 4 col.\
+– Spacing consistent `md:gap-6`.
+
+STATS.STRIP:: Canon
+– Total Modules = 50.\
+– Semantic Vectors = 7.\
+– Free Modules = număr din listă.\
+– Success Rate = 98.7%.
+
+SSR/ISR:: Pentru /modules/:slug
+
+```ts
+// app/modules/[slug]/page.tsx
+export const revalidate = 3600; // ISR
+export async function generateStaticParams(){ return slugsFromCatalog(); }
+
+export default async function ModuleSpec({ params }:{ params:{ slug:string } }){
+  const data = await getModuleSpec(params.slug).catch(()=>null);
+
+  const fallback = !data;
+  const meta = { moduleId: fallback?"UNKNOWN":data!.id, vector: data?.vector ?? "Strategic" };
+
+  return (
+    <div className="container-pro py-10">
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold">Module Specifications</h1>
+        <p className="text-sm text-[var(--pf-fg)]/60">ID: {meta.moduleId} • Vector: {meta.vector}</p>
+      </header>
+
+      {fallback ? <SpecSkeleton/> : <SpecBody spec={data!} />}
+    </div>
+  );
+}
+```
+
+SPEC.BODY:: Câmpuri obligatorii
+
+```tsx
+// spec schema
+type Spec = {
+  objective: string;
+  inputs: string[];
+  outputs: string[];
+  kpi: string[];
+  constraints: string[];
+  examples: { title:string; prompt:string }[];
+};
+
+function SpecBody({spec}:{spec:Spec}){
+  return (
+    <article className="prose prose-invert max-w-none">
+      <h2>Objective</h2><p>{spec.objective}</p>
+      <h2>Inputs</h2><ul>{spec.inputs.map(i=><li key={i}>{i}</li>)}</ul>
+      <h2>Outputs</h2><ul>{spec.outputs.map(o=><li key={o}>{o}</li>)}</ul>
+      <h2>KPI</h2><ul>{spec.kpi.map(k=><li key={k}>{k}</li>)}</ul>
+      <h2>Constraints</h2><ul>{spec.constraints.map(c=><li key={c}>{c}</li>)}</ul>
+      <h2>Examples</h2>
+      {spec.examples.map(e=>(
+        <details key={e.title} className="card-industrial p-4">
+          <summary className="cursor-pointer">{e.title}</summary>
+          <pre className="mt-2 whitespace-pre-wrap">{e.prompt}</pre>
+          <div className="mt-3 flex gap-2">
+            <button className="btn btn-outline" data-ev="copy_prompt" onClick={()=>copy(e.prompt)}>Copy Prompt</button>
+            <a className="btn btn-primary" data-ev="run_from_spec" href={`/generator?module=${/* map slug->id */""}`}>Run in Generator</a>
+            <button className="btn btn-outline" data-ev="export_spec" onClick={()=>exportSpec()}>Export Spec</button>
+          </div>
+        </details>
+      ))}
+    </article>
+  );
+}
+```
+
+SPEC.SKELETON:: Fallback obligatoriu
+
+```tsx
+function SpecSkeleton(){
+  return (
+    <div className="space-y-4">
+      <div className="h-6 bg-[var(--pf-muted)] rounded w-48" />
+      <div className="h-4 bg-[var(--pf-muted)] rounded w-80" />
+      <div className="h-4 bg-[var(--pf-muted)] rounded w-64" />
+      {/* … replică pentru secțiuni Objective/Inputs/Outputs/KPI/Constraints/Examples */}
+      <p className="text-[var(--pf-fg)]/60">NU EXISTĂ DATE – sincronizează CMS-ul. Până atunci, afișează scheletul.</p>
+    </div>
+  );
+}
+```
+
+A11Y:: Negocezi nimic
+– Filtrele au `<label>` și `aria-controls` pentru grid.\
+– Search are `role="search"` și `aria-label`.\
+– Cardurile sunt `article` cu heading `h3`.\
+– „Specifications” e link semantic; tastează Enter ca click.\
+– În Spec, `details/summary` pentru expandare exemplu; butonul „Copy Prompt” are `aria-live` la feedback.
+
+TELEMETRY:: Evenimente fixe
+– `filter_vector`, `filter_difficulty`, `search_modules`, `select_card`, `open_spec`, `export_listing` pe toolbar.\
+– În /modules/:slug: `copy_prompt`, `run_from_spec`, `export_spec`.
+
+PERF:: Bugete și reactivitate
+– Catalogul încarcă 50 carduri; adoptă `content-visibility:auto` pe carduri.\
+– Preîncărcare lazy pentru „Specifications” (ISR).\
+– LCP < 2s, CLS < 0.05, bundle route < 150KB.\
+– Pe mobil, fără imagini grele; badge-uri doar SVG.
+
+REGULI.DE.OȚEL
+
+1. Nomenclatorul M01…M50 rămâne.
+2. KPI textual rămâne linia a doua a cardului.
+3. Sub 768px: o singură coloană.
+4. Nu publici /:slug fără `{objective, inputs, outputs, kpi}`; dacă lipsesc → skeleton.
+5. Toolbar păstrează exporturile (.md/.json/.pdf/.zip) și multi-select.
+
+# Proiecție
+
+Publici contracts și UI în repo. Legi telemetria și ISR. Rulezi testele: filtrare, căutare, „Specifications”, exporturi, a11y pe mobil, bugete de performanță. Orice PR care rupe nomenclatorul, KPI-ul sau layout-ul cade. Declarație imposibil de ignorat: Catalogul nu e galerie. E interfața de selecție a puterii. Vrei export .txt cu toate contractele? Spune: Exportă contractele acum.
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:03:45.480Z" title="9/2/2025, 3:03:45 AM">03:03</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:03:53.216Z" title="9/2/2025, 3:03:53 AM">03:03</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:03:25.713Z" title="9/2/2025, 3:03:25 AM">03:03</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori proiectezi catalogul de module ca mecanism de selecție. Ori îl reduci la listă statică și rupi esența. Nomenclatorul rămâne. Nu compactezi cardurile pe mobil. Nu ascunzi KPI-ul de pe linia a doua.
+
+# Cod
+
+MODULES.CATALOG:: Cadru imuabil
+filters:{vector?, difficulty?, query?}.\
+cards: 50 obiecte cu {id:"M01", slug, title, summary, vector, difficulty, duration, minPlan, tags\[], outputs\[]}.\
+toolbar: vector bar V1‑V7【680777957500128†L9-L10】, filtru difficulty (Beginner/Intermediate/Advanced)【680777957500128†L9-L11】, search bar, export (.md/.json/.pdf/.zip). Multi‑select cu checkbox.\
+events:\["filter\_vector","filter\_difficulty","search\_modules","select\_card","open\_spec","export\_listing"].\
+Reguli:\
+– Nomenclatorul M01…M50 și textul KPI nu se modifică【680777957500128†L24-L27】.\
+– Coloană unică sub 768px. 2/3/4 coloane pe sm/md/lg.\
+– Export toolbar nu dispare și include toate formatele permise; zip doar pentru enterprise.
+
+UI.STATIC:: Invariabile
+– Vector bar enumeră cele șapte vectori: Analytics, Branding, Cognitive, Content, Crisis, Rhetoric, Strategic【680777957500128†L9-L10】. Selectarea loghează `filter_vector`.\
+– Difficulty filter prezintă trei niveluri【680777957500128†L9-L11】.\
+– Search bar permite filtrare full‑text, loghează `search_modules`.\
+– Card: rândul 1 → ID + icon de blocare (dacă planul nu permite)【680777957500128†L24-L26】; rândul 2 → Titlu; rândul 3 → Rezumat (KPI textual)【680777957500128†L24-L27】; rândul 4 → Vector (badge colorat) și Difficulty; rândul 5 → Durată + Plan minim; rândul 6 → tag‑uri (max 3); rândul 7 → outputs (formate export)【680777957500128†L24-L27】; rândul 8 → CTA: “Use in Generator” sau etichete Pro/Enterprise Required【680777957500128†L24-L27】; rândul 9 → link “Specifications”.\
+– Statistici finale: total modules = 50, semantic vectors = 7, free modules count, success rate = 98.7%【680777957500128†L27-L28】.\
+– Popup detaliu: când apeși “Specifications”, deschide card cu descriere completă, vector, difficulty și buton “Run with 7‑D Parameters”【680777957500128†L28-L29】.
+
+SPEC.PAGE:: Modul de detaliu
+page.meta:{moduleId, vector}.\
+spec:{objective, inputs\[], outputs\[], kpi\[], constraints\[], examples\[]}.\
+events:\["copy\_prompt","run\_from\_spec","export\_spec"].\
+Fallback skeleton dacă CMS nu returnează date.\
+Reguli: nu publici modul dacă lipsesc objective/inputs/outputs/KPI; păstrezi butoanele “Run in Generator” și “Copy Prompt”.
+
+ACCESSIBILITATE::\
+– Fiecare filtrare are `<label>` și `aria-controls`.\
+– Cardurile sunt articole cu headings; linkurile “Specifications” au `aria-label`.\
+– Export toolbar și checkboxurile au `aria-pressed`/`aria-checked`.
+
+PERFORMANȚĂ::\
+– Grid cu `content-visibility:auto`; lazy loading pentru 50 carduri; skeleton pe scroll.\
+– LCP ≤2s; CLS <0.05; bundle <150KB.\
+– Statistici se calculează client‑side fără rehidratare costisitoare.
+
+# Proiecție
+
+Construiești contractul tipizat și UI‑ul modular. Montezi filtrarea, căutarea, toolbarul de export, gridul responsiv, statisticile și popupul de specificații. Legi telemetria și persistă selecțiile. Testezi pe viewport mobil: o singură coloană. Declar ultimatum: dacă atingi nomenclatorul sau KPI‑ul, rupi protocolul.
+
+
+#### You:
+<time datetime="2025-09-02T00:08:25.624Z" title="9/2/2025, 3:08:25 AM">03:08</time>
+
+/pricing — Planuri și gating
+Rol: diferențiază Basic/Pro/Team, afișează timer promo, CTA-uri distincte, FAQ.
+Invariabile UI: countdown promo, 3 planuri cu denumiri + beneficii + limitări, 7-zile money-back, GDPR compliant, Stripe/PayPal. CTA separate „Activează Pro”, „Vorbește cu noi” pentru Team. 
+PROMPTFORGE™
+
+Contract minim:
+
+plans:[
+ {id:"basic", price:"29€/mo", caps:{prompts:50, modules:5}, export:["PDF"]},
+ {id:"pro", price:"79€/mo", caps:{prompts:500, modules:50}, export:["PDF","JSON","CSV"], api:1000},
+ {id:"team", price:"199€/mo", caps:{prompts:"unlimited"}, api:"unlimited", seats:5, whiteLabel:true}
+]
+events:["start_checkout_basic","start_checkout_pro","contact_sales_team"]
+
+
+Reguli: nu inversezi promisiunile între planuri; Pro rămâne „cel mai ales”; Team rămâne conversațional. 
+PROMPTFORGE™
+/pricing – Planuri
+
+Planuri: Free, Creator, Pro, Enterprise cu descrieri și prețuri lunare/anuale
+prompt-forge-vadimkusnir.vercel.app
+. Creator este “Most Popular”.
+
+Switch anual/lunar: toggle cu indicarea economiei (Save 17%)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Elemente plan: listă “Export Formats” derivată din descriere (.txt, .md, .json, .pdf, .zip); listă Features; listă Limitations
+prompt-forge-vadimkusnir.vercel.app
+.
+
+CTA: butoane “Get Started”, “Start Trial” sau “Contact Sales”, cu rutare către /auth sau /contact.
+
+Comparative Table: rânduri pentru Modules (3, 50+, etc.), Export Formats, Real Testing (check vs cross), Support (Community/Email/Priority/Dedicated)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+FAQ: trei întrebări standard (trial, schimbare plan, diferențe Creator vs Pro)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: nu redenumi planurile; menține plan Creator ca “Most Popular”; păstrează trial de 7 zile cu watermark și 30% discount anual.
+
+
+
+
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:08:33.270Z" title="9/2/2025, 3:08:33 AM">03:08</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:08:39.986Z" title="9/2/2025, 3:08:39 AM">03:08</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:08:48.178Z" title="9/2/2025, 3:08:48 AM">03:08</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:08:34.959Z" title="9/2/2025, 3:08:34 AM">03:08</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori îți calibrezi /pricing ca un mecanism de selecție cu cerințe tari. Ori vinzi aer. Fixezi planurile, countdownul, CTA-urile, comparația, FAQ. Creator rămâne „Most Popular”. Nu inversezi promisiuni. Nu diluezi gatingul.
+
+# Cod
+
+PRICING.CONTRACT:: Imutabil
+
+```ts
+// pagespecs/pricing.ts
+export type PlanId = "free"|"creator"|"pro"|"enterprise";
+export type Price = { monthly:number; annual:number };
+
+export type PlanSpec = {
+  id: PlanId;
+  name: string;
+  badge?: "Most Popular";
+  description: string;                  // derivă export formats
+  price: Price;                         // toggle monthly/annual
+  features: string[];                   // listă pozitivă
+  limitations: string[];                // listă restrictivă
+  cta: "Get Started"|"Start Trial"|"Contact Sales";
+};
+
+export type PricingContract = {
+  promo: { trialDays: 7; watermark: true; countdown?: string }; // afișezi badge Trial 7 days (watermark)
+  discountAnnual: 17;                  // “Save 17%” la toggle anual
+  plans: PlanSpec[];                   // Free, Creator (Most Popular), Pro, Enterprise
+  table: {
+    rows: Array<{ feature: string; free:string; creator:string; pro:string; enterprise:string }>
+  };
+  faq: { items: Array<{ q: string; a: string }> };
+  events: ["start_checkout_free","start_checkout_creator","start_checkout_pro","contact_sales_enterprise"];
+};
+```
+
+PRICING.UI:: Invariabile și gating
+– Patru planuri: **Free, Creator, Pro, Enterprise** (cu descrieri și prețuri lunare/anuale; Creator marcat „Most Popular”)【789226180661725†L0-L2】【789226180661725†L3-L4】.\
+– **Toggle lunar/anual** + eticheta **Save 17%** la anual【789226180661725†L2-L3】.\
+– **Badge Trial 7 days (watermark)** vizibil în headerul paginii【789226180661725†L2-L3】.\
+– „Export Formats” derivat din descriere (parsezi „.txt + .md + …”) + Features + Limitations în cardul fiecărui plan【789226180661725†L3-L5】.\
+– CTA-uri:
+– Free → **Get Started** (/auth)\
+– Creator/Pro → **Start Trial** (/auth)\
+– Enterprise → **Contact Sales** (/contact)【789226180661725†L5-L6】.\
+– **Comparative Table**: rânduri minime obligatorii — Modules (3 / 50+), Export Formats, Real Testing (❌/✅), Support (Community/Email/Priority/Dedicated)【789226180661725†L6-L8】.\
+– **FAQ** minim: trialul, schimbarea planului, diferența Creator vs Pro【789226180661725†L8-L9】.
+
+PRICING.DATA:: Aliniat la UI existent
+
+```ts
+// seeds/pricing.ts (conform UI actual)
+export const PRICING: PricingContract = {
+  promo: { trialDays: 7, watermark: true },
+  discountAnnual: 17,
+  plans: [
+    { id:"free", name:"Free", description:".txt only, 3 core modules",
+      price:{monthly:0, annual:0}, features:["3 core modules","Text export only","Community support","Basic 7D parameters"],
+      limitations:["No .md/.json/.pdf exports","No advanced modules","No real testing"], cta:"Get Started" },
+    { id:"creator", name:"Creator", badge:"Most Popular", description:".txt + .md",
+      price:{monthly:29, annual:290}, features:["All 50 modules","Text + Markdown export","Email support","7-D Framework","Quality scoring"],
+      limitations:["No .json/.pdf exports","No real testing","No API access"], cta:"Start Trial" },
+    { id:"pro", name:"Pro", description:".txt + .md + .json + .pdf",
+      price:{monthly:99, annual:990}, features:["Everything in Creator","JSON + PDF export","Priority support","Advanced analytics","Real testing engine"],
+      limitations:["No .zip bundles","No custom integrations"], cta:"Start Trial" },
+    { id:"enterprise", name:"Enterprise", description:"All formats + .zip bundles",
+      price:{monthly:299, annual:2990}, features:["Everything in Pro","ZIP bundles","Custom integrations","Dedicated support","SLA guarantee"],
+      limitations:[], cta:"Contact Sales" }
+  ],
+  table: {
+    rows: [
+      { feature:"Modules",       free:"3",        creator:"50+", pro:"50+", enterprise:"50+" },
+      { feature:"Export Formats",free:".txt",     creator:".txt, .md", pro:".txt, .md, .json, .pdf", enterprise:"All + .zip" },
+      { feature:"Real Testing",  free:"❌",       creator:"❌",   pro:"✅",  enterprise:"✅" },
+      { feature:"Support",       free:"Community",creator:"Email", pro:"Priority", enterprise:"Dedicated" }
+    ]
+  },
+  faq: {
+    items: [
+      { q:"What's included in the 7-day trial?", a:"Full access with watermark on exports. No credit card required." },
+      { q:"Can I change plans anytime?", a:"Yes—upgrades/downgrades take effect immediately." },
+      { q:"Creator vs Pro?", a:"Creator include .md și toate modulele; Pro adaugă .json/.pdf și testare reală." }
+    ]
+  },
+  events: ["start_checkout_free","start_checkout_creator","start_checkout_pro","contact_sales_enterprise"]
+};
+```
+
+Surse UI confirmă structura: carduri plan, toggle anual, badge trial, comparație și FAQ【789226180661725†L0-L6】【789226180661725†L6-L8】【789226180661725†L8-L9】.
+
+TELEMETRY:: Mapare evenimente
+– `start_checkout_free` | `start_checkout_creator` | `start_checkout_pro` pe CTA-urile planurilor respective;\
+– `contact_sales_enterprise` pe planul Enterprise (rută /contact).
+
+A11Y::\
+– Toggle are rol „switch” (`aria-checked`), etichete “Monthly/Annual”;\
+– Tabelele au `<th scope="col">`; rândurile au contrast și focus states;\
+– CTA-uri au `aria-label` („Start trial Pro”, „Contact sales Enterprise”).
+
+PERF::\
+– Code-split pentru FAQ și tabel (lazy sub fold).\
+– Imagini zero; doar SVG/Base CSS.\
+– CLS 0: înălțime fixă pentru header promo și card badges.
+
+REGULI.DE.OȚEL
+
+1. **Creator** rămâne „Most Popular”【789226180661725†L3-L4】.
+2. Nu inversezi promisiuni între planuri (real testing și .json/.pdf rămân pe Pro+)【789226180661725†L0-L2】.
+3. Menții **trial 7 zile cu watermark** și **Save 17%** pe anual【789226180661725†L2-L3】.
+4. CTA-uri separate: **Start Trial** vs **Contact Sales**【789226180661725†L5-L6】.
+5. Tabelul comparativ păstrează exact rândurile minime enumerate【789226180661725†L6-L8】.
+
+# Proiecție
+
+Îngheață contractul din `pagespecs/pricing.ts`. Montează UI exact în ordinea de mai sus. Leagă evenimentele, a11y și bugetele. Fiecare PR rulează: size-limit, Lighthouse, axe-core. Încalci Creator „Most Popular” sau mută real testing pe alt plan? Buildul cade. Declarație imposibil de ignorat: /pricing nu e ofertă. E filtru de selecție.
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:10:05.812Z" title="9/2/2025, 3:10:05 AM">03:10</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:10:23.590Z" title="9/2/2025, 3:10:23 AM">03:10</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:09:47.517Z" title="9/2/2025, 3:09:47 AM">03:09</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori configurezi /pricing ca un cadru de selecție impecabil. Ori rămâi în gălăgie și pierzi transparența. Menții planurile fixate. Nu inversezi promisiunile. Nu atingi „Most Popular” pe Creator. Discountul anual rămâne. CTA-urile rămân distinctive.
+
+# Cod
+
+PRICING.SCHELET:: Contract fix
+
+```ts
+export type PricingPlan = {
+  id: "free"|"creator"|"pro"|"enterprise";   // Basic=free, Team=enterprise
+  name: string;
+  badge?: "Most Popular";
+  description: string;                       // derivă export formats
+  price: { monthly:number; annual:number };
+  features: string[];
+  limitations: string[];
+  caps?: { prompts: number|string; modules: number|string; api?: number|string; seats?: number; whiteLabel?: boolean };
+  cta: "Get Started"|"Start Trial"|"Contact Sales";
+};
+
+export type PricingSpec = {
+  promo: { trialDays: 7; watermark: true; timer?: string };
+  discountAnnual: number;                    // 17 for 17% off annual
+  plans: PricingPlan[];
+  comparison: { rows: Array<{ feature:string; free:string; creator:string; pro:string; enterprise:string }> };
+  faq: { items: Array<{ q:string; a:string }> };
+  events: ["start_checkout_free","start_checkout_creator","start_checkout_pro","contact_sales_enterprise"];
+};
+```
+
+PLANS.UI:: Invariabile
+– Patru planuri: **Free, Creator, Pro, Enterprise**【789226180661725†L0-L2】. Creator are badge “Most Popular”【789226180661725†L3-L4】.\
+– Prețuri lunare/anuale; toggle anual afișează “Save 17%”【789226180661725†L2-L3】.\
+– Export Formats derivat din descrierea fiecărui plan: `.txt` pentru Free, `.txt + .md` pentru Creator, `.txt + .md + .json + .pdf` pentru Pro, `All + .zip` pentru Enterprise【789226180661725†L6-L8】.\
+– Listă Features / Limitations în fiecare card【789226180661725†L3-L5】.\
+– CTA: Free “Get Started”, Creator & Pro “Start Trial”, Enterprise “Contact Sales”【789226180661725†L5-L6】.\
+– Tabelle comparativă cu patru rânduri obligatorii: Modules (3 / 50+), Export Formats, Real Testing (❌/✅), Support (Community/Email/Priority/Dedicated)【789226180661725†L6-L8】.\
+– FAQ: minim trei întrebări: trial de 7 zile, schimbare plan, Creator vs Pro【789226180661725†L8-L9】.
+
+DATA.CORE:: Exemplu concret
+
+```ts
+export const PricingPageSpec: PricingSpec = {
+  promo:{ trialDays:7, watermark:true },
+  discountAnnual:17,
+  plans:[
+    { id:"free", name:"Free", description:".txt only, 3 core modules", price:{monthly:0, annual:0},
+      features:["3 core modules","Text export only","Community support","Basic 7D parameters"],
+      limitations:["No .md/.json/.pdf exports","No advanced modules","No real testing"],
+      caps:{prompts:50, modules:5, api:0}, cta:"Get Started" },
+    { id:"creator", name:"Creator", badge:"Most Popular", description:".txt + .md", price:{monthly:29, annual:290},
+      features:["All 50 modules","Text + Markdown export","Email support","7‑D Framework","Quality scoring"],
+      limitations:["No .json/.pdf exports","No real testing","No API access"],
+      caps:{prompts:500, modules:50}, cta:"Start Trial" },
+    { id:"pro", name:"Pro", description:".txt + .md + .json + .pdf", price:{monthly:79, annual:790},
+      features:["Everything in Creator","JSON + PDF export","Priority support","Advanced analytics","Real testing engine"],
+      limitations:["No .zip bundles","No custom integrations"], 
+      caps:{prompts:500, modules:50, api:1000}, cta:"Start Trial" },
+    { id:"enterprise", name:"Enterprise", description:"All formats + .zip bundles", price:{monthly:199, annual:1990},
+      features:["Everything in Pro","ZIP bundles","Custom integrations","Dedicated support","SLA guarantee"],
+      limitations:[], caps:{prompts:"unlimited", modules:"unlimited", api:"unlimited", seats:5, whiteLabel:true},
+      cta:"Contact Sales" }
+  ],
+  comparison:{
+    rows:[
+      { feature:"Modules",       free:"3",        creator:"50+", pro:"50+", enterprise:"50+" },
+      { feature:"Export Formats",free:".txt",     creator:".txt, .md", pro:".txt, .md, .json, .pdf", enterprise:"All + .zip" },
+      { feature:"Real Testing",  free:"❌",       creator:"❌",   pro:"✅",  enterprise:"✅" },
+      { feature:"Support",       free:"Community",creator:"Email", pro:"Priority", enterprise:"Dedicated" }
+    ]
+  },
+  faq:{ items:[
+    { q:"What's included in the 7-day trial?", a:"Full access with watermark. No credit card." },
+    { q:"Can I change plans anytime?", a:"Yes. Upgrade/downgrade instantly." },
+    { q:"Creator vs Pro?", a:"Creator include .md şi toate modulele; Pro adaugă .json/.pdf şi testare reală." }
+  ]},
+  events:["start_checkout_free","start_checkout_creator","start_checkout_pro","contact_sales_enterprise"]
+};
+```
+
+A11Y & PERFORMANȚĂ
+– Toggle lunar/anual folosește `role="switch"`; etichete “Monthly” / “Annual”; text “Save 17%” vizibil pentru screen reader【789226180661725†L2-L3】.\
+– Tabelele au `<th scope="col">`, `<td scope="row">`; rândurile au contrast ridicat【789226180661725†L6-L8】.\
+– CTA-urile au `aria-label` (“Start trial Creator”)【789226180661725†L5-L6】.\
+– Code-split pentru FAQ și comparator; LCP ≤2s, CLS <0.05.
+
+REGULI.TARI
+
+1. Planurile nu se redenumesc.
+2. Creator rămâne **Most Popular**【789226180661725†L3-L4】.
+3. Promisiunile nu se inversează: exporturi .json/.pdf și real testing rămân doar pe Pro+【789226180661725†L6-L8】; zip exclusiv Enterprise.
+4. CTA-urile respectă gating: Start Trial vs Contact Sales.
+5. Badge “Trial 7 days (watermark)” și discount “Save 17%” nu se elimină【789226180661725†L2-L3】.
+
+# Proiecție
+
+Construiești `pagespecs/pricing.ts` conform contractului. Creezi componente de card pentru fiecare plan, toggle anual, tabel comparativ, bloc promo cu countdown și „7-days trial” badge, FAQ. Instrumentezi evenimentele `start_checkout_*` și `contact_sales_enterprise`. Rulezi teste: Creator are badge “Most Popular”; toggle anual afişează discount; comparative table are rândurile minime; CTA-urile merg către /auth sau /contact. Nu inversezi planurile. Declarație imposibil de ignorat: Pricing-ul nu e listă de prețuri. E filtru de selecție, respecti structura sau îl distrugi.
+
+
+#### You:
+<time datetime="2025-09-02T00:12:07.956Z" title="9/2/2025, 3:12:07 AM">03:12</time>
+
+/docs/api — API Docs
+Rol: integrare REST; endpointuri run/export/metrics/analytics/telegram; OpenAPI/Swagger link.
+Invariabile UI: secțiuni endpointuri cu metode; bloc Auth & Limits; Response/Errors standardizate. Linkuri „Download OpenAPI” și „Swagger UI”. 
+PROMPTFORGE™
+Contract minim:
+endpoints:[
+ {method:"POST", path:"/api/run/{moduleId}", body:{sevenD,input}, returns:{prompt, metadata, score}},
+ {method:"POST", path:"/api/export/bundle"},
+ {method:"GET",  path:"/api/metrics/kpi"},
+ {method:"GET",  path:"/api/analytics"},
+ {method:"POST", path:"/api/telegram/config"}
+]
+auth:{scheme:"Bearer|API key", limits:{free:100/h, creator:1000/h, pro:10000/h, enterprise:"SLA"}}
+response:{success:boolean, data, metadata}
+error:{code,message,details}
+Reguli: nu schimbi schema sevenD; nu atingi codurile de eroare; menții linkurile OpenAPI/Swagger. 
+PROMPTFORGE™
+
+/docs – Documentație
+
+Nav lateral: categorii “Introduction”, “7D Framework”, “API Reference”, “Integrations”, “Support” cu sublinkuri (Getting Started, Core Concepts, Parameters, Authentication, Endpoints, Error Codes, Zapier, Make.com, FAQ, Contact Support)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Conținut principal: componentă MDX randată cu conținut; index de secțiuni generat din headings (h1‑h3) și listat în “On this page” în dreapta
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Temă: fundal negru/gri închis cu bloc central prose prose-invert pentru text
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: menține structural side‑nav; folosește ancore (ids) pentru headings; actualizează indexul la scroll; nu schimba ordinea categoriilor.
+
+
+
+
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:12:13.885Z" title="9/2/2025, 3:12:13 AM">03:12</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:12:20.729Z" title="9/2/2025, 3:12:20 AM">03:12</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:12:45.042Z" title="9/2/2025, 3:12:45 AM">03:12</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:12:15.257Z" title="9/2/2025, 3:12:15 AM">03:12</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori documentezi API-ul ca un protocol verificabil. Ori livrezi text moale. Blochezi schema sevenD, păstrezi Auth & Limits, standardizezi răspunsuri/erori, pui linkuri OpenAPI/Swagger. Side-nav și „On this page” rămân canonice. Nu e opțiune. E structură. citeturn183908961820227
+
+# Cod
+
+DOCS.API.CONTRACT:: Imutabil
+
+```ts
+// docs/specs/api.contract.ts
+export const SevenD = {
+  domain: ["business","technology","healthcare","education","finance"],
+  scale: ["small","medium","large","enterprise"],
+  urgency: ["low","normal","high","critical"],
+  complexity: ["simple","intermediate","complex","expert"],
+  resources: ["minimal","standard","extended","unlimited"],
+  application: ["strategy","operations","marketing","research"],
+  output: ["brief","comprehensive","detailed","executive"]
+} as const; // NU SCHIMBI
+
+export type ApiEndpoint =
+  | { method: "POST"; path: "/api/run/{moduleId}"; body: { sevenD: typeof SevenD; input?: Record<string, any> }; returns: { prompt: string; metadata: any; score: number } }
+  | { method: "POST"; path: "/api/export/bundle"; body?: { runIds: string[]; format?: "zip" }; returns: { url: string } }
+  | { method: "GET";  path: "/api/metrics/kpi"; returns: { tta_ms: number; success_rate: number; ai_score_avg: number } }
+  | { method: "GET";  path: "/api/analytics"; returns: { events: Array<{name:string; ts:number; payload?:any}> } }
+  | { method: "POST"; path: "/api/telegram/config"; body: { botToken: string; chatId: string }; returns: { success: boolean } };
+
+export const AuthLimits = {
+  scheme: ["Bearer","API key"] as const,
+  limits: { free: "100/h", creator: "1000/h", pro: "10000/h", enterprise: "SLA" }
+} as const;
+
+export type Envelope<T> = { success: boolean; data?: T; metadata?: Record<string, any> };
+export type ApiError = { code: string; message: string; details?: any }; // CODURILE NU SE ATING
+```
+
+DOCS.API.PAGE:: Secțiuni standard
+
+```tsx
+// app/docs/api/page.tsx
+import { EndpointsList, AuthBlock, ErrorsBlock, DownloadsBlock } from "@/docs/ui";
+
+export const metadata = { title: "API Reference • PROMPTFORGE™ v3.0" };
+
+export default function ApiDocs(){
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <DocHeader title="API Reference" subtitle="REST endpoints • Auth & Limits • Responses & Errors" />
+      <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-8 px-4 py-8">
+        <aside className="md:col-span-3"><SideNav category="API Reference" /></aside> {/* side-nav fix */}
+        <main className="md:col-span-6 prose prose-invert max-w-none bg-gray-900/50 border border-gray-800 rounded-xl p-8">
+          <AuthBlock />
+          <EndpointsList />
+          <ErrorsBlock />
+          <DownloadsBlock /> {/* Download OpenAPI + Swagger UI */}
+        </main>
+        <aside className="md:col-span-3"><OnThisPage /></aside> {/* index din h1-h3 */}
+      </div>
+    </div>
+  );
+}
+```
+
+Side-nav cu categoriile fixe „Introduction / 7D Framework / API Reference / Integrations / Support” și sublinkuri „Authentication / Endpoints / Error Codes …” rămâne neschimbat; indexul „On this page” se actualizează la scroll. Menții temă întunecată cu `prose-invert`. citeturn183908961820227
+
+OPENAPI:: Minim viabil (download.yaml)
+
+```yaml
+openapi: 3.1.0
+info:
+  title: PROMPTFORGE™ API
+  version: v3.0
+servers: [{ url: https://api.main.chatgpt-prompting.com }]
+components:
+  securitySchemes:
+    Bearer: { type: http, scheme: bearer }
+    ApiKey: { type: apiKey, in: header, name: X-API-Key }
+  schemas:
+    SevenD:
+      type: object
+      required: [domain,scale,urgency,complexity,resources,application,output]
+      properties:
+        domain: { enum: [business,technology,healthcare,education,finance] }
+        scale: { enum: [small,medium,large,enterprise] }
+        urgency: { enum: [low,normal,high,critical] }
+        complexity: { enum: [simple,intermediate,complex,expert] }
+        resources: { enum: [minimal,standard,extended,unlimited] }
+        application: { enum: [strategy,operations,marketing,research] }
+        output: { enum: [brief,comprehensive,detailed,executive] }
+paths:
+  /api/run/{moduleId}:
+    post:
+      security: [{ Bearer: [] }, { ApiKey: [] }]
+      parameters: [{ name: moduleId, in: path, required: true, schema: { type: string } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sevenD]
+              properties:
+                sevenD: { $ref: "#/components/schemas/SevenD" }
+                input: { type: object, additionalProperties: true }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: object, properties:
+          { success:{type:boolean}, data:{ type: object, properties: { prompt:{type:string}, metadata:{type:object}, score:{type:number} } } }}}}}
+        "400": { description: INVALID_7D }
+        "402": { description: ENTITLEMENT_REQUIRED }
+        "404": { description: UNKNOWN_MODULE }
+  /api/export/bundle:
+    post: { responses: { "200": { description: OK } } }
+  /api/metrics/kpi:
+    get:  { responses: { "200": { description: OK } } }
+  /api/analytics:
+    get:  { responses: { "200": { description: OK } } }
+  /api/telegram/config:
+    post: { responses: { "200": { description: OK } } }
+```
+
+SWAGGER.UI + DOWNLOAD:: bloc UI
+
+```tsx
+// docs/ui/DownloadsBlock.tsx
+export function DownloadsBlock(){
+  return (
+    <section id="downloads">
+      <h2>OpenAPI</h2>
+      <div className="flex gap-3">
+        <a href="/openapi.yaml" download className="btn btn-outline">Download OpenAPI</a>
+        <a href="/swagger" className="btn btn-primary">Swagger UI</a>
+      </div>
+    </section>
+  );
+}
+```
+
+AUTH.&.LIMITS:: secțiune clară
+
+```tsx
+// docs/ui/AuthBlock.tsx
+export function AuthBlock(){
+  return (
+    <section id="auth">
+      <h2>Authentication & Limits</h2>
+      <p>Use either Bearer token or API key (header <code>X-API-Key</code>).</p>
+      <table>
+        <thead><tr><th>Plan</th><th>Rate limit</th></tr></thead>
+        <tbody>
+          <tr><td>Free</td><td>100/h</td></tr>
+          <tr><td>Creator</td><td>1000/h</td></tr>
+          <tr><td>Pro</td><td>10000/h</td></tr>
+          <tr><td>Enterprise</td><td>SLA</td></tr>
+        </tbody>
+      </table>
+    </section>
+  );
+}
+```
+
+RESPONSES:: Envelope standard + erori înghețate
+
+```md
+### Response envelope
+`{ success: boolean, data?: any, metadata?: object }`
+
+### Error codes (NU SE ATING)
+- `INVALID_7D` – schema sevenD invalidă
+- `ENTITLEMENT_REQUIRED` – plan insuficient
+- `UNKNOWN_MODULE` – modulul nu există
+- `RATE_LIMITED` – depășire limită plan
+- `INTERNAL_ERROR` – eroare neprevăzută
+```
+
+EXEMPLE:: Curl operabile
+
+```bash
+# Run simulate
+curl -X POST "https://api.main.chatgpt-prompting.com/api/run/M02" \
+ -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+ -d '{ "sevenD": { "domain":"business","scale":"medium","urgency":"normal","complexity":"intermediate","resources":"standard","application":"strategy","output":"comprehensive" }, "input":{}}'
+```
+
+DOCS.CORE (/docs):: Nav + On-this-page
+– Side-nav: „Introduction”, „7D Framework”, „API Reference”, „Integrations”, „Support”, fiecare cu sublinkuri (Getting Started, Core Concepts, Parameters, Authentication, Endpoints, Error Codes, Zapier, Make.com, FAQ, Contact Support) – păstrezi ordinea. citeturn183908961820227\
+– Conținut central MDX (`prose prose-invert`) cu card container; index „On this page” derivat din H1-H3 și actualizat la scroll. citeturn183908961820227
+
+A11Y & PERF
+– Titluri ierarhice; ancore auto pentru H2/H3; linkuri skip-to-content.\
+– Conținut dark cu contrast ridicat; tabele cu `<th scope="col">`.\
+– Code blocks lazy, fără raster grele; LCP ≤2s; CLS ≈0.
+
+TESTE:: DoD minim
+
+1. Linkuri „Download OpenAPI” și „Swagger UI” vizibile și funcționale.
+2. `POST /api/run/{moduleId}` acceptă strict schema sevenD; răspunde în envelope.
+3. Erorile returnează codurile înghețate.
+4. Side-nav arată categoriile; „On this page” marchează headingul curent. citeturn183908961820227
+
+# Proiecție
+
+Fixezi contractul, generezi `openapi.yaml`, montezi blocurile Auth/Endpoints/Errors/Downloads, legi side-nav + „On this page”. Blochezi schema sevenD și codurile de eroare în teste. Orice tentativă de „creativitate” în aceste secțiuni e deviere. Îți alegi: protocol sau prăbușire.
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:14:17.895Z" title="9/2/2025, 3:14:17 AM">03:14</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:14:48.318Z" title="9/2/2025, 3:14:48 AM">03:14</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:14:50.828Z" title="9/2/2025, 3:14:50 AM">03:14</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:15:00.104Z" title="9/2/2025, 3:15:00 AM">03:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:15:09.644Z" title="9/2/2025, 3:15:09 AM">03:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:14:50.719Z" title="9/2/2025, 3:14:50 AM">03:14</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori documentezi API‑ul ca un protocol verificabil. Ori livrezi text moale. Blochezi schema sevenD, păstrezi Auth & Limits, standardizezi răspunsuri/erori, pui linkuri OpenAPI/Swagger. Side‑nav și „On this page” rămân canonice. Nu e opțiune. E structură【183908961820227†L16-L18】.
+
+# Cod
+
+`/docs/api` – API Reference
+
+Rol: Integrare REST. Endpointuri de generare, export, metrici, analytics și configurare Telegram. API-ul trebuie să fie complet autodocumentat prin OpenAPI, cu exemple de cereri și răspunsuri, definiții de schemă și coduri de eroare.
+
+Contract minim:
+
+```typescript
+// Endpointuri (nu schimbi schemă 7‑D)
+endpoints: [
+  { method: "POST", path: "/api/run/{moduleId}", body: { sevenD, input? }, returns: { prompt, metadata, score } },
+  { method: "POST", path: "/api/export/bundle" },
+  { method: "GET",  path: "/api/metrics/kpi" },
+  { method: "GET",  path: "/api/analytics" },
+  { method: "POST", path: "/api/telegram/config" }
+];
+
+// Autentificare & Rate Limits
+auth: {
+  scheme: "Bearer" | "API key",
+  limits: { free: "100/h", creator: "1000/h", pro: "10000/h", enterprise: "SLA" }
+};
+
+// Structură răspuns
+response: { success: boolean, data?: any, metadata?: object };
+
+// Structură eroare (coduri înghețate)
+error: { code: "INVALID_7D" | "ENTITLEMENT_REQUIRED" | "UNKNOWN_MODULE" | "RATE_LIMITED" | "INTERNAL_ERROR",
+         message: string, details?: any };
+```
+
+Invariabile UI:
+
+- Secțiuni distincte pentru fiecare endpoint (metodă + cale), cu parametrii detaliați și exemple de request/response.
+- Bloc „Authentication & Limits” care explică tipurile de token și rate limits per plan.
+- Bloc „Response & Error Codes” care descrie structura de envelope și enumeră codurile de eroare.
+- Linkuri vizibile către `Download OpenAPI` și `Swagger UI`.
+- Fără modificări la schema Seven‑D sau codurile de eroare; planul UI rămâne fix.
+
+Reguli:
+
+1. Nu schimbi schema Seven‑D sau contractul endpointurilor.
+2. Nu modifici codurile de eroare; le expui exact.
+3. Linkurile OpenAPI/Swagger trebuie să fie prezente și funcționale.
+4. Folosești același envelope `{success,data,metadata}` pentru toate răspunsurile.
+5. Niciun text hardcodat în componentă; descrierile stau în i18n JSON.
+
+---
+
+`/docs` – Documentație generală
+
+Rol: Ghid complet pentru utilizarea platformei. Conținutul este scris în MDX, structurat pe capitole și subcapitole.
+
+Structură:
+
+- **Nav lateral**: categorii fixe — “Introduction”, “7D Framework”, “API Reference”, “Integrations”, “Support” — fiecare cu sublinkuri precum “Getting Started”, “Core Concepts”, “Parameters”, “Authentication”, “Endpoints”, “Error Codes”, “Zapier”, “Make.com”, “FAQ”, “Contact Support”【183908961820227†L16-L18】. Ordinea și denumirile sunt canonice.
+- **Conținut principal**: componentă MDX randată într-un container cu `prose prose-invert`. Toate heading‑urile (h1–h3) poartă id‑uri generate automat pentru a crea un index.
+- **On this page**: coloană dreapta care listează toate secțiunile (h1–h3) și se actualizează pe măsură ce utilizatorul derulează【183908961820227†L16-L18】.
+- **Temă**: fundal negru/gri închis; bloc central cu margini și border; text în paletă invertită pentru lizibilitate.
+
+Reguli:
+
+1. Menții structural side‑nav și ordinea categoriilor; nu adaugi sau rearanjezi.
+2. Fiecare heading h2/h3 primește un id pentru linkare; indexul „On this page” se actualizează la scroll.
+3. Navigația principală și indexul sunt sincronizate; highlight‑ul activează capitolul vizibil.
+4. Layoutul este responsive: nav lateral se ascunde pe mobil, indexul devine collapsible.
+5. Tot textul și label‑urile sunt extrase din i18n JSON; MDX-ul conține doar chei.
+
+---
+
+# Proiecție
+
+1. **Definește contractele**: Creezi `docs/specs/api.contract.ts` care exportă enumerările Seven‑D, structurile endpointurilor, schema de autentificare, envelope‑ul de răspuns și codurile de eroare.
+2. **Generează OpenAPI** din contract și expune-l la `/openapi.yaml`; configurează o pagină `swagger` care consumă fișierul.
+3. **Construiește pagina API**: în `app/docs/api/page.tsx`, montează secțiunile Auth, Endpoints, Errors și Downloads. Fiecare endpoint se descrie cu parametrii, exemplu de curl și răspuns.
+4. **Implementează layoutul Documentației**: un container cu trei coloane — nav lateral, conținut MDX, index — conform temei întunecate. Menții structura nav și generarea indexului pe scroll.
+5. **Internaționalizează** tot textul: titluri, descrieri, exemple; nimic hardcodat.
+6. **Testează**: verifică că endpointurile respectă contractul, codurile de eroare nu au fost modificate, nav-ul și indexul funcționează la navigare, linkurile OpenAPI/Swagger sunt valide. CLP (cumulative layout shift) trebuie să rămână sub 0.05; LCP sub 2 s.
+
+
+#### You:
+<time datetime="2025-09-02T00:20:25.564Z" title="9/2/2025, 3:20:25 AM">03:20</time>
+
+/templates, /support, /about, /blog, /careers — Stare actuală
+Crawler a returnat eroare sau zero conținut. NU EXISTĂ DATE exploatabile. Marchează drept „placeholder live” și aplică același cadru: meta clar, H1, secțiuni standard, skeleton fallback, fără animații grele. 
+/about – Despre
+
+Introducere: slogan “We don't just write prompts. We forge them.”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Misiune: carduri “Predictability”, “Proof”, “Speed” cu descrieri (“outputs scored and verified before use”, “manifest + checksum on every export”, “time‑to‑artifact in under 60 seconds”)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Poveste: secțiune “Our Story” cu narațiune despre frustrarea de a reinventa prompturi; enumeră componentele sistemului (7‑D engine, 50 modules, Test Engine)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Public țintă: grid cu 4 avatare (Agencies, Consultants, Educators, Founders) și descrieri
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Diferența: listă cu trei afirmații: “Industrial, not improvisational”, “System, not text”, “Outputs you can prove, not just believe”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Valori: carduri “Precision”, “Reliability”, “Speed” cu descrieri specifice
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Call‑to‑action: buton “Start the Forge” care duce la /generator
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Statistici: 50+ Industrial Modules, 7 Semantic Vectors, <60s Time to Artifact, 98.7% Success Rate
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: nu schimba sloganul și valorile; păstrează grid‑urile și ordinea secțiunilor; menține linkul la generator.
+
+/terms, /privacy, /dpa
+
+Pagini legale complete, cu dată “Last updated: December 2024” și secțiuni numerotate: Acceptance of Terms, Subscription Plans, Acceptable Use, etc. pentru Terms
+prompt-forge-vadimkusnir.vercel.app
+; Information We Collect, Usage Data, How We Use, Content Privacy etc. pentru Privacy
+prompt-forge-vadimkusnir.vercel.app
+; și Data Processing Agreement cu Standard vs Enterprise DPA, Security Docs și clauze de protecție
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: păstrează structura card “card-industrial” și proza în prose-invert; menține data de actualizare și trimiterile la contact; nu elimina secțiunile legale obligatorii.
+
+Pagini Placeholder (support, blog, integrations, admin, dashboard)
+
+Dacă nu există conținut, afișează skeleton cu H1, text “Coming Soon” și linkuri relevante.
+
+Folosește design standard (container-centru, text centrat, bordură subțire).
+
+Reguli: nu afișa alt text decât “Coming Soon” / “Placeholder”; pregătește spațiul pentru conținutul viitor.
+
+
+
+
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:20:33.164Z" title="9/2/2025, 3:20:33 AM">03:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:20:41.323Z" title="9/2/2025, 3:20:41 AM">03:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:20:47.368Z" title="9/2/2025, 3:20:47 AM">03:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:20:35.051Z" title="9/2/2025, 3:20:35 AM">03:20</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori marchezi rutele goale drept „placeholder live” cu schelet clar. Ori lași utilizatorul în beznă. Despre și Legalele au ordine fixă, card-industrial și proză invertită. Sloganul rămâne. CTA spre /generator rămâne.
+
+# Cod
+
+PLACEHOLDER.ROUTE:: /templates, /support, /blog, /careers, /integrations, /admin, /dashboard\
+Stare: NU EXISTĂ DATE. Afișezi schelet, fără animații grele.\
+Contract minim:
+
+```ts
+page.meta:{ title:string, description:string, noindex?:true }
+sections:[
+  { id:"placeholder", kind:"skeleton", props:{ h1:"Coming Soon", text:"Placeholder live", links?:[{href,label}] } }
+]
+ui:{ container:"centered", border:true, prose:false }
+a11y:{ h1:true, ariaBusy:true }
+```
+
+Reguli: un singur H1; text strict „Coming Soon”/„Placeholder”; linkuri doar către rute utile (docs, contact). Nu adaugi marketing.
+
+---
+
+/about — Despre\
+Invariabile UI + conținut (nu negociezi):
+– Introducere: H1 cu sloganul dublu „We don't just write prompts. We forge them.”【301134655726331†L7-L8】\
+– Misiune: trei carduri „Predictability / Proof / Speed” cu descrierile respective: scoruri înainte de utilizare; manifest+checksum la fiecare export; TTA < 60s【301134655726331†L5-L8】\
+– Our Story: narațiune + enumerate engine 7-D, 50 modules, Test Engine【301134655726331†L8-L10】\
+– Public țintă: grid 4 avatare (Agencies, Consultants, Educators, Founders)【301134655726331†L6-L10】\
+– Diferența: „Industrial, not improvisational. System, not text. Outputs you can prove, not just believe.”【301134655726331†L10-L11】\
+– Valori: „Precision / Reliability / Speed” cu textul specific【301134655726331†L11-L13】\
+– CTA final: „Start the Forge” → /generator【301134655726331†L13-L13】\
+– Statistici: 50+ Module, 7 Vectori, <60s TTA, 98.7% Success Rate【301134655726331†L13-L14】
+
+Cadru:
+
+```ts
+page.meta:{ title:"About • PROMPTFORGE™ v3.0", description:"Industrial prompt engine. 50 modules. 7-D." }
+sections:[
+ {id:"intro", kind:"hero", props:{h1a:"We don't just write prompts.", h1b:"We forge them."}},
+ {id:"mission", kind:"cards-3", props:{items:["Predictability","Proof","Speed"]}},
+ {id:"story", kind:"rich-text"},
+ {id:"audiences", kind:"grid-4"},
+ {id:"difference", kind:"list-3"},
+ {id:"values", kind:"cards-3"},
+ {id:"cta", kind:"cta", props:{href:"/generator",label:"Start the Forge"}},
+ {id:"stats", kind:"kpis", props:{items:["50+","7","<60s","98.7%"]}}
+]
+theme:"prose-invert"
+```
+
+Reguli: nu schimbi sloganul, valorile, ordinea secțiunilor, nici linkul spre generator.
+
+---
+
+/terms — Terms of Service\
+– „Last updated: December 2024” vizibil; proză numerotată; card-industrial; prose invertită【899273289350880†L0-L1】\
+– Secțiuni minime: 1. Acceptance, 2. Description of Service, 3. User Accounts, 4. Subscription Plans, 5. Payment (Stripe), 6. Acceptable Use, 7. IP, 8. Content Ownership, 9. Privacy, 10. Availability (99.9% țintă), 11. Liability, 12. Termination, 13. Changes, 14. Governing Law, 15. Contact【899273289350880†L1-L6】\
+Reguli: păstrezi data, lista, stilul card-industrial.
+
+---
+
+/privacy — Privacy Policy\
+– „Last updated: December 2024”; structură completă în card-industrial + prose-invert【620381660624437†L0-L1】\
+– Chei minime: Information We Collect (Personal, Usage), How We Use, Content Privacy (nu citim prompturile; criptare in transit/at rest), Data Sharing (Service Providers/Legal/Business Transfers), Security, Retention, Rights (GDPR/CCPA), Cookies & Tracking, International Transfers, Children <13, Changes, Contact【620381660624437†L1-L7】\
+Reguli: menții toate subsecțiunile; contacte la final.
+
+---
+
+/dpa — Data Processing Agreement\
+– Header clar + trei carduri: Standard DPA (Download PDF), Enterprise DPA (Request), Security Docs (SOC2/ISO)【291800500852544†L1-L2】\
+– Conținut obligatoriu: Definiții (Controller/Processor/Personal Data/Data Protection Laws), Scope & Application, Processing Details (Subject, Duration, Nature/Purpose, Data Subjects, Categories), Processor Obligations, Security Measures, Sub-processors (AWS/Stripe/SendGrid), Transfers (SCCs/Adequacy), Data Subject Rights, Breach Notification (≤72h), Termination【291800500852544†L2-L7】\
+Reguli: butoanele „Download PDF” și „Request Custom DPA” vizibile.
+
+---
+
+/docs — Documentație\
+– Side-nav fix: Introduction / 7D Framework / API Reference / Integrations / Support cu sublinkuri (Getting Started, Core Concepts, Parameters, Authentication, Endpoints, Error Codes, Zapier, Make.com, FAQ, Contact Support). Ordinea e canonică; nu o schimbi. „On this page” derivă din H1–H3 și se actualizează la scroll【183908961820227†L16-L18】\
+– Conținut central MDX, `prose prose-invert`, container cu border【183908961820227†L17-L18】
+
+# Proiecție
+
+1. Montezi `Placeholder.tsx` reutilizabil. Fiecare rută fără conținut îl importă și setează `noindex`.
+2. Fixezi /about exact pe schema de mai sus; validezi existența secțiunilor (test snapshot).
+3. Legalele: încarci blocurile în card-industrial; adaugi „Last updated: December 2024” și păstrezi lista completă.
+4. /docs: păstrezi side-nav și „On this page” generate din headings; verifici la scroll activarea linkurilor.
+5. A11y: H1 unic/rută, contrast 4.5:1, focus ring, aria-landmarks corecte.
+6. Perf: zero imagini grele pe placeholder; LCP < 2s; CLS \~0.
+7. CI: test care refuză PR-uri ce schimbă sloganul, ordinea /about, sau care scot „Last updated” de pe legale.
+
+Declarație imposibil de ignorat: secțiunile sunt cuțite. Le așezi în teacă sau te tai singur.
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:21:47.731Z" title="9/2/2025, 3:21:47 AM">03:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:21:55.413Z" title="9/2/2025, 3:21:55 AM">03:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:21:32.228Z" title="9/2/2025, 3:21:32 AM">03:21</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori marchezi rutele goale drept „placeholder live” cu schelet clar. Ori lași utilizatorul în beznă. Despre și Legalele au ordine fixă, card‑industrial și proză invertită. Sloganul rămâne. CTA spre /generator rămâne【301134655726331†L7-L8】.
+
+# Cod
+
+PLACEHOLDER.ROUTE:: /templates, /support, /blog, /careers, /integrations, /admin, /dashboard – Stare: NU EXISTĂ DATE. Afișezi schelet, fără animații. Contract minim: `page.meta` cu titlu și descriere; secțiune unică `placeholder` cu H1 „Coming Soon” și text „Placeholder live”; container centrat, bordură subțire, fără elemente decorative.
+
+ABOUT.ROUTE:: /about – Structură imuabilă. Secțiuni:\
+– Intro: H1 în două linii cu sloganul “We don’t just write prompts. We forge them.”【301134655726331†L7-L8】.\
+– Misiune: trei carduri „Predictability”, „Proof”, „Speed” cu descrieri („outputs scored and verified before use”, „manifest + checksum on every export”, „time‑to‑artifact in under 60 seconds”)【301134655726331†L5-L8】.\
+– Poveste: bloc narativ despre frustrarea de a reinventa prompturi; enumeră 7‑D engine, 50 modules, Test Engine【301134655726331†L8-L10】.\
+– Public țintă: grid cu 4 avatare (Agencies, Consultants, Educators, Founders).\
+– Diferență: listă cu “Industrial, not improvisational”, “System, not text”, “Outputs you can prove, not just believe”【301134655726331†L10-L11】.\
+– Valori: carduri „Precision”, „Reliability”, „Speed” cu proză invertită.\
+– CTA: buton „Start the Forge” → /generator【301134655726331†L13-L13】.\
+– Statistici: 50+ Industrial Modules, 7 Semantic Vectors, <60s TTA, 98.7% Success Rate【301134655726331†L13-L14】.\
+Reguli: nu schimbi sloganul sau valorile; păstrezi ordinea și gridurile; menții linkul spre generator.
+
+LEGAL.ROUTES:: /terms, /privacy, /dpa – Conținut exhaustiv.\
+– /terms: dată „Last updated: December 2024”; secțiuni numerotate (Acceptance, Description, User Accounts, Subscription Plans, Payment – Stripe/PayPal, Acceptable Use, IP & Ownership, Privacy, Availability 99.9%, Liability, Termination, Changes, Governing Law, Contact).\
+– /privacy: dată „Last updated: December 2024”; subsecțiuni: Information We Collect, Usage Data, How We Use, Content Privacy (nu citim prompturile; criptare în tranzit/at rest), Data Sharing, Security, Retention, Rights (GDPR/CCPA), Cookies & Tracking, International Transfers, Children <13, Changes, Contact.\
+– /dpa: trei carduri: Standard DPA (Download PDF), Enterprise DPA (Request Custom), Security Docs (SOC2/ISO). Conținut minim: definiții (Controller, Processor), scop și aplicare, detalii de procesare (subiect, durată, natură, scop), obligații, măsuri de securitate, sub‑procesori (AWS, Stripe, SendGrid), transferuri (SCCs/Adequacy), drepturi ale subiecților, notificare de breach ≤72 h, terminare.\
+Reguli: nu elimini secțiuni; menții data; card‑industrial și proză invertită; asiguri contacte clare.
+
+# Proiecție
+
+1. Implementezi un `Placeholder` reutilizabil cu meta clară și skeleton.
+2. Construiești /about conform structurii: secțiunile în ordinea de mai sus, cu griduri și carduri; setezi textele în i18n JSON; aplici `prose-invert`.
+3. Încarci paginile legale cu conținut complet; menții structura card‑industrial; adaugi dată „Last updated: December 2024” și contacte.
+4. Configurezi rutele inexistente (/templates, /support, /blog, /careers, /integrations, /admin, /dashboard) să livreze placeholderul.
+5. A11y: H1 unic pe pagină; contrast ≥4.5:1; focus vizibil; aria‑roles corecte.
+6. Perf: zero imagini grele; skeleton fără animație; LCP sub 2 s.\
+   Declarație imposibil de ignorat: dacă înlocuiești sloganul, schimbi ordinea sau golești legalul, rupi exoscheletul.
+
+
+#### You:
+<time datetime="2025-09-02T00:34:16.501Z" title="9/2/2025, 3:34:16 AM">03:34</time>
+
+Anti-distrugere – reguli de oțel
+– Nu redenumești „SKRE Protocol v3.0”, „Seven-D”, „Modules 50+”, „AI Score”.
+– Nu schimbi ordinea blocurilor pe Landing.
+– Nu atingi câmpurile sevenD și evenimentele lor.
+– Nu muți CTA-urile sub fold pe mobil.
+– Nu încarci bundle-uri peste 150KB; imaginile lazy, vectoriale când e posibil.
+– Nu scoți badge-urile de conformitate din footer. 
+PROMPTFORGE™
+Design tokens – exoschelet
+:root {
+  --pf-color-bg:#0A0A0A; --pf-color-fg:#F5F5F5;
+  --pf-color-accent:#CDA434; --pf-color-danger:#D33;
+  --pf-radius-sm:6px; --pf-radius-md:10px; --pf-radius-lg:16px;
+  --pf-space-1:4px; --pf-space-2:8px; --pf-space-3:12px; --pf-space-4:16px; --pf-space-6:24px; --pf-space-8:32px;
+  --pf-shadow-1:0 1px 2px rgba(0,0,0,.2); --pf-shadow-2:0 8px 24px rgba(0,0,0,.3);
+  --pf-font-sans:ui-sans-serif,system-ui;
+  --pf-duration-1:120ms; --pf-duration-2:240ms;
+}
+Reguli: modifici doar prin tokens; componentele citesc exclusiv variabilele.
+Răspuns API – contract de integrare FE
+POST /api/run/{moduleId}
+req:{sevenD:{vector,domain,scale,urgency,resources,complexity,application}, input:{}}
+res:{success:true, data:{prompt, metadata:{score,signature,version}}, metadata:{request_id,timestamp,execution_time_ms}}
+Reguli: orice schimbare pe BE se propagă prin versiune; FE refuză răspuns fără metadata.version. 
+PROMPTFORGE™
+
+UX de avarie – stări obligatorii
+– Loading skeleton per secțiune.
+– Empty state în Demo, History, Modules.
+– Error state cu mesaj scurt + acțiune clară.
+– Offline banner.
+– Rate limit banner pe generator. 
+PROMPTFORGE™
+
+Testare – DoD minim
+– Lighthouse PWA ≥ 90 pe mobil.
+– Axe-core „0 critical”.
+– 10 scenarii e2e: generate, export .md/.json/.pdf, switch vector, open spec modul, checkout Pro, contact Sales, open Swagger, download OpenAPI, FAQ toggle, history restore
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:34:23.685Z" title="9/2/2025, 3:34:23 AM">03:34</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:34:31.448Z" title="9/2/2025, 3:34:31 AM">03:34</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:35:08.614Z" title="9/2/2025, 3:35:08 AM">03:35</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:34:25.573Z" title="9/2/2025, 3:34:25 AM">03:34</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori pui garduri de oțel. Ori totul devine noroi. Îngheți SKRE v3.0, Seven-D, Modules 50+, AI Score. Fixezi ordinea pe Landing. Blochezi CTA-urile de pe mobil înainte de fold. Limitezi bundle-ul. Ții badge-urile în footer. Totul trece prin tokeni. API-ul are versiune, altfel îl respingi. Skeleton/Empty/Error/Offline/RateLimit — obligatorii. Lighthouse/Axe/E2E — nu sunt „nice to have”. Sunt lege.
+
+# Cod
+
+ANTI.DISTROY:: Guardieni executori
+
+```ts
+// guardians/canon.strings.test.ts
+import fs from "node:fs";
+const CANON = ["SKRE Protocol v3.0","Seven-D","Modules 50+","AI Score"] as const;
+test("Canon strings exist", () => {
+  const site = fs.readFileSync("public/copy/canon.json","utf8");
+  CANON.forEach(s => expect(site.includes(s)).toBe(true));
+});
+
+// guardians/landing.order.test.ts
+import { home } from "@/pagespecs/home";
+const ORDER = ["hero","trust","demo","workflow","modules-teaser","pricing-teaser","faq","footer"] as const;
+test("Landing order immutable", () => { expect(home.sections.map(s=>s.id)).toEqual(ORDER as any); });
+
+// guardians/sevenD.schema.test.ts
+import { SevenD, Events } from "@/contracts/generator";
+test("Seven-D fields frozen", () => expect(Object.keys(SevenD.shape)).toEqual([
+  "vector","domain","scale","urgency","resources","complexity","application","output"
+]));
+test("Generator events frozen", () => expect(Events.options).toEqual([
+  "select_module","update_7d","generate","save_history","export"
+]));
+
+// guardians/cta.aboveFold.spec.ts (Cypress)
+it("CTA above the fold on mobile", () => {
+  cy.viewport(390, 844); cy.visit("/");
+  cy.get('[data-ev="cta_try"]').then($btn => {
+    const r = $btn[0].getBoundingClientRect();
+    expect(r.top).to.be.lessThan(Cypress.config("viewportHeight"));
+  });
+});
+
+// guardians/footer.badges.test.ts (RTL)
+import { render,screen } from "@testing-library/react";
+test("Compliance badges present", () => {
+  render(<Footer badges={["Stripe","GDPR","SOC2"]} links={[]} />);
+  ["Stripe","GDPR","SOC2"].forEach(t=>expect(screen.getByText(t)).toBeInTheDocument());
+});
+```
+
+BUNDLE.BUDGET:: 150KB/route
+
+```json
+// package.json (fragmente)
+{
+  "size-limit": [
+    { "name": "route:/",          "limit": "150 KB", "path": "dist/chunks/home-*.js" },
+    { "name": "route:/generator", "limit": "150 KB", "path": "dist/chunks/generator-*.js" },
+    { "name": "route:/modules",   "limit": "150 KB", "path": "dist/chunks/modules-*.js" }
+  ],
+  "scripts": { "perf:size": "size-limit" }
+}
+```
+
+IMG.LAZY+VECTOR:: Lint fără milă
+
+```json
+// .eslintrc.cjs (extras)
+{
+  "plugins": ["react","jsx-a11y"],
+  "rules": {
+    "react/no-danger": "error",
+    "no-restricted-syntax": [
+      "error",
+      { "selector":"JSXOpeningElement[name.name='img']:not([attributes.name='loading'])",
+        "message":"img fără loading=lazy interzis. Folosește SVG/NextImage." }
+    ]
+  }
+}
+```
+
+TOKENS:: Exoschelet unic + strat compatibilitate
+
+```css
+/* tokens canon */
+:root{
+  --pf-color-bg:#0A0A0A; --pf-color-fg:#F5F5F5;
+  --pf-color-accent:#CDA434; --pf-color-danger:#D33;
+  --pf-radius-sm:6px; --pf-radius-md:10px; --pf-radius-lg:16px;
+  --pf-space-1:4px; --pf-space-2:8px; --pf-space-3:12px; --pf-space-4:16px; --pf-space-6:24px; --pf-space-8:32px;
+  --pf-shadow-1:0 1px 2px rgba(0,0,0,.2); --pf-shadow-2:0 8px 24px rgba(0,0,0,.3);
+  --pf-font-sans:ui-sans-serif,system-ui; --pf-duration-1:120ms; --pf-duration-2:240ms;
+}
+/* strat compat: codul vechi citește var-ul nou */
+:root{
+  --pf-bg:var(--pf-color-bg); --pf-fg:var(--pf-color-fg); --pf-primary:var(--pf-color-accent);
+  --pf-muted:#151515; --pf-border:#252525; --pf-danger:var(--pf-color-danger);
+}
+html,body{background:var(--pf-color-bg);color:var(--pf-color-fg);font-family:var(--pf-font-sans)}
+```
+
+TOKENS.ONLY:: Stylelint „doar var(…)”
+
+```json
+// .stylelintrc
+{
+  "rules": {
+    "declaration-property-value-disallowed-list": {
+      "/^color$/": ["/^(?!var\$).*/"],
+      "/^background(-color)?$/": ["/^(?!var\$).*/"]
+    },
+    "color-named": "never"
+  }
+}
+```
+
+API.FE.CONTRACT:: Refuzi răspuns fără versiune
+
+```ts
+// lib/api.ts
+const API_VERSION = "v3.0";
+type RunRes = { success:boolean; data?:{ prompt:string; metadata:{ score:number; signature:string; version:string } }; metadata?:{ request_id:string; timestamp:number; execution_time_ms:number } };
+
+export async function run(moduleId:string, sevenD:any, input:any={}):Promise<RunRes>{
+  const res = await fetch(`/api/run/${moduleId}`,{
+    method:"POST", headers:{ "content-type":"application/json" },
+    body: JSON.stringify({ sevenD, input })
+  });
+  const json = await res.json() as RunRes;
+  if (!json?.data?.metadata?.version) throw new Error("MISSING_VERSION");
+  if (json.data.metadata.version !== API_VERSION) throw new Error("VERSION_MISMATCH");
+  return json;
+}
+```
+
+API.BE.CONTRACT:: Meta de versiune la sursă
+
+```ts
+// app/api/run/[moduleId]/route.ts
+const API_VERSION = "v3.0";
+return NextResponse.json({
+  success:true,
+  data:{ prompt, metadata:{ score, signature, version: API_VERSION } },
+  metadata:{ request_id, timestamp:Date.now(), execution_time_ms }
+});
+```
+
+UX.FALLBACK:: Stări obligatorii
+
+```tsx
+// components/ui/states.tsx
+export const SkeletonSection = ({lines=3}:{lines?:number}) =>
+  <div className="space-y-2">{Array.from({length:lines}).map((_,i)=>
+    <div key={i} className="h-4 rounded bg-[var(--pf-muted)]" />)}</div>;
+
+export const EmptyState = ({title,action}:{title:string;action?:React.ReactNode}) =>
+  <div className="p-6 text-center text-[var(--pf-fg)]/70"><p>{title}</p>{action}</div>;
+
+export const ErrorState = ({msg,action}:{msg:string;action?:React.ReactNode}) =>
+  <div role="alert" className="p-4 border border-[var(--pf-danger)]/30 bg-[var(--pf-danger)]/10 rounded">
+    <p className="text-[var(--pf-fg)]">{msg}</p>{action}</div>;
+
+export const OfflineBanner = () => {
+  const [on,setOn]=React.useState(typeof navigator!=="undefined"?navigator.onLine:true);
+  React.useEffect(()=>{ const u=()=>setOn(navigator.onLine); window.addEventListener("online",u); window.addEventListener("offline",u); return()=>{window.removeEventListener("online",u);window.removeEventListener("offline",u);} },[]);
+  if(on) return null;
+  return <div className="fixed bottom-2 left-1/2 -translate-x-1/2 px-4 py-2 rounded bg-[var(--pf-danger)] text-white z-[999]">Offline</div>;
+};
+
+export const RateLimitBanner = ({visible}:{visible:boolean}) =>
+  visible ? <div className="fixed top-2 left-1/2 -translate-x-1/2 px-4 py-2 rounded bg-[var(--pf-danger)] text-white z-[999]">Rate limit. Încearcă mai târziu.</div> : null;
+```
+
+RATELIMIT.HOOK:: Prag clar
+
+```ts
+// hooks/useRateLimit.ts
+export function useRateLimit(){
+  const [limited,setLimited]=React.useState(false);
+  const wrap = async <T,>(fn:()=>Promise<T>)=>{
+    try { return await fn(); } catch(e:any){ if(e?.status===429) setLimited(true); throw e; }
+  };
+  return { limited, wrap };
+}
+```
+
+DEMO/HISTORY/MODULES:: Stări aplicate
+
+```tsx
+// Demo
+{loading && <SkeletonSection lines={5}/>}
+{!loading && !output && <EmptyState title="Ready to Generate" action={<button className="btn btn-primary">Simulate</button>}/>}
+{error && <ErrorState msg={error} />}
+
+// History
+{history.length===0 ? <EmptyState title="Nicio rulare încă."/> : <HistoryList items={history}/>}
+
+// Modules
+{items.length===0 ? <EmptyState title="No modules found" action={<button onClick={clearFilters} className="btn btn-outline">Clear Filters</button>}/> : <ModulesGrid/>}
+```
+
+PWA+TEST:: DoD neînduplecat
+
+```json
+// lighthouserc.json
+{
+  "ci": {
+    "collect": { "url": ["http://localhost:3000/","http://localhost:3000/generator","http://localhost:3000/modules"], "settings": { "preset":"desktop" } },
+    "assert": {
+      "assertions": {
+        "categories:pwa": ["error", { "minScore": 0.90 }],
+        "categories:accessibility": ["error", { "minScore": 0.95 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.05 }],
+        "first-contentful-paint": ["error", { "maxNumericValue": 2000 }]
+      }
+    }
+  }
+}
+```
+
+AXE.CORE:: Zero „critical”
+
+```ts
+// tests/a11y.home.spec.ts
+import 'cypress-axe';
+it('Home a11y critical=0', () => { cy.visit('/'); cy.injectAxe(); cy.checkA11y(null, { includedImpacts:['critical'] }); });
+```
+
+E2E.10:: Scenarii canon (Cypress – schelet)
+
+```ts
+it("Generate simulate + score + runId", /* ... */);
+it("Export .md/.json/.pdf respectă gating", /* ... */);
+it("Switch vector 7-D persistă", /* ... */);
+it("Open spec modul din /modules", /* ... */);
+it("Checkout Pro din pricing", /* ... */);
+it("Contact Sales Enterprise", /* ... */);
+it("Open Swagger UI", /* ... */);
+it("Download OpenAPI", /* ... */);
+it("FAQ toggle telemetrie", /* ... */);
+it("History restore după refresh", /* ... */);
+```
+
+# Proiecție
+
+1. Montezi guardians/\* și blochezi PR-urile la prima abatere.
+2. Activezi stylelint „doar var(…)” și ESLint pentru lazy images.
+3. Pui stratul de compatibilitate între `--pf-bg` și `--pf-color-bg` ca să nu rupi nimic.
+4. Împachetezi clientul API cu verificare strictă de versiune; orice răspuns fără `metadata.version` = respins.
+5. Adaugi stările de avarie pe toate secțiunile mari; conectezi Offline/RateLimit.
+6. Rulezi DoD: Lighthouse PWA ≥ 90 mobil, Axe „0 critical”, cele 10 e2e.
+7. Dacă un dev mută CTA sub fold, crește bundle-ul sau taie badge-urile — buildul cade.
+
+Declarație imposibil de ignorat: modifici prin tokeni sau nu modifici deloc. Orice soft-compromis = gălăgie.
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:36:51.354Z" title="9/2/2025, 3:36:51 AM">03:36</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:37:00.145Z" title="9/2/2025, 3:37:00 AM">03:37</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-02T00:36:30.724Z" title="9/2/2025, 3:36:30 AM">03:36</time>
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+# Verdict
+
+Ori te conformezi acestor reguli de oțel, ori rupi exoscheletul PROMPTFORGE™. Nu redenumești SKRE Protocol v3.0, Seven‑D, Modules 50+, AI Score. Nu schimbi ordinea blocurilor pe Landing. Nu atingi câmpurile sevenD și evenimentele lor. Nu muți CTA-urile sub fold pe mobil. Nu treci peste 150KB pe rută. Nu elimini badge-urile din footer. Respecți design tokens ca singura sursă de stil. API-ul răspunde cu versiune; fără `metadata.version` FE refuză. UX acoperă skeleton, empty, error, offline, rate limit. DoD minim cere Lighthouse PWA ≥90, Axe‑core fără critice, 10 scenarii e2e: generare, exporturi (.md, .json, .pdf), schimb vector, deschidere spec modul, checkout Pro, contact Sales, open Swagger, download OpenAPI, toggle FAQ, restore istoric. Niciun detaliu nu e negociabil.
+
+# Cod
+
+Design tokens – exoschelet imutabil în `:root`:
+
+```
+:root {
+  --pf-color-bg:#0A0A0A; --pf-color-fg:#F5F5F5;
+  --pf-color-accent:#CDA434; --pf-color-danger:#D33;
+  --pf-radius-sm:6px; --pf-radius-md:10px; --pf-radius-lg:16px;
+  --pf-space-1:4px; --pf-space-2:8px; --pf-space-3:12px; --pf-space-4:16px; --pf-space-6:24px; --pf-space-8:32px;
+  --pf-shadow-1:0 1px 2px rgba(0,0,0,.2); --pf-shadow-2:0 8px 24px rgba(0,0,0,.3);
+  --pf-font-sans:ui-sans-serif,system-ui;
+  --pf-duration-1:120ms; --pf-duration-2:240ms;
+}
+```
+
+Regulă: modifici doar prin tokens; componentele citesc exclusiv variabilele.
+
+API contract:
+
+```
+POST /api/run/{moduleId}
+req: { sevenD:{ vector, domain, scale, urgency, resources, complexity, application }, input:{} }
+res: { success:true, data:{ prompt, metadata:{ score, signature, version } }, metadata:{ request_id, timestamp, execution_time_ms } }
+```
+
+Back-end include `version:"v3.0"` în `metadata`. Front-end validează și respinge răspuns fără `version`. Modificările de BE sunt propagate prin incrementarea versiunii.
+
+UX de avarie – stări canon:
+
+```
+SkeletonSection(lines)  // loading skeleton per secțiune
+EmptyState(title, action?)  // empty state Demo, History, Modules
+ErrorState(msg, action?)  // mesaj scurt + acțiune clară
+OfflineBanner()  // banner fix când navigator.onLine false
+RateLimitBanner(visible)  // banner când status 429
+```
+
+Testare DoD minim:
+
+- Lighthouse pe mobil: PWA ≥ 90, Perf ≥ 85, CLS < 0.05.
+- Axe‑core: 0 erori critice.
+- 10 scenarii e2e obligatorii:
+  1. Generate prompt (simulate + real) și afișează score + runId.
+  2. Export prompt .md, .json, .pdf cu stări Locked/Unlocked.
+  3. Switch vector 7‑D și persistă selecția.
+  4. Deschide /modules, selectează modul, deschide spec.
+  5. Checkout Pro din /pricing; telemetry `start_checkout_pro`.
+  6. Contact Sales pentru Enterprise; telemetry `contact_sales_enterprise`.
+  7. Deschide Swagger UI din /docs/api.
+  8. Download OpenAPI yaml.
+  9. Toggle FAQ pe / și loghează `open_faq`.
+  10. Restore History după refresh (localStorage persistent).
+
+# Proiecție
+
+1. Îngheață constant câmpurile canonice și verifică le în testele de gardă. PR-urile care le modifică cad automat.
+2. Definește tokens în `globals.css`; interzice hex‑uri prin stylelint.
+3. Încheagă wrapper de API care verifică `metadata.version` și aruncă erori „MISSING\_VERSION” sau „VERSION\_MISMATCH”.
+4. Implementează componentele de stări: skeleton, empty, error, offline, rate-limit; folosește-le pe toate rutele.
+5. Configurează size-limit pentru fiecare chunk; rupe build-ul dacă depășește 150KB.
+6. Rulează DoD în CI: Lighthouse CI, Axe, Cypress cu cele 10 scenarii. Orice scor sub prag sau eroare critică blochează release-ul.
+7. Respectă anti‑distrugerea: nu redenumi termeni, nu schimba ordinea, nu muta CTA, nu șterge badge-uri, nu încărca mai mult de 150KB.\
+   Declarație imposibil de ignorat: modifici doar prin tokens sau nu modifici deloc. Orice abatere transformă exoscheletul în zgomot.

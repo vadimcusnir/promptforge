@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cheia Hermetică - un simbol al cunoașterii ezoterice și al deschiderii porților către înțelepciune -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru cheie -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Cheia (mânerul) -->
+  <circle id="key-handle" cx="256" cy="176" r="40" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="251" stroke-dashoffset="251">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="251;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Cheia (tija) -->
+  <line id="key-shaft" x1="256" y1="216" x2="256" y2="336" stroke="#E0E0E0" stroke-width="3" stroke-dasharray="120" stroke-dashoffset="120">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="120;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="2s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Cheia (dinții) -->
+  <!-- Dintele 1 -->
+  <line id="key-tooth-1" x1="256" y1="276" x2="276" y2="276" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="20" stroke-dashoffset="20">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="20;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="3.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Dintele 2 -->
+  <line id="key-tooth-2" x1="256" y1="296" x2="286" y2="296" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="30" stroke-dashoffset="30">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="30;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="4s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="4.5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Dintele 3 -->
+  <line id="key-tooth-3" x1="256" y1="316" x2="266" y2="316" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="4.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Simboluri hermetice în interiorul mânerului -->
+  <!-- Simbolul soarelui -->
+  <circle id="sun-symbol" cx="256" cy="176" r="20" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="126" stroke-dashoffset="126">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="126;0"
+      keyTimes="0;1"
+      dur="1s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#FFD700;#E0E0E0;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Razele soarelui -->
+  <!-- Raza 1 -->
+  <line id="sun-ray-1" x1="256" y1="156" x2="256" y2="146" stroke="#FFD700" stroke-width="1" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.2s"
+      begin="6s"
+      fill="freeze"/>
+  </line>
+  
+  <!-- Raza 2 -->
+  <line id="sun-ray-2" x1="270" y1="160" x2="276" y2="152" stroke="#FFD700" stroke-width="1" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.2s"
+      begin="6.2s"
+      fill="freeze"/>
+  </line>
+  
+  <!-- Raza 3 -->
+  <line id="sun-ray-3" x1="276" y1="176" x2="286" y2="176" stroke="#FFD700" stroke-width="1" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.2s"
+      begin="6.4s"
+      fill="freeze"/>
+  </line>
+  
+  <!-- Raza 4 -->
+  <line id="sun-ray-4" x1="270" y1="192" x2="276" y2="200" stroke="#FFD700" stroke-width="1" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.2s"
+      begin="6.6s"
+      fill="freeze"/>
+  </line>
+  
+  <!-- Raza 5 -->
+  <line id="sun-ray-5" x1="242" y1="160" x2="236" y2="152" stroke="#FFD700" stroke-width="1" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.2s"
+      begin="6.8s"
+      fill="freeze"/>
+  </line>
+  
+  <!-- Raza 6 -->
+  <line id="sun-ray-6" x1="236" y1="176" x2="226" y2="176" stroke="#FFD700" stroke-width="1" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.2s"
+      begin="7s"
+      fill="freeze"/>
+  </line>
+  
+  <!-- Raza 7 -->
+  <line id="sun-ray-7" x1="242" y1="192" x2="236" y2="200" stroke="#FFD700" stroke-width="1" stroke-dasharray="10" stroke-dashoffset="10">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="10;0"
+      keyTimes="0;1"
+      dur="0.2s"
+      begin="7.2s"
+      fill="freeze"/>
+  </line>
+  
+  <!-- Simbolul lunii -->
+  <path id="moon-symbol" d="M256 176 A15 15 0 0 1 256 176" fill="none" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="0" stroke-dashoffset="0" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="8s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="d"
+      values="M256 176 A15 15 0 0 1 256 176;M246 176 A15 15 0 1 1 246 176;M246 176 A15 15 0 0 1 246 176"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Poarta hermetică -->
+  <path id="hermetic-gate" d="M196 336 L316 336 L316 376 L196 376 Z" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;1"
+      keyTimes="0;1"
+      dur="0.5s"
+      begin="9s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke-dashoffset"
+      values="400;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="9.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="11.5s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Efecte de deschidere a porții -->
+  <path id="gate-opening" d="M196 336 L316 336 L316 376 L196 376 Z" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="12s"
+      repeatCount="1"/>
+  </path>
+  
+  <!-- Efecte de pulsație pentru cheie -->
+  <circle id="pulse-key" cx="256" cy="176" r="40" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Efecte de glitch pentru cheie -->
+  <circle id="glitch-key" cx="256" cy="176" r="40" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+  </circle>
+  
+  <!-- Particule de energie care emană din cheie -->
+  <!-- Particula 1 -->
+  <circle id="energy-particle-1" cx="256" cy="176" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="176;136;176"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0;0.8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 2 -->
+  <circle id="energy-particle-2" cx="256" cy="176" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="256;296;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0;0.8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 3 -->
+  <circle id="energy-particle-3" cx="256" cy="176" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cy"
+      values="176;216;176"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0;0.8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 4 -->
+  <circle id="energy-particle-4" cx="256" cy="176" r="3" fill="#FFD700" opacity="0.8">
+    <animate
+      attributeName="cx"
+      values="256;216;256"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13.5s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;0;0.8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="13.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Simboluri pentru principiile hermetice -->
+  <!-- Principiul 1 -->
+  <text id="hermetic-principle-1" x="256" y="216" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">MENTALISMUL
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="14s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Principiul 2 -->
+  <text id="hermetic-principle-2" x="256" y="236" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">CORESPONDENȚA
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="17s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Principiul 3 -->
+  <text id="hermetic-principle-3" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">VIBRAȚIA
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="20s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "CHEIA HERMETICĂ" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">CHEIA HERMETICĂ</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Cheia Hermetică</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al cunoașterii ezoterice și al deschiderii porților către înțelepciune. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>

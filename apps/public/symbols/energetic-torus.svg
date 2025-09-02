@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Torus Energetic - un simbol al fluxului de energie și interconectării -->
+  
+  <!-- Fundal negru mat -->
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <!-- Container pentru torus -->
+  <rect x="106" y="106" width="300" height="300" fill="none" stroke="#5a5a5a" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Cercul exterior -->
+  <circle id="outer-circle" cx="256" cy="256" r="140" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+  
+  <!-- Elipsa exterioară (proiecția torusului) -->
+  <ellipse id="outer-ellipse" cx="256" cy="256" rx="120" ry="60" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="600" stroke-dashoffset="600">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="600;0"
+      keyTimes="0;1"
+      dur="3s"
+      begin="0s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="3s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Elipsa interioară (proiecția torusului) -->
+  <ellipse id="inner-ellipse" cx="256" cy="256" rx="60" ry="30" fill="none" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="300" stroke-dashoffset="300">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="300;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="3s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="-360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Linii verticale (proiecția torusului) -->
+  <!-- Linia 1 (stânga) -->
+  <line id="vertical-line-1" x1="136" y1="256" x2="376" y2="256" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="240" stroke-dashoffset="240">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="240;0"
+      keyTimes="0;1"
+      dur="2s"
+      begin="5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FFD700;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="18s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 (sus) -->
+  <line id="vertical-line-2" x1="256" y1="196" x2="256" y2="316" stroke="#E0E0E0" stroke-width="1.5" stroke-dasharray="120" stroke-dashoffset="120">
+    <animate
+      attributeName="stroke-dashoffset"
+      values="120;0"
+      keyTimes="0;1"
+      dur="1.5s"
+      begin="5.5s"
+      fill="freeze"/>
+    
+    <animate
+      attributeName="stroke"
+      values="#E0E0E0;#FF0000;#E0E0E0"
+      keyTimes="0;0.5;1"
+      dur="6s"
+      begin="7s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="90 256 256"
+      to="450 256 256"
+      dur="18s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Particule de energie care circulă pe torus -->
+  <!-- Particula 1 (exterior) -->
+  <circle id="energy-particle-1" cx="256" cy="196" r="4" fill="#FFD700" opacity="0.8">
+    <animateMotion
+      path="M0 0 A120 60 0 1 1 0 -0.1 A120 60 0 1 1 0 0"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 2 (exterior) -->
+  <circle id="energy-particle-2" cx="256" cy="196" r="4" fill="#FFD700" opacity="0.8">
+    <animateMotion
+      path="M0 0 A120 60 0 1 1 0 -0.1 A120 60 0 1 1 0 0"
+      begin="2s"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 3 (exterior) -->
+  <circle id="energy-particle-3" cx="256" cy="196" r="4" fill="#FFD700" opacity="0.8">
+    <animateMotion
+      path="M0 0 A120 60 0 1 1 0 -0.1 A120 60 0 1 1 0 0"
+      begin="4s"
+      dur="6s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 4 (interior) -->
+  <circle id="energy-particle-4" cx="256" cy="226" r="3" fill="#FF0000" opacity="0.8">
+    <animateMotion
+      path="M0 0 A60 30 0 1 0 0 -0.1 A60 30 0 1 0 0 0"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="1.5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 5 (interior) -->
+  <circle id="energy-particle-5" cx="256" cy="226" r="3" fill="#FF0000" opacity="0.8">
+    <animateMotion
+      path="M0 0 A60 30 0 1 0 0 -0.1 A60 30 0 1 0 0 0"
+      begin="1s"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="1.5s"
+      begin="1s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Particula 6 (interior) -->
+  <circle id="energy-particle-6" cx="256" cy="226" r="3" fill="#FF0000" opacity="0.8">
+    <animateMotion
+      path="M0 0 A60 30 0 1 0 0 -0.1 A60 30 0 1 0 0 0"
+      begin="2s"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="opacity"
+      values="0.8;1;0.8"
+      keyTimes="0;0.5;1"
+      dur="1.5s"
+      begin="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Centrul torusului -->
+  <circle id="torus-center" cx="256" cy="256" r="8" fill="#FFD700">
+    <animate
+      attributeName="r"
+      values="8;10;8"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+    
+    <animate
+      attributeName="fill"
+      values="#FFD700;#FF0000;#FFD700"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Linii de energie care radiază din centru -->
+  <!-- Linia 1 -->
+  <line id="energy-line-1" x1="256" y1="256" x2="256" y2="196" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="2s"
+      begin="8s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 2 -->
+  <line id="energy-line-2" x1="256" y1="256" x2="316" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.25;0.75;1"
+      dur="2s"
+      begin="8.5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 3 -->
+  <line id="energy-line-3" x1="256" y1="256" x2="256" y2="316" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.25;0.5;0.75;1"
+      dur="2s"
+      begin="9s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Linia 4 -->
+  <line id="energy-line-4" x1="256" y1="256" x2="196" y2="256" stroke="#FFD700" stroke-width="1" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0;0.8;0"
+      keyTimes="0;0.2;0.4;0.6;0.8;1"
+      dur="2s"
+      begin="9.5s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="12s"
+      repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Efecte de pulsație pentru torus -->
+  <ellipse id="pulse-torus" cx="256" cy="256" rx="120" ry="60" fill="#FFD700" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.2;0"
+      keyTimes="0;0.5;1"
+      dur="4s"
+      repeatCount="indefinite"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Efecte de glitch pentru torus -->
+  <ellipse id="glitch-torus" cx="256" cy="256" rx="120" ry="60" fill="#FF0000" opacity="0">
+    <animate
+      attributeName="opacity"
+      values="0;0.3;0"
+      keyTimes="0;0.1;0.2"
+      dur="0.5s"
+      begin="5s;10s;15s"
+      repeatCount="1"/>
+    
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 256 256"
+      to="360 256 256"
+      dur="24s"
+      repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Simboluri pentru fluxul de energie -->
+  <!-- Simbol 1 -->
+  <text id="energy-symbol-1" x="256" y="196" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">FLUX
+    <animate
+      attributeName="opacity"
+      values="0;0.8;0"
+      keyTimes="0;0.5;1"
+      dur="3s"
+      begin="12s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 2 -->
+  <text id="energy-symbol-2" x="256" y="316" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#E0E0E0" text-anchor="middle" opacity="0">REFLUX
+    <animate
+      attributeName="opacity"
+      values="0;0;0.8;0"
+      keyTimes="0;0.3;0.8;1"
+      dur="3s"
+      begin="15s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Simbol 3 -->
+  <text id="energy-symbol-3" x="256" y="256" font-family="'Space Grotesk', sans-serif" font-size="10" fill="#FFD700" text-anchor="middle" opacity="0">TORUS
+    <animate
+      attributeName="opacity"
+      values="0;0;0;0.8;0"
+      keyTimes="0;0.2;0.6;0.9;1"
+      dur="3s"
+      begin="18s"
+      repeatCount="1"/>
+  </text>
+  
+  <!-- Text "TORUS ENERGETIC" -->
+  <text x="256" y="436" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#E0E0E0" text-anchor="middle">TORUS ENERGETIC</text>
+  
+  <!-- Metadata -->
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>Torus Energetic</dc:title>
+        <dc:creator>PromptForge</dc:creator>
+        <dc:description>Un simbol al fluxului de energie și interconectării. Stil brutalist-flat + protocol cușnirian.</dc:description>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+</svg>

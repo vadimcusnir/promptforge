@@ -1,0 +1,887 @@
+
+
+
+
+
+
+Design system (essentials)
+
+Paletă (dark ritual): bg #05010A, primary neon #00FF7F, accent #FF2F2F, gold #CDA434.
+Fonts: Cinzel (display), Space Grotesk (UI), JetBrains Mono (telemetrie/score).
+Motive grafice: glitch subtil, geometrie sacră, stea 8 colțuri, „runa executabilă” ca actor UI (hover pulse, loading dot, glow la init). Acest motiv e exact ce ai notat în „Rună Digitală / Sigiliu Executabil” și îl folosesc ca sistem, nu ca logo static.
+
+Componente & interacțiuni (rezumat operațional)
+NavBar: logo + „PromptForge™”, tab-uri (Landing / Generator / Pricing / Dashboard / API Docs), badge plan.
+FilterBar: search (cmd+k), vectors (7), dificultate (1–5), plan.
+ModuleCard: vectors chips, badge minPlan, meter dificultate, CTA „View”.
+ModuleOverlay: Overview, Inputs (7D), Outputs, KPI, Guardrails; CTA: Simulate (toți) / Run Real Test (Pro+) / Export (gated).
+ExportMenu: afișează DOAR opțiunile permise planului (txt→Free; +md→Creator; +pdf/json→Pro; +zip→Ent), cu tooltips „de ce e blocat”.
+Motion: hover glow, overlay fade+scale 220ms; respectă prefers-reduced-motion.
+A11y: contrast ≥4.5:1, focus-ring vizibil, aria pe chips/meters, target ≥40×40.
+
+Unde le pui în proiect
+Tema (theme.pf.theme.ts) → învelești app cu <ChakraProvider theme={pfTheme}>.
+Tokenii (design.tokens.css) → import în app/globals.css.
+
+Pagini:
+/generator → grilă de 50 module din /api/modules, filtre client-side, Overlay la click.
+/pricing → matrice planuri (Free / Creator / Pro / Enterprise), „annual = 10× monthly”.
+/dashboard → runs table (filtre: module/domain/date/version), re-run, download.
+/docs/api → curl POST /api/run/{moduleId}, schema 7D, response + telemetry.
+
+Gating & consistență (FE + API)
+SSOT: lib/modules.catalog.json (exact 50).
+Schema Zod (CI gate): oprește deploy dacă nu sunt 50/ID unic/enum valid.
+Plan gates: badge pe card/overlay + dezactivare CTA cu motiv.
+Nomenclator: vectors lowercase (7), dificultate numerică (1–5) → UI derivă eticheta (Beginner…Expert).
+Denumiri: păstrează „™” unde e brand; UI nu „curăță” titlul.
+
+
+
+
+Îți dau design system-ul complet pentru PromptForge v4 — fundamentat pe simbolistica „Runa Executabilă” (ASCII > | { } ~ .), estetica dark-ritual și vocea „Retorică Fără Anestezie” — și aliniat la cele 50 de module + gate-urile pe planuri. Am inclus tot: foundation tokens, theming (CSS vars + Chakra), componente React, patterns, a11y, motion, data-viz, guideline de conținut și stratul de brand (runa).
+
+👉 Download: PFv4_DesignSystem_Full.zip
+Checksum (SHA256): 014f98a3aabf42fc876d2f72a9d4cdeb2e5ec399f9b7289e41f690806fe036ae
+
+Ce conține (executabil, nu doar teorie)
+
+Foundations / Tokens
+
+tokens/raw.tokens.json (culori, tipografie, radii, spacing, umbre, motion)
+
+tokens/semantic.tokens.json (semantic mapping: bg, text, state, surface, focus)
+
+css/pf.css (variabile CSS gata de folosit în orice stack)
+
+ts/pf.theme.ts (Chakra theme, dark-first)
+
+React primitives (TSX)
+
+Button, BadgePlan, DifficultyMeter, Card, Tooltip, Modal (stubs curate, a11y incluse)
+
+Guidelines
+
+Foundations (paletă, grid 12 col, densități, elevare)
+
+Iconography (linie 1.5, ASCII-inspired)
+
+Motion (120/220/360ms, reducere prin prefers-reduced-motion)
+
+Accessibility (contrast, focus, aria, target≥40×40)
+
+Content Style (micro-copy = verdict, ton ritualic)
+
+Patterns: forms, modules grid & overlay, feedback
+
+Data-viz (principii dark-UI, accent dozaj)
+
+Storybook & Figma tokens (cum publici librăria)
+
+Brand Layer
+
+brand/rune.md — regulile sigiliului (static vs. animat, mint de rună per prompt ≥80)
+
+Changelog/versioning (orientat CI)
+
+Arhitectura sistemului (rezumat operațional)
+
+SSOT vizual = tokens (raw→semantic).
+
+Teme = Chakra/Tailwind sau CSS vars direct — toate culorile/umbrele sunt centralizate.
+
+Componente = minimal primitives cu a11y → le compui în ModuleCard/Overlay/FilterBar.
+
+Patterns = formulare 7D, grid de module, overlay, feedback cu motiv + run_id.
+
+Brand = runa ca „prompt vizual”; SVG animat în UI, static în export.
+
+Integrare în proiect (pași rapizi)
+
+Importă css/pf.css în app/globals.css.
+
+Învelește app-ul cu <ChakraProvider theme={pfTheme}>.
+
+Folosește BadgePlan, DifficultyMeter în cardurile de modul; aplică minPlan drept gate vizual + dezactivare CTA cu tooltip-motiv.
+
+Respectă semantic tokens pentru tot ce înseamnă culori (nu hardcoda).
+
+În ModuleOverlay, menține ordinea secțiunilor: Overview → Inputs(7D) → Outputs → KPIs → Guardrails → Actions.
+
+Extensii recomandate (pot livra imediat)
+
+Kit de pagini Next.js: /, /generator, /pricing, /dashboard, /docs/api — sudate pe /api/modules.
+
+Set complet ModuleCard/Overlay/FilterBar (gata, cu filtre, shortcut ⌘K, skeletons).
+
+SVG „Rună Executabilă” (3 stări: idle/hover/loading) + utilitare React pentru animare.
+
+
+
+
+
+
+Am standardizat totul pe tokens PFv4 (bg --bg, brand --brand, surface --surface, border --border, focus --focus) și pe canonul vizual „Runa Executabilă” (glow discret, glitch controlat).
+
+NavBar
+
+Scop: navigație globală + status plan.
+Anatomie:
+
+Left: logo (SVG) + “PromptForge™” (H6).
+
+Center: Tabs: Landing /, Generator /generator, Pricing /pricing, Dashboard /dashboard, API Docs /docs/api.
+
+Right: PlanBadge (Free/Creator/Pro/Enterprise), avatar menu (Profile, Billing, Sign out).
+
+Stări: default / hover / active (tab curent) / focus / sticky.
+Comportament:
+
+Sticky la 0; blur subtire pe scroll; border-bottom 1px solid var(--border).
+
+Răspuns la Cmd/Ctrl+K: deschide Command Palette (search global).
+A11y: landmark <nav>, aria-current="page" pe tab-ul activ; focus-ring vizibil.
+Performance: ≤16ms per frame la scroll; img/logo ≤ 24KB (SVG).
+Telemetrie: nav_click {tab, path}.
+
+FilterBar
+
+Scop: filtrare locală în Generator.
+Controale:
+
+Search input cu shortcut Cmd/Ctrl+K și debounce 200ms.
+
+Multi-select vectors (7): strategic, rhetoric, content, analytics, branding, crisis, cognitive.
+
+Slider difficulty (1–5) + etichetă (“Beginner…Expert”).
+
+Select plan (All/Free/Creator/Pro/Enterprise).
+
+Chip-uri active + “Clear all”.
+
+Stări: empty / with filters / loading results (skeleton pe grid).
+A11y: role="search"; label vizibil; chip-urile au aria-pressed; slider cu aria-valuenow.
+Erori: mesaj scurt “Nu există module pentru filtrul curent. Resetează.”
+Telemetrie: filter_change {q, vectors[], difficulty, plan, results_count}.
+
+ModuleCard
+
+Scop: listare rapidă a capacității modulului.
+Anatomie:
+
+Titlu (poate include ™).
+
+Chips: vectors[] (max 3 afișate + “+n”).
+
+DifficultyMeter (1–5).
+
+BadgePlan (minPlan).
+
+Summary (max 160 caractere).
+
+CTA: View (deschide Overlay).
+
+Stări: default / hover (glow) / focus / locked (dacă userPlan < minPlan → CTA disabled).
+Microcopy:
+
+Locked tooltip: “Necesită {minPlan}. Încearcă Simulate sau upgradează.”
+A11y: card button-like focusable; aria-describedby -> summary.
+Telemetrie: module_card_open {id} / module_card_locked_click {id, userPlan, minPlan}.
+
+ModuleOverlay
+
+Scop: specificații executabile ale modulului.
+Structură (tab-uri/ancore):
+
+Overview — scop, vectors, minPlan, difficulty, outputs suportate.
+
+Inputs (7D) — domain, scale, urgency, complexity, resources, application, output (descrieri + validare inline).
+
+Outputs — .txt, .md, .json, .pdf, .zip (în funcție de plan).
+
+KPIs — clarity, execution, ambiguity, alignment, business_fit.
+
+Guardrails — “english-only UI, no PII, score≥80 pentru export pdf/json”.
+
+Actions — Simulate (toți), Run Real Test (Pro+), Export (meniu gated).
+
+Comportament:
+
+Deschidere: fade+scale (8px) 220ms; Esc închide; trap-focus.
+
+Validare live pe 7D; dacă lipsesc câmpuri critice → blochează acțiunile.
+
+Afișează scor după Simulate / Run (badge Telemetry: run_id, score, ms).
+
+Erori:
+
+“NU EXISTĂ DATE” pentru câmpuri lipsă (regula de adevăr); buton “Completează 7D”.
+Telemetrie: overlay_open {id}, simulate_run {id}, live_run {id}, overlay_export_click {id, format}.
+
+ExportMenu
+
+Scop: export controlat de entitlement.
+Regulă:
+
+Free → .txt
+
+Creator → .txt, .md
+
+Pro → .txt, .md, .pdf, .json
+
+Enterprise → toate + .zip (bundle)
+
+UI: opțiunile nepermise sunt vizibile dar disabled cu tooltip motivant:
+
+“Blocat pe planul curent. Disponibil pe {nextPlan}.”
+Comportament:
+
+Click pe format → confirm (nume fișier, includere checksum, watermark dacă trial).
+
+Export pipeline: generează checksum SHA256; log export_id.
+Erori:
+
+“Score < 80. PDF/JSON indisponibil.”
+
+“Entitlement invalid. Reautentifică-te.”
+Telemetrie: export_request {id, format, plan}, export_success {id, format, size_kb}, export_blocked {id, format, reason}.
+
+Motion (micro-interacțiuni)
+
+Principii: “simți puterea, nu artificiul”.
+
+Hover pe card: scale 0.99→1 + shadow: glow (token).
+
+Overlay: fade+scale (8px) 220ms.
+
+Filter apply: skeleton pe grid 120ms.
+
+prefers-reduced-motion: toate tranzițiile devin instant, fără parallax.
+
+A11y (accessibility)
+
+Contrast: text normal ≥ 4.5:1, text mare ≥ 3:1.
+
+Focus-ring vizibil pe toate interactivele (outline: 2px solid var(--focus)).
+
+Hit target ≥ 40×40 px.
+
+Semantici: <nav>, <main>, <section>; aria pe chips, meters, modals.
+
+Tastatură: Tab/Shift+Tab logic, Esc închide Overlay, Enter activează View, Cmd/Ctrl+K deschide filtrul global.
+
+API de props (interfețe sugerate)
+type Plan = 'free'|'creator'|'pro'|'enterprise';
+type Vector = 'strategic'|'rhetoric'|'content'|'analytics'|'branding'|'crisis'|'cognitive';
+
+type ModuleLite = {
+  id: `M${string}`;
+  title: string;
+  summary: string;
+  vectors: Vector[];
+  difficulty: 1|2|3|4|5;
+  minPlan: Plan;
+  outputs: ('.txt'|'.md'|'.json'|'.pdf'|'.zip')[];
+};
+
+<NavBar plan: Plan />
+<FilterBar onChange={(f)=>void} initial={{ q:'', vectors:[], difficulty:[1,5], plan:'all' }} />
+<ModuleCard module: ModuleLite userPlan: Plan onOpen={(id)=>void} />
+<ModuleOverlay id: string userPlan: Plan onClose={()=>void} />
+<ExportMenu moduleId: string userPlan: Plan allowed: string[] onExport={(fmt)=>Promise<void>} />
+
+Acceptanță (DoD UI)
+
+ Toate cele 50 de module apar în grid; filtrele reduc corect rezultatele.
+
+ Card-urile afișează: vectors chips, BadgePlan, DifficultyMeter, summary, CTA View.
+
+ Overlay-ul conține secțiunile declarate; Simulate activ pentru toți; Run Real Test doar Pro+; Export arată doar ce permite planul.
+
+ Tooltip-urile explică de ce ceva este blocat (plan, scor, lipsă 7D).
+
+ Motion respectă prefers-reduced-motion.
+
+ A11y: tab order corect, aria pe chips/meters/overlay, contrast conform.
+
+Micro-copy (RFA)
+
+Butoane: “Invocă”, “Simulate”, “Run Real Test”, “Exportă”, “Închide”.
+
+Empty state: “Nu există module pentru filtrul curent. Resetează.”
+
+Gate: “Necesită {minPlan}. Scopul: putere, nu confort.”
+
+Eroare scor: “Score < 80. Corectează intenția sau arde promptul.”
+
+Observații de brand
+
+Glow-ul și glitch-ul derivă din „Runa Executabilă”; nu abuza de efecte — simbolul decide, nu animația.
+
+
+
+
+
+Îți dau integrarea completă, “unde pui ce” + fragmente de cod gata de lipit, pe Next.js App Router (app/) cu Chakra și API-ul tău /api/modules. Păstrează vocabularul vizual (tokens) și gate-urile pe plan exact cum le-am definit.
+
+0) Setup de bază (o singură dată)
+
+app/providers.tsx
+
+'use client'
+import { ChakraProvider } from '@chakra-ui/react'
+import { pfTheme } from '@/theme/pf.theme' // theme/pf.theme.ts
+
+export default function Providers({ children }: { children: React.ReactNode }) {
+  return <ChakraProvider theme={pfTheme}>{children}</ChakraProvider>
+}
+
+
+app/layout.tsx
+
+import './globals.css'           // importă tokens CSS (design.tokens.css inclus aici)
+import Providers from './providers'
+
+export const metadata = { title: 'PromptForge' }
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+
+
+app/globals.css
+
+@import '@/styles/design.tokens.css';  /* variabilele CSS: culori, radii, spacing */
+html,body{ background:var(--bg); color:var(--text); font-family:Space Grotesk,ui-sans-serif }
+
+
+Structură recomandată:
+
+app/
+  layout.tsx
+  providers.tsx
+  page.tsx
+  generator/page.tsx
+  pricing/page.tsx
+  dashboard/page.tsx
+  docs/api/page.tsx
+theme/
+  pf.theme.ts
+styles/
+  design.tokens.css
+lib/
+  types.ts
+  telemetry.ts
+
+1) Tema (theme/pf.theme.ts)
+
+Conține paleta dark + accente neon/gold, radii, shadows (glow) și fonturile (Cinzel/Space Grotesk/JetBrains Mono).
+
+Se importă în app/providers.tsx și se injectează cu <ChakraProvider theme={pfTheme}>.
+
+2) Tokenii (design.tokens.css)
+
+Variabile CSS folosite de orice (Chakra, Tailwind sau CSS pur).
+
+Import o singură dată în app/globals.css.
+
+Referințe rapide:
+
+var(--bg), var(--surface), var(--border), var(--brand), var(--accent), var(--gold), var(--focus)
+
+Card-uri și butoane pot folosi clase simple (.card, .btn, .badge) definite în același fișier.
+
+3) Pagina /generator
+
+Obiectiv: afișează grilă de 50 module din /api/modules, filtre client-side, Overlay la click.
+
+app/generator/page.tsx (Server Component + fetch cu revalidare)
+
+import { Suspense } from 'react'
+
+async function getModules() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/modules`, {
+    next: { revalidate: 60 }
+  })
+  if (!res.ok) throw new Error('Modules API error')
+  const data = await res.json()
+  return data.modules as ModuleLite[]
+}
+
+// types minimale (sau importă din lib/types.ts)
+type Plan = 'free'|'creator'|'pro'|'enterprise'
+type Vector = 'strategic'|'rhetoric'|'content'|'analytics'|'branding'|'crisis'|'cognitive'
+type ModuleLite = {
+  id: `M${string}`; title:string; summary:string;
+  vectors:Vector[]; difficulty:1|2|3|4|5; minPlan:Plan; outputs:('.txt'|'.md'|'.json'|'.pdf'|'.zip')[]
+}
+
+export default async function GeneratorPage() {
+  const modules = await getModules()
+  return (
+    <main style={{padding:'24px'}}>
+      <h1>Generator</h1>
+      <Suspense fallback={<div>Loading…</div>}>
+        {/* FilterBar client-side (shortcut: Cmd/Ctrl+K) */}
+        <FilterClient modules={modules}/>
+      </Suspense>
+    </main>
+  )
+}
+
+
+Componentă client pentru filtre + grilă
+
+'use client'
+import { useMemo, useState } from 'react'
+import { SimpleGrid } from '@chakra-ui/react'
+
+export function FilterClient({ modules }: { modules: ModuleLite[] }) {
+  const [q,setQ] = useState('')
+  const [vectors,setVectors] = useState<Vector[]>([])
+  const [difficulty,setDifficulty] = useState<[number,number]>([1,5])
+  const [plan,setPlan] = useState<'all'|Plan>('all')
+  const [open, setOpen] = useState<ModuleLite|null>(null)
+
+  const filtered = useMemo(() => modules.filter(m=>{
+    const qok = !q || m.title.toLowerCase().includes(q.toLowerCase()) || m.summary.toLowerCase().includes(q.toLowerCase())
+    const vok = !vectors.length || vectors.some(v=>m.vectors.includes(v))
+    const dok = m.difficulty >= difficulty[0] && m.difficulty <= difficulty[1]
+    const pok = plan==='all' || m.minPlan===plan
+    return qok && vok && dok && pok
+  }), [modules,q,vectors,difficulty,plan])
+
+  return (
+    <>
+      <FilterBar q={q} onQ={setQ} vectors={vectors} onVectors={setVectors}
+                 difficulty={difficulty} onDifficulty={setDifficulty}
+                 plan={plan} onPlan={setPlan}/>
+      <SimpleGrid columns={{base:1, md:2, xl:3}} spacing="16px" mt="16px">
+        {filtered.map(m => (
+          <ModuleCard key={m.id} module={m} onOpen={()=>setOpen(m)} />
+        ))}
+      </SimpleGrid>
+      <ModuleOverlay module={open} onClose={()=>setOpen(null)} />
+    </>
+  )
+}
+
+
+ModuleCard & ModuleOverlay (schelet)
+
+// ModuleCard: arată vectors chips, BadgePlan, DifficultyMeter, CTA View
+function ModuleCard({ module, onOpen }:{ module: ModuleLite, onOpen:()=>void }) {
+  return (
+    <button className="card" onClick={onOpen} style={{textAlign:'left', padding:'16px'}}>
+      <h3 style={{marginBottom:8}}>{module.title}</h3>
+      <div style={{opacity:.8, marginBottom:8}}>{module.summary}</div>
+      <div style={{display:'flex', gap:8}}>
+        {module.vectors.slice(0,3).map(v => <span key={v} className="badge">{v}</span>)}
+        {module.vectors.length>3 && <span className="badge">+{module.vectors.length-3}</span>}
+      </div>
+      <div style={{marginTop:8, display:'flex', gap:12, alignItems:'center'}}>
+        <BadgePlan plan={module.minPlan}/>
+        <DifficultyMeter level={module.difficulty}/>
+      </div>
+    </button>
+  )
+}
+
+// ModuleOverlay: Overview, Inputs(7D), Outputs, KPI, Guardrails; CTA Simulate/Run/Export
+function ModuleOverlay({ module, onClose }:{ module: ModuleLite|null, onClose:()=>void }) {
+  if(!module) return null
+  return (
+    <div role="dialog" aria-modal="true" style={{position:'fixed', inset:0, display:'grid', placeItems:'center', background:'rgba(0,0,0,.5)'}}>
+      <div className="card" style={{maxWidth:900, width:'92%', padding:24}}>
+        <button className="btn btn--ghost" onClick={onClose} style={{float:'right'}}>✕</button>
+        <h2 style={{marginBottom:8}}>{module.title}</h2>
+        <p style={{opacity:.85}}>{module.summary}</p>
+
+        <section style={{marginTop:16}}>
+          <h4>Inputs (7D)</h4>
+          <p>domain, scale, urgency, complexity, resources, application, output</p>
+        </section>
+        <section style={{marginTop:16}}>
+          <h4>Outputs</h4>
+          <div style={{display:'flex', gap:8, flexWrap:'wrap'}}>
+            {module.outputs.map(f => <span key={f} className="badge">{f}</span>)}
+          </div>
+        </section>
+        <section style={{marginTop:16}}>
+          <h4>KPIs</h4>
+          <p>clarity, execution, ambiguity, alignment, business_fit</p>
+        </section>
+        <section style={{marginTop:16}}>
+          <h4>Guardrails</h4>
+          <p>english-only, no PII, score ≥ 80 pentru export .pdf/.json</p>
+        </section>
+
+        <div style={{marginTop:20, display:'flex', gap:8}}>
+          <button className="btn">Simulate</button>
+          <button className="btn">Run Real Test (Pro+)</button>
+          <ExportMenu id={module.id} allowed={module.outputs}/>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+4) Pagina /pricing
+
+Obiectiv: matrice planuri (Free / Creator / Pro / Enterprise), „annual = 10× monthly”.
+
+app/pricing/page.tsx
+
+const plans = [
+  { id:'free',       name:'Free',       monthly: 0,   annual: 0,   features:['Modules allowlist (M01,M10,M18)','Export .txt'] },
+  { id:'creator',    name:'Creator',    monthly: 19,  annual: 190, features:['All modules','Export .md','.txt'] },
+  { id:'pro',        name:'Pro',        monthly: 49,  annual: 490, features:['Live Test Engine','Export .pdf/.json','Cloud history','Evaluator'] },
+  { id:'enterprise', name:'Enterprise', monthly: 299, annual: 2990,features:['API access','Bundle.zip','.zip export','Seats & rate limits'] },
+]
+
+export default function PricingPage(){
+  return (
+    <main style={{padding:'24px'}}>
+      <h1>Pricing</h1>
+      <p>Annual billing = <strong>10× monthly</strong>.</p>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:16, marginTop:16}}>
+        {plans.map(p=>(
+          <div key={p.id} className="card" style={{padding:16}}>
+            <h3>{p.name}</h3>
+            <p>Monthly: ${p.monthly}</p>
+            <p>Annual: ${p.annual}</p>
+            <ul style={{marginTop:8, opacity:.9}}>
+              {p.features.map(f => <li key={f}>{f}</li>)}
+            </ul>
+            <button className="btn" style={{marginTop:12}}>Choose {p.name}</button>
+          </div>
+        ))}
+      </div>
+    </main>
+  )
+}
+
+5) Pagina /dashboard
+
+Obiectiv: runs table (filtre: module/domain/date/version), re-run, download artefacte.
+
+app/dashboard/page.tsx
+(skeleton – conectează la istoricul tău din DB sau API intern)
+
+'use client'
+import { useEffect, useState } from 'react'
+
+type RunRow = {
+  id: string
+  moduleId: string
+  domain: string
+  version: string
+  startedAt: string
+  score?: number
+  artifacts?: { kind:'.txt'|'.md'|'.json'|'.pdf'|'.zip', url:string }[]
+}
+
+export default function DashboardPage(){
+  const [rows,setRows] = useState<RunRow[]>([])
+  const [q,setQ] = useState('')
+
+  useEffect(()=>{ (async()=>{
+    // TODO: fetch din /api/runs (intern)
+    setRows([]) 
+  })() },[])
+
+  const filtered = rows.filter(r => !q || r.moduleId.includes(q) || r.domain.includes(q))
+
+  return (
+    <main style={{padding:'24px'}}>
+      <h1>Dashboard</h1>
+      <input placeholder="Filtrează după modul/domain…" value={q} onChange={e=>setQ(e.target.value)}
+             style={{margin:'12px 0', padding:'8px', width:'320px', border:'1px solid var(--border)', background:'var(--surface)'}}/>
+      <table style={{width:'100%', borderCollapse:'collapse'}}>
+        <thead>
+          <tr><th>Run ID</th><th>Module</th><th>Domain</th><th>Version</th><th>Score</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {filtered.map(r=>(
+            <tr key={r.id} style={{borderTop:'1px solid var(--border)'}}>
+              <td>{r.id}</td>
+              <td>{r.moduleId}</td>
+              <td>{r.domain}</td>
+              <td>{r.version}</td>
+              <td>{r.score ?? '—'}</td>
+              <td style={{display:'flex', gap:8}}>
+                <button className="btn">Re-run</button>
+                {(r.artifacts||[]).map(a => <a key={a.kind} className="btn btn--ghost" href={a.url}>Download {a.kind}</a>)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </main>
+  )
+}
+
+6) Pagina /docs/api
+
+Obiectiv: documentează endpointurile cheie + exemplu curl pentru POST /api/run/{moduleId} + schema 7D + telemetry.
+
+app/docs/api/page.tsx
+
+export default function ApiDocsPage(){
+  return (
+    <main style={{padding:'24px', maxWidth:920}}>
+      <h1>API Docs</h1>
+
+      <h2 style={{marginTop:16}}>POST /api/run/{'{moduleId}'}</h2>
+      <pre style={{background:'var(--surface)', padding:'12px', border:'1px solid var(--border)'}}>
+{`curl -X POST https://chatgpt-prompting.com/api/run/M12 \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer <API_KEY>" \\
+  -d '{
+    "params7D": {
+      "domain": "marketing",
+      "scale": "SMB",
+      "urgency": "high",
+      "complexity": "medium",
+      "resources": "solo",
+      "application": "landing_copy",
+      "output": "md"
+    },
+    "seed": 42
+  }'`}
+      </pre>
+
+      <h3 style={{marginTop:16}}>Schema 7D (body.params7D)</h3>
+      <ul>
+        <li>domain, scale, urgency, complexity, resources, application, output</li>
+      </ul>
+
+      <h3 style={{marginTop:16}}>Response (exemplu)</h3>
+      <pre style={{background:'var(--surface)', padding:'12px', border:'1px solid var(--border)'}}>
+{`{
+  "hash": "b4f...c3",
+  "artifacts": { "txt":"...", "md":"...", "json":"...", "pdf":"..." },
+  "telemetry": { "run_id":"RUN_123", "start_ts": "...", "end_ts":"...", "tokens": 3210, "cost": 0.42, "score": 86, "status":"ok" }
+}`}
+      </pre>
+
+      <p style={{opacity:.8}}>Note: exporturile respectă entitlements-ul planului; .zip doar pe Enterprise.</p>
+    </main>
+  )
+}
+
+Observații critice (ca să nu “scape” nimic)
+
+/api/modules este SSOT pentru UI (50/50). CI blochează dacă nu sunt exact 50 sau ID-uri duplicate.
+
+Filters: debounced, fără request la server (dataset mic). Pentru dataset mare → RSC cu query params.
+
+Overlay: validează 7D înainte de Run/Export; afișează scor și TelemetryBadge după rulare.
+
+ExportMenu: afișează opțiuni permise de plan; cele blocate → disabled + tooltip „de ce”.
+
+A11y: landmark semantic (<main>, <nav>), focus vizibil, aria pe chips/meters/modal.
+
+Perf: lazy pentru Overlay; skeleton la aplicare filtre; imagini SVG optimizate (logo “runa”).
+
+
+
+
+
+
+Perfect—îți dau specificația “gata de implementat” pentru Gating & consistență (FE + API), cu reguli, cod-schelet și teste care blochează orice deviație.
+
+1) SSOT: lib/modules.catalog.json (exact 50)
+
+Unică sursă de adevăr pentru UI + API. Niciun alt fișier nu definește module.
+
+Format: listă de 50 obiecte validate cu schema canonică (vezi §2).
+
+Regulă dură: dacă sunt ≠50 sau ID duplicat → build/CI eșuează; route-ul public /api/modules răspunde 500.
+
+Practici:
+
+un fișier, nu split; versiune în câmp version: "4.0.0";
+
+minPlan nu poate fi mai mic decât planul care oferă toate output-urile declarate.
+
+vectors doar din setul lowercase (7): strategic|rhetoric|content|analytics|branding|crisis|cognitive.
+
+Exemplu (fragment valid):
+
+{
+  "id": "M12",
+  "title": "Ritual Logic™",
+  "slug": "ritual-logic",
+  "summary": "UI ca templu de inițiere; scor 7D ca filtru.",
+  "vectors": ["branding","analytics"],
+  "difficulty": 4,
+  "minPlan": "pro",
+  "tags": ["initiation","score"],
+  "outputs": [".txt",".md",".pdf",".json"]
+}
+
+2) Schema Zod + CI Gate
+
+lib/module.schema.ts
+
+import { z } from "zod";
+export const Plan = z.enum(["free","creator","pro","enterprise"]);
+export const Vector = z.enum(["strategic","rhetoric","content","analytics","branding","crisis","cognitive"]);
+export const Difficulty = z.union([z.literal(1),z.literal(2),z.literal(3),z.literal(4),z.literal(5)]);
+
+export const Module = z.object({
+  id: z.string().regex(/^M\d{2}$/),
+  title: z.string().min(3),             // păstrează ™ dacă există
+  slug: z.string().min(3),
+  summary: z.string().min(1).max(280),
+  vectors: z.array(Vector).min(1),
+  difficulty: Difficulty,
+  minPlan: Plan,
+  tags: z.array(z.string()).default([]),
+  outputs: z.array(z.enum([".txt",".md",".json",".pdf",".zip"])).default([".txt"]),
+  version: z.string().default("4.0.0"),
+  deprecated: z.boolean().default(false)
+});
+
+export const Catalog = z.array(Module).superRefine((arr, ctx) => {
+  if (arr.length !== 50) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Catalog must have exactly 50 modules (got ${arr.length})`});
+  const ids = new Set<string>();
+  for (const m of arr) {
+    if (ids.has(m.id)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate id: ${m.id}`});
+    ids.add(m.id);
+    // validare plan vs outputs
+    const needPro = m.outputs.some(f => f === ".pdf" || f === ".json");
+    const needEnt = m.outputs.includes(".zip");
+    if (needEnt && m.minPlan !== "enterprise") ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${m.id} requires enterprise for .zip`});
+    if (needPro && !["pro","enterprise"].includes(m.minPlan)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${m.id} requires pro+ for .pdf/.json`});
+  }
+});
+
+
+Test CI (Vitest/Jest) — tests/modules.spec.ts
+
+import data from "../lib/modules.catalog.json";
+import { Catalog } from "../lib/module.schema";
+
+it("catalog is valid and consistent", () => {
+  const res = Catalog.safeParse(data);
+  expect(res.success).toBe(true);
+  if (!res.success) console.error(res.error.issues);
+});
+
+
+– Rule: pipeline de deploy eșuează dacă testul nu trece.
+
+3) Plan gates (FE + API)
+API
+
+GET /api/modules: validează Catalog. La succes, trimite doar câmpurile necesare listării.
+
+(opțional) GET /api/modules/:id: include spec avansat pentru overlay.
+
+Entitlements runtime: în middleware (sau în handler) citești planul userului; poți include canRunRealTest/allowedExports pre-calculate pentru UI.
+
+FE
+
+Badge pe Card/Overlay: minPlan (Free/Creator/Pro/Enterprise).
+
+CTA gating:
+
+Simulate — mereu activ.
+
+Run Real Test — activ doar pentru pro|enterprise; altfel disabled + tooltip “Necesită Pro+”.
+
+ExportMenu — afișează doar formatele permise planului curent; formatele blocate apar disabled cu motiv:
+
+Free: .txt
+
+Creator: .txt .md
+
+Pro: .txt .md .pdf .json
+
+Enterprise: + .zip
+
+Mesaje standard (tooltips/inline):
+
+„Necesită {minPlan}. Încearcă Simulate sau upgradează.”
+
+„Score < 80 — .pdf/.json blocate. Îmbunătățește promptul.”
+
+Pseudo-logic UI:
+
+const canRun = userPlan === "pro" || userPlan === "enterprise";
+const exportRights = {
+  free: [".txt"],
+  creator: [".txt",".md"],
+  pro: [".txt",".md",".pdf",".json"],
+  enterprise: [".txt",".md",".pdf",".json",".zip"]
+}[userPlan];
+
+4) Nomenclator (vectors & dificultate)
+
+Vectors: doar lowercase (exact cele 7); afișare în UI ca badge cu text capitalizat (ex. branding → „Branding”).
+
+Difficulty: numeric 1–5 în SSOT; UI derivă eticheta:
+
+1=Beginner, 2=Beginner+, 3=Intermediate, 4=Advanced, 5=Expert.
+
+Validări: schema refuză valori necanonice; mapările legacy (data→analytics, memetic→branding) se fac o singură dată la migrare.
+
+5) Denumiri & ™
+
+Câmpul title păstrează exact brandingul (inclusiv ™). UI nu “curăță” — doar îl afișează așa cum vine din SSOT.
+
+Slug rămâne fără ™ (ex.: SOP FORGE™ → sop-forge).
+
+Test suplimentar: title.includes("™") permis, slug.includes("™") interzis.
+
+6) Telemetrie & audite
+
+Evenimente:
+
+module_card_open {id}
+
+overlay_open {id}
+
+simulate_run {id}
+
+live_run {id, userPlan}
+
+export_request {id, format, userPlan}
+
+export_blocked {id, format, reason}
+
+Alerting:
+
+variance #modules < 50 vs. ieri → alert
+
+% export_blocked > 30% într-o oră → inspectează mesaje/plan gates
+
+7) Failure modes (și ce vezi în UI)
+
+Catalog invalid → /api/modules 500; UI: banner roșu „Catalog invalid. Încearcă mai târziu.” (nu cache-ui vechi).
+
+User fără entitlements → fallback userPlan="free"; marcaje disabled + tooltips.
+
+Score < 80 → .pdf/.json indisponibil; recomandare „Corectează 7D (clarity/complexity)”.
+
+8) Migrare sigură (ordinea commit-urilor)
+
+Adaugă schema Zod + testul CI.
+
+Introdu modules.catalog.json cu 50 item-uri (poți marca câteva .deprecated=true dacă e cazul).
+
+Adaptează /api/modules să valideze + să răspundă doar la succes.
+
+Aplică gating logic în FE (badge + CTA disable/tooltip).
+
+Normalizează vectors (lowercase 7) + difficulty numeric + titluri cu ™.
+
+Rulează CI; dacă trece, refactorizează UI (filtre & overlay) pe noile câmpuri.

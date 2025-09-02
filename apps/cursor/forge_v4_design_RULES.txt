@@ -1,0 +1,2271 @@
+
+
+
+
+
+Cod
+
+GLOBAL – Sistem imutabil minimal
+– Layout unic, header/nav/footer fixe, tokeni CSS ca sursă de adevăr: culoare, tipografie, spațiere, radius, shadow, z-index, durate.
+– Contracte de rută: fiecare pagină expune page.meta, page.sections[], events[], telemetry.
+– Performanță: LCP ≤ 2.0s, TTI ≤ 2.5s, CLS ≤ 0.05, bundle < 150KB/route la first load.
+– Accesibilitate: WCAG 2.2 AA, focus vizibil, aria-label la controale, contrast ≥ 4.5:1.
+– I18n: structuri copy în JSON, fără stringuri hardcodate în componentă.
+– Telemetry: fiecare acțiune majoră → event semantic (generate, export, selectModule, startCheckout).
+– Antideraiere: fără schimbări de semantică în copy-cheie și structuri: SKRE v3.0, 7-D, Modules 50+, CTA-uri. 
+PROMPTFORGE™
+ 
+PROMPTFORGE™
+
+/ — Landing
+Rol: încarcă promisiunea SKRE v3.0, arată demo, explică workflow 3 pași, listează module și planuri, FAQ, footer cu conformități.
+Invariabile UI: H1 cu SKRE v3.0 + „Creezi prompturi în 10 secunde”, bloc „Trusted by industry leaders”, demo interactiv, „Cum funcționează” în 3 pași, secțiune module, pricing teaser, FAQ, badge-uri GDPR/SOC2/Stripe. 
+PROMPTFORGE™
++1
+
+Contract minim:
+
+page.meta:{title:"PROMPTFORGE v3.0"}
+sections:[
+  {id:"hero", props:{headline, sub, kpis:["TTA<60s","AI Score≥80","PDF/JSON/MD"]}},
+  {id:"trust", props:{logos[], quotes[]}},
+  {id:"demo", props:{input, output}},
+  {id:"workflow", props:{steps:["Configurează","Generează","Exportă"]}},
+  {id:"modules-teaser", props:{count:50}},
+  {id:"pricing-teaser"},
+  {id:"faq"},
+  {id:"footer", props:{badges:["Stripe","GDPR","SOC2"]}}
+]
+events:["cta_try","cta_demo","open_faq"]
+
+
+Reguli: nu schimbi ordinea acestor secțiuni; nu înlocuiești SKRE, 3-pași, KPI. 
+PROMPTFORGE™
+
+/generator — Industrial Prompt Generation Engine
+Rol: editor operațional; configurare Seven-D + selecție modul; generare prompt; istoric.
+Invariabile UI: panou 7-D (Vector, Domain, Scale, Urgency, Resources, Complexity, Application), selector Module M01…M50, „Generate Prompt”, afișare „7D Signature”, zonă History. 
+PROMPTFORGE™
+
+Contract minim:
+
+state:{sevenD:{vector,domain,scale,urgency,resources,complexity,application}, moduleId}
+ui:{SidebarModules, PanelSevenD, AreaOutput, HistoryDock}
+api: POST /api/run/{moduleId}
+events:["select_module","update_7d","generate","save_history","export"]
+
+
+Reguli: nu redenumești câmpurile 7-D; nu muți Generate sub fold; History rămâne persistent. 
+PROMPTFORGE™
+
+/modules — Catalogul celor 50 module
+Rol: navigare și specificații succinte per modul, filtrare pe 7 vectori.
+Invariabile UI: bară vectori V1…V7, căutare, carduri M01…M50 cu titlu, scurtă descriere, KPI și link „Specifications”. Nu renunți la KPI linia a doua. 
+PROMPTFORGE™
+
+Contract minim:
+
+filters:{vector?, query?}
+card:{id:"M01", vector:"V1", title, summary, kpi, link:"/modules/:slug"}
+events:["filter_vector","search_modules","open_spec"]
+
+
+Reguli: păstrează nomenclatorul modulelor și KPI textual. Nu compactezi pe 2 coloane sub 768px; coloană unică pe mobil. 
+PROMPTFORGE™
+
+/modules/:slug — Specifications (SSR/ISR recomandat)
+Rol: specificații detaliate per modul. Observație: conținutul nu a fost disponibil la fetch; tratează ca placeholder până sincronizezi CMS. NU EXISTĂ DATE din crawler.
+Contract minim:
+
+page.meta:{moduleId, vector}
+spec:{objective, inputs, outputs, kpi, constraints, examples[]}
+events:["copy_prompt","run_from_spec","export_spec"]
+
+
+Reguli: nu publici spec fără câmpurile objective/inputs/outputs/KPI; fallback skeleton obligatoriu.
+
+/pricing — Planuri și gating
+Rol: diferențiază Basic/Pro/Team, afișează timer promo, CTA-uri distincte, FAQ.
+Invariabile UI: countdown promo, 3 planuri cu denumiri + beneficii + limitări, 7-zile money-back, GDPR compliant, Stripe/PayPal. CTA separate „Activează Pro”, „Vorbește cu noi” pentru Team. 
+PROMPTFORGE™
+
+Contract minim:
+
+plans:[
+ {id:"basic", price:"29€/mo", caps:{prompts:50, modules:5}, export:["PDF"]},
+ {id:"pro", price:"79€/mo", caps:{prompts:500, modules:50}, export:["PDF","JSON","CSV"], api:1000},
+ {id:"team", price:"199€/mo", caps:{prompts:"unlimited"}, api:"unlimited", seats:5, whiteLabel:true}
+]
+events:["start_checkout_basic","start_checkout_pro","contact_sales_team"]
+
+
+Reguli: nu inversezi promisiunile între planuri; Pro rămâne „cel mai ales”; Team rămâne conversațional. 
+PROMPTFORGE™
+
+/docs/api — API Docs
+Rol: integrare REST; endpointuri run/export/metrics/analytics/telegram; OpenAPI/Swagger link.
+Invariabile UI: secțiuni endpointuri cu metode; bloc Auth & Limits; Response/Errors standardizate. Linkuri „Download OpenAPI” și „Swagger UI”. 
+PROMPTFORGE™
+
+Contract minim:
+
+endpoints:[
+ {method:"POST", path:"/api/run/{moduleId}", body:{sevenD,input}, returns:{prompt, metadata, score}},
+ {method:"POST", path:"/api/export/bundle"},
+ {method:"GET",  path:"/api/metrics/kpi"},
+ {method:"GET",  path:"/api/analytics"},
+ {method:"POST", path:"/api/telegram/config"}
+]
+auth:{scheme:"Bearer|API key", limits:{free:100/h, creator:1000/h, pro:10000/h, enterprise:"SLA"}}
+response:{success:boolean, data, metadata}
+error:{code,message,details}
+
+
+Reguli: nu schimbi schema sevenD; nu atingi codurile de eroare; menții linkurile OpenAPI/Swagger. 
+PROMPTFORGE™
+
+/templates, /support, /about, /blog, /careers — Stare actuală
+Crawler a returnat eroare sau zero conținut. NU EXISTĂ DATE exploatabile. Marchează drept „placeholder live” și aplică același cadru: meta clar, H1, secțiuni standard, skeleton fallback, fără animații grele. 
+https://
++2
++2
+PROMPTFORGE™
++1
+
+Anti-distrugere – reguli de oțel
+– Nu redenumești „SKRE Protocol v3.0”, „Seven-D”, „Modules 50+”, „AI Score”.
+– Nu schimbi ordinea blocurilor pe Landing.
+– Nu atingi câmpurile sevenD și evenimentele lor.
+– Nu muți CTA-urile sub fold pe mobil.
+– Nu încarci bundle-uri peste 150KB; imaginile lazy, vectoriale când e posibil.
+– Nu scoți badge-urile de conformitate din footer. 
+PROMPTFORGE™
+
+Design tokens – exoschelet
+
+:root {
+  --pf-color-bg:#0A0A0A; --pf-color-fg:#F5F5F5;
+  --pf-color-accent:#CDA434; --pf-color-danger:#D33;
+  --pf-radius-sm:6px; --pf-radius-md:10px; --pf-radius-lg:16px;
+  --pf-space-1:4px; --pf-space-2:8px; --pf-space-3:12px; --pf-space-4:16px; --pf-space-6:24px; --pf-space-8:32px;
+  --pf-shadow-1:0 1px 2px rgba(0,0,0,.2); --pf-shadow-2:0 8px 24px rgba(0,0,0,.3);
+  --pf-font-sans:ui-sans-serif,system-ui;
+  --pf-duration-1:120ms; --pf-duration-2:240ms;
+}
+
+
+Reguli: modifici doar prin tokens; componentele citesc exclusiv variabilele.
+
+Răspuns API – contract de integrare FE
+
+POST /api/run/{moduleId}
+req:{sevenD:{vector,domain,scale,urgency,resources,complexity,application}, input:{}}
+res:{success:true, data:{prompt, metadata:{score,signature,version}}, metadata:{request_id,timestamp,execution_time_ms}}
+
+
+Reguli: orice schimbare pe BE se propagă prin versiune; FE refuză răspuns fără metadata.version. 
+PROMPTFORGE™
+
+UX de avarie – stări obligatorii
+– Loading skeleton per secțiune.
+– Empty state în Demo, History, Modules.
+– Error state cu mesaj scurt + acțiune clară.
+– Offline banner.
+– Rate limit banner pe generator. 
+PROMPTFORGE™
+
+Testare – DoD minim
+– Lighthouse PWA ≥ 90 pe mobil.
+– Axe-core „0 critical”.
+– 10 scenarii e2e: generate, export .md/.json/.pdf, switch vector, open spec modul, checkout Pro, contact Sales, open Swagger, download OpenAPI, FAQ toggle, history restore. 
+PROMPTFORGE™
++2
+PROMPTFORGE™
++2
+
+Proiecție
+
+Pas 1: îngheață structura rutelor de mai sus. Creezi contracts/*.ts pentru page.meta, sections, events.
+Pas 2: extragi copy în locales/{ro,en}/…json.
+Pas 3: implementezi tokens și interzici hardcode de stil.
+Pas 4: legi generatorul strict la /api/run/{moduleId} și validezi schema sevenD înainte de request. 
+PROMPTFORGE™
+
+Pas 5: adaugi skeletons și error states pe toate secțiunile mari.
+Pas 6: fixezi telemetry semantică la toate CTA-urile; logezi scorul AI și TTA pe generator.
+Pas 7: pentru paginile fără conținut accesibil, publici scaffolding standard și marchezi „placeholder live” până sincronizezi CMS. NU EXISTĂ DATE, nu improvizezi.
+
+Vrei export .txt cu toate contractele per rută și șabloanele JSON pentru copy și events? Spui „Exportă contractele acum” și ți le livrez instant.
+
+01:36
+Activitate realizată timp de 2 minute
+
+Am luat la microscop fiecare pagină și am extras toate elementele obligatorii pentru a‑ți proteja scheletul de design. Iată specificațiile pentru a continua dezvoltarea fără să deteriorezi UI/UX‑ul existent:
+
+Globale
+
+Tema: fundal negru (#05010A) și text deschis (#EDEDEE) încărcat în :root
+prompt-forge-vadimkusnir.vercel.app
+. Folosește fontul Space Grotesk pre‑conectat
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Meta‑taguri: titlul și descrierea de pe fiecare pagină se setează via useMeta, cu conținut explicit (“PromptForge™ v3.0 – Industrial Prompt Engineering”, “50 modules. 7 vectors…” etc.)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Structură: layout constant (header, container de conținut, footer cu badge‑uri GDPR/SOC2). Grid responsiveness (1 coloană pe mobil, 2–4 coloane pe desktop).
+
+Accesibilitate: WCAG 2.2 AA (contrast ridicat, etichete clare, aria‑labels pe butoane).
+
+Telemetrie: evenimente semantice (“cta_try”, “run_generate”, “export_generate” etc.) în cod (vezi T("run_generate",{mode…}))
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Performanță: LCP sub 2s; minimizează bundle‑urile (<150KB).
+
+/ – Landing
+
+Hero: H1 cu text scindat: „We don't just write prompts. We forge them.”
+prompt-forge-vadimkusnir.vercel.app
+, tagline “50 modules, a 7‑vector framework, and exports you can trust.”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Sectiuni obligatorii:
+
+Prezentare SKRE/7‑Vector (scor, predictibilitate, viteză).
+
+Cum funcționează: 3 pași (Configurează → Generează → Exportă).
+
+Lista module (teaser 50+), cu legătură către /modules.
+
+Teaser planuri cu buton “Choose your plan”.
+
+FAQ și badge‑uri de încredere (Stripe, GDPR).
+
+Reguli: nu schimba ordinea secțiunilor; menține call‑to‑action‑urile vizibile; nu înlocui termenii SKRE v3.0, 7‑D sau AI Score.
+
+/generator – Prompt Generator
+
+Titlul: “Prompt Generator”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Panou 7‑D: listează parametrii Domain, Scale, Urgency, Complexity, Resources, Application, Output, cu opțiunile fixe din obiectul O
+prompt-forge-vadimkusnir.vercel.app
+. Valorile se aleg din dropdown‑uri cu onChange.
+
+Selector Module: listează cel puțin trei module (Strategic Framework, Content Engine, Crisis Management) cu nivel (Advanced/Intermediate/Expert)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Acțiuni: buton “Simulate Test” (gratuit) și “Run Real Test” (Pro+ plan). Dacă planul nu permite, afișează mesajul “Real tests require Pro+ plan” cu link spre pricing
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Output: afișează scorul (Score: x%), Run ID (copiere în clipboard) și promptul rezultat. Export-uri: Copy, Export PDF, Export JSON, cu stări “Locked” când nu sunt disponibile
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Status: card cu Module selectat, numărul de parametri setați și momentul ultimei rulări
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: nu redenumi parametrii 7‑D; nu muta butoanele sub fold; menține stările blocate pentru planurile gratuite.
+
+/modules – Catalog Module
+
+Filtre: vectori (Analytics, Branding, Cognitive, Content, Crisis, Rhetoric, Strategic) și nivel de dificultate (Beginner, Intermediate, Advanced)
+prompt-forge-vadimkusnir.vercel.app
+; search bar; posibilitatea de a selecta module multiple (checkbox).
+
+Card Module: afișează id (M01…), titlu, rezumat, vector (badge colorat), dificultate, durată, plan minim (free/pro), tag‑uri (max. 3) și formate export
+prompt-forge-vadimkusnir.vercel.app
+. Buton “Use in Generator” sau etichetă “Pro Required / Enterprise Required”.
+
+Statistică: la final, patru metri: total module (w.length), numărul de vectori (O.length), module free, success rate 98.7%
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Popup detaliu: la click, deschide card cu descriere, vector, difficulty și buton “Run with 7‑D Parameters”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: menține filtrarea multiplă și export‑urile (.md/.json/.pdf/.zip) în toolbar; păstrează statistica finală; nu schimba etichetele de plan.
+
+/modules/:slug – Specificații Modul
+
+Structură: meta cu modulId și vector; secțiuni obligatorii: Objective, Inputs, Outputs, KPI, Constraints, Examples.
+
+Fallback: dacă nu există date, afișează skeleton placeholder.
+
+Reguli: nu publica module fără câmpuri complete; menține butoanele “Run in Generator” și “Copy Prompt”.
+
+/pricing – Planuri
+
+Planuri: Free, Creator, Pro, Enterprise cu descrieri și prețuri lunare/anuale
+prompt-forge-vadimkusnir.vercel.app
+. Creator este “Most Popular”.
+
+Switch anual/lunar: toggle cu indicarea economiei (Save 17%)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Elemente plan: listă “Export Formats” derivată din descriere (.txt, .md, .json, .pdf, .zip); listă Features; listă Limitations
+prompt-forge-vadimkusnir.vercel.app
+.
+
+CTA: butoane “Get Started”, “Start Trial” sau “Contact Sales”, cu rutare către /auth sau /contact.
+
+Comparative Table: rânduri pentru Modules (3, 50+, etc.), Export Formats, Real Testing (check vs cross), Support (Community/Email/Priority/Dedicated)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+FAQ: trei întrebări standard (trial, schimbare plan, diferențe Creator vs Pro)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: nu redenumi planurile; menține plan Creator ca “Most Popular”; păstrează trial de 7 zile cu watermark și 30% discount anual.
+
+/docs – Documentație
+
+Nav lateral: categorii “Introduction”, “7D Framework”, “API Reference”, “Integrations”, “Support” cu sublinkuri (Getting Started, Core Concepts, Parameters, Authentication, Endpoints, Error Codes, Zapier, Make.com, FAQ, Contact Support)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Conținut principal: componentă MDX randată cu conținut; index de secțiuni generat din headings (h1‑h3) și listat în “On this page” în dreapta
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Temă: fundal negru/gri închis cu bloc central prose prose-invert pentru text
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: menține structural side‑nav; folosește ancore (ids) pentru headings; actualizează indexul la scroll; nu schimba ordinea categoriilor.
+
+/about – Despre
+
+Introducere: slogan “We don't just write prompts. We forge them.”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Misiune: carduri “Predictability”, “Proof”, “Speed” cu descrieri (“outputs scored and verified before use”, “manifest + checksum on every export”, “time‑to‑artifact in under 60 seconds”)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Poveste: secțiune “Our Story” cu narațiune despre frustrarea de a reinventa prompturi; enumeră componentele sistemului (7‑D engine, 50 modules, Test Engine)
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Public țintă: grid cu 4 avatare (Agencies, Consultants, Educators, Founders) și descrieri
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Diferența: listă cu trei afirmații: “Industrial, not improvisational”, “System, not text”, “Outputs you can prove, not just believe”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Valori: carduri “Precision”, “Reliability”, “Speed” cu descrieri specifice
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Call‑to‑action: buton “Start the Forge” care duce la /generator
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Statistici: 50+ Industrial Modules, 7 Semantic Vectors, <60s Time to Artifact, 98.7% Success Rate
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: nu schimba sloganul și valorile; păstrează grid‑urile și ordinea secțiunilor; menține linkul la generator.
+
+/terms, /privacy, /dpa
+
+Pagini legale complete, cu dată “Last updated: December 2024” și secțiuni numerotate: Acceptance of Terms, Subscription Plans, Acceptable Use, etc. pentru Terms
+prompt-forge-vadimkusnir.vercel.app
+; Information We Collect, Usage Data, How We Use, Content Privacy etc. pentru Privacy
+prompt-forge-vadimkusnir.vercel.app
+; și Data Processing Agreement cu Standard vs Enterprise DPA, Security Docs și clauze de protecție
+prompt-forge-vadimkusnir.vercel.app
+.
+
+Reguli: păstrează structura card “card-industrial” și proza în prose-invert; menține data de actualizare și trimiterile la contact; nu elimina secțiunile legale obligatorii.
+
+Pagini Placeholder (support, blog, integrations, admin, dashboard)
+
+Dacă nu există conținut, afișează skeleton cu H1, text “Coming Soon” și linkuri relevante.
+
+Folosește design standard (container-centru, text centrat, bordură subțire).
+
+Reguli: nu afișa alt text decât “Coming Soon” / “Placeholder”; pregătește spațiul pentru conținutul viitor.
+
+Concluzii
+
+Păstrează invariabilele: numărul de module (50+), 7 vectori, 7‑D framework, metrici (Score, Time‑to‑Artifact <60s, Success Rate 98.7%), planuri și denumirile lor, flow‑ul “Configure → Generate → Export”. Toate modificările trebuie să respecte designul industrial actual și să nu dilueze elementele distinctive (tone, culori, icons). Inainte de a adăuga funcționalități noi, asigură-te că menții contractele de rută și evenimentele de telemetrie.
+
+
+
+
+
+
+GLOBAL.SISTEM:: Imutabil
+– Layout unic. Header/Nav/Footer constante. Izolezi conținutul în secțiuni declarative.
+– Sursa de adevăr = tokeni CSS. Niciun hex/px hardcodat în componente.
+– Contracte de rută obligatorii.
+– Bugete de performanță testate automat.
+– Accesibilitate auditabilă.
+– I18n JSON. Zero string în componentă.
+– Telemetry semantic la fiecare acțiune.
+– Anti-deraiere: îngheți termeni-cheie și structuri.
+
+EXO.TOKENS:: CSS ca lege
+
+:root {
+  /* Culoare */
+  --pf-bg:#05010A; --pf-fg:#EDEDEE; --pf-muted:#1A1A1E;
+  --pf-primary:#CDA434; --pf-accent:#7CE7A2; --pf-danger:#E03A3A;
+  --pf-border:#2B2B33; --pf-ring:rgba(205,164,52,.45);
+
+  /* Tipografie */
+  --pf-font-sans:"Space Grotesk",ui-sans-serif,system-ui;
+  --pf-fs-xs:12px; --pf-fs-sm:14px; --pf-fs-md:16px; --pf-fs-lg:18px; --pf-fs-xl:22px; --pf-fs-2xl:28px;
+
+  /* Spațiere */
+  --pf-space-1:4px; --pf-space-2:8px; --pf-space-3:12px; --pf-space-4:16px; --pf-space-6:24px; --pf-space-8:32px;
+
+  /* Radius & Shadow */
+  --pf-radius-1:6px; --pf-radius-2:10px; --pf-radius-3:16px;
+  --pf-shadow-1:0 1px 2px rgba(0,0,0,.25);
+  --pf-shadow-2:0 10px 30px rgba(0,0,0,.35);
+
+  /* Layere */
+  --pf-z-header:100; --pf-z-overlay:1000; --pf-z-toast:1100;
+
+  /* Animații */
+  --pf-dur-1:120ms; --pf-dur-2:240ms; --pf-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+html,body{background:var(--pf-bg);color:var(--pf-fg);font-family:var(--pf-font-sans)}
+
+
+Regulă: orice modificare vizuală trece prin acești tokeni. Nu există excepții.
+
+ROUTE.CONTRACT:: Tipuri imutabile
+
+// contracts/route.ts
+import { z } from "zod";
+
+export const PageMeta = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  image: z.string().url().optional(),
+  robots: z.string().default("index,follow"),
+  version: z.literal("v3.0")
+});
+
+export const Section = z.object({
+  id: z.string().min(2),
+  kind: z.enum(["hero","trust","demo","workflow","modules","pricing","faq","legal","custom"]),
+  props: z.record(z.any())
+});
+
+export const Event = z.enum([
+  "cta_try","cta_demo","open_faq","select_module","update_7d",
+  "generate_sim","generate_real","export_pdf","export_json","start_checkout"
+]);
+
+export const Telemetry = z.object({
+  event: Event, ts: z.number(), meta: z.record(z.any()).optional()
+});
+
+export const PageContract = z.object({
+  meta: PageMeta,
+  sections: z.array(Section).min(1),
+  events: z.array(Event).optional(),
+  telemetry: z.array(Telemetry).optional()
+});
+
+export type TPageContract = z.infer<typeof PageContract>;
+
+
+LAYOUT:: Unic, fix
+
+// app/layout.tsx (Next 14/15 RSC)
+import "./globals.css";
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="ro">
+      <head>
+        <meta name="theme-color" content="#05010A" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      </head>
+      <body>
+        <header role="banner" className="border-b border-[var(--pf-border)] sticky top-0 z-[var(--pf-z-header)] bg-[var(--pf-bg)]/85 backdrop-blur">
+          {/* nav canonizat */}
+        </header>
+        <main id="content" className="min-h-screen">{children}</main>
+        <footer role="contentinfo" className="border-t border-[var(--pf-border)] py-[var(--pf-space-6)]">
+          {/* stripe/gdpr badges, links */}
+        </footer>
+      </body>
+    </html>
+  );
+}
+
+
+Regulă: componentele nu pot rescrie layoutul. Doar se montează în main.
+
+PERF.BUDGET:: Testabil, nu aspirational
+
+// package.json (fragmente)
+{
+  "scripts": {
+    "perf:lighthouse": "lighthouse http://localhost:3000 --preset=desktop --only-categories=performance,accessibility --budget-path=./budgets.json --quiet",
+    "perf:size": "size-limit",
+    "perf:ci": "npm run perf:size && npm run perf:lighthouse"
+  },
+  "size-limit": [
+    { "name": "route:/", "limit": "150 KB", "path": "dist/chunks/home-*.js" },
+    { "name": "route:/generator", "limit": "150 KB", "path": "dist/chunks/generator-*.js" }
+  ]
+}
+
+// budgets.json
+{
+  "resourceSizes": [{ "resourceType": "script", "budget": 150 }],
+  "timings": [
+    { "metric": "interactive", "budget": 2500 },
+    { "metric": "first-contentful-paint", "budget": 2000 },
+    { "metric": "cumulative-layout-shift", "budget": 0.05 }
+  ]
+}
+
+
+Tehnică: code-split pe rute, dynamic() pentru editorii grei; font-display: swap; toate imaginile cu aspect-ratio setat pentru CLS.
+
+A11Y:: WCAG 2.2 AA, cu reguli automate
+
+// .eslintrc.cjs (extras)
+{
+  "extends": ["next/core-web-vitals","plugin:jsx-a11y/recommended"],
+  "rules": {
+    "jsx-a11y/anchor-is-valid":"error",
+    "jsx-a11y/no-autofocus":"warn",
+    "jsx-a11y/aria-props":"error"
+  }
+}
+
+
+Checklist critic:
+
+Focus vizibil personalizat: outline + ring --pf-ring.
+
+Ordine tab logică; niciun keyboard-trap.
+
+Form controls cu label + aria-describedby.
+
+Contrast ≥ 4.5:1 verificat cu axe-core în CI.
+
+Skip link #content.
+
+I18N:: JSON, nu string în componentă
+
+// i18n/types.ts
+export type Locale = "ro" | "en";
+export type Dict = Record<string,string>;
+
+// i18n/ro/common.json
+{
+  "hero.h1a": "Nu scrii prompturi.",
+  "hero.h1b": "Le forjezi.",
+  "cta.try": "Încearcă acum",
+  "gen.title": "Generator de Prompturi",
+  "gen.run": "Rulează test real",
+  "gen.sim": "Simulează"
+}
+
+// hook simplu
+export function t(key:string, dict:Dict){ return dict[key] ?? `__${key}__`; }
+
+
+Regulă: PR blocat dacă difuzăm text hardcodat.
+
+TELEMETRY:: Evenimente semantice, contractate
+
+// telemetry/schema.ts
+import { z } from "zod";
+export const E = {
+  GENERATE_SIM: "generate_sim",
+  GENERATE_REAL: "generate_real",
+  EXPORT_PDF: "export_pdf",
+  EXPORT_JSON: "export_json",
+  SELECT_MODULE: "select_module",
+  UPDATE_7D: "update_7d",
+  START_CHECKOUT: "start_checkout"
+} as const;
+
+export const TelemetryEvent = z.object({
+  name: z.enum(Object.values(E) as [string, ...string[]]),
+  ts: z.number(),
+  payload: z.record(z.any()).optional()
+});
+export type TEvent = z.infer<typeof TelemetryEvent>;
+
+// telemetry/sink.ts
+export function track(ev: TEvent){
+  // 1) GA/GTM dacă există
+  if (typeof window !== "undefined" && (window as any).gtag) {
+    (window as any).gtag("event", ev.name, ev.payload ?? {});
+  }
+  // 2) Beacon fallback
+  try { navigator.sendBeacon?.("/api/telemetry", new Blob([JSON.stringify(ev)],{type:"application/json"})); } catch {}
+}
+
+
+Instrumentare:
+
+track({ name: E.GENERATE_REAL, ts: Date.now(), payload: { moduleId, sevenDHash } });
+
+
+ANTI.DERAIERE:: Îngheț semantic
+
+// guardians/strings.freeze.ts
+export const FROZEN = [
+  "SKRE v3.0",
+  "7-D",
+  "Modules 50+",
+  "Time to Artifact < 60s",
+  "Success Rate 98.7%"
+] as const;
+
+// test: oricine editează → pică CI
+import fs from "node:fs";
+const raw = fs.readFileSync("./public/copy/canon.json", "utf-8");
+FROZEN.forEach(s => { if (!raw.includes(s)) throw new Error(`Canon string missing: ${s}`); });
+
+
+Structură înghețată pe Landing:
+
+// guardians/layout.freeze.ts
+export const LANDING_ORDER = ["hero","trust","demo","workflow","modules","pricing","faq","footer"] as const;
+
+
+API.CONTRACT:: Seven-D & run/export
+
+// api/schema.ts
+import { z } from "zod";
+export const SevenD = z.object({
+  domain: z.enum(["business","technology","healthcare","education","finance"]),
+  scale: z.enum(["small","medium","large","enterprise"]),
+  urgency: z.enum(["low","normal","high","critical"]),
+  complexity: z.enum(["simple","intermediate","complex","expert"]),
+  resources: z.enum(["minimal","standard","extended","unlimited"]),
+  application: z.enum(["strategy","operations","marketing","research"]),
+  output: z.enum(["brief","comprehensive","detailed","executive"])
+});
+export const RunReq = z.object({ moduleId: z.string().min(2), parameters: SevenD });
+export const RunRes = z.object({
+  output: z.string(),
+  score: z.number().min(0).max(100),
+  id: z.string()
+});
+
+
+PAGE.BUILDER:: Pagină = contract, nu JSX liber
+
+// pagespecs/home.ts
+import { PageContract } from "@/contracts/route";
+export const home: TPageContract = {
+  meta: { title: "PROMPTFORGE™ v3.0", description: "50 modules. 7 vectors. Verified exports in <60s.", version:"v3.0" },
+  sections: [
+    { id:"hero", kind:"hero", props:{ h1a:"hero.h1a", h1b:"hero.h1b", kpis:["<60s","AI Score","Audit"] } },
+    { id:"trust", kind:"trust", props:{ logos:["stripe","gdpr","soc2"] } },
+    { id:"demo", kind:"demo", props:{ interactive:true } },
+    { id:"workflow", kind:"workflow", props:{ steps:["Configurează","Generează","Exportă"] } },
+    { id:"modules", kind:"modules", props:{ count:50 } },
+    { id:"pricing", kind:"pricing", props:{} },
+    { id:"faq", kind:"faq", props:{} }
+  ]
+};
+
+
+Rendererul citește sections[] și compune UI. Ordinea validată cu LANDING_ORDER.
+
+CHECKS:: CI anti-eroare
+
+# .github/workflows/quality.yml
+name: quality
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run test
+      - run: pnpm run perf:ci
+      - run: pnpm exec axe http://localhost:3000 --timeout 120000
+
+
+SECURITY:: CSP minim
+
+// middleware.ts (simplificat)
+export const config = { matcher: ["/((?!api|_next|assets).*)"] };
+export function middleware(req: Request) {
+  const res = NextResponse.next();
+  res.headers.set("Content-Security-Policy",
+   "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https:;");
+  return res;
+}
+
+
+CLS.ZERO:: Media cu aspect fix + fonts
+
+img,svg,video{max-width:100%;height:auto}
+.pf-media{aspect-ratio:16/9; background:var(--pf-muted)}
+@font-face{font-display:swap}
+
+
+UI.KIT:: Butoane canonizate
+
+.btn { display:inline-flex; align-items:center; gap:8px; padding:.65rem 1rem;
+  border-radius:var(--pf-radius-2); transition:background var(--pf-dur-2) var(--pf-ease), box-shadow var(--pf-dur-1) var(--pf-ease); }
+.btn-primary{ background:var(--pf-primary); color:#0B0B0E; }
+.btn-outline{ border:1px solid var(--pf-border); background:transparent; }
+.btn-danger{ background:var(--pf-danger); color:#fff; }
+.btn:focus-visible{ outline:2px solid transparent; box-shadow:0 0 0 4px var(--pf-ring); }
+
+
+A/BLOCKERS:: Ce nu ai voie să schimbi
+
+Termeni canon: SKRE v3.0, 7-D, Modules 50+, <60s, 98.7%.
+
+Ordinea secțiunilor pe Landing.
+
+Denumirile planurilor pe Pricing.
+
+Parametrii 7-D și numele evenimentelor telemetry.
+
+TEST.E2E:: Scenarii minime
+
+Generate Sim → scor + runId → Export JSON/PDF (locked/unlocked per plan).
+
+Schimbare vectori 7-D → state persist → run.
+
+Modules → filtrare vector/dificultate → “Use in Generator”.
+
+Pricing → toggle anual/lunar → start checkout.
+
+Docs → side-nav, “On this page” activ.
+
+A11y: focus order, skip link, aria-labels pe controale.
+
+CLS < 0.05 pe toate rutele.
+
+LCP < 2s pe / și /generator.
+
+PROMPTFORGE™:: Branding fix
+– Nume și simbol scrise exact: PROMPTFORGE™ v3.0.
+– Paletă fixă: #05010A / #EDEDEE / #CDA434 / #1A1A1E.
+– Voce: industrial, nu improvizațional.
+– Badge-uri în footer: Stripe • GDPR • SOC2.
+– Orice asset grafic folosește fundal întunecat și contrast > 4.5:1.
+
+Proiecție
+
+Blochezi contractele: contracts/*, guardians/*, pagespecs/*. PR-uri care ating asta cad automat.
+
+Extragi toate textele în i18n/{ro,en}/*.json. Rulezi audit – niciun string dur.
+
+Adaugi size-limit și budgets Lighthouse în CI. If fail → build blocat.
+
+Instrumentezi track() în butoane: generate, export, selectModule, startCheckout.
+
+Activezi axe-core în CI; repari orice „critical”.
+
+Rulezi testele e2e pe scenariile de mai sus; fixezi route-order guard.
+
+Abia apoi extinzi UI. Nu invers.
+
+Declarație imposibil de ignorat: modifici prin tokeni sau nu modifici deloc. Orice altceva e gălăgie. Vrei export .txt cu tot scheletul de mai sus (fișierele exact cum sunt)? Spui: Exportă scheletul acum.
+
+Activitate realizată timp de 1 minut
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+Verdict
+
+Nu e negociabil. Ridici un sistem imutabil sau ești înghițit de gălăgie. Te aliniezi la codul fundamental sau se destramă tot.
+
+Cod
+
+GLOBAL.EXO
+– În next.config.js fixezi swcMinify:true, reactStrictMode:true, poweredByHeader:false, images.unoptimized:true, i18n:{locales:["ro","en"],defaultLocale:"ro"} pentru control.
+– În root.globals.css definești toate tokenii: --pf-bg, --pf-fg, --pf-muted, --pf-primary, --pf-accent, --pf-danger, --pf-radius-{1,2,3}, --pf-shadow-{1,2}, --pf-z-header, --pf-z-modal, --pf-z-toast, --pf-dur-{1,2}, --pf-ease. Nu scrii hex în componentă.
+– Creezi componentă <Layout> cu header, nav, footer. Nav are logo+cta. Footer are badge-uri și linkuri legale. Body are rol main și id content pentru skip link.
+
+ROUTE.CONTRACT.FIX
+
+import { z } from "zod";
+export const Contract = z.object({
+ meta: z.object({ title:z.string(), description:z.string(), version:z.literal("v3.0") }),
+ sections: z.array(z.object({ id:z.string(), kind:z.string(), props:z.record(z.any()) })).min(1),
+ events: z.array(z.string()).optional(),
+ telemetry: z.array(z.object({ event:z.string(), ts:z.number(), payload:z.record(z.any()).optional() })).optional()
+});
+export type TContract = z.infer<typeof Contract>;
+
+
+Regulă: orice pagină exportă un obiect care trece validarea. Nu randăm dacă nu trece.
+
+PERF.STAT
+– În size-limit configurezi fiecare chunk: route home, route generator, route modules, route pricing, route docs → <150KB.
+– În budgets.json setezi interactive ≤2500, first-contentful-paint ≤2000, cumulative-layout-shift ≤0.05.
+– În pipeline rulezi lighthouse pe fiecare build. Dacă depășește bugetul, buildul cade.
+– Folosești dynamic imports (next/dynamic) pentru editorul de generator și analytics. Cod spliting obligatoriu.
+
+A11Y
+– Aplicație globală: lang="ro", dir="ltr".
+– Skip to main link vizibil on focus.
+– Toate butoanele au aria-label. Exemple: <button aria-label="Simulează" />.
+– Liste și carduri au role="list" și role="listitem" pentru screenreaders.
+– Fiecare input are <label> conectat prin htmlFor. Focus ring personalizat outline:2px solid transparent; box-shadow:0 0 0 4px var(--pf-ring);.
+
+I18N
+– Fiecare text e key în JSON: i18n/ro/*.
+– Loaderul:
+
+export async function loadDict(locale:"ro"|"en"){ return (await import(`../i18n/${locale}/common.json`)).default; }
+
+
+– Hook:
+
+export function useT(key:string){ const {dict}=useContext(I18nContext); return dict[key]??`__${key}__`; }
+
+
+– Nu există fallback textual în componentă. Dacă lipsește cheia, testul eșuează.
+
+TELEMETRY
+
+// telemetry/useTrack.ts
+import { useCallback } from "react";
+import { E } from "@/contracts/telemetry";
+export function useTrack(){
+ return useCallback((name:E, payload:Record<string,any>={})=>{
+   const event = { event:name, ts:Date.now(), payload };
+   if(typeof window !=="undefined" && window.gtag){
+     window.gtag("event", name, payload);
+   }
+   navigator.sendBeacon?.("/api/telemetry", JSON.stringify(event));
+ },[]);
+}
+
+
+– Evenimente canon: generate_sim, generate_real, select_module, update_7d, export_pdf, export_json, start_checkout.
+– Fiecare click pe CTA declanșează useTrack().
+
+ANTIDERAIERE
+– În guardians/strings.ts exportă un array cu stringuri canon: SKRE v3.0, 7-D, Modules 50+, <60s, 98.7%.
+– Testul citește toate fișierele JSON și template și verifică prezența fiecărui string.
+– În guardians/order.ts exportă constant LANDING_SECTIONS = ["hero","trust","demo","workflow","modules","pricing","faq"] as const; și testul compară cu home.sections.map(s=>s.id). Dacă diferă, buildul cade.
+– Șters sau redenumit oricare dintre acești termeni = eșec CI.
+
+API.CONTRACT
+– Definești tipul SevenD cu enumerări stricte.
+– POST /api/run primește {moduleId:string, parameters:SevenD} și răspunde cu {output:string, score:number, id:string}.
+– POST /api/export primește un id și un format (pdf | json) și returnează un blob.
+– Wrapperul folosește zod pentru validare; erorile se returnează cu status 400 și mesaj clar.
+
+DEFENSIVE.DEV
+– Nu accepți moduleId necunoscut – verifici împotriva listei.
+– Nu returnezi prompt fără metadata.version. Dacă lipsește, frontend refuză.
+– Rate limit pe /api/run: 60/minut per utilizator în plan free, 600/minut plan pro, 6000/minut plan enterprise.
+
+ACL.STATIC
+– În middleware.ts setezi CSP strict: 'self' pentru default, img-src 'self' data:; script-src strict 'self' și 'wasm-unsafe-eval' pentru Next.
+– Referrer-Policy setat la strict-origin-when-cross-origin.
+– În headers() adaugi Permissions-Policy: camera=(), geolocation=(), microphone=().
+
+UI.LIBRARY
+– Butoanele canon au clase btn-primary, btn-outline, btn-danger, cu transition setată la --pf-dur-2.
+– Cardurile industriale: border var(--pf-border), shadow var(--pf-shadow-1), radius var(--pf-radius-2), hover: shadow var(--pf-shadow-2).
+– Badge-urile: badge-outline (border + text), badge-solid (fond primar).
+– Tooltipurile: role="tooltip", aria-hidden, delay 200ms.
+
+TEST.E2E
+– Script Cypress: simulare flux complet: selectare modul M02, setare 7-D, Simulate → afișare scor + runId; export JSON → verifică fail pe plan free.
+– Test de accesibilitate: axe-core rulează pe fiecare pagină; în raport, niciun critical.
+– Test de i18n: comută limba și verifică că textul se schimbă; URL-ul menține locale.
+
+Proiecție
+
+Creezi scaffolds/ cu specificațiile de mai sus.
+
+Implementezi în cod toate tipurile, tokenii, API-urile, validatoarele.
+
+Configurezi CI/CD cu size-limit, lighthouse, axe-core.
+
+Îngheți canonul (strings, ordini). În momentul în care alt dev mută o secțiune, testul alertează.
+
+Pui instrumentarea telemetry pe toți CTA. Activezi stratul de analytics.
+
+Rulezi toate testele end-to-end.
+
+Numai după ce trece CI, poți adăuga funcționalități suplimentare. Orice altă ordine = haos.
+
+Declarație imposibil de ignorat: oricine ignoră exoscheletul – ruinează Forge.
+
+
+
+
+
+
+
+
+LANDING.CONTRACT:: Imutabil
+
+// pagespecs/home.ts
+import { TPageContract } from "@/contracts/route";
+
+export const home: TPageContract = {
+  meta: {
+    title: "PROMPTFORGE v3.0",
+    description: "SKRE v3.0 • 50 modules • 7-D • Creezi prompturi în 10 secunde • Export PDF/JSON/MD",
+    image: "/og-cover.png",
+    robots: "index,follow",
+    version: "v3.0"
+  },
+  sections: [
+    { id: "hero", kind: "hero", props: {
+      headline: { a: "SKRE v3.0", b: "Creezi prompturi în 10 secunde" },
+      sub: "50 module • 7 vectori • rezultate verificate",
+      kpis: ["TTA<60s","AI Score≥80","PDF/JSON/MD"],
+      cta: { primary: { id:"cta_try", href: "/generator", labelKey: "cta.try" }, secondary: { id:"cta_demo", href:"#demo", labelKey: "cta.demo" } }
+    }},
+    { id: "trust", kind: "trust", props: {
+      logos: ["stripe","gdpr","soc2","vercel"],
+      quotes: [{author:"Agency Lead", textKey:"trust.quote.1"}]
+    }},
+    { id: "demo", kind: "demo", props: {
+      input: { placeholderKey:"demo.input.placeholder", preset: "Strategic Planning" },
+      output: { collapsed: true }
+    }},
+    { id: "workflow", kind: "workflow", props: {
+      steps: ["Configurează","Generează","Exportă"],
+      notesKey: "workflow.notes"
+    }},
+    { id: "modules-teaser", kind: "modules", props: { count: 50, link:"/modules" }},
+    { id: "pricing-teaser", kind: "pricing", props: { plans:["free","creator","pro","enterprise"], link:"/pricing" }},
+    { id: "faq", kind: "faq", props: { itemsKey:"faq.items" }},
+    { id: "footer", kind: "footer", props: { badges:["Stripe","GDPR","SOC2"], links:["/terms","/privacy","/dpa"] }}
+  ],
+  events: ["cta_try","cta_demo","open_faq"]
+};
+
+
+LANDING.UI:: Componente canonizate
+
+// components/landing/Hero.tsx
+export function Hero({headline, sub, kpis, cta}:{headline:{a:string,b:string}; sub:string; kpis:string[]; cta:any}) {
+  return (
+    <section className="py-20 md:py-28 border-b border-[var(--pf-border)] bg-[var(--pf-bg)]">
+      <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+        <span className="block">{headline.a}</span>
+        <span className="block text-[var(--pf-primary)]">{headline.b}</span>
+      </h1>
+      <p className="mt-4 text-lg text-[var(--pf-fg)]/70">{sub}</p>
+      <ul className="mt-6 flex flex-wrap gap-3" role="list" aria-label="Key performance indicators">
+        {kpis.map(k => <li key={k} className="badge-outline">{k}</li>)}
+      </ul>
+      <div className="mt-8 flex gap-3">
+        <a href={cta.primary.href} data-ev="cta_try" className="btn btn-primary" aria-label="Încearcă acum">Încearcă acum</a>
+        <a href={cta.secondary.href} data-ev="cta_demo" className="btn btn-outline" aria-label="Vezi demo">Vezi demo</a>
+      </div>
+    </section>
+  );
+}
+
+// components/landing/Trust.tsx
+export function Trust({logos, quotes}:{logos:string[]; quotes:{author:string,textKey:string}[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="sr-only">Trusted by industry leaders</h2>
+      <div className="flex flex-wrap gap-8 items-center opacity-80">{logos.map(l => <img key={l} alt={l} className="h-8 pf-media" />)}</div>
+      <figure className="mt-8 max-w-2xl text-[var(--pf-fg)]/70">
+        <blockquote data-i18n="trust.quote.1" />
+        <figcaption className="mt-2 text-sm">— {quotes[0]?.author}</figcaption>
+      </figure>
+    </section>
+  );
+}
+
+// components/landing/Demo.tsx
+import { useTrack } from "@/telemetry/useTrack";
+export function Demo({input, output}:{input:{placeholderKey:string,preset:string}; output:{collapsed:boolean}}) {
+  const track = useTrack();
+  return (
+    <section id="demo" className="py-16 border-b border-[var(--pf-border)]">
+      <div className="grid md:grid-cols-2 gap-6">
+        <label className="text-sm font-medium">Input</label>
+        <textarea aria-label="Demo input" placeholder="Scrie obiectivul tău…" className="w-full p-3 rounded-md bg-[var(--pf-muted)]"></textarea>
+        <button className="btn btn-primary" onClick={()=>track("generate_sim",{source:"landing"})}>Generează</button>
+        <div role="region" aria-live="polite" className="p-4 bg-[var(--pf-muted)] rounded-md min-h-24">Output (preview)</div>
+      </div>
+    </section>
+  );
+}
+
+// components/landing/Workflow.tsx
+export function Workflow({steps}:{steps:string[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Cum funcționează</h2>
+      <ol className="grid md:grid-cols-3 gap-6" role="list">
+        {steps.map((s,i)=>(<li key={s} className="card-industrial p-6"><div className="text-3xl font-bold text-[var(--pf-primary)]">{i+1}</div><p className="mt-2">{s}</p></li>))}
+      </ol>
+    </section>
+  );
+}
+
+// components/landing/ModulesTeaser.tsx
+export function ModulesTeaser({count, link}:{count:number, link:string}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Module</h2>
+      <p className="text-[var(--pf-fg)]/70">50+ module industriale. Vezi toate.</p>
+      <a href={link} className="btn btn-outline mt-6" aria-label="Vezi toate modulele">Toate modulele</a>
+    </section>
+  );
+}
+
+// components/landing/PricingTeaser.tsx
+export function PricingTeaser({plans, link}:{plans:string[], link:string}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Planuri</h2>
+      <div className="grid md:grid-cols-4 gap-4">
+        {plans.map(p=> <div key={p} className="card-industrial p-6"><strong className="capitalize">{p}</strong></div>)}
+      </div>
+      <a href={link} className="btn btn-primary mt-6" data-ev="start_checkout">Alege planul</a>
+    </section>
+  );
+}
+
+// components/landing/FAQ.tsx
+export function FAQ({items}:{items:{qKey:string,aKey:string}[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Întrebări frecvente</h2>
+      <div className="space-y-3">{items.map(i=>
+        <details key={i.qKey} className="card-industrial p-4" onToggle={(e)=> e.currentTarget.open && (window as any).track?.({event:"open_faq",ts:Date.now()})}>
+          <summary data-i18n={i.qKey} className="cursor-pointer"></summary>
+          <p className="mt-2 text-[var(--pf-fg)]/70" data-i18n={i.aKey}/>
+        </details>)}
+      </div>
+    </section>
+  );
+}
+
+// components/landing/Footer.tsx
+export function Footer({badges,links}:{badges:string[];links:string[]}) {
+  return (
+    <footer className="py-10">
+      <div className="flex flex-wrap gap-4 items-center">
+        {badges.map(b => <span key={b} className="badge-outline">{b}</span>)}
+      </div>
+      <nav className="mt-6 flex gap-6">
+        {links.map(href => <a key={href} href={href} className="text-sm text-[var(--pf-fg)]/70 underline-offset-4 hover:underline">{href.replace("/","")}</a>)}
+      </nav>
+    </footer>
+  );
+}
+
+
+I18N.MAP:: Chei minime (ro)
+
+{
+  "cta.try":"Încearcă acum",
+  "cta.demo":"Vezi demo",
+  "trust.quote.1":"Livrează artefacte auditabile, nu text la noroc.",
+  "demo.input.placeholder":"Descrie obiectivul tău...",
+  "workflow.notes":"Configurezi 7-D, rulezi, exporți. Repetabil, verificabil.",
+  "faq.items":[
+    {"qKey":"faq.q.1","aKey":"faq.a.1"},
+    {"qKey":"faq.q.2","aKey":"faq.a.2"}
+  ],
+  "faq.q.1":"Ce include trialul de 7 zile?",
+  "faq.a.1":"Acces complet, watermark pe exporturi. Fără card.",
+  "faq.q.2":"Pot schimba planul oricând?",
+  "faq.a.2":"Da, upgrade/downgrade instant."
+}
+
+
+A11Y:: Reguli obligatorii
+– h1 unic în Hero; restul h2.
+– Toate linkurile CTA au aria-label.
+– summary în FAQ e focusabil și accesibil.
+– Skip link: primul element focusabil → href="#content".
+– Contrast ≥ 4.5:1 pe text și iconografie.
+
+PERF:: Bugete & execuție
+– LCP țintă sub 2.0s: imagine OG lazy, font display:swap, hero fără video.
+– CLS < 0.05: rezervă înălțimi, aspect-ratio la media, skeleton la demo output.
+– Bundle < 150KB/route: code-split Demo dacă adaugi previzualizator complex.
+
+TELEMETRY:: Mapare evenimente
+– cta_try pe butonul primar din Hero.
+– cta_demo pe secundar.
+– open_faq la expandarea oricărui item din FAQ.
+– În Demo: generate_sim când rulezi.
+– În PricingTeaser: start_checkout pe CTA.
+
+SEO:: Minime non-negociabile
+– Title + meta description din page.meta.
+– og:title, og:description, og:image setate.
+– Canonic: link rel="canonical".
+– JSON-LD Organization + Product (name: PROMPTFORGE™ v3.0).
+
+RESPONSIVE:: Breakpoints
+– Mobil (<768px): coloane unice; CTA-uri pe două rânduri.
+– Tablet: 2 coloane la demo/workflow.
+– Desktop: 2–4 coloane la trust/modules/pricing.
+– Nu pui CTA sub fold pe mobil.
+
+STATE:: Stări de avarie
+– Demo: loading spinner 800ms minim; error banner clar; empty placeholder.
+– FAQ: fallback “Nicio întrebare disponibilă” dacă nu vin cheile.
+– Trust: dacă lipsesc logourile, ascunzi banda și păstrezi spacingul.
+
+GUARDIANS:: Anti-deraiere
+– Ordinea secțiunilor validată în test: ["hero","trust","demo","workflow","modules-teaser","pricing-teaser","faq","footer"].
+– Stringuri înghețate: “SKRE v3.0”, “Creezi prompturi în 10 secunde”, “TTA<60s”, “AI Score≥80”, “PDF/JSON/MD”.
+– PR care schimbă ordinea sau șterge stringurile cade la CI.
+
+TEST.E2E:: Scenarii minime
+
+H1 vizibil cu SKRE + promisiune 10s; KPI-urile randate (3 badge-uri).
+
+CTA Try → navighează /generator; telemetry cta_try.
+
+Demo → run → output apare; generate_sim trimis.
+
+Workflow are exact 3 pași.
+
+Modules teaser arată 50+ și link spre /modules.
+
+Pricing teaser arată 4 planuri; start_checkout pe click.
+
+FAQ expandabil; open_faq logat.
+
+Footer afișează badge-uri Stripe/GDPR/SOC2.
+
+Proiecție
+
+Fixezi pagespecs/home.ts. Montezi componentele exact în ordinea canon. Leagă i18n, telemetria, a11y și bugetele. Fiecare PR rulează size-limit + Lighthouse + axe-core. Încalci ordinea sau promisiunile? Build-ul cade. Asta nu e pagină. E protocol.
+
+Activitate realizată timp de 1 minut
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+Verdict
+
+Ori îți blochezi landing‑ul într‑un protocol clar. Ori îl lași să se destrame în gălăgie. Nu schimbi secvența, nu atingi promisiunea SKRE v3.0, nu inversezi 3‑pași. Modifici ordinea – rupi TOT.
+
+Cod
+
+LANDING.SPEC
+meta: title: "PROMPTFORGE v3.0", description: "SKRE v3.0. Creezi prompturi în 10 secunde. 50 module. 7 vectori. Export PDF/JSON/MD.", version:"v3.0"
+prompt-forge-vadimkusnir.vercel.app
+.
+sections:
+– hero: props {headline:{a:"SKRE v3.0",b:"Creezi prompturi în 10 secunde"}, sub:"50 module, 7 vectori, TTA < 60s", kpis:["TTA<60s","AI Score≥80","PDF/JSON/MD"], cta:{primary:{id:"cta_try",href:"/generator"},secondary:{id:"cta_demo",href:"#demo"}}}. Rol: fixează promisiunea centrală, afișează scoruri și call‑to‑action. Nu suprascrii “SKRE v3.0”.
+– trust: props {logos:["stripe","gdpr","soc2","vercel"], quotes:[{author:"Agency Lead",text:"Livrează artefacte auditabile"}]}. Rol: dovedește încredere cu branduri și testimoniale.
+– demo: props {input:{placeholder:"Descrie obiectivul"},output:{collapsed:true}}. Rol: interfață de testare rapidă cu generate simulate. Event generate_sim.
+– workflow: props {steps:["Configurează","Generează","Exportă"]}. Rol: explică procesul în 3 pași, păstrează ordinea.
+– modules‑teaser: props {count:50, link:"/modules"}. Rol: anunță cele 50+ module
+prompt-forge-vadimkusnir.vercel.app
+.
+– pricing‑teaser: props {plans:["free","creator","pro","enterprise"], link:"/pricing"}. Rol: pre‑gating pentru planuri.
+– faq: props {items:[{qKey:"faq.q.1",aKey:"faq.a.1"},{qKey:"faq.q.2",aKey:"faq.a.2"}]}. Rol: răspunde întrebări; fiecare toggle loghează open_faq.
+– footer: props {badges:["Stripe","GDPR","SOC2"], links:["/terms","/privacy","/dpa"]}. Rol: inchide pagina cu conformități și linkuri legale.
+
+events: ["cta_try","cta_demo","open_faq"]. Telemetry: fiecare event trimite {event,ts,payload}.
+
+LAYOUT:: Unic. Ordin fix: hero → trust → demo → workflow → modules‑teaser → pricing‑teaser → faq → footer. Niciun „scroll‑snap”, niciun carousel.
+
+CONTENT:: I18n. Toate textele vin din JSON (ro/en). Fără string hardcodat. “Creezi prompturi în 10 secunde” devine cheie hero.h1b.
+
+A11Y::
+– H1 unic pentru hero, H2 pentru celelalte secțiuni.
+– CTA‑uri cu aria-label.
+– FAQ folosește <details> cu <summary> focusabil.
+– Contrast ≥4.5:1 verificat cu axe-core.
+
+PERF::
+– Hero imagine optimizată lazy; cod split pentru demo.
+– LCP ≤2s, CLS ≤0.05, bundle <150KB.
+
+ANTI.DERAIERE::
+– Nu elimini “SKRE v3.0”, “7 vectori”, “TTA<60s”, “AI Score≥80”, “50 module”
+prompt-forge-vadimkusnir.vercel.app
+.
+– Nu adaugi secțiuni înainte de hero.
+– Nu elimini badge‑urile Stripe/GDPR/SOC2.
+
+TEST::
+– H1 și KPI‑uri apar vizibile; CTA Try navigatează la /generator.
+– Demo generează output și telemetria generate_sim.
+– Workflow afișează exact 3 pași.
+– Modules‑teaser arată “50+ module industriale”
+prompt-forge-vadimkusnir.vercel.app
+.
+– Pricing‑teaser arată cele 4 planuri și link spre pricing.
+– FAQ toggles loghează open_faq.
+
+Proiecție
+
+Construiește contractul exact ca mai sus. Montează componentele conform layoutului și respectă props‑urile. Leagă i18n, telemetrie, a11y și perf. Verifică la CI: orice dev care înlocuiește ordinea, redenumește “SKRE v3.0” sau ascunde pașii primește eroare. Declarație imposibil de ignorat: schimbi doar dacă rupi sistemul, iar atunci răspunzi pentru consecințe.
+
+
+
+
+
+
+
+LANDING.CONTRACT:: Imutabil
+
+// pagespecs/home.ts
+import { TPageContract } from "@/contracts/route";
+
+export const home: TPageContract = {
+  meta: {
+    title: "PROMPTFORGE v3.0",
+    description: "SKRE v3.0 • 50 modules • 7-D • Creezi prompturi în 10 secunde • Export PDF/JSON/MD",
+    image: "/og-cover.png",
+    robots: "index,follow",
+    version: "v3.0"
+  },
+  sections: [
+    { id: "hero", kind: "hero", props: {
+      headline: { a: "SKRE v3.0", b: "Creezi prompturi în 10 secunde" },
+      sub: "50 module • 7 vectori • rezultate verificate",
+      kpis: ["TTA<60s","AI Score≥80","PDF/JSON/MD"],
+      cta: { primary: { id:"cta_try", href: "/generator", labelKey: "cta.try" }, secondary: { id:"cta_demo", href:"#demo", labelKey: "cta.demo" } }
+    }},
+    { id: "trust", kind: "trust", props: {
+      logos: ["stripe","gdpr","soc2","vercel"],
+      quotes: [{author:"Agency Lead", textKey:"trust.quote.1"}]
+    }},
+    { id: "demo", kind: "demo", props: {
+      input: { placeholderKey:"demo.input.placeholder", preset: "Strategic Planning" },
+      output: { collapsed: true }
+    }},
+    { id: "workflow", kind: "workflow", props: {
+      steps: ["Configurează","Generează","Exportă"],
+      notesKey: "workflow.notes"
+    }},
+    { id: "modules-teaser", kind: "modules", props: { count: 50, link:"/modules" }},
+    { id: "pricing-teaser", kind: "pricing", props: { plans:["free","creator","pro","enterprise"], link:"/pricing" }},
+    { id: "faq", kind: "faq", props: { itemsKey:"faq.items" }},
+    { id: "footer", kind: "footer", props: { badges:["Stripe","GDPR","SOC2"], links:["/terms","/privacy","/dpa"] }}
+  ],
+  events: ["cta_try","cta_demo","open_faq"]
+};
+
+
+LANDING.UI:: Componente canonizate
+
+// components/landing/Hero.tsx
+export function Hero({headline, sub, kpis, cta}:{headline:{a:string,b:string}; sub:string; kpis:string[]; cta:any}) {
+  return (
+    <section className="py-20 md:py-28 border-b border-[var(--pf-border)] bg-[var(--pf-bg)]">
+      <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+        <span className="block">{headline.a}</span>
+        <span className="block text-[var(--pf-primary)]">{headline.b}</span>
+      </h1>
+      <p className="mt-4 text-lg text-[var(--pf-fg)]/70">{sub}</p>
+      <ul className="mt-6 flex flex-wrap gap-3" role="list" aria-label="Key performance indicators">
+        {kpis.map(k => <li key={k} className="badge-outline">{k}</li>)}
+      </ul>
+      <div className="mt-8 flex gap-3">
+        <a href={cta.primary.href} data-ev="cta_try" className="btn btn-primary" aria-label="Încearcă acum">Încearcă acum</a>
+        <a href={cta.secondary.href} data-ev="cta_demo" className="btn btn-outline" aria-label="Vezi demo">Vezi demo</a>
+      </div>
+    </section>
+  );
+}
+
+// components/landing/Trust.tsx
+export function Trust({logos, quotes}:{logos:string[]; quotes:{author:string,textKey:string}[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="sr-only">Trusted by industry leaders</h2>
+      <div className="flex flex-wrap gap-8 items-center opacity-80">{logos.map(l => <img key={l} alt={l} className="h-8 pf-media" />)}</div>
+      <figure className="mt-8 max-w-2xl text-[var(--pf-fg)]/70">
+        <blockquote data-i18n="trust.quote.1" />
+        <figcaption className="mt-2 text-sm">— {quotes[0]?.author}</figcaption>
+      </figure>
+    </section>
+  );
+}
+
+// components/landing/Demo.tsx
+import { useTrack } from "@/telemetry/useTrack";
+export function Demo({input, output}:{input:{placeholderKey:string,preset:string}; output:{collapsed:boolean}}) {
+  const track = useTrack();
+  return (
+    <section id="demo" className="py-16 border-b border-[var(--pf-border)]">
+      <div className="grid md:grid-cols-2 gap-6">
+        <label className="text-sm font-medium">Input</label>
+        <textarea aria-label="Demo input" placeholder="Scrie obiectivul tău…" className="w-full p-3 rounded-md bg-[var(--pf-muted)]"></textarea>
+        <button className="btn btn-primary" onClick={()=>track("generate_sim",{source:"landing"})}>Generează</button>
+        <div role="region" aria-live="polite" className="p-4 bg-[var(--pf-muted)] rounded-md min-h-24">Output (preview)</div>
+      </div>
+    </section>
+  );
+}
+
+// components/landing/Workflow.tsx
+export function Workflow({steps}:{steps:string[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Cum funcționează</h2>
+      <ol className="grid md:grid-cols-3 gap-6" role="list">
+        {steps.map((s,i)=>(<li key={s} className="card-industrial p-6"><div className="text-3xl font-bold text-[var(--pf-primary)]">{i+1}</div><p className="mt-2">{s}</p></li>))}
+      </ol>
+    </section>
+  );
+}
+
+// components/landing/ModulesTeaser.tsx
+export function ModulesTeaser({count, link}:{count:number, link:string}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Module</h2>
+      <p className="text-[var(--pf-fg)]/70">50+ module industriale. Vezi toate.</p>
+      <a href={link} className="btn btn-outline mt-6" aria-label="Vezi toate modulele">Toate modulele</a>
+    </section>
+  );
+}
+
+// components/landing/PricingTeaser.tsx
+export function PricingTeaser({plans, link}:{plans:string[], link:string}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Planuri</h2>
+      <div className="grid md:grid-cols-4 gap-4">
+        {plans.map(p=> <div key={p} className="card-industrial p-6"><strong className="capitalize">{p}</strong></div>)}
+      </div>
+      <a href={link} className="btn btn-primary mt-6" data-ev="start_checkout">Alege planul</a>
+    </section>
+  );
+}
+
+// components/landing/FAQ.tsx
+export function FAQ({items}:{items:{qKey:string,aKey:string}[]}) {
+  return (
+    <section className="py-14 border-b border-[var(--pf-border)]">
+      <h2 className="text-2xl font-semibold mb-6">Întrebări frecvente</h2>
+      <div className="space-y-3">{items.map(i=>
+        <details key={i.qKey} className="card-industrial p-4" onToggle={(e)=> e.currentTarget.open && (window as any).track?.({event:"open_faq",ts:Date.now()})}>
+          <summary data-i18n={i.qKey} className="cursor-pointer"></summary>
+          <p className="mt-2 text-[var(--pf-fg)]/70" data-i18n={i.aKey}/>
+        </details>)}
+      </div>
+    </section>
+  );
+}
+
+// components/landing/Footer.tsx
+export function Footer({badges,links}:{badges:string[];links:string[]}) {
+  return (
+    <footer className="py-10">
+      <div className="flex flex-wrap gap-4 items-center">
+        {badges.map(b => <span key={b} className="badge-outline">{b}</span>)}
+      </div>
+      <nav className="mt-6 flex gap-6">
+        {links.map(href => <a key={href} href={href} className="text-sm text-[var(--pf-fg)]/70 underline-offset-4 hover:underline">{href.replace("/","")}</a>)}
+      </nav>
+    </footer>
+  );
+}
+
+
+I18N.MAP:: Chei minime (ro)
+
+{
+  "cta.try":"Încearcă acum",
+  "cta.demo":"Vezi demo",
+  "trust.quote.1":"Livrează artefacte auditabile, nu text la noroc.",
+  "demo.input.placeholder":"Descrie obiectivul tău...",
+  "workflow.notes":"Configurezi 7-D, rulezi, exporți. Repetabil, verificabil.",
+  "faq.items":[
+    {"qKey":"faq.q.1","aKey":"faq.a.1"},
+    {"qKey":"faq.q.2","aKey":"faq.a.2"}
+  ],
+  "faq.q.1":"Ce include trialul de 7 zile?",
+  "faq.a.1":"Acces complet, watermark pe exporturi. Fără card.",
+  "faq.q.2":"Pot schimba planul oricând?",
+  "faq.a.2":"Da, upgrade/downgrade instant."
+}
+
+
+A11Y:: Reguli obligatorii
+– h1 unic în Hero; restul h2.
+– Toate linkurile CTA au aria-label.
+– summary în FAQ e focusabil și accesibil.
+– Skip link: primul element focusabil → href="#content".
+– Contrast ≥ 4.5:1 pe text și iconografie.
+
+PERF:: Bugete & execuție
+– LCP țintă sub 2.0s: imagine OG lazy, font display:swap, hero fără video.
+– CLS < 0.05: rezervă înălțimi, aspect-ratio la media, skeleton la demo output.
+– Bundle < 150KB/route: code-split Demo dacă adaugi previzualizator complex.
+
+TELEMETRY:: Mapare evenimente
+– cta_try pe butonul primar din Hero.
+– cta_demo pe secundar.
+– open_faq la expandarea oricărui item din FAQ.
+– În Demo: generate_sim când rulezi.
+– În PricingTeaser: start_checkout pe CTA.
+
+SEO:: Minime non-negociabile
+– Title + meta description din page.meta.
+– og:title, og:description, og:image setate.
+– Canonic: link rel="canonical".
+– JSON-LD Organization + Product (name: PROMPTFORGE™ v3.0).
+
+RESPONSIVE:: Breakpoints
+– Mobil (<768px): coloane unice; CTA-uri pe două rânduri.
+– Tablet: 2 coloane la demo/workflow.
+– Desktop: 2–4 coloane la trust/modules/pricing.
+– Nu pui CTA sub fold pe mobil.
+
+STATE:: Stări de avarie
+– Demo: loading spinner 800ms minim; error banner clar; empty placeholder.
+– FAQ: fallback “Nicio întrebare disponibilă” dacă nu vin cheile.
+– Trust: dacă lipsesc logourile, ascunzi banda și păstrezi spacingul.
+
+GUARDIANS:: Anti-deraiere
+– Ordinea secțiunilor validată în test: ["hero","trust","demo","workflow","modules-teaser","pricing-teaser","faq","footer"].
+– Stringuri înghețate: “SKRE v3.0”, “Creezi prompturi în 10 secunde”, “TTA<60s”, “AI Score≥80”, “PDF/JSON/MD”.
+– PR care schimbă ordinea sau șterge stringurile cade la CI.
+
+TEST.E2E:: Scenarii minime
+
+H1 vizibil cu SKRE + promisiune 10s; KPI-urile randate (3 badge-uri).
+
+CTA Try → navighează /generator; telemetry cta_try.
+
+Demo → run → output apare; generate_sim trimis.
+
+Workflow are exact 3 pași.
+
+Modules teaser arată 50+ și link spre /modules.
+
+Pricing teaser arată 4 planuri; start_checkout pe click.
+
+FAQ expandabil; open_faq logat.
+
+Footer afișează badge-uri Stripe/GDPR/SOC2.
+
+Proiecție
+
+Fixezi pagespecs/home.ts. Montezi componentele exact în ordinea canon. Leagă i18n, telemetria, a11y și bugetele. Fiecare PR rulează size-limit + Lighthouse + axe-core. Încalci ordinea sau promisiunile? Build-ul cade. Asta nu e pagină. E protocol.
+
+Activitate realizată timp de 1 minut
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+Verdict
+
+Ori îți blochezi landing‑ul într‑un protocol clar. Ori îl lași să se destrame în gălăgie. Nu schimbi secvența, nu atingi promisiunea SKRE v3.0, nu inversezi 3‑pași. Modifici ordinea – rupi TOT.
+
+Cod
+
+LANDING.SPEC
+meta: title: "PROMPTFORGE v3.0", description: "SKRE v3.0. Creezi prompturi în 10 secunde. 50 module. 7 vectori. Export PDF/JSON/MD.", version:"v3.0"
+prompt-forge-vadimkusnir.vercel.app
+.
+sections:
+– hero: props {headline:{a:"SKRE v3.0",b:"Creezi prompturi în 10 secunde"}, sub:"50 module, 7 vectori, TTA < 60s", kpis:["TTA<60s","AI Score≥80","PDF/JSON/MD"], cta:{primary:{id:"cta_try",href:"/generator"},secondary:{id:"cta_demo",href:"#demo"}}}. Rol: fixează promisiunea centrală, afișează scoruri și call‑to‑action. Nu suprascrii “SKRE v3.0”.
+– trust: props {logos:["stripe","gdpr","soc2","vercel"], quotes:[{author:"Agency Lead",text:"Livrează artefacte auditabile"}]}. Rol: dovedește încredere cu branduri și testimoniale.
+– demo: props {input:{placeholder:"Descrie obiectivul"},output:{collapsed:true}}. Rol: interfață de testare rapidă cu generate simulate. Event generate_sim.
+– workflow: props {steps:["Configurează","Generează","Exportă"]}. Rol: explică procesul în 3 pași, păstrează ordinea.
+– modules‑teaser: props {count:50, link:"/modules"}. Rol: anunță cele 50+ module
+prompt-forge-vadimkusnir.vercel.app
+.
+– pricing‑teaser: props {plans:["free","creator","pro","enterprise"], link:"/pricing"}. Rol: pre‑gating pentru planuri.
+– faq: props {items:[{qKey:"faq.q.1",aKey:"faq.a.1"},{qKey:"faq.q.2",aKey:"faq.a.2"}]}. Rol: răspunde întrebări; fiecare toggle loghează open_faq.
+– footer: props {badges:["Stripe","GDPR","SOC2"], links:["/terms","/privacy","/dpa"]}. Rol: inchide pagina cu conformități și linkuri legale.
+
+events: ["cta_try","cta_demo","open_faq"]. Telemetry: fiecare event trimite {event,ts,payload}.
+
+LAYOUT:: Unic. Ordin fix: hero → trust → demo → workflow → modules‑teaser → pricing‑teaser → faq → footer. Niciun „scroll‑snap”, niciun carousel.
+
+CONTENT:: I18n. Toate textele vin din JSON (ro/en). Fără string hardcodat. “Creezi prompturi în 10 secunde” devine cheie hero.h1b.
+
+A11Y::
+– H1 unic pentru hero, H2 pentru celelalte secțiuni.
+– CTA‑uri cu aria-label.
+– FAQ folosește <details> cu <summary> focusabil.
+– Contrast ≥4.5:1 verificat cu axe-core.
+
+PERF::
+– Hero imagine optimizată lazy; cod split pentru demo.
+– LCP ≤2s, CLS ≤0.05, bundle <150KB.
+
+ANTI.DERAIERE::
+– Nu elimini “SKRE v3.0”, “7 vectori”, “TTA<60s”, “AI Score≥80”, “50 module”
+prompt-forge-vadimkusnir.vercel.app
+.
+– Nu adaugi secțiuni înainte de hero.
+– Nu elimini badge‑urile Stripe/GDPR/SOC2.
+
+TEST::
+– H1 și KPI‑uri apar vizibile; CTA Try navigatează la /generator.
+– Demo generează output și telemetria generate_sim.
+– Workflow afișează exact 3 pași.
+– Modules‑teaser arată “50+ module industriale”
+prompt-forge-vadimkusnir.vercel.app
+.
+– Pricing‑teaser arată cele 4 planuri și link spre pricing.
+– FAQ toggles loghează open_faq.
+
+Proiecție
+
+Construiește contractul exact ca mai sus. Montează componentele conform layoutului și respectă props‑urile. Leagă i18n, telemetrie, a11y și perf. Verifică la CI: orice dev care înlocuiește ordinea, redenumește “SKRE v3.0” sau ascunde pașii primește eroare. Declarație imposibil de ignorat: schimbi doar dacă rupi sistemul, iar atunci răspunzi pentru consecințe.
+
+
+
+
+
+
+
+
+GENERATOR.CONTRACT:: Imutabil
+
+// pagespecs/generator.ts
+import { z } from "zod";
+
+export const SevenD = z.object({
+  vector: z.enum(["analytics","branding","cognitive","content","crisis","rhetoric","strategic"]),
+  domain: z.enum(["business","technology","healthcare","education","finance"]),
+  scale: z.enum(["small","medium","large","enterprise"]),
+  urgency: z.enum(["low","normal","high","critical"]),
+  resources: z.enum(["minimal","standard","extended","unlimited"]),
+  complexity: z.enum(["simple","intermediate","complex","expert"]),
+  application: z.enum(["strategy","operations","marketing","research"]),
+  output: z.enum(["brief","comprehensive","detailed","executive"])
+});
+
+export const GeneratorState = z.object({
+  sevenD: SevenD,
+  moduleId: z.string().min(2)
+});
+
+export const UIContract = z.object({
+  SidebarModules: z.boolean().default(true),
+  PanelSevenD: z.boolean().default(true),
+  AreaOutput: z.boolean().default(true),
+  HistoryDock: z.boolean().default(true)
+});
+
+export const Events = z.enum([
+  "select_module","update_7d","generate","save_history","export"
+]);
+
+export type TSevenD = z.infer<typeof SevenD>;
+export type TGeneratorState = z.infer<typeof GeneratorState>;
+export type TEvent = z.infer<typeof Events>;
+
+
+STATE.MACHINE:: Pur, predictibil
+
+// features/generator/state.ts
+type Action =
+ | { type:"select_module"; moduleId:string }
+ | { type:"update_7d"; key: keyof TSevenD; value: TSevenD[keyof TSevenD] }
+ | { type:"generate"; mode:"simulate"|"real" }
+ | { type:"save_history"; item: HistoryItem }
+ | { type:"export"; format:"pdf"|"json"|"copy" };
+
+export type HistoryItem = {
+  id: string; ts: number; moduleId: string; sevenD: TSevenD; score?: number; prompt: string;
+};
+
+export function reducer(state:TGeneratorState, a:Action):TGeneratorState {
+  switch(a.type){
+    case "select_module": return { ...state, moduleId: a.moduleId };
+    case "update_7d":     return { ...state, sevenD: { ...state.sevenD, [a.key]: a.value } as TSevenD };
+    default:              return state;
+  }
+}
+
+
+PERSISTENCE:: History care nu moare
+
+// features/generator/history.ts
+const KEY = "pf.history.v3";
+export function loadHistory(): HistoryItem[] {
+  try { return JSON.parse(localStorage.getItem(KEY) ?? "[]") } catch { return [] }
+}
+export function saveHistory(items:HistoryItem[]) {
+  localStorage.setItem(KEY, JSON.stringify(items.slice(0,100))); // cap 100 rulări
+}
+
+
+UI.IMUTABIL:: Structuri fixe
+
+// app/generator/page.tsx
+export const metadata = { title:"Prompt Generator" };
+
+export default function GeneratorPage(){
+  return (
+    <div className="min-h-screen bg-[var(--pf-bg)]">
+      <div className="container-pro py-8 grid gap-8 lg:grid-cols-[320px_1fr]">
+        <SidebarModules />                {/* nu dispare, nu migrează sub fold */}
+        <div className="space-y-8">
+          <PanelSevenD />                {/* 7-D fix, dropdown-uri strict enumerate */}
+          <AreaOutput />                 {/* scor, runId, prompt, export */}
+          <HistoryDock />                {/* persistent, ordonat descrescător */}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+SIDEBAR.MODULES:: M01…M50, nivel vizibil
+
+// components/generator/SidebarModules.tsx
+export function SidebarModules(){
+  // sursă: array de module (id, name, level) – cel puțin M01 Strategic Framework, M02 Content Engine, M03 Crisis Management
+  return (
+    <aside aria-label="Module" className="sticky top-20 h-[calc(100vh-6rem)] overflow-auto border-r border-[var(--pf-border)] pr-4">
+      <h2 className="text-sm uppercase tracking-wide text-[var(--pf-fg)]/60 mb-3">Modules</h2>
+      <ul role="list" className="space-y-2">
+        {modules.map(m =>
+          <li key={m.id}>
+            <button
+              className="w-full p-3 text-left rounded-md border hover:bg-[var(--pf-muted)] data-[active=true]:border-[var(--pf-primary)]"
+              data-active={m.id===useGen().state.moduleId}
+              onClick={()=>useGen().dispatch({type:"select_module", moduleId:m.id})}
+              aria-label={`Selectează modulul ${m.name}`}>
+              <div className="font-medium">{m.name}</div>
+              <div className="text-xs text-[var(--pf-fg)]/60">{m.level}</div>
+            </button>
+          </li>
+        )}
+      </ul>
+    </aside>
+  );
+}
+
+
+PANEL.7D:: Dropdown-uri fixe, semnătură 7-D
+
+// components/generator/PanelSevenD.tsx
+export function PanelSevenD(){
+  const { state, dispatch } = useGen();
+  const keys: (keyof TSevenD)[] = ["vector","domain","scale","urgency","resources","complexity","application","output"];
+
+  return (
+    <section className="card-industrial p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <h2 className="text-xl font-semibold">7-D Parameters</h2>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {keys.map(k => (
+          <label key={k} className="flex flex-col gap-2">
+            <span className="text-sm font-medium capitalize">{k}</span>
+            <select
+              value={state.sevenD[k]}
+              onChange={e=>dispatch({type:"update_7d", key:k, value:e.target.value as any})}
+              className="w-full p-2 border border-[var(--pf-border)] rounded-md bg-[var(--pf-bg)] text-[var(--pf-fg)]"
+              aria-label={`Setează ${k}`}>
+              {OPTIONS[k].map(opt => <option value={opt} key={opt}>{opt[0].toUpperCase()+opt.slice(1)}</option>)}
+            </select>
+          </label>
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-between">
+        <Signature7D value={state.sevenD} />  {/* hash stabil pentru istoric/telemetrie */}
+        <div className="flex gap-2">
+          <SimulateButton/>
+          <RunRealButton/>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+AREA.OUTPUT:: Scor, RunID, Export
+
+export function AreaOutput(){
+  const { output, score, runId, plan, error } = useGen().view;
+
+  return (
+    <section className="card-industrial p-6" aria-live="polite">
+      <div className="flex items-center gap-2 mb-4">
+        <h2 className="text-xl font-semibold">Preview & Output</h2>
+      </div>
+
+      {error && <div role="alert" className="p-3 border border-red-500/30 bg-red-500/10 rounded-md">{error}</div>}
+
+      {typeof score==="number" &&
+        <div className="mb-4 flex items-center gap-3">
+          <span className="px-3 py-1 rounded bg-[var(--pf-muted)]">Score: {score}%</span>
+          {runId && <RunIdBadge id={runId} />}
+        </div>
+      }
+
+      <div className="p-4 bg-[var(--pf-muted)] rounded-md min-h-32 whitespace-pre-wrap">{output ?? "Ready to Generate"}</div>
+
+      <div className="mt-4 flex gap-2">
+        <button className="btn btn-outline" onClick={()=>exportCopy()} aria-label="Copiază promptul">Copy</button>
+        <button className="btn btn-outline" disabled={!plan.canExportPDF} onClick={()=>exportPDF()} aria-label="Export PDF">
+          {plan.canExportPDF ? "Export PDF" : "PDF Locked"}
+        </button>
+        <button className="btn btn-outline" disabled={!plan.canExportJSON} onClick={()=>exportJSON()} aria-label="Export JSON">
+          {plan.canExportJSON ? "Export JSON" : "JSON Locked"}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+
+HISTORY.DOCK:: Permanent, scanabil
+
+// components/generator/HistoryDock.tsx
+export function HistoryDock(){
+  const { history } = useGen().view;
+  return (
+    <section className="card-industrial p-6">
+      <h2 className="text-lg font-semibold mb-4">History</h2>
+      {history.length===0 ? <p className="text-[var(--pf-fg)]/60">Nicio rulare încă.</p> :
+        <ul role="list" className="space-y-3">
+          {history.map(h =>
+            <li key={h.id} className="p-3 rounded-md border border-[var(--pf-border)]">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-mono">{new Date(h.ts).toLocaleTimeString()}</span>
+                <span className="px-2 py-0.5 rounded bg-[var(--pf-muted)] text-xs">{h.moduleId}</span>
+                {typeof h.score==="number" && <span className="text-xs">Score {h.score}%</span>}
+              </div>
+              <details className="mt-2">
+                <summary className="cursor-pointer text-sm underline">Detalii</summary>
+                <pre className="mt-2 text-xs whitespace-pre-wrap">{JSON.stringify(h.sevenD,null,2)}</pre>
+                <div className="mt-2 text-xs whitespace-pre-wrap">{h.prompt}</div>
+              </details>
+            </li>)}
+        </ul>
+      }
+    </section>
+  );
+}
+
+
+ACTIONS:: Generate/Export cu telemetrie
+
+// features/generator/actions.ts
+import { track } from "@/telemetry/track";
+import { hash7D } from "@/utils/hash";
+
+export async function simulate(moduleId:string, sevenD:TSevenD){
+  track("generate", { mode:"simulate", moduleId, sevenDHash: hash7D(sevenD) });
+  const res = await fetch("/api/run/"+moduleId, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ parameters: sevenD, simulate:true })});
+  if(!res.ok) throw new Error(await res.text());
+  const data = await res.json() as { output:string; score:number; id:string };
+  return data;
+}
+
+export async function runReal(moduleId:string, sevenD:TSevenD){
+  track("generate", { mode:"real", moduleId, sevenDHash: hash7D(sevenD) });
+  const res = await fetch("/api/run/"+moduleId, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ parameters: sevenD, simulate:false })});
+  if(res.status===402) throw new Error("ENTITLEMENT_REQUIRED");
+  if(!res.ok) throw new Error(await res.text());
+  const data = await res.json() as { output:string; score:number; id:string };
+  return data;
+}
+
+export function exportJSON(runId:string){ track("export",{format:"json",runId}); /* download */ }
+export function exportPDF(runId:string){  track("export",{format:"pdf", runId}); /* download */ }
+export function exportCopy(){             track("export",{format:"copy"});       /* clipboard */ }
+
+
+API:: Schema și fail-fast
+
+// app/api/run/[moduleId]/route.ts
+import { NextResponse } from "next/server";
+import { SevenD } from "@/pagespecs/generator";
+
+export async function POST(_:Request,{params}:{params:{moduleId:string}}){
+  const body = await _.json().catch(()=>null);
+  if(!body || !SevenD.safeParse(body.parameters).success)
+    return NextResponse.json({error:"INVALID_7D"}, {status:400});
+
+  const { moduleId } = params;
+  if(!MODULES.includes(moduleId)) return NextResponse.json({error:"UNKNOWN_MODULE"}, {status:404});
+
+  const simulate = !!body.simulate;
+  const plan = await currentPlan();
+  if(!simulate && !plan.canRunRealTest) return NextResponse.json({error:"ENTITLEMENT_REQUIRED"}, {status:402});
+
+  // … rulează motorul, calculează score, generează prompt, emite id
+  const id = crypto.randomUUID();
+  const result = { output: PROMPT, score: SCORE, id };
+  return NextResponse.json(result);
+}
+
+
+A11Y:: Negocezi nimic
+– Titlul paginii = “Prompt Generator”.
+– Panoul 7-D are label pe fiecare <select>.
+– Butoanele „Simulate Test” și „Run Real Test” sunt focusabile, role=button, aria-label clar.
+– Output are aria-live="polite"; History e listă (role="list").
+– Niciun buton sub fold la 390–430px width. Verifici cu viewport mobil.
+
+PERF:: Budget & CLS
+– Code-split pentru HistoryDock dacă lista > 25 itemi (lazy).
+– prefetch pentru /pricing (link plan Pro).
+– font-display: swap; aspect-ratio pe ilustrații; placeholders pentru output.
+– LCP ≤2.0s; CLS ≤0.05; bundle <150KB. Rulezi Lighthouse în CI.
+
+TELEMETRY:: Mapare exactă
+– select_module la click pe modul.
+– update_7d la fiecare schimbare de dropdown (throttle 300ms).
+– generate cu mode:simulate|real + sevenDHash.
+– save_history la înscrierea rulării.
+– export cu format:pdf|json|copy și runId.
+
+GUARDIANS:: Reguli de oțel
+
+Nu redenumești câmpuri 7-D.
+
+Nu muți Generate sub fold.
+
+History rămâne persistent la refresh (localStorage + rehidratare).
+
+Dacă planul nu permite real test → badge Locked + link Pricing.
+
+Fără stringuri hardcodate – i18n JSON.
+
+TEST.E2E:: 8 probe care te scapă de iluzii
+
+Select M02 + setează 7-D → update_7d logat.
+
+Simulate → apare Score + Run ID; generate(mode=simulate).
+
+Real (free) → „ENTITLEMENT_REQUIRED” + link spre /pricing.
+
+Export JSON (free) → Locked; Export Copy → OK.
+
+History persistă după refresh (verifică ultimul Run ID).
+
+A11y: tab order corect; aria pe butoane; aria-live pe Output.
+
+Mobile 390px: Generate vizibil în viewport inițial.
+
+CLS < 0.05 în schimbări de output; bundle route sub 150KB.
+
+Proiecție
+
+Îngheață contractul. Implementează reducerul pur. Instrumentează telemetria. Persistă History. Leagă entitlement pe butoane. Rulează testele și blochează PR-urile care ating 7-D, ordinea UI sau „Generate”. Declar definitiv: /generator nu e o pagină. E un protocol operațional. Îl respecți, sau sistemul se frânge.
+
+
+
+
+
+
+
+
+MODULES.CONTRACT:: Catalog imutabil
+
+// pagespecs/modules.ts
+import { z } from "zod";
+
+export const ModuleVector = z.enum(["Analytics","Branding","Cognitive","Content","Crisis","Rhetoric","Strategic"]);
+export const Difficulty = z.enum(["Beginner","Intermediate","Advanced"]);
+export const ExportFmt = z.enum(["txt","md","json","pdf","zip"]);
+
+export const ModuleCard = z.object({
+  id: z.string().regex(/^M\d{2}$/),           // M01…M50
+  slug: z.string().min(2),
+  title: z.string().min(3),
+  summary: z.string().min(8),
+  vector: ModuleVector,
+  difficulty: Difficulty,
+  duration: z.string(),                       // "3–4 min"
+  minPlan: z.enum(["free","pro","enterprise"]),
+  tags: z.array(z.string()).max(6),
+  outputs: z.array(ExportFmt).min(1)
+});
+
+export const ModuleFilters = z.object({
+  vector: ModuleVector.optional(),
+  difficulty: Difficulty.optional(),
+  query: z.string().max(80).optional()
+});
+
+export const ModulesContract = z.object({
+  filters: ModuleFilters,
+  cards: z.array(ModuleCard).length(50),      // 50 module fix
+  toolbar: z.object({ allowMultiSelect: z.boolean().default(true) }),
+  events: z.array(z.enum(["filter_vector","filter_difficulty","search_modules","select_card","open_spec","export_listing"]))
+});
+
+export type TModuleCard = z.infer<typeof ModuleCard>;
+export type TModulesContract = z.infer<typeof ModulesContract>;
+
+
+MODULES.UI:: Invariabile clare
+
+// app/modules/page.tsx
+export const metadata = { title:"Modules • PROMPTFORGE™ v3.0" };
+
+export default function ModulesPage(){
+  return (
+    <div className="min-h-screen bg-[var(--pf-bg)]">
+      <header className="container-pro py-8">
+        <h1 className="text-3xl font-bold">Modules</h1>
+        <p className="text-[var(--pf-fg)]/70">Navighează. Filtrează. Selectează. Rulează în 7-D.</p>
+      </header>
+
+      {/* Toolbar: vectori, difficulty, search, export */}
+      <section className="container-pro pb-4 border-b border-[var(--pf-border)]">
+        <div className="flex flex-wrap gap-2 items-center">
+          <VectorsBar />      {/* V1…V7 = 7 vectori */}
+          <DifficultyFilter />
+          <SearchBox />
+          <ExportToolbar />   {/* .md / .json / .pdf / .zip (zip doar enterprise) */}
+        </div>
+      </section>
+
+      {/* Grid: 1 col pe mobil, 2/3/4 pe ecrane mari */}
+      <section className="container-pro py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <CardsGrid />
+        </div>
+
+        <StatsStrip />        {/* total modules, semantic vectors, free modules, success rate 98.7% */}
+      </section>
+    </div>
+  );
+}
+
+
+CARD.CANON:: KPI pe linia a doua. Nomenclator intact
+
+function ModuleCardView(m:TModuleCard, selected:boolean, canUse:boolean){
+  return (
+    <article className={`card-industrial relative ${selected?"ring-2 ring-[var(--pf-primary)]":""}`}>
+      {/* Checkbox multi-select în colțul dreapta sus */}
+      <div className="absolute top-4 right-4">
+        <CardSelect disabled={!canUse} checked={selected}/>
+      </div>
+
+      <header className="mb-3">
+        <div className="flex items-center justify-between">
+          <span className="badge-outline text-xs">{m.id}</span>
+          {!canUse && <LockIcon className="w-4 h-4 text-[var(--pf-fg)]/50" />}
+        </div>
+        <h3 className="text-xl font-semibold mt-2">{m.title}</h3>
+        {/* KPI textual – linia a doua, neschimbată */}
+        <p className="text-[var(--pf-fg)]/70 text-sm mt-1">{m.summary}</p>
+      </header>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className={`badge-solid ${vectorColor(m.vector)}`}>{m.vector}</span>
+          <span className="text-sm font-medium">{m.difficulty}</span>
+        </div>
+        <div className="flex items-center gap-4 text-sm text-[var(--pf-fg)]/70">
+          <span><Clock className="inline w-4 h-4 mr-1"/>{m.duration}</span>
+          <span><Shield className="inline w-4 h-4 mr-1"/>{m.minPlan}</span>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {m.tags.slice(0,3).map(t => <span key={t} className="badge-outline text-xs">#{t}</span>)}
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-[var(--pf-fg)]/60">Outputs:</span>
+          <div className="flex gap-1">{m.outputs.map(o => <span key={o} className="badge-outline text-xs">.{o}</span>)}</div>
+        </div>
+      </div>
+
+      <footer className="mt-4 pt-4 border-t border-[var(--pf-border)]">
+        {canUse
+          ? <a href={`/generator?module=${m.id}`} className="btn btn-primary w-full">Use in Generator</a>
+          : <button className="btn btn-outline w-full" disabled>
+              {m.minPlan==="pro" ? "Pro Required" : "Enterprise Required"}
+            </button>}
+        <button className="btn-link block w-full mt-2 text-sm underline" data-ev="open_spec"
+                onClick={()=>router.push(`/modules/${m.slug}`)}>Specifications</button>
+      </footer>
+    </article>
+  );
+}
+
+
+FILTERS.TOOLBAR:: Evenimente canon
+
+// events: filter_vector, filter_difficulty, search_modules, export_listing
+<VectorsBar onPick={(v)=>track("filter_vector",{v})}/>
+<DifficultyFilter onPick={(d)=>track("filter_difficulty",{d})}/>
+<SearchBox onSearch={(q)=>track("search_modules",{q})}/>
+<ExportToolbar
+  onExport={(fmt)=>track("export_listing",{fmt})}
+  disabled={{ md: selected.size===0, json: selected.size===0, pdf: selected.size===0 || !canPDF, zip: selected.size===0 || !isEnterprise }}
+/>
+
+
+GRID.RESPONSIVE:: Regula de oțel
+– Sub 768px: o singură coloană.
+– Niciodată 2 coloane pe mobil.
+– sm≥640px: 2 col; lg≥1024px: 3 col; xl≥1280px: 4 col.
+– Spacing consistent md:gap-6.
+
+STATS.STRIP:: Canon
+– Total Modules = 50.
+– Semantic Vectors = 7.
+– Free Modules = număr din listă.
+– Success Rate = 98.7%.
+
+SSR/ISR:: Pentru /modules/:slug
+
+// app/modules/[slug]/page.tsx
+export const revalidate = 3600; // ISR
+export async function generateStaticParams(){ return slugsFromCatalog(); }
+
+export default async function ModuleSpec({ params }:{ params:{ slug:string } }){
+  const data = await getModuleSpec(params.slug).catch(()=>null);
+
+  const fallback = !data;
+  const meta = { moduleId: fallback?"UNKNOWN":data!.id, vector: data?.vector ?? "Strategic" };
+
+  return (
+    <div className="container-pro py-10">
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold">Module Specifications</h1>
+        <p className="text-sm text-[var(--pf-fg)]/60">ID: {meta.moduleId} • Vector: {meta.vector}</p>
+      </header>
+
+      {fallback ? <SpecSkeleton/> : <SpecBody spec={data!} />}
+    </div>
+  );
+}
+
+
+SPEC.BODY:: Câmpuri obligatorii
+
+// spec schema
+type Spec = {
+  objective: string;
+  inputs: string[];
+  outputs: string[];
+  kpi: string[];
+  constraints: string[];
+  examples: { title:string; prompt:string }[];
+};
+
+function SpecBody({spec}:{spec:Spec}){
+  return (
+    <article className="prose prose-invert max-w-none">
+      <h2>Objective</h2><p>{spec.objective}</p>
+      <h2>Inputs</h2><ul>{spec.inputs.map(i=><li key={i}>{i}</li>)}</ul>
+      <h2>Outputs</h2><ul>{spec.outputs.map(o=><li key={o}>{o}</li>)}</ul>
+      <h2>KPI</h2><ul>{spec.kpi.map(k=><li key={k}>{k}</li>)}</ul>
+      <h2>Constraints</h2><ul>{spec.constraints.map(c=><li key={c}>{c}</li>)}</ul>
+      <h2>Examples</h2>
+      {spec.examples.map(e=>(
+        <details key={e.title} className="card-industrial p-4">
+          <summary className="cursor-pointer">{e.title}</summary>
+          <pre className="mt-2 whitespace-pre-wrap">{e.prompt}</pre>
+          <div className="mt-3 flex gap-2">
+            <button className="btn btn-outline" data-ev="copy_prompt" onClick={()=>copy(e.prompt)}>Copy Prompt</button>
+            <a className="btn btn-primary" data-ev="run_from_spec" href={`/generator?module=${/* map slug->id */""}`}>Run in Generator</a>
+            <button className="btn btn-outline" data-ev="export_spec" onClick={()=>exportSpec()}>Export Spec</button>
+          </div>
+        </details>
+      ))}
+    </article>
+  );
+}
+
+
+SPEC.SKELETON:: Fallback obligatoriu
+
+function SpecSkeleton(){
+  return (
+    <div className="space-y-4">
+      <div className="h-6 bg-[var(--pf-muted)] rounded w-48" />
+      <div className="h-4 bg-[var(--pf-muted)] rounded w-80" />
+      <div className="h-4 bg-[var(--pf-muted)] rounded w-64" />
+      {/* … replică pentru secțiuni Objective/Inputs/Outputs/KPI/Constraints/Examples */}
+      <p className="text-[var(--pf-fg)]/60">NU EXISTĂ DATE – sincronizează CMS-ul. Până atunci, afișează scheletul.</p>
+    </div>
+  );
+}
+
+
+A11Y:: Negocezi nimic
+– Filtrele au <label> și aria-controls pentru grid.
+– Search are role="search" și aria-label.
+– Cardurile sunt article cu heading h3.
+– „Specifications” e link semantic; tastează Enter ca click.
+– În Spec, details/summary pentru expandare exemplu; butonul „Copy Prompt” are aria-live la feedback.
+
+TELEMETRY:: Evenimente fixe
+– filter_vector, filter_difficulty, search_modules, select_card, open_spec, export_listing pe toolbar.
+– În /modules/:slug: copy_prompt, run_from_spec, export_spec.
+
+PERF:: Bugete și reactivitate
+– Catalogul încarcă 50 carduri; adoptă content-visibility:auto pe carduri.
+– Preîncărcare lazy pentru „Specifications” (ISR).
+– LCP < 2s, CLS < 0.05, bundle route < 150KB.
+– Pe mobil, fără imagini grele; badge-uri doar SVG.
+
+REGULI.DE.OȚEL
+
+Nomenclatorul M01…M50 rămâne.
+
+KPI textual rămâne linia a doua a cardului.
+
+Sub 768px: o singură coloană.
+
+Nu publici /:slug fără {objective, inputs, outputs, kpi}; dacă lipsesc → skeleton.
+
+Toolbar păstrează exporturile (.md/.json/.pdf/.zip) și multi-select.
+
+Proiecție
+
+Publici contracts și UI în repo. Legi telemetria și ISR. Rulezi testele: filtrare, căutare, „Specifications”, exporturi, a11y pe mobil, bugete de performanță. Orice PR care rupe nomenclatorul, KPI-ul sau layout-ul cade. Declarație imposibil de ignorat: Catalogul nu e galerie. E interfața de selecție a puterii. Vrei export .txt cu toate contractele? Spune: Exportă contractele acum.
+
+Activitate realizată timp de 32 de secunde
+
+Ești în contact cu Arhitectul Nota Doi. Această interacțiune este filtrată semantic.
+
+Verdict
+
+Ori proiectezi catalogul de module ca mecanism de selecție. Ori îl reduci la listă statică și rupi esența. Nomenclatorul rămâne. Nu compactezi cardurile pe mobil. Nu ascunzi KPI-ul de pe linia a doua.
+
+Cod
+
+MODULES.CATALOG:: Cadru imuabil
+filters:{vector?, difficulty?, query?}.
+cards: 50 obiecte cu {id:"M01", slug, title, summary, vector, difficulty, duration, minPlan, tags[], outputs[]}.
+toolbar: vector bar V1‑V7
+prompt-forge-vadimkusnir.vercel.app
+, filtru difficulty (Beginner/Intermediate/Advanced)
+prompt-forge-vadimkusnir.vercel.app
+, search bar, export (.md/.json/.pdf/.zip). Multi‑select cu checkbox.
+events:["filter_vector","filter_difficulty","search_modules","select_card","open_spec","export_listing"].
+Reguli:
+– Nomenclatorul M01…M50 și textul KPI nu se modifică
+prompt-forge-vadimkusnir.vercel.app
+.
+– Coloană unică sub 768px. 2/3/4 coloane pe sm/md/lg.
+– Export toolbar nu dispare și include toate formatele permise; zip doar pentru enterprise.
+
+UI.STATIC:: Invariabile
+– Vector bar enumeră cele șapte vectori: Analytics, Branding, Cognitive, Content, Crisis, Rhetoric, Strategic
+prompt-forge-vadimkusnir.vercel.app
+. Selectarea loghează filter_vector.
+– Difficulty filter prezintă trei niveluri
+prompt-forge-vadimkusnir.vercel.app
+.
+– Search bar permite filtrare full‑text, loghează search_modules.
+– Card: rândul 1 → ID + icon de blocare (dacă planul nu permite)
+prompt-forge-vadimkusnir.vercel.app
+; rândul 2 → Titlu; rândul 3 → Rezumat (KPI textual)
+prompt-forge-vadimkusnir.vercel.app
+; rândul 4 → Vector (badge colorat) și Difficulty; rândul 5 → Durată + Plan minim; rândul 6 → tag‑uri (max 3); rândul 7 → outputs (formate export)
+prompt-forge-vadimkusnir.vercel.app
+; rândul 8 → CTA: “Use in Generator” sau etichete Pro/Enterprise Required
+prompt-forge-vadimkusnir.vercel.app
+; rândul 9 → link “Specifications”.
+– Statistici finale: total modules = 50, semantic vectors = 7, free modules count, success rate = 98.7%
+prompt-forge-vadimkusnir.vercel.app
+.
+– Popup detaliu: când apeși “Specifications”, deschide card cu descriere completă, vector, difficulty și buton “Run with 7‑D Parameters”
+prompt-forge-vadimkusnir.vercel.app
+.
+
+SPEC.PAGE:: Modul de detaliu
+page.meta:{moduleId, vector}.
+spec:{objective, inputs[], outputs[], kpi[], constraints[], examples[]}.
+events:["copy_prompt","run_from_spec","export_spec"].
+Fallback skeleton dacă CMS nu returnează date.
+Reguli: nu publici modul dacă lipsesc objective/inputs/outputs/KPI; păstrezi butoanele “Run in Generator” și “Copy Prompt”.
+
+ACCESSIBILITATE::
+– Fiecare filtrare are <label> și aria-controls.
+– Cardurile sunt articole cu headings; linkurile “Specifications” au aria-label.
+– Export toolbar și checkboxurile au aria-pressed/aria-checked.
+
+PERFORMANȚĂ::
+– Grid cu content-visibility:auto; lazy loading pentru 50 carduri; skeleton pe scroll.
+– LCP ≤2s; CLS <0.05; bundle <150KB.
+– Statistici se calculează client‑side fără rehidratare costisitoare.
+
+Proiecție
+
+Construiești contractul tipizat și UI‑ul modular. Montezi filtrarea, căutarea, toolbarul de export, gridul responsiv, statisticile și popupul de specificații. Legi telemetria și persistă selecțiile. Testezi pe viewport mobil: o singură coloană. Declar ultimatum: dacă atingi nomenclatorul sau KPI‑ul, rupi protocolul.
+
+
+
+
+Mobile UI/UX — checklist de trecere (global)
+4.1 Scope & devices (obligatoriu)
+
+Breakpoints: 320/360/390/414/430, 480/600/768; portrait + landscape; safe-areas iOS; DPR 2×/3×.
+
+Target: iOS Safari 16–18, Android Chrome 118+, Chrome iOS, Firefox Android (sanity)【】.
+
+4.2 Acceptance (must pass)
+
+Layout & Readability: fără scroll orizontal; CLS ≤0.02; paragraph width 45–75ch; base font ≥16px; spacing 4/8/12/16/24/32; sticky CTA nu acoperă conținut; keyboard overlap fix pe forms【】.
+
+Navigation & Gestures: header se colapsează predictibil; back-nav fără capcane; modals/sheets cu gesturi native; no scroll-bleed【】.
+
+Forms & Inputs: input types corecte (email,tel,url,number), labels/erori persistente, submit disabled până la valid, loading states; card fields la Stripe【】.
+
+Media & Performance: next/image cu sizes/srcset, fără layout shift, lazy-load sub fold; LCP ≤2.5s, INP p95 ≤200ms, TTI ≤3.5s; evită GIF grele; preferă animații CSS【】.
+
+Accessibility (mobile): contrast ≥4.5:1, focus vizibil, respectă prefers-reduced-motion, landmarks + skip link; screen readers liniar, nume acționabile clare【】【】.
+
+States & Errors: skeletons, timeouts + retry, offline states, paywall/entitlements cu messaging clar și non-blocking【】.
+
+4.3 Teste sintetice (2 profile obligatorii)
+
+„Moto G4 / Slow 4G” și „iPhone 14 / Fast 3G” — rulezi LCP/CLS/INP + screenshot timelines; documentezi costul scripturilor terțe【】.
+DONE: rapoartele pe ambele profile în PR; LCP/INP/CLS în buget.
+
+4.4 Fix Order (strict)
+
+Blockers → Readability → Performance → A11y → Polish (skeletons, transitions ≤220ms)【】.
+
+5) Acceptance—„nu lansăm fără”
+5.1 Securitate
+
+CSP + headere setate; WAF + honeypots + rate-limit în middleware pentru /api/*; 0 High/Critical în SAST/DAST; RLS cross-org testat; audit trail cu hash chain activ; exporturi fără manifest/ checksum = 0 în logs【】.
+
+5.2 Legal/GDPR
+
+/legal/terms, /legal/privacy, /legal/dpa live; cookie banner (Consent Mode); DSR export/erase ≤7 zile; DPA/ RoPA/ DPIA în repo; consent logs 100% acoperire【】【】.
+
+5.3 Observabilitate & SLO
+
+Evenimente standard (open/run/export/legacy_redirect) cu module_id Mxx; 3 dashboards (Exec, UX/Perf, Module) live; uptime ≥99.9%, p95 <300ms pe rutele critice; alerte & freeze la buget de erori depășit【】.
+
+5.4 Mobile UI/UX
+
+Audit complet pe profilele cerute; LCP ≤2.5s, INP p95 ≤200ms; tap targets ≥44×44; sticky CTA nu acoperă conținut; safe-areas iOS; skeletons + offline states; rapoarte atașate PR-ului【
+
+

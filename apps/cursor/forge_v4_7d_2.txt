@@ -1,0 +1,2607 @@
+
+
+În contextul PROMPTFORGE™, „7D” înseamnă motorul de parametrizare pe 7 dimensiuni. Este schema canonică după care se construiește orice rulare (prompt, modul, artefact). Cele 7 dimensiuni sunt:
+
+Domain – industria / verticala (din nomenclatorul CORE-25: SaaS, FinTech, E-Commerce, Education, Healthcare etc.).
+
+Scale – nivelul de scară: personal_brand, solo, startup, SMB, corporate, enterprise.
+
+Urgency – gradul de urgență: low, planned, sprint, pilot, crisis.
+
+Complexity – nivelul de complexitate: foundational, standard, advanced, expert.
+
+Resources – resurse disponibile: minimal, solo, lean_team, agency_stack, full_stack_org, enterprise_budget.
+
+Application – aplicația concretă: training, audit, implementation, strategy, crisis_response, experimentation, documentation.
+
+Output – formatul livrabilului: txt, md, checklist, spec, playbook, json, yaml, diagram, bundle, pdf.
+
+🔑 Rolul 7D:
+– Standardizează inputul pentru toate modulele (schema JSON).
+– Garantează consistență și validare (enum-only, guardrails în ruleset.yml).
+– Decide gatingul (ce plan poate exporta anumite formate).
+– Permite măsurarea KPI (time-to-artifact, scor evaluare, etc.).
+
+Pe scurt: 7D = motorul semantic și operațional al PROMPTFORGE™. Fiecare prompt/modul rulează numai dacă are un set valid de 7D (Definition of Ready), și este acceptat ca „Done” doar dacă artefactul rezultat respectă și scorurile + exportul (Definition of Done).
+
+
+
+🌐 Parametrul 2 din 7D — Scale (Nivelul de Scară)
+
+Definiție canonică:
+„Scale” exprimă dimensiunea și maturitatea contextului organizațional în care se aplică un modul sau un prompt. El stabilește cine e utilizatorul final (o persoană, o echipă, o organizație), cât de complexe sunt procesele și ce așteptări există în livrabile.
+
+Valorile de bază (enum strict):
+
+personal_brand
+
+solo
+
+startup
+
+SMB
+
+corporate
+
+enterprise
+
+1. Personal Brand
+
+🔹 Context: un individ care își construiește identitatea publică (ex. freelancer, consultant, creator de conținut).
+🔹 Caracteristici:
+
+Accent pe vizibilitate rapidă și autenticitate.
+
+Resurse financiare și umane limitate; adesea DIY (do-it-yourself).
+
+Procese simple, cu accent pe marketing și conținut personalizat.
+🔹 Exemplu prompt: „Generează o poveste scurtă pentru Instagram care exprimă autoritatea mea pe tema X.”
+🔹 Output tipic: post social media, scroll de vânzare personalizat, prezentare one-pager.
+
+2. Solo
+
+🔹 Context: profesionist independent care oferă servicii (copywriter, jurist, designer, coach).
+🔹 Caracteristici:
+
+Procese repetitive (contracte, emailuri, briefuri).
+
+Vrea automatizare tactică pentru a economisi timp.
+
+Scalare limitată la propriile ore disponibile.
+🔹 Exemplu prompt: „Creează un template de contract de consultanță de 2 pagini, cu clauze standard.”
+🔹 Output tipic: checklist, document Word, mini-funnel email.
+
+3. Startup
+
+🔹 Context: echipă de 2–10 persoane, orientată pe lansarea rapidă a unui produs/serviciu.
+🔹 Caracteristici:
+
+Resurse limitate dar orientare pe MVP și pe validarea pieței.
+
+Accent pe pitch deck, roadmap, research de piață.
+
+Riscul major: „time-to-market”.
+🔹 Exemplu prompt: „Construiește un pitch deck de 10 slide-uri pentru un SaaS de HR.”
+🔹 Output tipic: spec tehnic MVP, roadmap, plan de go-to-market.
+
+4. SMB (Small and Medium Business)
+
+🔹 Context: companii cu 10–250 angajați, procese operaționale stabilite.
+🔹 Caracteristici:
+
+Au deja clienți și cashflow, caută eficiență și optimizare.
+
+Accent pe marketing scalabil, CRM, customer success.
+
+Procese mai birocratice decât la startup, dar nu rigide.
+🔹 Exemplu prompt: „Creează un playbook de customer success pentru o firmă de e-commerce cu 50 angajați.”
+🔹 Output tipic: SOP, raport KPI, manual de training intern.
+
+5. Corporate
+
+🔹 Context: organizații mari (500–5.000 angajați) cu divizii multiple.
+🔹 Caracteristici:
+
+Procese complexe, structură ierarhică.
+
+Accent pe compliance, raportare, procese inter-departamentale.
+
+KPI-uri rigide, auditabilitate obligatorie.
+🔹 Exemplu prompt: „Scrie un raport de conformitate GDPR pentru departamentul de HR.”
+🔹 Output tipic: policy document, raport execuțional, proceduri standardizate.
+
+6. Enterprise
+
+🔹 Context: corporații globale cu mii sau zeci de mii de angajați.
+🔹 Caracteristici:
+
+Procese critice, SLA/SLO la nivel global.
+
+Accent pe scalabilitate, securitate și integrare enterprise.
+
+Documentație extrem de formală, multi-jurisdicțională.
+🔹 Exemplu prompt: „Generează un plan de continuitate a business-ului (BCP) pentru o bancă multinațională.”
+🔹 Output tipic: bundle complet (spec PDF, manifest JSON, checklist ZIP).
+
+7. Sub-parametri operaționali ai Scale
+
+Conform extensiei din schema 7D:
+
+team_size → numeric range (1, 2–5, 10–50, 50+)
+
+budget_band → low / medium / high
+
+market_scope → local / regional / global
+
+decision_structure → founder-driven / board-driven / committee
+
+Acești sub-parametri definesc fin contextul: un startup de 3 persoane bootstrapped ≠ un startup cu seed funding de 2M€.
+
+8. Rolul Scale în evaluare și gating
+
+Evaluator AI: scorurile se calibrează diferit (ex. la enterprise, toleranța pentru ambiguitate = zero).
+
+Gating comercial: formate avansate (.pdf/.zip, API) sunt disponibile doar pentru corporate/enterprise.
+
+KPI-uri asociate:
+
+Solo: time saved / week.
+
+Startup: time-to-market.
+
+SMB: customer retention.
+
+Corporate: compliance adherence.
+
+Enterprise: uptime, SLA, audit trails.
+
+9. Psihologic & retoric
+
+La nivel personal_brand/solo → limbaj narativ, metaforic, accesibil.
+
+La nivel startup/SMB → limbaj pragmatic, orientat pe execuție.
+
+La nivel corporate/enterprise → limbaj formal, metric-driven, „board-ready”.
+
+👉 Concluzie:
+Scale este parametrul care face diferența între un prompt de tip „ajută-mă să scriu o postare LinkedIn” și un bundle complet de conformitate enterprise. El ancorează întregul motor 7D la realitatea cine ești și la ce nivel joci.
+
+
+
+În PromptForge™ se poate aborda și din alte unghiuri, ca să devină un motor strategic. Uite câteva perspective alternative:
+
+1. Abordare ca Vector de Complexitate Operațională
+
+Scale = proxy pentru număr de stakeholders și procese.
+
+La nivel personal_brand/solo → 1 stakeholder, 1–2 procese simple.
+
+La nivel enterprise → zeci de stakeholders, sute de procese interdependente.
+👉 În UI/API: poți traduce scale direct în nr. pași în output, nr. KPI monitorizați sau nr. guardrails obligatorii.
+
+2. Abordare ca Strat de Gating Comercial
+
+Scale poate fi mapat pe planuri plătite:
+
+Solo → Creator plan (19€).
+
+SMB → Pro plan (49€).
+
+Enterprise → Enterprise (299€).
+👉 Practic, Scale devine declanșator de upsell: dacă cineva setează scale=corporate, UI afișează funcții blocate (API, PDF, Bundle ZIP).
+
+3. Abordare ca Filtru Retoric & Ton
+
+La personal_brand → limbaj metaforic, storytelling, emoțional.
+
+La corporate → limbaj metric, KPI-driven, formal.
+👉 Prompturile se personalizează automat, fără ca utilizatorul să conștientizeze că scale = stil de retorică.
+
+4. Abordare ca Semnătură de Risc & Decizie
+
+Startup → risc ridicat, dar viteză maximă.
+
+SMB → risc mediu, echilibru execuție–resurse.
+
+Enterprise → risc scăzut tolerat, procese lente dar robuste.
+👉 Evaluator AI poate ajusta scorurile: toleranță la ambiguitate 0 pentru Enterprise, mai relaxată pentru Solo.
+
+5. Abordare ca Strat de Date & Telemetrie
+
+Scale poate fi înregistrat în runs și prompt_history ca context al execuției.
+
+La analiză: vezi câte rulări vin din „startup” vs. „SMB”.
+👉 Poți face rapoarte comparative: „Pro users din SMB obțin cu 20% mai multe exporturi PDF decât Solo.”
+
+6. Abordare ca Dimensiune Psihologică
+
+Scale reflectă aspirația utilizatorului, nu doar realitatea.
+
+Cineva poate fi freelancer dar setează scale=enterprise ca să primească output mai serios.
+👉 În funnel: Scale devine o oglindă identitară („Joci la nivel solo sau te poziționezi ca enterprise?”).
+
+7. Abordare ca Motor de Variabilitate în Output
+
+Outputul final poate fi calibrat:
+
+Solo → 1–2 pagini, checklist.
+
+SMB → playbook de 10 pași.
+
+Enterprise → bundle ZIP cu spec, manifest, KPI, policy.
+👉 Scale influențează direct formatul și granularitatea.
+
+📌 Concluzie:
+„Scale” nu e doar o etichetă. Poate fi folosit ca switch semantic, comercial și psihologic. Practic, în PromptForge™, Scale decide cât de mare e jocul:
+
+mic (personal/solo → simplu, rapid, emoțional),
+
+mediu (startup/SMB → pragmatic, eficiență),
+
+mare (corporate/enterprise → formal, scalabil, auditat).
+
+
+
+
+
+⚡ Parametrul 3 din 7D — Urgency (Gradul de Urgență)
+
+Definiție:
+„Urgency” reprezintă presiunea temporală și riscul asociat unui task sau proiect. El determină viteza de execuție, toleranța la ambiguitate și tipul de output acceptabil.
+
+🔢 Valorile canonice (enum strict)
+
+low
+
+planned
+
+sprint
+
+pilot
+
+crisis
+
+📚 Descrierea fiecărui nivel
+1. Low
+
+Context: explorare, cercetare, brainstorming.
+
+Durată tipică: 60+ zile, fără presiune.
+
+Ton: relaxat, exploratoriu, permisiv cu variații.
+
+Output: liste de idei, prototipuri, drafturi.
+
+Exemplu: „Generează 20 de titluri posibile pentru un ebook.”
+
+2. Planned
+
+Context: proiecte cu deadline stabilit, dar cu buffer.
+
+Durată tipică: 30–60 zile.
+
+Ton: metodic, documentativ.
+
+Output: planuri, roadmap, SOP-uri.
+
+Exemplu: „Creează un plan editorial pe 3 luni pentru LinkedIn.”
+
+3. Sprint
+
+Context: iterații rapide, testare de idei, hackathoane.
+
+Durată tipică: 3–7 zile.
+
+Ton: directiv, orientat pe acțiune rapidă.
+
+Output: prototipuri, mini-campanii, storyboarduri.
+
+Exemplu: „Construiește un landing page pentru o ofertă promoțională în această săptămână.”
+
+4. Pilot
+
+Context: lansări limitate, validare de ipoteze, testare pe un segment restrâns.
+
+Durată tipică: 2–6 săptămâni.
+
+Ton: experimentator, dar riguros.
+
+Output: rapoarte de testare, chestionare, planuri de ajustare.
+
+Exemplu: „Creează un survey pentru un test pilot al unui produs fintech.”
+
+5. Crisis
+
+Context: situații critice unde e nevoie de reacție imediată (PR, securitate, legal, downtime).
+
+Durată tipică: 0–24h.
+
+Ton: autoritar, binar („fă/nu fă”).
+
+Output: comunicate oficiale, playbookuri de criză, checklisturi non-negociabile.
+
+Exemplu: „Generează un răspuns oficial pentru o criză reputațională apărută azi.”
+
+🔑 Sub-parametri operaționali
+
+timeline → ex. 7d, 30d, 90d.
+
+pressure_type → market / regulatory / competitive / internal.
+
+risk_tolerance → low / medium / high.
+
+decision_speed → instant / fast-track / deliberative.
+
+🎯 Rolul Urgency în PromptForge
+
+Evaluator AI:
+
+crisis = toleranță 0 la ambiguitate.
+
+low = mai multă libertate creativă.
+
+Output gating:
+
+low și planned → outputs simple (txt, md).
+
+pilot și crisis → outputs stricte (pdf/json/zip cu manifest și checksum).
+
+UX & psihologic:
+
+UI afișează culori și ton diferite:
+
+verde pentru low,
+
+galben pentru planned,
+
+portocaliu pentru sprint,
+
+albastru pentru pilot,
+
+roșu pentru crisis.
+
+📌 Concluzie:
+Urgency este parametrul care decide cât de repede și cu câtă toleranță la eroare trebuie să fie produs artefactul. De la „joacă exploratorie” (low) până la „acțiune imediată sub risc major” (crisis), el face legătura între contextul real și forma finală a output-ului.
+
+
+
+
+
+
+
+
+
+🔬 Parametrul 4 din 7D — Complexity (Nivelul de Complexitate)
+
+Definiție canonică:
+„Complexity” descrie cât de sofisticată trebuie să fie soluția generată și câte elemente interdependente conține. El setează granularitatea, nivelul de detaliu și cât de dificil va fi de aplicat în practică.
+
+Valorile de bază (enum strict):
+
+foundational
+
+standard
+
+advanced
+
+expert
+
+1. Foundational
+
+🔹 Context: început, inițiere, bază teoretică sau exemple simple.
+🔹 Caracteristici:
+
+1–2 pași clari.
+
+Output scurt, educativ, ușor de înțeles.
+
+Public țintă = începători, freelanceri la început.
+🔹 Exemplu: „Explică în 3 pași ce e un funnel de vânzări.”
+🔹 Output tipic: listă simplă, definiție, exemplu.
+
+2. Standard
+
+🔹 Context: taskuri uzuale, procese obișnuite în business.
+🔹 Caracteristici:
+
+3–5 pași structurați.
+
+Output mediu ca lungime.
+
+Nivel potrivit pentru majoritatea utilizatorilor (SMB, startup).
+🔹 Exemplu: „Creează un plan de postări LinkedIn pentru o lună.”
+🔹 Output tipic: checklist, SOP, plan lunar.
+
+3. Advanced
+
+🔹 Context: procese mai complexe, cu mai multe ramificații și condiții.
+🔹 Caracteristici:
+
+5–10 pași.
+
+Include fallback, scenarii alternative, metrici.
+
+Necesită resurse mai multe pentru aplicare.
+🔹 Exemplu: „Construiește un playbook de gestionare a crizelor reputaționale în social media.”
+🔹 Output tipic: playbook detaliat, document de 10+ pagini, flow-uri cu diagrame.
+
+4. Expert
+
+🔹 Context: sisteme critice, multi-stakeholder, foarte specializate.
+🔹 Caracteristici:
+
+10+ pași și interdependențe complexe.
+
+Include analize de risc, audit, KPI multipli, fallback strict.
+
+Se adresează nivelului enterprise/corporate.
+🔹 Exemplu: „Generează un plan complet de migrare cloud pentru o bancă globală, conform Basel III și GDPR.”
+🔹 Output tipic: bundle ZIP cu spec, JSON schema, PDF oficial, manifest.
+
+🔑 Sub-parametri operaționali ai Complexity
+
+steps_required → 3, 5, 10+.
+
+stakeholders_count → 1, 2–3, 5+.
+
+tools_involved → single / multi-stack.
+
+knowledge_depth → novice / intermediate / specialized / research-grade.
+
+failure_cost → low / medium / high.
+
+🎯 Rolul Complexity în sistem
+
+Evaluator AI: crește scorul minim cerut la claritate și execuție odată cu complexitatea.
+
+Output control: la foundational → text simplu; la expert → bundle cu manifest și checksum obligatorii.
+
+Gating comercial: livrabilele de nivel expert (ex. bundle, API, white-label) blocate pentru Enterprise.
+
+
+🔬 Parametrul 4 din 7D — Complexity (Nivelul de Complexitate)
+
+Definiție:
+Complexity reflectă cât de sofisticată trebuie să fie soluția livrată, câți pași interdependenți implică și ce cost de eroare există dacă lucrurile sunt greșite.
+
+Enum standard (fix):
+
+foundational
+
+standard
+
+advanced
+
+expert
+
+1. Foundational
+
+Public țintă: începători, freelanceri, training.
+
+Caracteristici: explicații simple, 1–2 pași, cost mic al erorii.
+
+Exemplu output: checklist scurt „Cum scrii un titlu bun” / definiții de bază.
+
+2. Standard
+
+Public țintă: SMB, startupuri, echipe mici.
+
+Caracteristici: 3–5 pași, procese uzuale, cost mediu al erorii.
+
+Exemplu output: plan editorial pe 1 lună, manual scurt de onboarding.
+
+3. Advanced
+
+Public țintă: companii cu echipe dedicate.
+
+Caracteristici: 5–10 pași, ramificații, fallback, KPI asociați.
+
+Exemplu output: playbook de criză reputațională, spec tehnic pentru MVP SaaS.
+
+4. Expert
+
+Public țintă: enterprise, industrii reglementate.
+
+Caracteristici: >10 pași, interdependențe complexe, cost ridicat al erorii.
+
+Exemplu output: bundle ZIP cu spec GDPR, rapoarte de risc, JSON schema + PDF oficial.
+
+🔑 Sub-parametri canonici ai Complexity
+
+steps_required → nr. pași (3, 5, 10+).
+
+stakeholders_count → 1, 2–3, 5+.
+
+tools_involved → single / multi-stack.
+
+knowledge_depth → novice / intermediate / research-grade.
+
+failure_cost → low / medium / high.
+
+🎯 Cum influențează sistemul
+
+Evaluator AI:
+– la nivel foundational → claritatea minimă = 70.
+– la nivel expert → claritate + execuție ≥ 90, ambiguitate ≤ 10.
+
+DoR/DoD (gates):
+– foundational permite export simplu (txt, md).
+– expert blochează exportul dacă lipsesc checksum, manifest, scor ≥ 80.
+
+Gating comercial:
+– Complexity advanced și expert necesită plan Pro/Enterprise.
+
+Psihologic:
+– Userul alege implicit „cât de departe vrea să meargă”: joacă simplă vs. document oficial „board-ready”.
+
+🔮 Extensii posibile
+
+Scală mai fină (8–10 trepte):
+Basic → Simple → Moderate → Structured → Advanced → Multi-team → Critical → Enterprise → Expert → Research-grade.
+
+Indicator vizual: Complexity Meter (1–5 puncte, culori progresive).
+
+Automatizare: dacă un user selectează enterprise domain + crisis urgency, sistemul poate seta implicit complexity=expert.
+
+
+
+
+
+
+⚙️ Parametrul 5 din 7D — Resources (Resurse disponibile)
+
+Definiție:
+„Resources” descrie ce fel de mijloace umane, financiare și tehnice sunt accesibile pentru a implementa soluția. El setează realismul aplicației și gradul de automatizare posibil.
+
+Enum standard:
+
+minimal
+
+solo
+
+lean_team
+
+agency_stack
+
+full_stack_org
+
+enterprise_budget
+
+1. Minimal
+
+Context: hobby, test individual, buget ≈ 0.
+
+Resurse: doar timp propriu, tooluri gratuite.
+
+Output tipic: text simplu, idei brute.
+
+Exemplu: „Scrie o listă de 5 titluri pentru un blog personal.”
+
+2. Solo
+
+Context: freelancer cu unelte proprii plătite (ChatGPT, Canva).
+
+Resurse: 1 om, câteva tooluri low-cost.
+
+Output tipic: checklisturi, SOP-uri aplicabile direct.
+
+Exemplu: „Creează un template de contract de consultanță.”
+
+3. Lean Team
+
+Context: echipă de 2–5 persoane.
+
+Resurse: câteva tooluri premium, buget lunar limitat.
+
+Output tipic: playbookuri, ghiduri de echipă.
+
+Exemplu: „Construiește un plan editorial de 1 lună pentru un startup.”
+
+4. Agency Stack
+
+Context: agenție cu 10–20 oameni, multiple tooluri integrate.
+
+Resurse: CRM, analytics, suite marketing, design.
+
+Output tipic: bundle documente (spec + plan + KPI).
+
+Exemplu: „Generează un funnel complet cu 3 landing pages și 5 emailuri.”
+
+5. Full Stack Org
+
+Context: companie medie sau mare cu echipe interne dedicate.
+
+Resurse: departamente (marketing, IT, legal), infrastructură internă.
+
+Output tipic: documentație completă, rapoarte multi-KPI, audituri.
+
+Exemplu: „Creează un plan de compliance GDPR pentru departamentul HR.”
+
+6. Enterprise Budget
+
+Context: corporații cu resurse financiare și tehnice extinse.
+
+Resurse: bugete mari, vendor stacks, infrastructură proprie, integrări enterprise.
+
+Output tipic: bundle .zip (pdf, json, manifest, checksum).
+
+Exemplu: „Generează un plan global de migrare cloud cu audit multi-jurisdicțional.”
+
+🔑 Sub-parametri operaționali
+
+human → solo / 2–3 persoane / departament / cross-org.
+
+financial → bootstrap / seed / VC-funded / enterprise budget.
+
+tech_stack → lightweight / SaaS integrat / infrastructură custom.
+
+time_allocation → <5h/săpt., part-time, full-time.
+
+outsourcing → none / partial / full.
+
+🎯 Rolul Resources în sistem
+
+Evaluator AI:
+– Dacă resources=minimal, outputul trebuie să fie simplu, aplicabil imediat.
+– Dacă resources=enterprise_budget, outputul cere structuri avansate + bundle.
+
+DoR/DoD:
+– La nivel minimal → nu se cer KPI detaliați.
+– La nivel enterprise → obligatoriu KPI, manifest și scor ≥80.
+
+Comercial:
+– Planurile Creator/Pro corespund „solo” și „lean_team”.
+– Enterprise mapat direct pe enterprise_budget.
+
+📌 Concluzie:
+Resources decide cât de realist și cât de mare poate fi artefactul. Un freelancer cu resurse minime primește un checklist scurt, iar o corporație cu enterprise budget primește un bundle complet auditat.
+
+
+
+
+
+⚙️ Resources — Nivelul Minimal
+📖 Definiție
+
+„Minimal” înseamnă că utilizatorul are la dispoziție doar resursele strict necesare: timp personal, unelte gratuite sau trial, zero buget consistent. Este nivelul de bootstrap extrem.
+
+🔎 Caracteristici cheie
+
+Umane: 1 persoană (userul singur).
+
+Financiare: buget ≈ 0 → maxim tooluri freemium (Google Docs, ChatGPT free).
+
+Tehnice: laptop personal, conexiune la internet, zero infrastructură.
+
+Timp: ≤5h/săptămână investite, pe lângă alte activități.
+
+Outsourcing: inexistent (totul DIY).
+
+🎯 Obiective tipice
+
+Validarea rapidă a unei idei.
+
+Explorare / învățare fără investiție.
+
+Obținerea primelor rezultate vizibile (ex. un text, o imagine, un mic funnel).
+
+Economisirea timpului personal, nu a banilor (deoarece bani ≠ disponibili).
+
+🧩 Tipuri de output la „Minimal”
+
+Text scurt (postări social media, 1-2 emailuri).
+
+Checklists simple.
+
+Drafturi brute de idei.
+
+Mini-artefacte care pot fi copiate direct în tooluri gratuite.
+
+Exemplu:
+„Generează 5 titluri pentru un articol de blog personal.”
+→ Output = listă text simplă, fără design, fără formatare avansată.
+
+🛑 Limitări
+
+Nu există cloud storage (istoric local doar).
+
+Export permis: doar .txt (gratuit, fără PDF/JSON).
+
+Nicio integrare cu API sau tooluri avansate.
+
+Nu există evaluare complexă (scor simplu, fără feedback AI detaliat).
+
+📊 KPI relevanți pentru Minimal
+
+Time saved / week (ex. 1–2h).
+
+First artifact delivered (≤10 minute).
+
+User activation rate: % care ajung să folosească primul modul gratuit.
+
+🧠 Psihologic
+
+Utilizatorul caută siguranța intrării fără risc.
+
+Se simte confortabil dacă primește valoare rapidă fără card bancar.
+
+E foarte receptiv la nudge-uri de upgrade (ex. „Vrei să exporți PDF? Deblochează Pro”).
+
+💰 Comercial
+
+„Minimal” corespunde Free planului din SaaS:
+
+acces doar la câteva module (M01, M10, M18).
+
+export doar .txt.
+
+retention scurt (7 zile istoric max).
+
+Scopul nu e profitul direct, ci convertirea în Creator/Pro.
+
+📌 Concluzie:
+Resources = Minimal este nivelul de intrare, unde PromptForge livrează valoare instant, dar cu output limitat, astfel încât utilizatorul să simtă diferența și să fie motivat să treacă la următorul strat (Solo / Lean Team).
+
+
+
+
+
+⚙️ Resources — Nivelul Solo
+📖 Definiție
+
+„Solo” descrie contextul unui profesionist individual (freelancer, consultant, creator) care are câteva resurse plătite la dispoziție (abonamente mici la AI, tooluri de design sau CRM basic), dar lucrează singur și gestionează totul cap-coadă.
+
+🔎 Caracteristici cheie
+
+Umane: 1 persoană (owner și operator).
+
+Financiare: buget mic-mediu (50–200 €/lună) pentru unelte SaaS.
+
+Tehnice: unelte cloud (Notion, Trello, Canva, ChatGPT Pro, Zapier basic).
+
+Timp: 10–20h/săptămână dedicate businessului.
+
+Outsourcing: limitat sau deloc; eventual colaboratori ocazionali.
+
+🎯 Obiective tipice
+
+Crearea și vânzarea de produse/servicii proprii (consulting, cursuri, content).
+
+Automatizarea taskurilor repetitive (emailuri, postări, programări).
+
+Creșterea vizibilității personale și a brandului individual.
+
+Stabilirea unui workflow organizat pentru a salva timp.
+
+🧩 Tipuri de output la „Solo”
+
+Documente clare: SOP-uri simple, ghiduri personalizate.
+
+Emailuri profesionale, mini-funneluri de vânzare.
+
+Vizuale de brand (carusele, slide-uri) generate rapid.
+
+Playbookuri mici aplicabile 1:1 cu clienți.
+
+Exemplu:
+„Creează un funnel simplu cu 3 emailuri pentru un consultant de branding.”
+→ Output = 3 emailuri + titluri + timeline de trimitere.
+
+🛑 Limitări
+
+Nu există echipă → sarcinile se limitează la ceea ce poate gestiona 1 om.
+
+Export: .txt și .md disponibile, dar PDF/JSON blocate (Pro+).
+
+Istoric local, nu cloud (risc de pierdere date).
+
+Test Engine live și API indisponibile.
+
+📊 KPI relevanți pentru Solo
+
+Număr de clienți deserviți lunar (ex. 3–5).
+
+Timp salvat/automatizat (5–10h/lună).
+
+Calitatea percepută de clienți (feedback).
+
+Consistența conținutului (ex. 1 post/zi fără efort suplimentar).
+
+🧠 Psihologic
+
+Utilizatorul caută eficiență personală și dovada că AI îi poate crește productivitatea.
+
+Are o mentalitate de autonomie: vrea control, dar simte și limitele proprii.
+
+Este foarte sensibil la mesaje de tipul: „Salvează timp, câștigă bani, fii mai vizibil”.
+
+💰 Comercial
+
+„Solo” corespunde Creator planului (≈ 19 €/lună):
+
+acces la toate cele 50 module, dar export doar .txt și .md.
+
+istoric local, nu cloud.
+
+fără evaluare avansată, doar scor simplu.
+
+Scopul: să devină clar că pentru a face salt la Pro (49 €/lună), are nevoie de export PDF/JSON, Test Engine live și cloud history.
+
+📌 Concluzie:
+Resources = Solo este nivelul profesionistului individual cu câteva unelte premium. Are suficient pentru a livra rezultate clienților, dar PromptForge îl direcționează natural spre upgrade, arătându-i diferența dintre „lucrez singur cu tooluri simple” și „scalare reală cu Pro/Enterprise”.
+
+
+
+
+
+⚙️ Resources — Nivelul Lean Team
+📖 Definiție
+
+„Lean Team” reprezintă o echipă mică (2–5 persoane) care are resurse limitate, dar destule pentru a opera coordonat. Membrii își împart sarcinile, folosesc tooluri SaaS integrate și caută eficiență maximă cu un buget moderat.
+
+🔎 Caracteristici cheie
+
+Umane: echipă mică, complementară (ex. 1 marketer, 1 dev, 1 designer).
+
+Financiare: buget lunar 200–1000 € pentru unelte + reclame.
+
+Tehnice: tooluri cloud premium (Notion, Slack, Zapier Pro, Figma, CRM basic).
+
+Timp: echipă dedicată parțial sau full-time.
+
+Outsourcing: uneori folosit pentru taskuri de design/copy suplimentare.
+
+🎯 Obiective tipice
+
+Organizarea muncii pe roluri și reducerea blocajelor.
+
+Scalarea producției de content și livrabile (pentru clienți sau pentru produs propriu).
+
+Crearea primelor sisteme interne: mini-CRM, playbookuri, funneluri automate.
+
+Validarea pieței și creșterea eficienței pentru fiecare membru.
+
+🧩 Tipuri de output la „Lean Team”
+
+Playbookuri pentru colaborare (workflow de echipă).
+
+Documente mai lungi (ex. 10–20 pagini).
+
+Funneluri complete (landing page + 3–5 emailuri).
+
+Rapoarte cu KPI de echipă.
+
+Exemplu:
+„Construiește un plan editorial de 30 zile pentru startup, împărțit pe 3 roluri: copywriter, designer, social media manager.”
+→ Output = tabel cu taskuri, timeline, roluri, KPI de engagement.
+
+🛑 Limitări
+
+Resurse bune, dar nu infinite → fiecare membru face multitasking.
+
+Export: .txt și .md disponibile, uneori PDF (dacă echipa are Pro). JSON/ZIP și API blocate.
+
+Cloud history și Evaluator AI disponibile doar în plan Pro.
+
+Lipsă putere de negociere enterprise (dependenți de SaaS extern).
+
+📊 KPI relevanți pentru Lean Team
+
+Output pe membru (ex. 10 artefacte / săpt.).
+
+Timp total economisit (20–30h/săpt. pentru echipă).
+
+Calitate constantă (score ≥80 pe livrabile).
+
+Time-to-market (≤14 zile pentru campanii/proiecte).
+
+🧠 Psihologic
+
+Echipa e entuziastă, dar simte presiunea resurselor limitate.
+
+Foarte receptivi la promisiuni de tip „Economisește timp, elimină erorile, scalează fără să angajezi încă 3 oameni”.
+
+Vor instrumente care integrează totul într-un loc.
+
+💰 Comercial
+
+„Lean Team” corespunde de obicei Pro planului (49 €/lună):
+
+acces la toate modulele.
+
+export .txt, .md, .pdf, .json.
+
+Test Engine live (scoruri clare).
+
+Cloud history și Evaluator AI.
+
+Este sweet spot-ul comercial: echipele mici percep clar valoarea upgrade-ului și sunt dispuse să plătească pentru calitate și scalabilitate.
+
+📌 Concluzie:
+Resources = Lean Team este nivelul unde PromptForge devine de la „tool pentru freelanceri” → „sistem pentru echipe mici care vor să scaleze rapid”. Este treapta naturală de trecere spre Agency Stack.
+
+
+
+
+
+⚙️ Resources — Nivelul Agency Stack
+📖 Definiție
+
+„Agency Stack” înseamnă o echipă consolidată (10–20 persoane) care lucrează organizat, are deja clienți multipli și operează pe baza unui set extins de tooluri SaaS integrate. Este nivelul la care procesele devin scalabile și repetitive, iar outputul livrat trebuie să fie consistent și profesionist.
+
+🔎 Caracteristici cheie
+
+Umane: echipă multidisciplinară (account managers, copy, design, media buying, strategie).
+
+Financiare: buget lunar 1.000–5.000 € pentru unelte + ads.
+
+Tehnice: suita completă: CRM avansat (HubSpot, Pipedrive), Zapier/Make avansat, Slack, Notion, ClickUp, Figma, software de raportare.
+
+Timp: dedicare full-time, procese interne și externe clar definite.
+
+Outsourcing: parțial, dar pentru sarcini non-critice (traduceri, content extra).
+
+🎯 Obiective tipice
+
+Creșterea productivității pe fiecare cont/client.
+
+Standardizarea livrabilelor → playbookuri, template-uri reutilizabile.
+
+Raportare constantă și transparentă către clienți.
+
+Automatizarea proceselor interne pentru a reduce costurile de operare.
+
+🧩 Tipuri de output la „Agency Stack”
+
+Bundle-uri complete: funnel (landing + emailuri + ads) + raport KPI.
+
+Documente multi-format (md, pdf, json) → livrate clienților.
+
+Playbookuri pentru trainingul echipei interne.
+
+Template-uri reutilizabile (pitch decks, workflows, rapoarte lunare).
+
+Exemplu:
+„Creează un bundle cu: strategie de campanie FB Ads, 5 vizuale, 3 emailuri de follow-up și raport de evaluare KPI.”
+→ Output = fișier ZIP cu toate componentele + manifest + checksum.
+
+🛑 Limitări
+
+Dependență mare de tooluri externe (costuri cresc cu fiecare client).
+
+Export .zip și API de obicei limitate doar pe plan Enterprise (Pro oferă PDF/JSON dar nu bundle).
+
+Vulnerabilitate la pierderea consistenței între echipe dacă nu există SSOT (Single Source of Truth).
+
+📊 KPI relevanți pentru Agency Stack
+
+Clienți activi simultan (ex. 10–30).
+
+Cost pe livrabil (timp + tooluri).
+
+Satisfacția clienților (NPS).
+
+Timp mediu de execuție per client (ex. reducere cu 20–30% prin AI).
+
+Rata de retenție a clienților.
+
+🧠 Psihologic
+
+Echipele de agenție vor eficiență repetabilă și livrabile standardizate.
+
+Foarte receptivi la argumente de tip ROI („economisești 40h/lună pentru fiecare client”).
+
+Încearcă să păstreze avantajul competitiv: viteza și consistența în fața altor agenții.
+
+💰 Comercial
+
+„Agency Stack” se aliniază între Pro și Enterprise plan:
+
+Toate modulele, export .txt/.md/.pdf/.json.
+
+Test Engine live, Evaluator AI, Cloud history.
+
+Lipsesc încă API și white-label complet (doar Enterprise).
+
+Upsell natural: Enterprise → pentru agenții care cer API, bundle ZIP și branding propriu.
+
+📌 Concluzie:
+Resources = Agency Stack este nivelul unde PromptForge devine infrastructură de producție pentru echipe agențiale. Outputul trebuie să fie consistent, multi-format, verificabil (checksum + manifest). Este pivotul între „echipă mică” și „organizație full-stack”.
+
+
+
+
+
+
+
+⚙️ Resources — Nivelul Full Stack Org
+📖 Definiție
+
+„Full Stack Org” înseamnă o companie medie spre mare (50–500+ oameni), cu echipe specializate pe departamente (marketing, IT, legal, HR, product). Are infrastructură proprie și poate integra PromptForge ca strat operațional în fluxurile existente.
+
+🔎 Caracteristici cheie
+
+Umane: departamente dedicate; fiecare funcție are manager propriu.
+
+Financiare: buget lunar 5.000–20.000 € pentru unelte, training și consultanță.
+
+Tehnice: infrastructură internă + SaaS enterprise (Salesforce, Workday, HubSpot Enterprise, Jira/Confluence, cloud privat).
+
+Timp: resurse full-time distribuite; deadlines formale cu raportare ierarhică.
+
+Outsourcing: folosit strategic (compliance, consultanți de industrie).
+
+🎯 Obiective tipice
+
+Integrarea PromptForge în procese interne existente (CRM, ERP, HR).
+
+Standardizarea livrabilelor la nivel cross-departamental.
+
+Creșterea productivității fără a crește headcount.
+
+Raportare KPI auditabilă pentru board și investitori.
+
+🧩 Tipuri de output la „Full Stack Org”
+
+Playbookuri multi-departament (ex. marketing + sales + HR).
+
+Documente complexe cu KPI, scoruri, fallbackuri.
+
+Exporturi multi-format obligatorii: .md, .pdf, .json.
+
+Bundle-uri validate (manifest + checksum) pentru audit intern.
+
+Exemplu:
+„Generează un plan de onboarding pentru 100 de angajați noi, integrat cu KPI de retenție și training HR + workflow IT.”
+→ Output = bundle cu SOP HR, checklist IT, raport PDF pentru board, JSON pentru integrări.
+
+🛑 Limitări
+
+Procese mai rigide; viteza de execuție e încetinită de aprobări interne.
+
+Dependență mare de integrări API + SSO (nu toate echipele le pot activa fără Enterprise).
+
+Lipsa white-label completă → uneori branding PromptForge nu e acceptabil.
+
+📊 KPI relevanți pentru Full Stack Org
+
+Productivity gain / departament (ex. +25%).
+
+Compliance adherence (100% bundle-uri cu manifest valid).
+
+Cost per deliverable redus prin automatizare.
+
+Time-to-approve artefacte între echipe (scop: <7 zile).
+
+Adopția AI cross-team (% de echipe care folosesc PromptForge).
+
+🧠 Psihologic
+
+Motivația principală = eficiență și control.
+
+Foarte sensibili la argumente de conformitate (GDPR, ISO, SOC2) și auditabilitate.
+
+Așteptările: livrabile „board-ready”, verificabile, cu scoruri clare și trasabilitate.
+
+💰 Comercial
+
+„Full Stack Org” mapat la Enterprise plan (299 €/lună+):
+
+acces complet la toate modulele.
+
+export bundle .zip (md, pdf, json, manifest, checksum).
+
+API, seats multiple, white-label.
+
+suport prioritar și SLA-uri.
+
+Upsell natural: licențiere pe industrii sau traininguri corporate.
+
+📌 Concluzie:
+Resources = Full Stack Org este nivelul unde PromptForge devine un strat operațional oficial al companiei. Accentul nu mai e doar pe productivitate individuală sau de echipă, ci pe compliance, trasabilitate și integrare în sistemele existente.
+
+
+
+
+
+⚙️ Resources — Nivelul Enterprise Budget
+📖 Definiție
+
+„Enterprise Budget” înseamnă o corporație globală (mii sau zeci de mii de angajați) cu resurse financiare, tehnice și umane practic nelimitate. PromptForge, la acest nivel, nu mai e doar un tool — devine o infrastructură strategică integrată în guvernanță, securitate și operațiuni globale.
+
+🔎 Caracteristici cheie
+
+Umane: echipe distribuite global (marketing, sales, compliance, legal, IT, AI-ops), fiecare cu sub-departamente.
+
+Financiare: buget anual 100k–1M+ € pentru AI tooling, consultanță, licențe.
+
+Tehnice: cloud propriu/hibrid, SSO, integrare completă cu ERP (SAP, Oracle), sisteme BI (Tableau, PowerBI), infrastructură DevSecOps enterprise.
+
+Timp: SLA-uri stricte (minute/ore), timpi de reacție contractuali.
+
+Outsourcing: pe scară mare (vendor partnerships, consultanți globali).
+
+🎯 Obiective tipice
+
+Automatizarea proceselor globale (mii de execuții simultane).
+
+Compliance multi-jurisdicțional (GDPR, HIPAA, SOX, PCI DSS, AI Act).
+
+Raportare board-ready și auditabilă pentru investitori și reglementatori.
+
+Scalare globală → adoptare uniformă a metodologiilor AI în sute de echipe.
+
+🧩 Tipuri de output la „Enterprise Budget”
+
+Bundle-uri complete .zip cu toate formatele (.txt, .md, .json, .pdf, manifest.json, checksum.sha256).
+
+Rapoarte multi-layer (ex. KPI + scoruri AI + guardrails legale).
+
+Spec-uri enterprise integrate cu API-uri interne.
+
+Playbookuri globale → procese standardizate pe regiuni.
+
+Exemplu:
+„Generează un plan de continuitate a businessului (BCP) pentru o bancă multinațională, validat Basel III + GDPR + ISO 27001, cu bundle complet pentru audit.”
+→ Output = ZIP cu SOP, spec JSON, raport PDF, manifest + checksum.
+
+🛑 Limitări
+
+Procese lente de aprobare: fiecare output trece prin legal/compliance.
+
+Rigiditate: necesită integrări personalizate și white-label total.
+
+Dependență de SLA-uri: dacă PromptForge nu oferă uptime ≥99.9%, nu e adoptat.
+
+📊 KPI relevanți pentru Enterprise Budget
+
+Auditability: 100% bundle-uri cu manifest + checksum.
+
+SLA Compliance: uptime ≥99.9%, TTR <30min pentru incidente.
+
+Adoption rate: % din departamente care implementează PromptForge.
+
+ROI global: cost economisit vs. headcount adițional.
+
+Risk reduction: % scădere a incidentelor legale/tehnice.
+
+🧠 Psihologic
+
+Enterprise nu cumpără „tooluri”, cumpără siguranță + reputație.
+
+Mesaje cheie: „Auditabil, conform, scalabil, zero risc.”
+
+Așteptările: output zero ambiguitate, trasabilitate, verificare prin checksum, integrare în ecosistem IT existent.
+
+💰 Comercial
+
+„Enterprise Budget” corespunde Enterprise Plan (299 €/lună+), dar în realitate → contracte custom (licențe anuale 5–6 cifre).
+
+Include:
+
+API complet și chei cu rate-limit scalabil.
+
+White-label complet (branding propriu, domeniu propriu).
+
+Multi-seat (100+ useri).
+
+SLA contractual (uptime, suport 24/7).
+
+Training + consultanță dedicată.
+
+Posibil upsell: Industry Packs + licențiere white-label globală.
+
+📌 Concluzie:
+Resources = Enterprise Budget este vârful scării. PromptForge devine infrastructură critică, cu output obligatoriu verificat și livrat în bundle-uri complete. Accentul nu e pe „creativitate”, ci pe conformitate, securitate și scalare globală.
+
+
+
+
+
+
+
+🧩 Parametrul 6 din 7D — Application (Aplicația concretă)
+📖 Definiție
+
+„Application” definește cum și unde va fi folosit artefactul generat. Dacă Domain spune „în ce industrie?”, iar Scale spune „cât de mare este contextul?”, atunci Application răspunde la întrebarea „pentru ce scop practic și imediat?”.
+
+🔢 Valorile canonice (enum strict)
+
+training
+
+audit
+
+implementation
+
+strategy
+
+crisis_response
+
+experimentation
+
+documentation
+
+📚 Descrierea fiecărei aplicații
+1. Training
+
+Scop: predare, formare, dezvoltare de competențe.
+
+Output: curriculum, lecții, exerciții, rubrici de evaluare.
+
+Exemplu: „Creează un plan de training de 4 săptămâni pentru echipa de vânzări.”
+
+KPI: engagement, completion, knowledge retention.
+
+2. Audit
+
+Scop: verificare, analiză, identificarea gap-urilor.
+
+Output: rapoarte, checklisturi, scoring, matrice de conformitate.
+
+Exemplu: „Generează un audit SEO pentru site-ul X.”
+
+KPI: % conformitate, număr gap-uri identificate.
+
+3. Implementation
+
+Scop: aplicare directă într-un proces sau sistem.
+
+Output: playbookuri pas-cu-pas, SOP-uri, planuri de acțiune.
+
+Exemplu: „Creează un ghid de implementare pentru campanie de email marketing.”
+
+KPI: time-to-execute, succesul execuției.
+
+4. Strategy
+
+Scop: orientare pe termen mediu-lung, aliniere business.
+
+Output: roadmapuri, whitepaper-uri, planuri de creștere.
+
+Exemplu: „Construiește o strategie de intrare pe piața germană.”
+
+KPI: ROI estimat, market penetration, alignment.
+
+5. Crisis Response
+
+Scop: reacție imediată la situații critice (PR, securitate, legal).
+
+Output: comunicate oficiale, playbookuri de criză, checklisturi binare.
+
+Exemplu: „Scrie un plan de reacție pentru un incident de securitate cu scurgeri de date.”
+
+KPI: timpul de răspuns, reducerea impactului negativ.
+
+6. Experimentation
+
+Scop: testare de idei, prototipuri, validări rapide.
+
+Output: drafturi, prototipuri, A/B tests, rapoarte de experiment.
+
+Exemplu: „Generează 3 variante de mesaje pentru o campanie pilot.”
+
+KPI: succesul ipotezei, rata de conversie în test.
+
+7. Documentation
+
+Scop: standardizare, înregistrare, trasabilitate.
+
+Output: manuale, proceduri, ghiduri, rapoarte tehnice.
+
+Exemplu: „Scrie un manual de utilizare pentru noul produs SaaS.”
+
+KPI: claritatea documentului, rata de adopție, ușurința de training.
+
+🔑 Sub-parametri operaționali
+
+artifact_type → curriculum, raport, SOP, plan, playbook.
+
+end_user → student, angajat, manager, regulator, client.
+
+delivery_mode → async, sync, blended, automatizat.
+
+measurement_metric → ROI, retenție, compliance, throughput.
+
+maturity_level → POC, MVP, Pilot, Production, Scale.
+
+🎯 Rolul Application în PromptForge
+
+Claritate pentru AI:
+– Application setează direct structura și formatul outputului.
+
+Evaluator AI:
+– Pragurile de scor se ajustează:
+
+Training → claritate ≥80.
+
+Audit → execuție + alignment ≥85.
+
+Crisis → ambiguitate ≤5.
+
+Comercial:
+– Application poate activa Industry Packs (ex. FinTech → audit obligatoriu în JSON/PDF).
+– Upsell: documentație și playbookuri complete sunt gated pe Pro/Enterprise.
+
+📌 Concluzie:
+Application este parametrul care răspunde la întrebarea „Ce fac efectiv cu artefactul acesta?”. Dacă Domain e contextul, Scale e mărimea, Urgency e timpul, Complexity e profunzimea, atunci Application este direcția practică și utilitară.
+
+
+
+
+🗂 Grupare pe categorii — Application (7D)
+📘 Learning & Knowledge
+
+Training
+
+Research
+
+Documentation
+
+Knowledge Transfer
+
+Onboarding
+
+Offboarding
+
+Community Building
+
+Thought Leadership
+
+⚙️ Operations & Delivery
+
+Implementation
+
+Prototyping
+
+Testing
+
+Deployment
+
+Workflow Automation
+
+Monitoring
+
+Incident Management
+
+Change Management
+
+Performance Review
+
+Risk Management
+
+📊 Governance & Control
+
+Audit
+
+Compliance
+
+Governance
+
+Benchmarking
+
+Evaluation
+
+Reporting
+
+Budgeting
+
+Policy Making
+
+Roadmapping
+
+Strategy
+
+🚀 Growth & Market
+
+Marketing
+
+Sales Enablement
+
+Customer Support
+
+Content Creation
+
+Campaign Management
+
+Event Management
+
+Fundraising
+
+Partnership Development
+
+Advocacy
+
+Innovation
+
+🔥 Exploration & Crisis
+
+Crisis Response
+
+Experimentation
+
+Analysis
+
+Planning
+
+Simulation
+
+Forecasting
+
+Optimization
+
+Presentation
+
+Communication
+
+Negotiation
+
+Product Design
+
+Talent Acquisition
+
+📌 Cum o folosești practic
+
+În frontend/UI → afișezi doar 6–8 opțiuni canonice (Training, Audit, Implementation, Strategy, Documentation, Crisis, Experimentation).
+
+În backend/ruleset → menții cele 50 ca vocabular complet, dar cu aliasuri mapate la cele canonice (ex. „Fundraising” → Strategy).
+
+În Industry Packs → activezi subseturi relevante (ex. pentru FinTech: Audit, Compliance, Risk Management; pentru Marketing: Campaign Management, Content Creation, Optimization).
+
+
+
+
+
+📚 Categorii de Application (7D)
+
+Din cele 50 de aplicații, le-am grupat în 5 mari categorii (Learning, Operations, Governance, Growth, Exploration).
+Dar în practică, putem rafina până la 7–8 categorii canonice ca să fie ușor de înțeles și implementat.
+
+👉 Set extins (8 categorii totale):
+
+Learning & Knowledge – training, onboarding, documentation.
+
+Operations & Delivery – implementation, testing, deployment.
+
+Governance & Control – audit, compliance, reporting.
+
+Growth & Market – marketing, sales, content, campaigns.
+
+Exploration & R&D – research, experimentation, innovation.
+
+Crisis & Risk – crisis response, incident management, risk mitigation.
+
+People & Community – HR, talent acquisition, performance review, community building.
+
+Strategy & Planning – roadmaps, budgeting, policy making.
+
+🔑 Câte domenii (Application) există?
+
+În catalogul extins → 50 de aplicații distincte.
+
+În backend (ruleset.yml) → 7–8 valori canonice (pentru simplitate și validare).
+
+În frontend (UI/UX) → afișezi doar 5–7 opțiuni „umbrela”, fiecare cu aliasuri și sub-aplicații.
+
+🎯 Cele mai importante pentru un marketer
+
+Un marketer trăiește în categoria Growth & Market, dar se intersectează și cu alte arii.
+Cele mai relevante pentru el:
+
+Marketing (umbrela generală).
+
+Content Creation (postări, ads, vizuale).
+
+Campaign Management (planificare și execuție).
+
+Sales Enablement (mesaje și materiale pentru echipa de vânzări).
+
+Customer Support (scripturi, răspunsuri standard).
+
+Optimization (A/B testing, funnel tweaks).
+
+Reporting (KPI de campanie).
+
+Community Building (social media, grupuri, engagement).
+
+✅ Da, avem și „Marketer”
+
+În PromptForge CORE-25 (Domain) există deja domeniul Marketing:
+
+Sub-industrii: agenții, performance marketing, SEO, MarTech SaaS.
+
+Jargon: ROAS, CPC, funnel, persona, growth loop.
+
+KPI: CTR, conversie, awareness, share of voice.
+
+Style bias: creativ, persuasiv, storytelling + data-driven.
+
+Default output: playbook (campanii, calendare editoriale).
+
+📌 Concluzie:
+
+Total „Application” → ~50 (catalog extins), dar canonice rămân 7–8.
+
+Pentru marketer, cele mai importante sunt Content, Campaign, Optimization, Reporting.
+
+Da, Domain Marketing există deja în CORE-25 și e foarte bine documentat în schema ta.
+
+
+Iată doar lista de categorii pentru parametrul Application (7D) — fără descrieri, doar enumerarea completă:
+
+Learning & Knowledge
+
+Operations & Delivery
+
+Governance & Control
+
+Strategy & Planning
+
+Growth & Market
+
+Exploration & R&D
+
+Crisis & Risk
+
+People & Community
+
+👉 În total: 8 categorii.
+
+
+
+🗂 Catalog Extins — Application (7D)
+1. Learning & Knowledge
+
+Training Programs
+
+Microlearning Modules
+
+Course Design
+
+Curriculum Mapping
+
+Lesson Planning
+
+Workshop Facilitation
+
+Coaching Frameworks
+
+Mentorship Guides
+
+Knowledge Base Articles
+
+SOP Libraries
+
+Playbooks for Teams
+
+Case Studies
+
+Whitepapers
+
+E-Learning Platforms
+
+Study Guides
+
+Certification Prep
+
+Role-play Scenarios
+
+Gamified Learning
+
+Peer Learning Systems
+
+Knowledge Retention Tools
+
+2. Operations & Delivery
+
+Implementation Guides
+
+Standard Operating Procedures (SOPs)
+
+Task Automation Scripts
+
+Workflow Blueprints
+
+QA Testing Plans
+
+DevOps Pipelines
+
+Release Notes
+
+Deployment Guides
+
+Incident Playbooks
+
+Monitoring Dashboards
+
+Root Cause Analyses
+
+Maintenance Schedules
+
+Resource Allocation Plans
+
+Vendor Management Flows
+
+Capacity Planning
+
+Backup & Recovery Protocols
+
+Operational Risk Logs
+
+Efficiency Benchmarks
+
+Service Delivery Checklists
+
+End-to-End Runbooks
+
+3. Governance & Control
+
+Internal Audits
+
+Compliance Reports
+
+Regulatory Checklists
+
+Policy Frameworks
+
+Data Protection Logs
+
+Risk Assessments
+
+Business Continuity Plans
+
+Disaster Recovery Plans
+
+Security Standards (ISO, SOC2)
+
+Privacy Impact Assessments
+
+KPI Dashboards
+
+Budget Forecasts
+
+Annual Reports
+
+Balanced Scorecards
+
+Performance Audits
+
+Ethics Guidelines
+
+Board Reports
+
+Quality Assurance Logs
+
+Benchmark Studies
+
+Governance Charters
+
+4. Strategy & Planning
+
+Business Roadmaps
+
+Strategic Plans
+
+Market Entry Strategies
+
+Competitive Analyses
+
+SWOT Matrices
+
+Scenario Planning
+
+Product Roadmaps
+
+OKR Systems
+
+Investment Strategies
+
+M&A Playbooks
+
+Portfolio Management Plans
+
+Policy Drafts
+
+Expansion Models
+
+Pricing Strategies
+
+Partnership Blueprints
+
+Long-term Forecasts
+
+Succession Planning
+
+Brand Strategy Decks
+
+Growth Loops
+
+Innovation Roadmaps
+
+5. Growth & Market
+
+Marketing Campaigns
+
+Social Media Calendars
+
+Content Marketing Playbooks
+
+SEO Reports
+
+PPC Campaign Setups
+
+Landing Page Templates
+
+Email Marketing Sequences
+
+Sales Scripts
+
+Lead Nurture Flows
+
+Customer Journey Maps
+
+Brand Guidelines
+
+Creative Briefs
+
+Event Promotion Plans
+
+Influencer Playbooks
+
+Affiliate Programs
+
+PR Releases
+
+Product Launch Kits
+
+Growth Experiments
+
+Market Research Reports
+
+Customer Feedback Loops
+
+6. Exploration & R&D
+
+Research Proposals
+
+Experiment Designs
+
+A/B Testing Frameworks
+
+Hypothesis Logs
+
+Innovation Sprints
+
+Simulation Models
+
+Data Collection Protocols
+
+Statistical Analyses
+
+Pilot Project Plans
+
+Technical Feasibility Reports
+
+MVP Specs
+
+Prototype Documentation
+
+Sandbox Experiments
+
+Concept Testing Scripts
+
+User Testing Logs
+
+Product Iteration Plans
+
+Emerging Tech Studies
+
+Idea Backlogs
+
+Risk Experiments
+
+Discovery Reports
+
+7. Crisis & Risk
+
+Crisis Communication Plans
+
+Incident Reports
+
+Escalation Paths
+
+Emergency SOPs
+
+Risk Heatmaps
+
+Threat Models
+
+Contingency Plans
+
+Downtime Protocols
+
+Breach Notifications
+
+PR Crisis Responses
+
+Insurance Checklists
+
+Regulatory Notifications
+
+Legal Escalation Flows
+
+Cybersecurity Response Plans
+
+Disaster Recovery Runbooks
+
+Reputation Management Playbooks
+
+Whistleblowing Procedures
+
+Mitigation Frameworks
+
+Root Cause Incident Analyses
+
+After-Action Reviews
+
+8. People & Community
+
+Talent Acquisition Flows
+
+Job Descriptions
+
+Interview Guides
+
+Employee Onboarding Kits
+
+Offboarding Guides
+
+Performance Review Templates
+
+Career Pathing Plans
+
+HR Policies
+
+DEI Initiatives
+
+Employee Engagement Surveys
+
+Feedback Loops
+
+Recognition Programs
+
+Coaching Guides
+
+Internal Newsletters
+
+Community Building Playbooks
+
+Event Agendas
+
+Volunteer Coordination Plans
+
+Peer Mentorship Logs
+
+Culture Handbooks
+
+Leadership Development Tracks
+
+📌 Concluzie
+
+Categorii totale: 8
+
+Subcategorii generate: 20 × 8 = 160 aplicații distincte
+
+Toate se pot mapa pe enumurile de bază (cele 7–8 valori canonice din ruleset.yml).
+
+
+
+
+Am transformat cele 8 categorii × 20 sub-aplicații în tabel complet. Fiecare intrare are: Categorie → Sub-aplicație → Exemple de Output.
+
+📑 Catalog Application (7D) — 160 Sub-aplicații
+Categorie	Sub-aplicație	Exemple de Output
+Learning & Knowledge	Training Programs	Curriculum, plan de training pe 4 săpt.
+	Microlearning Modules	Lecții scurte cu quiz-uri
+	Course Design	Structura unui curs complet
+	Curriculum Mapping	Hărți de competențe + lecții
+	Lesson Planning	Plan de lecție pas-cu-pas
+	Workshop Facilitation	Ghid pentru workshop de 1 zi
+	Coaching Frameworks	Fișe de coaching individual
+	Mentorship Guides	Playbook pentru mentorat
+	Knowledge Base Articles	Articole tip FAQ
+	SOP Libraries	Colecție proceduri standard
+	Playbooks for Teams	Manual de lucru pentru echipă
+	Case Studies	Studii de caz cu rezultate
+	Whitepapers	Raport formal, academic/business
+	E-Learning Platforms	Outline platformă digitală
+	Study Guides	Ghid de învățare pentru examene
+	Certification Prep	Plan de pregătire certificare
+	Role-play Scenarios	Scenarii de training vânzări
+	Gamified Learning	Exerciții cu puncte/recompense
+	Peer Learning Systems	Framework de învățare colegială
+	Knowledge Retention Tools	Teste de retenție, rubrici
+Categorie	Sub-aplicație	Exemple de Output
+Operations & Delivery	Implementation Guides	Manual implementare software
+	SOPs	Standard Operating Procedures
+	Automation Scripts	Cod pentru workflow simplu
+	Workflow Blueprints	Hartă procese echipă
+	QA Testing Plans	Plan de testare produs
+	DevOps Pipelines	Config CI/CD YAML
+	Release Notes	Note de versiune
+	Deployment Guides	Ghid rollout aplicație
+	Incident Playbooks	Checklist reacție incident
+	Monitoring Dashboards	Layout metrici în Grafana
+	Root Cause Analyses	Raport RCA post-incident
+	Maintenance Schedules	Calendar mentenanță
+	Resource Allocation Plans	Plan staffing & buget
+	Vendor Management Flows	SOP relație furnizori
+	Capacity Planning	Raport forecast resurse
+	Backup Protocols	Procedură backup/restore
+	Operational Risk Logs	Jurnal riscuri operaționale
+	Efficiency Benchmarks	KPI eficiență procese
+	Service Delivery Checklists	Checklist servicii clienți
+	End-to-End Runbooks	Ghiduri complete de execuție
+Categorie	Sub-aplicație	Exemple de Output
+Governance & Control	Internal Audits	Raport audit intern
+	Compliance Reports	Raport conformitate GDPR
+	Regulatory Checklists	Listă verificare PCI DSS
+	Policy Frameworks	Document politici interne
+	Data Protection Logs	Loguri acces date
+	Risk Assessments	Matrice riscuri
+	BCP Plans	Business Continuity Plans
+	Disaster Recovery Plans	Runbook DR
+	Security Standards	ISO 27001 guideline
+	Privacy Impact Assessments	DPIA
+	KPI Dashboards	Dashboard metrici
+	Budget Forecasts	Proiecții bugetare
+	Annual Reports	Raport anual
+	Balanced Scorecards	Scorecard departamental
+	Performance Audits	Audit performanță
+	Ethics Guidelines	Cod etic
+	Board Reports	Raport board
+	QA Logs	Quality Assurance Logs
+	Benchmark Studies	Studii comparative
+	Governance Charters	Charte de guvernanță
+Categorie	Sub-aplicație	Exemple de Output
+Strategy & Planning	Business Roadmaps	Roadmap anual
+	Strategic Plans	Plan strategic 3–5 ani
+	Market Entry Strategies	Strategie intrare pe piață
+	Competitive Analyses	Raport competitori
+	SWOT Matrices	SWOT analysis
+	Scenario Planning	Plan scenariu best/worst
+	Product Roadmaps	Timeline features
+	OKR Systems	Framework OKR trimestrial
+	Investment Strategies	Plan investiții startup
+	M&A Playbooks	Ghid fuziuni și achiziții
+	Portfolio Plans	Plan management portofoliu
+	Policy Drafts	Draft politici publice
+	Expansion Models	Model extindere regională
+	Pricing Strategies	Strategie prețuri
+	Partnership Blueprints	Ghid parteneriate
+	Long-term Forecasts	Proiecții 5–10 ani
+	Succession Plans	Plan succesiune leadership
+	Brand Strategy Decks	Prezentare strategie brand
+	Growth Loops	Model de creștere virală
+	Innovation Roadmaps	Hărți inovație
+Categorie	Sub-aplicație	Exemple de Output
+Growth & Market	Marketing Campaigns	Campanie digitală
+	Social Media Calendars	Calendar postări
+	Content Playbooks	Playbook content
+	SEO Reports	Raport optimizare SEO
+	PPC Campaigns	Config Google Ads
+	Landing Pages	Template LP
+	Email Sequences	Funnel email
+	Sales Scripts	Script vânzări
+	Lead Nurture Flows	Drip campaign
+	Customer Journeys	Hartă customer journey
+	Brand Guidelines	Ghid identitate vizuală
+	Creative Briefs	Brief campanie
+	Event Promotion	Plan promovare eveniment
+	Influencer Playbooks	Ghid colaborare influenceri
+	Affiliate Programs	Program afiliere
+	PR Releases	Comunicat presă
+	Product Launch Kits	Kit lansare produs
+	Growth Experiments	Experimente A/B
+	Market Research Reports	Raport cercetare piață
+	Customer Feedback Loops	Loop NPS/CSAT
+Categorie	Sub-aplicație	Exemple de Output
+Exploration & R&D	Research Proposals	Propunere grant
+	Experiment Designs	Plan experiment
+	A/B Testing Frameworks	Matrice testare
+	Hypothesis Logs	Log ipoteze
+	Innovation Sprints	Sprint de inovare
+	Simulation Models	Model simulare
+	Data Collection Protocols	SOP colectare date
+	Statistical Analyses	Analiză statistică
+	Pilot Projects	Plan pilot
+	Feasibility Reports	Raport fezabilitate
+	MVP Specs	Specificații MVP
+	Prototype Docs	Doc prototip
+	Sandbox Experiments	Experimente sandbox
+	Concept Testing	Testare concepte
+	User Testing Logs	Jurnal testare useri
+	Iteration Plans	Plan iterații
+	Emerging Tech Studies	Studii tech emergente
+	Idea Backlogs	Backlog idei
+	Risk Experiments	Experimente risc
+	Discovery Reports	Raport descoperire
+Categorie	Sub-aplicație	Exemple de Output
+Crisis & Risk	Crisis Comms Plans	Comunicat criză
+	Incident Reports	Raport incident
+	Escalation Paths	Flow escaladare
+	Emergency SOPs	SOP urgență
+	Risk Heatmaps	Hartă riscuri
+	Threat Models	Model amenințări
+	Contingency Plans	Planuri backup
+	Downtime Protocols	Protocol downtime
+	Breach Notifications	Notificare breach
+	PR Crisis Responses	Răspuns presă
+	Insurance Checklists	Checklist asigurare
+	Reg. Notifications	Raportare autorități
+	Legal Escalations	Flow legal
+	Cyber Response	Plan reacție ciber
+	DR Runbooks	Runbook disaster recovery
+	Reputation Mgmt	Playbook reputație
+	Whistleblowing SOPs	SOP avertizori
+	Mitigation Frameworks	Cadru mitigare
+	RCA Analyses	Analize Root Cause
+	After-Action Reviews	Raport post-criză
+Categorie	Sub-aplicație	Exemple de Output
+People & Community	Talent Acquisition	Flow recrutare
+	Job Descriptions	JD-uri standard
+	Interview Guides	Ghid interviu
+	Onboarding Kits	Kit angajare
+	Offboarding Guides	Ghid offboarding
+	Performance Reviews	Template evaluare
+	Career Pathing	Plan carieră
+	HR Policies	Politici HR
+	DEI Initiatives	Programe diversitate
+	Engagement Surveys	Chestionar engagement
+	Feedback Loops	Sisteme feedback
+	Recognition Programs	Programe recunoaștere
+	Coaching Guides	Ghid coaching
+	Internal Newsletters	Newsletter intern
+	Community Playbooks	Playbook community
+	Event Agendas	Agendă eveniment
+	Volunteer Plans	Plan voluntariat
+	Peer Mentorship Logs	Log mentorat colegial
+	Culture Handbooks	Handbook cultură org.
+	Leadership Dev.	Plan leadership
+
+✅ Acum ai:
+
+8 categorii
+
+160 sub-aplicații
+
+Exemple clare de output pentru fiecare.
+
+
+
+
+🧩 Parametrul 7 din 7D — Output (Formatul livrabilului)
+📖 Definiție
+
+„Output” reprezintă forma finală în care artefactul este livrat. Dacă ceilalți 6 parametri definesc contextul și scopul, Output definește ambalajul: tipul de fișier, structura, vizualele, gradul de validare și retenție.
+
+🔢 Valorile canonice (enum strict)
+
+txt
+
+md
+
+checklist
+
+spec
+
+playbook
+
+json
+
+yaml
+
+diagram
+
+bundle
+
+pdf
+
+📚 Sub-parametri (operaționali)
+
+file_format → txt, md, pdf, json, zip.
+
+structure → narrative, table, diagram, SOP steps.
+
+visuals → text-only, with charts, with branding.
+
+validation → checksum required, manifest required, score ≥ 80 required.
+
+retention → local only, cloud 30d, cloud 90d, archive permanent.
+
+🧩 Descrierea tipurilor principale de Output
+
+txt → livrabil brut, simplu, doar text. (Free tier)
+
+md (Markdown) → document structurat, lizibil și reutilizabil. (Creator+)
+
+checklist → listă de verificare acționabilă, folosită în procese operaționale.
+
+spec (Specification) → document tehnic cu câmpuri, schema, reguli.
+
+playbook → plan detaliat cu pași + fallback + KPI.
+
+json → livrabil structural, integrabil cu API/automatizări. (Pro+)
+
+yaml → configurări, declarativ (DevOps/infra).
+
+diagram → vizualizare proces (flowchart, arhitectură).
+
+bundle → pachet complet (txt, md, pdf, json, manifest.json, checksum). (Enterprise)
+
+pdf → livrabil formal, prezentabil (consulting, training). (Pro+)
+
+🎯 Rolul Output în sistem
+
+Evaluator AI:
+
+Outputul trebuie validat conform tipului → ex. json valid, pdf completat, bundle cu manifest & checksum.
+
+DoR/DoD gates:
+
+Nu poți exporta pdf/json/bundle dacă scorul < 80.
+
+Nu poți exporta bundle fără manifest și checksum.
+
+Comercial (gating):
+
+Free → doar .txt.
+
+Creator → .txt + .md.
+
+Pro → .pdf, .json, .md.
+
+Enterprise → bundle .zip, API, white-label.
+
+📌 Concluzie:
+Output este parametrul care transformă munca invizibilă a AI în artefact comercial verificabil. Este direct legat de monetizare (gating pe planuri) și de calitate (DoD).
+
+
+
+🧩 Parametrul 7 din 7D — Output (Formatul livrabilului)
+1. TXT (Plain Text)
+
+🔹 Ce este: cel mai simplu format — fișier brut, fără structură de markup, fără stiluri.
+🔹 Context: ideal pentru prototipuri rapide, schițe, idei brute.
+🔹 Avantaje: universal, poate fi deschis pe orice device, dimensiune mică.
+🔹 Limitări: fără structuri logice (liste, tabele), fără branding.
+🔹 Plan disponibil: Free (toți utilizatorii pot exporta TXT).
+🔹 Exemplu: listă cu titluri de articole.
+
+2. MD (Markdown)
+
+🔹 Ce este: format text structurat cu markup simplu (#, -, *, code blocks).
+🔹 Context: ideal pentru documentații, note tehnice, articole, playbookuri.
+🔹 Avantaje: lizibil și ca text brut, dar și randabil frumos (în GitHub, Notion, Docs).
+🔹 Limitări: nu are design vizual avansat; nu e „formal” ca PDF.
+🔹 Plan disponibil: Creator+.
+🔹 Exemplu: articol blog cu headinguri, liste, linkuri.
+
+3. Checklist
+
+🔹 Ce este: listă structurată de pași/acțiuni verificabile ([ ] → [x]).
+🔹 Context: task management, audituri, SOP-uri simple.
+🔹 Avantaje: ușor de folosit ca to-do list; foarte aplicabil operațional.
+🔹 Limitări: pierzi context narativ; bun doar pentru execuție punctuală.
+🔹 Plan disponibil: Free+ (în special pentru training și audit).
+🔹 Exemplu: checklist pentru lansarea unei campanii (10 pași).
+
+4. Spec (Specification Document)
+
+🔹 Ce este: document tehnic formalizat cu secțiuni fixe (objective, inputs, outputs, constraints, KPIs).
+🔹 Context: dezvoltare software, arhitectură de sistem, protocoale medicale, compliance.
+🔹 Avantaje: claritate, structură obligatorie, trasabilitate.
+🔹 Limitări: rigid, necesită completare completă; nu e potrivit pentru explorare liberă.
+🔹 Plan disponibil: Pro+.
+🔹 Exemplu: specificație API pentru un modul SaaS.
+
+5. Playbook
+
+🔹 Ce este: plan detaliat de acțiuni și procese, cu pași, fallbackuri și KPI-uri.
+🔹 Context: marketing, sales, crisis management, training.
+🔹 Avantaje: oferă atât viziune strategică, cât și pași operaționali.
+🔹 Limitări: necesită mai mult timp de generare și validare.
+🔹 Plan disponibil: Creator+ (Pro pentru playbookuri extinse).
+🔹 Exemplu: playbook de gestionare criză reputațională în social media.
+
+6. JSON (JavaScript Object Notation)
+
+🔹 Ce este: format structural, standardizat, citibil de mașini.
+🔹 Context: integrări API, workflow automation, structuri de date.
+🔹 Avantaje: ușor de folosit în dev/ops, validabil cu schema.
+🔹 Limitări: nu e lizibil pentru utilizatorii non-tehnici; necesită validare strictă.
+🔹 Plan disponibil: Pro+.
+🔹 Exemplu: schema unui plan editorial cu câmpuri (title, author, deadline).
+
+7. YAML (Yet Another Markup Language)
+
+🔹 Ce este: format declarativ, folosit mai ales în DevOps (configurații).
+🔹 Context: infrastructură, CI/CD, deployment.
+🔹 Avantaje: ușor de citit, suportat de majoritatea toolurilor cloud.
+🔹 Limitări: sensibil la spațiere; nu e prietenos pentru non-tehnici.
+🔹 Plan disponibil: Pro+ (mai ales pentru domenii tehnice).
+🔹 Exemplu: config pentru pipeline GitHub Actions.
+
+8. Diagram
+
+🔹 Ce este: reprezentare vizuală (flowchart, arhitectură, mindmap).
+🔹 Context: design procese, arhitecturi, planificări vizuale.
+🔹 Avantaje: comunică instant relații complexe, util pentru prezentări.
+🔹 Limitări: generare mai dificilă, poate necesita tooluri externe (Mermaid, PlantUML, Graphviz).
+🔹 Plan disponibil: Pro+ (Enterprise pentru diagrame complexe multi-layer).
+🔹 Exemplu: diagrama funnel marketing.
+
+9. Bundle
+
+🔹 Ce este: pachet complet cu toate fișierele aferente unei rulări (txt, md, pdf, json, manifest.json, checksum.sha256).
+🔹 Context: enterprise, audit, consultanță, livrabile comerciale.
+🔹 Avantaje: integritate maximă, auditabil, trasabil.
+🔹 Limitări: disponibil doar pe Enterprise; overhead de stocare și validare.
+🔹 Plan disponibil: Enterprise.
+🔹 Exemplu: bundle pentru audit GDPR cu toate rapoartele și manifest.
+
+10. PDF (Portable Document Format)
+
+🔹 Ce este: document vizual formal, brand-uit, gata de prezentare.
+🔹 Context: livrabile comerciale, rapoarte, prezentări clienți, traininguri.
+🔹 Avantaje: universal, protejat, acceptat legal.
+🔹 Limitări: greu de editat ulterior, nu e machine-readable.
+🔹 Plan disponibil: Pro+ (Enterprise pentru PDF-uri brand-uite cu white-label).
+🔹 Exemplu: raport de strategie marketing în format PDF cu logo.
+
+📌 Concluzie
+
+Outputul 7D definește „în ce formă concretă primești rezultatul”:
+
+simplu & rapid (txt, md, checklist),
+
+structurat & tehnic (spec, json, yaml),
+
+vizual & formal (diagram, pdf),
+
+complet & auditabil (bundle).
+
+Este parametrul cel mai puternic pentru gating comercial și pentru garantarea calității (DoR/DoD cu scor ≥80 și checksum).
+
+
+📑 Output — Lista extinsă (canon + derivate)
+Text & Narrative
+
+txt — text brut (Free)
+
+md — Markdown structurat (Creator+)
+
+rtf — Rich Text Format
+
+docx — document MS Word
+
+odt — document OpenDocument
+
+narrative — text narativ, eseu, poveste
+
+Lists & Check Tools
+
+checklist — listă verificabilă (cu casete)
+
+to-do list — variantă simplă de checklist
+
+SOP steps — pași procedurali standardizați
+
+bullet list — listă narativă simplă
+
+table — tabel text / markdown
+
+Specs & Formal Docs
+
+spec — specificație tehnică (contract, arhitectură)
+
+playbook — plan detaliat cu pași, fallback, KPI
+
+manual — ghid tehnic sau operațional
+
+policy doc — politici interne, cod etic
+
+contract template — document legal standard
+
+Data & Structured Files
+
+json — artefact structurat, integrabil (Pro+)
+
+yaml — configurare DevOps / infra
+
+xml — formate legacy / interschimb date
+
+csv — tabele de date, import/export
+
+xlsx — Excel / raport KPI
+
+ods — spreadsheet OpenDocument
+
+database dump — export SQL / schema
+
+Visual & Design
+
+diagram — flowchart, arhitectură, proces
+
+graph — grafic metrici / KPI
+
+dashboard — layout cu metrici, charts
+
+slide deck (pptx/odp) — prezentări vizuale
+
+infographic — imagine statică cu date
+
+storyboard — secvență vizuală pentru video
+
+Bundles & Archives
+
+pdf — raport comercial formal (Pro+)
+
+bundle — pachet complet (txt/md/pdf/json/manifest/checksum) (Enterprise)
+
+zip — arhivă cu toate fișierele generate
+
+tar.gz — arhivă alternativă (DevOps)
+
+manifest.json — fișier de control bundle
+
+checksum.sha256 — verificare integritate
+
+Media & Scripts
+
+html — pagină web statică
+
+css — stylesheet / theme export
+
+script — fișier cod (js, py, sh)
+
+api spec — OpenAPI/Swagger YAML
+
+video script — scenariu video
+
+podcast script — structură episod audio
+
+chatbot dialog — script conversațional
+
+Governance & Compliance
+
+audit report — raport complet audit
+
+compliance checklist — DPIA/DPA/GDPR doc
+
+license_notice — declarație licențiere bundle
+
+sla/slo report — raport SLA/SLO
+
+risk register — tabel riscuri
+
+📌 Concluzie
+
+Canon minim (ruleset.yml): 7–10 valori → txt, md, checklist, spec, playbook, json, yaml, diagram, bundle, pdf.
+
+Catalog extins (aliasuri + derivate): 45–50 valori, acoperind toate tipurile de livrabile reale (text, date, vizual, bundle, media).
+
+Comercial (gating):
+
+Free → txt
+
+Creator → md, checklist
+
+Pro → pdf, json, spec, playbook
+
+Enterprise → bundle, zip, manifest, checksum
+
+
+📚 Sub-parametri operaționali — Output (7D)
+1. File & Format
+
+file_format → txt, md, pdf, json, csv, yaml, docx, xlsx, pptx, zip etc.
+
+encoding → UTF-8, ASCII, Unicode.
+
+compression → none, zip, tar.gz, rar.
+
+versioning → v1.0, semver, draft vs. final.
+
+extension_policy → enforce .json only / multi-format allowed.
+
+2. Structure & Layout
+
+structure → narrative, table, diagram, SOP steps.
+
+length → short (1p), medium (5p), long (20p+).
+
+depth → surface, detailed, expert.
+
+hierarchy → flat list, nested list, tree.
+
+segmentation → by chapter, by slide, by section.
+
+granularity → micro (checklist), macro (report).
+
+ordering → chronological, priority-based, thematic.
+
+pagination → single-page, multi-page.
+
+outline_style → numbered, bullet, mixed.
+
+language_register → formal, informal, academic, persuasive.
+
+3. Visuals & Styling
+
+visuals → text-only, with charts, with branding.
+
+chart_type → bar, line, pie, gantt, heatmap.
+
+diagram_style → flowchart, architecture, mind-map.
+
+theme → light, dark, custom palette.
+
+typography → default, brand-font, code-style.
+
+logo_inclusion → on/off.
+
+watermark → none, trial, licensed.
+
+cover_page → included/excluded.
+
+appendix → included/excluded.
+
+template_used → corporate, academic, minimal.
+
+4. Validation & Integrity
+
+validation_required → yes/no.
+
+score_threshold → min_score≥80.
+
+checksum_required → sha256, md5, none.
+
+manifest_included → true/false.
+
+schema → json_schema_v2020, yaml_schema.
+
+sign_off → human, AI, both.
+
+audit_trail → enabled/disabled.
+
+policy_hits → compliance notes included.
+
+error_handling → fail_fast, retry, ignore.
+
+testcases_included → yes/no.
+
+5. Retention & Storage
+
+retention → local only, cloud 30d, cloud 90d, archive permanent.
+
+storage_location → EU, US, hybrid.
+
+backup_policy → daily, weekly, none.
+
+encryption → AES256, none.
+
+access_scope → private, org_only, public.
+
+expiration_date → set/unset.
+
+archival_format → PDF/A, XML archive.
+
+deletable → user_request, auto, never.
+
+snapshot_frequency → per_run, daily, on_change.
+
+replication → single-region, multi-region.
+
+6. Distribution & Export
+
+delivery_channel → download, email, API, webhook.
+
+export_mode → manual, auto-scheduled.
+
+shareability → link, invite, embed.
+
+notification → on_success, on_failure, none.
+
+integration_target → CRM, LMS, ERP, CMS.
+
+entitlement_check → plan, pack, addon.
+
+throttling → per_user, per_org, unlimited.
+
+📌 Concluzie
+
+Sub-parametri canonic minim (ruleset.yml): 5–6 (file_format, structure, visuals, validation, retention).
+
+Catalog extins: 50+ sub-parametri, care pot fi implementați gradual.
+
+Valoare practică: cu acest set poți controla Output la nivel granular (cum arată, unde e stocat, cât timp, în ce format, ce validări are, cum se distribuie).
+
+
+
+📑 Tabel comparativ — Sub-parametri Output (7D)
+Sub-parametru	Opțiuni posibile	Plan minim
+file_format	txt, md, pdf, json, csv, yaml, docx, xlsx, pptx, zip	Free=txt, Creator=md, Pro=pdf/json, Ent=bundle/zip
+encoding	UTF-8, ASCII, Unicode	Free
+compression	none, zip, tar.gz	Ent
+versioning	draft, v1.0, semver	Pro
+extension_policy	single-format, multi-format	Pro
+structure	narrative, table, diagram, SOP steps	Creator
+length	short (1p), medium (5p), long (20p+)	Free
+depth	surface, detailed, expert	Creator
+hierarchy	flat list, nested list, tree	Creator
+segmentation	chapter, slide, section	Pro
+granularity	micro (checklist), macro (report)	Free
+ordering	chronological, priority, thematic	Creator
+pagination	single-page, multi-page	Pro
+outline_style	numbered, bullet, mixed	Free
+language_register	formal, informal, academic, persuasive	Free
+visuals	text-only, with charts, with branding	Pro (charts), Ent (branding)
+chart_type	bar, line, pie, gantt, heatmap	Pro
+diagram_style	flowchart, architecture, mind-map	Pro
+theme	light, dark, custom palette	Pro
+typography	default, brand font, code-style	Ent
+logo_inclusion	on/off	Ent
+watermark	none, trial, licensed	Creator (trial), Pro (licensed)
+cover_page	included/excluded	Pro
+appendix	included/excluded	Pro
+template_used	corporate, academic, minimal	Pro
+validation_required	yes/no	Pro
+score_threshold	min_score≥80	Pro
+checksum_required	sha256, md5	Ent
+manifest_included	true/false	Ent
+schema	json_schema, yaml_schema	Pro
+sign_off	human, AI, both	Ent
+audit_trail	enabled/disabled	Ent
+policy_hits	compliance notes included	Ent
+error_handling	fail_fast, retry, ignore	Pro
+testcases_included	yes/no	Pro
+retention	local, cloud 30d, 90d, archive	Free=local, Pro=90d, Ent=archive
+storage_location	EU, US, hybrid	Ent
+backup_policy	daily, weekly, none	Ent
+encryption	AES256, none	Ent
+access_scope	private, org_only, public	Pro
+expiration_date	set/unset	Pro
+archival_format	PDF/A, XML	Ent
+deletable	user_request, auto, never	Free (user), Ent (never)
+snapshot_frequency	per_run, daily, on_change	Ent
+replication	single-region, multi-region	Ent
+delivery_channel	download, email, API, webhook	Free=download, Pro=email/API, Ent=webhook
+export_mode	manual, auto-scheduled	Pro
+shareability	link, invite, embed	Pro
+notification	on_success, on_failure	Pro
+integration_target	CRM, LMS, ERP, CMS	Ent
+entitlement_check	plan, pack, addon	Pro
+throttling	per_user, per_org, unlimited	Free=per_user, Ent=unlimited
+
+📌 Observații
+
+Free: minim, doar txt, local storage, fără branding.
+
+Creator: md, checklist, structuri simple.
+
+Pro: pdf/json, vizualuri, validare scor ≥80, email/API export, retention cloud.
+
+Enterprise: bundle zip, manifest+checksum, white-label, multi-region, audit trail.
+
+
+
+
+
+
+
+
+
+
+
+
+

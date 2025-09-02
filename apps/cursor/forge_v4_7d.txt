@@ -1,0 +1,7756 @@
+
+
+
+
+
+În contextul PROMPTFORGE™, „7D” înseamnă motorul de parametrizare pe 7 dimensiuni. Este schema canonică după care se construiește orice rulare (prompt, modul, artefact). Cele 7 dimensiuni sunt:
+
+Domain – industria / verticala (din nomenclatorul CORE-25: SaaS, FinTech, E-Commerce, Education, Healthcare etc.).
+
+Scale – nivelul de scară: personal_brand, solo, startup, SMB, corporate, enterprise.
+
+Urgency – gradul de urgență: low, planned, sprint, pilot, crisis.
+
+Complexity – nivelul de complexitate: foundational, standard, advanced, expert.
+
+Resources – resurse disponibile: minimal, solo, lean_team, agency_stack, full_stack_org, enterprise_budget.
+
+Application – aplicația concretă: training, audit, implementation, strategy, crisis_response, experimentation, documentation.
+
+Output – formatul livrabilului: txt, md, checklist, spec, playbook, json, yaml, diagram, bundle, pdf.
+
+🔑 Rolul 7D:
+– Standardizează inputul pentru toate modulele (schema JSON).
+– Garantează consistență și validare (enum-only, guardrails în ruleset.yml).
+– Decide gatingul (ce plan poate exporta anumite formate).
+– Permite măsurarea KPI (time-to-artifact, scor evaluare, etc.).
+
+Pe scurt: 7D = motorul semantic și operațional al PROMPTFORGE™. Fiecare prompt/modul rulează numai dacă are un set valid de 7D (Definition of Ready), și este acceptat ca „Done” doar dacă artefactul rezultat respectă și scorurile + exportul (Definition of Done).
+
+
+
+
+
+
+🧩 1. Domain (Industrie / Verticală)
+
+📚 Nomenclator CORE-25 (definit deja în schema ta):
+
+SaaS → sub-industrii: B2B SaaS, Productivity, Collaboration, DevTools
+
+FinTech → Banking, Payments, Lending, Insurance, RegTech
+
+E-Commerce → Retail, Marketplaces, D2C, Dropshipping
+
+Consulting → Management, Strategy, Marketing, IT Consulting
+
+Education → E-learning, K-12, Higher Ed, Corporate Training
+
+Healthcare → Hospitals, Telemedicine, MedTech, Pharma
+
+… (până la Agriculture, Gaming, Beauty, Fashion etc.)
+
+🔑 Sub-parametri Domain:
+
+sub_industry (array enum) – ex: “Digital Banking”, “MOOCs”, “InsurTech”
+
+jargon[] – termeni tehnici specifici (ARR, KYC, AOV…)
+
+kpis[] – indicatori de performanță canonici (MRR growth, fraud_rate, completion_rate)
+
+compliance_notes – reguli legale sau restricții
+
+style_bias – ton recomandat (audit, narativ, formal…)
+
+default_output_format – spec / playbook / plan
+
+🧩 2. Scale (Nivel de scară)
+
+Valori de bază: personal_brand, solo, startup, SMB, boutique_agency, corporate, enterprise.
+
+🔑 Sub-parametri Scale:
+
+team_size → numeric range (1, 2–5, 10–50, 50+)
+
+budget_band → low / medium / high
+
+market_scope → local / regional / global
+
+decision_structure → founder-driven / board-driven / committee
+
+🧩 3. Urgency (Gradul de urgență)
+
+Valori de bază: low, planned, sprint, pilot, crisis.
+
+🔑 Sub-parametri Urgency:
+
+timeline → zile/săpt./luni (ex: 7d, 30d, 90d)
+
+pressure_type → market / regulatory / competitive / internal
+
+risk_tolerance → low / medium / high
+
+decision_speed → instant / fast-track / deliberative
+
+🧩 4. Complexity (Nivel de complexitate)
+
+Valori de bază: foundational, standard, advanced, expert.
+
+🔑 Sub-parametri Complexity:
+
+steps_required → 3, 5, 10+
+
+stakeholders_count → 1, 2–3, 5+
+
+tools_involved → single / multi-stack
+
+knowledge_depth → novice / intermediate / specialized / research-grade
+
+failure_cost → low / medium / high
+
+🧩 5. Resources (Resurse disponibile)
+
+Valori de bază: minimal, solo, lean_team, agency_stack, full_stack_org, enterprise_budget.
+
+🔑 Sub-parametri Resources:
+
+human → solo / 2–3 ppl / department / cross-org
+
+financial → bootstrap / seed / VC-funded / enterprise budget
+
+tech_stack → lightweight / integrated SaaS / custom infra
+
+time_allocation → <5h/w, 10–20h/w, full-time
+
+outsourcing → none / partial / full
+
+🧩 6. Application (Aplicație concretă)
+
+Valori de bază: training, audit, implementation, strategy, crisis_response, experimentation, documentation.
+
+🔑 Sub-parametri Application:
+
+artifact_type → curriculum, report, SOP, plan, playbook
+
+end_user → student, employee, manager, regulator, client
+
+delivery_mode → async, sync, blended, automated
+
+measurement_metric → ROI, retention, compliance, throughput
+
+maturity_level → POC, MVP, Pilot, Production, Scale
+
+🧩 7. Output (Formatul livrabilului)
+
+Valori de bază: txt, md, checklist, spec, playbook, json, yaml, diagram, bundle, pdf.
+
+🔑 Sub-parametri Output:
+
+file_format → txt, md, json, pdf, zip
+
+structure → narrative, table, diagram, SOP steps
+
+visuals → text-only, with charts, with branding
+
+validation → checksum required, manifest required, score≥80 required
+
+retention → local only, cloud 30d, cloud 90d, archive permanent
+
+⚙️ Cum folosești sub-parametrii?
+
+În Supabase schema → fiecare parametru 7D are sub-coloane în JSONB (config).
+
+În UI (React/Next) → filtre avansate, form controls (sliders, selects, tags).
+
+În Evaluator AI → scoruri calibrate diferit per sub-parametri (ex: urgency=crisis → toleranță ambiguitate=0).
+
+
+
+
+
+Îți dezvolt acum complet 📚 Nomenclatorul CORE-25 — adică lista celor 25 domenii canonice, fiecare cu sub-industrii, jargon, KPI, note de conformitate, stil recomandat și format default de output. Acest nomenclator e pivotul pentru parametrul Domain din 7D Engine.
+
+
+📚 Nomenclator CORE-25 — PROMPTFORGE™ v3
+
+1. SaaS – Software as a Service
+Sub-industrii: B2B SaaS, Productivity, Collaboration, DevTools
+Jargon: ARR, MRR, churn, CAC, LTV, freemium, multi-tenant, API-first
+KPI: MRR growth, churn rate, NRR, DAU/WAU/MAU, time-to-value
+Compliance: GDPR, SOC2, ISO 27001
+Style: analitic, orientat pe metrici
+Default output: spec (documentație, arhitectură)
+
+2. FinTech – Banking, Payments, Lending, Insurance, RegTech
+Sub-industrii: Digital Banking, Wallets, InsurTech, RegTech
+Jargon: KYC, AML, PSD2, open banking, risk scoring
+KPI: fraud_rate, approval_rate, KYC_time, compliance_incidents
+Compliance: SEC/FCA, Basel III, PCI DSS
+Style: formal, layered, risc/reglementare
+Default output: spec (politici, proceduri)
+
+3. E-Commerce – Retail, Marketplaces, D2C, Dropshipping
+Sub-industrii: Online Retail, Marketplaces, D2C Brands
+Jargon: CR, AOV, ROAS, SKU, checkout funnel
+KPI: conversion_rate, AOV, cart_abandonment, LTV
+Compliance: GDPR, PSD2 SCA, protecția consumatorului
+Style: pragmatic, optimizat funnel
+Default output: playbook (funneluri, SOP execuție)
+
+4. Consulting – Management, Strategy, Marketing, IT
+Sub-industrii: Management Consulting, Digital Transformation
+Jargon: OKRs, buy-in, change mgmt, deliverables
+KPI: ROI, client_satisfaction, decision_speed
+Compliance: NDAs, ISO 9001
+Style: audit-like, autoritar
+Default output: spec (diagrame, rapoarte)
+
+5. Education – E-learning, K-12, Higher Ed, Corporate
+Sub-industrii: EdTech, Universities, MOOCs, Corporate Learning
+Jargon: LMS, cohort, microlearning, gamification
+KPI: engagement_rate, completion_rate, dropout_rate
+Compliance: FERPA, GDPR, WCAG/ADA
+Style: narativ, gamified, empatic
+Default output: playbook (curriculum, lesson plans)
+
+6. Healthcare – Hospitals, Telemedicine, MedTech, Pharma
+Sub-industrii: Hospitals, Telehealth, Pharma, Devices
+Jargon: EMR, HIPAA, HL7, clinical trial
+KPI: patient_outcome, readmission_rate, treatment_adherence
+Compliance: HIPAA, GDPR, FDA/EMA
+Style: formal, etic, bazat pe dovezi
+Default output: spec (protocoale clinice)
+
+7. Legal – Law Firms, Compliance, Contract Automation
+Sub-industrii: Corporate Law, Litigation, IP Law
+Jargon: case law, precedent, M&A, arbitration
+KPI: contract_review_time, compliance_incidents
+Compliance: GDPR, SOX, Bar Association Rules
+Style: juridic, precis, auditabil
+Default output: spec (contracte, proceduri)
+
+8. Marketing – Agencies, SEO, Content, MarTech
+Sub-industrii: Creative Agencies, SEO/Content, MarTech SaaS
+Jargon: ROAS, CPC, funnel, persona, growth loop
+KPI: CTR, conversion_rate, share_of_voice
+Compliance: GDPR (cookies), FTC, ASA (ads)
+Style: creativ, storytelling + data-driven
+Default output: playbook (campanii, calendare)
+
+9. Media – Publishing, Entertainment, Influencers, News
+Sub-industrii: Publishing, Journalism, Social Media, Streaming
+Jargon: CPM, OTT, UGC, virality
+KPI: reach, watch_time, subscriber_growth
+Compliance: Copyright, GDPR, DMA, FTC disclosures
+Style: narativ, atractiv, factual
+Default output: playbook (plan editorial, campanie media)
+
+10. Real Estate – PropTech, Construction, Design, Facility
+Sub-industrii: PropTech, Smart Buildings, Interior Design
+Jargon: MLS, mortgage, occupancy, BIM
+KPI: occupancy_rate, rental_yield, project_time
+Compliance: Zoning laws, Building codes, GDPR tenant data
+Style: pragmatic, investițional
+Default output: spec (analize, planuri construcție)
+
+11. HR – Recruiting, PeopleOps, Engagement
+Sub-industrii: Talent Acquisition, HR Tech, PeopleOps
+Jargon: ATS, DEI, onboarding, turnover
+KPI: time_to_hire, retention_rate, satisfaction_index
+Compliance: GDPR (candidate data), Equal Employment Law
+Style: empatic, people-centric
+Default output: playbook (proces HR, survey frameworks)
+
+12. NGO – Nonprofits, Activism, Foundations
+Sub-industrii: Humanitarian, Activism, Foundations
+Jargon: impact report, SDGs, donor engagement
+KPI: fundraising_growth, donor_retention, impact_metrics
+Compliance: NGO codes, GDPR, Anti-terrorism financing
+Style: empatic, storytelling, orientat pe impact
+Default output: playbook (rapoarte impact, fundraising)
+
+13. Government – Policy, Public Sector, Civic Tech
+Sub-industrii: Central Government, Think Tanks, Digital Services
+Jargon: policy, citizen engagement, open data
+KPI: service_delivery_time, transparency_index
+Compliance: GDPR, FOIA, procurement laws
+Style: formal, instituțional
+Default output: spec (policy papers, dashboards)
+
+14. Web3 – Blockchain, Crypto, NFTs, DAOs
+Sub-industrii: DeFi, NFT Marketplaces, DAOs, L1/L2 Infra
+Jargon: staking, tokenomics, governance, DEX
+KPI: TVL, active_wallets, protocol_revenue
+Compliance: MiCA, SEC/CFTC, AML/KYC
+Style: tehnic, comunitar, experimental
+Default output: spec (tokenomics, governance)
+
+15. AI/ML – Applied AI, Research, Agents, PromptOps
+Sub-industrii: AutoML, Agents, Research Labs
+Jargon: LLM, embeddings, multi-agent, hallucination
+KPI: accuracy, latency, adoption_rate
+Compliance: AI Act (EU), NIST AI Risk
+Style: semi-academic, tehnic
+Default output: spec (model cards, frameworks)
+
+16. Cybersecurity – Threat Intel, Zero-Trust, Compliance
+Sub-industrii: SOC Ops, IAM, Threat Intel, Endpoint Security
+Jargon: SIEM, phishing, CVE, incident response
+KPI: MTTR, false_positive_rate, breach_cost
+Compliance: ISO 27001, NIS2, GDPR
+Style: formal, tehnic, risk-base
+Default output: spec (incident playbooks)
+
+17. Manufacturing – Industry 4.0, Robotics, Automotive
+Sub-industrii: Smart Factories, Automotive, Aerospace
+Jargon: CNC, lean, OEE, predictive maintenance
+KPI: OEE, defect_rate, throughput, downtime
+Compliance: ISO 9001, OSHA, FAA/EASA
+Style: ingineresc, pragmatic
+Default output: spec (optimizare procese)
+
+18. Logistics – Supply Chain, Shipping, Warehousing
+Sub-industrii: Mobility, Freight, Warehousing
+Jargon: last-mile, RFID, 3PL, cold chain
+KPI: on_time_delivery, inventory_turnover, emissions
+Compliance: IATA, IMO, OSHA
+Style: operațional, optimizat costuri
+Default output: playbook (workflows supply chain)
+
+19. Travel – Hospitality, Airlines, Tourism
+Sub-industrii: Airlines, Hotels, Travel Tech
+Jargon: yield management, OTA, RevPAR
+KPI: occupancy_rate, load_factor, satisfaction_score
+Compliance: GDPR, IATA, ICAO
+Style: experiențial, storytelling
+Default output: playbook (guest journey, pricing)
+
+20. Gaming – eSports, VR/AR, Mobile
+Sub-industrii: eSports, Indie, VR, Mobile Games
+Jargon: DAU/MAU, ARPU, retention curve, live ops
+KPI: retention_day1/7/30, ARPU, LTV
+Compliance: PEGI/ESRB, GDPR, IP laws
+Style: interactiv, ludic
+Default output: playbook (game design docs)
+
+21. Fashion – Apparel, Luxury, Streetwear
+Sub-industrii: Luxury, Streetwear, Sustainable
+Jargon: capsule collection, runway, fast fashion
+KPI: sell_through_rate, gross_margin, repeat_purchase
+Compliance: Ethical sourcing, Labor law, IP protection
+Style: vizual, aspirational
+Default output: playbook (lookbooks, brand strategy)
+
+22. Beauty – Cosmetics, Wellness, Skincare
+Sub-industrii: Cosmetics, Skincare, Wellness
+Jargon: skincare routine, clean beauty, formulation
+KPI: repeat_purchase_rate, influencer_engagement
+Compliance: FDA/EMA cosmetic regulations, cruelty-free
+Style: aspirational, influencer-driven
+Default output: playbook (launch cycle, brand kits)
+
+23. Spiritual – Coaching, Religion Tech, Communities
+Sub-industrii: Coaching, Spiritual Tech, Faith Groups
+Jargon: mindfulness, rituals, congregation, initiation
+KPI: engagement, retention, community_growth
+Compliance: Local religious law, ethical guidelines
+Style: empatic, ritualic, narativ
+Default output: playbook (ceremonii, cadre comunitare)
+
+24. Architecture – Urbanism, Design, Engineering
+Sub-industrii: Urban Design, Architecture Studios, Engineering
+Jargon: CAD, blueprint, BIM, zoning
+KPI: project_completion_time, cost_efficiency
+Compliance: Building codes, zoning, OSHA
+Style: vizual, tehnic, investițional
+Default output: spec (blueprints, design reports)
+
+25. Agriculture – AgriTech, Food Supply, Biotech
+Sub-industrii: AgriTech, Food Chains, Biotech
+Jargon: yield, crop cycle, irrigation, biotech
+KPI: yield_per_hectare, cost_per_unit, sustainability_index
+Compliance: Food safety regs, EU CAP, USDA rules
+Style: pragmatic, sustenabil
+Default output: playbook (proces agricol, optimizare)
+👉 Acesta este nomenclatorul complet CORE-25, baza pentru parametrul domain din 7D.
+
+
+
+
+
+📚 CORE-25 — Domeniul 1: SaaS (Software as a Service)
+🔹 Sub-industrii (20)
+
+B2B SaaS
+
+Productivity Tools (task mgmt, notes, docs)
+
+Collaboration Platforms (chat, video, wikis)
+
+DevTools (CI/CD, IDE plugins)
+
+CRM SaaS
+
+ERP SaaS
+
+HR SaaS (talent, payroll, engagement)
+
+FinOps SaaS (billing, spend mgmt)
+
+AI SaaS (LLMs, AutoML, AI ops)
+
+Low-Code / No-Code Builders
+
+Security SaaS (IAM, zero-trust, SIEM)
+
+API Management SaaS
+
+Data Analytics SaaS (BI dashboards)
+
+Customer Support SaaS (helpdesk, chatbots)
+
+IoT SaaS (device mgmt, telemetry)
+
+Marketing Automation SaaS
+
+Vertical SaaS (industry-specific: MedTech SaaS, EdTech SaaS)
+
+Supply Chain SaaS (logistics, procurement)
+
+Compliance SaaS (GDPR, SOC2, PCI audits)
+
+SaaS Marketplaces (aggregators, integrations)
+
+🔹 Jargon
+
+ARR, MRR, Churn, CAC, LTV
+
+Multi-tenant, API-first, Freemium
+
+DAU/WAU/MAU, Activation Rate
+
+Uptime SLA, Scalability, Stickiness
+
+Product-Led Growth (PLG)
+
+Payback Period, NRR (Net Revenue Retention)
+
+Customer Onboarding, Expansion Revenue
+
+Usage-based Pricing, Feature Flags
+
+Integration Depth, Platform Stickiness
+
+🔹 KPI (tipici pentru SaaS)
+
+MRR growth (%/mo)
+
+Churn rate (% logo & revenue)
+
+NRR (Net Revenue Retention, target >110%)
+
+CAC Payback Period (≤ 12 months)
+
+Activation Rate (% users reaching 1st value <7 days)
+
+DAU/WAU/MAU ratios (stickiness ≥0.4)
+
+Time-to-Value (TTV) (≤ 10 min first export/action)
+
+🔹 Compliance
+
+GDPR (EU) → data privacy, user consent
+
+SOC 2 Type II → security & availability audits
+
+ISO 27001 → info security mgmt
+
+PCI DSS → dacă există plăți integrate
+
+Data Residency → EU/US region-specific hosting
+
+SLA Commitments → uptime guarantees 99.9%+
+
+🔹 Style Bias
+
+Analitic & metric-driven
+
+Orientat pe growth KPIs și retention
+
+Formal în doc tehnice, persuasiv în go-to-market
+
+Explică cu cifre clare → fără “fluff”
+
+Limbaj compatibil cu investitori și echipe de produs
+
+🔹 Default Output
+
+Spec (documentație, arhitectură, playbook scalare)
+
+Format: .md (Pro), .pdf (Enterprise)
+
+Structură standard:
+
+Overview produs → KPI → Diagramă Arhitectură → Guardrails → Roadmap
+
+
+
+
+📚 CORE-25 — Domeniul 2: FinTech (Financial Technology)
+🔹 Sub-industrii (20)
+
+Digital Banking (neo-bănci, mobile-first)
+
+Mobile Wallets & SuperApps (Apple Pay, Revolut-style)
+
+Payments Infrastructure (PSPs, acquirers)
+
+BNPL (Buy Now, Pay Later)
+
+P2P Lending Platforms
+
+SME Lending (microcredit digitalizat)
+
+Mortgage Tech (origination, scoring)
+
+InsurTech – Health
+
+InsurTech – Auto
+
+InsurTech – Property
+
+WealthTech (robo-advisors, trading apps)
+
+Neobrokerage & Fractional Trading
+
+Crypto Payments & Stablecoins
+
+RegTech Platforms (AML, KYC, reporting)
+
+Fraud Detection SaaS (real-time scoring)
+
+Open Banking APIs & Aggregators
+
+Cross-Border Payments (remittances, FX)
+
+Embedded Finance (API payments in SaaS)
+
+Payroll FinTech (contractor payments, compliance)
+
+Treasury & Liquidity Management Platforms
+
+🔹 Jargon
+
+KYC (Know Your Customer)
+
+AML (Anti-Money Laundering)
+
+PSD2 / Open Banking
+
+Tokenization, Risk Scoring
+
+Payment Rails, Settlement
+
+Basel III, Regulatory Capital
+
+Credit Scoring, Alternative Data
+
+Customer Due Diligence (CDD)
+
+Fraud Rate, Chargebacks
+
+API Aggregator, Digital Identity
+
+🔹 KPI (tipici pentru FinTech)
+
+Fraud Rate (% transactions flagged)
+
+Approval Rate (% loans/cards approved)
+
+KYC Time (avg onboarding completion)
+
+Transaction Success Rate (% payments processed)
+
+Compliance Incidents (# per year)
+
+Cost per Transaction (CPT, in cents)
+
+Customer Lifetime Value (CLV) (profit per user)
+
+🔹 Compliance
+
+GDPR → protecția datelor clienților
+
+AML/KYC Directives → obligatorii la nivel EU/US
+
+PCI DSS → pentru procesarea cardurilor
+
+Basel III → pentru scoring & capital adequacy
+
+SEC / FCA Oversight → pentru trading & securities
+
+Insurance Regulation (NAIC/EIOPA) → pentru InsurTech
+
+PSD2 SCA → autentificare plăți puternică
+
+🔹 Style Bias
+
+Formal, layered, compliance-driven
+
+Ton de audit & reglementare
+
+Explică întotdeauna cu disclaimere
+
+Structurat în pași cu referințe legale
+
+Business-case + Risk-case în același cadru
+
+🔹 Default Output
+
+Spec (politici, proceduri, arhitecturi de risc)
+
+Format: .pdf (rapoarte de conformitate), .json (config APIs)
+
+Structură standard:
+
+Scope & Use-Case
+
+Compliance Mapping
+
+Risk Scoring Model
+
+KPI + SLA Targets
+
+Guardrails + Audit Checklist
+
+
+
+
+
+📚 CORE-25 — Domeniul 3: E-Commerce
+🔹 Sub-industrii (20)
+
+Online Retail (general stores)
+
+Marketplaces B2C (Amazon, eMAG)
+
+Marketplaces B2B (Alibaba, Faire)
+
+Social Commerce (TikTok Shop, Instagram)
+
+D2C Brands (native direct-to-consumer)
+
+Subscription Commerce (meal kits, beauty boxes)
+
+Dropshipping Stores
+
+Flash Sales Platforms (Zalando Lounge, Veepee)
+
+Luxury E-Commerce (Farfetch, Net-a-Porter)
+
+Sustainable E-Commerce (eco-friendly brands)
+
+Live Shopping (interactive streams)
+
+Grocery Delivery (Instacart, Glovo)
+
+Meal Kit E-Commerce (HelloFresh type)
+
+Fashion E-Commerce (Zara, H&M online)
+
+Beauty & Cosmetics E-Commerce (Sephora online)
+
+Electronics E-Commerce (Newegg, PC Garage)
+
+Furniture & Home E-Commerce (IKEA online)
+
+Cross-Border E-Commerce (global shipping)
+
+ReCommerce (second-hand & resale platforms)
+
+E-Commerce Logistics SaaS (fulfillment, 3PL APIs)
+
+🔹 Jargon
+
+Conversion Rate (CR), AOV (Average Order Value)
+
+ROAS (Return on Ad Spend), SKU, Cart Abandonment
+
+Checkout Funnel, Customer Journey
+
+Last-Mile Delivery, RFM Segmentation
+
+Retargeting, Cross-Sell, Upsell
+
+CAC (Customer Acquisition Cost), LTV
+
+Return Rate, Refund Policy
+
+Click-Through Rate (CTR), Bounce Rate
+
+Fulfillment SLA, Inventory Turnover
+
+Multi-channel Attribution
+
+🔹 KPI
+
+Conversion Rate (% visitors → buyers)
+
+AOV (Average Order Value)
+
+Cart Abandonment Rate
+
+Customer LTV (Lifetime Value)
+
+ROAS (ad efficiency)
+
+Repeat Purchase Rate
+
+Return Rate (% products returned)
+
+🔹 Compliance
+
+GDPR → protecția datelor clienților (cookies, profiling)
+
+PSD2 SCA → Strong Customer Authentication la checkout
+
+Consumer Protection Laws → drepturi retur & garanții
+
+Sales Tax / VAT → OSS, marketplace collection rules
+
+PCI DSS → plăți online securizate
+
+Accessibility (WCAG 2.2) → UI compatibil pentru toți userii
+
+🔹 Style Bias
+
+Pragmatic, funnel-oriented
+
+Mix data-driven + storytelling vizual
+
+Ton persuasiv, dar cu claritate operațională
+
+Focus pe optimizare & conversii
+
+Evidențiază KPI comercial imediat (CR, AOV)
+
+🔹 Default Output
+
+Playbook (funneluri, SOP execuție campanii, analize comerciale)
+
+Formate: .md (playbooks), .json (catalog, tracking), .pdf (rapoarte comerciale)
+
+Structură standard:
+
+Funnel Map + KPI Targets
+
+Experiment Design (A/B, CRO)
+
+Checkout Flow Audit
+
+Growth Playbook (ads, email, retargeting)
+
+Compliance Checklist
+
+
+
+
+📚 CORE-25 — Domeniul 4: Consulting
+🔹 Sub-industrii (20)
+
+Management Consulting
+
+Strategy Consulting
+
+Marketing Consulting
+
+IT Consulting
+
+Digital Transformation Advisory
+
+Financial Consulting
+
+HR & PeopleOps Consulting
+
+Operations Consulting
+
+Change Management Consulting
+
+Risk & Compliance Consulting
+
+Supply Chain Consulting
+
+Brand Strategy Consulting
+
+Customer Experience (CX) Consulting
+
+Product Management Consulting
+
+Pricing Strategy Consulting
+
+Sales Enablement Consulting
+
+Innovation & R&D Consulting
+
+Sustainability / ESG Consulting
+
+Crisis & Reputation Consulting
+
+Interim & Fractional Leadership (CxO-as-a-Service)
+
+🔹 Jargon
+
+OKRs, KPIs, ROI
+
+Buy-in, Change Management, Stakeholders
+
+Benchmarking, Due Diligence
+
+Deliverables, Workstreams, Roadmap
+
+Value Proposition, Business Case
+
+Engagement Model, Retainer
+
+Transformation Framework, Capability Map
+
+Governance, Maturity Model
+
+SWOT, PESTEL, Porter’s 5 Forces
+
+RACI Matrix
+
+🔹 KPI
+
+ROI on Projects (% improvement vs cost)
+
+Client Satisfaction (CSAT/NPS)
+
+Decision Speed (time to board approval)
+
+Execution Alignment (% initiatives delivered as scoped)
+
+On-Time Delivery Rate (% projects delivered vs committed)
+
+Revenue Impact per Engagement
+
+Repeat Engagement Rate
+
+🔹 Compliance
+
+NDAs & Confidentiality Clauses → standard contractuale
+
+ISO 9001 → quality management systems
+
+Data Protection → GDPR pentru consultanță digitală
+
+Professional Codes of Conduct (ACCA, PMI, etc.)
+
+Anti-Bribery & Corruption Regulations (FCPA, UK Bribery Act)
+
+🔹 Style Bias
+
+Audit-like, autoritar, structură clară
+
+Limbaj de boardroom → simplu, dar puternic
+
+Folosește diagrame, frameworks, bullets
+
+Ton de „consilier expert” cu autoritate epistemică
+
+Mix: logică + business impact
+
+🔹 Default Output
+
+Spec (diagrame, rapoarte executive, planuri de transformare)
+
+Formate: .pdf (executive summary), .md (frameworks, SOP-uri), .pptx (board decks)
+
+Structură standard:
+
+Executive Summary
+
+Problem Statement → Framework → Solution
+
+KPI Mapping
+
+Implementation Roadmap
+
+Risk & Mitigation Plan
+
+
+
+
+📚 CORE-25 — Domeniul 5: Education
+🔹 Sub-industrii (20)
+
+EdTech Platforms (LMS, adaptive learning)
+
+K-12 Schools Digital Tools
+
+Higher Education (universities, online degrees)
+
+MOOCs (Coursera, Udemy type)
+
+Corporate Learning & Development
+
+Microlearning Platforms (bite-sized content)
+
+Language Learning Apps
+
+Exam Prep & Certification Platforms
+
+Tutoring Platforms (1:1, group sessions)
+
+Gamified Learning Systems
+
+AR/VR Education (immersive classrooms)
+
+Teacher Tools (lesson planning, grading automation)
+
+Student Engagement Platforms (polls, Q&A, feedback)
+
+Peer-to-Peer Learning Communities
+
+Special Education Tech (assistive tools)
+
+Workforce Reskilling Platforms
+
+Test & Assessment SaaS (proctoring, AI-grading)
+
+Knowledge Management Systems (corporate academies)
+
+Hybrid/Blended Learning Systems
+
+Education Marketplaces (courses, tutors, content licensing)
+
+🔹 Jargon
+
+LMS (Learning Management System)
+
+Cohort-Based Learning, Blended Learning
+
+Microlearning, Gamification, XP/Badges
+
+Learning Outcomes, Student Retention
+
+Adaptive Learning, Rubric Grading
+
+Knowledge Retention, Dropout Rate
+
+Engagement Index, Peer Review
+
+Accessibility Standards (WCAG, ADA)
+
+Proctoring, Academic Integrity
+
+ROI on Training
+
+🔹 KPI
+
+Engagement Rate (% active students / enrolled)
+
+Completion Rate (% who finish a course)
+
+Dropout Rate
+
+Knowledge Retention (measured via assessments)
+
+Satisfaction Score (student/teacher feedback)
+
+Time-to-Skill (avg. time until competency)
+
+ROI of Training (business L&D programs)
+
+🔹 Compliance
+
+FERPA (US) → protecția datelor educaționale
+
+GDPR (EU students) → privacy în platforme EdTech
+
+WCAG 2.2 / ADA → accesibilitate digitală
+
+SCORM/xAPI → standarde conținut educațional
+
+Plagiarism Detection & Integrity Codes
+
+Local Education Laws & Accreditation
+
+🔹 Style Bias
+
+Narativ, empatic, gamified
+
+Ton de coach/mentor → simplu, dar motivant
+
+Structuri interactive (quiz, rubrici, XP)
+
+Limbaj incluziv și accesibil (child-proof)
+
+Explică prin exemple concrete și aplicații
+
+🔹 Default Output
+
+Playbook (curriculum maps, lesson plans, rubrics de evaluare)
+
+Formate: .md (planuri lecție), .pdf (curriculum complet), .json (analytics, KPIs)
+
+Structură standard:
+
+Learning Objectives
+
+Curriculum Map
+
+Lesson Plan Templates
+
+Evaluation Rubrics
+
+Engagement & Retention KPI
+
+
+
+
+📚 CORE-25 — Domeniul 6: Healthcare
+🔹 Sub-industrii (20)
+
+Hospitals & Clinics (management systems)
+
+Telemedicine Platforms (remote care)
+
+MedTech Devices (IoT health devices)
+
+Digital Health Apps (wellness, tracking)
+
+Electronic Health Records (EHR/EMR)
+
+Pharma R&D (drug discovery with AI)
+
+Clinical Trial Management Platforms
+
+Health Insurance Tech (claims, policy mgmt)
+
+Genomics & Personalized Medicine
+
+Diagnostics AI (imaging, pathology)
+
+Remote Patient Monitoring (IoT sensors)
+
+Healthcare Analytics (population health)
+
+Mental Health Apps (therapy, meditation)
+
+Fitness & Wellness Tech
+
+Rehabilitation Tech (VR/PT solutions)
+
+Nursing & Care Management Systems
+
+Supply Chain in Healthcare (cold chain pharma)
+
+Regulatory Compliance Platforms (FDA/EMA)
+
+Elderly Care Tech (home monitoring)
+
+Emergency & Crisis Response Tech
+
+🔹 Jargon
+
+EMR/EHR, HL7, FHIR
+
+HIPAA Compliance, GDPR Health Data
+
+ICD-10, SNOMED CT (medical coding)
+
+Clinical Trial Phases, IRB Approval
+
+Patient Journey, Readmission Rate
+
+Treatment Adherence, Outcome Metrics
+
+Teleconsultation, Virtual Care
+
+HealthTech, Digital Therapeutics
+
+Pharmacovigilance, Adverse Events
+
+Remote Monitoring, Wearables
+
+🔹 KPI
+
+Patient Outcome Improvement (% recovery metrics)
+
+Readmission Rate (% within 30 days)
+
+Treatment Adherence (% patients following regimens)
+
+Teleconsultation Volume (# sessions/month)
+
+Clinical Trial Success Rate (%)
+
+Time-to-Diagnosis (avg. days from first consult)
+
+Cost per Patient (efficiency indicator)
+
+🔹 Compliance
+
+HIPAA (US) → privacy & security for patient data
+
+GDPR (EU) → sensitive personal data in health
+
+FDA/EMA Regulations → medical devices, drugs
+
+CE Marking → compliance for MedTech in EU
+
+Medical Ethics Boards → approvals for research/trials
+
+HL7/FHIR Standards → data exchange interoperability
+
+ISO 13485 → quality management for medical devices
+
+🔹 Style Bias
+
+Formal, ethical, evidence-driven
+
+Limbaj bazat pe dovezi clinice și statistici
+
+Ton precaut, respectând confidențialitatea
+
+Structuri de raport medical/protocol
+
+Stil „guideline” + referințe la standarde medicale
+
+🔹 Default Output
+
+Spec (protocoale clinice, rapoarte de testare, ghiduri medicale)
+
+Formate: .pdf (clinical reports), .json (EHR data), .md (guidelines)
+
+Structură standard:
+
+Medical Background & Protocol
+
+KPI Outcome Metrics
+
+Compliance Mapping (HIPAA, GDPR)
+
+Treatment Flow or Trial Process
+
+Risk & Mitigation (Adverse Events)
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 7: Legal
+🔹 Sub-industrii (20)
+
+Corporate Law (M&A, governance)
+
+Litigation (civil, penal, arbitraj)
+
+Intellectual Property Law (patente, copyright, trademarks)
+
+Contract Automation (CLM SaaS)
+
+Legal Tech Platforms (e-discovery, case mgmt)
+
+Compliance & Regulatory Consulting
+
+Employment Law
+
+Family Law (divorce, custody)
+
+Real Estate Law (leases, transactions)
+
+Tax Law (local, cross-border)
+
+International Arbitration & Disputes
+
+Data Privacy & Protection Law (GDPR, CCPA)
+
+Financial Regulation & Securities Law
+
+Environmental Law (ESG, green compliance)
+
+Healthcare Law (HIPAA, medical liability)
+
+Legal Process Outsourcing (LPO)
+
+Court Tech (AI-assisted trials, transcripts)
+
+Legal Research Platforms (AI-driven search)
+
+Notary Tech & E-Signature Compliance
+
+Bar Association & Professional Services
+
+🔹 Jargon
+
+Case Law, Precedent, Due Diligence
+
+Arbitration, Mediation, Settlement
+
+Contract Lifecycle Mgmt (CLM)
+
+Compliance Framework, Governance
+
+Discovery, Evidence Chain, Redaction
+
+Liability, Indemnification, Force Majeure
+
+Statutory, Common Law, Civil Code
+
+Legal Opinions, Memorandum
+
+Regulatory Filing, Risk Mitigation
+
+Court Filings, Briefs, Affidavits
+
+🔹 KPI
+
+Contract Review Time (avg. hours → minutes)
+
+Compliance Incidents (# per year)
+
+Case Win Rate (%)
+
+Document Automation Adoption (%)
+
+Client Retention Rate (%)
+
+Legal Cost per Case
+
+Time to Resolution (disputes/arbitrations)
+
+🔹 Compliance
+
+GDPR / CCPA → privacy & data handling
+
+SOX (Sarbanes-Oxley) → corp governance compliance
+
+AML/KYC Directives → financial law overlap
+
+Bar Association Rules (per jurisdiction)
+
+SEC / FCA Regulations (securities law)
+
+HIPAA & Healthcare Acts (for med-law)
+
+E-Signature Compliance (eIDAS, ESIGN Act)
+
+🔹 Style Bias
+
+Juridic, precis, auditabil
+
+Zero ambiguitate → formulări stricte, articulate
+
+Limbaj formal, referințe legislative obligatorii
+
+Structură de memorandum/contract/procedură
+
+Ton conservator & defensiv (risc-averse)
+
+🔹 Default Output
+
+Spec (contracte, proceduri, opinii legale, rapoarte de conformitate)
+
+Formate: .pdf (contracte, politici), .md (proceduri interne), .json (schemas CLM)
+
+Structură standard:
+
+Legal Context
+
+Issue & Applicable Law
+
+Precedent/Statutory Basis
+
+Opinion/Procedure
+
+Compliance Guardrails
+
+
+
+
+
+📚 CORE-25 — Domeniul 8: Marketing
+🔹 Sub-industrii (20)
+
+Creative Agencies (branding, storytelling)
+
+Digital Marketing Agencies
+
+SEO Agencies (technical/on-page/off-page)
+
+Content Marketing Studios
+
+Performance Marketing (PPC, paid media)
+
+Social Media Marketing (SMM)
+
+Influencer Marketing Platforms
+
+MarTech SaaS (CRM, analytics, automation)
+
+Email Marketing Automation
+
+Video Marketing (YouTube, TikTok)
+
+Growth Hacking Agencies
+
+PR & Media Relations Agencies
+
+Affiliate Marketing Networks
+
+Mobile Marketing (apps, push notifications)
+
+Conversion Rate Optimization (CRO)
+
+Marketing Analytics & Attribution Platforms
+
+Event & Experiential Marketing
+
+Employer Branding Agencies
+
+Community Marketing (Discord, Telegram, forums)
+
+B2B ABM (Account-Based Marketing)
+
+🔹 Jargon
+
+ROAS (Return on Ad Spend)
+
+CTR (Click-Through Rate), CPC, CPM
+
+Funnel, TOFU/MOFU/BOFU
+
+Customer Persona, ICP
+
+Content Pillars, Evergreen Content
+
+Growth Loop, Virality Coefficient
+
+A/B Testing, Multivariate Testing
+
+Lead Magnet, Tripwire, Upsell
+
+Attribution Model, Last Touch/First Touch
+
+Share of Voice (SOV), Brand Lift
+
+🔹 KPI
+
+CTR (% clicks per impression)
+
+Conversion Rate (visitors → leads/customers)
+
+ROAS (ad efficiency ratio)
+
+CAC (Customer Acquisition Cost)
+
+Engagement Rate (likes, comments, shares)
+
+Share of Voice (vs competition)
+
+Organic Traffic Growth (SEO-driven)
+
+🔹 Compliance
+
+GDPR → cookie consent, profiling
+
+FTC Guidelines (US) → influencer & ads disclosures
+
+ASA (UK) → advertising standards
+
+CAN-SPAM / ePrivacy Directive → email marketing rules
+
+Consumer Protection Laws (global ads)
+
+Copyright/IP → content ownership
+
+🔹 Style Bias
+
+Creativ, persuasiv, storytelling + data-driven
+
+Ton adaptiv: emoțional (B2C) vs rațional (B2B)
+
+Mix vizual + retoric
+
+Orientat pe impact rapid & conversii
+
+Microcopy scurt, punchy, CTA-centric
+
+🔹 Default Output
+
+Playbook (campanii, funneluri, calendare editoriale)
+
+Formate: .md (calendare & SOP-uri), .pdf (planuri media), .json (campaign configs)
+
+Structură standard:
+
+Campaign Overview
+
+Funnel Map & Assets
+
+Content Calendar
+
+KPI Targets
+
+Compliance Checklist
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 9: Media
+🔹 Sub-industrii (20)
+
+Publishing Houses (books, journals)
+
+Digital News Platforms
+
+Streaming Services (OTT, VOD)
+
+Social Media Influencers
+
+Podcast Networks
+
+Entertainment Studios (TV, film)
+
+Music Labels & Streaming
+
+Gaming/Esports Media Outlets
+
+Content Syndication Platforms
+
+UGC Platforms (YouTube, TikTok)
+
+Short-form Video Platforms (Reels, Shorts)
+
+Community Media (forums, newsletters)
+
+Independent Media & Bloggers
+
+Investigative Journalism Outlets
+
+Opinion & Commentary Platforms
+
+Sports Media & Broadcasters
+
+Meme Culture Platforms
+
+Interactive Media (AR/VR)
+
+Local & Regional Press
+
+Digital Magazines & Niche Zines
+
+🔹 Jargon
+
+CPM (Cost per Mille), CPC, CPE
+
+OTT (Over-the-Top), VOD, Streaming Rights
+
+Syndication, Virality, Engagement Rate
+
+Watch Time, Subscriber Growth
+
+UGC (User-Generated Content)
+
+Influencer ROI, Reach vs Impressions
+
+Branded Content, Native Ads
+
+Press Release, Editorial Calendar
+
+DAU/MAU Stickiness
+
+Creator Economy
+
+🔹 KPI
+
+Audience Reach (unique users)
+
+Watch Time / Average Session Duration
+
+Subscriber Growth Rate
+
+Engagement Rate (comments, shares, likes)
+
+Ad Revenue (CPM, CPC)
+
+Virality Coefficient
+
+Retention (day 7, day 30)
+
+🔹 Compliance
+
+Copyright/IP Law → licensing, fair use
+
+GDPR / CCPA → audience data protection
+
+DMA (EU Digital Markets Act) → platform responsibility
+
+FTC / ASA Disclosures → sponsored content labeling
+
+Press Ethics Codes → fact-checking, balance
+
+Broadcasting Licenses (local/national)
+
+🔹 Style Bias
+
+Narativ, atractiv, factual
+
+Ton: de la jurnalistic neutru → la entertainment vibrant
+
+Include elemente vizuale, titluri captivante
+
+Limbaj simplu, ușor de consumat
+
+Mix între emoție + factualitate verificabilă
+
+🔹 Default Output
+
+Playbook (planuri editoriale, campanii media, grile de conținut)
+
+Formate: .md (calendar editorial), .pdf (raport reach), .json (distribution schedule)
+
+Structură standard:
+
+Editorial Strategy
+
+Content Formats & Channels
+
+Distribution Plan
+
+KPI Targets (reach, engagement, revenue)
+
+Compliance & IP Checklist
+
+
+
+
+
+📚 CORE-25 — Domeniul 10: Real Estate
+🔹 Sub-industrii (20)
+
+PropTech Platforms (property mgmt SaaS)
+
+Smart Buildings (IoT, energy efficiency)
+
+Real Estate Marketplaces (Zillow-type)
+
+Interior Design Platforms
+
+Architecture & Planning SaaS
+
+Facility Management Tech
+
+Construction Tech (BIM, CAD)
+
+Real Estate Investment Platforms (crowdfunding, REITs)
+
+Mortgage & Lending Tech
+
+Rental Marketplaces (short/long term)
+
+Co-living & Shared Spaces Platforms
+
+Co-working Management SaaS
+
+Real Estate Analytics & Valuation
+
+3D Virtual Tours & AR Visualization
+
+Lease Management & Contract Automation
+
+Property Compliance & Legal Tech
+
+Smart Home Ecosystems (IoT integration)
+
+Real Estate Tokenization (fractional ownership)
+
+Green Building Tech (sustainable certification)
+
+Construction Supply Chain Platforms
+
+🔹 Jargon
+
+MLS (Multiple Listing Service)
+
+Mortgage Origination, Valuation Models
+
+Occupancy Rate, Rental Yield
+
+BIM (Building Information Modeling)
+
+CAPEX, OPEX, ROI
+
+Facility Lifecycle, Preventive Maintenance
+
+Smart Meters, Energy Star Rating
+
+Property Tokenization, REIT
+
+Tenant Retention, Lease Agreement
+
+Due Diligence, Zoning Laws
+
+🔹 KPI
+
+Occupancy Rate (% rented/available)
+
+Rental Yield (% ROI on property)
+
+Time on Market (days to sale/lease)
+
+Project Completion Time (construction)
+
+Lead-to-Contract Conversion Rate
+
+Operating Cost per Facility
+
+Tenant Retention Rate
+
+🔹 Compliance
+
+Zoning Laws & Building Codes (local/national)
+
+GDPR / Tenant Data Privacy
+
+OSHA → safety in construction/facilities
+
+LEED / BREEAM Certifications → sustainability compliance
+
+Contract & Lease Regulations
+
+Fair Housing Laws
+
+Anti-Money Laundering (AML) for property transactions
+
+🔹 Style Bias
+
+Pragmatic, investițional, tehnic
+
+Limbaj: mixt între financiar și arhitectural
+
+Folosește diagrame, tabele ROI, planuri vizuale
+
+Ton profesional, „due diligence ready”
+
+Stil vizual + metric-driven
+
+🔹 Default Output
+
+Spec (analize investiții, planuri construcție, rapoarte facility)
+
+Formate: .pdf (financial/architecture reports), .md (guidelines, SOP-uri), .json (valuation models)
+
+Structură standard:
+
+Market/Asset Overview
+
+KPI Dashboard
+
+Valuation & ROI Calculation
+
+Compliance Mapping (codes, zoning, safety)
+
+Roadmap (construction/facility lifecycle)
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 11: HR (Human Resources)
+🔹 Sub-industrii (20)
+
+Talent Acquisition Platforms
+
+Recruiting Agencies
+
+Applicant Tracking Systems (ATS)
+
+HR Tech SaaS (HRIS, HCM)
+
+PeopleOps Platforms (culture, workflows)
+
+Payroll Management Systems
+
+Benefits & Compensation Platforms
+
+Employee Engagement SaaS
+
+Learning & Development (L&D) Platforms
+
+Performance Management Systems
+
+Onboarding Automation Platforms
+
+Diversity, Equity & Inclusion (DEI) Tools
+
+Employee Wellbeing & Mental Health Apps
+
+Workforce Analytics Platforms
+
+Remote Work Management Tools
+
+Freelance / Contractor Management Systems
+
+Employee Feedback & Survey Tools
+
+Compliance & Labor Law Platforms
+
+Succession Planning Systems
+
+HR Outsourcing & Shared Services
+
+🔹 Jargon
+
+ATS, HCM, HRIS
+
+Turnover, Retention, Attrition
+
+PeopleOps, Employee Lifecycle
+
+Engagement Index, Pulse Surveys
+
+DEI, Inclusive Hiring
+
+Performance Reviews, 360 Feedback
+
+Compensation Benchmarking
+
+Onboarding, Offboarding
+
+Employee Net Promoter Score (eNPS)
+
+Workforce Planning, Talent Pipeline
+
+🔹 KPI
+
+Time-to-Hire (days)
+
+Cost per Hire
+
+Employee Retention Rate (%)
+
+Offer Acceptance Rate (%)
+
+Employee Satisfaction Index (survey score)
+
+Engagement Score / eNPS
+
+Attrition Rate (%)
+
+🔹 Compliance
+
+GDPR (candidate & employee data)
+
+Equal Employment Opportunity Laws (EEOC, EU directives)
+
+Labor Law Compliance (local/national)
+
+OSHA (workplace safety)
+
+FLSA (US) → wage & hour rules
+
+ISO 30414 → human capital reporting standards
+
+Data Retention & Right-to-Erasure Policies
+
+🔹 Style Bias
+
+Empatic, people-centric, motivational
+
+Ton prietenos, dar bazat pe date
+
+Limbaj clar, accesibil pentru angajați & manageri
+
+Evită jargon excesiv → focus pe impact cultural
+
+Echilibru între emoție + metrici
+
+🔹 Default Output
+
+Playbook (proces de recrutare, onboarding, survey frameworks, L&D curricula)
+
+Formate: .md (HR SOP-uri), .pdf (rapoarte engagement, performance), .json (HR analytics dashboards)
+
+Structură standard:
+
+Employee Lifecycle Overview
+
+Recruitment Funnel & KPIs
+
+Engagement Framework (surveys, DEI)
+
+Compliance Mapping (labor law, GDPR)
+
+Retention & Succession Roadmap
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 12: NGO (Non-Governmental Organizations)
+🔹 Sub-industrii (20)
+
+International NGOs (UNICEF, WWF-type)
+
+Humanitarian Aid Organizations
+
+Grassroots Activism Movements
+
+Philanthropic Foundations
+
+Advocacy & Policy NGOs
+
+Environmental NGOs
+
+Human Rights NGOs
+
+Education NGOs (school access, literacy)
+
+Healthcare NGOs (vaccination, clinics)
+
+Disaster Relief Organizations
+
+Community Development NGOs
+
+Poverty Alleviation NGOs
+
+Refugee & Migration NGOs
+
+Gender Equality NGOs
+
+Child Protection NGOs
+
+Arts & Culture Foundations
+
+Research & Think-Tank NGOs
+
+Digital Rights & Internet Freedom NGOs
+
+Faith-Based NGOs
+
+Volunteer Mobilization Platforms
+
+🔹 Jargon
+
+Impact Report, Social ROI (SROI)
+
+SDGs (UN Sustainable Development Goals)
+
+Donor Engagement, Stewardship
+
+Fundraising Pipeline, Grantmaking
+
+Advocacy, Policy Change
+
+Capacity Building, Field Operations
+
+Stakeholder Mapping
+
+Beneficiary Outreach
+
+Transparency Index
+
+Monitoring & Evaluation (M&E)
+
+🔹 KPI
+
+Fundraising Growth Rate
+
+Donor Retention Rate (%)
+
+Impact Metrics Achieved (% vs targets)
+
+Program Reach (# beneficiaries)
+
+Cost per Beneficiary
+
+Volunteer Engagement Rate
+
+Advocacy Success Rate (% policies influenced)
+
+🔹 Compliance
+
+NGO Governance Codes (charity commission, IRS 501(c)(3))
+
+GDPR / Data Privacy (donors & beneficiaries)
+
+AML / Anti-Terrorism Financing Laws
+
+Financial Transparency & Audit Standards
+
+OFAC/EU Sanctions Compliance (international ops)
+
+Ethical Fundraising Standards (AFP, EU Fundraising codes)
+
+Child Protection Policies (safeguarding frameworks)
+
+🔹 Style Bias
+
+Empatic, narativ, orientat pe impact
+
+Limbaj accesibil, povestiri umane, storytelling emoțional
+
+Include dovezi, dar transmite și misiune inspirațională
+
+Ton credibil: transparență + emoție
+
+Echilibru între date (impact) + povești (beneficiari)
+
+🔹 Default Output
+
+Playbook (rapoarte de impact, campanii fundraising, activism frameworks)
+
+Formate: .pdf (impact report), .md (campaign frameworks), .json (donor data, program KPIs)
+
+Structură standard:
+
+Mission & Context
+
+Programs & Reach
+
+Impact Metrics & SROI
+
+Fundraising Pipeline & Donor KPIs
+
+Compliance & Governance Checklist
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 13: Government
+🔹 Sub-industrii (20)
+
+Central Government (ministere, agenții)
+
+Local Government & Municipalities
+
+Policy Think Tanks
+
+Civic Tech Startups (open data, participare civică)
+
+Digital Public Services (e-gov portals)
+
+Smart City Platforms
+
+Public Health Agencies
+
+Tax & Revenue Authorities
+
+Transport & Infrastructure Authorities
+
+Education Departments & Regulators
+
+Justice & Courts Digitalization
+
+Defense & Security Digital Systems
+
+Immigration & Border Tech
+
+Procurement & Tender Platforms
+
+Transparency & Anti-Corruption Bodies
+
+Citizen Engagement Platforms (consultări publice)
+
+Legislative Tech (parlament digitalizat)
+
+Voting Tech (e-voting, audit systems)
+
+Government Research Institutes
+
+International Cooperation & Diplomatic Tech
+
+🔹 Jargon
+
+Public Policy, Regulatory Framework
+
+Citizen Engagement, Open Data
+
+Service Delivery, Bureaucratic Efficiency
+
+FOIA (Freedom of Information Act)
+
+Procurement, Tendering, RFP
+
+Digital Sovereignty, Cyber Governance
+
+Smart Governance, Civic Participation
+
+Policy Whitepaper, Regulatory Sandbox
+
+Public Sector Innovation
+
+Transparency Index
+
+🔹 KPI
+
+Service Delivery Time (citizen request → resolution)
+
+Transparency Index (global ranking score)
+
+Citizen Satisfaction Score
+
+Digital Service Adoption Rate
+
+Policy Implementation Rate
+
+Budget Utilization Efficiency
+
+Procurement Fairness Index
+
+🔹 Compliance
+
+GDPR → citizen data privacy
+
+FOIA / Right to Information Acts
+
+Procurement Laws (EU, national)
+
+NIS2 (EU) → public sector cybersecurity
+
+Accessibility (WCAG 2.2) → mandatory for public services
+
+Anti-Corruption & Ethics Regulations
+
+Data Localization & Sovereignty Rules
+
+🔹 Style Bias
+
+Formal, instituțional, orientat pe transparență
+
+Limbaj simplu, clar, dar serios
+
+Structuri standardizate (policy briefs, dashboards)
+
+Ton „neutral governance” → obiectiv & verificabil
+
+Accent pe măsurabilitate & legitimitate
+
+🔹 Default Output
+
+Spec (policy papers, dashboards, civic frameworks)
+
+Formate: .pdf (policy briefs), .md (frameworkuri legislative), .json (open data schemas)
+
+Structură standard:
+
+Policy Context & Problem
+
+Stakeholders & Impact
+
+Implementation Roadmap
+
+KPIs & Monitoring
+
+Legal & Compliance Guardrails
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 14: Web3
+🔹 Sub-industrii (20)
+
+DeFi Protocols (DEX, lending, staking)
+
+Crypto Exchanges (CEX, DEX hybrids)
+
+NFT Marketplaces
+
+DAOs (governance collectives)
+
+L1 Blockchains (Ethereum, Solana, etc.)
+
+L2 Scaling Solutions (rollups, sidechains)
+
+Stablecoins & Payment Tokens
+
+Crypto Custody & Wallets
+
+Web3 Identity (DIDs, SSI)
+
+Tokenization Platforms (real estate, assets)
+
+Play-to-Earn Gaming (GameFi)
+
+Metaverse Platforms
+
+Cross-chain Bridges
+
+Oracles (Chainlink-type)
+
+DeSci (Decentralized Science)
+
+Decentralized Storage (IPFS, Filecoin)
+
+Decentralized Social Media (Lens, Farcaster)
+
+Privacy Coins & Mixers
+
+Web3 Security & Auditing Firms
+
+RegTech for Web3 (AML/KYC blockchain compliance)
+
+🔹 Jargon
+
+Smart Contracts, DApp, Gas Fees
+
+Staking, Yield Farming, Liquidity Pool
+
+Tokenomics, Governance Tokens
+
+DAO Treasury, Multi-Sig
+
+NFT Minting, Floor Price
+
+Consensus Mechanisms (PoW, PoS)
+
+Bridging, Interoperability
+
+Airdrops, Incentive Mechanisms
+
+Sybil Resistance, Reputation Layer
+
+On-chain vs Off-chain Data
+
+🔹 KPI
+
+Total Value Locked (TVL)
+
+Active Wallets (# unique addresses)
+
+Transaction Throughput (TPS)
+
+Protocol Revenue
+
+DAO Participation Rate (%)
+
+NFT Floor Price & Volume
+
+Cross-chain Transaction Success Rate
+
+🔹 Compliance
+
+MiCA (EU) → crypto-assets regulation
+
+SEC / CFTC Oversight (US) → securities vs commodities
+
+AML / KYC Requirements (global standards)
+
+FATF Travel Rule → crypto transfers
+
+GDPR → blockchain & data immutability conflicts
+
+Intellectual Property Law → NFTs & content rights
+
+OFAC Sanctions Lists → blacklisted wallets
+
+🔹 Style Bias
+
+Tehnic, comunitar, experimental
+
+Limbaj descentralizat: „trustless”, „permissionless”
+
+Stil manifest + whitepaper
+
+Focalizat pe cod + comunitate
+
+Ton explorator, dar cu disclaimere de risc
+
+🔹 Default Output
+
+Spec (tokenomics, governance models, protocol designs)
+
+Formate: .md (whitepapers, DAO manifestos), .json (smart contract schemas), .pdf (investor decks)
+
+Structură standard:
+
+Problem & Decentralization Rationale
+
+Protocol Architecture
+
+Tokenomics & Incentives
+
+Governance Mechanism
+
+Compliance Considerations
+
+
+
+
+
+📚 CORE-25 — Domeniul 15: AI/ML
+🔹 Sub-industrii (20)
+
+Applied AI SaaS (verticalized AI tools)
+
+AI Research Labs (OpenAI, DeepMind-style)
+
+Multi-Agent Systems (orchestration frameworks)
+
+PromptOps Platforms (prompt mgmt & testing)
+
+AutoML Platforms (model training automation)
+
+Computer Vision AI (image/video analysis)
+
+Natural Language Processing (chatbots, LLMs)
+
+Speech AI (recognition, synthesis)
+
+Predictive Analytics Platforms
+
+Reinforcement Learning Systems
+
+Generative AI (text, image, audio, video)
+
+Edge AI (IoT, embedded inference)
+
+AI Cybersecurity (threat detection)
+
+Healthcare AI (diagnostics, genomics)
+
+Financial AI (trading, risk scoring)
+
+Retail AI (recommendations, personalization)
+
+HR AI (talent scoring, bias detection)
+
+Robotics & Autonomous Systems
+
+AI Infrastructure (MLOps, vector DBs)
+
+Responsible AI & Ethics Platforms
+
+🔹 Jargon
+
+LLM (Large Language Model), Embeddings
+
+Fine-Tuning, Few-Shot, Zero-Shot
+
+Multi-Agent, Orchestration, Memory
+
+Hallucination, Guardrails, Prompt Chaining
+
+Latency, Token Usage, Context Window
+
+Vector Databases, RAG (Retrieval-Augmented Generation)
+
+RLHF (Reinforcement Learning with Human Feedback)
+
+Model Card, Bias Report
+
+Inference Pipeline, Evaluation Suite
+
+Synthetic Data, Auto-labeling
+
+🔹 KPI
+
+Model Accuracy (task-specific benchmarks)
+
+Latency (ms per inference)
+
+Adoption Rate (% active orgs/users)
+
+Token Efficiency (cost per request)
+
+Agent Success Rate (%)
+
+Bias / Fairness Metrics (Δ across cohorts)
+
+Deployment Cost per 1k Requests
+
+🔹 Compliance
+
+EU AI Act (risk categories, transparency)
+
+NIST AI Risk Framework (US)
+
+GDPR (data minimization, explainability)
+
+Copyright/IP (training data, outputs)
+
+Ethical AI Guidelines (OECD, UNESCO)
+
+HIPAA/FDA (AI in healthcare)
+
+SEC/FINRA Oversight (AI in finance)
+
+🔹 Style Bias
+
+Semi-academic, tehnic, pragmatic
+
+Whitepaper style → dar aplicat pe business outcomes
+
+Ton: cercetare + produs (lab + SaaS)
+
+Evidențierea limitărilor și bias-urilor
+
+Explică clar scoruri și guardrails
+
+🔹 Default Output
+
+Spec (model cards, frameworks, evaluation protocols)
+
+Formate: .md (framework docs), .pdf (research papers, model cards), .json (evaluation schemas)
+
+Structură standard:
+
+Problem & Task Context
+
+Model Architecture & Data
+
+KPIs & Benchmark Results
+
+Bias & Ethical Considerations
+
+Deployment Guide
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 16: Cybersecurity
+🔹 Sub-industrii (20)
+
+Threat Intelligence Platforms
+
+SOC Operations (Security Operations Centers)
+
+Identity & Access Management (IAM)
+
+Zero-Trust Network Security
+
+Endpoint Security Platforms
+
+Cloud Security (CSPM, CWPP)
+
+Application Security (SAST/DAST)
+
+Network Security (firewalls, IDS/IPS)
+
+Vulnerability Management & Patch Mgmt
+
+Penetration Testing & Red Team Services
+
+Incident Response Platforms
+
+Phishing Protection & Training
+
+Ransomware Defense Solutions
+
+Data Loss Prevention (DLP)
+
+Encryption & Key Management
+
+OT/ICS Security (industrial systems)
+
+Mobile Security (MDM, app protection)
+
+Privacy & Compliance Platforms
+
+DevSecOps Tools (CI/CD integration)
+
+Cyber Insurance & Risk Platforms
+
+🔹 Jargon
+
+SIEM (Security Information & Event Mgmt)
+
+CVE, CVSS (vulnerabilities scoring)
+
+Phishing, Spear-Phishing, Social Engineering
+
+Zero-Trust, MFA, SSO
+
+Red Team, Blue Team, Purple Team
+
+Threat Hunting, IOC, TTPs
+
+Ransomware, Malware, Exploit
+
+Incident Response Plan (IRP)
+
+DLP, Tokenization, Encryption at Rest/In Transit
+
+NIS2, SOC2, ISO 27001
+
+🔹 KPI
+
+MTTR (Mean Time to Respond)
+
+Mean Time to Detect (MTTD)
+
+False Positive Rate
+
+Breach Cost Avoidance (savings est.)
+
+Patch Compliance Rate
+
+Incident Containment Time
+
+Phishing Simulation Success Rate (%)
+
+🔹 Compliance
+
+ISO 27001 / SOC2 Type II → infosec frameworks
+
+NIS2 Directive (EU) → critical infra security
+
+GDPR / CCPA → data privacy overlap
+
+PCI DSS → secure payment systems
+
+HIPAA → health data security
+
+FISMA / FedRAMP (US gov)
+
+OWASP ASVS → app sec standards
+
+🔹 Style Bias
+
+Formal, tehnic, risk-based
+
+Ton „defensiv & auditabil”
+
+Structură de playbook incident response
+
+Include scoruri de risc, clasificări (CVE/CVSS)
+
+Evită limbaj emoțional → doar fapte + măsuri
+
+🔹 Default Output
+
+Spec (incident response playbooks, threat intel reports, compliance checklists)
+
+Formate: .pdf (audit/compliance reports), .md (incident SOPs), .json (IOC feeds)
+
+Structură standard:
+
+Threat Model & Scope
+
+Risk & Vulnerabilities (CVEs)
+
+KPIs & Security Metrics
+
+Incident Response Protocol
+
+Compliance Mapping & Guardrails
+
+
+
+
+
+📚 CORE-25 — Domeniul 17: Manufacturing
+🔹 Sub-industrii (20)
+
+Industry 4.0 Platforms (IoT-driven factories)
+
+Smart Factories (automation, sensors)
+
+Robotics Manufacturing (industrial robots)
+
+Automotive Manufacturing (OEM, suppliers)
+
+Aerospace Manufacturing (FAA/EASA compliance)
+
+Electronics & Semiconductors
+
+Additive Manufacturing (3D printing)
+
+CNC & Machining Systems
+
+Industrial IoT Platforms
+
+Predictive Maintenance Systems
+
+Supply Chain & Production Planning
+
+Lean Manufacturing & Kaizen Systems
+
+Process Automation (PLC, SCADA)
+
+Textile Manufacturing Tech
+
+Food & Beverage Processing Tech
+
+Heavy Industry (steel, mining equipment)
+
+Renewable Energy Equipment (wind/solar parts)
+
+Quality Management Systems (QMS)
+
+Digital Twins for Manufacturing
+
+Logistics & Warehousing Integration
+
+🔹 Jargon
+
+OEE (Overall Equipment Effectiveness)
+
+Downtime, Throughput, Yield
+
+Just-in-Time (JIT), Kanban
+
+Lean, Six Sigma, Kaizen
+
+Predictive Maintenance (PdM)
+
+CNC (Computer Numerical Control)
+
+MES (Manufacturing Execution Systems)
+
+BOM (Bill of Materials)
+
+QMS, SPC (Statistical Process Control)
+
+Digital Twin, Smart Sensors
+
+🔹 KPI
+
+OEE (availability × performance × quality)
+
+Defect Rate (%)
+
+Throughput (units/hour)
+
+Downtime Reduction (%)
+
+Yield per Line (%)
+
+Energy Efficiency per Unit
+
+Time-to-Market for New Products
+
+🔹 Compliance
+
+ISO 9001 → quality management
+
+ISO/TS 16949 → automotive quality standards
+
+FAA / EASA Regulations → aerospace compliance
+
+OSHA → workplace safety
+
+Environmental Regulations (EPA, EU Green Deal)
+
+IEC Standards (machinery & automation)
+
+CE Marking (EU) for equipment
+
+🔹 Style Bias
+
+Ingineresc, pragmatic, metric-driven
+
+Ton tehnic + operațional
+
+Focus pe productivitate, calitate, eficiență
+
+Limbaj scurt, orientat pe procese și ROI
+
+Structuri tabelare + diagrame de flux
+
+🔹 Default Output
+
+Spec (optimizare procese, rapoarte industriale, planuri producție)
+
+Formate: .pdf (rapoarte calitate & audit), .md (proceduri), .json (telemetrie producție)
+
+Structură standard:
+
+Production Overview
+
+KPIs (OEE, Yield, Throughput)
+
+Process Optimization Plan
+
+Compliance Checklist
+
+Digital Twin / Predictive Maintenance Flow
+
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 18: Logistics
+🔹 Sub-industrii (20)
+
+Supply Chain Management Platforms
+
+Freight Forwarding Tech
+
+Warehousing & Fulfillment Automation
+
+Last-Mile Delivery Platforms
+
+Cold Chain Logistics
+
+3PL (Third-Party Logistics) Providers
+
+Fleet Management Systems
+
+Route Optimization Platforms
+
+Shipping Marketplaces (spot freight)
+
+Port & Maritime Logistics Tech
+
+Air Cargo Platforms
+
+Rail Freight Management
+
+Cross-Border Customs Tech
+
+E-Commerce Fulfillment Solutions
+
+Reverse Logistics (returns mgmt)
+
+Inventory Optimization Systems
+
+Intermodal Logistics (multi-transport)
+
+Sustainable Logistics (green fleets)
+
+Logistics Analytics Platforms
+
+Delivery Drones & Autonomous Vehicles
+
+🔹 Jargon
+
+Last-Mile Delivery, Reverse Logistics
+
+3PL, 4PL, Freight Forwarding
+
+RFID, Barcode, IoT Sensors
+
+Route Optimization, Load Balancing
+
+Cross-Docking, Consolidation
+
+Just-in-Time Inventory
+
+SKU Velocity, Safety Stock
+
+Cold Chain, Temperature Control
+
+ETA (Estimated Time of Arrival)
+
+Emissions per Shipment
+
+🔹 KPI
+
+On-Time Delivery Rate (%)
+
+Inventory Turnover Ratio
+
+Fulfillment Accuracy (%)
+
+Cost per Mile / Shipment
+
+Fleet Utilization Rate (%)
+
+Carbon Emissions per Shipment
+
+Average Delivery Time (hours/days)
+
+🔹 Compliance
+
+IATA → air cargo compliance
+
+IMO → maritime safety & shipping rules
+
+OSHA → warehouse & transport safety
+
+Customs Regulations (WCO, EU, US CBP)
+
+GDPR / Data Privacy (tracking data)
+
+ISO 28000 → supply chain security
+
+Environmental Regulations (emissions reporting)
+
+🔹 Style Bias
+
+Operațional, metric-driven, optimizat costuri
+
+Ton: practic, orientat pe SLA-uri
+
+Limbaj scurt, orientat pe execuție & eficiență
+
+Focus pe cost, timp, fiabilitate
+
+Stil logistic = procedural + KPI dashboard
+
+🔹 Default Output
+
+Playbook (workflows supply chain, rapoarte costuri, SOP livrări)
+
+Formate: .md (proceduri & workflows), .pdf (rapoarte cost & performanță), .json (tracking & inventory APIs)
+
+Structură standard:
+
+Supply Chain Overview
+
+KPI Dashboard
+
+Route & Fleet Optimization Plan
+
+Compliance Mapping (IATA/IMO/OSHA)
+
+Risk & Resilience Playbook
+
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 19: Travel
+🔹 Sub-industrii (20)
+
+Airlines (legacy & low-cost carriers)
+
+Airports & Ground Services
+
+Hotels & Resorts
+
+Hostels & Budget Accommodation
+
+Vacation Rentals (Airbnb-style)
+
+Online Travel Agencies (OTAs)
+
+Metasearch Engines (Skyscanner, Kayak)
+
+Cruise Lines & Maritime Tourism
+
+Tour Operators (package tours)
+
+Destination Management Companies (DMCs)
+
+Business Travel Management
+
+Travel Insurance Tech
+
+Loyalty Programs & Travel Rewards
+
+Travel Tech Startups (apps, SaaS)
+
+Mobility-as-a-Service (car rentals, ride-hailing)
+
+Sustainable/Eco-Tourism Platforms
+
+Cultural & Heritage Tourism Platforms
+
+Adventure Tourism Tech (trekking, safaris)
+
+Event & Conference Travel (MICE)
+
+Visa & Immigration Processing Platforms
+
+🔹 Jargon
+
+RevPAR (Revenue per Available Room)
+
+ADR (Average Daily Rate)
+
+Load Factor (airlines)
+
+GDS (Global Distribution System)
+
+OTA, Direct Booking Share
+
+Ancillary Revenue (bags, meals, upgrades)
+
+Dynamic Pricing, Yield Management
+
+Guest Experience Index
+
+Average Booking Window
+
+Loyalty Tier, Points Redemption
+
+🔹 KPI
+
+Occupancy Rate (hotels, rentals)
+
+RevPAR (revenue efficiency per room)
+
+Load Factor (airlines seat utilization)
+
+Customer Satisfaction Score (CSAT/NPS)
+
+Ancillary Revenue % (upsells, add-ons)
+
+Average Booking Window (days in advance)
+
+Cancellation/No-Show Rate
+
+🔹 Compliance
+
+GDPR (traveler data, bookings)
+
+IATA / ICAO Regulations (air travel safety & ops)
+
+Consumer Protection Laws (cancellations, refunds)
+
+ADA / Accessibility Standards (hotels, travel services)
+
+Tourism Tax & Local Regulations
+
+Health & Safety Standards (WHO, CDC guidelines)
+
+Visa & Immigration Laws
+
+🔹 Style Bias
+
+Experiențial, storytelling, orientat pe emoție
+
+Ton: inspiră dorința de călătorie → dar pragmatic în operațiuni
+
+Limbaj vizual + senzorial (destinații, experiențe)
+
+Echilibru: emoție pentru clienți, metrici pentru investitori
+
+Stilul = narațiune + ROI
+
+🔹 Default Output
+
+Playbook (guest journey, pricing strategies, loyalty frameworks)
+
+Formate: .pdf (rapoarte de destinație), .md (guest journey SOPs), .json (booking/loyalty APIs)
+
+Structură standard:
+
+Destination/Service Overview
+
+Guest Journey Mapping
+
+Pricing & Yield Management Plan
+
+KPI Dashboard (RevPAR, Load Factor, CSAT)
+
+Compliance Checklist (IATA, GDPR, Consumer Law)
+
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 20: Gaming
+🔹 Sub-industrii (20)
+
+eSports Teams & Leagues
+
+Game Streaming Platforms (Twitch, Kick)
+
+Mobile Games (casual, hyper-casual)
+
+PC & Console AAA Games
+
+Indie Game Studios
+
+VR Games (immersive)
+
+AR Games (location-based)
+
+Cloud Gaming Platforms
+
+Blockchain / Play-to-Earn Games
+
+Game Engines & Dev Tools (Unity, Unreal)
+
+Game Monetization Platforms (ads, IAPs)
+
+Modding & UGC Platforms
+
+Serious Games (education, training)
+
+Simulation Games (flight, farming, racing)
+
+Social Gaming (party, community games)
+
+Multiplayer Online Games (MMORPGs)
+
+Game Analytics Platforms
+
+Game Publishing & Distribution (Steam, Epic)
+
+Gamification SaaS (non-gaming apps)
+
+Accessibility in Gaming (inclusive design)
+
+🔹 Jargon
+
+DAU/WAU/MAU (Daily/Weekly/Monthly Active Users)
+
+ARPU (Average Revenue Per User)
+
+LTV (Lifetime Value)
+
+Retention Curve (Day 1, 7, 30)
+
+Live Ops (events, updates)
+
+In-App Purchase (IAP)
+
+Pay-to-Win, Free-to-Play
+
+Battle Pass, Loot Boxes
+
+Matchmaking Systems, Ping/Latency
+
+Metagame, Mods, DLCs
+
+🔹 KPI
+
+Retention Day 1/7/30 (%)
+
+ARPU (avg. revenue per user)
+
+LTV (long-term revenue/user)
+
+Churn Rate
+
+In-Game Purchase Conversion Rate (%)
+
+DAU/MAU Ratio (Stickiness)
+
+eSports Viewership Metrics (avg. concurrent viewers)
+
+🔹 Compliance
+
+PEGI / ESRB Age Ratings
+
+GDPR / CCPA → player data privacy
+
+Loot Box Regulations (EU/Asia emerging rules)
+
+Copyright & IP Laws (mods, assets, UGC)
+
+Online Safety Acts (child protection in games)
+
+Consumer Protection (refunds, microtransactions)
+
+Accessibility Standards (WCAG for games)
+
+🔹 Style Bias
+
+Interactiv, ludic, comunitar
+
+Ton energic, orientat pe engagement
+
+Stil vizual + experiențial → screenshots, avatars, icons
+
+Narativ scurt, punchy, captivant
+
+Focus pe gameplay + monetizare
+
+🔹 Default Output
+
+Playbook (game design docs, monetization frameworks, live ops calendars)
+
+Formate: .md (GDD docs, roadmaps), .pdf (monetization reports), .json (telemetry, player metrics)
+
+Structură standard:
+
+Game Concept & Core Loop
+
+Player Journey (onboarding → retention)
+
+Monetization Model
+
+Live Ops Calendar
+
+Compliance & Safety Checklist
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 21: Fashion
+🔹 Sub-industrii (20)
+
+Luxury Fashion Houses (Haute Couture)
+
+Streetwear Brands
+
+Fast Fashion Retailers
+
+Sustainable / Ethical Fashion Labels
+
+D2C Apparel Brands
+
+Fashion E-Commerce Platforms
+
+Fashion Marketplaces (multi-brand)
+
+Footwear Brands (sneakers, luxury shoes)
+
+Sportswear & Athleisure
+
+Digital Fashion (NFT clothing, skins)
+
+Fashion Rental Platforms (Rent-the-Runway style)
+
+Second-Hand & ReCommerce (Depop, Vinted)
+
+Fashion Tech (AI design, 3D fitting)
+
+Smart Textiles & Wearables
+
+Fashion Shows & Events (fashion weeks)
+
+Fashion Magazines & Media
+
+Emerging Designers & Indie Brands
+
+Private Label / White Label Apparel
+
+Accessories & Jewelry Brands
+
+Tailoring & Bespoke Fashion
+
+🔹 Jargon
+
+Capsule Collection, Runway, Drop
+
+SKU Velocity, Sell-Through Rate
+
+D2C Funnel, Omnichannel Retail
+
+Fashion Cycle, Fast vs Slow Fashion
+
+Limited Edition, Collab Release
+
+Brand Equity, Luxury Margin
+
+Supply Chain Traceability
+
+Sustainable Index, Circular Economy
+
+Lookbook, Moodboard
+
+Pre-Order, Waitlist, Scarcity Marketing
+
+🔹 KPI
+
+Sell-Through Rate (%)
+
+Gross Margin (%)
+
+Repeat Purchase Rate (%)
+
+Inventory Turnover
+
+Brand Awareness Score
+
+E-Commerce Conversion Rate (%)
+
+Sustainability Index
+
+🔹 Compliance
+
+Ethical Sourcing Standards (Fair Trade, BSCI, WRAP)
+
+Labor Laws (wages, working conditions)
+
+IP Protection (designs, trademarks)
+
+Sustainability Regulations (EU CSRD, ESG reporting)
+
+Consumer Protection (returns, refunds)
+
+Chemical Safety Regulations (REACH, CPSIA)
+
+Advertising Standards (truth in fashion claims)
+
+🔹 Style Bias
+
+Vizual, aspirational, trend-driven
+
+Ton creativ, aspiră la statut și identitate
+
+Narativ bazat pe emoție + imagine
+
+Integrare de moodboards și imagini conceptuale
+
+Stil: identitate vizuală + storytelling
+
+🔹 Default Output
+
+Playbook (lookbooks, brand strategies, seasonal campaign SOPs)
+
+Formate: .pdf (lookbooks, brand kits), .md (campaign plans), .json (inventory KPIs)
+
+Structură standard:
+
+Brand Positioning & Market Map
+
+Seasonal Campaign Strategy
+
+Collection Lookbook
+
+KPI Dashboard (sell-through, margin)
+
+Sustainability & Compliance Checklist
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 22: Beauty
+🔹 Sub-industrii (20)
+
+Cosmetics Brands (makeup)
+
+Skincare Brands (mass & luxury)
+
+Haircare Products & Tools
+
+Fragrance & Perfume Brands
+
+Wellness Products (supplements, aromatherapy)
+
+Clean Beauty Brands (toxic-free, natural)
+
+Luxury Beauty & High-End Cosmetics
+
+K-Beauty / J-Beauty Innovators
+
+Men’s Grooming (beard, skincare)
+
+D2C Beauty Startups
+
+Beauty E-Commerce Platforms
+
+Beauty Subscription Boxes
+
+Salon & Spa Management SaaS
+
+Influencer-Led Brands (celebrity lines)
+
+Aesthetic Clinics & MedSpas
+
+Dermatology Tech (tele-dermatology, AI scans)
+
+Beauty Tech (virtual try-on, AR makeup)
+
+Sustainable Beauty (refillables, zero waste)
+
+DIY / Indie Beauty Brands
+
+Multi-Brand Retail (Sephora, Douglas)
+
+🔹 Jargon
+
+Skincare Routine, Serum, Retinol
+
+Clean Beauty, Cruelty-Free, Vegan Formula
+
+Shelf Life, Batch Code, Formulation
+
+Influencer Engagement, UGC
+
+Conversion via Tutorials, Before/After
+
+Repeat Purchase, Cross-Sell
+
+Product-Market Fit (shade range, skin type)
+
+Wellness Index, Self-Care Trend
+
+Refillable Packaging, Sustainable Supply
+
+Clinical Testing, Dermatologically Approved
+
+🔹 KPI
+
+Repeat Purchase Rate (%)
+
+Customer Loyalty Index (NPS/eNPS)
+
+Influencer Engagement Metrics
+
+Product Review Score (avg stars)
+
+Sell-Through Rate (%)
+
+Retention Rate (subscription boxes)
+
+Cross-Sell/Upsell Rate
+
+🔹 Compliance
+
+FDA/EMA Cosmetic Regulations (claims, labeling)
+
+EU Cosmetic Directive (EC 1223/2009)
+
+Cruelty-Free & Animal Testing Bans
+
+Claims Substantiation (before/after evidence)
+
+GDPR / Data Privacy (customer data, try-on tech)
+
+Sustainability & Packaging Regulations (EU Green Deal)
+
+Local Health & Safety Certifications
+
+🔹 Style Bias
+
+Aspirational, influencer-driven, trend-conscious
+
+Ton: emoțional + vizual (self-confidence, lifestyle)
+
+Storytelling bazat pe transformare & ritual
+
+Integrare puternică cu social media
+
+Stil: vizual, lifestyle-oriented, aspirational
+
+🔹 Default Output
+
+Playbook (launch cycles, influencer campaigns, brand kits)
+
+Formate: .pdf (brand kits, launch roadmaps), .md (campaign SOPs), .json (loyalty program KPIs)
+
+Structură standard:
+
+Brand Positioning & Audience Persona
+
+Product Launch Plan
+
+Influencer Campaign Flow
+
+KPI Dashboard (retention, repeat purchase)
+
+Compliance & Claims Checklist
+
+
+
+
+
+📚 CORE-25 — Domeniul 23: Spiritual
+🔹 Sub-industrii (20)
+
+Life Coaching Platforms
+
+Executive & Leadership Coaching
+
+Mindfulness & Meditation Apps
+
+Yoga & Wellness Communities
+
+Spiritual Retreats & Experiences
+
+Religion Tech (apps, prayer trackers)
+
+Digital Congregation Platforms (live sermons)
+
+Faith-Based NGOs & Missions
+
+Online Coaching Marketplaces
+
+Energy Healing & Alternative Practices
+
+Personal Transformation Programs
+
+Astrology & Divination Platforms
+
+Ritual Tech (guided rituals, ceremonies)
+
+Community Circles (support groups)
+
+Esoteric Knowledge Platforms (tarot, Kabbalah)
+
+Mentorship & Spiritual Guidance Programs
+
+Interfaith Dialogue Platforms
+
+AI Avatars for Faith/Guidance
+
+Gamified Spiritual Learning Apps
+
+Legacy & Meaning Platforms (digital afterlife, memorials)
+
+🔹 Jargon
+
+Mindfulness, Awakening, Higher Self
+
+Coaching Frameworks (GROW, SMART goals)
+
+Initiation, Ritual, Ceremony
+
+Congregation, Fellowship, Community Growth
+
+Self-Discovery, Healing, Inner Work
+
+Spiritual Journey, Transformation Path
+
+Mentorship, Guidance, Accountability
+
+Soul Purpose, Destiny Mapping
+
+Energy Fields, Chakras, Aura
+
+Sacred Tech, Ritual Design
+
+🔹 KPI
+
+Engagement Rate (% sessions completed)
+
+Community Growth Rate (# members/month)
+
+Program Completion Rate (%)
+
+Retention Rate (day 30 / day 90)
+
+Satisfaction Score (survey, testimonials)
+
+Spiritual/Coaching Session Attendance
+
+Revenue per Member (donations/subscriptions)
+
+🔹 Compliance
+
+Local Religious Law (per country)
+
+Ethical Guidelines in Coaching (ICF standards)
+
+GDPR / Data Privacy (community & belief data = sensitive)
+
+Non-Profit Compliance (if faith-based orgs)
+
+Advertising Standards (no false healing claims)
+
+Wellness & Health Regulations (if overlapping)
+
+Youth Protection Standards (age-appropriate content)
+
+🔹 Style Bias
+
+Empatic, ritualic, narativ
+
+Ton: calm, inspirațional, transformator
+
+Structuri bazate pe pași → „ritualuri de trecere”
+
+Limbaj accesibil, dar cu simboluri și metafore sacre
+
+Echilibru: emoție + comunitate + disciplină
+
+🔹 Default Output
+
+Playbook (ceremonii, cadre comunitare, coaching frameworks)
+
+Formate: .pdf (ritual handbooks, community guides), .md (session templates, curricula), .json (membership metrics, attendance data)
+
+Structură standard:
+
+Ritual/Program Overview
+
+Steps & Initiations
+
+Community Framework
+
+KPI Dashboard (engagement, growth, retention)
+
+Ethical & Compliance Guardrails
+
+
+
+
+
+
+📚 CORE-25 — Domeniul 24: Architecture
+🔹 Sub-industrii (20)
+
+Urban Planning & Smart Cities
+
+Architecture Studios (residential, commercial)
+
+Interior Design Firms
+
+Landscape Architecture
+
+Civil Engineering Consultancies
+
+Structural Engineering
+
+Construction Design Tech (CAD/BIM)
+
+Sustainable Architecture (LEED/BREEAM)
+
+Heritage Restoration & Conservation
+
+Industrial Architecture (factories, warehouses)
+
+Public Space Design (parks, plazas)
+
+Transportation Infrastructure Design (bridges, airports)
+
+Modular & Prefab Housing Design
+
+High-Rise & Skyscraper Design
+
+Stadiums & Large Venues
+
+Healthcare Architecture (hospitals, clinics)
+
+Educational Facilities (schools, campuses)
+
+Hospitality Architecture (hotels, resorts)
+
+Religious Architecture (churches, temples)
+
+Digital Twins & Virtual Architecture (VR/AR environments)
+
+🔹 Jargon
+
+CAD (Computer-Aided Design), BIM (Building Information Modeling)
+
+Blueprints, Renderings, 3D Modeling
+
+Zoning, Building Codes, Permit Process
+
+Floor Area Ratio (FAR), Occupancy Rate
+
+LEED Certification, Green Roof, Net-Zero
+
+Structural Integrity, Load-Bearing
+
+Mixed-Use Development, Masterplan
+
+Urban Density, Transit-Oriented Development
+
+Façade Design, Materiality
+
+Design Thinking, Human-Centered Design
+
+🔹 KPI
+
+Project Completion Time (vs plan)
+
+Cost Efficiency (budget adherence %)
+
+Energy Efficiency (kWh/m²)
+
+Occupancy Rate (real estate projects)
+
+Client Satisfaction Index
+
+Regulatory Approval Time
+
+Sustainability Score (LEED/BREEAM points)
+
+🔹 Compliance
+
+Local Zoning & Planning Laws
+
+Building Codes & Safety Regulations (IBC, Eurocode)
+
+OSHA → worker safety on construction sites
+
+Accessibility Standards (ADA, WCAG for digital twins)
+
+LEED/BREEAM Certifications
+
+Fire Safety Standards (NFPA, EU regs)
+
+Environmental Impact Assessments
+
+🔹 Style Bias
+
+Vizual, tehnic, investițional
+
+Ton: pragmatic + aspirational (design as identity)
+
+Structuri bazate pe diagrame, planuri, randări
+
+Limbaj echilibrat între inginerie & estetică
+
+Stil = funcționalitate + inspirație vizuală
+
+🔹 Default Output
+
+Spec (blueprints, design reports, project proposals)
+
+Formate: .pdf (architecture reports, proposals), .md (design frameworks), .json (BIM/3D data schemas)
+
+Structură standard:
+
+Project Overview
+
+Design & Engineering Specs
+
+Sustainability & Compliance Mapping
+
+KPI Dashboard (time, cost, efficiency)
+
+Visual Renderings / Mockups
+
+
+
+
+
+📚 CORE-25 — Domeniul 25: Agriculture
+🔹 Sub-industrii (20)
+
+AgriTech SaaS Platforms (farm mgmt)
+
+Precision Agriculture (drones, sensors)
+
+Smart Irrigation Systems
+
+Vertical Farming & Hydroponics
+
+Greenhouse Tech & Automation
+
+Crop Monitoring with Satellites
+
+Livestock Management Tech
+
+Dairy Tech (automation, sensors)
+
+Aquaculture Tech (fish farming)
+
+Food Supply Chain Platforms
+
+Agri-Marketplaces (B2B produce exchanges)
+
+Agri-Biotech (seed engineering, CRISPR)
+
+Organic Farming Systems
+
+Sustainable Farming (carbon-neutral)
+
+Soil Health & Fertility Tech
+
+Agri-FinTech (insurance, loans)
+
+Post-Harvest Storage & Processing
+
+Cold Chain Food Logistics
+
+Traceability & Food Safety Platforms
+
+Climate-Resilient Agriculture
+
+🔹 Jargon
+
+Yield per Hectare, Crop Cycle
+
+Soil Moisture, Nutrient Index
+
+IoT Sensors, Drone Imaging
+
+Food Miles, Cold Chain, Farm-to-Fork
+
+Biotech Seeds, GMO, CRISPR
+
+Carbon Credits, Sustainable Index
+
+Smart Tractors, Autonomy in Farming
+
+Supply Chain Traceability
+
+Post-Harvest Loss, Shelf Life
+
+Agri-Insurance, Input Financing
+
+🔹 KPI
+
+Yield per Hectare
+
+Cost per Unit (production efficiency)
+
+Water Use Efficiency (liters/kg produce)
+
+Post-Harvest Loss %
+
+Sustainability Index (carbon footprint)
+
+Farmer Profitability per Acre
+
+Food Safety Compliance Rate
+
+🔹 Compliance
+
+Food Safety Regulations (FDA, EFSA, USDA)
+
+EU CAP (Common Agricultural Policy)
+
+Organic Certification (USDA Organic, EU Bio)
+
+GMO/CRISPR Regulatory Frameworks
+
+GDPR → farmer & supply chain data privacy
+
+Carbon & Sustainability Standards (ISO 14064)
+
+Animal Welfare Laws
+
+🔹 Style Bias
+
+Pragmatic, metric-driven, sustenabil
+
+Ton: echilibrat între știință & tradiție
+
+Limbaj orientat pe producție și inovație
+
+Accent pe eficiență + sustenabilitate
+
+Stilul = raport agronomic + business case
+
+🔹 Default Output
+
+Playbook (proces agricol, optimizare resurse, food supply chain frameworks)
+
+Formate: .pdf (rapoarte sustenabilitate), .md (guidelines operaționale), .json (telemetrie senzori, traceability data)
+
+Structură standard:
+
+Farm / Supply Chain Overview
+
+KPI Dashboard (yield, costs, sustainability)
+
+Optimization Frameworks (water, soil, energy)
+
+Compliance Mapping (food safety, carbon)
+
+Innovation & Biotech Integration
+
+
+
+
+
+
+📚 EXTEND-50 — Industrii Adiționale (25 noi)
+26. ClimateTech 🌍
+
+Sub-industrii: carbon capture, green energy SaaS, ESG analytics, reforestation tech, carbon trading platforms.
+KPI: CO₂ offset, sustainability index, energy efficiency.
+Style: etic, sustenabil, metric-driven.
+
+27. SpaceTech 🚀
+
+Sub-industrii: satellite comms, launch services, space mining, astro-biotech, orbital logistics.
+KPI: launch success rate, payload efficiency.
+Style: ingineresc, vizionar.
+
+28. EnergyTech ⚡
+
+Sub-industrii: smart grids, renewables, hydrogen tech, energy storage, microgrids.
+KPI: energy efficiency, uptime, carbon reduction.
+Style: tehnic, pragmatic.
+
+29. Mining & Natural Resources ⛏️
+
+Sub-industrii: rare earths, metals, smart mining, water resources, recycling mining.
+KPI: yield/ton, safety incidents, cost per unit.
+Style: operațional, ingineresc.
+
+30. Chemicals Industry 🧪
+
+Sub-industrii: industrial chemicals, green chemistry, plastics recycling, biotech polymers, pharma intermediates.
+KPI: production yield, safety, compliance incidents.
+Style: tehnic, reglementat.
+
+31. Music Industry 🎵
+
+Sub-industrii: labels, streaming, production, live concerts, sync licensing.
+KPI: streams, royalties, fan engagement.
+Style: creativ, artistic, metric + emoție.
+
+32. Sports & Fitness 🏅
+
+Sub-industrii: pro sports leagues, fitness apps, wearables, esports crossover, sports media.
+KPI: fan engagement, DAU/MAU, attendance, ARPU.
+Style: energic, comunitar.
+
+33. Film & Cinema 🎬
+
+Sub-industrii: studios, VFX, indie films, cinema chains, distribution.
+KPI: box office revenue, streaming rights, viewership.
+Style: narativ, vizual, dramatic.
+
+34. Arts & Design 🎨
+
+Sub-industrii: galleries, digital art, NFTs, design studios, public art.
+KPI: exhibition attendance, artwork sales.
+Style: vizual, semiotic, inspirator.
+
+35. Entertainment Parks 🎡
+
+Sub-industrii: amusement parks, AR/VR attractions, theme parks, water parks, edutainment.
+KPI: visitor count, ticket revenue, safety incidents.
+Style: experiențial, emoțional.
+
+36. Food & Beverage 🍔
+
+Sub-industrii: restaurant tech, food delivery, ghost kitchens, craft beverages, food marketplaces.
+KPI: order volume, average order value, repeat customers.
+Style: practic, experiențial.
+
+37. Home & Living 🏠
+
+Sub-industrii: smart homes, interior retail, furniture design, IoT appliances, DIY platforms.
+KPI: sales per sq.m., customer retention.
+Style: aspirațional, lifestyle-driven.
+
+38. Pet Industry 🐾
+
+Sub-industrii: pet care, pet tech (trackers), pet food, veterinary SaaS, pet insurance.
+KPI: customer LTV, retention, pet health outcomes.
+Style: empatic, prietenos.
+
+39. Event Management 🎤
+
+Sub-industrii: event SaaS, ticketing, hybrid events, expo logistics, wedding planners.
+KPI: attendance, revenue per event, NPS.
+Style: organizatoric, metric-driven.
+
+40. Wedding Industry 💍
+
+Sub-industrii: bridal fashion, venues, planners, honeymoon packages, wedding SaaS.
+KPI: booking conversion, average spend.
+Style: emoțional, aspirational.
+
+41. Space Tourism 🛰️
+
+Sub-industrii: suborbital flights, orbital hotels, space experiences.
+KPI: flight safety, passenger count, ticket sales.
+Style: vizionar, explorator.
+
+42. BioTech (separat de Healthcare) 🧬
+
+Sub-industrii: gene editing, synthetic biology, bio-materials, pharma biotech, agribiotech.
+KPI: trial success, IP patents, cost per therapy.
+Style: academic + aplicat.
+
+43. Edutainment 📚🎮
+
+Sub-industrii: kids learning games, AR classrooms, cultural museums gamified, language apps gamified.
+KPI: engagement, retention, completion rates.
+Style: jucăuș, educativ.
+
+44. Creator Economy 👩‍🎨
+
+Sub-industrii: Patreon-style platforms, UGC monetization, content marketplaces, NFT creators, social tipping.
+KPI: creator revenue, fan engagement.
+Style: comunitar, empowerment.
+
+45. Circular Economy ♻️
+Sub-industrii: recycling platforms, second-hand, product-as-a-service, waste-to-energy, upcycling.
+KPI: waste diverted, CO₂ saved, % recycled.
+Style: sustenabil, pragmatic.
+
+46. Hospitality Tech 🏨
+Sub-industrii: booking engines, hotel SaaS, guest experience apps, smart hotels, hospitality robots.
+KPI: occupancy, RevPAR, NPS.
+Style: experiențial + metric.
+
+47. MobilityTech 🚗
+Sub-industrii: EV platforms, ride-sharing, micro-mobility, autonomous driving, fleet SaaS.
+KPI: rides/day, utilization, cost per mile.
+Style: tehnic + urban.
+
+48. FinMedia (intersection Finance + Media) 💹📰
+Sub-industrii: stock analysis platforms, influencer finance, retail investor tools, newsletters, financial media.
+KPI: subscribers, engagement, AUM influenced.
+Style: factual, educativ, persuasiv.
+
+49. Health & Wellness Lifestyle 🧘
+Sub-industrii: fitness apps, nutrition tech, mindfulness, corporate wellness, holistic health.
+KPI: user retention, engagement rate, adherence.
+Style: empatic, aspirational.
+
+50. Defense & Security Industry 🛡️
+Sub-industrii: defense contractors, military tech, cyber-defense, drones, AI defense.
+KPI: contract wins, uptime, mission success rate.
+Style: formal, tehnic, reglementat.
+
+👉 Rezultatul:
+CORE-25 = cele canonice (pe care le ai deja).
+EXTEND-50 = CORE-25 + cele 25 noi de mai sus.
+Astfel ai un vocabular standardizat cu 50 industrii → fiecare utilizabilă în motorul 7D ca parametru domain.
+
+
+
+
+📚 EXTEND-50 — Domeniul 26: ClimateTech 🌍
+🔹 Sub-industrii (20)
+
+Carbon Capture & Storage (CCS)
+
+Direct Air Capture (DAC)
+
+Renewable Energy Platforms (solar, wind, hydro SaaS)
+
+Energy Storage & Battery Tech
+
+EV Charging Infrastructure SaaS
+
+Smart Grid Management Platforms
+
+Climate Risk Analytics Platforms
+
+ESG Reporting Software
+
+Sustainable Supply Chain Tech
+
+Green Finance (carbon credits, climate bonds)
+
+Reforestation & Land Restoration Tech
+
+WaterTech (purification, smart irrigation)
+
+Circular Economy Platforms (waste-to-energy, recycling)
+
+Sustainable Agriculture Tech (carbon farming)
+
+Climate Insurance Platforms (parametric insurance)
+
+Climate Adaptation Solutions (flood barriers, urban cooling)
+
+Carbon Trading Marketplaces
+
+IoT Sensors for Emissions Monitoring
+
+Sustainable Materials (bioplastics, green concrete)
+
+Climate Data APIs & Digital Twins
+
+🔹 Jargon
+
+Net Zero, Carbon Neutral, Carbon Negative
+
+CO₂e (carbon equivalent)
+
+Carbon Sequestration, Offsetting
+
+ESG (Environmental, Social, Governance)
+
+Scope 1/2/3 Emissions
+
+Carbon Credits, Trading, Offset Markets
+
+LCA (Life Cycle Assessment)
+
+PPA (Power Purchase Agreement)
+
+Climate Stress Test
+
+Transition Risk & Physical Risk
+
+🔹 KPI
+
+CO₂ Captured / Offset (tons/year)
+
+Carbon Intensity Reduction (%)
+
+Renewable Energy Share (%)
+
+Sustainability Index (composite score)
+
+Energy Efficiency (kWh saved)
+
+ESG Compliance Score
+
+Water Savings (liters/acre)
+
+🔹 Compliance
+
+EU Green Deal / CSRD (Corporate Sustainability Reporting Directive)
+
+SEC Climate Disclosure Rules (US)
+
+ISO 14064 (carbon reporting)
+
+TCFD (Task Force on Climate-related Financial Disclosures)
+
+Paris Agreement / Net Zero Commitments
+
+Carbon Market Standards (Verra, Gold Standard)
+
+GDPR (applies to IoT/climate data where personal info overlaps)
+
+🔹 Style Bias
+
+Etic, metric-driven, sustenabil
+
+Ton: activist + tehnic (emoție + cifre)
+
+Limbaj clar, bazat pe date, dar inspirațional
+
+Integrare de simboluri ecologice, KPI vizibile
+
+Stil: raport sustenabilitate + apel la acțiune
+
+🔹 Default Output
+
+Playbook (sustainability reports, decarbonization roadmaps, ESG dashboards)
+
+Formate: .pdf (rapoarte ESG & climate), .md (frameworkuri de sustenabilitate), .json (telemetrie CO₂, energie, apă)
+
+Structură standard:
+
+Climate Problem & Context
+
+Carbon Baseline & Targets
+
+KPI Dashboard (emissions, offsets, savings)
+
+Decarbonization Roadmap
+
+Compliance & ESG Guardrails
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 27: SpaceTech 🚀
+🔹 Sub-industrii (20)
+
+Satellite Communications (telecom, internet)
+
+Earth Observation (EO data, analytics)
+
+Space Launch Services (rockets, reusable launchers)
+
+Orbital Logistics (refuelling, servicing)
+
+Space Mining & Resource Extraction
+
+Space Tourism Platforms
+
+Satellite Manufacturing (small sats, cubesats)
+
+Space Debris Removal Systems
+
+Navigation & Positioning (GNSS, GPS augmentation)
+
+Defense & Security Space Systems
+
+Astro-Biotech (life sciences in orbit)
+
+Lunar & Mars Exploration Tech
+
+Space Habitat Design (stations, colonies)
+
+In-Orbit Manufacturing (3D printing in space)
+
+Space Energy (solar power satellites)
+
+Space Data Marketplaces (satellite APIs)
+
+Astronomy & Telescope Tech (optics, AI pipelines)
+
+Rocket Propulsion Innovations
+
+Deep Space Communication Systems
+
+Climate & Environmental Space Monitoring
+
+🔹 Jargon
+
+Payload Capacity, Launch Window
+
+GEO / MEO / LEO Orbits
+
+CubeSat, Smallsat
+
+Orbital Mechanics, Delta-v
+
+Reusable Launch Vehicles (RLV)
+
+In-Orbit Servicing (OOS)
+
+Telemetry, Ground Station
+
+Space Debris, Kessler Syndrome
+
+Lunar Gateway, Mars Colonization
+
+Space Law (Outer Space Treaty, ITU regs)
+
+🔹 KPI
+
+Launch Success Rate (%)
+
+Payload Efficiency (kg/$)
+
+Satellite Uptime (%)
+
+Cost per Launch ($/kg)
+
+Data Accuracy & Resolution (EO)
+
+Debris Removal Efficiency (%)
+
+Mission Reliability Index
+
+🔹 Compliance
+
+Outer Space Treaty (1967)
+
+ITU Regulations (spectrum allocation)
+
+FCC/ESA/NASA Licensing
+
+Export Control (ITAR, EAR)
+
+National Space Legislation (US, EU, Japan, etc.)
+
+Space Debris Mitigation Guidelines (UN COPUOS)
+
+GDPR/Data Privacy (Earth observation data overlaps)
+
+🔹 Style Bias
+
+Ingineresc, vizionar, explorator
+
+Ton: științific + inspirațional
+
+Limbaj tehnic (orbital mechanics) + storytelling („the next frontier”)
+
+Mix între raport tehnic & manifest explorator
+
+Stil: whitepaper + roadmap
+
+🔹 Default Output
+
+Spec (mission proposals, satellite designs, EO analytics)
+
+Formate: .pdf (mission reports, launch decks), .md (space law docs, frameworks), .json (telemetry data, satellite APIs)
+
+Structură standard:
+
+Mission Scope & Context
+
+Technical Architecture
+
+KPI Dashboard (payload, uptime, cost)
+
+Risk & Debris Mitigation
+
+Compliance & Governance Checklist
+
+
+
+
+📚 EXTEND-50 — Domeniul 28: EnergyTech ⚡
+🔹 Sub-industrii (20)
+
+Renewable Energy Platforms (solar, wind, hydro)
+
+Hydrogen Economy (production, storage, distribution)
+
+Smart Grid Management (IoT, AI optimization)
+
+Energy Storage (batteries, flow cells)
+
+EV Charging Infrastructure Networks
+
+Distributed Energy Resources (DER)
+
+Microgrids (community energy systems)
+
+Virtual Power Plants (VPPs)
+
+Energy Trading Platforms (P2P, blockchain)
+
+Nuclear Fusion & Advanced Reactors
+
+Energy Efficiency SaaS (monitoring, optimization)
+
+Carbon-Neutral Fuels (biofuels, e-fuels)
+
+Offshore Wind Tech & Infrastructure
+
+Grid Security & Cyber Protection
+
+Smart Buildings Energy Mgmt
+
+Industrial Energy Management Systems
+
+Heat & Cooling Tech (district heating, geothermal)
+
+Waste-to-Energy Platforms
+
+Energy Data Marketplaces (APIs, analytics)
+
+Climate-Aligned Energy Finance
+
+🔹 Jargon
+
+Baseload, Peak Load, Grid Balancing
+
+DER (Distributed Energy Resources)
+
+VPP (Virtual Power Plant)
+
+PPA (Power Purchase Agreement)
+
+LCOE (Levelized Cost of Energy)
+
+Energy Arbitrage, Demand Response
+
+Smart Meters, Net Metering
+
+Hydrogen Electrolysis, Storage Density
+
+Grid Resilience, Blackout Prevention
+
+Decarbonization Roadmap
+
+🔹 KPI
+
+Energy Efficiency (kWh saved per unit)
+
+Renewable Share in Mix (%)
+
+Carbon Intensity Reduction (%)
+
+Grid Uptime (%)
+
+Cost per kWh Delivered
+
+Battery Cycle Life & Efficiency
+
+Time-to-Grid Integration (days)
+
+🔹 Compliance
+
+Paris Agreement & Net Zero Targets
+
+EU Taxonomy for Sustainable Activities
+
+ISO 50001 (Energy Management)
+
+IEC Standards (grid, batteries)
+
+EPA Regulations (US), EU ETS (carbon trading)
+
+Local Energy Market Regulations
+
+Cybersecurity Standards (NIS2 for grids)
+
+🔹 Style Bias
+
+Tehnic, pragmatic, metric-driven
+
+Ton: științific + economic
+
+Limbaj clar, focus pe eficiență & sustenabilitate
+
+Documentare echilibrată între ROI + impact ecologic
+
+Stil = raport tehnic + business case
+
+🔹 Default Output
+
+Spec (decarbonization plans, energy optimization frameworks, market models)
+
+Formate: .pdf (energy reports, compliance docs), .md (optimization playbooks), .json (grid telemetry, storage APIs)
+
+Structură standard:
+
+Energy Context & Mix
+
+Technical Architecture & Innovations
+
+KPI Dashboard (efficiency, uptime, cost)
+
+Decarbonization & Net Zero Roadmap
+
+Compliance & Safety Guardrails
+
+
+
+
+📚 EXTEND-50 — Domeniul 29: Mining & Natural Resources ⛏️
+🔹 Sub-industrii (20)
+
+Smart Mining (IoT, automation in mines)
+
+Rare Earths Extraction (lithium, cobalt, nickel)
+
+Metals Mining (iron, copper, aluminum)
+
+Oil & Gas Exploration Tech
+
+Offshore Drilling Tech
+
+Quarrying & Stone Industry
+
+Water Resources Management (desalination, conservation)
+
+Sand & Gravel Industry
+
+Forest Resource Management
+
+Coal Mining (transition & reduction tech)
+
+Recycling Mining (urban mining, e-waste)
+
+Geothermal Exploration
+
+Mineral Trading Platforms
+
+Remote Sensing for Exploration (satellites, drones)
+
+Safety & Risk Tech in Mining
+
+Sustainable Mining Solutions
+
+Environmental Remediation Tech
+
+Logistics & Supply Chain for Commodities
+
+Drilling Equipment & Robotics
+
+Mining Finance & Investment Platforms
+
+🔹 Jargon
+
+Ore Grade, Yield per Ton
+
+Tailings, Smelting, Refining
+
+Strip Mining, Open Pit, Underground Mining
+
+Rare Earths, Critical Minerals
+
+E-Waste, Urban Mining
+
+Geological Survey, Core Samples
+
+Seismic Data, Exploration Drilling
+
+Energy Intensity, Water Footprint
+
+ESG Mining, Responsible Sourcing
+
+Royalties, Concession Rights
+
+🔹 KPI
+
+Yield per Ton Extracted
+
+Safety Incident Rate
+
+Cost per Unit of Resource
+
+Water & Energy Consumption per Ton
+
+CO₂ Emissions per Operation
+
+Mine Uptime / Downtime Ratio
+
+Recycling % (urban mining recovery)
+
+🔹 Compliance
+
+OSHA / Worker Safety Standards
+
+Environmental Regulations (EPA, EU ETS)
+
+Mining Licenses & Concession Laws
+
+EITI (Extractive Industries Transparency Initiative)
+
+GDPR / Data Privacy (in remote sensing data)
+
+ISO 14001 (Environmental Management)
+
+Anti-Bribery & Corruption Laws (FCPA, UK Bribery Act)
+
+🔹 Style Bias
+
+Operațional, ingineresc, metric-driven
+
+Ton: pragmatic, axat pe ROI + sustenabilitate
+
+Limbaj tehnic + rapoarte financiare
+
+Include diagrame de flux & tabele KPI
+
+Stil: raport industrial + due diligence
+
+🔹 Default Output
+
+Spec (rapoarte explorare, planuri operațiuni miniere, sustainability frameworks)
+
+Formate: .pdf (mining reports, ESG docs), .md (proceduri operaționale), .json (exploration & logistics data)
+
+Structură standard:
+
+Exploration & Resource Overview
+
+KPI Dashboard (yield, cost, safety)
+
+Operational Flow & Logistics
+
+Environmental & ESG Mapping
+
+Compliance & Safety Guardrails
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 30: Chemicals Industry 🧪
+🔹 Sub-industrii (20)
+
+Industrial Chemicals (bulk production)
+
+Specialty Chemicals (coatings, adhesives)
+
+Petrochemicals (plastics, polymers)
+
+Green Chemistry (bio-based materials)
+
+Agrochemicals (fertilizers, pesticides)
+
+Pharmaceutical Intermediates
+
+Fine Chemicals (high-purity compounds)
+
+Cosmetic Ingredients (formulations)
+
+Bioplastics & Sustainable Polymers
+
+Battery Chemicals (lithium, cobalt derivatives)
+
+Paints & Coatings Industry
+
+Water Treatment Chemicals
+
+Cleaning & Hygiene Chemicals
+
+Explosives & Defense Chemicals
+
+Textile Chemicals (dyes, finishing agents)
+
+Food & Beverage Additives
+
+Construction Chemicals (cement additives, sealants)
+
+Chemical Distribution Platforms
+
+Waste Management & Chemical Recycling
+
+R&D Labs for New Molecules
+
+🔹 Jargon
+
+Catalysts, Solvents, Reagents
+
+Batch vs Continuous Process
+
+Polymers, Resins, Elastomers
+
+VOCs (Volatile Organic Compounds)
+
+REACH Compliance, GHS Labeling
+
+Reaction Yield, Purity Level
+
+Process Safety Management (PSM)
+
+MSDS (Material Safety Data Sheet)
+
+Emissions Intensity, Hazardous Waste
+
+Scale-Up, Pilot Plant
+
+🔹 KPI
+
+Production Yield (%)
+
+Purity of Output (%)
+
+Cost per Unit of Production
+
+Compliance Incident Rate
+
+Energy Consumption per Batch
+
+R&D Pipeline Success Rate
+
+CO₂ Emissions per Ton Produced
+
+🔹 Compliance
+
+REACH (EU Chemical Safety Regulation)
+
+OSHA Hazard Communication Standards
+
+GHS (Globally Harmonized System for Labeling)
+
+EPA / Environmental Regulations (US)
+
+ISO 9001 / ISO 14001 (quality & environment)
+
+FDA/EMA Standards (for pharma intermediates)
+
+Transport of Dangerous Goods (UN)
+
+🔹 Style Bias
+
+Tehnic, reglementat, ingineresc
+
+Ton: științific + procedural
+
+Focus pe siguranță, precizie, sustenabilitate
+
+Limbaj clar, cu tabele & formule
+
+Stil = raport de laborator + compliance briefing
+
+🔹 Default Output
+
+Spec (formule, proceduri, rapoarte de siguranță & sustenabilitate)
+
+Formate: .pdf (rapoarte MSDS, compliance), .md (proceduri de proces), .json (telemetrie producție & emisii)
+
+Structură standard:
+
+Process Overview
+
+Chemical Inputs & Outputs
+
+KPI Dashboard (yield, purity, energy use)
+
+Compliance Mapping (REACH, GHS, OSHA)
+
+Risk & Safety Protocols
+
+
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 31: Music Industry 🎵
+🔹 Sub-industrii (20)
+
+Record Labels (majors & indies)
+
+Music Streaming Platforms
+
+Music Production Studios
+
+Music Publishing & Rights Mgmt
+
+Live Concerts & Tours
+
+Ticketing Platforms
+
+Artist Management & Agencies
+
+Music Licensing & Sync (film, ads, games)
+
+Digital Distribution (aggregators)
+
+Independent Artists & DIY Platforms
+
+Music Education & Training Tech
+
+AI-Generated Music & Tools
+
+Music Analytics (royalties, fan engagement)
+
+Merchandise & Fan Commerce
+
+Podcast & Audio Platforms
+
+Radio & Broadcast Networks
+
+Festival & Event Organizers
+
+Virtual Concerts & Metaverse Music
+
+NFT Music Collectibles
+
+Music Collaboration Platforms (remote production)
+
+🔹 Jargon
+
+Master Rights, Publishing Rights
+
+Royalty Streams (mechanical, performance, sync)
+
+Streaming Payouts (per stream $)
+
+A&R (Artists & Repertoire)
+
+Sync Licensing, PROs (ASCAP, BMI)
+
+Tour Gross, Box Office Report
+
+Fan Engagement, ARPU (per listener)
+
+Back Catalog, Recoupment
+
+Playlist Placements, Curators
+
+NFT Drops, Music Collectibles
+
+🔹 KPI
+
+Streaming Volume (plays/month)
+
+Average Royalty per Artist
+
+Ticket Sales / Concert Attendance
+
+Fan Engagement Rate (%)
+
+Merchandise Revenue per Fan
+
+Catalog Exploitation Rate (%)
+
+Sync Licensing Revenue
+
+🔹 Compliance
+
+Copyright Law / IP Protection (global)
+
+Music Licensing Regulations (PROs)
+
+GDPR / CCPA → fan & listener data
+
+Contract Law → artist-label agreements
+
+Digital Millennium Copyright Act (DMCA)
+
+NFT/Blockchain Compliance (MiCA, SEC)
+
+Health & Safety Laws (live events)
+
+🔹 Style Bias
+
+Creativ, emoțional, aspirational
+
+Ton: balans între artă + business
+
+Limbaj accesibil pentru artiști, dar și investitori
+
+Narativ bazat pe emoție, fandom, storytelling
+
+Stil = emoție + metrici comerciale
+
+🔹 Default Output
+
+Playbook (album launch strategy, tour plan, rights mgmt)
+
+Formate: .pdf (release decks, tour P&L), .md (artist playbooks), .json (streaming/royalty analytics)
+
+Structură standard:
+
+Artist/Label Overview
+
+Release/Tour Plan
+
+Revenue Model & Royalty Splits
+
+KPI Dashboard (streams, sales, fan metrics)
+
+Compliance & IP Checklist
+
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 32: Sports & Fitness 🏅
+🔹 Sub-industrii (20)
+
+Professional Sports Leagues (NFL, NBA, UEFA)
+
+Sports Teams & Clubs
+
+Fitness Apps (Strava, MyFitnessPal)
+
+Wearables & Smart Devices (Fitbit, Apple Watch)
+
+Sports Media & Broadcasting
+
+Esports & Competitive Gaming
+
+Sports Betting Platforms
+
+Fantasy Sports Platforms
+
+Sports Analytics & Performance Tracking
+
+Training & Coaching Tech (AI coaches, VR training)
+
+Stadiums & Venue Management Tech
+
+Fan Engagement Platforms (loyalty, gamification)
+
+Sports Equipment & Apparel Tech
+
+Health & Nutrition Platforms
+
+Athlete Management & Agencies
+
+Youth Sports Development Platforms
+
+Corporate Wellness & Fitness Programs
+
+Outdoor Adventure & Extreme Sports Tech
+
+Rehabilitation & Recovery Tech
+
+Sports Event Management SaaS
+
+🔹 Jargon
+
+ARPU (Average Revenue Per User)
+
+DAU/MAU (Daily/Monthly Active Users)
+
+Fan Engagement Index
+
+Player Efficiency Rating (PER)
+
+Biometrics, VO₂ Max, Recovery Score
+
+Game Day Revenue, Ticket Yield
+
+OTT Broadcasting, PPV (Pay-Per-View)
+
+Sponsorship ROI, Endorsement Deals
+
+Training Load, Injury Risk Index
+
+Fantasy League Metrics (lineup efficiency)
+
+🔹 KPI
+
+Fan Engagement Rate (%)
+
+DAU/MAU Ratio (stickiness)
+
+Attendance & Ticket Sales
+
+Sponsorship ROI (%)
+
+Athlete Performance Metrics (PER, VO₂ Max)
+
+Churn Rate (fitness apps)
+
+Merchandise Revenue / Fan
+
+🔹 Compliance
+
+GDPR / CCPA → fan & athlete data privacy
+
+Sports Governance (FIFA, IOC, WADA)
+
+Betting Regulations (per country)
+
+Broadcasting Rights (licensing)
+
+Health & Safety Regulations (stadiums, events)
+
+Labor Laws & Athlete Contracts
+
+Anti-Doping Regulations (WADA compliance)
+
+🔹 Style Bias
+
+Energic, comunitar, inspirațional
+
+Ton: motivațional + metric-driven
+
+Limbaj simplu, dar plin de acțiune
+
+Povestiri despre eroi & performanță
+
+Stil = emoție + rezultate măsurabile
+
+🔹 Default Output
+
+Playbook (fan engagement strategies, training frameworks, event blueprints)
+
+Formate: .pdf (sports reports, sponsorship decks), .md (training plans, fan strategies), .json (performance analytics)
+
+Structură standard:
+
+League/Team Overview
+
+Fan/Athlete Engagement Framework
+
+Revenue & Sponsorship Model
+
+KPI Dashboard (attendance, engagement, ROI)
+
+Compliance Checklist (anti-doping, governance)
+
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 33: Film & Cinema 🎬
+🔹 Sub-industrii (20)
+
+Major Film Studios (Hollywood, Bollywood)
+
+Independent Film Production
+
+Film Festivals & Awards (Cannes, Sundance, Oscars)
+
+Cinema Chains & Theaters
+
+Film Distribution Companies
+
+VFX & Post-Production Studios
+
+Animation Studios (2D, 3D, CGI)
+
+Scriptwriting & Story Development Platforms
+
+Casting Agencies & Talent Mgmt
+
+Film Financing & Investment Platforms
+
+Streaming Originals (Netflix, Prime, Disney+)
+
+Short Film Platforms (YouTube, Vimeo)
+
+Documentary Production
+
+Educational Films & Training Videos
+
+AR/VR Immersive Cinema
+
+Film Archiving & Restoration
+
+Production Equipment & Rental Services
+
+International Co-Productions
+
+Voice Acting & Dubbing Services
+
+Script-to-Screen SaaS Tools
+
+🔹 Jargon
+
+Box Office Gross, Opening Weekend
+
+Pre-Production, Post-Production
+
+VFX, CGI, Motion Capture
+
+Distribution Rights, Territory Sales
+
+Script Coverage, Screenplay Drafts
+
+Greenlight, Pitch Deck, Option Agreement
+
+Day-and-Date Release Strategy
+
+P&A (Prints & Advertising) Budget
+
+IP Adaptation, Franchise Building
+
+Streaming Window, OTT Release
+
+🔹 KPI
+
+Box Office Revenue (domestic/international)
+
+Streaming Hours Watched
+
+Audience Ratings (IMDb, Rotten Tomatoes)
+
+Production Budget vs Gross ROI
+
+Festival Awards Won
+
+Subscriber Growth (streaming originals)
+
+Merchandise Revenue
+
+🔹 Compliance
+
+Copyright & IP Laws (scripts, adaptations)
+
+Union & Guild Agreements (SAG-AFTRA, WGA, DGA)
+
+Film Censorship & Ratings (MPA, BBFC, CBFC)
+
+Data Protection (GDPR for streaming viewers)
+
+Occupational Safety on Set (OSHA, EU equivalents)
+
+International Co-Production Treaties
+
+Financial Compliance (film tax credits, grants)
+
+🔹 Style Bias
+
+Narativ, vizual, dramatic
+
+Ton: emoțional + artistic, dar și comercial
+
+Structuri de poveste (acte, climax, rezoluție)
+
+Limbaj bogat în metafore vizuale
+
+Stil = storytelling + business case
+
+🔹 Default Output
+
+Playbook (production planning, film pitch decks, distribution strategies)
+
+Formate: .pdf (pitch decks, ROI reports), .md (scriptwriting frameworks), .json (audience analytics, streaming data)
+
+Structură standard:
+
+Story & Script Development
+
+Production Plan (timeline, budget)
+
+KPI Dashboard (box office, ratings)
+
+Distribution Strategy
+
+Compliance & Guild Checklist
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 34: Arts & Design 🎨
+🔹 Sub-industrii (20)
+
+Art Galleries & Exhibitions
+
+Museums & Cultural Institutions
+
+Contemporary Art Studios
+
+Graphic Design Agencies
+
+Digital Art Platforms (NFTs, marketplaces)
+
+Industrial Design (product design)
+
+UX/UI Design Studios
+
+Fashion Design (crossover cu Fashion)
+
+Interior Decoration & Design
+
+Public Art & Installations
+
+Architecture-Design Hybrids (art-driven spaces)
+
+Illustration & Concept Art Studios
+
+Animation & Visual Storytelling
+
+Creative Agencies (branding + art direction)
+
+3D Modeling & Digital Sculpture
+
+Street Art & Graffiti Platforms
+
+Art Education Platforms (courses, tutorials)
+
+Collectibles & Auction Houses
+
+Artistic Residencies & Fellowships
+
+Design Thinking Consultancies
+
+🔹 Jargon
+
+Curatorial Practice, Exhibition Design
+
+Mixed Media, Digital Canvas
+
+Moodboards, Typography, Branding Systems
+
+UX Flows, Wireframes, Prototypes
+
+Concept Art, Storyboarding
+
+Visual Identity, Color Palettes
+
+Metaverse Art, Generative AI Art
+
+Creative Brief, Design Sprint
+
+Limited Edition, Artist Proofs
+
+Human-Centered Design
+
+🔹 KPI
+
+Exhibition Attendance (# visitors)
+
+Artwork Sales Volume ($)
+
+Auction Price Index (%)
+
+Engagement Rate (social & digital)
+
+Course/Workshop Enrollment
+
+Brand Awareness Score
+
+Design Project Delivery On-Time Rate
+
+🔹 Compliance
+
+Copyright & IP Protection (artworks, design rights)
+
+GDPR/CCPA → data in digital galleries
+
+Cultural Heritage Protection Laws
+
+Resale Rights & Royalties
+
+NFT/Blockchain Regulations (MiCA, SEC)
+
+Consumer Protection (design products)
+
+Labor & Commissioning Contracts
+
+🔹 Style Bias
+
+Vizual, semiotic, inspirațional
+
+Ton: creativ + simbolic, dar și pragmatic în branding
+
+Limbaj bogat în metafore și culori
+
+Documentare artistică combinată cu business framing
+
+Stil = emoție vizuală + metrici comerciale
+
+🔹 Default Output
+
+Playbook (art strategies, design frameworks, exhibition roadmaps)
+
+Formate: .pdf (cataloguri & pitch decks), .md (design briefs, frameworks), .json (attendance & sales analytics)
+
+Structură standard:
+
+Creative Context & Concept
+
+Design/Art Development Plan
+
+KPI Dashboard (sales, attendance, awareness)
+
+Distribution/Exhibition Strategy
+
+Compliance & Rights Checklist
+
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 35: Entertainment Parks 🎡
+🔹 Sub-industrii (20)
+
+Amusement Parks (Disney, Universal)
+
+Theme Parks (brand/IP-driven)
+
+Water Parks & Aquatic Centers
+
+VR/AR Attractions (immersive rides)
+
+Edutainment Centers (science, discovery)
+
+Family Entertainment Centers (arcades, bowling)
+
+Zoos & Aquariums
+
+Cultural Heritage Parks
+
+Adventure Parks (zipline, climbing, outdoor)
+
+Indoor Trampoline & Play Parks
+
+Seasonal Events & Holiday Villages
+
+Festival Grounds & Event Parks
+
+Resort Parks (all-inclusive complexes)
+
+Amusement Park SaaS (ticketing, mgmt)
+
+Theme Park Merchandise Platforms
+
+Simulation Rides (flight, racing)
+
+Museum-Park Hybrids (interactive culture)
+
+Kid Edutainment (play-based learning)
+
+Esports Arenas & Hybrid Parks
+
+Touring Attractions (traveling fairs, carnivals)
+
+🔹 Jargon
+
+Attendance, Visitor Flow, Ride Capacity
+
+Per Capita Spend (tickets + food + merch)
+
+Dwell Time, Queue Management
+
+Safety Incidents, Incident Rate
+
+Theming, IP Integration, Guest Journey
+
+Edutainment, Immersive Experience
+
+CAPEX (capital expenditure for rides)
+
+Operational Efficiency, Load Factor
+
+Virtual Queue, Fast Pass Systems
+
+Revenue per Available Space
+
+🔹 KPI
+
+Attendance (# visitors/day)
+
+Revenue per Visitor ($)
+
+Ride Capacity Utilization (%)
+
+Safety Incident Rate
+
+Guest Satisfaction / NPS
+
+Average Dwell Time (hours)
+
+Merchandise Revenue Share (%)
+
+🔹 Compliance
+
+OSHA / Local Safety Standards
+
+Amusement Ride Safety Regulations
+
+Fire & Evacuation Codes
+
+GDPR / Data Privacy (ticketing, loyalty apps)
+
+Food & Beverage Safety Regulations
+
+Accessibility Standards (ADA, EU Accessibility Act)
+
+Environmental Impact (noise, waste, emissions)
+
+🔹 Style Bias
+
+Experiențial, emoțional, vizual
+
+Ton: entuziasmant + metric-driven
+
+Limbaj narativ → povești despre experiențe
+
+Mix între emoție (guest journey) + KPI operațional
+
+Stil = adventure storytelling + operational dashboards
+
+🔹 Default Output
+
+Playbook (guest experience maps, operational SOPs, event calendars)
+
+Formate: .pdf (park performance reports), .md (guest journey frameworks), .json (ticketing & attendance analytics)
+
+Structură standard:
+
+Park/Attraction Overview
+
+Guest Journey Mapping
+
+Revenue & KPI Dashboard
+
+Safety & Compliance Checklist
+
+Operational/Seasonal Roadmap
+
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 36: Food & Beverage 🍔
+🔹 Sub-industrii (20)
+
+Restaurant Chains & Franchises
+
+Quick Service Restaurants (QSR/fast food)
+
+Fine Dining & Luxury Cuisine
+
+Food Delivery Platforms
+
+Ghost Kitchens / Virtual Brands
+
+Meal Kit Subscriptions
+
+Beverage Companies (soft drinks, energy drinks)
+
+Coffee Chains & Specialty Cafés
+
+Craft Breweries & Distilleries
+
+Plant-Based Food Brands
+
+Functional Foods & Nutraceuticals
+
+Food Marketplaces (B2B & B2C)
+
+Food Processing & Packaging Tech
+
+Food Safety & Compliance Platforms
+
+Supply Chain for Food & Beverages
+
+Catering & Event Food Services
+
+Vending & Smart Fridges
+
+Alcohol E-Commerce Platforms
+
+Sustainable Food Startups (lab-grown, zero-waste)
+
+Food Influencer Platforms (recipes, social commerce)
+
+🔹 Jargon
+
+AOV (Average Order Value), Ticket Size
+
+Food Cost %, Prime Cost
+
+Supply Chain Traceability, Cold Chain
+
+HACCP (Hazard Analysis and Critical Control Points)
+
+Ghost Kitchen, Virtual Brand
+
+SKU Velocity, Menu Engineering
+
+Upselling, Cross-Selling in Menus
+
+Shelf Life, Food Miles
+
+Beverage Mix %, Draft Yield
+
+Health & Nutrition Claims
+
+🔹 KPI
+
+Average Order Value (AOV)
+
+Food Cost %
+
+Delivery Time SLA (minutes)
+
+Customer Retention Rate
+
+Waste Reduction %
+
+Table Turnover Rate (restaurants)
+
+Sustainability Index (emissions, food miles)
+
+🔹 Compliance
+
+FDA / EFSA Regulations (ingredients, labeling)
+
+HACCP Standards (food safety)
+
+GDPR / CCPA (customer data in delivery apps)
+
+Alcohol Licensing & Age Verification
+
+Local Health Codes (restaurants, kitchens)
+
+Fair Trade & Ethical Sourcing
+
+Nutrition & Claims Regulations (EU/US rules)
+
+🔹 Style Bias
+
+Pragmatic, experiențial, senzorial
+
+Ton: gustativ + vizual + metric
+
+Limbaj simplu, axat pe calitate + satisfacția clientului
+
+Storytelling gastronomic pentru marketing, dar KPI în management
+
+Stil = emoție + operare eficientă
+
+🔹 Default Output
+
+Playbook (menu engineering, delivery workflows, food safety SOPs)
+
+Formate: .pdf (restaurant financial reports, HACCP docs), .md (menu design playbooks), .json (supply chain traceability data)
+
+Structură standard:
+
+Business / Menu Overview
+
+KPI Dashboard (AOV, waste, retention)
+
+Operational Flow (dine-in + delivery)
+
+Compliance Checklist (HACCP, FDA/EFSA)
+
+Sustainability & Innovation Roadmap
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 37: Home & Living 🏠
+🔹 Sub-industrii (20)
+
+Smart Home Devices (IoT, voice assistants)
+
+Home Automation Systems
+
+Interior Retail (furniture, décor)
+
+DIY & Home Improvement Platforms
+
+Real Estate-Home Living Crossovers (interior packages)
+
+Kitchen Appliances (smart ovens, fridges)
+
+Home Security Systems (cameras, alarms)
+
+HVAC & Climate Control Solutions
+
+Home Energy Mgmt (solar panels, batteries)
+
+Cleaning Robotics (vacuums, lawn robots)
+
+Subscription Boxes (home décor, supplies)
+
+Pet-Friendly Home Solutions
+
+Gardening & Outdoor Living Tech
+
+Modular & Prefab Homes
+
+Home Maintenance SaaS (repair, scheduling)
+
+Storage & Organization Solutions
+
+E-Commerce for Home & Living (IKEA online, Wayfair)
+
+Home Design & AR Visualization Platforms
+
+Elderly Care Home Solutions (fall detection, monitoring)
+
+Lifestyle Media & Influencer Platforms (home inspo, trends)
+
+🔹 Jargon
+
+Smart Home, Connected Devices
+
+Ambient Intelligence, Home Hub
+
+Retrofit, Energy Efficiency Rating
+
+Voice Control, Remote Monitoring
+
+AR Home Design, Virtual Staging
+
+Preventive Maintenance, Service Calls
+
+Home Experience Index (HXI)
+
+Omnichannel Retail, Click & Collect
+
+Indoor Air Quality (IAQ)
+
+Minimalism vs Maximalism (design trends)
+
+🔹 KPI
+
+Adoption Rate of Smart Devices (%)
+
+Energy Savings per Household (kWh)
+
+Customer Satisfaction (HXI, NPS)
+
+Average Basket Size (home retail)
+
+Churn Rate (subscriptions)
+
+Conversion Rate (AR/VR design apps)
+
+Home Security Incident Reduction %
+
+🔹 Compliance
+
+GDPR / CCPA → data from smart home devices
+
+Electrical & Safety Standards (UL, CE)
+
+Building Codes for Installations
+
+Energy Star / EU Efficiency Labels
+
+Health & Safety (indoor air, emissions)
+
+Product Safety Recalls & Consumer Protection
+
+IoT Cybersecurity Standards (NIS2, ISO/IEC 27001)
+
+🔹 Style Bias
+
+Aspirational, lifestyle-driven, pragmatic
+
+Ton: inspirațional + metric
+
+Narativ axat pe confort, siguranță, estetică
+
+Limbaj simplu pentru consumatori, dar cu date pentru investitori
+
+Stil = emoție + eficiență
+
+🔹 Default Output
+
+Playbook (home automation plans, retail strategies, smart living roadmaps)
+
+Formate: .pdf (trend reports, compliance docs), .md (design frameworks), .json (device telemetry, energy savings data)
+
+Structură standard:
+
+Home/Consumer Context
+
+KPI Dashboard (savings, adoption, satisfaction)
+
+Lifestyle & Design Strategy
+
+Compliance Checklist (IoT, safety)
+
+Innovation & Sustainability Roadmap
+
+
+
+
+
+38. Pet Industry 🐾
+🔹 Sub-industrii
+
+Pet Care Services (grooming, boarding)
+
+Pet Tech (GPS trackers, health monitors)
+
+Pet Food & Nutrition (premium, organic, subscription)
+
+Veterinary SaaS & TeleVet Platforms
+
+Pet Insurance & FinTech
+
+Pet Training Platforms
+
+Smart Accessories (collars, feeders)
+
+Pet Adoption Platforms
+
+Pet Wellness Apps
+
+Animal Genetics & Breeding Tech
+
+Exotic Pet Markets
+
+Pet Pharmaceutics
+
+Pet-Friendly Travel & Hospitality
+
+Community Pet Platforms (social for pets)
+
+IoT for Livestock & Companion Animals
+
+AI Diagnostics for Pets
+
+Wearables for Animals
+
+Subscription Boxes for Pets
+
+Pet Media (influencers, content)
+
+NGOs & Rescue Tech
+
+🔹 Jargon
+
+LTV Pet, Retention Rate, Vet Visits/Year, Wellness Index, Premiumization, TeleVet, Smart Collar, Insurance Claim Ratio
+
+🔹 KPI
+
+Customer LTV
+
+Retention Rate
+
+Average Vet Visits per Pet
+
+Pet Health Outcomes Index
+
+Insurance Claim Rate
+
+🔹 Compliance
+
+Veterinary Practice Laws
+
+Animal Welfare Regulations
+
+GDPR / Pet Owner Data Privacy
+
+Food & Safety Standards (pet food)
+
+Insurance Compliance
+
+🔹 Style Bias
+
+Empatic, prietenos, afectiv — limbaj accesibil, orientat spre emoție și grijă.
+
+🔹 Default Output
+
+Playbook (care routines, health monitoring frameworks, insurance flows) → .pdf (pet health reports), .md (care SOPs), .json (device telemetry).
+
+39. Event Management 🎤
+🔹 Sub-industrii
+
+Event SaaS Platforms
+
+Ticketing Systems
+
+Hybrid Event Tech
+
+Expo Logistics
+
+Wedding & Corporate Planners
+
+Conference Apps
+
+Festival Tech
+
+Live Streaming for Events
+
+Trade Show SaaS
+
+Venue Management Platforms
+
+Event Staffing Tech
+
+AR/VR Event Experiences
+
+Event Security Tech
+
+Check-in & Access Control SaaS
+
+Sponsorship Mgmt Platforms
+
+Networking Apps
+
+Event Analytics SaaS
+
+Nonprofit Event Platforms
+
+Sports Event Mgmt
+
+Community Meetup Tech
+
+🔹 Jargon
+
+Registrations, Ticket Yield, Check-in Flow, Sponsorship ROI, NPS, Hybrid Engagement, Attendance Funnel
+
+🔹 KPI
+
+Attendance (# participants)
+
+Revenue per Event
+
+NPS (Net Promoter Score)
+
+Sponsorship ROI
+
+Conversion to Next Event (%)
+
+🔹 Compliance
+
+GDPR (attendee data)
+
+Safety Codes (fire, occupancy)
+
+Ticketing Consumer Protection
+
+Accessibility Laws (WCAG, ADA)
+
+Insurance & Liability
+
+🔹 Style Bias
+
+Organizatoric, metric-driven, procedural.
+
+🔹 Default Output
+
+Playbook (event calendars, ticketing workflows, sponsor kits) → .pdf (event P&L), .md (logistics checklists), .json (attendance metrics).
+
+
+
+
+
+
+40. Wedding Industry 💍
+🔹 Sub-industrii
+
+Bridal Fashion & Accessories
+
+Wedding Venues
+
+Wedding Planners
+
+Honeymoon Packages
+
+Wedding SaaS Platforms
+
+Catering Services
+
+Photography & Videography
+
+Floristry
+
+Decoration Services
+
+Invitation Design (digital & print)
+
+Music & Entertainment
+
+Guest Mgmt SaaS
+
+Destination Weddings
+
+Jewelry (rings, gifts)
+
+Beauty & Styling
+
+Wedding Registries
+
+Gifting Platforms
+
+AR/VR Wedding Visualization
+
+Micro-Weddings & Elopements
+
+Sustainable Weddings
+
+🔹 Jargon
+
+Booking Funnel, Guest List Mgmt, Conversion Rate, Vendor Marketplace, Average Spend, Upsell Packages
+
+🔹 KPI
+
+Booking Conversion Rate
+
+Average Spend per Wedding
+
+Vendor Retention Rate
+
+Guest Attendance %
+
+NPS Bride/Groom
+
+🔹 Compliance
+
+Contract Laws
+
+Consumer Protection (refunds, cancellations)
+
+Licensing (music, venues)
+
+GDPR (guest data)
+
+Insurance (event coverage)
+
+🔹 Style Bias
+
+Emoțional, aspirational, romantic.
+
+🔹 Default Output
+
+Playbook (wedding plans, vendor packages, guest journeys) → .pdf (wedding guides), .md (planning frameworks), .json (guest data).
+
+41. Space Tourism 🛰️
+🔹 Sub-industrii
+
+Suborbital Flights
+
+Orbital Hotels
+
+Space Experiences & Training
+
+Simulation & VR Space Experiences
+
+Luxury Space Travel Packages
+
+Research-Tourism Hybrids
+
+Microgravity Experiences
+
+Spaceports Infrastructure
+
+Insurance & Safety Systems
+
+Launch Services for Tourism
+
+Lunar Excursions (future)
+
+Private Astronaut Training
+
+Space Capsule Manufacturing
+
+Hospitality in Orbit
+
+Cross-border Licensing
+
+Entertainment in Space
+
+Space Fashion & Design
+
+Tourism Research Stations
+
+Climate Observation for Tourists
+
+Space Tourism Media
+
+🔹 Jargon
+
+Suborbital, Orbital, Payload, Safety Rating, Astronaut Training, Ticket Yield, Flight Window
+
+🔹 KPI
+
+Flight Safety %
+
+Passenger Count
+
+Ticket Sales Volume
+
+Launch Success Rate
+
+Occupancy of Orbital Hotels
+
+🔹 Compliance
+
+Outer Space Treaty
+
+National Space Agencies (FAA/ESA)
+
+ITAR Export Controls
+
+Insurance & Liability Laws
+
+GDPR (passenger data)
+
+🔹 Style Bias
+
+Vizionar, explorator, inspirațional.
+
+🔹 Default Output
+
+Spec (flight plans, safety frameworks, passenger journeys) → .pdf (mission reports), .md (guest frameworks), .json (telemetry).
+
+42. BioTech (separat de Healthcare) 🧬
+🔹 Sub-industrii
+
+Gene Editing (CRISPR)
+
+Synthetic Biology
+
+Bio-Materials (lab-grown leather, plastics)
+
+Pharma Biotech
+
+AgriBiotech
+
+Diagnostics Biotech
+
+Bioinformatics SaaS
+
+Cell & Gene Therapy Platforms
+
+Biomanufacturing (fermentation)
+
+Personalized Medicine Tech
+
+Clinical Biotech Trials
+
+AI for Biotech Discovery
+
+BioSensors
+
+Microbiome Platforms
+
+Regenerative Medicine
+
+Biotech IP Licensing
+
+Vaccines & Therapeutics
+
+Rare Disease Biotech
+
+Biotech Robotics (lab automation)
+
+Ethical Biotech Platforms
+
+🔹 Jargon
+
+CRISPR, GMO, Synthetic Pathways, Assay, Clinical Trial Phases, IP Patent, Biomanufacturing
+
+🔹 KPI
+
+Clinical Trial Success Rate
+
+IP Patents Filed
+
+Cost per Therapy
+
+Time-to-Market (drug/therapy)
+
+Research Grant Funding
+
+🔹 Compliance
+
+FDA/EMA Biotech Approvals
+
+GMO Regulations
+
+Clinical Trial Protocols (ICH GCP)
+
+Bioethics Guidelines
+
+IP Law & Patents
+
+🔹 Style Bias
+
+Academic + aplicat, semi-științific.
+
+🔹 Default Output
+
+Spec (research papers, biotech frameworks, clinical protocols) → .pdf (trial docs), .md (frameworks), .json (lab data).
+
+43. Edutainment 📚🎮
+🔹 Sub-industrii
+
+Kids Learning Games
+
+AR Classrooms
+
+Gamified Museums
+
+Language Learning Gamified Apps
+
+Cultural Heritage VR Platforms
+
+Family Edutainment Centers
+
+Subscription Edutainment Platforms
+
+Interactive Storytelling Apps
+
+Educational Animation Studios
+
+Hybrid Classrooms with Gaming
+
+Science Simulation Games
+
+Gamified Assessment Platforms
+
+Skill-Based Learning Games
+
+Online Campuses Gamified
+
+AR Books & Interactive Content
+
+Early Childhood Learning Apps
+
+Gamified Corporate Training
+
+STEM Learning Kits + Apps
+
+Digital Camp Platforms
+
+Edutainment Events (live + hybrid)
+
+🔹 Jargon
+
+Gamification, XP/Levels, Completion Rate, Retention Curve, Engagement Rate, AR/VR Learning
+
+🔹 KPI
+
+Engagement Rate
+
+Retention Rate
+
+Completion Rate
+
+Session Duration
+
+Subscription Conversion
+
+🔹 Compliance
+
+GDPR / COPPA (child data)
+
+Accessibility Standards (WCAG)
+
+IP & Copyright (educational content)
+
+Consumer Protection Laws
+
+Educational Standards (K-12, STEM)
+
+🔹 Style Bias
+
+Jucăuș, educativ, interactiv.
+
+🔹 Default Output
+
+Playbook (gamified lesson plans, museum frameworks) → .pdf (edu reports), .md (learning flows), .json (engagement analytics).
+
+44. Creator Economy 👩‍🎨
+🔹 Sub-industrii
+
+Patreon-Style Subscription Platforms
+
+UGC Monetization Tools
+
+Content Marketplaces
+
+NFT Creator Platforms
+
+Social Tipping Platforms
+
+Creator CRM Systems
+
+Influencer Mgmt SaaS
+
+Live Streaming Monetization
+
+Brand Partnerships Marketplaces
+
+Micro-Creators Marketplaces
+
+Course & Knowledge Platforms
+
+Merchandising SaaS
+
+Audio Creator Platforms
+
+Video Editing SaaS for Creators
+
+Fan Engagement Apps
+
+Creator DAOs
+
+Cross-Platform Publishing Tools
+
+Licensing & IP Mgmt Platforms
+
+Creator Insurance & Finance Tools
+
+Creator Analytics SaaS
+
+🔹 Jargon
+
+Monetization Rate, Fan Engagement, Patron Growth, Tipping, Creator LTV, Community Retention
+
+🔹 KPI
+
+Creator Revenue
+
+Fan Engagement Rate
+
+Churn/Retention Rate
+
+Conversion to Paid Subscribers
+
+LTV per Creator
+
+🔹 Compliance
+
+Copyright & IP Law
+
+Platform Regulations (YouTube, Twitch)
+
+GDPR / CCPA (fan data)
+
+Tax Compliance (global payouts)
+
+FTC/ASA Disclosures
+
+🔹 Style Bias
+
+Comunitar, empowerment, creator-centric.
+
+🔹 Default Output
+
+Playbook (creator monetization strategies, community frameworks) → .pdf (creator economy reports), .md (growth frameworks), .json (fan analytics).
+
+
+
+
+
+
+
+
+45. Circular Economy ♻️
+🔹 Sub-industrii
+
+Recycling Platforms
+
+Second-Hand Marketplaces
+
+Product-as-a-Service Platforms
+
+Waste-to-Energy Plants
+
+Upcycling Businesses
+
+Plastic Neutral Programs
+
+Sustainable Packaging Tech
+
+Textile Recycling Platforms
+
+Food Waste Mgmt Systems
+
+Carbon Neutral Supply Chains
+
+Industrial Byproduct Exchanges
+
+Circular Design Studios
+
+Material Innovation Startups
+
+Rental & Sharing Platforms
+
+Circular Construction Tech
+
+Urban Mining
+
+E-Waste Recycling
+
+Water Circular Systems
+
+Blockchain Traceability for Circularity
+
+ESG Circular Auditing
+
+🔹 Jargon
+
+Waste Diverted, CO₂ Saved, Circular Index, Upcycling, Zero Waste, Closed Loop, Product Lifecycle
+
+🔹 KPI
+
+Waste Diverted (tons)
+
+CO₂ Saved (%)
+
+Recycling %
+
+Customer Adoption Rate
+
+Circular Supply Chain Score
+
+🔹 Compliance
+
+EU Circular Economy Action Plan
+
+Extended Producer Responsibility (EPR)
+
+ISO 14001 (environmental)
+
+Local Waste Mgmt Regulations
+
+ESG Reporting Standards
+
+🔹 Style Bias
+
+Sustenabil, pragmatic, responsabil.
+
+🔹 Default Output
+
+Playbook (circular frameworks, recycling strategies) → .pdf (circularity reports), .md (frameworks), .json (waste analytics).
+
+46. Hospitality Tech 🏨
+🔹 Sub-industrii
+
+Booking Engines
+
+Hotel SaaS Platforms
+
+Guest Experience Apps
+
+Smart Hotels & IoT
+
+Hospitality Robots
+
+PMS (Property Mgmt Systems)
+
+Loyalty & Rewards SaaS
+
+Mobile Check-In / Check-Out
+
+Hotel Analytics Platforms
+
+Revenue Mgmt Systems (RMS)
+
+Conference & MICE Tech
+
+Housekeeping Automation
+
+Spa & Wellness Tech
+
+Restaurant-Hotel Cross Platforms
+
+Guest Feedback Platforms
+
+Smart Locks & Room Access
+
+Hospitality Payments Tech
+
+Chatbots & AI Concierges
+
+Hotel Marketplaces
+
+Cross-brand Hotel SaaS
+
+🔹 Jargon
+
+RevPAR, ADR, Occupancy, Guest Journey, NPS, Upsell Rate, Check-in Flow, Loyalty Tier
+
+🔹 KPI
+
+Occupancy Rate
+
+RevPAR
+
+Guest NPS
+
+Average Upsell per Guest
+
+Booking Conversion %
+
+🔹 Compliance
+
+GDPR (guest data)
+
+PCI DSS (payments)
+
+Hospitality Safety & Health Codes
+
+Accessibility Standards (ADA, EU regs)
+
+Local Taxation (tourist tax)
+
+🔹 Style Bias
+
+Experiențial + metric, ton inspirațional dar datadriven.
+
+🔹 Default Output
+
+Playbook (guest journey flows, hotel SOPs, revenue strategies) → .pdf (hotel performance), .md (journey frameworks), .json (booking analytics).
+
+47. MobilityTech 🚗
+🔹 Sub-industrii
+
+EV Platforms
+
+Ride-Sharing Apps
+
+Micro-Mobility (scooters, bikes)
+
+Autonomous Driving Systems
+
+Fleet SaaS Platforms
+
+MaaS (Mobility as a Service)
+
+Car Subscription Platforms
+
+Parking Tech
+
+Charging Infrastructure SaaS
+
+Delivery & Logistics Mobility
+
+Insurance & FinTech for Mobility
+
+Mobility Analytics
+
+Connected Cars & IoT
+
+Smart City Mobility Systems
+
+Public Transport Integrations
+
+Mobility Drones
+
+Shared Autonomous Pods
+
+Accessibility Mobility Tech
+
+Fuel-to-EV Transition SaaS
+
+Sustainable Mobility Startups
+
+🔹 Jargon
+
+Utilization, Rides per Day, Cost per Mile, Fleet Turnover, MaaS API, Charging Density, AV Safety Score
+
+🔹 KPI
+
+Rides/Day
+
+Fleet Utilization %
+
+Cost per Mile
+
+Charging Coverage %
+
+AV Safety Incidents
+
+🔹 Compliance
+
+Local Transport Regulations
+
+GDPR (ride data)
+
+Insurance Laws
+
+Safety Standards (autonomous vehicles)
+
+Environmental Emissions Rules
+
+🔹 Style Bias
+
+Tehnic + urban, metric-driven.
+
+🔹 Default Output
+
+Playbook (mobility strategies, fleet optimization, charging maps) → .pdf (mobility KPIs), .md (urban plans), .json (ride/charging data).
+
+48. FinMedia 💹📰
+🔹 Sub-industrii
+
+Stock Analysis Platforms
+
+Influencer Finance (YouTube/TikTok analysts)
+
+Retail Investor Tools
+
+Financial Newsletters
+
+Financial Media Outlets
+
+Podcasts & Webinars
+
+Trading Education Platforms
+
+Social Investing Apps
+
+Subscription Research Platforms
+
+Alt-Investments Media
+
+Macro Strategy Outlets
+
+Earnings Call Analysis Platforms
+
+FinTech + Media Hybrids
+
+Portfolio Simulators
+
+Community Finance Platforms
+
+Stock-Picking AI Assistants
+
+Crowdfunding Media Platforms
+
+Investor Sentiment Analytics
+
+Finance Video Platforms
+
+Paid Analyst Communities
+
+🔹 Jargon
+
+Subscribers, AUM Influenced, CTR, Engagement, Alpha, Sentiment, Conversion Funnel
+
+🔹 KPI
+
+Subscribers
+
+Engagement Rate
+
+Assets Under Management Influenced
+
+CTR %
+
+Conversion to Paid %
+
+🔹 Compliance
+
+SEC/FINRA Rules
+
+GDPR / CCPA (investor data)
+
+Advertising & Influencer Disclosures
+
+Financial Reporting Laws
+
+Copyright/IP
+
+🔹 Style Bias
+
+Factual, educativ, persuasiv.
+
+🔹 Default Output
+
+Playbook (subscriber growth, content strategy, compliance frameworks) → .pdf (finance reports), .md (content plans), .json (subscriber analytics).
+
+49. Health & Wellness Lifestyle 🧘
+🔹 Sub-industrii
+
+Fitness Apps
+
+Nutrition Tech
+
+Mindfulness & Meditation Apps
+
+Corporate Wellness Programs
+
+Holistic Health Platforms
+
+Wearables for Health & Wellness
+
+Alternative Therapy Platforms
+
+Health Retreats
+
+Personalized Diet Apps
+
+Sleep Tech
+
+Yoga Apps
+
+Mental Health Platforms
+
+Biohacking Startups
+
+Digital Fitness Content Creators
+
+Tele-Wellness Services
+
+Preventive Health SaaS
+
+Wellness Marketplaces
+
+VR/AR Wellness Experiences
+
+Supplement Subscription Platforms
+
+Influencer-Led Wellness Brands
+
+🔹 Jargon
+
+Adherence, Retention, Engagement, Wellness Score, Mind-Body Index, LTV Wellness
+
+🔹 KPI
+
+User Retention
+
+Engagement Rate
+
+Adherence %
+
+Wellness Score
+
+Subscription Conversion
+
+🔹 Compliance
+
+HIPAA / GDPR (health data)
+
+FDA/EMA (supplements, claims)
+
+Advertising Standards (wellness claims)
+
+Data Privacy Laws
+
+Wellness Certifications
+
+🔹 Style Bias
+
+Empatic, aspirational, transformațional.
+
+🔹 Default Output
+
+Playbook (wellness routines, fitness frameworks, corporate wellness plans) → .pdf (wellness KPIs), .md (routines), .json (user metrics).
+
+
+
+
+
+
+
+📚 EXTEND-50 — Domeniul 50: Defense & Security Industry 🛡️
+🔹 Sub-industrii (20)
+
+Defense Contractors (integrare platforme)
+
+Military Tech Platforms (C2/C4ISR)
+
+Cyber-Defense & Threat Intel (SOC, CTI)
+
+Drone Systems (ISR, logistică; non-letale/dual-use)
+
+AI Defense Platforms (detecție/anomalie, fuziune senzori)
+
+Space Defense (sateliți, GEO/LEO monitorizare)
+
+Surveillance & Reconnaissance (SIGINT/IMINT/GEOINT)
+
+Secure Comms (COMSEC, crypto FIPS)
+
+Border & Homeland Security Tech
+
+Defense Logistics (MRO, lanț aprovizionare)
+
+Naval Systems (senzori, DCS)
+
+Air Defense & Avionics (fără detalii armament)
+
+Ground Systems (vehicule, senzori teren)
+
+Simulation, Training & Digital Twins
+
+Intelligence Analysis Tools (OSINT+classified workflows)
+
+Emergency & Civil Protection (CBRN sensing; non-kinetic)
+
+Counter-UAS (detecție, mitigare autorizată legal)
+
+Critical Infrastructure Protection (ICS/OT security)
+
+Vetting & Insider-Risk Platforms
+
+Classified Cloud / On-Prem Secure Enclaves
+
+Notă de siguranță: fără instrucțiuni operaționale sau de fabricare armament; strict procese, cadre, guvernanță și conformitate.
+
+🔹 Jargon
+
+C2/C4ISR, CONOPS, ROE (Rules of Engagement)
+
+STANAG (NATO), MIL-STD (MIL-STD-810, 461), FIPS 140-3
+
+ITAR / EAR (export control), DFARS (cyber clauses)
+
+NIST 800-171/53, CMMC, Tempest/EMSEC
+
+SIGINT/IMINT/GEOINT, TTPs, OPSEC/COMSEC
+
+MTBF/MTTR, Sortie Rate, Readiness Index, SLA/SLO
+
+Link-16/22, STANAG 4609 (video), Zero-Trust, SBOM
+
+🔹 KPI (orientative)
+
+Mission Success Rate (%) – obiective atinse fără incidente
+
+System Uptime / Availability (%) – pe teatru / pe platformă
+
+Detection → Response Time (D→R) (sec/min) – cyber/kinetic non-letal
+
+False Positive / False Negative Rate – senzori & intel analytics
+
+MTBF / MTTR – fiabilitate & mentenanță
+
+Readiness Index / Sortie Generation Rate – pregătire operațională
+
+Compliance Pass Rate (audit ITAR/EAR/NIST/CMMC)
+
+Supply Chain Risk Score (SBOM, provenance, vendor tier)
+
+🔹 Compliance (cadre cheie)
+
+ITAR / EAR (US export controls), EU Dual-Use, licențiere națională
+
+NIST SP 800-171/53, CMMC (DoD), FIPS 140-3 (crypto)
+
+NATO STANAG / MIL-STD (interoperabilitate & mediu)
+
+DFARS 252.204-7012 (cyber incident & CDI/CUI)
+
+ISO/IEC 27001, NIS2 (infrastructuri critice)
+
+GDPR (date personale neclasificate), LOAC/IHL (dreptul conflictelor armate)
+
+Politici de OPSEC/COMSEC, clasificare & need-to-know
+
+🔹 Style Bias
+
+Formal, tehnic, reglementat, risk-based
+
+Ton auditabil, zero senzaționalism; accent pe safety & lawful use
+
+Clar separație: public/unclassified vs. restricted; fără detalii sensibile
+
+Documente cu traceability, anexe standard & checklists
+
+🔹 Default Output
+
+Spec & Playbooks: CONOPS (unclassified), arhitecturi C2/C4ISR, planuri cyber IR, proceduri OPSEC/COMSEC, matrice testare STANAG/MIL-STD, SBOM & supply-chain assurance.
+
+Formate: .pdf (compliance & test reports), .md (SOP-uri/CONOPS), .json (telemetrie/indicatori, SBOM CycloneDX).
+
+Structură standard:
+
+Threat & Mission Context (scop, constrângeri legale, ROE)
+
+Architecture & Data Flows (segmente, enclaves, interfețe; fără detalii clasificate)
+
+KPIs & SLOs (mission, cyber, fiabilitate)
+
+Compliance Mapping (ITAR/EAR, NIST/CMMC, STANAG/MIL-STD)
+
+Assurance & Test Plan (EMSEC, environmental, cyber drills, red/blue/purple teaming)
+
+Supply-Chain Security (SBOM, provenance, vendor risk, export-control gates)
+
+Operations & Governance (access control, incident process, audit trail)
+
+🔹 Guardrails (de inclus în orice livrabil)
+
+No fabrication / no weaponization guidance.
+
+Lawful use only; respectarea ROE, LOAC/IHL și licențelor de export.
+
+Data minimization & classification; fără informații sensibile în clar.
+
+Dual-Use Ethics: evaluare impact civil, transparență & oversight.
+
+
+
+
+
+
+
+
+îți detaliez acum 📍 1.2 Sub-parametri Domain. Fiecare domeniu (din CORE-25) nu este doar o etichetă, ci o structură parametrică completă cu sub-câmpuri obligatorii. Acestea devin meta-date canonice pentru fiecare domain_config din baza ta de date (Supabase/Postgres) și pentru validarea JSON Schema din module.spec.json.
+
+🔑 Sub-parametri Domain
+1. sub_industry (array enum)
+
+Rol: definește granularitatea domeniului.
+
+Tip: string[] (enumuri predefinite, max 10 per domain).
+
+Exemple:
+
+SaaS → [“B2B SaaS”, “Productivity Tools”, “Collaboration Platforms”, “DevTools”]
+
+FinTech → [“Digital Banking”, “Payments & Wallets”, “InsurTech”, “RegTech”]
+
+Education → [“E-learning”, “K-12”, “Higher Ed”, “Corporate Training”]
+
+👉 Beneficiu: permite filtrare și personalizare în UI (dropdown, multi-select), plus analytics mai fin pe segmente.
+
+2. jargon[] (termeni tehnici specifici)
+
+Rol: vocabularul propriu industriei, injectat în prompts ca context.
+
+Tip: string[] (min 5 – max 50 termeni).
+
+Exemple:
+
+SaaS → ARR, MRR, churn, CAC, NRR, multi-tenant, API-first
+
+FinTech → KYC, AML, PSD2, open banking, risk scoring
+
+E-Commerce → CR, AOV, ROAS, cart abandonment, SKU
+
+👉 Beneficiu: engine-ul poate valida dacă outputul folosește jargonul corect și poate ajusta stilul.
+
+3. kpis[] (indicatori canonici de performanță)
+
+Rol: setul de KPI-uri care trebuie să apară în livrabil (scoruri, planuri).
+
+Tip: string[] (min 3 – max 20 indicatori).
+
+Exemple:
+
+SaaS → [“MRR growth”, “churn rate”, “time-to-value”]
+
+FinTech → [“fraud_rate”, “KYC_completion_time”, “approval_rate”]
+
+Education → [“completion_rate”, “engagement_rate”, “retention_rate”]
+
+👉 Beneficiu: evaluatorul AI poate nota “business_fit” verificând apariția acestor KPI în output.
+
+4. compliance_notes
+
+Rol: regulile și restricțiile legale pentru domeniu.
+
+Tip: text (până la 2000 caractere).
+
+Exemple:
+
+SaaS → GDPR, SOC2, ISO27001, Data Residency (EU/US).
+
+FinTech → SEC/FCA sensitive, Basel III, PCI DSS, Anti-Money Laundering.
+
+Healthcare → HIPAA, GDPR, FDA/EMA approvals.
+
+👉 Beneficiu: se injectează ca guardrail în prompts → engine știe ce să evite (ex: fără “profit garantat”, fără “diagnostic medical”).
+
+5. style_bias
+
+Rol: definește tonul și vocea recomandată pentru livrabile.
+
+Tip: enum string (audit | narativ | formal | empatic | persuasiv | experimental).
+
+Exemple:
+
+SaaS → analitic, orientat pe metrici.
+
+Consulting → audit-like, autoritar.
+
+Education → narativ, gamified, empatic.
+
+FinTech → formal, layered, risc/reglementare.
+
+👉 Beneficiu: influențează micro-copy în output → modulul știe dacă să fie mai “storytelling” sau mai “report-like”.
+
+6. default_output_format
+
+Rol: setul de livrabile standard pentru industrie.
+
+Tip: enum string (txt | md | checklist | spec | playbook | json | pdf | bundle).
+
+Exemple:
+
+SaaS → spec (documentație tehnică).
+
+Marketing → playbook (funneluri, campanii).
+
+Healthcare → spec (protocoale clinice).
+
+Education → playbook (curriculum, rubrici).
+
+👉 Beneficiu: engine-ul propune implicit formatul cel mai util pentru acel domeniu, dar permite override.
+
+📑 Exemplu JSON pentru un domain_config (FinTech)
+{
+  "id": "fintech",
+  "industry": "FinTech",
+  "sub_industry": ["Digital Banking", "Payments", "InsurTech", "RegTech"],
+  "jargon": ["KYC", "AML", "PSD2", "open banking", "risk scoring"],
+  "kpis": ["fraud_rate", "KYC_completion_time", "approval_rate"],
+  "compliance_notes": "SEC/FCA sensitive; Basel III; PCI DSS; GDPR; AML directives.",
+  "style_bias": "formal",
+  "default_output_format": "spec"
+}
+
+
+🔧 Integrare practică:
+
+În Supabase → coloane sub_industry[], jargon[], kpis[], compliance_notes text, style_bias text, default_output_format text.
+
+În UI → filtre de tip select/multi-select (sub_industry), checklist (KPI), textarea (compliance).
+
+În Evaluator → se verifică dacă jargonul și KPI apar în output + se aplică tonul cerut.
+
+
+
+
+
+
+
+
+🧩 2. Scale (Nivel de scară)
+🎯 Valori canonice (enum de bază)
+
+personal_brand → 1 individ, branding propriu.
+
+solo → freelancer, one-man-show cu câteva tool-uri.
+
+startup → echipă 2–15 oameni, finanțare seed/pre-seed.
+
+SMB → 15–100 oameni, business stabilizat, creștere sănătoasă.
+
+boutique_agency → 5–30 oameni, clienți multipli, servicii creative/consulting.
+
+corporate → sute/mii angajați, proceduri, bugete mari.
+
+enterprise → global, multi-divizii, infrastructură complexă.
+
+🔑 Sub-parametri Scale
+1. team_size
+
+Rol: definește resursa umană disponibilă.
+
+Tip: interval numeric sau enum scalat.
+
+Valori recomandate:
+
+1 → personal brand / solo
+
+2–5 → startup foarte mic
+
+6–15 → startup / boutique agency
+
+16–50 → SMB
+
+51–250 → corporate mid-size
+
+250+ → enterprise
+
+👉 Impact: prompts și SOP-urile trebuie să includă roluri și responsabilități adaptate numărului de oameni.
+
+2. budget_band
+
+Rol: definește resursele financiare disponibile.
+
+Tip: enum {low, medium, high}.
+
+Mapping sugestiv:
+
+Low: bootstrapped, <10k €/lună buget operațional.
+
+Medium: 10k–100k €/lună (SMB, startup cu funding).
+
+High: 100k+/lună (corporate, enterprise).
+
+👉 Impact: decide ce tool-uri/stack-uri sunt recomandate (no-code vs enterprise SaaS vs custom infra).
+
+3. market_scope
+
+Rol: aria de piață vizată.
+
+Tip: enum {local, regional, global}.
+
+Definiții:
+
+Local: 1 țară / comunitate restrânsă.
+
+Regional: UE, APAC, LatAm etc.
+
+Global: prezență internațională, multi-limbă, multi-tax.
+
+👉 Impact: prompts pentru marketing/branding includ localizare, i18n, reglementări fiscale.
+
+4. decision_structure
+
+Rol: modul în care se iau deciziile în organizație.
+
+Tip: enum {founder-driven, board-driven, committee}.
+
+Definiții:
+
+Founder-driven: 1–2 persoane decid rapid (solo/startup).
+
+Board-driven: investitori și board decid (SMB / startup cu funding).
+
+Committee: departamente, procese lente (corporate, enterprise).
+
+👉 Impact: prompts trebuie să includă „layers of approval” și moduri de prezentare (ex: business case pentru board vs one-pager pentru fondator).
+
+📑 Exemplu JSON — Scale pentru un startup
+{
+  "scale": "startup",
+  "team_size": "6-15",
+  "budget_band": "medium",
+  "market_scope": "regional",
+  "decision_structure": "founder-driven"
+}
+
+🧭 Integrare practică
+
+Supabase/DB: coloane team_size text, budget_band text, market_scope text, decision_structure text.
+
+UI: selectori dropdown / sliders pentru team size și buget.
+
+Evaluator AI: ajustează scorul „business_fit” în funcție de scale (ex: corporate → output mai formal; personal_brand → limbaj mai autentic).
+
+
+
+
+
+
+
+
+🧩 3. Urgency — enum de bază
+
+low – fără presiune imediată; explorare/învățare.
+
+planned – proiect programat; termene clare dar flexibile.
+
+sprint – fereastră scurtă (1–3 săpt.); livrabile iterativ.
+
+pilot – probă controlată cu criterii de reușită; impact moderat.
+
+crisis – incident/acuțiune; zero ambiguitate, decizie rapidă.
+
+🔑 Sub-parametri
+1) timeline
+
+Rol: încadrează livrabilele în timp (zile/săpt./luni).
+
+Tip & exemple: string tipat ca „7d”, „30d”, „90d”.
+
+Heuristici:
+
+low → 60–90d
+
+planned → 30–60d
+
+sprint → 7–21d
+
+pilot → 14–45d (include milestones)
+
+crisis → 24–72h
+
+Efecte practice: dimensionează granularitatea prompturilor (SOP scurt vs. plan complet) și limitează numărul de pași/artefacte per run.
+
+2) pressure_type
+
+Rol: natura presiunii ce dictează stilul și guardrails.
+
+Tip: enum {market, regulatory, competitive, internal}
+
+Guidelines:
+
+market – livrabile orientate pe conversie/time-to-value.
+
+regulatory – includere explicită de conformitate, citări și checklist; export .json/.pdf preferat.
+
+competitive – comparativ/benchmark + roadmap scurt.
+
+internal – focus pe aliniere și adoptare (playbooks).
+
+3) risk_tolerance
+
+Rol: cât risc acceptă organizația în decizii & output.
+
+Tip: enum {low, medium, high}
+
+Aplicare:
+
+low → guardrails stricte, praguri evaluator mai sus, mai puține „salturi” de ipoteze.
+
+medium → standardele implicite 7D.
+
+high → permite experimente (ex: 2 variante de prompt în paralel).
+
+Legat de DoD: pentru risk_tolerance=low, ridică minimele de scor și blochează export dacă lipsesc secțiuni „evidence/source”.
+
+4) decision_speed
+
+Rol: cât de repede trebuie luată decizia.
+
+Tip: enum {instant, fast-track, deliberative}
+
+Pattern-uri:
+
+instant – 1 pager + checklist; fără ambiguitate; fallback-uri predefinite.
+
+fast-track – brief + 2 opțiuni cu criterii clare.
+
+deliberative – raport comparativ, riscuri, cost/benefit; anexe.
+
+Mape de comportament (implicite în engine)
+Urgency	Timeline	Pressure default	Risk tol.	Decision speed	Stil & Output implicit
+low	60–90d	internal/market	medium	deliberative	narativ + plan de studiu
+planned	30–60d	internal	medium	fast-track	spec/playbook echilibrat
+sprint	7–21d	competitive	medium	fast-track	SOP scurt, milestones
+pilot	14–45d	market/regulatory	medium	fast-track	plan pilot + criterii
+crisis	24–72h	regulatory/competitive	low	instant	checklist & roluri clare
+
+Notă: Aceste preseturi se leagă de gating (formate permise pe plan) și de tipurile de artefacte (ex: regulatory → .pdf/.json) conform entitlements/export policy din sistem.
+
+Praguri dinamice de calitate (Test Engine)
+
+Integrează Urgency în rubrică (Claritate/Execuție/Ambiguitate/Business-Fit), ajustând pragurile DoD:
+
+crisis: Claritate ≥ 90, Execuție ≥ 90, Ambiguitate ≤ 10, Business-Fit ≥ 80; export blocat dacă lipsește secțiunea „Escalation Path”.
+
+sprint/pilot: Claritate ≥ 85, Execuție ≥ 85, Ambiguitate ≤ 15, Business-Fit ≥ 78.
+
+planned/low: pragurile standard (ex.: ≥80 / ≤20) rămân aplicabile.
+
+Micro-reguli de generare (stil & structură)
+
+crisis → „directive, binar, fără floricele”; „Next step in 60 minutes”, owner + SLO; Output: checklist + timeline.
+
+sprint → „milestone-driven”; Output: SOP pe 7–14 zile + criterii de acceptare.
+
+pilot → include „Success Criteria”, ipoteze & metrici; Output: plan pilot + șablon raport.
+
+planned/low → documentație completă, alternative, riscuri & mitigații.
+
+Exemple
+A) Urgency = crisis (regulatory, low risk, instant)
+{
+  "urgency": "crisis",
+  "timeline": "72h",
+  "pressure_type": "regulatory",
+  "risk_tolerance": "low",
+  "decision_speed": "instant"
+}
+
+
+Efecte:
+– Forțează format „checklist/spec” + .pdf/.json la export (dacă planul permite).
+– Praguri DoD ridicate + blocare export fără „Escalation Path” și „Contact Matrix”.
+
+B) Urgency = sprint (competitive, medium risk, fast-track)
+{
+  "urgency": "sprint",
+  "timeline": "14d",
+  "pressure_type": "competitive",
+  "risk_tolerance": "medium",
+  "decision_speed": "fast-track"
+}
+
+
+Efecte:
+– Output: SOP cu 3 milestones, 2 opțiuni tactice, criterii clare; evaluarea cere execuție ≥85.
+
+JSON Schema (fragment) – validare Urgency
+{
+  "type": "object",
+  "properties": {
+    "urgency": { "type": "string", "enum": ["low","planned","sprint","pilot","crisis"] },
+    "timeline": { "type": "string", "pattern": "^(\\d+)(d|w|m)$" },
+    "pressure_type": { "type": "string", "enum": ["market","regulatory","competitive","internal"] },
+    "risk_tolerance": { "type": "string", "enum": ["low","medium","high"] },
+    "decision_speed": { "type": "string", "enum": ["instant","fast-track","deliberative"] }
+  },
+  "required": ["urgency","timeline","pressure_type","risk_tolerance","decision_speed"],
+  "additionalProperties": false
+}
+
+Integrare în pipeline
+
+UI: preseturi de „Urgency Mode” (low/planned/sprint/pilot/crisis) ce autocompletază sub-parametrii; tooltips explică implicațiile.
+
+API/DoR: respinge payload fără pattern corect la timeline sau fără decision_speed (enum-only).
+
+DoD/Export: la crisis & regulatory, cere .pdf/.json + manifest/checksum pe bundle; altfel 422 + hint de corecție.
+
+
+
+
+
+
+
+
+🧩 4. Complexity — enum de bază
+
+foundational — complexitate minimă; patternuri de bază, puțini pași.
+
+standard — flux obișnuit cu câteva dependențe.
+
+advanced — mai multe părți mobile, integrații, validări.
+
+expert — arhitectură, cercetare sau conformitate strictă; risc mare dacă greșești.
+
+🔑 Sub-parametri (definiții + efecte în engine)
+1) steps_required
+
+Tip: enum numeric: 3, 5, 10+
+Rol: granulează livrabilul (SOP/plan) după cât de „lung” trebuie să fie fluxul.
+Mapare implicită:
+
+foundational → 3
+
+standard → 5
+
+advanced → 5–10
+
+expert → 10+
+Efecte:
+– constrânge generatorul să livreze exact N pași sau range;
+– reduce ambiguitatea (mai ales la expert/sprint) și ajută Test Engine pe „Execution”.
+
+2) stakeholders_count
+
+Tip: enum: 1, 2–3, 5+
+Rol: câți actori trebuie coordonați.
+Mapare implicită:
+
+foundational → 1
+
+standard → 2–3
+
+advanced → 2–3 / 5+
+
+expert → 5+
+Efecte:
+– include roluri/owner per pas;
+– la 5+ se cer clar „RACI mini” (Owner/Consulted/Informed) în output (condiție DoD la nivel înalt).
+
+3) tools_involved
+
+Tip: enum: single | multi-stack
+Rol: numărul de unelte/integrații.
+Mapare implicită:
+
+foundational → single
+
+standard → single
+
+advanced → multi-stack
+
+expert → multi-stack (cu secțiune „compat & risks”)
+Efecte:
+– dacă multi-stack, generatorul cere tabel „tool ↔ sarcină ↔ riscuri ↔ fallback”;
+– export recomandat include .json cu mapări (dacă planul o permite).
+
+4) knowledge_depth
+
+Tip: enum: novice | intermediate | specialized | research-grade
+Rol: cât de „adâncă” trebuie să fie expertiza pentru a executa.
+Mapare implicită:
+
+foundational → novice
+
+standard → intermediate
+
+advanced → specialized
+
+expert → research-grade
+Efecte:
+– tonul & densitatea: la research-grade se cer citări/surse, anexe și limitări;
+– Test Engine crește pragul pe „Clarity” (terminologie precisă, fără fluff).
+
+5) failure_cost
+
+Tip: enum: low | medium | high
+Rol: cât de gravă e eroarea.
+Mapare implicită:
+
+foundational → low
+
+standard → medium
+
+advanced → medium/high
+
+expert → high
+Efecte:
+– la high, DoD impune: secțiune „Risks & Mitigations” + „Rollback Plan”;
+– exportul .pdf/.json devine obligatoriu în domenii reglementate (dacă entitlements permit).
+
+Praguri dinamice de calitate (legate de Complexity)
+
+Aplicate în Test Engine & DoD:
+
+Complexity	Clarity	Execution	Ambiguity	Business-Fit	Cerințe suplimentare DoD
+foundational	≥78	≥78	≤22	≥72	—
+standard	≥80	≥80	≤20	≥75	—
+advanced	≥85	≥85	≤15	≥78	tabel tool↔task, KPIs clare
+expert	≥90	≥90	≤12	≥80	surse/citări, risks+mitigation, rollback
+
+Dacă failure_cost=high: aplică rândul următor mai strict (ex. standard devine advanced).
+
+Preseturi recomandate (Quality of Life pentru UI)
+Complexity	steps_required	stakeholders	tools	knowledge	failure_cost
+foundational	3	1	single	novice	low
+standard	5	2–3	single	intermediate	medium
+advanced	5–10	2–3 / 5+	multi	specialized	medium/high
+expert	10+	5+	multi	research-grade	high
+JSON (payload exemplu)
+{
+  "complexity": "expert",
+  "steps_required": "10+",
+  "stakeholders_count": "5+",
+  "tools_involved": "multi-stack",
+  "knowledge_depth": "research-grade",
+  "failure_cost": "high"
+}
+
+JSON Schema (fragment de validare)
+{
+  "type": "object",
+  "properties": {
+    "complexity": { "type": "string", "enum": ["foundational","standard","advanced","expert"] },
+    "steps_required": { "type": "string", "enum": ["3","5","10+"] },
+    "stakeholders_count": { "type": "string", "enum": ["1","2–3","5+"] },
+    "tools_involved": { "type": "string", "enum": ["single","multi-stack"] },
+    "knowledge_depth": { "type": "string", "enum": ["novice","intermediate","specialized","research-grade"] },
+    "failure_cost": { "type": "string", "enum": ["low","medium","high"] }
+  },
+  "required": ["complexity","steps_required","stakeholders_count","tools_involved","knowledge_depth","failure_cost"],
+  "additionalProperties": false
+}
+
+Efecte în generare & export (engine hooks)
+
+Prompt structure: inseră automat secțiuni minime în funcție de complexitate (ex. la expert: „Assumptions, Evidence, Risks, Rollback”).
+
+Export policy: pentru advanced/expert + failure_cost=high → recomandă .pdf/.json și bundle cu manifest+checksum, conform politicilor de export/entitlements.
+
+DoR Gate: respinge rularea dacă lipsesc sub-parametrii obligatorii la advanced/expert (ex. tools_involved, stakeholders_count).
+
+
+
+
+
+
+
+🧩 5. Resources — enum de bază
+
+minimal — resurse abia suficiente (timp/bani/unelte foarte limitate).
+
+solo — o singură persoană executantă cu câteva tool-uri.
+
+lean_team — 2–5 oameni, eficient, fără birocrație.
+
+agency_stack — echipă mică-medie cu tool-uri profesionale și procese.
+
+full_stack_org — departamente separate (produs, marketing, legal, data).
+
+enterprise_budget — bugete mari, multi-vendor, cerințe enterprise.
+
+🔑 Sub-parametri (definiții + efecte în engine)
+1) human
+
+Tip: enum: solo | 2–3 ppl | department | cross-org
+Rol: capacitatea umană disponibilă pentru execuție.
+Mapare tipică după Resources:
+
+minimal/solo → solo
+
+lean_team → 2–3 ppl
+
+agency_stack → 2–3 ppl / department
+
+full_stack_org → department
+
+enterprise_budget → cross-org
+Efecte:
+– generatorul include/omite roluri și responsabilități; la department/cross-org impune o mini-secțiune RACI (Owner/Consulted/Informed) în livrabil (condiție DoD în proiectele complexe).
+
+2) financial
+
+Tip: enum: bootstrap | seed | VC-funded | enterprise budget
+Rol: constrângeri/opțiuni financiare.
+Heuristici de selecție a soluțiilor:
+
+bootstrap/seed → preferă no-code / SaaS accesibile, evită tooling scump;
+
+VC-funded → acceptă un mix SaaS + integrații plătite;
+
+enterprise budget → permite stack multi-vendor, SSO, audit, exporturi enterprise.
+Efecte:
+– influențează recomandările de tooling și formatele de export (PDF/JSON/ZIP dacă entitlements permit).
+
+3) tech_stack
+
+Tip: enum: lightweight | integrated SaaS | custom infra
+Rol: maturitatea și complexitatea infrastructurii.
+Ghid:
+
+lightweight (Notion/GSheets/Zapier) – setup rapid, cost mic;
+
+integrated SaaS (HubSpot/SFDC/+ BI) – rapoarte, API, procese;
+
+custom infra (microservicii, queue, data lake) – control total + cost/efort mare.
+Efecte:
+– la custom infra, generatorul cere tabele de compatibilitate și fallback-uri pe integrații (DoR/DoD);
+– la lightweight, forțează SOP curt + checklists în loc de arhitecturi grele.
+
+4) time_allocation
+
+Tip: enum: <5h/w | 10–20h/w | full-time
+Rol: timpul real disponibil săptămânal.
+Efecte:
+– <5h/w → livrabile strict esențiale (3 pași, 1 artefact);
+– 10–20h/w → SOP/plan în 5 pași cu milestones;
+– full-time → plan complet + experimente A/B + raport.
+
+Engine-ul restrânge numărul de pași/artefacte în funcție de timp, pentru a respecta DoD (nu livrăm scope imposibil).
+
+5) outsourcing
+
+Tip: enum: none | partial | full
+Rol: externalizare execuție.
+Efecte:
+– la partial/full, prompturile includ „handoff package” (brief, criterii, fișiere sursă, check de calitate);
+– Test Engine penalizează Ambiguity dacă lipsesc clarificări pentru handoff (praguri DoD).
+
+Preseturi recomandate (QoL pentru UI)
+Resources	human	financial	tech_stack	time_allocation	outsourcing
+minimal	solo	bootstrap	lightweight	<5h/w	none
+solo	solo	bootstrap/seed	lightweight	10–20h/w	none
+lean_team	2–3 ppl	seed/VC-funded	integrated SaaS	10–20h/w	partial
+agency_stack	2–3 / dept	VC-funded	integrated SaaS	full-time	partial
+full_stack_org	department	VC-funded	custom infra	full-time	partial
+enterprise_budget	cross-org	enterprise budget	custom infra	full-time	full
+Reguli dinamice (legate de Resources)
+
+Export policy:
+– enterprise_budget + custom infra → recomandă .pdf/.json și, dacă planul permite, bundle .zip cu manifest+checksum (audit, QA).
+
+Praguri calitate (exemplu):
+– minimal/solo → Clarity/Execution minime standard, focus pe 1 artefact;
+– full_stack_org/enterprise_budget → ↑ Clarity/Execution, ↓ Ambiguity, obligatoriu „Risks & Mitigations” + „Rollback Plan” pentru failure_cost ridicat (dacă a fost setat în Complexity).
+
+DoR Gate:
+– custom infra fără tabel compatibilități/integrări ⇒ 422 (nu trece DoR);
+– outsourcing=full fără handoff package ⇒ 422 (completare necesară).
+
+Exemplu payload (Resources = agency_stack)
+{
+  "resources": "agency_stack",
+  "human": "2–3 ppl",
+  "financial": "VC-funded",
+  "tech_stack": "integrated SaaS",
+  "time_allocation": "full-time",
+  "outsourcing": "partial"
+}
+
+JSON Schema (fragment de validare)
+{
+  "type": "object",
+  "properties": {
+    "resources": { "type": "string", "enum": ["minimal","solo","lean_team","agency_stack","full_stack_org","enterprise_budget"] },
+    "human": { "type": "string", "enum": ["solo","2–3 ppl","department","cross-org"] },
+    "financial": { "type": "string", "enum": ["bootstrap","seed","VC-funded","enterprise budget"] },
+    "tech_stack": { "type": "string", "enum": ["lightweight","integrated SaaS","custom infra"] },
+    "time_allocation": { "type": "string", "enum": ["<5h/w","10–20h/w","full-time"] },
+    "outsourcing": { "type": "string", "enum": ["none","partial","full"] }
+  },
+  "required": ["resources","human","financial","tech_stack","time_allocation","outsourcing"],
+  "additionalProperties": false
+}
+
+Cum influențează generatorul & evaluatorul
+
+Generator: ajustează mărimea livrabilului (număr pași, artefacte), tipul de conținut (SOP vs plan), detalierea tehnică (lightweight vs custom).
+
+Evaluator (Test Engine): ridică pragurile pentru seturi bogate de resurse și scade toleranța la ambiguitate; blochează export când lipsesc elementele obligatorii din „handoff” și „compat mapping” la nivel enterprise.
+
+
+
+
+
+
+🧩 6. Application (Aplicație concretă) și îl legăm de reguli executabile în generator, DoR/DoD și export. Reamintesc: 7D este schema canonică a rulărilor, validată la intrare (DoR) și la ieșire (DoD) în pipeline-ul tău; formatele de export și gating-ul pe planuri sunt deja standardizate în app/API/UI.
+
+🧩 6. Application — enum de bază
+
+training — instruire, învățare, curriculum.
+
+audit — verificare/diagnostic cu dovezi.
+
+implementation — execuție operațională (SOP, runbook).
+
+strategy — direcție & arhitectură decizională.
+
+crisis_response — acțiune rapidă, zero ambiguitate.
+
+experimentation — teste, A/B, ipoteze.
+
+documentation — specificații, ghiduri, referințe.
+
+🔑 Sub-parametri (definiții + efecte în engine)
+1) artifact_type
+
+Tip: enum: curriculum | report | SOP | plan | playbook
+Rol: formatul principal al livrabilului (în afara extensiilor de export).
+Reguli:
+
+training → curriculum / playbook
+
+audit → report (secțiuni „Findings / Evidence / Risk / Remediation”)
+
+implementation → SOP (pași, owners, SLO, fallback)
+
+strategy → plan (opțiuni, criterii, roadmap)
+
+crisis_response → SOP + „Escalation Path”
+
+experimentation → report (ipoteze, design, rezultate, decizie)
+
+documentation → spec/guide (în practică „report/plan” cu structură fixă)
+
+Efect în DoD: impune secțiuni obligatorii diferite (ex.: audit cere „Evidence” și „Severity Matrix”; crisis cere „Escalation Path”).
+
+2) end_user
+
+Tip: enum: student | employee | manager | regulator | client
+Rol: pentru cine e scris livrabilul → ton, granularitate, dovezi.
+Guidelines:
+
+student/employee → exemple & exerciții / pași executabili
+
+manager/client → sumar executiv, KPI, opțiuni + recomandare
+
+regulator → citări, conformitate, anexe, trasabilitate
+
+Efect în generator: ajustează micro-copy, nivelul de detaliu și secțiunile „Summary vs. Deep Dive”.
+
+3) delivery_mode
+
+Tip: enum: async | sync | blended | automated
+Rol: modul de livrare/execuție.
+Aplicare:
+
+async → materiale consumabile independent (docs, video, checklists)
+
+sync → agende, ritm, timpi, facilitare (meeting playbooks)
+
+blended → mix; cere timeline și repere de verificare
+
+automated → pași + integrare (webhooks/jobs) și criterii de retry
+
+Efect în DoR/DoD: pentru automated cere secțiune „Triggers, Inputs, Outputs, Error Handling” (altfel respins la DoR).
+
+4) measurement_metric
+
+Tip: enum: ROI | retention | compliance | throughput
+Rol: ce optimizăm și cum validăm reușita.
+Minime pe tip:
+
+ROI → cost vs. beneficiu, payback, ipoteze
+
+retention → cohorte, D1/D7/D30, NRR
+
+compliance → checklist normativ, evidențe, deviații
+
+throughput → p95 timp/volum, blocanți, capacitate
+
+Efect în evaluator: Business-Fit verifică prezența KPI-urilor și a formulelor/criteriilor de măsurare în artefact.
+
+5) maturity_level
+
+Tip: enum: POC | MVP | Pilot | Production | Scale
+Rol: stadiul inițiativei → câtă robustețe și câtă documentație sunt necesare.
+Ancore:
+
+POC → rapid, ipoteze, risc acceptat, fără „hardening”
+
+MVP → minim funcțional + criterii de acceptare
+
+Pilot → grup țintă + „Success Criteria” și raport pilot
+
+Production → SLO, monitoring, rollback, runbooks
+
+Scale → multi-regiuni/echipe, training, audit periodic
+
+Efect în export: Production/Scale recomandă .pdf/.json și bundle cu manifest+checksum (dacă planul permite) pentru trasabilitate.
+
+Preseturi recomandate (QoL pentru UI)
+Application	artifact_type	end_user	delivery_mode	measurement_metric	maturity_level
+training	curriculum	student	blended	retention	MVP
+audit	report	regulator	async	compliance	Pilot
+implementation	SOP	employee	automated	throughput	Production
+strategy	plan	manager	async/sync	ROI	MVP/Pilot
+crisis_response	SOP	manager	sync	compliance	Production
+experimentation	report	manager	async	ROI/throughput	POC
+documentation	report/spec	employee	async	—	Production
+Praguri dinamice DoD (în funcție de Application)
+
+(aplicate de Test Engine peste rubrică)
+
+audit: Clarity ≥ 85, Execution ≥ 85, Ambiguity ≤ 15, Business-Fit ≥ 80; obligatoriu „Evidence”, „Severity”, „Remediation Plan”.
+
+implementation (automated): Execution ≥ 88, „Triggers/IO/Errors/Owners/SLO” prezente; altfel 422.
+
+crisis_response: Clarity ≥ 90, Ambiguity ≤ 10; „Escalation Path”, „Contact Matrix”, „Next check-in time”.
+
+strategy: Business-Fit ≥ 80; minimum 2 opțiuni cu criterii și recomandare motivată.
+
+training: Retention metric + evaluare; curriculă cu obiective și rubrică.
+
+documentation: secțiuni „Versioning/Change log”; linkuri și referințe.
+
+Exemple payload
+A) implementation → SOP automatizat (production)
+{
+  "application": "implementation",
+  "artifact_type": "SOP",
+  "end_user": "employee",
+  "delivery_mode": "automated",
+  "measurement_metric": "throughput",
+  "maturity_level": "Production"
+}
+
+
+Efect: forțează secțiunile Triggers/Inputs/Outputs/Error Handling + owners/SLO; recomandă export .json/.pdf (dacă entitlements permit).
+
+B) audit → raport conformitate (pilot)
+{
+  "application": "audit",
+  "artifact_type": "report",
+  "end_user": "regulator",
+  "delivery_mode": "async",
+  "measurement_metric": "compliance",
+  "maturity_level": "Pilot"
+}
+
+
+Efect: cere „Evidence” și „Severity Matrix”; DoD crește pragurile de calitate și blochează exportul fără secțiunile obligatorii.
+
+JSON Schema (fragment de validare)
+{
+  "type": "object",
+  "properties": {
+    "application": { "type": "string", "enum": ["training","audit","implementation","strategy","crisis_response","experimentiation","documentation","experimentation"] },
+    "artifact_type": { "type": "string", "enum": ["curriculum","report","SOP","plan","playbook"] },
+    "end_user": { "type": "string", "enum": ["student","employee","manager","regulator","client"] },
+    "delivery_mode": { "type": "string", "enum": ["async","sync","blended","automated"] },
+    "measurement_metric": { "type": "string", "enum": ["ROI","retention","compliance","throughput"] },
+    "maturity_level": { "type": "string", "enum": ["POC","MVP","Pilot","Production","Scale"] }
+  },
+  "required": ["application","artifact_type","end_user","delivery_mode","measurement_metric","maturity_level"],
+  "additionalProperties": false
+}
+
+
+Notă: am inclus atât experimentiation (typo istoric posibil) cât și experimentation ca fallback—poți păstra doar varianta corectă în producție.
+
+Integrare în engine
+
+UI: selector „Application Mode” care setează automat artifact/end_user/delivery/metric/maturity (editabile).
+
+DoR: respinge payload fără secțiuni obligatorii derivabile din Application (ex: implementation/automated fără „Triggers”).
+
+Export/Gating: pentru audit/production/scale ↔ recomandă .pdf/.json, bundle .zip cu manifest+checksum dacă planul utilizatorului permite
+
+
+
+
+
+
+🧩 7. Output — enum de bază
+
+Valori: txt, md, checklist, spec, playbook, json, yaml, diagram, bundle, pdf.
+
+Formatul final livrabil (și mixul de fișiere exportate) este controlat de plan/entitlements și de policy-ul de export din app/API.
+
+🔑 Sub-parametri Output (definiții + efecte în engine)
+1) file_format
+
+Tip: enum: txt | md | json | pdf | zip
+Rol: extensia/embalarea exportului.
+Gating (implicit în sistem):
+
+Free → txt (doar)
+
+Creator → txt, md
+
+Pro → txt, md, pdf, json
+
+Enterprise → + zip (bundle complet)
+Efect: generatorul activează/ascunde opțiuni, iar API blochează exporturi nepermise pe plan (422).
+
+2) structure
+
+Tip: enum: narrative | table | diagram | SOP steps
+Rol: forma conținutului în fișier (independent de extensie).
+Heuristici:
+
+narrative → rapoarte/spec (secțiuni: Context→Findings→Actions)
+
+table → matrice KPI, mapări tool↔task, checklists
+
+diagram → diagrame (mermaid/plantUML) în md/pdf
+
+SOP steps → pași numerotați, owner/SLO, fallback
+Efect DoD: pentru SOP steps, evaluatorul cere pași numerotați + owner + criterii; altfel export blocat.
+
+3) visuals
+
+Tip: enum: text-only | with charts | with branding
+Rol: nivel vizual în export.
+Aplicare:
+
+with charts → anexe cu grafice (md→pdf), legate de measurement_metric
+
+with branding → header/footer, logo, paletă (plan ≥ Pro recomandat)
+Efect export: pdf compilează stilurile; md/txt rămân plain. (UI are componente dedicate pentru preview/export.)
+
+4) validation
+
+Tip: set flags: checksum required, manifest required, score≥80 required
+Rol: condiții obligatorii înainte de livrare.
+Politici standard:
+
+manifest & checksum: pentru bundle și exporturi enterprise; se calculează SHA256 per fișier și pachet.
+
+score≥80: blocare export (PDF/JSON/ZIP) sub prag (gate DoD).
+Efect API: dacă flag-ul este cerut, handler-ul refuză exportul cu 422 și motivul (ex: scor insuficient; manifest/ checksum lipsă).
+
+5) retention
+
+Tip: enum: local only | cloud 30d | cloud 90d | archive permanent
+Rol: păstrarea artefactelor.
+Mapping implicit pe plan:
+
+Free → local only (istoric local, fără cloud)
+
+Creator → cloud 30d
+
+Pro → cloud 90d
+
+Enterprise → archive permanent (politici org/tenant)
+Efect: salvează în runs/exports cu TTL/archivare; Enterprise folosește bundle cu manifest+checksum pentru trasabilitate.
+
+Mapări recomandate (QoL pentru UI)
+Output (enum)	file_format tipic	structure tipic	visuals
+txt	txt	narrative	text-only
+md	md	narrative/table	with charts
+checklist	md/pdf	table/SOP steps	text-only
+spec	md/pdf	narrative/table	with branding
+playbook	md/pdf	SOP steps/table	with branding
+json	json	table (data)	—
+yaml	yaml	table (data)	—
+diagram	md/pdf	diagram	with charts
+pdf	pdf	narrative/table	with branding
+bundle	zip	mixed	with branding
+
+La bundle, pachetul include artefacte + manifest.json + checksum.txt (și opțional semnătură digitală) conform standardului PROMPTFORGE.
+
+Standard de bundle (rezumat executabil)
+
+Conținut: prompt.txt, prompt.md, prompt.json, prompt.pdf, telemetry.json, checksum.txt, manifest.json.
+
+Manifest: bundle_id, run_id, module_id, version, formats, lista de fișiere cu SHA256, timestamp; opțional semnătură ed25519.
+
+Naming & storage: /exports/{org_id}/{module_id}/{run_hash}/… + bundle-{module_id}-{run_hash}.zip.
+
+Praguri dinamice DoD (legate de Output)
+
+pdf/json/zip → score≥80 obligatoriu (altfel 422).
+
+zip (bundle) → manifest & checksum obligatorii; lipsă ⇒ 422; Pro/Ent only.
+
+SOP steps → pași numerotați + owner + SLO + fallback; lipsă ⇒ 422.
+
+Exemple payload
+A) Export enterprise, bundle complet
+{
+  "output": "bundle",
+  "file_format": "zip",
+  "structure": "mixed",
+  "visuals": "with branding",
+  "validation": ["manifest required","checksum required","score≥80 required"],
+  "retention": "archive permanent"
+}
+
+
+Efect: generează și verifică manifest + checksum; blochează dacă scor < 80; salvează pe termen nelimitat (plan Enterprise).
+
+B) Playbook Pro (pdf + charts)
+{
+  "output": "playbook",
+  "file_format": "pdf",
+  "structure": "SOP steps",
+  "visuals": "with charts",
+  "validation": ["score≥80 required"],
+  "retention": "cloud 90d"
+}
+
+
+Efect: export PDF condiționat de scor; găzduire 90 zile (plan Pro).
+
+JSON Schema (fragment de validare)
+{
+  "type": "object",
+  "properties": {
+    "output":        { "type": "string", "enum": ["txt","md","checklist","spec","playbook","json","yaml","diagram","bundle","pdf"] },
+    "file_format":   { "type": "string", "enum": ["txt","md","json","pdf","zip"] },
+    "structure":     { "type": "string", "enum": ["narrative","table","diagram","SOP steps","mixed"] },
+    "visuals":       { "type": "string", "enum": ["text-only","with charts","with branding"] },
+    "validation":    { "type": "array", "items": { "type": "string", "enum": ["checksum required","manifest required","score≥80 required"] } },
+    "retention":     { "type": "string", "enum": ["local only","cloud 30d","cloud 90d","archive permanent"] }
+  },
+  "required": ["output","file_format","structure","retention"],
+  "additionalProperties": false
+}
+
+Integrare în engine
+
+UI: arată doar opțiunile permise de plan; tooltips explică de ce e blocat (paywall inline).
+
+API (pre-export): verifică entitlements → respinge formatele nepermise; aplică reguli validation; calculează autom. manifest+checksum pentru zip.
+
+Telemetry: salvează export_success/export_blocked cu motiv, scor și tip format (bun pentru funnel și upsell).
+
+
+
+
+
+
+
+Iată cum „cablezi” sub-parametrii 7D în tot stack-ul tău — DB (Supabase), UI (Next/React) și Evaluator (scoruri & gates) — fără să lași loc de drift.
+
+1) Supabase (Postgres) — schema & validare
+a) parameter_sets cu JSONB „config” (7D + sub-parametri)
+-- 7D + sub-parametri (un singur loc de adevăr pentru o rulare)
+create table if not exists parameter_sets (
+  id uuid primary key default gen_random_uuid(),
+  -- 7D canonice (enum-like la nivel de aplicație)
+  domain text not null,
+  scale text not null,
+  urgency text not null,
+  complexity text not null,
+  resources text not null,
+  application text not null,
+  output text not null,
+
+  -- sub-parametri 7D, toți laolaltă într-un JSONB canonic
+  config jsonb not null default '{}'::jsonb,
+
+  created_at timestamptz not null default now()
+);
+
+-- Indici utili pentru căutare
+create index if not exists parameter_sets_domain_idx on parameter_sets (domain);
+create index if not exists parameter_sets_scale_idx on parameter_sets (scale);
+create index if not exists parameter_sets_gin on parameter_sets using gin (config jsonb_path_ops);
+
+b) Constrângeri minime pe config (enum-only, pattern timeline)
+
+Postgres nu „știe” JSON Schema nativ, dar poți face garduri simple cu jsonb_path_exists:
+
+--  Urgency.timeline = '7d|30d|90d|...'
+alter table parameter_sets
+  add constraint ck_urgency_timeline
+  check (jsonb_path_exists(config, '$.urgency.timeline ? (@ like_regex "^[0-9]+(d|w|m)$")'));
+
+--  Decision speed ∈ {instant, fast-track, deliberative}
+alter table parameter_sets
+  add constraint ck_decision_speed
+  check (jsonb_path_exists(config, '$.urgency.decision_speed ? (@ == "instant" || @ == "fast-track" || @ == "deliberative")'));
+
+--  Complexity.tools_involved ∈ {single, multi-stack}
+alter table parameter_sets
+  add constraint ck_tools_involved
+  check (jsonb_path_exists(config, '$.complexity.tools_involved ? (@ == "single" || @ == "multi-stack")'));
+
+--  Output.validation: dacă include „score≥80 required”, conține și „file_format" in ("pdf","json","zip")
+create or replace function f_ck_output_policy() returns trigger as $$
+begin
+  if (new.config #>> '{output,validation,0}') is not null
+     and position('score≥80 required' in (new.config #>> '{output,validation}' )) > 0
+     and (new.config #>> '{output,file_format}') !~ '^(pdf|json|zip)$' then
+       raise exception 'score≥80 required este permis doar pentru pdf/json/zip';
+  end if;
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists trg_ck_output_policy on parameter_sets;
+create trigger trg_ck_output_policy
+before insert or update on parameter_sets
+for each row execute function f_ck_output_policy();
+
+c) Payload de inserare (exemplu complet, 7D + sub-parametri)
+insert into parameter_sets
+  (domain, scale, urgency, complexity, resources, application, output, config)
+values
+  ('FinTech','startup','sprint','advanced','lean_team','implementation','playbook', jsonb_build_object(
+     'domain', jsonb_build_object(
+       'sub_industry', jsonb_build_array('Digital Banking','RegTech'),
+       'jargon', jsonb_build_array('KYC','AML','PSD2'),
+       'kpis',   jsonb_build_array('fraud_rate','approval_rate'),
+       'style_bias', 'formal'
+     ),
+     'scale', jsonb_build_object(
+       'team_size', '6-15',
+       'budget_band','medium',
+       'market_scope','regional',
+       'decision_structure','founder-driven'
+     ),
+     'urgency', jsonb_build_object(
+       'timeline','14d',
+       'pressure_type','regulatory',
+       'risk_tolerance','medium',
+       'decision_speed','fast-track'
+     ),
+     'complexity', jsonb_build_object(
+       'steps_required','5-10',
+       'stakeholders_count','2–3',
+       'tools_involved','multi-stack',
+       'knowledge_depth','specialized',
+       'failure_cost','medium'
+     ),
+     'resources', jsonb_build_object(
+       'human','2–3 ppl','financial','seed',
+       'tech_stack','integrated SaaS','time_allocation','10–20h/w','outsourcing','partial'
+     ),
+     'application', jsonb_build_object(
+       'artifact_type','SOP','end_user','employee',
+       'delivery_mode','automated','measurement_metric','throughput','maturity_level','Production'
+     ),
+     'output', jsonb_build_object(
+       'file_format','pdf','structure','SOP steps',
+       'visuals','with branding',
+       'validation', jsonb_build_array('score≥80 required'),
+       'retention','cloud 90d'
+     )
+  ));
+
+2) UI (Next/React) — formuri & filtre fără drift
+a) Tipare Zod pentru sub-parametri (validare în UI)
+import { z } from "zod";
+
+export const UrgencySchema = z.object({
+  timeline: z.string().regex(/^\d+(d|w|m)$/),
+  pressure_type: z.enum(["market","regulatory","competitive","internal"]),
+  risk_tolerance: z.enum(["low","medium","high"]),
+  decision_speed: z.enum(["instant","fast-track","deliberative"])
+});
+
+export const ComplexitySchema = z.object({
+  steps_required: z.enum(["3","5","5-10","10+"]),
+  stakeholders_count: z.enum(["1","2–3","5+"]),
+  tools_involved: z.enum(["single","multi-stack"]),
+  knowledge_depth: z.enum(["novice","intermediate","specialized","research-grade"]),
+  failure_cost: z.enum(["low","medium","high"])
+});
+
+export const OutputSchema = z.object({
+  file_format: z.enum(["txt","md","json","pdf","zip"]),
+  structure: z.enum(["narrative","table","diagram","SOP steps","mixed"]),
+  visuals: z.enum(["text-only","with charts","with branding"]),
+  validation: z.array(z.enum(["checksum required","manifest required","score≥80 required"])).optional().default([]),
+  retention: z.enum(["local only","cloud 30d","cloud 90d","archive permanent"])
+});
+
+// … similar pentru Domain/Scale/Resources/Application
+
+b) React Hook Form + UI gating (plan-aware)
+const { register, watch, setValue, handleSubmit } = useForm<Form7D>({
+  resolver: zodResolver(Form7DSchema),
+  defaultValues: presetFor("implementation/production/fintech"),
+});
+
+const plan = usePlanEntitlements(); // { canExportMD, canExportPDF, canExportJSON, canExportBundleZip, ... }
+
+const fileFormat = watch("output.file_format");
+const validation = watch("output.validation");
+
+// Gating vizual: disable opțiuni nepermise
+const allowedFormats = [
+  "txt",
+  ...(plan.canExportMD ? ["md"] : []),
+  ...(plan.canExportPDF ? ["pdf"] : []),
+  ...(plan.canExportJSON ? ["json"] : []),
+  ...(plan.canExportBundleZip ? ["zip"] : []),
+];
+
+c) Filtre avansate (grid de module)
+
+Combina domain.sub_industry[], scale.team_size, urgency.timeline etc. într-un Command Palette (⌘K) cu chips pentru sub-parametri.
+
+Păstrează preseturi „Crisis Mode / Pilot / Sprint” care setează automat sub-parametrii aferenți; utilizatorul își ajustează fin.
+
+3) Evaluator AI — scoruri calibrate by sub-parametri
+a) Praguri dinamice (concept)
+
+urgency=crisis → AmbiguityMax=0–10, ClarityMin=90, ExecutionMin=90; forțează secțiunea „Escalation Path”.
+
+complexity.failure_cost=high → adaugă cerințe DoD: „Risks & Mitigations”, „Rollback Plan”.
+
+application.delivery_mode=automated → cere „Triggers/Inputs/Outputs/Error Handling” (altfel FAIL DoR).
+
+output.validation conține „score≥80 required” → blochează export pdf/json/zip sub 80.
+
+b) Matrice de evaluare (pseudo-config)
+{
+  "thresholds": {
+    "base": { "clarity": 80, "execution": 80, "ambiguity_max": 20, "business_fit": 75 },
+    "urgency": {
+      "crisis":   { "clarity": 90, "execution": 90, "ambiguity_max": 10, "business_fit": 80 },
+      "sprint":   { "clarity": 85, "execution": 85, "ambiguity_max": 15 }
+    },
+    "complexity.failure_cost": {
+      "high": { "clarity": 88, "execution": 88, "ambiguity_max": 12, "requires": ["risks", "rollback"] }
+    },
+    "application.delivery_mode": {
+      "automated": { "requires": ["triggers","io","error_handling","owners","slo"] }
+    }
+  }
+}
+
+c) Verdict logic (pseudo-cod)
+const pass = (scores, req) =>
+  scores.clarity >= req.clarity &&
+  scores.execution >= req.execution &&
+  scores.ambiguity <= req.ambiguity_max &&
+  scores.business_fit >= (req.business_fit ?? 75);
+
+if (!hasRequiredSections(bundle, req.requires)) return FAIL_DOR;
+if (!pass(scores, req)) return (composite >= 80 ? PARTIAL_PASS : FAIL_DOD);
+if (output.validation?.includes("score≥80 required") && composite < 80) return FAIL_EXPORT;
+return PASS;
+
+4) Conectarea pieselor (pipeline, practic)
+
+DB: parameter_sets ține 7D + sub-parametri în config (JSONB) cu câteva verificări SQL.
+
+UI: Zod + RHF pentru formuri; gating de plan pe export; preseturi „mode”.
+
+Evaluator: citește config și ridică/relaxează praguri; verifică secțiuni obligatorii; blochează exportul când regulile cer (DoR/DoD/Export gates).
+
+Telemetry: loghează export_blocked_reason (ex: score_below_threshold, missing_required_section, plan_not_allowed) pentru funnel & upsell.
+
+

@@ -1,0 +1,3489 @@
+
+
+https://chatgpt-prompting.com/
+https://chatgpt-prompting.com/generator
+https://chatgpt-prompting.com/modules
+https://chatgpt-prompting.com/pricing
+https://chatgpt-prompting.com/docs
+https://chatgpt-prompting.com/blog
+https://chatgpt-prompting.com/dashboard
+
+
+# Cross-cutting (critice pentru toate paginile)
+
+- **SSR/ISR obligatoriu pe rutele publice** (home, generator, modules, pricing, docs, blog). Păstrează JS pentru interacțiuni, dar livrează HTML server-side pentru conținut+meta. Adaugă `app/sitemap.ts` și `app/robots.ts`, exact cum e în IA-ul tău, ca să asiguri indexarea corectă. fileciteturn0file6 fileciteturn0file5
+- **Bugete CWV mobile**: LCP ≤2.5s, INP ≤200ms, CLS ≤0.1. Optimizează imaginea LCP cu `next/image` + `sizes`, preîncărcare 1 singură resursă critică; fără GIF-uri grele; code-split pe module. fileciteturn0file5
+- **Headere securitate + CSP**: setează CSP strict, HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Permissions-Policy`, `Referrer-Policy`. Blochează exporturi fără manifest+checksum. Rate-limit pe rute sensibile. fileciteturn0file5 fileciteturn0file4
+- **Gating consecvent (planuri)**: Simulate (toți), Run Real Test (Pro+), export .txt/.md/.pdf/.json/.zip după plan; paywall la acțiune, nu la pagină. fileciteturn0file6 fileciteturn0file5
+- **Legal & consent**: `/legal/terms`, `/legal/privacy`, `/legal/dpa` live; Consent Mode V2 înainte de GA4/alte tag-uri. fileciteturn0file6 fileciteturn0file5
+- **Design System & A11y**: contrast AA, focus rings, target ≥44×44, `prefers-reduced-motion`. Tokenizează culorile/spacing; nu hardcoda hex-uri. fileciteturn0file1
+
+---
+
+## / — Homepage (Hero → Proof → Process → Modules → Testimonials → Pricing → FAQ → Footer)
+
+### Probleme probabile
+
+- Conținut randat doar client-side (crawlerul nu vede nimic); OG/meta lipsă sau dinamice.
+- LCP afectat de eroul grafic + scripturi; fără “proof blocks” SSR.
+- Lipsesc demos scurte și CTA-uri “Try Generator”/“Pricing” cu track evenimente.
+
+### Fixuri
+
+1. **SSR + IA corectă**: randează server-side secțiunile statice și “LiveGenerationDemo” ca island lazy-loaded. Include `<h1>` unic, meta description (≤160), OG/Twitter. fileciteturn0file6
+2. **Proof sec**: 3–5 “dovezi” alimentate din `proof_assets.json`, randate static; link spre `/pricing`. fileciteturn0file5
+3. **Bugete perf**: imaginea LCP sub 160KB AVIF, `sizes="(max-width:768px) 100vw, 50vw"`, `priority`. fileciteturn0file5
+4. **Evenimente**: `pricing_view`, `ui.cta_click`, `module_open` server-side (fără PII). fileciteturn0file5
+
+---
+
+## /generator — 7-D Prompt Generator
+
+### Probleme probabile
+
+- Grila și filtrarea se încarcă doar client-side; overlay-ul modulului fără validări live 7D; gating vizual inconsistent.
+
+### Fixuri
+
+1. **Server component + hydratare ușoară**: fetch SSR `/api/modules` (revalidate 60s), filtre client-side doar pe dataset redus. fileciteturn0file6
+2. **Overlay standard**: taburi Overview → Inputs(7D) → Outputs → KPIs → Guardrails → Actions; validează 7D inline; blochează acțiuni când lipsesc câmpuri. fileciteturn0file1
+3. **Gating la acțiune**: butoane “Simulate” (toți), “Run Real Test (Pro+)”; Export menu arată doar formatele permise planului curent, restul disabled + tooltip motivant. fileciteturn0file1
+4. **Telemetrie**: `module_run_requested/started/scored/succeeded|blocked` + `export_performed` (checksum\_ok). fileciteturn0file5
+
+---
+
+## /modules — Biblioteca (index + /modules/\[id])
+
+### Probleme probabile
+
+- Lipsă SSR pe index, lipsă 50/50 consistență, overlay non-standard; SEO: fără H1 unic + descrieri.
+
+### Fixuri
+
+1. **Catalog SSOT**: validează `lib/modules.catalog.json` (exact 50, ID unic Mxx, vectors din enum, minPlan vs outputs coerent) în CI. Eșec → build STOP. fileciteturn0file1
+2. **Index SSR + filtre**: chips pentru vectors (7), slider difficulty, plan; `Cmd/Ctrl+K` pentru căutare. fileciteturn0file1
+3. **Pagina modulului**: titlu SSOT, summary, meta (≤160), OG, schema JSON-LD, “Run Sample”, breadcrumb. Redirect 308 pentru `legacy_slugs`. fileciteturn0file4
+
+---
+
+## /pricing — Planuri & Checkout
+
+### Probleme probabile
+
+- Copy generic, fără “moment-of-value” clar pe Pro (“Run Real Test”, `.pdf/.json`); checkout nelegat de Stripe webhooks; fără portal.
+
+### Fixuri
+
+1. **Matrice clară**: Free / Creator / Pro / Enterprise cu entitlements reale (exporturi, Test Engine, API, bundle.zip). “Annual = 10× monthly”. CTA → Checkout. fileciteturn0file1 fileciteturn0file6
+2. **Stripe end-to-end**: Products/Prices, Checkout Session, Webhooks idempotente (`invoice.paid`, `customer.subscription.updated`), Customer Portal. Trial Pro 7z cu watermark. fileciteturn0file7
+3. **KPIs**: log `checkout_started/paid`; fallback “Payment processing…” + reconciliere periodică. fileciteturn0file5
+
+---
+
+## /docs — Hub + /docs/api
+
+### Probleme probabile
+
+- API ref doar client-side; cod-uri fără scroll; lipsesc `canonical`, `sitemap` entries și `robots` permit.
+
+### Fixuri
+
+1. **SSR docs**: MDX/Blocks cu TOC; URL stabil `/docs/api`; exemple `curl` pentru `POST /api/run/{moduleId}` + schema 7D; copy-buttons accesibile. fileciteturn0file6
+2. **SEO corect**: `sitemap.ts` include docs; JSON-LD “TechArticle”; coduri într-un container scroll-only. fileciteturn0file5
+
+---
+
+## /blog — Content hub
+
+### Probleme probabile
+
+- Fără ISR/SSG; lipsesc `og:image`, schema Article, RSS; lipsesc preview-uri.
+
+### Fixuri
+
+1. **Pipeline content**: MDX cu Blocks, preview securizat, programare, revisions, linter SEO (H1 unic, description, 3+ internal links). fileciteturn0file5
+2. **RSS + sitemaps**: `/api/rss.xml`, sitemaps pe secțiuni, `og:image` 1200×630. fileciteturn0file5
+
+---
+
+## /dashboard — User Login Board
+
+### Probleme probabile
+
+- La încărcare goală (JS); fără istoric runs; gating inconsistent; lipsă “Tighten & Re-test” la scor <80.
+
+### Fixuri
+
+1. **Layout în 3 zone**: KPIs (Runs 7d, Avg Score, Exports, TTA median, Pass Rate) + Tabs (Recent Runs, Artifacts, Module Usage, Scores & Quality, History). “New Run”, “Try Generator”, re-run cu aceiași 7D. fileciteturn0file6
+2. **Blocaje corecte**: export blocat sub scor 80 → afișează “repair prompts” + CTA “Tighten Prompt”. fileciteturn0file5
+3. **A11y & perf**: infinite list lazy-loaded; sort/filter SSR parametric; toasts pentru succes/erori. fileciteturn0file1
+
+---
+
+# Securitate, Legal, Observabilitate (transversale)
+
+- **CSP + WAF + rate-limit** în `middleware` pentru rute `/api/*`; honeypots; audit trail cu hash chain; RLS per org în DB. Nu lansa fără ele. fileciteturn0file4 fileciteturn0file5
+- **GDPR**: cookie banner (Consent Mode), DSR export/erase ≤7 zile, DPA la /legal/dpa. fileciteturn0file5
+- **Telemetrie unificată**: evenimente standard (open/run/export/legacy\_redirect) cu `module_id` Mxx; 3 dashboards (Exec, UX/Perf, Module). SLO: uptime ≥99.9%, p95 <300ms. fileciteturn0file5
+
+---
+
+# Mobile UI/UX — checklist de trecere (aplică la toate paginile)
+
+- Breakpoints 320/360/390/414/430; safe-areas iOS; tap targets ≥44×44; sticky CTA nu acoperă conținut; input types corecte; skeletons + offline states; LCP ≤2.5s. Rulează rapoartele pe “Moto G4 Slow 4G” & “iPhone 14 Fast 3G”. fileciteturn0file6
+
+---
+
+## 10 “fixuri de livrat azi” (în ordinea impactului)
+
+1. Activează SSR/ISR pe `/`, `/generator`, `/modules`, `/pricing`, `/docs`, `/blog`. fileciteturn0file6
+2. Adaugă `app/sitemap.ts`, `app/robots.ts`, canonic & OG/Twitter meta pe toate. fileciteturn0file6
+3. Impune CSP + headere securitate; scoate `ignoreBuildErrors/ignoreDuringBuilds`. fileciteturn0file5
+4. Leagă Stripe complet (checkout, portal, webhooks idempotente). fileciteturn0file7
+5. Rulează gating de plan în UI+API (Simulate pentru toți, Run Real Test Pro+, exporturi pe plan). fileciteturn0file6
+6. Validează catalogul de 50 module în CI (Zod schema; 50/50 + reguli outputs vs minPlan). fileciteturn0file1
+7. Blochează export sub scor 80 și cere “repair prompts”; manifest + checksum obligatoriu. fileciteturn0file5
+8. Montează Consent Mode V2; pornește GA4 & Sentry doar după consimțământ. fileciteturn0file5
+9. Optimizează LCP pe homepage și pricing (imagine AVIF ≤160KB + `sizes`), code-split la overlayuri. fileciteturn0file5
+10. Publică `/legal/*` (Terms, Privacy, DPA) + pagini 404/500 custom cu linkuri utile. fileciteturn0file6
+
+Dacă vrei, îți pot livra imediat un patch-set minimal (next.config.mjs headers, `app/sitemap.ts`/`robots.ts`, schelet docs SSR, ExportMenu & Overlay standardizate, Zod validator pentru `modules.catalog.json`, middleware rate-limit+CSP) — toate mapează 1:1 pe specificațiile deja stabilite în repo-ul tău. fileciteturn0file1 fileciteturn0file6 fileciteturn0file5
+
+Vrei să ți le împachetez într-un **.txt** “Ready-to-Paste Patch Plan” (secțiuni per fișier și pași de commit)?
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:58:35.317Z" title="9/1/2025, 2:58:35 PM">14:58</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:58:37.827Z" title="9/1/2025, 2:58:37 PM">14:58</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:58:37.828Z" title="9/1/2025, 2:58:37 PM">14:58</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:58:40.341Z" title="9/1/2025, 2:58:40 PM">14:58</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:58:42.902Z" title="9/1/2025, 2:58:42 PM">14:58</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:58:42.902Z" title="9/1/2025, 2:58:42 PM">14:58</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:58:42.903Z" title="9/1/2025, 2:58:42 PM">14:58</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:08.294Z" title="9/1/2025, 2:59:08 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:30.418Z" title="9/1/2025, 2:59:30 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:41.656Z" title="9/1/2025, 2:59:41 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:46.661Z" title="9/1/2025, 2:59:46 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:49.163Z" title="9/1/2025, 2:59:49 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:51.663Z" title="9/1/2025, 2:59:51 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:54.164Z" title="9/1/2025, 2:59:54 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:56.663Z" title="9/1/2025, 2:59:56 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:59.164Z" title="9/1/2025, 2:59:59 PM">14:59</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:00:05.065Z" title="9/1/2025, 3:00:05 PM">15:00</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:00:07.992Z" title="9/1/2025, 3:00:07 PM">15:00</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T11:59:57.367Z" title="9/1/2025, 2:59:57 PM">14:59</time>
+
+The requested audit and page-by‑page corrections are compiled in a separate document. You can download it using the link below:
+
+{{file:file-WxAdgoQkRfEueHaeZD7ksu}}
+
+In summary, the audit recommends enabling SSR/ISR across the entire site (including Home, Generator, Modules, Pricing, Docs and Blog) so content is visible to crawlers and improves core web vitals【990267171919994†L154-L165】. It highlights the need to integrate a complete SEO setup (unique H1 per page, meta descriptions, canonical URLs and OG/Twitter meta)【990267171919994†L154-L165】, enforce gating logic for plan entitlements on both the UI and API【991367986541179†L154-L160】, and implement strict security headers such as CSP, HSTS, X‑Frame‑Options and rate‑limit sensitive endpoints.
+
+For each major page, the document provides detailed instructions. For example, the homepage should server‑render its hero, proof, process, testimonials and pricing teaser; include a clear call‑to‑action; and showcase the 3‑step workflow from module selection to export【990267171919994†L154-L165】. The generator page must fetch modules server‑side, support filters (search, vector chips, difficulty slider) and present module overlays with tabs (Overview → Inputs → Outputs → KPIs → Guardrails → Actions) and inline validation【291444568850641†L127-L128】. The modules page should validate the catalog against the SSOT, provide a server‑rendered index with filters, and implement `/modules/[id]` detail pages【291444568850641†L31-L37】. The pricing page needs a clear plan matrix (Free, Creator, Pro, Enterprise) with Stripe checkout integration and upsell messaging. The docs hub should serve MDX content, include an API reference with sample requests and JSON schemas, and generate sitemaps. The blog should use ISR/SSG, support categories/tags, include article schema and end posts with calls‑to‑action.
+
+The dashboard guidance covers breaking the page into header/KPI/workspace zones, providing sortable tables for runs, exports, module usage and score quality, and applying gating and nudges (e.g., paywall on “Run Real Test” for lower plans)【990267171919994†L339-L408】. The audit also stresses mobile‑first design—ensuring no horizontal scroll, safe‑area padding, tap targets ≥44×44 px, performance budgets like LCP ≤2.5 s and INP ≤200 ms, and robust offline/error states【990267171919994†L230-L250】.
+
+Feel free to review the full document for specific patch recommendations and prioritised tasks.
+
+
+#### You:
+<time datetime="2025-09-01T12:15:04.591Z" title="9/1/2025, 3:15:04 PM">15:15</time>
+
+dezvoltă lista completa si detalaită de sarcini, pe pasi, pentru homepage
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:15:22.231Z" title="9/1/2025, 3:15:22 PM">15:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:15:31.158Z" title="9/1/2025, 3:15:31 PM">15:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:15:33.659Z" title="9/1/2025, 3:15:33 PM">15:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:15:41.166Z" title="9/1/2025, 3:15:41 PM">15:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:15:43.680Z" title="9/1/2025, 3:15:43 PM">15:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:15:48.682Z" title="9/1/2025, 3:15:48 PM">15:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:16:02.075Z" title="9/1/2025, 3:16:02 PM">15:16</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:16:16.966Z" title="9/1/2025, 3:16:16 PM">15:16</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T12:15:50.306Z" title="9/1/2025, 3:15:50 PM">15:15</time>
+
+Pentru a construi o pagină de start de nivel mondial pentru PromptForge trebuie să parcurgi o serie de pași bine definiți, conform arhitecturii informaționale și design‑ului deja stabilite【990267171919994†L3-L11】. Mai jos găsești lista completă de sarcini, ordonată logic și cronologic.
+
+1. **Inițializare și infrastructură**
+   - Creează ruta `app/page.tsx` drept componentă server. Configurează `app/layout.tsx` pentru a include tema din design system și navigația globală cu logo și tab‑urile „Landing”, „Generator”, „Pricing”, „Dashboard”, „API Docs”【291444568850641†L152-L156】.
+   - Definește metadatele (`<title>`, `description`, `canonical`, `og:`, `twitter:`) în `metadata.ts` sau direct în pagină, respectând cerința de un singur H1 per pagină și excluderea rutelor API în sitemap【990267171919994†L154-L165】.
+
+2. **Importă design system‑ul**
+   - Învelește aplicația în `<ChakraProvider theme={pfTheme}>` și încarcă variabilele CSS din `pf.css` pentru a folosi tokenii de culoare, spacing și tipografie【291444568850641†L118-L125】.
+   - Asigură contrast ≥4.5:1, focus‑ring vizibil și ținte de clic ≥44×44 px【990267171919994†L238-L243】.
+
+3. **Secțiunea Hero (fold)**
+   - Conținut server‑side: titlu memorabil (ex. „Operational Prompt Generator”), subtitlu scurt și un buton principal („Try Generator”) care face legătura cu `/generator`.
+   - Încarcă imaginea de fundal sau ilustrația prin `next/image` cu format AVIF sau WebP, dimensiune ≤160 KB și `priority` pentru a optimiza LCP【990267171919994†L232-L236】.
+   - Include un link secundar către „Pricing” pentru a valorifica traficul direct pe funnel.
+
+4. **Demonstrație live**
+   - Creează un component `LiveGenerationDemo` care prezintă modul de lucru: alege un modul presetat (de exemplu M01), setează 7D predefinit, simulează testul și afișează un fragment de rezultat.
+   - Încarcă componenta în mod lazy (`dynamic` cu `ssr: false`) și afișează un skeleton până când aceasta se încarcă【89616155072043†L6-L10】.
+   - Înregistrează evenimente de telemetrie la deschiderea demo‑ului și la clicurile pe „Run demo”.
+
+5. **Secțiunea „Why PromptForge?” / Beneficii**
+   - Construiți un grid de carduri (3–6) cu titlu, pictogramă și text succint. Exemple: „Lightning Fast” (generare în secunde), „Enterprise Ready” (securitate și conformitate), „Export Anywhere” (formate multiple), „AI‑Powered” (algoritmi avansați) ș.a.m.d.
+   - Aceste carduri pot fi server‑rendered; folosiți iconografia din design system și tokenii de spacing.
+
+6. **Secțiunea de încredere („Proof”)**
+   - Prezintă dovezi: număr de module disponibile, număr de utilizatori sau companii, scoruri medii ale Evaluatorului, testimoniile clienților.
+   - Include logo‑urile partenerilor sau clienților importanți (dacă există) și un link către studii de caz. Conținutul trebuie să fie vizibil server‑side pentru SEO.
+
+7. **Secțiunea „Process”**
+   - Descrie în trei pași cum funcționează PromptForge (Selectezi modulul → setezi parametrii 7D → simulezi/testezi și exporți). Folosește pictograme sau diagrame simple.
+   - Oferă un link „Vezi toate modulele” către `/modules`.
+
+8. **Secțiune cu demonstrații / module recomandate**
+   - Afișează 3 module reprezentative (de ex. M01, M10, M18) cu titlu, descriere scurtă și buton „Simulate Now” care duce direct la generator cu parametrii presetati; respectă planurile pentru Free (doar aceste module)【990267171919994†L154-L160】.
+
+9. **Teaser de prețuri**
+   - Introdu un rezumat al planurilor (Free, Creator, Pro, Enterprise) cu o listă scurtă de beneficii și buton „Vezi Planurile” către pagina /pricing.
+
+10. **Testimonials & Social Proof**
+    - Afișează citate sau recenzii de la utilizatori; eventual include un rating mediu.
+    - Asigură-te că textul recenziilor este server‑rendered și că imaginile clienților respectă drepturile de utilizare.
+
+11. **FAQ (Întrebări Frecvente)**
+    - Selectează 3–5 întrebări cheie (ex.: „Ce înseamnă 7D?”, „Care sunt diferențele dintre planuri?”, „Cât de sigure sunt datele mele?”) și răspunsurile lor, servite server‑side pentru a îmbunătăți SEO.
+    - Include linkuri către documentație pentru mai multe detalii.
+
+12. **Call‑To‑Action final**
+    - Reiterează beneficiile și îndeamnă utilizatorul să înceapă („Get Started Free”) sau să afle mai multe („View Documentation”).
+    - Butoanele trebuie să trimită evenimente de telemetrie (ex.: `ui.cta_click`) pentru a măsura conversia.
+
+13. **Footer și linkuri legale**
+    - Creează un footer cu navigație secundară (About, Blog, Contact), linkuri către /legal/terms, /legal/privacy, /legal/dpa【990267171919994†L29-L34】 și rețele sociale (dacă există).
+    - Adaugă copyright, numărul de versiune al site‑ului și informații de contact.
+
+14. **Instrumentare și monitorizare**
+    - Integrează hook‑ul de analytics pentru a loga evenimentele cheie (vizitarea paginii, scroll‑profund, clicuri pe CTA).
+    - Măsoară Core Web Vitals (LCP, INP, CLS) și optimizează unde este cazul【990267171919994†L232-L236】.
+
+15. **Responsive & A11y**
+    - Testează designul pe breakpoints XS/SM (320–430 px) și MD (480–768 px) pentru a preveni scroll orizontal【990267171919994†L194-L214】.
+    - Respectă preferința `prefers-reduced-motion` și oferă alternative pentru utilizatorii cu mobilitate redusă【990267171919994†L238-L243】.
+    - Asigură etichete corecte pentru toate controalele și implementează „Skip to content” pentru navigație cu tastatura.
+
+16. **Optimizare și teste**
+    - Rulează Lighthouse și Core Web Vitals pe mobile („Moto G4 / Slow 4G” și „iPhone 14 / Fast 3G”) pentru a verifica LCP, INP și CLS【990267171919994†L286-L288】.
+    - Implementează skeleton loaders pentru zonele dinamice și tratează stările de eroare (fallback text, reîncărcare)【990267171919994†L244-L250】.
+
+17. **Conținut și actualizare continuă**
+    - Planifică actualizarea periodică a testimonialelor și a cifrelor de performanță.
+    - Folosește un sistem ușor de actualizat (ex. import de markdown/MDX pentru secțiunile statice) pentru a permite echipei de marketing să aducă modificări fără a atinge codul.
+
+Respectarea acestor pași va asigura că homepage‑ul PromptForge respectă structura IA definită【990267171919994†L3-L11】, folosește corect design system‑ul și îndeplinește cerințele de SEO, performanță și accesibilitate【990267171919994†L154-L165】【990267171919994†L232-L236】.
+
+
+#### You:
+<time datetime="2025-09-01T15:11:32.439Z" title="9/1/2025, 6:11:32 PM">18:11</time>
+
+dezvoltă similar, lista completa si detalaită de sarcini, pe pasi, pentru pagina: /generator
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:11:36.218Z" title="9/1/2025, 6:11:36 PM">18:11</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:11:46.033Z" title="9/1/2025, 6:11:46 PM">18:11</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:11:53.406Z" title="9/1/2025, 6:11:53 PM">18:11</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:11:36.195Z" title="9/1/2025, 6:11:36 PM">18:11</time>
+
+Mai jos ai lista completă, pe pași, pentru implementarea paginii **/generator** (7-D Prompt Generator). Am structurat totul în ordine de execuție (de la schelet → UI → API → gating → performanță/A11y → telemetrie → SEO → testare/CI), ancorat în SSOT-urile tale și în specificația existentă.
+
+# /generator — plan de implementare, pas cu pas
+
+## 0) Scheletul rutei și SSR
+
+1. Creează `app/generator/page.tsx` ca **Server Component**. Fetch la catalogul canonic prin `/api/modules` cu `revalidate: 60` (ISR), nu client-side, ca gridul inițial să fie indexabil și rapid. Contextul routei: `<main>` cu H1 unic „Generator” pentru SEO corect. fileciteturn0file6L63-L68
+2. Montează **design system-ul**: tokens CSS în `app/globals.css`, theming prin `<ChakraProvider theme={pfTheme}>` în `app/layout.tsx`. Folosește numai variabile semantice, fără hexuri hard-codate. fileciteturn0file1L118-L125
+
+## 1) FilterBar (client) + Grid cu ModuleCard
+
+3. Adaugă `FilterBar` ca **Client Component**: search (Cmd/Ctrl+K + debounce 200ms), multi-select pe 7 vectors, slider difficulty 1–5, select „plan=all|free|creator|pro|enterprise”, chip-uri active, „Clear”. Afișează **empty state**: „Nu există module pentru filtrul curent. Resetează.” și loghează `filter_change` (q, vectors\[], difficulty, plan, results\_count). fileciteturn0file1L169-L189
+4. Listează modulele SSR în grid (1/2/3 col pe breakpoints). Fiecare card afișează: titlu, summary (≤160c), chips pentru vectors (max 3 + „+n”), **DifficultyMeter** (1–5), **BadgePlan** (minPlan) și CTA „View”. Card-ul e focusable, cu aria & tooltip pentru state „locked” (plan < minPlan): „Necesită {minPlan}. Încearcă Simulate sau upgradează.”. fileciteturn0file1L191-L199
+
+## 2) ModuleOverlay (spec executabil + 7D)
+
+5. Creează **ModuleOverlay** (dialog cu focus-trap, Esc, role="dialog"): taburi în ordinea: **Overview → Inputs(7D) → Outputs → KPIs → Guardrails → Actions**. **Actions**: Simulate (toți), Run Real Test (Pro+), Export (gated). Blochează acțiunile când lipsesc câmpuri 7D (validare inline). fileciteturn0file1L127-L128
+6. Respectă copy-ul canonic: guardrails vizibile („english-only, no PII, score≥80 pentru export .pdf/.json”), scor afișat după run și **TelemetryBadge** (run\_id, score, ms). fileciteturn0file1L127-L128
+
+## 3) ExportMenu (gating pe plan)
+
+7. **ExportMenu** trebuie să arate DOAR formatele permise de plan (vizibile, dar disabled cu motiv când sunt blocate):\
+   Free → .txt; Creator → .txt/.md; Pro → .txt/.md/.pdf/.json; Enterprise → +.zip. La click, confirmă nume fișier, checksum și watermark dacă trial. Blochează exportul sub **score < 80** cu mesaj „Tighten & re-test”. Loghează `export_request/success/blocked`. fileciteturn0file1L18-L19 fileciteturn0file6L404-L408
+
+## 4) API: /api/modules, /api/run/\[moduleId], /api/export
+
+8. **/api/modules**: expune catalogul SSOT (exact 50). Pune validarea de **Zod/Schema** în CI: build fail dacă ≠50, ID duplicat, vectors în afara enum, inconsistențe minPlan vs outputs (.pdf/.json → pro+, .zip → enterprise). fileciteturn0file1L39-L45
+9. **/api/run/\[moduleId]**: pre-gate (auth, plan, entitlements, feature\_flags, rate-limit), validare input 7D `enum_only`, core run (simulate sau live), evaluatori → score{quality,risk,cost,overall}, bloc export dacă overall < 80, return repair-prompts. Evenimente: `module_run_requested/started/scored/succeeded|blocked`. fileciteturn0file4L241-L261
+10. **/api/export**: generează manifest + SHA256, aplică watermark la trial, verifică rights per plan, salvează artefact + checksum. Returnează link semnat. Garantează refuz 422 dacă lipsește manifest/checksum ori formatul nu e permis. fileciteturn0file5L1-L10
+
+## 5) Gating comercial (UI + API)
+
+11. Aliniază **plan gates**: Free (subset M01,M10,M18 + .txt), Creator (all modules + .md), Pro (.pdf/.json + Test Engine live), Enterprise (API, bundle .zip). Upsell pe acțiuni „aha” (Run Real Test, Export PDF/JSON/ZIP). fileciteturn0file6L154-L160
+12. Externează entitlements din endpoint dedicat (`/api/entitlements`) + hook FE `useEntitlements` pentru UI gating determinist. fileciteturn0file6L88-L96
+
+## 6) UX/A11y/Mobile & performanță (bugete dure)
+
+13. **A11y**: contrast ≥ 4.5:1, focus ring vizibil, landmarks header/nav/main/footer, `role="search"` pe FilterBar, aria-pressed pe chips; **tap targets ≥44×44**. fileciteturn0file6L238-L243
+14. **Mobile CWV**: LCP ≤ 2.5s, INP p95 ≤ 200ms, TTI ≤ 3.5s. Folosește `next/image` cu `sizes`, lazy-load sub fold, fără GIF grele; skeletons pe grid/overlay. Test pe „Moto G4 Slow 4G” și „iPhone 14 Fast 3G”. fileciteturn0file6L232-L236
+15. **Motion guard**: 220ms max; respectă `prefers-reduced-motion`. Overlay: fade+scale(8px). fileciteturn0file1L20-L23
+
+## 7) SEO & sistemul de pagini
+
+16. H1 unic „Generator”, description ≤160c, canonical, OG/Twitter meta prin layout. Include ruta în `app/sitemap.ts` și **exclude /api/** din sitemap. fileciteturn0file6L162-L165
+
+## 8) Telemetrie & KPIs (prod-ready)
+
+17. Emite evenimentele standard cu `module_id (Mxx)` cheie: `module_open`, `module_run_*`, `export_performed`, `legacy_redirect_hit`. Dashboard: funnel open→run→success, TTV median < 300s. fileciteturn0file4L338-L347
+18. Business KPIs: „Activation: first export ≤10m”, „Export mix plătit ≥55% la M6”, „Evaluator median ≥80”. Mapează în Data/Revenue dashboards. fileciteturn0file5L1-L10
+
+## 9) Testare stratificată & CI gates
+
+19. **Unit/Component**:\
+    – FilterBar: debounce, chips states;\
+    – ModuleCard: state locked/hover/focus;\
+    – Overlay: validări 7D;\
+    – ExportMenu: gating per plan și score. (axe-core/Pa11y fără erori critice). fileciteturn0file2L63-L71
+20. **Contract/API**: validează input/output JSON-Schema (7D, score, manifest). Fail hard pe `enum_only` sau lipsă checksum. fileciteturn0file4L5-L13
+21. **E2E (Playwright)**:\
+    – Home→Generator→select modul→setează 7D→Simulate→(Pro+) Run Real Test→Export;\
+    – Gating: user Free primește paywall pe Run Real Test/PDF;\
+    – Empty/error states;\
+    – Tablouri pentru mobile (390px/430px). fileciteturn0file6L252-L264
+22. **CI gates**: build fail dacă: catalog ≠50/ID duplicat; `LCP > 2.5s` pe mobile; A11y < AA; schema invalidă; export fără manifest/checksum; score<80 și totuși PDF/JSON nu este blocat. fileciteturn0file6L294-L299
+
+## 10) Securitate & cost guard
+
+23. Middleware: **rate-limit** pe `/api/run` și `/api/export`, headers CSP/HSTS, refuz `.pdf/.json/.zip` fără rights/score≥80. Watermark pentru trial. Log „policy\_denied”. fileciteturn0file5L1-L10
+24. Cost-cap: dacă estimarea depășește plafonul planului → degrade la „Simulated” + mesaj. (Regula e în charterul de gating). fileciteturn0file5L1-L10
+
+---
+
+## Artefacte minime de livrat pentru /generator
+
+- `app/generator/page.tsx` (SSR + fetch ISR) fileciteturn0file6L63-L68
+- `components/modules/module-browser.tsx`, `module-card.tsx`, `ModuleOverlay.tsx`, `ExportMenu.tsx` (conforme DS) fileciteturn0file6L121-L127
+- `app/api/modules/route.ts` + validare catalog (50/50, enum) fileciteturn0file1L39-L45
+- `app/api/run/[moduleId]/route.ts` (pre-gate→validate→run→evaluate→return) fileciteturn0file4L241-L261
+- `app/api/export/route.ts` (manifest + checksum + rights) fileciteturn0file5L1-L10
+- Teste: unit/contract/e2e + Lighthouse/Pa11y gates în CI fileciteturn0file2L63-L71
+
+---
+
+## Note de implementare (aliniere la sistem)
+
+- **IA de site**: /generator e rută P0, vizibilă în nav principal. Menține linkurile către /pricing și /docs/api pentru conversie/educație. fileciteturn0file6L1-L8
+- **Design System**: păstrează animațiile scurte (≤220ms), glow discret; respectă prefers-reduced-motion; fără artwork greu în fold. fileciteturn0file1L20-L23
+- **Charter & KPI**: optimizează flow-ul pentru „first export ≤10 min” și upsell pe acțiuni premium (Run Real Test, PDF/JSON). fileciteturn0file5L1-L10
+
+Dacă vrei, pot transforma lista într-un **checklist de livrare** (markdown) împărțit în „today / next / done”, sau într-un **template de PR** (cu DoR/DoD și gates) pentru echipă.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:13:19.964Z" title="9/1/2025, 6:13:19 PM">18:13</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:13:58.398Z" title="9/1/2025, 6:13:58 PM">18:13</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:12:51.936Z" title="9/1/2025, 6:12:51 PM">18:12</time>
+
+Mai jos găsești lista completă de sarcini, pas cu pas, pentru implementarea paginii **/generator** (7‑D Prompt Generator). Aceasta urmărește specificațiile IA și design‑ul existent și integrează gating‑ul planurilor, simularea și testarea live, exporturi, performanță, accesibilitate, securitate și telemetrie.
+
+### 1. Structură și schelet
+
+1. **Creează ruta** `app/generator/page.tsx` ca componentă server (SSR). Acest lucru asigură indexarea corectă și optimizarea SEO pentru conținutul gridului de module【291444568850641†L31-L37】.
+2. **Importă theme‑ul PFv4** și tokens‑urile CSS în `globals.css`, apoi învelește aplicația cu `<ChakraProvider theme={pfTheme}>` pentru a unifica paleta, tipografiile și spacing‑ul【291444568850641†L118-L125】.
+3. **Adaugă metadate** (title, description, canonical, og:image) pentru pagina generatorului. Include `<main>` cu un H1 descriptiv (“Generator – 7‑D Prompt Engine”).
+
+### 2. Catalogul de module și FilterBar
+
+4. **SSR fetch** la `/api/modules` (ISR cu `revalidate:60s`) pentru a obține catalogul canonic de 50 de module. În cazul în care catalogul are mai puțin de 50 de elemente, oprește build‑ul, conform Zod schema【291444568850641†L39-L45】.
+
+5. **Implementare FilterBar** (Client Component):
+   - Câmp de căutare cu shortcut „Cmd/Ctrl + K” și debounce de 200 ms.
+   - Multi‑select pentru “vectors” (strategic, rhetoric, content, analytics, branding, crisis, cognitive)【291444568850641†L169-L177】.
+   - Slider de dificultate 1–5 cu etichete “Beginner…Expert”【291444568850641†L179-L189】.
+   - Selector “plan” (All, Free, Creator, Pro, Enterprise).
+   - Chip‑uri care reflectă filtrele aplicate și buton “Clear all”.
+   - Mesaj pentru stare goală: “Nu există module pentru filtrul curent. Resetează.”【291444568850641†L188-L189】.
+   - Telemetrie: loghează eveniment `filter_change` cu parametrii (q, vectors\[], difficulty, plan, results\_count)【291444568850641†L169-L189】.
+
+6. **Gridul de module**:
+   - Afișează modulele într‑o grilă responsive (1–3 coloane).
+   - Fiecare card (`ModuleCard`) conține titlul, un rezumat (max. 160 caractere), chips pentru primele 3 vectors (cu „+n” pentru restul), `DifficultyMeter`, `BadgePlan` (minPlan) și buton “View”【291444568850641†L169-L177】.
+   - Când planul utilizatorului este sub `minPlan`, butonul este dezactivat și apare un tooltip: “Necesită {minPlan}. Încearcă Simulate sau upgradează.”【291444568850641†L169-L189】.
+   - La click, se deschide `ModuleOverlay` (v. secțiunea următoare). Telemetrie: `module_card_open` (id).
+
+### 3. ModuleOverlay: 7‑D engine și executare
+
+7. **Structurează Overlay‑ul** ca un dialog cu focus trap (esc pentru închidere), cu taburi:
+   - **Overview** (scop, vectors, minPlan, dificultate, outputs suportate).
+   - **Inputs (7‑D)**: domeniu, scară, urgență, complexitate, resurse, aplicație, rezultat; fiecare câmp are validare în timp real și clarificări.
+   - **Outputs**: prezintă formatele disponibile (vizibile, chiar dacă sunt blocate), cu explicații și gating clar【291444568850641†L127-L128】.
+   - **KPIs**: descrie scorurile așteptate (clarity/execution/ambiguity/alignment/business fit).
+   - **Guardrails**: reguli de securitate (fără date personale, fără cod malițios, etc.).
+   - **Actions**: Simulate (toți), Run Real Test (doar Pro/Enterprise), Export (format dependent de plan)【291444568850641†L127-L128】.
+
+8. **Run logic**:
+   - Simulate: folosește `simulateGptResponse()` cu seed determinist, persistă promptul și parametrii 7‑D.
+   - Run Real Test: disponibil doar pentru Pro+; apelează `liveGptTest()`, înregistrează tokenii și calculează scoruri; persistă în `prompt_scores`【291444568850641†L127-L128】.
+   - La final, afișează scorul și `TelemetryBadge` (run\_id, scor).
+   - Dacă scorul < 80, blochează exporturile plătite și sugerează “Tighten & re-test”. Gating pentru plan: verifică entitlements (Free/Creator/Pro/Enterprise) și afișează paywall inline când utilizatorul apasă Run Real Test sau Export PDF/JSON/ZIP fără drepturi.
+
+### 4. ExportMenu și pipeline
+
+9. **Interfață ExportMenu**:
+   - Listează formatele permise de plan: Free → .txt; Creator → .txt/.md; Pro → .txt/.md/.pdf/.json; Enterprise → + bundle.zip【291444568850641†L18-L19】.
+   - Formatele nepermise sunt vizibile dar inactive; afișează motivul (“Necesită Pro/Enterprise” sau “Scor < 80”).
+   - În urma exportului, generează `prompt.txt`, `prompt.md`, `prompt.json` (include config7D și telemetrie), `prompt.pdf` (cu watermark dacă user este în trial), `checksum.txt`; pentru Enterprise, zip‑uiește totul【291444568850641†L18-L19】.
+   - Telemetrie: `export_requested`, `export_success` sau `export_blocked`.
+
+10. **API și pipeline server**:
+
+- `/api/run/[moduleId]`: primește params7D, verifică planul, rulează simulare sau live test, calculează scor și persistă; returnează artifactele intermediate.
+- `/api/export`: primește run\_id și tip export, verifică rights și scor, generează fișiere, calculează checksum, salvează în `bundles` și returnează link securizat.
+- `/api/modules`: returnează catalogul (50 module). Validate la build (Zod) că are exact 50 elemente cu vectors valide și difficulty 1–5【291444568850641†L39-L45】.
+- Toate endpoints‑urile trebuie să aplice RLS Supabase și rate limiting (pe plan și `entitlements`).
+
+### 5. Gating comercial și entitlements
+
+11. **Definirea flags‑urilor**:
+
+- Free: acces la modulele M01, M10, M18; export .txt; simulare test.
+- Creator: acces la toate modulele; export .md; doar simulare.
+- Pro: +export .pdf/.json; +Test Engine live; +cloud history; +Evaluator scoruri.
+- Enterprise: +API public; +white‑label; +bundle.zip; +seats și rate‑limits【990267171919994†L154-L160】.
+- Add‑ons: `evaluator_advanced`, `export_designer` (opționale pentru Pro/Ent).
+
+12. **Hook FE `useEntitlements`**: fetch la `/api/entitlements` (plan, add‑on, trial, expirare). Folosit pentru a activa/dezactiva butoanele Run Real Test și export.
+
+### 6. UX / Accesibilitate / Mobile
+
+13. **Ajustări mobile**: layout fluid pe breakpoints XS/SM/MD (320–768 px). Fără scroll orizontal; safe‑area padding; butoane cu min‑height 44 px【990267171919994†L194-L214】.
+
+14. **A11y**: semantic HTML (nav/search/main/footer), aria‑labeluri pe inputs; focus‑ring vizibil; `prefers-reduced-motion` reduce animațiile la 220 ms【990267171919994†L238-L243】.
+
+15. **Skeleton & error states**: skeleton pe grid și overlay; mesaje de eroare clare (ex: „Network error, încearcă din nou”), opțiune de retry; offline state cu conținut cache.
+
+16. **Performance**: lazily load overlay și import de librării doar la nevoie; optimizează LCP ≤2.5 s și INP ≤200 ms pe mobil【990267171919994†L232-L236】. Rulează Lighthouse pe „Moto G4 Slow 4G” și „iPhone 14 Fast 3G”.
+
+### 7. Telemetrie și KPI
+
+17. **Evenimente de telemetrie**:
+
+- `page_view` (Generator), `filter_change`, `module_card_open`, `module_run_requested`, `module_run_simulated/live`, `module_run_completed`, `export_requested`, `export_success/blocked`, `paywall_hit`.
+- Fiecare include `module_id` (Mxx), userPlan, score, cost, run\_id, duration.
+
+18. **KPI**: urmărește „Activation: first export ≤10 min”; „Export mix plătit ≥55% la M6”; „Evaluator Score median ≥80”; „free→paid conversion”; „TTV ≤60s”.
+
+### 8. Teste și CI
+
+19. **Unit tests**: validare pentru FilterBar, ModuleCard, Overlay, ExportMenu; mock entitlements.
+20. **Contract tests**: asigură respectarea JSON Schema la `/api/run` și `/api/export` (params7D, metadata, scores).
+21. **E2E (Playwright)**: simulare flow complet: home → generator → filtrează → select modul → setează 7‑D → Simulate → (Pro+) Run Real Test → Export; verifică gating; UI mobil; empty/error states【990267171919994†L252-L264】.
+22. **CI Gates**: build fail dacă catalogul ≠50; LCP >2.5s; A11y \<AA; export fără checksum sau permisiune; gating broken (ex: Free poate exporta PDF).
+
+### 9. Securitate & cost control
+
+23. **Middleware** pentru `/api/run` și `/api/export`: rate‑limit per plan; set CSP strict (script-src self; connect-src supabase, stripe); HSTS; X‑Frame‑Options; X‑Content‑Type‑Options.
+24. **Cost guard**: dacă scorul sau lungimea promptului depășește costul planului, degradează automat la Simulate și loghează `degraded=true`.
+25. **Audit trail**: persistă fiecare run și export (hash chain) în DB; module varianta; versiunea scoring.
+
+---
+
+Acești pași asigură că pagina **/generator** este complet funcțională, aliniată la design și specificațiile PromptForge, cu focus pe SSR, gating comercial, UX, performanță și securitate.
+
+
+#### You:
+<time datetime="2025-09-01T15:13:59.691Z" title="9/1/2025, 6:13:59 PM">18:13</time>
+
+continua cu următoarea pagina
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:14:12.523Z" title="9/1/2025, 6:14:12 PM">18:14</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:14:23.540Z" title="9/1/2025, 6:14:23 PM">18:14</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:14:41.776Z" title="9/1/2025, 6:14:41 PM">18:14</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:14:12.469Z" title="9/1/2025, 6:14:12 PM">18:14</time>
+
+Perfect. Continuăm cu **/modules** — biblioteca de module (index + detaliu `/modules/[id]`). Mai jos ai lista completă de sarcini, în ordine de execuție, ca să iasă o pagină de nivel mondial.
+
+# /modules — plan de implementare, pas cu pas
+
+## 1) Structură, SSR/ISR și rute
+
+1. Creează rutele:
+   - `app/modules/page.tsx` (index) și `app/modules/[id]/page.tsx` (detaliu). Ambele trebuie randate server-side pentru SEO și timp de încărcare corect, cu sitemap/robots gestionate din `app/sitemap.ts` și `app/robots.ts`【fileciteturn0file6】.
+2. Setează ISR pentru listă (ex. `revalidate: 60`) și SSR strict pentru detaliu (meta unice, JSON-LD). H1 unic/pagină; canonical stabil; OG/Twitter meta prin layout【fileciteturn0file6】.
+
+## 2) Catalog — SSOT + validări dure
+
+3. Expune `/api/modules` ca sursă unică de adevăr (exact **50** module). Montează validator Zod/Schema în CI: fail hard dacă ≠50, ID duplicat, vectors în afara enum, plan < capabilități declarate (ex. `.pdf/.json` ⇒ Pro+)【fileciteturn0file1】.
+4. Păstrează nomenclatorul: `vectors` (7 valori lowercase), `difficulty` 1–5; titlurile păstrează `™` unde e brand【fileciteturn0file1】.
+5. Integrează registry-ul în librăria internă (`lib/modules.ts`) și aliniază cu restul serviciilor (prompt-generator, test-engine)【fileciteturn0file6】.
+
+## 3) Indexul /modules — UX, filtre, carduri
+
+6. **FilterBar** (client): search (`Cmd/Ctrl+K`, debounce 200 ms), multi-select vectors (7), slider difficulty 1–5, selector plan (All/Free/Creator/Pro/Enterprise), chip-uri active, „Clear all”; empty-state clar. Telemetrie: `filter_change{q,vectors[],difficulty,plan,results_count}`【fileciteturn0file1】.
+7. **Grid responsive** 1/2/3 col cu **ModuleCard**: titlu, summary ≤160c, chips vectors (max 3 + „+n”), `DifficultyMeter`, `BadgePlan (minPlan)`, CTA „View”. Locked-state (userPlan < minPlan) dezactivează CTA + tooltip motivant【fileciteturn0file1】.
+8. Performanță mobilă: imagini optimizate, lazy-load sub fold, LCP ≤2.5s, INP p95 ≤200ms, TTI ≤3.5s. Testează pe „Moto G4 Slow 4G” & „iPhone 14 Fast 3G”【fileciteturn0file6】.
+
+## 4) Pagina de detaliu /modules/\[id]
+
+9. SSR + meta dedicate (title/description ≤160), OG/Twitter, JSON-LD „TechArticle”/„SoftwareApplication” (în funcție de conținut). Breadcrumbs: Modules → {ModuleTitle}.
+10. Conținutul detaliului oglindește **Overlay**:
+    - **Overview** (scop, vectors, minPlan, difficulty, outputs),
+    - **Inputs (7D)** (descrieri + exemple),
+    - **Outputs** (vizibile/gated),
+    - **KPIs**,
+    - **Guardrails** (english-only/no PII, score≥80 pentru export .pdf/.json),
+    - CTA: **Run Sample** (Simulate pentru toți), **Run Real Test** (Pro+)【fileciteturn0file1】.
+11. Redirecționări 308 pentru `legacy_slugs[]` → slug curent + eveniment `legacy_redirect_hit` logat (SEO & compat)【fileciteturn0file4】.
+
+## 5) Gating comercial (UI + API)
+
+12. Respectă planurile reale:
+    - Free: subset module (ex. M01/M10/M18), export `.txt`
+    - Creator: all modules, export `.md`
+    - Pro: `.pdf/.json`, Test Engine live, cloud history
+    - Enterprise: API, **bundle .zip**【fileciteturn0file6】.
+13. Upsell „aha”: pe **Run Real Test** și **Export PDF/JSON/ZIP** afișează inline paywall; la export sub **score < 80** → blochează și arată „Tighten & Re-test”【fileciteturn0file6】.
+14. Conectează UI la entitlements (endpoint dedicat + hook FE) și la prețuri/checkout (Stripe) pentru upgrade rapid【fileciteturn0file6】【fileciteturn0file7】.
+
+## 6) SEO tehnic & conformitate
+
+15. Un singur H1/pagină, canonical, OG/Twitter; **sitemap.ts + robots.ts** active (exclude `/api/*`). Păstrează paginile legale sub `/legal/*` (Terms, Privacy, DPA)【fileciteturn0file6】.
+16. Respectă Charter KPI-uri: Activation ≤10m (primul export), Export Mix (plătite) ↑, CWV la țintă. Asigură-te că indexul /modules contribuie la funnel (landing → modules → generator → export)【fileciteturn0file5】.
+
+## 7) A11y & Mobile polish
+
+17. Accesibilitate AA: contrast ≥4.5:1, focus vizibil, landmarks header/nav/main/footer, `role="search"` pe FilterBar, aria pe chips/meters/dialog; tap targets ≥44×44 px; `prefers-reduced-motion` on【fileciteturn0file6】.
+
+## 8) Telemetrie & KPI (prod-ready)
+
+18. Evenimente standard:
+    - `module_open` (și din redirect),
+    - `module_run_requested/started/scored/succeeded|blocked`,
+    - `export_performed` (format, checksum\_ok),
+    - `legacy_redirect_hit`.\
+      Cheia analitică: **module\_id (Mxx)**; dashboard cu open→run→success și TTV median < 300s【fileciteturn0file4】.
+19. Conectează evenimentele la Charter dashboards: usage (exports by type/plan), evaluator scores, web-vitals pe rute【fileciteturn0file5】.
+
+## 9) Testare & CI gates
+
+20. **Unit/Component**: FilterBar (debounce, state), ModuleCard (locked/hover/focus), pagină detaliu (secțiuni), Overlay tab-nav; axe-core/Pa11y fără erori critice【fileciteturn0file2】.
+21. **Contract/API**: `/api/modules` validează catalogul (50/50, enum strict), `/api/run` și export pipeline (manifest + checksum) — fail hard la abatere【fileciteturn0file2】.
+22. **E2E**: index → detaliu → Run Sample → (Pro+) Run Real Test → Export; verifică paywall, redirects 308, empty/error states; vizează mobile 390px/430px【fileciteturn0file6】.
+23. **CI gates**: build fail dacă: catalog ≠50, LCP (mobile) >2.5s, A11y \<AA, export fără manifest/checksum, gating broken (ex. Free poate PDF)【fileciteturn0file6】.
+
+## 10) Securitate & cost-guard
+
+24. Middleware cu **CSP/HSTS**, rate-limit pe `/api/run` & export; blocare export sub scor; watermark în trial; jurnalizare policy-denied. Stripe webhooks idempotente pentru upgrade/downgrade【fileciteturn0file5】【fileciteturn0file7】.
+
+---
+
+### Artefacte minime de livrat
+
+- `app/modules/page.tsx` (SSR+ISR) și `app/modules/[id]/page.tsx` (SSR + JSON-LD & redirects 308)【fileciteturn0file6】【fileciteturn0file4】
+- `components/modules/module-browser.tsx`, `module-card.tsx`, `ModuleOverlay` (spec/tabs), `ExportMenu` conforme DS【fileciteturn0file6】【fileciteturn0file1】
+- `/api/modules` + validatori Zod (catalog 50)【fileciteturn0file1】
+- Telemetrie standard conectată la KPIs Charter【fileciteturn0file5】
+
+---
+
+#### Notă (context pedagogic, opțional):
+
+În /modules poți insera, ca item „demo”, un modul educațional care explică pe scurt filosofia **Model-Prompt-Librărie-Automatizare** (pentru orientarea vizitatorilor non-tehnici) — menținând însă gatingul comercial și calitatea artefactelor (score≥80, manifest+checksum)【fileciteturn0file0】.
+
+Dacă vrei, pot transforma această listă într-un **checklist de livrare** (TODAY/NEXT/DONE) sau într-un **PR template** cu DoR/DoD și gates.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:16:45.098Z" title="9/1/2025, 6:16:45 PM">18:16</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:16:50.257Z" title="9/1/2025, 6:16:50 PM">18:16</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:16:52.759Z" title="9/1/2025, 6:16:52 PM">18:16</time>
+
+\[Unsupported Content]
+
+
+#### You:
+<time datetime="2025-09-01T15:18:07.559Z" title="9/1/2025, 6:18:07 PM">18:18</time>
+
+continua detaliat cu: 
+/pricing — Planuri & Checkout
+Probleme probabile
+
+Copy generic, fără “moment-of-value” clar pe Pro (“Run Real Test”, .pdf/.json); checkout nelegat de Stripe webhooks; fără portal.
+
+Fixuri
+
+Matrice clară: Free / Creator / Pro / Enterprise cu entitlements reale (exporturi, Test Engine, API, bundle.zip). “Annual = 10× monthly”. CTA → Checkout.
+
+Stripe end-to-end: Products/Prices, Checkout Session, Webhooks idempotente (invoice.paid, customer.subscription.updated), Customer Portal. Trial Pro 7z cu watermark.
+
+KPIs: log checkout_started/paid; fallback “Payment processing…” + reconciliere periodică.
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:18:34.568Z" title="9/1/2025, 6:18:34 PM">18:18</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:18:48.983Z" title="9/1/2025, 6:18:48 PM">18:18</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:19:02.701Z" title="9/1/2025, 6:19:02 PM">18:19</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:18:34.393Z" title="9/1/2025, 6:18:34 PM">18:18</time>
+
+Gata. Mai jos ai lista completă, pe pași, pentru **/pricing — Planuri & Checkout**, mapată exact pe problemele menționate (copy generic, lipsă „moment-of-value”, Stripe nelegat, fără portal) și pe fixurile cerute (matrice clară, Stripe end-to-end, KPIs + fallback). Am inclus și criterii de acceptare (DoD) ca să poți închide rapid PR-urile.
+
+---
+
+# /pricing — plan de implementare, pas cu pas
+
+## 0) Schelet & SEO
+
+1. Creează `app/pricing/page.tsx` (SSR). Un singur `<h1>Pricing` + meta description ≤160c; canonical; OG/Twitter. Include ruta în `app/sitemap.ts` și nu indexa `/api/*`. fileciteturn0file6
+2. Layout clar în 3 blocuri: (A) head-copy + switch Monthly/Annual, (B) matrice planuri, (C) FAQ scurt + CTA. „Annual = 10× monthly” vizibil lângă toggle. fileciteturn0file1
+
+## 1) Conținut (copy care vinde „moment-of-value”)
+
+3. Scrie headline/lead orientat pe „adevărul” Pro: „Run Real Test” + exporturi `.pdf/.json` = livrabile verificabile. Pune lângă fiecare plan 2–3 „aha moments” diferențiatoare (ex: Pro = Live Test + Evaluator + export profesional). (Plan gates déjà definite) fileciteturn0file6
+4. În gridul de planuri afișează **entitlements reale** (Free/Creator/Pro/Enterprise) și blochează vizual capabilitățile nedisponibile (tooltip cu motiv). fileciteturn0file1
+
+## 2) Matricea de planuri (deterministă, fără „if-uri” hardcodate)
+
+5. Sursează planurile din config (plans.json/feature flags) și randă „feature list” 1:1 cu entitlements:
+   - Free: subset module + `.txt`
+   - Creator: toate modulele + `.md`
+   - Pro: + `.pdf/.json`, Live Test, cloud history
+   - Enterprise: + API, bundle `.zip`, seats, rate-limits fileciteturn0file6
+6. „Annual = 10× monthly” în UI (toggle Monthly/Annual). fileciteturn0file1
+
+## 3) CTA → Checkout (Stripe end-to-end)
+
+7. Buton „Choose {Plan}” apelează `POST /api/billing/checkout` → primește `checkout_url` și face redirect. (Hosted Checkout; PCI scăzut) fileciteturn0file5
+8. Configurează **Products/Prices** pentru Free/Creator/Pro/Enterprise și **Stripe Tax**; setează trial Pro 7 zile. **Portal**: `GET /api/billing/portal` din `/dashboard/billing`. fileciteturn0file5
+9. **Webhooks idempotente**: `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated`, `invoice.payment_failed`. Persistă `subscriptions`, `invoices`, recalculează `entitlements` și setează watermark pentru trial. DLQ + retry. fileciteturn0file5 fileciteturn0file7
+
+## 4) Trial Pro 7 zile (watermark) & stări UI
+
+10. Dacă user este în trial Pro: badge „Trial — exports watermarked” + dezactivează upgrade copy. După `invoice.paid` → ridică watermark. fileciteturn0file5
+11. Pagini de status:
+
+- `/checkout/success` (rezumat plan + buton „Go to dashboard”)
+- `/checkout/cancel` (întoarcere la pricing).\
+  Empty/error states explicite („Payment processing…”, webhook reconcilier periodic). fileciteturn0file5
+
+## 5) KPI & Telemetrie (server-side + RUM)
+
+12. Evenimente: `pricing_view`, `checkout_started`, `checkout_paid`, `trial_started`, `trial_converted`. Le vei vedea în dashboards Revenue/Funnel (MRR/NRR, Free→Paid, Payback). fileciteturn0file5
+13. SLO operaționale (monitorizate): checkout success ≥ 98.5%, factură ≤5s, webhook lag ≤2s P95, dispute ≤0.8%. Alerte pe depășiri. fileciteturn0file5
+
+## 6) Gating corelat cu Entitlements
+
+14. După `checkout_paid`, invalidează cache-ul FE (`useEntitlements`) și arată imediat capabilitățile noului plan (ex: „Run Real Test” / export `.pdf/.json/.zip`). fileciteturn0file6
+15. La clic pe capabilitate nepermisă (de pe pricing sau altundeva) → **PaywallInline** cu beneficiile planului corespunzător. fileciteturn0file6
+
+## 7) Performanță & A11y (mobile-first)
+
+16. Bugete: LCP ≤2.5s, INP p95 ≤200ms; folosește `next/image` pentru ilustrații, lazy pentru FAQ; tap targets ≥44×44; contrast AA; `prefers-reduced-motion`. fileciteturn0file6
+17. Teste pe „Moto G4 Slow 4G” & „iPhone 14 Fast 3G”; raportează LCP/INP/CLS + screenshot timeline. fileciteturn0file6
+
+## 8) CI/QA & DoD (fail-hard)
+
+18. **Contracte Stripe**: fixture E2E pentru `invoice.paid`, `payment_failed`, `subscription.updated`. Idempotency check (3× același event). fileciteturn0file5
+19. **Test funnel**: `pricing_view → checkout_started → success|cancel`. Verifică:
+
+- Mapping plan ↔ entitlements după webhook
+- Trial watermark on/off
+- Error fallback („Plata în procesare…”) fileciteturn0file5
+
+20. **Lighthouse CI** pe `/pricing`: Performance ≥90, SEO ≥95, A11y ≥95; Pa11y zero erori critice. fileciteturn0file2
+
+## 9) Legal & Compliance
+
+21. Afișează linkuri către **Terms/Privacy/DPA** în footerul /pricing; activează **Consent Mode** (analytics doar după acord). fileciteturn0file6 fileciteturn0file5
+
+## 10) UX micro-detalii care cresc CR
+
+22. **Card Pro evidențiat** („Recommended”) + banderolă cu beneficiul diferențiator (Live Test + `.pdf/.json`).
+23. **Ancore interne**: din bullets „.pdf/.json/ZIP/API” spre modalele de demo sau /docs/api (pentru Enterprise). fileciteturn0file6
+24. **Trust**: mic „How billing works” (prorratare, portal, anulare la EoP) + badge „VAT handled by Stripe Tax”. fileciteturn0file5
+
+---
+
+## Criterii de acceptare (DoD) — /pricing
+
+- **Conținut & UI:** matrice planuri corectă, „Annual = 10× monthly” vizibil, copy axat pe „Run Real Test” & exporturi profesionale. fileciteturn0file1
+- **Checkout:** redirect Stripe funcțional; `invoice.paid` actualizează entitlements; `invoice.payment_failed` → mesaj clar + dunning. fileciteturn0file5
+- **Portal:** link „Manage billing” funcțional (self-service). fileciteturn0file5
+- **Trial Pro:** watermark aplicat în trial și revocat după conversie. fileciteturn0file5
+- **KPIs logate:** `pricing_view`, `checkout_started`, `checkout_paid`, `trial_started`, `trial_converted`. fileciteturn0file5
+- **Perf/A11y:** LCP ≤2.5s (mobil), INP p95 ≤200ms, A11y AA; rapoarte CI atașate la PR. fileciteturn0file6 fileciteturn0file2
+
+---
+
+## Notițe de implementare & fișiere utile
+
+- Design System menționează explicit pagina **/pricing** + regula de **Annual 10×**. Folosește aceleași token-uri și pattern-uri de gating ca restul site-ului. fileciteturn0file1
+- IA confirmă ruta **/pricing** ca P0 și legăturile spre entitlements/Paywall. fileciteturn0file6
+- Charter & capitolul „Abonamente & Plăți” descriu integral **Stripe end-to-end** (Checkout, Webhooks, Portal), **trial**, **dunning**, **SLO-uri**. fileciteturn0file5
+- Checklistul tehnic pe integrări (Stripe keys, products, webhook secret) — verificare „gata de prod”. fileciteturn0file7
+
+Dacă vrei, pot livra imediat un **checklist de implementare (TODAY/NEXT/DONE)** pentru /pricing, plus un **PR template** (DoR/DoD + fixtures Stripe) ca să închizi rapid cerințele de mai sus.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:20:34.289Z" title="9/1/2025, 6:20:34 PM">18:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:20:54.996Z" title="9/1/2025, 6:20:54 PM">18:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:20:57.498Z" title="9/1/2025, 6:20:57 PM">18:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:20:57.499Z" title="9/1/2025, 6:20:57 PM">18:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:02.498Z" title="9/1/2025, 6:21:02 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:02.499Z" title="9/1/2025, 6:21:02 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:04.998Z" title="9/1/2025, 6:21:04 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:07.499Z" title="9/1/2025, 6:21:07 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:07.500Z" title="9/1/2025, 6:21:07 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:10.000Z" title="9/1/2025, 6:21:10 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:12.514Z" title="9/1/2025, 6:21:12 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:15.015Z" title="9/1/2025, 6:21:15 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:15.017Z" title="9/1/2025, 6:21:15 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:17.602Z" title="9/1/2025, 6:21:17 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:20.103Z" title="9/1/2025, 6:21:20 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:26.245Z" title="9/1/2025, 6:21:26 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:26.246Z" title="9/1/2025, 6:21:26 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:28.748Z" title="9/1/2025, 6:21:28 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:31.260Z" title="9/1/2025, 6:21:31 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:33.869Z" title="9/1/2025, 6:21:33 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:33.871Z" title="9/1/2025, 6:21:33 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:36.390Z" title="9/1/2025, 6:21:36 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:45.311Z" title="9/1/2025, 6:21:45 PM">18:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:22:06.389Z" title="9/1/2025, 6:22:06 PM">18:22</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:21:36.560Z" title="9/1/2025, 6:21:36 PM">18:21</time>
+
+Mai jos ai lista completă de sarcini pentru implementarea paginii **/pricing – Planuri & Checkout**, structurată pe pași şi bazată pe cerinţele din design system şi din specificația site‑ului. Sunt incluse şi corecțiile pentru problemele identificate (copy generic, lipsă „moment‑of‑value”, lipsă legare Stripe, lipsă portal).
+
+### 1. Scheletul și SEO
+
+1. **Creează ruta `/pricing/page.tsx` ca server component** (SSR) pentru vizibilitate SEO și încărcare rapidă.
+2. **Include metadate completate**: `<title>`, `<meta name="description">` (max. 160 caractere), link `canonical`, og:title/og:description/og:image.
+3. **Adaugă ruta în sitemap și exclude rutele `/api/*`** din sitemap.
+4. În topul paginii, folosește un H1 unic („Pricing”) pentru consistență SEO【291444568850641†L25-L40】.
+
+### 2. Conținutul (copy)
+
+1. **Headline centrat pe „moment‑of‑value”**: evidențiază că planul Pro deblochează „Run Real Test” și exporturi profesionale (.pdf/.json), nu doar generarea simulată.
+2. **Descrieri pentru fiecare plan**: Free, Creator, Pro, Enterprise, cu 2–3 „aha moments” pe plan (de ex. „Teste Live”, „Export PDF/JSON”, „API și bundle .zip”).
+3. „Annual = 10× monthly”: clarifică acest raport lângă un toggle Monthly ↔ Annual și reamintește-l la final【291444568850641†L25-L40】【990267171919994†L154-L165】.
+4. Include o notă că planul Pro oferă trial de 7 zile, dar exporturile sunt watermark‑ate【990267171919994†L29-L34】.
+
+### 3. Matricea de planuri & gating
+
+1. **Construiește o matrice de comparație** cu rânduri pentru funcționalități (simulare, test live, export .txt/.md/.pdf/.json/.zip, API, seats) și coloane pentru planuri: Free, Creator, Pro, Enterprise【930679758492844†L930-L965】.
+2. Derivează entitlements din config:
+   - **Free** – Simulate Test, export .txt, istoric local.
+   - **Creator** – toate Free + export .md, module nelimitate, istoric cloud【930679758492844†L930-L965】.
+   - **Pro** – toate Creator + „Run Real Test”, export .pdf/.json, Evaluator live, dashboards RUM【930679758492844†L930-L965】.
+   - **Enterprise** – toate Pro + API, bundle .zip, white‑label, rate‑limits extinse și seats incluse【930679758492844†L930-L965】.
+3. **Conectați gatingul planurilor**: butoanele de upgrade se dezactivează automat pentru planurile curente; tooltip‑urile explică de ce o funcționalitate e blocată.
+4. Afișează planul recomandat (Pro) cu o banderolă vizuală și un CTA colorat.
+
+### 4. UI/UX de plată
+
+1. **Toggle Monthly/Annual**: afişează preţurile conform matricei (de ex. €49/lună → €490/an)【930679758492844†L930-L965】.
+2. **Carduri pentru fiecare plan**: design consistent, responsive, cu buton „Choose {Plan}” care deschide checkout‑ul.
+3. **Lista de funcționalități (comparative)** sub carduri; folosește check‑marks pentru entitlements disponibile și text „Locked” pentru cele neincluse.
+4. **CTA sticky**: la scroll lung, afișează o bară fixă cu buton „Upgrade now” care să trimită direct spre checkout (pattern prezentat în design system【291444568850641†L25-L40】).
+
+### 5. Integrare Stripe end‑to‑end
+
+1. **Definește produsele și prețurile în Stripe** (un produs per plan, prețuri lunare și anuale). În DB salvează prețurile în minor units (e.g., 4900 = €49)【930679758492844†L930-L965】.
+2. **API server `/api/billing/checkout`**: la click pe „Choose {Plan}”, creează un `CheckoutSession` cu entitlements specifice (trial Pro 7 zile cu watermark dacă e Pro).
+3. **Configurează webhooks idempotente** pentru `checkout.session.completed`, `invoice.paid`, `invoice.payment_failed`, `customer.subscription.updated`. La fiecare eveniment:
+   - Creează sau actualizează subscription și salvează entitlements actualizate în DB.
+   - Pentru `invoice.paid`, dezactivează watermarkul la expirația trialului și activează exporturile plătite.
+   - Pentru `invoice.payment_failed`, marchează factura „Past due” și pornește dunning; afișează statusul „Payment failed, check your card”.
+4. **Stripe Customer Portal**: activează‐l pentru upgrade/downgrade, adăugare card, cancel; expune linkul „Manage billing” în `/dashboard/billing`【930679758492844†L1050-L1070】.
+5. **Pagina de status**: `/checkout/success` și `/checkout/cancel`; arată utilizatorului starea plății și un link „Back to dashboard”【930679758492844†L1050-L1070】.
+6. **Add-ons**: pregătește prețuri separate (seats extra, evaluator advanced, export designer, API burst pack) conform catalogului【930679758492844†L930-L965】.
+
+### 6. Trial & watermark logic
+
+1. **Pro Trial de 7 zile**: la pornirea trialului, planul Pro devine activ dar exporturile .pdf/.json/.zip sunt watermark‑ate【930679758492844†L930-L965】.
+2. **La `invoice.paid`** după trial: actualizează entitlements, ridică watermarkul.
+3. **Dacă utilizatorul nu convertește** după 7 zile: degradează la plan Creator și rearanjează gatingul.
+
+### 7. Telemetrie și KPIs
+
+1. **Instrumentează evenimente server‑side și RUM**: `pricing_view`, `checkout_started`, `checkout_paid`, `trial_started`, `trial_converted`, `export_*`, `module_run_*` etc., conform taxonomiei【930679758492844†L120-L136】.
+2. **Măsoară performanța plăților**: checkout success ≥ 98.5%, emitere factură ≤ 5s, dispute rate ≤ 0.8%【930679758492844†L1050-L1070】.
+3. **Creează dashboards**: Revenue (MRR, NRR), Funnel (sessions → pricing → signup → activation → free → paid) și Usage (exporturi pe tip/plan)【930679758492844†L120-L136】.
+4. **Fallback UI**: în caz de „webhook down” sau întârziere de procesare, afișează mesaj „Payment processing… Vei primi un email când e finalizat.”【930679758492844†L1050-L1070】.
+
+### 8. Actualizarea entitlements în UI
+
+1. **Endpoint `/api/entitlements`**: returnează planul curent, data de expirare a trialului, add‑ons active și watermark status.
+2. **Hook FE `useEntitlements`**: folosește endpoint‑ul pentru gating în UI; după `checkout_paid`, invalidează cache-ul pentru a reflecta entitlements noi.
+3. **Paywall inline**: dacă userul încearcă să acceseze o funcționalitate din plan superior, afişează overlay cu beneficiile planului și un buton „Upgrade”.
+
+### 9. Performanță, accesibilitate și mobile
+
+1. **Bugete Core Web Vitals**: LCP ≤ 2.5 s, INP p95 ≤ 200 ms, CLS ≤ 0.1【930679758492844†L1050-L1070】. Folosește `next/image` pentru ilustrații și lazy‑loading pentru secțiunile necritice.
+2. **Accesibilitate**: contrast ≥ 4.5:1, focus ring vizibil, landmarks (header/main/footer), aria labels pe butoane, tap targets ≥ 44×44 px, respectă `prefers-reduced-motion`【930679758492844†L1050-L1070】.
+3. **Mobile-first**: cardurile se redimensionează pentru 360–430 px; CTA sticky nu acoperă conținut important; toggle-ul monthly/annual rămâne accesibil.
+
+### 10. Legal și compliance
+
+1. **VAT OSS & US sales tax**: activează `automatic_tax` în Stripe; colectează adresa la checkout; salvează `tax_breakdown` în DB【930679758492844†L1045-L1070】.
+2. **Invoice & archiving**: salvează invoice\_pdf și tax\_breakdown timp de 10 ani conform reglementărilor【930679758492844†L1045-L1070】.
+3. **Linkuri legale**: în footer adaugă link-uri către Terms, Privacy și DPA; asigură Consent Mode V2 (analytics doar cu acord)【930679758492844†L1050-L1070】.
+
+### 11. Testare & CI gates
+
+1. **Unit tests**: verifică toggles (Monthly/Annual), gating plan, fallback UI.
+2. **Integration tests (Stripe mocks)**: simulează `checkout.session.completed`, `invoice.paid`, `invoice.payment_failed`, `customer.subscription.updated` și asigură că entitlements se actualizează corect și watermark-ul se ridică.
+3. **E2E tests**: parcurge flow-ul complet: `/pricing` → select plan → checkout → success/cancel; verifică upgrade/downgrade, trial logic, plan gating.
+4. **CI gates**: fail dacă LCP > 2.5s (mobil), A11y < AA, gating broken (ex. Free poate exporta .pdf), webhooks ne-idempotente sau entitlements nu se actualizează după `invoice.paid`.
+5. **Lighthouse & Pa11y**: rulează în pipeline; require SEO ≥ 95, Performance ≥ 90, A11y ≥ 95.
+
+---
+
+Prin implementarea acestor pași, pagina **/pricing** va livra o experiență profesionistă: copy convingător, matrice de planuri clară și corectă, funnel de checkout complet legat de Stripe (inclusiv trial, webhooks, portal), gating comercial corect, performanță optimă, accesibilitate și instrumentare analitică robustă【291444568850641†L25-L40】【930679758492844†L930-L965】.
+
+
+#### You:
+<time datetime="2025-09-01T15:23:15.934Z" title="9/1/2025, 6:23:15 PM">18:23</time>
+
+dezvoltă detaliat pe pasi complet: 
+/docs — Hub + /docs/api
+Probleme probabile
+API ref doar client-side; cod-uri fără scroll; lipsesc canonical, sitemap entries și robots permit.
+Fixuri
+SSR docs: MDX/Blocks cu TOC; URL stabil /docs/api; exemple curl pentru POST /api/run/{moduleId} + schema 7D; copy-buttons accesibile.
+SEO corect: sitemap.ts include docs; JSON-LD “TechArticle”; coduri într-un container scroll-only.
+
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:23:21.141Z" title="9/1/2025, 6:23:21 PM">18:23</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:23:34.400Z" title="9/1/2025, 6:23:34 PM">18:23</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:24:32.114Z" title="9/1/2025, 6:24:32 PM">18:24</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:23:22.155Z" title="9/1/2025, 6:23:22 PM">18:23</time>
+
+Perfect. Mai jos ai planul complet, pe pași, pentru **/docs** (hubul de documentație) și **/docs/api** (referința API), rezolvând explicit problemele semnalate: „client-side only”, coduri fără scroll, lipsă canonical/sitemap/robots.
+
+---
+
+## 0) Rute, randare și structură (fixează „client-only”)
+
+1. **Rute App Router**\
+   Creează:
+
+- `app/docs/page.tsx` (hub)
+- `app/docs/api/page.tsx` (referință API)\
+  Aceste rute sunt parte din IA deja definită pentru site【fileciteturn0file6】.
+
+2. **Randare server, dar statică (SSG/ISR)**\
+   Documentația și blogul se livrează ca SSG/ISR (nu „client-only”), cu revalidare la publish; SSR strict pentru dashboard (nu pentru docs)【fileciteturn0file5】.\
+   — Rezultat: HTML vizibil crawler-ilor + performanță bună; eliminăm „JS-only” pe /docs.
+
+3. **MDX + Blocks**\
+   Activează MDX cu un set de componente „whitelisted” pentru docs (ex: `<Code>`, `<Callout>`, `<Table>`, `<Accordion>`, `<Image>`), preview, media library cu alt obligatoriu, și workflow draft→review→publish【fileciteturn0file5】.
+
+4. **TOC + Sidebar**\
+   Hubul `/docs` listează secțiuni (Overview, API, Guides) + TOC ancorat; pagina `/docs/api` are TOC local cu titluri linkabile (id-uri pentru H2/H3).
+
+---
+
+## 1) /docs/api — conținut executabil (exemplu curl + schema 7D + response)
+
+5. **Structura paginii**
+
+- H1: „API Reference”
+- Secțiuni: Auth (dacă expui chei), Rate Limits, Errors, **POST `/api/run/{moduleId}`**, Telemetry, Webhooks (dacă expui)\
+  Rutele și endpoint-ul `/api/run/{moduleId}` sunt parte din scheletul platformei【fileciteturn0file6】.
+
+6. **Exemplu cURL + body 7D + răspuns**\
+   Include un exemplu complet de **POST `/api/run/{moduleId}`**, cu body `params7D` și un răspuns conținând `artifacts` și `telemetry` (run\_id, score etc.), exact cum ai prevăzut pentru /docs/api【fileciteturn0file1】.
+
+7. **Code blocks bune pe mobil (scroll + copy)**
+
+- Code block-urile sunt într-un container **scroll-only** pe orizontală;
+- Buton „Copy” cu aria-label clar;
+- Pe mobil, păstrează scroll intern la bloc, nu la pagină【fileciteturn0file6】.
+
+---
+
+## 2) UX & A11y pentru hub și API
+
+8. **Componente accesibile**
+
+- Landmarks `<main>/<nav>`;
+- Un singur **H1**/pagină;
+- Focus-ring vizibil, tap-targets >=44×44;
+- Preferă `prefers-reduced-motion` pentru animații minime în docs【fileciteturn0file6】.
+
+9. **Navigație și căutare**\
+   TOC „sticky”, breadcrumbs spre /docs; pe mobil, secțiuni pliate (Accordion) cu tastatură full.
+
+---
+
+## 3) SEO corect (canonical, sitemap, robots, JSON-LD)
+
+10. **Sitemap & robots**
+
+- Generează `app/sitemap.ts` cu intrări pentru **/docs** și **/docs/api**;
+- `app/robots.ts` blochează `/api/*`; ambele sunt deja cerute în IA【fileciteturn0file6】.
+
+11. **Canonical & OG**
+
+- Setează `canonical` stabil pe fiecare pagină de docs;
+- OG/Twitter meta din layout (titlu/descriere), „un singur H1” pe pagină【fileciteturn0file6】.
+
+12. **Structured data (JSON-LD)**
+
+- Adaugă **Article/TechArticle** JSON-LD la paginile de documentație; Structured data e cerință standard în SEO-ul tehnic al proiectului【fileciteturn0file5】.
+
+---
+
+## 4) Surse de conținut & workflow
+
+13. **Surse**
+
+- Docs în MDX (ex. `content/docs/*.mdx`), cu front-matter (title, description, sidebar\_order).
+- Build SSG/ISR pe publish; preview securizat pentru draft【fileciteturn0file5】.
+
+14. **Versionare**
+
+- Opțional: `version` în front-matter (stabil pentru API); păstrează URL-ul `/docs/api` ca **stabil** conform IA【fileciteturn0file6】.
+
+---
+
+## 5) Acceptanță (DoD) — „gata de pus live”
+
+15. **Conținut**
+
+- `/docs` hub + TOC; `/docs/api` cu: exemplu curl, schema 7D, response, copy-buttons, „scroll-only” la code blocks【fileciteturn0file1】【fileciteturn0file6】.
+
+16. **SEO**
+
+- H1 unic; canonical; **sitemap include docs**; robots exclude `/api/*`; JSON-LD valid【fileciteturn0file6】【fileciteturn0file5】.
+
+17. **A11y & Mobile**
+
+- Axe/Pa11y: 0 critical/serious;
+- Code-blocks scrollabile pe mobil; copy-buttons accesibile;
+- Tap-targets & focus-order corecte【fileciteturn0file6】.
+
+18. **Performanță**
+
+- SSG/ISR (instant TTFB); imagini optimizate; fără terți fără consimțământ; bugete CWV respectate (LCP/INP/CLS)【fileciteturn0file5】.
+
+---
+
+## 6) Liste de livrare (ce trebuie să existe în PR)
+
+- `app/docs/page.tsx`, `app/docs/api/page.tsx` (Server Components, SSG/ISR)【fileciteturn0file6】
+- `content/docs/api.mdx` (conține curl + 7D + response)【fileciteturn0file1】
+- `components/docs/Code.tsx` (scroll-only + Copy)【fileciteturn0file6】
+- `components/docs/TOC.tsx` (linkuri către headings)
+- `app/sitemap.ts`, `app/robots.ts` — docs incluse; `/api/*` exclus【fileciteturn0file6】
+- JSON-LD helper (Article/TechArticle) pentru docs【fileciteturn0file5】
+
+---
+
+## 7) QA rapid înainte de merge
+
+- **Vizual / conținut**: H1 unic, TOC funcțional, copy-buttons merg.
+- **Mobil**: code-blocks se scrollează intern; fără „page scroll trap”【fileciteturn0file6】.
+- **SEO**: sitemap listă /docs & /docs/api; robots exclude `/api/*`; canonical corect【fileciteturn0file6】.
+- **CWV**: LCP/INP/CLS în limite (SSG/ISR ajută)【fileciteturn0file5】.
+
+Dacă vrei, transform pașii de mai sus într-un **checklist de implementare** pe care îl pui ca „Acceptance” în PR (cu casete de bifat) — totul rămâne aliniat pe IA și regulile vizuale din design system pentru /docs/api【fileciteturn0file1】【fileciteturn0file6】.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:04.519Z" title="9/1/2025, 6:26:04 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:09.532Z" title="9/1/2025, 6:26:09 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:17.235Z" title="9/1/2025, 6:26:17 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:17.237Z" title="9/1/2025, 6:26:17 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:19.737Z" title="9/1/2025, 6:26:19 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:22.240Z" title="9/1/2025, 6:26:22 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:24.740Z" title="9/1/2025, 6:26:24 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:27.246Z" title="9/1/2025, 6:26:27 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:29.748Z" title="9/1/2025, 6:26:29 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:29.750Z" title="9/1/2025, 6:26:29 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:32.249Z" title="9/1/2025, 6:26:32 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:34.777Z" title="9/1/2025, 6:26:34 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:34.779Z" title="9/1/2025, 6:26:34 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:40.446Z" title="9/1/2025, 6:26:40 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:45.460Z" title="9/1/2025, 6:26:45 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:45.461Z" title="9/1/2025, 6:26:45 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:47.963Z" title="9/1/2025, 6:26:47 PM">18:26</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:27:02.058Z" title="9/1/2025, 6:27:02 PM">18:27</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:26:45.273Z" title="9/1/2025, 6:26:45 PM">18:26</time>
+
+Mai jos găsești pașii detaliați pentru implementarea paginilor **/docs** (hubul de documentație) și **/docs/api** (referința API), rezolvând explicit problemele semnalate: randare client-only, coduri fără scroll, lipsă canonical și sitemap entries, etc.
+
+### 1. Structură și randare
+
+1. **Definește rutele în `app`**:
+   - `app/docs/page.tsx` — pagina hub pentru documentație.
+   - `app/docs/api/page.tsx` — pagina de referință API.\
+     Aceste rute fac parte din IA a site‑ului【291444568850641†L25-L40】.
+
+2. **Random server‑side, dar static**: pentru documentație folosește **SSG/ISR** în loc de “client-only”. Articolele și API docs sunt generate la build sau la publish (ISR) pentru SEO și performanță, iar dashboardul continuă să fie SSR【291444568850641†L25-L40】.
+
+3. **MDX + blocks**:
+   - Configurează suport MDX pentru pagini de documentație, incluzând doar componente whitelisted (<Callout>, <Table>, <Accordion>, <Image> etc.).
+   - Creează un TOC (table of contents) generat din headinguri pentru fiecare pagină, cu ancore linkabile și sticky scroll.
+
+4. **Hub `/docs`**:
+   - Listă de secțiuni (Overview, Guides, API Reference, Changelog), preluate din front‑matter.
+   - Include search local sau un filtru “sidebar” cu secțiuni pliate pe mobil.
+   - Pagină indexabilă cu H1 unic “Documentation”.
+
+### 2. Pagina `/docs/api`
+
+1. **Conținutul API**:
+   - H1 “API Reference”.
+   - Secțiuni: Auth (chei, OAuth), Rate limits, Errors, **POST `/api/run/{moduleId}`**. Design system recomandă explicit să arăți un exemplu `curl POST /api/run/{moduleId}`, schema parametrilor 7D și un exemplu de răspuns cu `telemetry`【291444568850641†L25-L40】.
+   - Încorporează automat schema OpenAPI generată, menționată în specificație ca publicată pe `/docs/api`【930679758492844†L2150-L2164】.
+
+2. **Blocuri de cod**:
+   - Afișează codurile în containere scrollabile orizontal; folosește butoane “Copy” cu aria‑label.
+   - Codurile pot fi puse în `<pre><code>` cu `overflow-x: auto` și margine consistentă; la nivel de componentă React, se poate crea `CodeBlock` cu buton de copiere.
+
+3. **Exemple suplimentare**:
+   - Ilustrează body-ul JSON cu parametrii 7D (`domain`, `scale`, `urgency`, etc.), un seed opțional și modulul ales.
+   - Explică câmpurile din răspuns: `hash`, `artifacts` (.txt/.md/.json/.pdf/.zip), `telemetry` (run\_id, scoruri, cost, tokens) în conformitate cu designul general al API-ului.
+
+### 3. UX, accesibilitate și navigație
+
+1. **TOC și navigare**: Atât hubul, cât și pagina API trebuie să aibă un TOC care devine sticky după scroll; pe mobil, folosește accordion pentru collapsible sections.
+
+2. **Accesibilitate**: menține contrast ≥ 4.5:1, focus rings vizibile, landmarks (`<nav>`, `<main>`, `<footer>`) și tap targets ≥44×44 px【291444568850641†L25-L40】.
+
+3. **Mobil**: asigură layout fluid (fără scroll orizontal) și ca blocurile de cod să aibă scroll intern; dezactivează efectele vizuale pentru `prefers-reduced-motion`.
+
+### 4. SEO și meta
+
+1. **Canonical & OG**: pentru fiecare pagină docs, setează meta `canonical` și meta OG/Twitter (title, description, image). Este necesar un singur H1 per pagină【291444568850641†L25-L40】.
+
+2. **Sitemap & robots**:
+   - Generează `app/sitemap.ts` astfel încât să includă explicit rutele `/docs` și `/docs/api`, conform specificației care indică sitemap index + sitemaps per secțiune (blog/docs/pages)【930679758492844†L1288-L1294】.
+   - Actualizează `app/robots.ts` pentru a bloca `/api/*` și a permite `/docs/*`.
+
+3. **JSON-LD**: adaugă în head un script `application/ld+json` cu tip `TechArticle` pentru paginile de documentație, furnizând `headline`, `description`, `author`, `datePublished`, `articleBody` (sau rezumat), ceea ce ajută la SEO tehnic.
+
+### 5. Flux și surse de conținut
+
+1. **Fișiere MDX**: conținutul documentației și al API-ului este în fișiere `content/docs/*.mdx` cu front-matter (title, description, slug, sidebar\_order).
+2. **Automatizare**: la publish/update, se invalidează rutele afectate (ISR) și se regenerează sitemap și RSS conform procesului din specificație【930679758492844†L1288-L1294】.
+3. **Control versiunii**: suportă eventual un `version` în front-matter (ex. v1), dar menține `/docs/api` ca URL stabil; versiunea se poate include în calea fișierului (ex. `/docs/api/v1/run`), dacă necesar.
+
+### 6. Acceptanță & testare (DoD)
+
+- **Conținut complet**: `/docs` indexează toate paginile MDX; `/docs/api` include exemplul curl, schema 7D și răspuns, cu code-blocks scrollabile și butoane Copy.
+- **SSG/ISR**: paginile docs se generează static; nu există rendering exclusiv client.
+- **SEO**: sitemap include docs; robots.txt exclude `/api/*` și permite `/docs/*`; canonical corect; structured data valid【930679758492844†L1288-L1294】.
+- **A11y**: nu există erori critice la axe/Pa11y; code-blocks au scroll intern; interfețele sunt navigabile cu tastatura.
+- **Performanță**: TTFB și LCP sub 2.5s (SSG/ISR); cod lazy loaded; imagini optimizate.
+
+Acest plan rezolvă problemele actuale (cod client-only, lipsa de scroll la cod, lipsa canonical/sitemap) și implementează o documentație robustă, accesibilă și SEO-friendly, conform designului și specificațiilor PromptForge【291444568850641†L25-L40】【930679758492844†L2150-L2164】.
+
+
+#### You:
+<time datetime="2025-09-01T15:29:22.455Z" title="9/1/2025, 6:29:22 PM">18:29</time>
+
+dezvoltă detaliat pe pasi complet: 
+/blog — Content hub
+Probleme probabile
+Fără ISR/SSG; lipsesc og:image, schema Article, RSS; lipsesc preview-uri.
+Fixuri
+Pipeline content: MDX cu Blocks, preview securizat, programare, revisions, linter SEO (H1 unic, description, 3+ internal links).
+RSS + sitemaps: /api/rss.xml, sitemaps pe secțiuni, og:image 1200×630.
+
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:29:27.206Z" title="9/1/2025, 6:29:27 PM">18:29</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:29:42.393Z" title="9/1/2025, 6:29:42 PM">18:29</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:30:28.848Z" title="9/1/2025, 6:30:28 PM">18:30</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:29:28.241Z" title="9/1/2025, 6:29:28 PM">18:29</time>
+
+Iată planul complet, pe pași, pentru **/blog — Content hub**, rezolvând punctual problemele semnalate (fără ISR/SSG, lipsă og:image, schema Article, RSS, lipsă preview-uri) și aliniind pagina la IA și la standardele tale de CMS/SEO/A11y.
+
+### 1) Rute, structură, randare
+
+1. Creează rutele: `app/blog/page.tsx` (index) și `app/blog/[slug]/page.tsx` (post). Blog-ul face parte din IA (P1), iar sitemap/robots se servesc via `app/sitemap.ts` și `app/robots.ts`. fileciteturn0file6
+2. Randează **SSG/ISR** pentru posturi și index; **SSR doar unde e nevoie** (dashboard/pricing). La publish/update rulezi **revalidare fină** a exact rutelor afectate. fileciteturn0file5
+
+### 2) Modelul de conținut (MDX)
+
+3. Tipuri și câmpuri (front-matter) pentru `post` (blog): `title`, `slug`, `excerpt`, `content_mdx`, `cover`, `categories[]`, `tags[]`, `status (draft/review/scheduled/published)`, `published_at`, `author_id`, opțional `canonical_url`, `og_image`, `noindex?`. fileciteturn0file5
+4. **MDX + Blocks whitelisted** (ex: `<Callout>`, `<Table>`, `<Accordion>`, `<Image>`), **preview securizat** (link temporar), **media library** cu **alt obligatoriu** și cropper pe rapoarte (inclusiv **1200×630** pentru OG). fileciteturn0file5
+
+### 3) Workflow editorial & versionare
+
+5. Stări: **draft → review → approved → scheduled → published → (rollback)**.\
+   **Gates** obligatorii: Design (contrast/breakpoints), **SEO** (H1 unic, meta ≤160, ≥3 linkuri interne), **Legal** (no PII / claims sensibile). Programare cu cron server-side + auto-recuperare „missed schedule”. **Revisions** cu diff per câmp și restore. fileciteturn0file5
+
+### 4) Generare & livrare
+
+6. Build **ISR/SSG** pentru blog/docs/pages; pe publish/update rulezi **revalidate** exact pe rutele afectate. Optimizezi imagini (next/image, sizes), faci code-split pentru editor, lazy pentru media grea; prefetch inteligent la hover pentru linkuri interne. fileciteturn0file5
+
+### 5) SEO tehnic & OG
+
+7. **Structured data**: adaugă **JSON-LD Article/BlogPosting** la posturi; **BreadcrumbList** pe listări și pagini cu ierarhie. **Canonical** stabil, **noindex** pentru draft/preview, **OG/Twitter** complete; **og:image 1200×630** (fallback generat din H1 + cover). fileciteturn0file5
+8. **robots & sitemaps**: robots.txt generat; **sitemap index + sitemaps pe secțiuni** (blog/docs/pages); rulează la publish/update. Expune și **/api/rss.xml** pentru RSS public. fileciteturn0file5 fileciteturn0file6
+
+### 6) RSS + sitemaps (implementare)
+
+9. `app/api/rss.xml/route.ts`: citește posturile publicate, generează feed (title, link, pubDate, guid, description) + `<media:content>` dacă ai cover.
+10. `app/sitemap.ts`: sitemap index care include `/sitemap.blog.xml`; `app/sitemap.blog/route.ts` listează doar posturile `published`. **Exclude `/api/*` în robots/sitemaps**, conform IA. fileciteturn0file6
+
+### 7) Căutare & indexare
+
+11. La publish/update, **index incremental** în Algolia/OpenSearch cu: `title, slug, excerpt, headings[], tags[], lang, popularity`. Protejează indexarea: **noindex** pentru draft/review. 404 inteligent (sugestii + back link). fileciteturn0file5
+
+### 8) Acces, RBAC & RLS
+
+12. RBAC: editor/admin/owner pot crea/edita; support poate edita changelog/FAQ; viewer read-only. **RLS**: conținutul publicat vizibil public; alt conținut doar membrilor org-ului. Lock-uri optimiste la editare. fileciteturn0file5
+
+### 9) Telemetrie & KPIs
+
+13. Evenimente: `content.view`, `content.read_complete` (scroll 75% + timp minim), `content.cta_click`, `content.share`, `content.search`.\
+    KPI: timp draft→publish ≤24h (P90), **organic→pricing CR ≥ 6%**, acoperire alt-text 100%, **sitemap valid 100%**. Raport săptămânal: top posts, cele mai convertibile, pagini lente (CWV), erori build. fileciteturn0file5
+
+### 10) Mobile & performanță
+
+14. Ținte CWV (mobil **P75**): **LCP < 2.5s**, **INP < 200ms**, **CLS < 0.1**; pentru „Blog post” bugete de resurse: HTML ≤30KB, JS exec ≤120ms, JS total ≤140KB, CSS ≤45KB, LCP image ≤160KB (AVIF/WebP), LCP ≤2.2s. fileciteturn0file5
+
+### 11) Internaționalizare (opțional P1/P2)
+
+15. Strategie URL cu prefix per limbă (ex. `/en/blog/...`, `/ro/blog/...`), **hreflang** complet + `x-default`, slugs localizate, **canonical** corect per limbă. Publici doar traduceri **approved**; fallback „translated from …” pe lipsă. fileciteturn0file5
+
+### 12) QA & CI (fail-hard)
+
+16. **Lint SEO/A11y** pe PR (axe + reguli custom), **test linkuri** (intern/extern) și imagini lipsă, **MDX type-check** (props whitelisted). Previews Vercel pe fiecare PR cu „publishability gates”. Acceptanță: editor MDX + preview + workflow complet, **schema validă, OG/Twitter, canonical**, sitemaps+RSS valide, căutare funcțională, **LCP P75 < 2.5s**, **CLS < 0.1**, **axe** fără erori critice. fileciteturn0file5
+
+---
+
+## Checklist operabil (TODAY → NEXT → DONE)
+
+**TODAY (schelet & SEO minim):**
+
+- [ ] `app/blog/page.tsx`, `app/blog/[slug]/page.tsx` (SSG/ISR + revalidate) fileciteturn0file5
+- [ ] `app/sitemap.ts`, `app/robots.ts` includ blog; exclude `/api/*` fileciteturn0file6
+- [ ] JSON-LD Article/BlogPosting + OG 1200×630 fallback generator fileciteturn0file5
+
+**NEXT (pipeline & preview):**
+
+- [ ] MDX Blocks whitelisted + preview securizat (token TTL) fileciteturn0file5
+- [ ] Workflow: draft→review→scheduled→published + gates Design/SEO/Legal, revisions & rollback fileciteturn0file5
+- [ ] `app/api/rss.xml/route.ts` + sitemaps pe secțiuni (blog) fileciteturn0file5
+
+**DONE (perf, QA, telemetry):**
+
+- [ ] CWV mobile respectate (LCP/INP/CLS + bugete Blog post) fileciteturn0file5
+- [ ] Lint SEO/A11y în CI + preview checks; acceptanță 9.13 verde fileciteturn0file5
+- [ ] Telemetrie content.\* + dashboard săptămânal (top posts / CWV / build errors) fileciteturn0file5
+
+---
+
+### De ce e corect așa (ancore din specificațiile tale)
+
+- IA și rutele obligă prezența blogului (P1) și management corect `sitemap.ts` + `robots.ts`. fileciteturn0file6
+- CMS/Blog definește exact **modelul**, **workflow-ul**, **SEO tehnic**, **RSS**, **sitemaps**, **indexarea incrementală**, **RBAC/RLS** și **telemetrie**. fileciteturn0file5
+
+Dacă vrei, pot să-ți livrez imediat un **PR template** cu gates (Design/SEO/Legal), un **schelet de `rss.xml`** și un **linter SEO minimal** pentru MDX (validări H1/meta/links) — toate mapate la pașii de mai sus.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:32:52.068Z" title="9/1/2025, 6:32:52 PM">18:32</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:32:57.099Z" title="9/1/2025, 6:32:57 PM">18:32</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:32:59.599Z" title="9/1/2025, 6:32:59 PM">18:32</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:33:07.754Z" title="9/1/2025, 6:33:07 PM">18:33</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:33:12.762Z" title="9/1/2025, 6:33:12 PM">18:33</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:33:15.263Z" title="9/1/2025, 6:33:15 PM">18:33</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:33:27.428Z" title="9/1/2025, 6:33:27 PM">18:33</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:33:48.666Z" title="9/1/2025, 6:33:48 PM">18:33</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T15:33:13.491Z" title="9/1/2025, 6:33:13 PM">18:33</time>
+
+Mai jos ai planul complet, pas cu pas, pentru **/blog — Content hub**, împărțit în etape de implementare și corectare. Acesta rezolvă problemele semnalate (fără SSG/ISR, lipsă imagine OG, lipsă schema Article și RSS, lipsă preview-uri) și aliniază blogul cu structura PromptForge.
+
+### 1. Structură, rute și randare
+
+1. **Creează rutele**:
+
+   - `app/blog/page.tsx` – index (listing) pentru blog.
+   - `app/blog/[slug]/page.tsx` – detaliul fiecărui articol.
+
+   Blogul trebuie generat static cu ISR/SSG, nu client‑only. Specificația cere ca paginile de blog să fie generate SSG/ISR, cu revalidare la update【930679758492844†L1610-L1635】.
+
+2. **Paginate indexul**: folosește paginare (`page=1,2,3`), nu infinite scroll, iar linkurile `rel="next"` și `rel="prev"` trebuie setate pe paginile index【930679758492844†L1610-L1635】.
+
+3. **SSG/ISR & caching**: rulează `getStaticProps`/`generateStaticParams` pentru listare și `getStaticProps` cu param `slug` pentru fiecare articol. Cache edge: `Cache-Control: public, s-maxage=86400, stale-while-revalidate=604800` pentru blog【930679758492844†L1610-L1635】.
+
+### 2. Modelul de conținut (MDX) și pipeline-ul editorial
+
+4. **Definește schema `post`**: front‑matter trebuie să includă `title`, `slug`, `excerpt`, `content_mdx`, `cover`, `categories`, `tags`, `status (draft/review/scheduled/published)`, `published_at`, `author_id`, `canonical_url?`, `og_image?`, `noindex?`【930679758492844†L1248-L1253】.
+
+5. **Editor MDX/Blocks**:
+   - Folosește MDX cu componente whitelisted (Callout, Table, Code, Accordion, Video, Image).
+   - Oferă un **preview instant securizat** (link cu token valid 30 min).
+   - Include asistent de scriere: numără heading-urile, verifică 3+ linkuri interne și meta description 120–160 caractere【930679758492844†L1255-L1274】.
+   - Un linter SEO blochează publish-ul dacă H1 nu e unic, lipsesc 3 linkuri interne, sau meta depășește 160 caractere【930679758492844†L1255-L1274】.
+
+6. **Media library**: încărcare drag‑drop, cropper pentru rapoarte 1.91:1, 1:1, **1200×630** (pentru OG), focal point, deduplicare hash, obligatoriu `alt` (nu salvează fără alt)【930679758492844†L1255-L1274】.
+
+7. **Workflow & versionare**:
+   - Stări: `draft` → `review` → `approved` → `scheduled` → `published` → (rollback).
+   - Gates: Design (contrast, breakpoints), SEO (title ≤60, meta ≤160, H1 unic, linkuri interne ≥3, schema validă), Legal (fără PII/claims sensibile)【930679758492844†L1255-L1274】.
+   - Programare cu cron; auto-recuperare la „missed schedule”; posibilitatea de rollback cu diffs per câmp.
+
+### 3. Generarea și livrarea conținutului
+
+8. **Build + Revalidare**: Utilizează ISR/SSG – la publish/update invalidezi rutele blog index și slugul postului. Fiecare build trebuie să treacă bugetele de performanță pentru blog: HTML ≤30 KB, execuție JS ≤120 ms, JS total ≤140 KB, CSS ≤45 KB, imagine LCP ≤160 KB, LCP ≤2.2 s【930679758492844†L1610-L1635】.
+
+9. **Imagini**: folosește `next/image` cu dimensiuni declarate; optimizează în AVIF/JPEG; preîncarcă doar imaginea LCP (cover-ul articolului).
+
+10. **Prefetch inteligent**: prefetch pe hover pentru linkuri interne (următoarea pagină de blog sau categorie).
+
+### 4. SEO tehnic și OpenGraph
+
+11. **Meta și OG**:
+    - Un singur H1 pe pagină; description 120–160 caractere.
+    - `canonical` setat; slug scurt și stabil; trailing slash unitar.
+    - `og:image` 1200×630 pentru fiecare articol; fallback automat generat din H1 și cover【930679758492844†L1255-L1274】.
+    - Adaugă card Twitter `summary_large_image`.
+    - Dacă un articol e `noindex`, adaugă `<meta name="robots" content="noindex,nofollow">`.
+
+12. **Structured Data**:
+    - Schema.org: folosește `Article` sau `BlogPosting` cu câmpuri `headline`, `description`, `image`, `author`, `datePublished`, `dateModified`【930679758492844†L1288-L1294】.
+    - `BreadcrumbList` pe paginile blog (homepage → blog → articol).
+
+13. **Robots & Sitemaps**:
+    - Generează `robots.txt` care permite crawl pe `/blog` și exclude `/api/*`【930679758492844†L1288-L1294】.
+    - `app/sitemap.ts` – sitemap index, plus `sitemap.blog.xml` pentru posturi; update la publish/update【930679758492844†L1288-L1294】.
+
+### 5. RSS și search
+
+14. **RSS feed**: Endpoint `app/api/rss.xml/route.ts` care generează feed XML din posturile publicate (title, link, pubDate, guid, description, `<media:content>` pentru cover), conform specificației care cere RSS/Atom pentru blog【930679758492844†L1288-L1294】.
+
+15. **Search & indexare**: La publish/update, trimite payload minimal în Algolia/OpenSearch (`title`, `slug`, `excerpt`, `headings[]`, `tags[]`, `lang`, `popularity`) pentru a susține căutarea și modul de „related posts” (BM25 simplu pe tags/categorii)【930679758492844†L1288-L1294】.
+
+### 6. Internaționalizare (opțional)
+
+16. Prefix per limbă: `/en/blog/...`, `/ro/blog/...`; `hreflang` complet; fallback `x‑default`. Slugurile sunt localizate; canonical setat per limbă【930679758492844†L1288-L1294】.
+
+### 7. Telemetrie și KPI
+
+17. **Evenimente**: `content.view`, `content.read_complete` (scroll 75% + timp minim), `content.cta_click`, `content.share`, `content.search` – pentru funnel (blog → pricing → signup)【930679758492844†L1248-L1253】.
+18. **KPI**: draft→publish ≤24 h P90; click‑through rate organic→pricing ≥6%; acoperire alt-text 100%; sitemap valid 100%; LCP/INP/CLS sub bugete【930679758492844†L1248-L1253】【930679758492844†L1610-L1635】.
+
+### 8. Acces și permisiuni
+
+19. **RBAC & RLS**: conținutul publicat este vizibil public; versiunile în draft/review sunt accesibile doar echipei (org‑level).
+20. Editorii pot crea/edita; suport poate edita changelog/FAQ; viewer este read‑only. Lock optimist la editare.
+
+### 9. QA & CI
+
+21. **CI gates**: build-ul eșuează dacă depășești bugetele de performanță pentru blog; dacă schema SEO nu e validă; dacă meta description/H1 nu respectă linter-ul; dacă imaginea OG lipsește; sau dacă sitemap/RSS nu se actualizează.
+22. **Testare**: Axe/Pa11y fără erori critice; verifică generarea sitemaps & RSS; testul `draft→review→publish` cu preview securizat; verificare 404 inteligent (sugestii + link back).
+23. **Preview**: testează preview-ul (token TTL 30 min) și asigură-te că rutele nepublicate au `noindex` și nu apar în sitemap/search.
+
+---
+
+Implementând acești pași, vei avea un blog complet funcțional și performant: articole servite static, cu pipeline editorial robust, SEO impecabil (og:image 1200×630, schema Article, sitemaps & RSS), preview securizat, telemetrie completă și bugete Core Web Vitals respectate【930679758492844†L1248-L1253】【930679758492844†L1255-L1274】.
+
+
+#### You:
+<time datetime="2025-09-01T16:06:26.913Z" title="9/1/2025, 7:06:26 PM">19:06</time>
+
+dezvoltă detaliat pe pasi complet: 
+/dashboard — User Login Board
+Probleme probabile
+La încărcare goală (JS); fără istoric runs; gating inconsistent; lipsă “Tighten & Re-test” la scor <80.
+Fixuri
+Layout în 3 zone: KPIs (Runs 7d, Avg Score, Exports, TTA median, Pass Rate) + Tabs (Recent Runs, Artifacts, Module Usage, Scores & Quality, History). “New Run”, “Try Generator”, re-run cu aceiași 7D.
+Blocaje corecte: export blocat sub scor 80 → afișează “repair prompts” + CTA “Tighten Prompt”.
+A11y & perf: infinite list lazy-loaded; sort/filter SSR parametric; toasts pentru succes/erori.
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:06:40.984Z" title="9/1/2025, 7:06:40 PM">19:06</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:06:55.635Z" title="9/1/2025, 7:06:55 PM">19:06</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:07:21.969Z" title="9/1/2025, 7:07:21 PM">19:07</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:06:40.850Z" title="9/1/2025, 7:06:40 PM">19:06</time>
+
+Perfect. Mai jos ai planul complet, pe pași, pentru **/dashboard — User Login Board**, astfel încât să reparăm problemele tipice (încărcare „goală” JS-only, lipsă istoric, gating inconsistent, lipsă „Tighten & Re-test” la scor <80) și să-l aducem la nivel enterprise.
+
+---
+
+## 1) Rută, randare și date
+
+1. Creează `app/dashboard/page.tsx` ca **Server Component** (page shell + SEO), cu secțiunile static-SSR (header, KPIs, tab bar), iar conținutul taburilor ca **Client Components** cu data-fetch incremental (SWR/React Query) și virtualizare. Shell-ul SSR previne „încărcare goală” și face pagina indexabilă. Design systemul recomandă clar această pagină și rolul ei („runs table”, re-run, download)【fileciteturn0file1】.
+2. API-uri interne minime:
+   - `GET /api/runs?org_id&from&to&module&min_score&verdict&page=…`
+   - `GET /api/runs/{id}` (detaliu + artifacts)
+   - `POST /api/runs/{id}/rerun` (preia exact aceiași 7D)
+   - `POST /api/export` (verifică entitlements + manifest/checksum + score gate)\
+     Istoricul rularilor și exporturilor este parte din scopul MVP-ului (istoric & telemetrie, scor Evaluator, run\_id, checksum, descărcări)【fileciteturn0file5】.
+
+---
+
+## 2) Layout în 3 zone (shell)
+
+1. **Header bar**: Workspace switcher (multi-org), quick actions: **New Run**, **Browse Modules**, **Try Generator**; căutare globală (Run ID / Module / keyword).
+2. **KPIs de top** (server-rendered pentru TTI mic):
+   - **Runs (7d)** + trend ▲/▼, **Avg Score** (ultimele 20), **Exports** (md/json/pdf/zip), **TTA median** (<60s target), **Pass Rate** (% rulari cu score ≥80)【fileciteturn0file6】.
+3. **Zona de lucru (tabs)**: **Recent Runs**, **Artifacts**, **Module Usage**, **Scores & Quality**, **History** — exact așa cum e definit în IA【fileciteturn0file6】.
+   > Filosofia „copil-proof KPIs” (câteva indicatori simpli, cu feedback imediat) e susținută și în materialele tale educaționale, încurajând claritate vizuală și decizii rapide【fileciteturn0file0】.
+
+---
+
+## 3) Tab-urile (comportament & UI)
+
+### A. Recent Runs (default)
+
+- **Tabel** cu: Run ID • Module • Score • Verdict • Duration • Owner • Created • Actions.
+- **Row actions**: View, **Re-run** (aceiași 7D), **Export** (eligibil), **Open in Generator**.
+- **Filtre**: date range, module, min score, verdict, format exportat.
+- **Bulk actions**: Export Selected, Delete, Tag【fileciteturn0file6】.
+
+### B. Artifacts / Exports
+
+- **Card grid sau tabel**: format • filename • checksum • size • exported at • run link • Download.
+- **Chips rapide**: .md, .json, .pdf, .zip【fileciteturn0file6】.
+
+### C. Module Usage
+
+- **Heatmap/list**: module • runs • avg score • exports • last used • Open Module; CTA „Your top 3 under-used modules”【fileciteturn0file6】.
+
+### D. Scores & Quality
+
+- Mini-dashboards: **score distribution**, **axis breakdown** (clarity/execution/ambiguity/business fit), „**Repair candidates**” (scores <80) cu **Tighten Prompt** (auto-improve)【fileciteturn0file6】.
+
+### E. History (long-tail)
+
+- **Infinite list lazy-loaded** pentru audituri (scroll performant)【fileciteturn0file6】.
+
+---
+
+## 4) Gating corect și blocaje explicite
+
+1. **Export gate pe scor**: dacă **score < 80**, exporturile plătite sunt blocate; afișează „**Repair prompts**” + CTA **Tighten & Re-test** (buton **Tighten Prompt** direct în dashboard). Această regulă (DoD ≥80) este în charter & ruleset【fileciteturn0file5】 și în layoutul /dashboard【fileciteturn0file6】.
+2. **Plan gates la acțiuni „aha”**: dacă plan < Pro și user apasă **Run Real Test** ori **Export PDF/JSON/ZIP** → **paywall inline** cu ce se deblochează【fileciteturn0file6】.
+3. **Entitlements deterministe**: UI se bazează pe `withEntitlementGate(…)`, nu pe string-uri de plan; invalidate cache după upgrade【fileciteturn0file5】.
+
+---
+
+## 5) A11y & performanță
+
+1. **Listă infinită virtualizată** în „Recent Runs” și „History” (evită jank).
+2. **Sort/filter SSR parametric**: `?module=Mxx&min_score=80&verdict=pass&page=…`, pentru paginare stabilă.
+3. **Toasts** pentru succes/erori: Run started/finished/failed, Export success, Paywall hits; mesaje clare, non-intruzive【fileciteturn0file6】.
+4. **Mobile acceptance**: fără scroll orizontal, tap targets ≥44×44, focus vizibil, LCP ≤2.5s, INP p95 ≤200ms; skeletons, offline resilience, error states cu CTA util【fileciteturn0file6】.
+5. **Tokens & DS**: respectă design tokens și componentizarea din DS (badge, card, tabel, toast), pentru coerență vizuală【fileciteturn0file1】.
+
+---
+
+## 6) Telemetrie & KPIs (prod-ready)
+
+1. **Evenimente standard** (server-side + RUM): `module_run_*`, `export_*`, `web_vitals`, plus **evenimente specifice dashboardului**: `run_re_run`, `tighten_prompt_click`, `repair_shown`, `artifact_download`, `paywall_shown/accepted`. Taxonomia evenimentelor și tablourile de bord unificate sunt definite în specificație【fileciteturn0file5】.
+2. **KPIs de produs** (din Charter): Activation **first export ≤10 min**, **Evaluator median ≥80**, Export mix paid, WAU/MAU; le arăți condensat în header (trend pe 7 zile)【fileciteturn0file5】.
+
+---
+
+## 7) Securitate & cost guard (transversal)
+
+1. **Rate-limit** pe `POST /api/runs/*` și `POST /api/export` (per org/plan), pentru control costuri.
+2. **Export policy**: **manifest + checksum** obligatorii; **watermark** pentru trial Pro (ridicat la `invoice.paid`) — totul e în politicile de export și plăți (Stripe) din Charter【fileciteturn0file5】.
+3. **RBAC + RLS**: runs/artifacts vizibile doar în org-ul userului; link-uri de download semnate (TTL).
+
+---
+
+## 8) Fluxuri esențiale (E2E)
+
+- **New Run → (Simulate/Live) → Score → Export**: dacă score<80 → bloc + Tighten; dacă plan insuficient → paywall; dacă eligibil → export + checksum OK.
+- **Re-run cu aceiași 7D** din listă (scade fricțiunea).
+- **Download**: verifică entitlement + checksum înainte de servir【fileciteturn0file6】.
+
+---
+
+## 9) QA & CI (acceptanță „fail-hard”)
+
+- **Unit/Component**: tabelul (sorting, virtualizare), toasts, paywall inline, „Tighten Prompt”.
+- **Contract/API**: `GET /api/runs`, `POST /api/export` validează scheme; export refuzat fără manifest/checksum.
+- **E2E**:
+  1. Home → Generator → Run → Export → vizibil în **Recent Runs/Artifacts**;
+  2. Score <80 → blocare + **Tighten**;
+  3. Plan Free → paywall la „Run Real Test/PDF”.
+- **Perf/A11y**: LCP/INP/CLS în bugete mobile; Pa11y fără erori critice; **SSR shell + lazy tabs**.
+- **DoD**: KPIs header apar, taburile funcționează, exporturile se descarcă cu checksum OK; niciun „JS-only blank” la load.
+
+---
+
+## 10) Artefacte de livrat
+
+- `app/dashboard/page.tsx` (shell SSR + KPIs + tab bar).
+- `components/dashboard/…`
+  - `KpiHeader.tsx`, `TabBar.tsx`, `RecentRunsTable.tsx` (virtualizat),
+  - `ArtifactsTable.tsx`, `ModuleUsageHeatmap.tsx`, `ScorePanels.tsx`, `HistoryInfiniteList.tsx`,
+  - `TightenPromptDialog.tsx`, `PaywallInline.tsx`, `Toasts.tsx`.
+- API handlers: `app/api/runs/route.ts`, `app/api/runs/[id]/route.ts`, `app/api/export/route.ts`.
+- Teste: unit/contract/e2e + Lighthouse/Pa11y.
+- Telemetrie: emitere evenimente standard conform taxonomiei.
+
+---
+
+## 11) Micro-detalii care cresc utilizabilitatea
+
+- **Deep-links**: `/dashboard?tab=artifacts&format=pdf` deschide direct contextul relevant.
+- **Quick starts** pentru first-run: 3 module recomandate + **Run Sample** (evită golul inițial)【fileciteturn0file6】.
+- **Checksum copy** pe artifact row (într-un singur click).
+- **CTA logice** în empty/error states (ex. „Try the Generator”).
+
+---
+
+## 12) De ce funcționează
+
+- Structura în 3 zone + taburi este specificată 1:1 în IA și adresează exact scopul: „ce a rulat, ce a ieșit bine, ce export și ce fac acum”【fileciteturn0file6】.
+- Gate-ul la **score ≥80** și paywall-ul pe acțiuni „aha” sunt pârghii comerciale validate în Charter (Pro+ pentru **Run Real Test**, export PDF/JSON/ZIP)【fileciteturn0file5】.
+- DS & mobile criteria garantează o experiență rapidă și accesibilă, fără „blank JS” sau lag pe liste mari【fileciteturn0file1】【fileciteturn0file6】.
+
+---
+
+Dacă vrei, pot transforma imediat acest plan într-un **checklist de implementare** (TODAY/NEXT/DONE) + un **PR template (DoR/DoD)** pentru /dashboard, astfel încât livrarea să fie măsurabilă și fără surprize.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:09.533Z" title="9/1/2025, 7:09:09 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:16.077Z" title="9/1/2025, 7:09:16 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:23.350Z" title="9/1/2025, 7:09:23 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:25.903Z" title="9/1/2025, 7:09:25 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:28.439Z" title="9/1/2025, 7:09:28 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:35.987Z" title="9/1/2025, 7:09:35 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:44.199Z" title="9/1/2025, 7:09:44 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:46.701Z" title="9/1/2025, 7:09:46 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:52.479Z" title="9/1/2025, 7:09:52 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:54.984Z" title="9/1/2025, 7:09:54 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:09:59.998Z" title="9/1/2025, 7:09:59 PM">19:09</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:10:02.506Z" title="9/1/2025, 7:10:02 PM">19:10</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:10:10.148Z" title="9/1/2025, 7:10:10 PM">19:10</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:10:15.174Z" title="9/1/2025, 7:10:15 PM">19:10</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:10:21.977Z" title="9/1/2025, 7:10:21 PM">19:10</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:10:40.691Z" title="9/1/2025, 7:10:40 PM">19:10</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:10:14.864Z" title="9/1/2025, 7:10:14 PM">19:10</time>
+
+Mai jos găsești pașii detaliați pentru a implementa **/dashboard — User Login Board**, astfel încât să rezolve problemele sesizate (încărcare goală JS-only, lipsă istoric, gating inconsistent, absența butonului “Tighten & Re-test” sub scor 80) și să se alinieze la specificațiile PromptForge.
+
+### 1. Rută, randare și flux de date
+
+1. **Definește ruta** `app/dashboard/page.tsx` ca server component pentru a preveni încărcarea goală. Folosește layout SSR pentru header, KPIs și bară de tab-uri; încarcă conținutul taburilor (tabele, grafice) ca client components (SWR/React Query + virtualizare). Documentația de design confirmă că dashboardul trebuie să conțină un tabel de run-uri cu filtre și acțiuni de re-run și download【291444568850641†L25-L34】.
+2. **Interfețe API**: Implementează `/api/runs` (listare cu filtrare, sortare, paginare), `/api/runs/{id}` (detaliu + artefacte), `/api/runs/{id}/rerun` (re-rulează testul cu aceiași parametri 7D) și `/api/export` (generează artefacte, verificând entitlements și scorul). Rulările, scorurile și exporturile apar în tabele de istoric și sunt înregistrate în tabelele `prompt_runs`, `exports` și agregate în `daily_usage`【930679758492844†L2075-L2110】.
+3. **SSR vs SSG**: Dashboard-ul rămâne SSR (date personale + gating), spre deosebire de landing/blog care sunt SSG/ISR【930679758492844†L1610-L1635】.
+
+### 2. Structura UI: Layout în 3 zone
+
+1. **Zona superioară**:
+   - **Header** cu selector de workspace/org, butoane „New Run”, „Browse Modules”, „Try Generator” și căutare globală (Run ID, modul, domeniu).
+   - **KPIs** server-rendered: total Runs 7d, Avg Score, Exports, TTA median (Time To Answer), Pass Rate (procent de rulări cu scor ≥80). Aceste valori se calculează din agregările zilnice din `daily_usage` (runs, users, exports, avg\_score, revenue)【930679758492844†L2075-L2110】.
+
+2. **Tab-uri** (client components cu lazy loading):
+   - **Recent Runs** – tabel cu Run ID, Module, Domain, Version, Score, Actions. Permite re-run, export și deschidere în Generator【291444568850641†L25-L34】.
+   - **Artifacts/Exports** – listă sau grid cu artefacte (.txt/.md/.json/.pdf/.zip), checksum, dimensiune, dată, link.
+   - **Module Usage** – statistici pe modul (număr de rulări, scor mediu, exporturi); sugerează modulul sub-utilizat.
+   - **Scores & Quality** – grafice pentru distribuția scorurilor și breakdown clarity/execution/ambiguity/business fit; listă cu runde sub scor 80 și buton „Tighten Prompt”.
+   - **History** – listă infinita, virtualizată, cu toate rulările (scroll performant).
+
+3. **Empty states**: Pentru utilizatorii noi, afișează un mesaj „No runs yet” și butoane „Run Sample” sau „Try Generator”.
+
+### 3. Gating și blocaje
+
+1. **DoD/DoR gates**:
+   - *DoR gate:* modulul nu poate fi testat live dacă parametrii 7D nu sunt validați (enum-only)【930679758492844†L140-L147】.
+   - *DoD gate:* exporturile sunt blocate dacă Evaluator Score < 80; se afișează mesaj „Repair prompts” și CTA „Tighten & Re-test”【930679758492844†L140-L147】.
+   - *Rate limits:* aplică throttling per plan pentru a proteja costurile; la atingerea limitei se afișează mesaj de upgrade【930679758492844†L390-L398】.
+2. **Plan gates**: Simulate Test pentru toți; Run Real Test și export .pdf/.json pentru Pro+; API și bundle.zip pentru Enterprise【930679758492844†L390-L398】. Paywall inline explică beneficiile planului superior.
+3. **Tighten once**: folosește evaluatorul standard și, dacă scorul < 80, încearcă automat un „tighten prompt”; dacă scorul rămâne sub 80, exportul rămâne blocat【930679758492844†L2195-L2210】.
+
+### 4. UX, accesibilitate și performanță
+
+1. **Listă virtualizată**: Utilizează un `InfiniteList`/`react-window` pentru taburile „Recent Runs” și „History” pentru a evita lags la scroll.
+2. **Sort & filter SSR**: parametrii din query string (`?module=M01&minScore=80&page=2`) sunt procesați server-side pentru a permite bookmark și share.
+3. **Toasts**: Notificări pentru acțiuni (Run started, success, failed, export ready, entitlements insuficiente).
+4. **Mobile & A11y**: elimină scroll orizontal; asigură contrast ≥4.5:1, focus rings vizibile, tap targets ≥44×44 px; skeletons și indicatori de încărcare. Bugetele CWV: TTFB ≤300 ms, LCP ≤2.3 s, INP ≤200 ms pentru dashboard【930679758492844†L1610-L1635】.
+
+### 5. Telemetrie, observabilitate și KPIs
+
+1. **Evenimente standard**: `module_run_requested`, `module_run_started`, `module_run_scored`, `module_run_succeeded`, `module_run_blocked`, `export_performed`, `run_re_run`, `tighten_prompt_click`, `repair_shown`, `artifact_download`, `paywall_shown/accepted`. Modelul de evenimente centralizează payload minim (module\_id, run\_id, plan, quality/risk/cost/overall)【930679758492844†L2010-L2029】.
+2. **Metrics & daily usage**: contorizează run\_started/completed/failed, histograme pentru execution\_time\_ms, tokens, score; agregare zilnică `daily_usage` (runs, users, exports, avg\_score, revenue\_usd)【930679758492844†L2075-L2110】. Tile-urile de KPIs din header sunt alimentate din acest tabel.
+3. **Consent & analytics**: respectă Consent Mode — fără consimțământ se colectează doar metrice operaționale agregate; cu consimțământ se trimit către GA4/Sentry【930679758492844†L2010-L2029】.
+
+### 6. Securitate și RLS
+
+1. **Row-Level Security**: tabelele `prompt_runs`, `exports` și `daily_usage` au politici de izolare `org_id` în Supabase, astfel încât utilizatorii văd doar datele organizației lor【930679758492844†L2075-L2110】.
+2. **Signed URLs**: exporturile se descarcă prin link semnat (TTL scurt) și includ manifest + checksum.
+3. **Audit trail**: persistă fiecare run și export (hash chain) pentru traceability; SLO de success rate ≥95% și export success ≥98% conform DoD【930679758492844†L2075-L2110】.
+
+### 7. Testare și CI
+
+1. **Unit/Component tests**: Tabel runs (filtre, sortare, virtualizare), paywall, „Tighten & Re-test” dialog, KPI header.
+2. **Contract tests**: validare schema JSON pentru API endpoints; exportul refuză lipsa manifest/checksum.
+3. **E2E tests**:
+   - Flow complet: Run Simulate → Score <80 → blocare export + prompt tighten;
+   - Plan Free → paywall la Run Real Test/Export PDF;
+   - Re-run folosește aceiași parametri;
+   - Export cu score≥80 → descărcare și verificare checksum;
+   - Perf: LCP/INP/CLS în bugete; Pa11y/axe pentru A11y.
+4. **CI gates**: build fail dacă gating broken (export sub score 80 permis), entitlements greșite, KPIs nepopulate, LCP >2.3s, A11y critică.
+
+---
+
+Implementând acești pași vei obține un dashboard robust: afișează istoric complet al rulărilor și exporturilor, oferă KPIs în timp real, respectă gating-ul planurilor și scorurilor, permite re-run rapid, asigură accesibilitate și performanță mobile și are telemetrie completă pentru monitorizarea produsului【291444568850641†L25-L34】【930679758492844†L140-L147】.
+
+
+#### You:
+<time datetime="2025-09-01T16:15:33.031Z" title="9/1/2025, 7:15:33 PM">19:15</time>
+
+dezvoltă detaliat, ca act final de impleemntare:
+
+Securitate, Legal, Observabilitate (transversale)
+
+CSP + WAF + rate-limit în middleware pentru rute /api/*; honeypots; audit trail cu hash chain; RLS per org în DB. Nu lansa fără ele.
+
+GDPR: cookie banner (Consent Mode), DSR export/erase ≤7 zile, DPA la /legal/dpa.
+
+Telemetrie unificată: evenimente standard (open/run/export/legacy_redirect) cu module_id Mxx; 3 dashboards (Exec, UX/Perf, Module). SLO: uptime ≥99.9%, p95 <300ms.
+
+Mobile UI/UX — checklist de trecere (aplică la toate paginile)
+
+Breakpoints 320/360/390/414/430; safe-areas iOS; tap targets ≥44×44; sticky CTA nu acoperă conținut; input types corecte; skeletons + offline states; LCP ≤2.5s. Rulează rapoartele pe “Moto G4 Slow 4G” & “iPhone 14 Fast 3G”.
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:15:57.866Z" title="9/1/2025, 7:15:57 PM">19:15</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:16:13.010Z" title="9/1/2025, 7:16:13 PM">19:16</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:16:25.592Z" title="9/1/2025, 7:16:25 PM">19:16</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:15:57.608Z" title="9/1/2025, 7:15:57 PM">19:15</time>
+
+Mai jos este **actul final de implementare** pentru straturile transversale cerute. E structurat „ce pui, unde, cum testezi, ce consideri DONE”. Totul mapează 1-la-1 pe SSOT (ruleset.yml, SLO, RLS, event taxonomy) și pe IA-ul site-ului (rutele /legal/*, /api/*, dashboards), cu acceptance clar și evidență de conformitate.
+
+# 1) Securitate (CSP, WAF, rate-limit, honeypots, audit trail, RLS)
+
+## 1.1 Middleware de perimetru (Edge)
+
+**Ce pui**
+
+- `middleware.ts`: lanț fix — `applyCSPHeaders()` → `honeypotGuard()` → `wafGuard()` → `rateLimit()` → `auth/entitlements` → `schemaValidate` → `handler`.
+- Match: `matcher: ['/api/:path*']`.
+- **Honeypots**: blochează și loghează acces la căi precum `/.env`, `/api/admin/users`, `/api/debug/dump` (404 cu log „honeypot”).
+- **WAF**: regex pentru `SQLi, XSS, path traversal, prompt-injection`.
+- **Rate-limit**: per rută (ex. `/api/export` plafon mic), per plan (Pilot < Pro < Ent), răspuns `429 + Retry-After`.
+- **CSP**: `default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-<nonce>' https://js.stripe.com; connect-src 'self' https://*.supabase.co https://api.stripe.com; img-src 'self' data: blob:; frame-ancestors 'none'`.\
+  **De ce**: cerințe minime în ruleset + arhitectura edge-first; „safety by default” (CSP, RL, allowlist)【fileciteturn0file10】【fileciteturn0file5】.
+
+**DONE când**
+
+- CSP/headere securitate prezente pe toate rutele; verificare CI „headers check” verde.
+- RL activ pe rute sensibile (login/OTP/export/API).
+- Honeypots și WAF dau 403/404, cu evenimente în `audits/events`.
+- SAST/DAST fără High/Critical; dependency audit verde【fileciteturn0file10】.
+
+## 1.2 RLS & izolarea multi-tenant (DB)
+
+**Ce pui**
+
+- Activezi **RLS deny-by-default** pe tabele cu `org_id` (`runs`, `exports`, `telemetry_events`, `audits`, `memberships`).
+- Politici `USING`/`WITH CHECK` pe `org_id = current_setting('app.org_id')::uuid`.
+- Linkezi `app.org_id` în request context din gateway auth.\
+  **De ce**: izolarea organizațională este non-negociabilă și validată la acceptance (cross-org imposibil)【fileciteturn0file10】.
+
+**DONE când**
+
+- Teste negative cross-org trec (select/update/delete imposibil).
+- Download artefact doar cu link semnat + entitlement + checksum valid【fileciteturn0file10】.
+
+## 1.3 Audit trail tamper-evident
+
+**Ce pui**
+
+- Tabel `audits(id, org_id, actor_id, entity, action, record_json, prev_hash, hash, at)` + trigger `audit_insert()` (lanț SHA-256).
+- Evenimente: `auth.*`, `roles.changed`, `policy_denied`, `export.*`, `billing.*`.\
+  **De ce**: trasabilitate completă pentru conformitate, investigații și DR【fileciteturn0file10】.
+
+**DONE când**
+
+- `audits` are lanț de hash valid; export CSV poartă checksum; acces read-only pentru auditor【fileciteturn0file10】.
+
+## 1.4 Export policy & DoD
+
+**Ce pui**
+
+- Export permis **numai** dacă: format ∈ policy/plan, **manifest + checksum** generate, `score.overall ≥ 80`, trial → watermark.
+- Abateri → `422` cu hint „repair prompts”; event `export_blocked` cu motiv【fileciteturn0file10】.
+
+**DONE când**
+
+- 0 exporturi fără manifest+checksum în logs; PDF/JSON blocate sub 80 (apare „Tighten & Re-test”)【fileciteturn0file10】.
+
+---
+
+# 2) Legal & GDPR (cookie banner, DSR ≤7 zile, DPA)
+
+## 2.1 Rute & documente
+
+**Ce pui**
+
+- `/legal/terms`, `/legal/privacy`, `/legal/dpa` — live conform IA【fileciteturn0file6】.
+- **Cookie banner cu Consent Mode V2** (analytics/marketing blocate până la accept).
+- **RoPA** (register of processing) + **DPIA** pentru telemetrie/marketing/AI jobs; **DPA** pentru enterprise.\
+  **De ce**: charter & site spec impun Consent Mode și pagini legale ca parte din MVP【fileciteturn0file10】.
+
+**DONE când**
+
+- Consent logs 100% acoperire; GA4/Sentry pornesc doar după consimțământ.
+- DSR flow: export/erase ≤ 7 zile (log UI/ops); templates DPA/DPIA în repo【fileciteturn0file10】.
+
+## 2.2 Data lifecycle & minimizare PII
+
+**Ce pui**
+
+- Minim PII în scheme; mascare în loguri; pseudonimizare în analytics.
+- Retenții: raw events 90 zile, audit 18 luni, exporturi șterse la 30 zile de la închiderea contului (dacă nu contravine fiscal).\
+  **DONE când**: policy publicată, test DSR trecut, rotații/backup verificate【fileciteturn0file10】.
+
+---
+
+# 3) Observabilitate: telemetrie unificată, 3 dashboards, SLO
+
+## 3.1 Taxonomia de evenimente (server-side, fără PII)
+
+**Ce pui (minim MVP)**
+
+- `module_open`, `module_run_requested/started/scored/succeeded|blocked`, `export_performed`, `legacy_redirect_hit` — toate cu `module_id (Mxx)` ca cheie analitică.
+- `pricing_view`, `checkout_started/paid`, `trial_started/converted`, `web_vitals(LCP/INP/CLS)`【fileciteturn0file10】.\
+  **De ce**: funnel open→run→success, conversie și CWV trebuie vizibile într-un singur loc.
+
+**DONE când**
+
+- Evenimentele apar complet în `events`; lipsa PII verificată; sampling/consent respectate【fileciteturn0file10】.
+
+## 3.2 Dashboards (minim 3)
+
+- **Exec (Prod/SLO)**: p95 latency pe rute critice, error-rate, throughput, uptime, buget de erori.
+- **UX/Perf (Frontend)**: LCP/TTFB/CLS per pagină/segment, INP p95, third-party cost.
+- **Module (Business)**: success\_rate, TTV median, tokens/cost, export mix, legacy\_redirect\_share.\
+  Ținte SLO: **uptime ≥ 99.9%**, **p95 < 300 ms** pe rutele critice【fileciteturn0file10】.
+
+**DONE când**
+
+- Alerte configurate (p95>300ms 10m, error-rate>1% 10m) → Slack/Telegram; freeze deploy dacă bugetul de erori e depășit【fileciteturn0file10】.
+
+## 3.3 Post-deploy hooks
+
+- Recrawl sitemap, purge CDN, Lighthouse CI pe rutele P0; smoke E2E; tagging release + on-call rota.\
+  **DONE**: rapoarte artefact în PR; canary 24h verde【fileciteturn0file10】【fileciteturn0file2】.
+
+---
+
+# 4) Mobile UI/UX — checklist de trecere (global)
+
+## 4.1 Scope & devices (obligatoriu)
+
+- Breakpoints: **320/360/390/414/430**, 480/600/768; portrait + landscape; **safe-areas iOS**; DPR 2×/3×.
+- Target: iOS Safari 16–18, Android Chrome 118+, Chrome iOS, Firefox Android (sanity)【fileciteturn0file6】.
+
+## 4.2 Acceptance (must pass)
+
+1. **Layout & Readability**: fără scroll orizontal; **CLS ≤0.02**; paragraph width 45–75ch; base font ≥16px; spacing 4/8/12/16/24/32; **sticky CTA nu acoperă conținut**; keyboard overlap fix pe forms【fileciteturn0file6】.
+2. **Navigation & Gestures**: header se colapsează predictibil; back-nav fără capcane; modals/sheets cu gesturi native; no scroll-bleed【fileciteturn0file6】.
+3. **Forms & Inputs**: input types corecte (`email`,`tel`,`url`,`number`), labels/erori persistente, **submit disabled până la valid**, loading states; card fields la Stripe【fileciteturn0file6】.
+4. **Media & Performance**: `next/image` cu `sizes/srcset`, **fără layout shift**, lazy-load sub fold; **LCP ≤2.5s**, **INP p95 ≤200ms**, **TTI ≤3.5s**; evită GIF grele; preferă animații CSS【fileciteturn0file6】.
+5. **Accessibility (mobile)**: contrast ≥4.5:1, focus vizibil, respectă `prefers-reduced-motion`, landmarks + skip link; screen readers liniar, nume acționabile clare【fileciteturn0file6】【fileciteturn0file1】.
+6. **States & Errors**: skeletons, timeouts + retry, **offline states**, paywall/entitlements cu messaging clar și non-blocking【fileciteturn0file6】.
+
+## 4.3 Teste sintetice (2 profile obligatorii)
+
+- **„Moto G4 / Slow 4G”** și **„iPhone 14 / Fast 3G”** — rulezi LCP/CLS/INP + screenshot timelines; documentezi costul scripturilor terțe【fileciteturn0file6】.\
+  **DONE**: rapoartele pe ambele profile în PR; LCP/INP/CLS în buget.
+
+## 4.4 Fix Order (strict)
+
+**Blockers** → **Readability** → **Performance** → **A11y** → **Polish** (skeletons, transitions  ≤220ms)【fileciteturn0file6】.
+
+---
+
+# 5) Acceptance—„nu lansăm fără”
+
+## 5.1 Securitate
+
+- CSP + headere setate; **WAF + honeypots + rate-limit** în middleware pentru `/api/*`; 0 High/Critical în SAST/DAST; RLS cross-org testat; **audit trail cu hash chain** activ; exporturi fără manifest/ checksum = 0 în logs【fileciteturn0file10】.
+
+## 5.2 Legal/GDPR
+
+- `/legal/terms`, `/legal/privacy`, `/legal/dpa` live; **cookie banner (Consent Mode)**; **DSR export/erase ≤7 zile**; DPA/ RoPA/ DPIA în repo; consent logs 100% acoperire【fileciteturn0file6】【fileciteturn0file10】.
+
+## 5.3 Observabilitate & SLO
+
+- Evenimente standard (open/run/export/legacy\_redirect) cu `module_id Mxx`; **3 dashboards** (Exec, UX/Perf, Module) live; **uptime ≥99.9%**, **p95 <300ms** pe rutele critice; alerte & freeze la buget de erori depășit【fileciteturn0file10】.
+
+## 5.4 Mobile UI/UX
+
+- Audit complet pe profilele cerute; **LCP ≤2.5s, INP p95 ≤200ms**; tap targets ≥44×44; **sticky CTA** nu acoperă conținut; safe-areas iOS; skeletons + offline states; rapoarte atașate PR-ului【fileciteturn0file6】.
+
+---
+
+# 6) Livrabile „gata de lipit” (minim)
+
+- `middleware.ts` cu **CSP/WAF/RL/Honeypots** (Edge) + citire ruleset; `lib/security.ts` (helpers).
+- SQL RLS & Audit (hash chain) + migrări și teste negative cross-org.
+- `app/legal/{terms,privacy,dpa}/page.tsx` + **banner-consent**; DSR endpoints & playbook.
+- Telemetrie: ingestor, schema de eveniment, **3 dashboards** + alerte (p95, error-rate).
+- **Mobile test kit** (LH config + pa11y + profiles) și **Issues Spreadsheet** pentru bug-fix loop.
+- Checklist CI (headers, Lighthouse/Pa11y, SAST/DAST, contracts, perf budgets) ca gates.
+
+---
+
+# 7) Traseu de verificare (rapid)
+
+1. Rulezi **headers-check** → vezi CSP/HSTS/… pe `/`, `/pricing`, `/api/export` (200).
+2. DAI „burst” pe `/api/run` → vezi `429 + Retry-After` + alert „rate\_limit.hit”.
+3. Încarci un **legacy slug** de modul → primești **308** și `legacy_redirect_hit`.
+4. Încerci **PDF export** cu **score <80** → 422 + „Tighten & Re-test”, `export_blocked`.
+5. **DSR export**: user data bundle generat < 7 zile, log în DSR queue.
+6. **Moto G4 / iPhone 14** rapoarte → LCP/INP sub buget; screenshot timelines salvate.
+
+---
+
+**Note finale (ancore SSOT)**
+
+- IA confirmă rutele /legal/*, /api/*, /dashboard și „FrontEnd & Mobile UI/UX” acceptance【fileciteturn0file6】.
+- Charter & spec fixează **SLO (p95<300ms, 99.9% uptime)**, Consent Mode, DSR≤7 zile, export policy cu manifest+checksum și scor≥80【fileciteturn0file10】.
+- Design system cere A11y AA, focus vizibil, motion ≤220ms; tap targets ≥40–44px (rotunjit la 44×44 pe mobil)【fileciteturn0file1】.
+- Checklist-urile de integrare (Stripe, Supabase, GA4, Sentry) rămân „blocking” în faza CRITICĂ a pipeline-ului【fileciteturn0file7】.
+
+Dacă vrei, îți pot livra pe loc un **patch-set comentat** (schelet `middleware.ts`, SQL RLS & audit, config consent & legal, profiles Lighthouse/Pa11y) plus **checklist CI** pentru gates — toate conectate la structura actuală din repo.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:19:23.414Z" title="9/1/2025, 7:19:23 PM">19:19</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:19:41.446Z" title="9/1/2025, 7:19:41 PM">19:19</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:19:43.949Z" title="9/1/2025, 7:19:43 PM">19:19</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:19:53.721Z" title="9/1/2025, 7:19:53 PM">19:19</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:01.408Z" title="9/1/2025, 7:20:01 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:03.948Z" title="9/1/2025, 7:20:03 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:03.952Z" title="9/1/2025, 7:20:03 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:09.137Z" title="9/1/2025, 7:20:09 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:09.140Z" title="9/1/2025, 7:20:09 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:11.646Z" title="9/1/2025, 7:20:11 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:14.146Z" title="9/1/2025, 7:20:14 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:14.149Z" title="9/1/2025, 7:20:14 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:16.651Z" title="9/1/2025, 7:20:16 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:21.660Z" title="9/1/2025, 7:20:21 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:21.663Z" title="9/1/2025, 7:20:21 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:24.162Z" title="9/1/2025, 7:20:24 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:24.164Z" title="9/1/2025, 7:20:24 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:26.662Z" title="9/1/2025, 7:20:26 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:29.163Z" title="9/1/2025, 7:20:29 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:29.167Z" title="9/1/2025, 7:20:29 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:31.663Z" title="9/1/2025, 7:20:31 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:31.669Z" title="9/1/2025, 7:20:31 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:34.164Z" title="9/1/2025, 7:20:34 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:36.664Z" title="9/1/2025, 7:20:36 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:36.667Z" title="9/1/2025, 7:20:36 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:41.665Z" title="9/1/2025, 7:20:41 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:41.668Z" title="9/1/2025, 7:20:41 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:46.696Z" title="9/1/2025, 7:20:46 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:46.699Z" title="9/1/2025, 7:20:46 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:49.199Z" title="9/1/2025, 7:20:49 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:51.757Z" title="9/1/2025, 7:20:51 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:51.760Z" title="9/1/2025, 7:20:51 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:54.375Z" title="9/1/2025, 7:20:54 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:56.882Z" title="9/1/2025, 7:20:56 PM">19:20</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:21:04.178Z" title="9/1/2025, 7:21:04 PM">19:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:21:23.823Z" title="9/1/2025, 7:21:23 PM">19:21</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T16:20:55.903Z" title="9/1/2025, 7:20:55 PM">19:20</time>
+
+Pentru a încheia implementarea PromptForge la nivel global, sunt necesare o serie de măsuri transversale care acoperă securitatea, conformitatea legală, observabilitatea și experiența mobilă. Mai jos găsești **actul final de implementare**, structurat pe pași concreți, cu trimiteri către liniile relevante din specificație.
+
+---
+
+## 1. Securitate (CSP, WAF/rate‑limit, honeypot, audit trail, RLS)
+
+### 1.1 Middleware de perimetru pentru `/api/*`
+
+1. **Construiește lanțul de middleware** în `middleware.ts`:
+   - setează CSP strict (default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce'; connect-src doar către Stripe și Supabase; img-src data/blob; style-src 'self' 'unsafe-inline'; frame-ancestors 'none')【1780†L8-L13】;
+   - aplică X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy și Permissions-Policy minimizată【1780†L8-L13】;
+   - implementează rate‑limit per rută și per plan;
+   - filtrează injecții (regex SQL/XSS/path‑traversal);
+   - adaugă honeypot-uri (ex. rute `/admin`, `/.env`) care răspund cu 404 și log „honeypot”;
+   - validează schema requesturilor înainte de a ajunge la handler (Zod).
+2. **Aplicați CSP și headere** pe toate rutele și verificați în CI că sunt prezente【1950†L1-L2】.
+3. **Logați și blocați încercările** de acces la honeypot sau de depășire a rate-limit; salvați evenimentul în `audits` (v. audit trail).
+
+### 1.2 Izolare multi‑tenant (RLS)
+
+1. În Supabase activați RLS „deny-by-default” pe tabele cu `org_id` (runs, exports, telemetry\_events, audits, api\_keys etc.)【508†L1-L5】.
+2. Scrieți politici `USING`/`WITH CHECK` care verifică `org_id = current_setting('app.org_id')::uuid`【508†L1-L5】.
+3. Utilizați `app.org_id` injectat din gateway auth în contextul requestului; testați acces cross‑org (trebuie să fie imposibil)【508†L1-L5】.
+
+### 1.3 Audit trail tamper‑evident
+
+1. Creați tabelul `audits` cu câmpuri `prev_hash`/`hash`, semnătură HMAC și acces doar append【1885†L5-L10】.
+2. Înregistrați evenimente cheie: autentificări, schimbări roluri, actualizări de organizație, billing, publicare conținut, exporturi, webhooks, policy\_denied【1885†L5-L13】.
+3. Mențineți audit trail 18 luni și logurile tehnice 90 zile; asigurați export CSV/JSON cu checksum【1885†L11-L13】.
+
+### 1.4 Politica de export
+
+1. Exporturile (.txt, .md, .pdf, .json, .zip) sunt permise doar dacă:
+   - formatul este inclus în plan;
+   - `score.overall ≥ 80`;
+   - manifestul și checksum-ul sunt generate și atașate【1950†L4-L8】.
+2. În trial, adăugați watermark; în caz contrar răspundeți cu 422 și mesaj „repair prompts”.
+
+### 1.5 Alte măsuri
+
+- **MFA & device binding**: implementați TOTP și legare dispozitiv pentru conturi; sesiuni HttpOnly/Secure cu rotație și revocare【1780†L4-L7】.
+- **Threat modelling**: folosiți STRIDE și checklist ASVS la fiecare epic; remediați riscurile medii și mari【1780†L2-L4】.
+
+---
+
+## 2. Conformitate legală (GDPR)
+
+### 2.1 Pagini legale și consent
+
+1. Publicați `/legal/terms`, `/legal/privacy`, `/legal/dpa` (cu DPA semnate cu toți subprocessorii: Stripe, Supabase, Vercel, Postmark etc.)【1834†L4-L8】.
+2. Implementați cookie banner cu **Consent Mode V2**: blocați scripturile de analytics/marketing până la accept【1834†L4-L12】.
+3. Păstrați logul de consimțământ (cine, ce, când, versiune); exportați-l la cerere【1834†L10-L13】.
+
+### 2.2 Procese DSR (Data Subject Request)
+
+1. Pentru **export**: generați un JSON cu datele utilizatorului și atașați arhiva de exporturi (link semnat); răspundeți în ≤7 zile【1834†L10-L17】.
+2. Pentru **ștergere**: aplicați soft‑delete imediat și hard‑delete în batch ≤30 zile, păstrând minimul legal pentru obligațiile fiscale【1834†L10-L17】.
+3. Implementați UI/ticket pentru rectificare și restricționare.
+4. Păstrați identitatea minimală: colectați strict e‑mail și nume opțional; nu stocați carduri local (Stripe le tokenizează)【1885†L1-L3】.
+
+### 2.3 DPIA și registre
+
+- Completați DPIA pentru telemetrie, procesări marketing și joburi AI (dacă prelucrează PII)【1834†L4-L9】.
+- Publicați registrul de prelucrări (RoPA) în `/docs/gdpr/ropa.csv`【1834†L4-L9】.
+
+---
+
+## 3. Observabilitate (telemetrie, dashboards, SLO)
+
+### 3.1 Taxonomia evenimentelor
+
+1. Emiteți server‑side evenimente standard: `module_open`, `module_run_requested`, `module_run_started`, `module_run_scored`, `module_run_succeeded`, `module_run_blocked`, `export_performed`, `legacy_redirect_hit`, `pricing_view`, `checkout_started`, `checkout_paid`, `trial_started`, `trial_converted`【2014†L1-L7】.
+2. Fiecare eveniment trebuie să includă `module_id (Mxx)`, `trace_id`, `plan`, `ts`, `status`, `duration_ms`, `tokens`, `cost_cents`【2014†L1-L7】.
+3. Colectați web vitals (`LCP`, `INP`, `CLS`) ca evenimente RUM și agregați‑le pe route și geo【2014†L8-L16】.
+4. Aplicați Consent Mode: fără consimțământ colectați doar evenimente operaționale agregate; cu consimțământ trimiteți și către GA4/Sentry【2014†L8-L16】.
+
+### 3.2 Dashboards
+
+1. **Exec dashboard**: latente p95 și p99 pentru rutele API, rata de erori, throughput, uptime; compară cu SLO (p95 <300 ms, uptime ≥99.9%)【2014†L8-L16】.
+2. **UX/performance dashboard**: LCP/INP/CLS pe fiecare pagină și segment de utilizatori; Core Web Vitals; impactul terților【2014†L8-L16】.
+3. **Module dashboard**: număr de rulări, scor mediu, cost de tokeni, mix de exporturi, run-uri blocate (score <80); compară modul vs. planuri【2014†L1-L7】.
+
+### 3.3 Metode de colectare
+
+- Scrieți evenimentele direct în Postgres (`telemetry_events`) în timpul execuției; agregați zilnic în `daily_usage` (runs, users, exports, avg\_score, revenue)【2014†L8-L16】.
+- Corelați loguri/metrics/traces prin `trace_id` pentru a urmări execuțiile end‑to‑end【2014†L8-L16】.
+- Configurați alerte: latente p95 >300 ms sau uptime sub 99.9% trimit alertă și blochează release-ul următor.
+
+---
+
+## 4. Mobile UI/UX – checklist aplicabil global
+
+1. **Breakpoints**: verificați layout-ul pe lățimi 320, 360, 390, 414 și 430 px; asigurați-vă că nu există scroll orizontal și că safe‑areas iOS sunt respectate (padding suplimentar pentru notch și home indicator)【1515†L11-L18】.
+2. **Tap targets**: toate controalele tactile (butoane, linkuri, icon-uri) trebuie să aibă dimensiuni minime de 44 × 44 px și să fie suficient distanțate【1515†L11-L18】.
+3. **Sticky CTA**: bara cu CTA sau subsol flotant nu trebuie să acopere conținutul sau navigația; folosiți `position: sticky` cu offset corect.
+4. **Input types**: folosiți tipuri adecvate (`email`, `tel`, `number`); afișați etichete și mesaje de eroare persistente.
+5. **Skeletons și stări offline**: folosiți schelete de încărcare pe liste (griduri de module, tabel runs) și prezentați mesaje offline cu opțiunea de retry.
+6. **Performanță**: țineți LCP ≤2.5 s, INP p95 ≤200 ms și CLS <0.1 pe profiluri mobile; optimizați imaginile și code‑spliting.
+7. **Testare pe dispozitive**: rulați Lighthouse/Pa11y pe „Moto G4 / Slow 4G” și „iPhone 14 / Fast 3G”; verificați rapoartele pentru LCP, INP, CLS și accesibilitate【1515†L11-L18】.
+8. **Accesibilitate**: contrast minim 4.5:1, focus ring vizibil, landmarks (header/nav/main/footer), ordinea tab-urilor logică, respectarea prefers-reduced-motion și evitarea animațiilor mari【1515†L11-L18】.
+9. **Tipografie și spacing**: textul are mărimea de bază ≥16 px; paragrafe de 45–75 caractere; spații predefinite (4/8/12/16/24/32 px) pentru claritate.
+
+---
+
+### Finalizare
+
+Implementarea acestor măsuri completează celelalte pagini și module deja proiectate, asigurând un site **sigur, conform GDPR, monitorizat eficient și optimizat pentru mobil**. Fiecare punct de mai sus trebuie validat în CI (SAST/DAST, RLS tests, Lighthouse/Pa11y, verificarea CSP) și demonstrat în rapoarte de QA înainte de lansare【1780†L8-L13】【1885†L5-L13】.
+
+
+#### You:
+<time datetime="2025-09-01T18:49:45.410Z" title="9/1/2025, 9:49:45 PM">21:49</time>
+
+și dacă toatea astea ai spus să le fac în app/ dar primar site-ul și agent.ts se află în apps/ cum fac mai departe?
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:50:49.623Z" title="9/1/2025, 9:50:49 PM">21:50</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:51:07.033Z" title="9/1/2025, 9:51:07 PM">21:51</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:51:24.265Z" title="9/1/2025, 9:51:24 PM">21:51</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:50:49.211Z" title="9/1/2025, 9:50:49 PM">21:50</time>
+
+Pe scurt: tratezi “app/” din ghidurile mele ca pe “apps/web/app/” în monorepo-ul tău, iar gardianul `agent.ts` rămâne la rădăcină și aplică allow-list pe subfolderele din `apps/*`. Mai jos ai pașii exacți ca să nu rupi nimic.
+
+## 0) Context (de ce așa)
+
+- IA-ul și exemplele mele au fost scrise pentru un repo cu un singur app folder (Next App Router sub `app/`)【fileciteturn0file6】, dar tu rulezi monorepo cu `apps/web`, `apps/admin`, `packages/ui`, `packages/lib` etc. (vezi structura și fișierele comune din v3/v4)【fileciteturn0file2】.
+- Asta înseamnă doar **mapare de căi**, nu schimbare de logică.
+
+## 1) Maparea “app/” → “apps/web/app/”
+
+Mută/creează rutele așa (1:1 cu IA):
+
+- `/` → `apps/web/app/page.tsx`
+- `/generator` → `apps/web/app/generator/page.tsx`
+- `/modules` → `apps/web/app/modules/page.tsx` + `apps/web/app/modules/[id]/page.tsx`
+- `/pricing` → `apps/web/app/pricing/page.tsx`
+- `/dashboard` → `apps/web/app/dashboard/page.tsx`
+- `/docs` → `apps/web/app/docs/page.tsx` + `/docs/api/page.tsx`
+- SEO: `apps/web/app/sitemap.ts` și `apps/web/app/robots.ts`【fileciteturn0file6】
+
+Design system & tokens:
+
+- `styles/design.tokens.css` → import în `apps/web/app/globals.css`
+- `theme/pf.theme.ts` + `<ChakraProvider>` în `apps/web/app/providers.tsx`【fileciteturn0file1】
+
+## 2) API routes (server) în monorepo
+
+Toate rutele menționate rămân sub `apps/web/app/api/*` (nu în root):
+
+- `apps/web/app/api/run/[moduleId]/route.ts`
+- `apps/web/app/api/export/route.ts`
+- `apps/web/app/api/gpt-editor/route.ts`, `…/gpt-test/route.ts`, `…/entitlements/route.ts`, `…/webhooks/stripe` etc.【fileciteturn0file6】
+
+Când legi Stripe/Supabase/Sentry, folosește variabile de mediu **scoped pe aplicația `apps/web`** (Vercel → Project → Root Directory = `apps/web`) și completează checklist-ul de integrare (Stripe keys, Supabase keys, GA4, Sentry)【fileciteturn0file7】.
+
+## 3) `middleware.ts` și headers
+
+Ține `apps/web/middleware.ts` pentru garduri web (CSP, rate-limit pe `/api/*`, i18n/redirect), **sau** un middleware la rădăcină care filtrează `request.nextUrl.pathname.startsWith('/api')` doar pentru web. Politicile (CSP, rate-limits, DoR/DoD) se trag din ruleset/SSOT conform specificației site-ului【fileciteturn0file5】.
+
+## 4) `agent.ts` (gardianul Cursor) în monorepo
+
+- Lasă `agent.ts` la **rădăcina repo-ului** ca SSOT.
+- Actualizează allow-list-ul să includă doar:
+  - `apps/web/app/**`, `apps/web/components/**`, `apps/web/lib/**`
+  - `packages/ui/**`, `packages/lib/**`
+  - exclude write în `apps/admin/**` dacă nu lucrezi acolo acum
+- Regula: “**config, nu if-uri**”. Agentul citește din `ruleset.yml`/map-uri de entitlements, nu hardcodează căi (este exact spiritul bundle-ului v3/v4)【fileciteturn0file2】.
+
+## 5) Imports & aliasuri (TS/ESM)
+
+- În `tsconfig.base.json` (root) setează `paths`:
+  - `@ui/*` → `packages/ui/*`
+  - `@lib/*` → `packages/lib/*`
+  - `@web/*` → `apps/web/*`
+- În `apps/web/tsconfig.json`, extinde base și asigură `baseUrl: "."`.
+- Verifică ca **nu** mai ai importuri relative care sar între aplicații (ex: din `apps/web` către `apps/admin`).
+
+## 6) CI/CD & Vercel (monorepo aware)
+
+- În Vercel: Project → Setează `Root Directory = apps/web`.
+- Environment Groups per mediu (dev/staging/prod).
+- Pipeline (GitHub Actions): build & test rulează la rădăcină, dar **Next build** rulează în `apps/web`. Șabloanele și gates (DoR/DoD, perf/a11y) rămân aceleași; doar căile se schimbă【fileciteturn0file2】.
+
+## 7) SEO, Legal & sitemap în `apps/web`
+
+- `/legal/terms`, `/legal/privacy`, `/legal/dpa` → `apps/web/app/legal/*/page.tsx`
+- `sitemap.ts` include **toate rutele web**; robots exclude `/api/*` conform IA【fileciteturn0file6】.
+- OG/JSON-LD pe paginile de docs/blog/pricing după site spec【fileciteturn0file5】.
+
+## 8) Entitlements & Gating (unde pui ce)
+
+- **FE**: hook-urile de gating (`useEntitlements`, `withEntitlementGate`) stau în `apps/web/lib/entitlements/*` sau în `packages/lib/entitlements/*` dacă sunt share【fileciteturn0file6】.
+- **BE**: rutele API verifică plan/flags + rate-limit înainte de execuție (Pro: live test; Enterprise: zip/API; trial: watermark) conform charter-ului【fileciteturn0file5】.
+
+## 9) Chei & config (unde trăiesc)
+
+- `apps/web/.env.local` (dev) / Vercel Env (staging/prod) pentru: `SUPABASE_URL/KEYS`, `STRIPE_*`, `GA_MEASUREMENT_ID`, `SENTRY_DSN`, `RULESET_PATH` etc., exact cum cere checklist-ul de integrare【fileciteturn0file7】.
+
+## 10) Admin app (opțional, separat)
+
+Dacă păstrezi `apps/admin`, tratează-l ca **alt proiect Vercel** (root `apps/admin`) cu propriile env. Nu amesteca rutele de admin în `apps/web`. (Spec-ul tău separă clar dashboard user vs. admin workspace)【fileciteturn0file6】.
+
+---
+
+### “Șablon de mutare” (copy-paste)
+
+- [ ] Creează `apps/web/app/{page.tsx,layout.tsx,globals.css,sitemap.ts,robots.ts}`【fileciteturn0file6】
+- [ ] Copiază/creează rutele `/generator`, `/modules`, `/pricing`, `/dashboard`, `/docs`, `/docs/api` sub `apps/web/app/*`
+- [ ] Mută API-urile sub `apps/web/app/api/*` (run, export, gpt-editor, webhooks/stripe)
+- [ ] Montează DS: `apps/web/app/providers.tsx` + import tokens în `globals.css`【fileciteturn0file1】
+- [ ] Setează `middleware.ts` în `apps/web` (CSP+RL pe `/api/*`)【fileciteturn0file5】
+- [ ] Configurează Vercel Project cu Root `apps/web` + env din checklist【fileciteturn0file7】
+- [ ] Actualizează `agent.ts` (allow-list: `apps/web/**`, `packages/ui/**`, `packages/lib/**`) ca SSOT de securitate【fileciteturn0file2】
+
+Dacă vrei, îți fac acum un patch-plan “Ready-to-Paste” (fișiere și conținut minimal per path) pentru mapare `apps/web`, plus un diff de `agent.ts` cu allow-list-ul corect.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:13.352Z" title="9/1/2025, 9:53:13 PM">21:53</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:15.859Z" title="9/1/2025, 9:53:15 PM">21:53</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:26.814Z" title="9/1/2025, 9:53:26 PM">21:53</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:33.642Z" title="9/1/2025, 9:53:33 PM">21:53</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:39.910Z" title="9/1/2025, 9:53:39 PM">21:53</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:47.635Z" title="9/1/2025, 9:53:47 PM">21:53</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:56.450Z" title="9/1/2025, 9:53:56 PM">21:53</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:54:04.885Z" title="9/1/2025, 9:54:04 PM">21:54</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:54:07.433Z" title="9/1/2025, 9:54:07 PM">21:54</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T18:53:57.823Z" title="9/1/2025, 9:53:57 PM">21:53</time>
+
+În monorepo‑ul tău directorul de lucru nu este `app/`, ci `apps/web/app/`. Asta înseamnă că toate paginile și rutele menționate în ghidul meu trebuie create aici. Concret:
+
+- Creează `apps/web/app/page.tsx` pentru pagina de start și rutele `apps/web/app/generator/page.tsx`, `apps/web/app/modules/page.tsx`, `apps/web/app/pricing/page.tsx`, `apps/web/app/dashboard/page.tsx`, `apps/web/app/docs/page.tsx`, `apps/web/app/docs/api/page.tsx`, etc. API‑urile devin `apps/web/app/api/run/[moduleId]/route.ts`, `apps/web/app/api/export/route.ts`, etc. Dacă folosești blog, pagina index și articolele vor fi sub `apps/web/app/blog/…`.
+
+- Montează design system-ul în `apps/web/app/layout.tsx`/`globals.css` și mută middleware‑ul (CSP + rate‑limit) în `apps/web/middleware.ts` sau un middleware la rădăcina repo‑ului care filtrează doar cererile pentru `apps/web`【1780†L8-L13】.
+
+- `agent.ts` rămâne în rădăcina repo‑ului, dar actualizează allow‑list‑ul să includă `apps/web/**`, `packages/ui/**` și `packages/lib/**`. Astfel agentul va controla accesul la fișierele site‑ului corect.
+
+- Toate fișierele legate de SEO (sitemap.ts, robots.ts), legal (terms/privacy/dpa), gating (entitlements, stripe), telemetrie, etc., vor fi plasate în `apps/web/app` conform structurii de mai sus; logica rămâne identică – doar calea se schimbă.
+
+- Setează Next.js în Vercel cu Root Directory = `apps/web` și asigură‑te că variabilele de mediu (Supabase, Stripe, GA4, Sentry, etc.) sunt definite pentru această aplicație.
+
+În rest, implementarea recomandărilor de securitate, legal, observabilitate și UI/UX rămâne neschimbată – doar folosești directorul `apps/web/app/` în loc de `app/` și ajustezi configurațiile de build/CI pentru monorepo.
+
+
+#### You:
+<time datetime="2025-09-01T20:40:56.778Z" title="9/1/2025, 11:40:56 PM">23:40</time>
+
+iată situația actuală, citește fiecare fișier pana la ultimul cuvant și textul de mai jos, apoi spune-mi ce să fac mai departe: 
+
+Voi analiza doar structura existentă fără să implementez nimic. 1
+Bazat pe analiza pe care am făcut-o, iată situația actuală a paginii /generator:
+Structura Actuală
+1. Pagina Generator (app/generator/page.tsx)
+Status: Implementare de bază cu hardcoded content
+Probleme identificate:
+Nu folosește API-ul /api/modules pentru date dinamice
+Are doar 6 module hardcoded în loc de 50
+Nu are funcționalitate de filtrare reală
+Nu are overlay pentru module
+Nu implementează sistemul 7-D
+2. API Modules (app/api/modules/route.ts)
+Status: Implementat și funcțional
+Capabilități:
+Returnează toate cele 50 de module din catalog
+Suportă filtrare pe vector, difficulty, minPlan, search
+Are endpoint POST pentru simulate/run (parțial implementat)
+3. Catalogul de Module (lib/modules.ts)
+Status: Complet și bine structurat
+Conținut: Exact 50 de module (M01-M50) cu toate detaliile
+Tipuri: Toate interfețele necesare (Module, SevenDParams, etc.)
+Gap-urile Majore
+1. Frontend vs Backend Disconnect
+Pagina nu folosește API-ul existent
+Datele sunt hardcoded în loc să vină din catalog
+2. Funcționalități Lipsă
+FilterBar funcțional cu debounce
+ModuleOverlay cu taburi 7-D
+ExportMenu cu gating pe plan
+Sistem de scoring și evaluare
+Telemetrie și tracking
+3. Componente Lipsă
+ModuleCard component
+FilterBar component
+ModuleOverlay component
+ExportMenu component
+DifficultyMeter component
+4. API Endpoints Lipsă
+/api/run/[moduleId] - pentru execuția modulelor
+/api/export - pentru exporturi
+/api/entitlements - pentru gating
+Concluzie
+Infrastructura de bază există (catalogul de 50 module, API-ul de bază), dar pagina /generator actuală este doar un mockup static. Pentru implementarea completă conform planului tău, ar trebui să:
+Conecteze frontend-ul la API-ul existent
+Implementeze componentele lipsă
+Adauge funcționalitățile 7-D
+Implementeze gating-ul comercial
+Adauge telemetria și exporturile
+Catalogul de module este complet și bine structurat - aceasta este partea cea mai solidă a implementării actuale.
+
+Based on my examination of the directory structure, here are the key differences between /apps and /app:
+/app Directory
+Purpose: This is the main Next.js application directory for the current PromptForge project
+Structure: Contains the active application with:
+Route pages (about, admin, auth, blog, checkout, dashboard, etc.)
+API routes (/api subdirectory with 78 files)
+Core application files (layout.tsx, page.tsx, ClientRootLayout.tsx)
+Styling files (globals.css, critical.css)
+Configuration files (robots.ts, sitemap.ts)
+/apps Directory
+Purpose: This appears to be a separate applications directory containing alternative or archived versions
+Structure: Contains:
+site-v4-manus/promptforge_production/source/ - which has its own app, components, hooks, and lib directories
+This looks like a different version or variant of the PromptForge application
+Key Differences:
+Active vs. Archive: /app is the active, main application being developed, while /apps contains what appears to be an alternative or archived version (site-v4-manus)
+Next.js Convention: /app follows the Next.js 13+ App Router convention and is the primary application directory that Next.js recognizes
+Development Focus: All current development, routing, and features are in /app, while /apps seems to contain experimental or alternative implementations
+File Count: /app has significantly more files and is actively maintained, while /apps contains a smaller, more contained structure
+The /apps directory appears to be used for monorepo-style organization or version management, allowing multiple application variants to coexist in the same repository.
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:41:11.132Z" title="9/1/2025, 11:41:11 PM">23:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:41:28.962Z" title="9/1/2025, 11:41:28 PM">23:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:41:42.417Z" title="9/1/2025, 11:41:42 PM">23:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:41:11.051Z" title="9/1/2025, 11:41:11 PM">23:41</time>
+
+Perfect—ai deja fundația (catalog complet de 50, `/api/modules` funcțional). Ca să trecem de la „mock static” la **/generator** complet și la un MVP coerent, urmează pașii de mai jos în ordine strictă. Îi leg direct de structura, IA, gating-ul comercial și KPI-urile tale, ca să nu ratezi nimic.
+
+---
+
+## P0 (azi–mâine): Conectează UI la API și pune scheletul standard
+
+1. **Înlocuiește conținutul hardcoded din `/app/generator/page.tsx` cu fetch SSR (ISR 60s) la `/api/modules`**\
+   – Listează toate cele 50 (nu 6) și randează grila cu carduri din catalogul canonic. Dacă lista ≠ 50 sau are ID duplicat, CI trebuie să pice (Zod gate pe catalog)【fileciteturn0file1】【fileciteturn0file2】.
+
+2. **Adaugă FilterBar (client) cu debounce 200ms**\
+   – `q`, `vectors[7]`, `difficulty 1–5`, `plan (all/free/creator/pro/enterprise)`, chip-uri active + „Clear all”; empty-state clar. Log `filter_change{…}` (q, vectors\[], difficulty, plan, results\_count)【fileciteturn0file1】.
+
+3. **ModuleCard + DifficultyMeter + BadgePlan**\
+   – Afișează vectors (max 3 + “+n”), dificultate, minPlan; CTA „View”. Locked-state (userPlan < minPlan) → CTA disabled + tooltip „de ce”【fileciteturn0file1】.
+
+4. **ModuleOverlay (schelet) cu taburi: Overview → Inputs(7D) → Outputs → KPIs → Guardrails → Actions**\
+   – Păstrează ordinea și validează că există secțiunile (chiar dacă inițial Inputs/KPIs sunt statice). Actions: `Simulate (toți)` / `Run Real Test (Pro+)` / `Export (gated)`【fileciteturn0file1】.
+
+5. **Respectă IA și amplasează rutele unde trebuie**\
+   – `/`, `/generator`, `/modules`, `/pricing`, `/docs/api`, `/dashboard` + `app/sitemap.ts`, `app/robots.ts` (exclude `/api/*`), `/legal/{terms,privacy,dpa}`【fileciteturn0file6】.
+
+---
+
+## P0 împreună cu generatorul: Endpoints lipsă + gating + export
+
+6. **Finalizează endpoints lipsă (server):**
+
+- `POST /api/run/[moduleId]` (pre-gate: plan/flags/rl → validate input 7D → simulate/live → evaluate → score)
+- `POST /api/export` (manifest + SHA256, formate permise per plan, watermark în trial)
+- `GET /api/entitlements` (plan/flags/usage), FE → `useEntitlements` pentru gating determinist【fileciteturn0file6】.
+
+7. **ExportMenu cu opțiuni permise de plan**
+
+- Free: `.txt`; Creator: `.txt/.md`; Pro: `.txt/.md/.pdf/.json`; Ent: +`.zip`. Formatele nepermise: vizibile, disabled + motiv. Sub **score < 80**: blocare export + “Tighten & Re-test”【fileciteturn0file1】.
+
+8. **Telemetrie minimă (server-side)**
+
+- `module_open`, `module_run_requested/started/scored/succeeded|blocked`, `export_performed`, `legacy_redirect_hit` (cheie: `module_id Mxx`)【fileciteturn0file5】.
+
+---
+
+## P0 securitate, legal, observabilitate (transversal, înainte de canary)
+
+9. **CSP + WAF + rate-limit în middleware pe `/api/*`**\
+   – CSP strict, headere securitate; rate-limit per rută/plan; honeypots; audit trail cu hash chain; RLS per org în DB. E „nu lansa fără ele”【fileciteturn0file5】.
+
+10. **Legal/GDPR minim**\
+    – `/legal/terms`, `/legal/privacy`, `/legal/dpa`; cookie banner Consent Mode; DSR export/erase ≤7 zile (proceduri + endpoint)【fileciteturn0file5】.
+
+11. **Telemetrie unificată + 3 dashboards**\
+    – Exec (p95/error/uptime), UX/Perf (LCP/INP/CLS), Module (open→run→success, export mix). SLO: uptime ≥99.9%, p95 <300ms【fileciteturn0file5】.
+
+---
+
+## P0 Mobil & Perf (se aplică la toate)
+
+12. **Checklist mobile (test pe 320/360/390/414/430)**\
+    – safe-areas iOS, tap ≥44×44, sticky CTA nu acoperă conținut, input types corecte, skeletons + offline states; **LCP ≤2.5s** („Moto G4 Slow 4G” & „iPhone 14 Fast 3G”)【fileciteturn0file6】.
+
+---
+
+## P1 (imediat după P0): 7-D real, simulate/live & evaluatori, export complet
+
+13. **Inputs(7D) reale în Overlay + validare enum-only**\
+    – `domain, scale, urgency, complexity, resources, application, output` validate (schema) înainte de `Run`【fileciteturn0file1】.
+
+14. **Simulate (toți) / Live (Pro+)**\
+    – `simulateGptResponse` + `liveGptTest` (Pro+), scoruri `quality/risk/cost/overall`; sub 80 → repair prompts + bloc export【fileciteturn0file2】【fileciteturn0file5】.
+
+15. **Export pipeline complet**\
+    – Manifest + checksum obligatorii; link semnat; watermark trial; telemetrie `export_performed` (checksum\_ok)【fileciteturn0file5】.
+
+---
+
+## P1: Pricing, Stripe, entitlements (ca să poți monetiza)
+
+16. **/pricing curat (matrice planuri) + Stripe e2e**\
+    – Planurile Free/Creator/Pro/Enterprise cu „Annual = 10× monthly”, Checkout Session, Portal, webhooks idempotente (`invoice.paid`, `subscription.updated`), TOS/Privacy în footer【fileciteturn0file6】【fileciteturn0file7】.
+
+17. **Upsell pe acțiuni „aha”**\
+    – `Run Real Test`, `Export PDF/JSON/ZIP` → paywall inline + upgrade; după `invoice.paid` invalidezi entitlements și ridici watermark【fileciteturn0file6】【fileciteturn0file7】.
+
+---
+
+## P1: Docs/API & Dashboard (MVP)
+
+18. **/docs & /docs/api (SSG/ISR)**\
+    – Example `curl POST /api/run/{moduleId}`, schema 7-D, code-blocks scroll-only; sitemap include docs, robots exclude `/api/*`【fileciteturn0file6】.
+
+19. **/dashboard (3 zone + tab-uri)**\
+    – KPIs (Runs 7d, Avg Score, Exports, TTA median, Pass Rate), taburi (Recent Runs, Artifacts, Module Usage, Scores & Quality, History), re-run cu aceiași 7-D, „Tighten & Re-test” sub 80【fileciteturn0file6】.
+
+---
+
+## De ce asta e ordinea corectă (ancore)
+
+- **IA + structura de pagini** sunt clare și impun rutele P0 (Home, Generator, Modules, Pricing, Docs/API, Dashboard, Legal)【fileciteturn0file6】.
+- **Design systemul** definește UI-ul canonic pentru FilterBar, ModuleCard, Overlay și ExportMenu, inclusiv gating-ul pe planuri și a11y/motion【fileciteturn0file1】.
+- **Gatingul comercial, DoR/DoD și export policy** (manifest + checksum, scor ≥80) sunt deja standardizate; respectă-le ca „gates” în runtime/CI【fileciteturn0file2】【fileciteturn0file5】.
+- **Charter & KPI**: North Star = exporturi lunare plătite; SLO perf/uptime, CR free→paid, TTV ≤10m – toate depind de implementarea de mai sus (telemetrie + Stripe + gating)【fileciteturn0file5】.
+- **Checklisturi pentru plăți/integrare** (Stripe/Supabase/GA4/Sentry) sunt deja în pachetul tău—umple env-urile și bifează integrările critice în ordinea recomandată【fileciteturn0file7】.
+
+---
+
+## Ce livrăm concret în următoarele commituri (TODAY → NEXT)
+
+**TODAY (P0)**
+
+- [ ] `/app/generator/page.tsx` → fetch la `/api/modules` (ISR), randează 50 carduri.
+- [ ] `FilterBar`, `ModuleCard`, `ModuleOverlay` (schelet) + telemetry `filter_change/module_card_open`.
+- [ ] `app/sitemap.ts`, `app/robots.ts`, `/legal/{terms,privacy,dpa}`.
+- [ ] `middleware.ts` cu CSP + rate-limit pe `/api/*`; RLS activ, audit trail hash chain.
+- [ ] Mobile quick pass: tap target 44×44, fără scroll orizontal, LCP ≤2.5s pe „Moto G4 Slow 4G”【fileciteturn0file6】.
+
+**NEXT (P1)**
+
+- [ ] `/api/run/[moduleId]`, `/api/export`, `/api/entitlements` + FE gating (`useEntitlements`).
+- [ ] Overlay Inputs(7D) + validate enum-only; simulate/live + evaluatori; ExportMenu complet.
+- [ ] `/pricing` + Stripe (Checkout/Portal/Webhooks), paywall inline & invalidare entitlements.
+- [ ] `/docs/api` (curl + schema 7-D) și `/dashboard` (KPIs + taburi).
+
+Dacă vrei, îți pun la dispoziție un **PR template cu DoR/DoD** și un **checklist CI** (typecheck + contract + e2e + lighthouse + pa11y + ruleset gates) astfel încât fiecare „verigă” să fie verificată automat la push (se mapează 1:1 pe cuprinsul tău v3)【fileciteturn0file2】.
+
+---
+
+### Notă finală despre structura repo-ului
+
+Din ce ai descris, **`/app` e activul**, iar `/apps` conține o variantă/archivă. Continuă implementarea pe `/app` (App Router), conform IA-ului și mapărilor de mai sus【fileciteturn0file6】.
+
+Dacă vrei, îți scriu și fișierul „Issues board (P0→P1)” cu task-uri atomice, estimate și ordonate pentru commit-uri consecutive.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:43:28.452Z" title="9/1/2025, 11:43:28 PM">23:43</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:47:20.670Z" title="9/1/2025, 11:47:20 PM">23:47</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:47:23.204Z" title="9/1/2025, 11:47:23 PM">23:47</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:47:50.207Z" title="9/1/2025, 11:47:50 PM">23:47</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T20:47:22.726Z" title="9/1/2025, 11:47:22 PM">23:47</time>
+
+Pentru a merge mai departe trebuie doar să adaptezi drumul, nu logica. În proiectul tău, directorul activ pentru Next.js este `apps/web/app/`, în timp ce `agent.ts` rămâne la rădăcina repo‑ului. Asta înseamnă că:
+
+- **Toate rutele și componentele pe care le‑am descris pentru `app/` (Homepage, Generator, Modules, Pricing, Docs/API, Dashboard, Legal, sitemap, robots, middleware etc.) trebuie plasate sub `apps/web/app/`**. De exemplu, pagina generatorului va fi `apps/web/app/generator/page.tsx`, endpointurile API vor fi `apps/web/app/api/run/[moduleId]/route.ts`, `apps/web/app/api/export/route.ts` și așa mai departe. Design system‑ul și temele se importă în `apps/web/app/layout.tsx` și `apps/web/app/globals.css`.
+
+- **`agent.ts` rămâne la rădăcina repo‑ului** ca sistem de securitate şi control. Actualizează allow‑list‑ul să includă căile `apps/web/**` și `packages/*`, astfel încât agentul să supravegheze accesul doar la fișierele relevante din aplicația web.
+
+- **Logica pe care ai enumerat‑o în analiza ta rămâne neschimbată**: conectează UI‑ul generatorului la endpointul `/api/modules` în locul datelor hardcodate, implementează FilterBar cu căutare şi filtrare, ModuleCard, ModuleOverlay şi ExportMenu, creează endpointurile lipsă (`/api/run/[moduleId]`, `/api/export`, `/api/entitlements`), aplică gating‑ul comercial şi validările scorurilor, adaugă telemetrie şi sistemul de scoring 7‑D, și integrează Stripe pentru planuri și exporturi.
+
+- Directorul `/apps/site-v4-manus` pare a fi o variantă istorică/alternativă; nu îl modifica. Continuă dezvoltarea în `apps/web` care este proiectul activ.
+
+Pe scurt, ceea ce ai de făcut acum este să respecți planul de implementare detaliat (din mesajele anterioare) și să aplici toate modificările în `apps/web/app/` în loc de un ipotetic `app/`. Modifică `agent.ts` pentru noua structură și apoi implementează rutele, componentele și API‑urile lipsă, înlăturând conținutul hardcodate și conectându‑te la catalogul de 50 de module și la sistemul de planuri.
+
+
+#### You:
+<time datetime="2025-09-01T22:28:16.508Z" title="9/2/2025, 1:28:16 AM">01:28</time>
+
+totul s-a dus naiba...  agentul a șters versiunea site-ului și totul s-a stricat... 
+
+fă din nou un audit al fișierelor din github /promptforge și gândeste cum să restabilesc site-ul măcar la etapa initială... uite asa: https://prompt-forge-kbp4xb9hr-vadimkusnir.vercel.app
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:28:24.454Z" title="9/2/2025, 1:28:24 AM">01:28</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:28:41.047Z" title="9/2/2025, 1:28:41 AM">01:28</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:29:26.127Z" title="9/2/2025, 1:29:26 AM">01:29</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:28:25.000Z" title="9/2/2025, 1:28:25 AM">01:28</time>
+
+Respir. Refacem ordinea în 2 pași: (A) audit flash al repo-ului vs. „osatura minimă” documentată și (B) plan de restaurare rapidă până la starea inițială (preview), apoi stabilizare.
+
+# A) Audit flash (ce trebuie să existe vs. ce s-a rupt)
+
+**IA minimă (P0) care trebuie să fie în repo**\
+Rute publice: `/` (home), `/generator`, `/modules` (+ `/modules/[id]`), `/pricing`, `/docs` + `/docs/api`, `/dashboard`, **legal** (`/legal/terms`, `/legal/privacy`, `/legal/dpa`), plus `app/sitemap.ts` și `app/robots.ts`. Toate se află sub App Router și fac parte din structura canonică PromptForge【fileciteturn0file6】.
+
+**Design & comportament /generator (așteptări)**\
+Grid cu 50 module (din `/api/modules`), **FilterBar** (q, vectors, difficulty, plan), **ModuleCard** (BadgePlan, DifficultyMeter), **ModuleOverlay** (Overview → Inputs 7-D → Outputs → KPIs → Guardrails → Actions), **ExportMenu** (opțiuni în funcție de plan: Free/Creator/Pro/Enterprise)【fileciteturn0file1】.
+
+**Gating & planuri (comercial)**\
+Free: subset & `.txt/.md`; Pro: `.pdf/.json` + Test Engine; Enterprise: API + bundle `.zip`. Upsell pe acțiuni „aha” (Run Real Test, Export PDF/JSON/ZIP)【fileciteturn0file6】. Charterul și spec-ul confirmă că 50 de module, 7-D și exporturile cu manifest/checksum sunt „coloana vertebrală” a MVP-ului【fileciteturn0file5】.
+
+**Securitate & observabilitate (minimul care trebuie să existe)**\
+CSP + rate-limit în `middleware`, RLS per org în DB, export policy (manifest + checksum), telemetrie cu evenimentele standard (open/run/export/legacy\_redirect)【fileciteturn0file5】.
+
+**Checklist integrare Stripe/Supabase/Sentry/GA (business layer)**\
+Stripe (products/prices, webhooks, portal), Supabase (URL/keys + RLS), Sentry/GA4 în env-uri — toate sunt în „API & Integration Requirements Checklist”【fileciteturn0file7】.
+
+> Concluzie audit: „osatura” este clar definită în documentație (IA + DS + charter + checklists). Ce s-a rupt este copy-ul/folderele din `app/` (șterse de agent) și alinierea UI→API (gridul /generator trebuie să consume `/api/modules`, nu hardcode).
+
+---
+
+# B) Plan de restaurare rapidă (până la starea inițială din preview)
+
+Țintă: readucem site-ul la structura P0 + /generator conectat la `/api/modules`, apoi „încuiem” sistemul să nu mai poată fi șters.
+
+## 1) Stop pierderile (protejează master)
+
+1. **Freeze agentul**: închide orice task automat care scrie în repo; setează `agent.ts` pe „read-only” sau scoate-l temporar din pipeline (pre-commit/husky) ca să nu mai poată șterge nimic.
+2. **Branch de salvare**: `git switch -c restore/preview` (nu lucra direct pe `main`).
+
+## 2) Recuperează ultima versiune bună (Git + Vercel)
+
+1. **Găsește commitul „bun”** (cel al preview-ului cu URL-ul furnizat): în GitHub → *Deployments* → deschide deploymentul care corespunde linkului; ia SHA.
+2. **Extrage doar folderele cheie din acel commit** (fără să pierzi restul):
+   ```bash
+   git checkout <GOOD_SHA> -- app components lib public
+   ```
+3. **Promovează rapid versiunea stabilă** în Vercel (dacă e nevoie de respir artificial): Promote deployment (buton „Promote to Production”) → setează temporar `COMING_SOON=true` ca să servești `/coming-soon` până repari rutele P0【fileciteturn0file6】.
+
+## 3) Recreează IA P0 în `app/` (dosare goale dar valide)
+
+Creează rutele canonic exact ca în IA PromptForge:
+
+```
+app/
+  layout.tsx, page.tsx, globals.css, sitemap.ts, robots.ts
+  generator/page.tsx
+  modules/page.tsx
+  modules/[id]/page.tsx
+  pricing/page.tsx
+  dashboard/page.tsx
+  docs/page.tsx
+  docs/api/page.tsx
+  legal/terms/page.tsx, legal/privacy/page.tsx, legal/dpa/page.tsx
+```
+
+Aceasta este „coloana vertebrală” minimă pentru a fi indexabil/funcțional【fileciteturn0file6】.
+
+> Notă: păstrează un **`not-found.tsx`** și un **`error.tsx`** simple, plus `/coming-soon` la îndemână.
+
+## 4) Re-conectează /generator la API (fără hardcode)
+
+1. **SSR fetch** în `app/generator/page.tsx`: `fetch('/api/modules', { next:{ revalidate:60 }})`, afișezi **toate cele 50** module din catalog (nu 6).
+2. **FilterBar (client)**: q + vectors(7) + difficulty 1–5 + plan (all/free/creator/pro/enterprise), debounce 200ms.
+3. **ModuleCard + Overlay + ExportMenu** (scheletul exact din DS): chiar dacă inițial acțiunile sunt no-op, UI-ul trebuie să existe și să arate gate-urile de plan【fileciteturn0file1】.
+4. **Nu reinventa overlayul**: respectă ordinea taburilor (Overview → Inputs7-D → Outputs → KPIs → Guardrails → Actions) — e standard PromptForge【fileciteturn0file1】.
+
+## 5) Activează endpoints API lipsă (minim funcțional)
+
+- `/api/run/[moduleId]` (pre-gate plan/flags/rl → validate 7-D → simulate/live → score);
+- `/api/export` (manifest + SHA256; output permis doar dacă scor ≥ 80; watermark la trial);
+- `/api/entitlements` (returnează plan/flags pentru FE gating).\
+  Sunt „rutele minime” documentate în IA și în checklistul de integrare【fileciteturn0file6】【fileciteturn0file7】.
+
+## 6) Re-aplică gate-urile comerciale (vizual + server)
+
+- **Free/Creator/Pro/Enterprise** → ExportMenu afișează strict formatele permise; opțiunile blocate rămân vizibile, dar inactive, cu motiv clar【fileciteturn0file1】.
+- **Run Real Test** doar Pro+; la clic în plan inferior → **paywall inline** (upsell)【fileciteturn0file6】.
+- **Export blocat sub scor 80** → „Tighten & Re-test” (repair prompts)【fileciteturn0file5】.
+
+## 7) Re-pornește protecțiile minime
+
+- **CSP + rate-limit** în `middleware` pe `/api/*` + **RLS** în DB; **export policy** cu manifest+checksum; sunt „nu lansa fără ele” în spec-ul tău【fileciteturn0file5】.
+- **Consent Mode + legal**: `/legal/terms`, `/legal/privacy`, `/legal/dpa` + banner — cerute de spec (SEO & compliance)【fileciteturn0file6】.
+- **Telemetrie minimă**: evenimentele standard (open/run/export/legacy\_redirect) pentru dashboardurile Exec/Perf/Module (SLO: uptime ≥99.9%, p95 <300ms)【fileciteturn0file5】.
+
+## 8) Stripe & env (ca site-ul să „prindă viață”)
+
+- Seed produse/price pentru planuri, **Checkout Session + Portal**, webhooks idempotente; tot flow-ul e în checklist (obligatoriu pentru monetizare)【fileciteturn0file7】.
+- Env: `STRIPE_*`, `SUPABASE_*`, `SENTRY_DSN`, `GA_MEASUREMENT_ID`, `RULESET_PATH`, `PLANS_FILE` — vezi lista canonică din checklist【fileciteturn0file7】.
+
+---
+
+# „PARCURS DE ORE” – cum revii azi la „starea inițială”
+
+**Ora 0–1: Recuperare cod & IA**
+
+- Freeze agent; branch `restore/preview`.
+- `git checkout <GOOD_SHA> -- app components lib public` (din deploymentul bun).
+- Confirmă structura minimă din IA (folderele din secțiunea 3)【fileciteturn0file6】.
+
+**Ora 1–2: /generator on life-support**
+
+- Înlocuiește hardcoded grid cu `fetch('/api/modules')`.
+- Montează **FilterBar + ModuleCard + Overlay + ExportMenu** (fără logică completă, dar arată gate-urile)【fileciteturn0file1】.
+- Păstrează `COMING_SOON=true` dacă încă repari restul, ca să nu expire sesiuni reale.
+
+**Ora 2–3: protecții & SEO**
+
+- `middleware.ts`: CSP strict + rate-limit pe `/api/*`.
+- `app/sitemap.ts`, `app/robots.ts`, `/legal/*` (goale, dar valide)【fileciteturn0file6】.
+- Adaugă cele 3 evenimente minime în server: `module_open`, `module_run_requested`, `export_performed`【fileciteturn0file5】.
+
+**Ora 3–4: Stripe seed (dacă vrei preview monetizabil)**
+
+- Creează Products/Prices; `POST /api/billing/checkout` + `GET /api/billing/portal`; webhooks idempotente (log în DB)【fileciteturn0file7】.
+
+> La final: **Promote** deploymentul bun în Vercel (sau redeploy branchul `restore/preview`). Păstrează `COMING_SOON=true` până trec rutele P0 și verificările (Lighthouse/Pa11y) — apoi dezactivezi.
+
+---
+
+# „Încuiem” sistemul ca să nu se mai șteargă
+
+- **Agent allow-list**: limitează scrierea la `apps/web/app/**`, `components/**`, `lib/**`, `public/**`; blochează ștergeri în `app/` fără tag „SAFE” în commit.
+- **Branch protection + CI gates**: build fail dacă lipsesc rute P0, dacă `catalog != 50`, dacă `ignoreBuildErrors/ignoreDuringBuilds` apar în config (auditul tău le marchează drept risc)【fileciteturn0file5】.
+- **Ruleset gates**: bloc export fără manifest/checksum; scor <80 ⇒ FAIL; CSP/headers prezente în 3 rute verificate în CI【fileciteturn0file5】.
+
+---
+
+# Ce verifici ca „DONE”
+
+- `/`, `/generator`, `/pricing`, `/docs/api`, `/dashboard`, `sitemap.ts`, `robots.ts`, `/legal/*` — **200 OK** și H1 unic; `/generator` arată 50/50 din `/api/modules`【fileciteturn0file6】.
+- FilterBar/ModuleCard/Overlay/ExportMenu prezente, chiar dacă „Actions” sunt parțiale; opțiunile nepermise apar disabled (cu motiv)【fileciteturn0file1】.
+- CSP + RL active (verificate cu un mic flood test); exportul blochează sub scor 80 (UI arată „Tighten & Re-test”)【fileciteturn0file5】.
+- Stripe: `checkout.session.completed` și `invoice.paid` ajung la webhook (idempotent) — minim pentru test【fileciteturn0file7】.
+
+
+
+I found that the repository hasn’t actually lost the source code – it still contains both the current `app` directory and a historical version in `apps/site-v4-manus/promptforge_production/source`. The main problem is that the **/generator** page is just a stub: it hard‑codes a “coming soon” message and never calls the `/api/modules` API. The `/api/modules` endpoint is fully implemented and returns the full catalog of 50 modules with search and filtering【458788387637880†L0-L78】【281940465776295†L1-L156】, but the UI never uses it. That’s why the deployed preview shows a blank generator and modules pages, and why the error you saw (“Card is not defined”) appears – there is no ModuleCard component or overlay.
+
+### What to do next
+
+1. **Stop further automatic deletions**: disable or remove the offending “agent” or scripts that auto‑delete files. Work in a new branch so you can safely revert to earlier commits if needed.
+
+2. **Identify the last working version**: use GitHub’s commit history to find the commit associated with the Vercel preview (`prompt-forge-kbp4xb9hr…`). In GitHub’s deployment dashboard you can find the SHA for that deploy and check out that commit. The repository root still shows the old directory structure (`app`, `apps/site-v4-manus`, etc.)【131926287647525†L186-L235】. Create a branch from that commit.
+
+3. **Restore the `app` structure**: The historical code under `apps/site-v4-manus/promptforge_production/source` contains the earlier version of the site. Copy its `app` folder (including pages and components) into the root `app` directory of your working branch. This will bring back the missing pages like `/generator`, `/modules`, `/pricing`, etc.
+
+4. **Connect the generator page to the API**: Replace the hard‑coded “Coming soon” content in `app/generator/page.tsx` with a call to `fetch('/api/modules')` and render the returned modules. The API already returns 50 modules, filters and metadata【281940465776295†L1-L156】. Build the `FilterBar`, `ModuleCard`, `ModuleOverlay` and `ExportMenu` components to show the catalog, support search/filtering, and gating per plan.
+
+5. **Implement required endpoints**: Ensure that `/api/run/[moduleId]`, `/api/export` and `/api/entitlements` are present. The historical version under `apps/site-v4-manus` may already have these; if not, follow the specifications to add them. They should validate 7‑D parameters, enforce plan entitlements, generate scores, and create export artifacts.
+
+6. **Fix the `modules` page**: Use the same approach—fetch from `/api/modules` instead of hard‑coding, display module cards, and create detail pages. This will eliminate the “Card is not defined” error and restore the modules library page.
+
+7. **Re‑add legal pages and SEO files**: Ensure `/legal/terms`, `/legal/privacy` and `/legal/dpa` exist, and that `app/sitemap.ts` and `app/robots.ts` are restored to include your routes as required in the original spec【458788387637880†L0-L78】.
+
+8. **Protect against future deletions**: Once the site is restored, lock down critical directories with branch protection rules and adjust any agents to prevent them from modifying the `app` or `apps` folders. Consider moving the automatic tasks into separate scripts or CI jobs so they cannot delete code at runtime.
+
+By following these steps—reverting to a working commit, copying back the historical `app` folder, re‑wiring the generator page to call the modules API, and rebuilding the missing components—you can get the site back to the stage shown in the preview.
+
+
+#### You:
+<time datetime="2025-09-01T22:40:04.534Z" title="9/2/2025, 1:40:04 AM">01:40</time>
+
+asta e versiunea buna: https://prompt-forge-vadimkusnir.vercel.app 
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:40:16.922Z" title="9/2/2025, 1:40:16 AM">01:40</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:40:33.743Z" title="9/2/2025, 1:40:33 AM">01:40</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:40:44.360Z" title="9/2/2025, 1:40:44 AM">01:40</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:40:17.905Z" title="9/2/2025, 1:40:17 AM">01:40</time>
+
+Perfect—am deschis versiunea bună și funcționează ca referință. Hai s-o „înghețăm” ca baseline și s-o folosim ca sursă pentru revenire.
+
+## Ce facem ACUM (rapid & sigur)
+
+1. **Leagă fetch-urile de același origin (evită cross-origin 404/500):**\
+   În `app/generator/page.tsx`, folosește **relative fetch** (`/api/modules`) sau setează:
+   ```
+   NEXT_PUBLIC_APP_URL=https://prompt-forge-vadimkusnir.vercel.app
+   ```
+   și în cod:
+   ```ts
+   const base = process.env.NEXT_PUBLIC_APP_URL || '';
+   await fetch(`${base}/api/modules`, { next:{ revalidate:60 }});
+   ```
+   IA ta cere explicit /api intern și ISR/SSR pe rutele publice【fileciteturn0file6】, iar spec-ul confirmă că /generator trebuie să consume `/api/modules` și să listeze exact 50 module, cu filtre și overlay【fileciteturn0file1】.
+
+2. **Repară eroarea “Card is not defined” pe /generator & /modules:**
+   - Verifică importul/fișierul `components/modules/module-card.tsx` și exportul default.
+   - Dacă lipsește, creează rapid un `ModuleCard` minimal (titlu, summary, chips, BadgePlan, DifficultyMeter) conform DS【fileciteturn0file1】.
+   - În /modules, rulează SSR la listare și deschide overlay la click (Overview→Inputs 7-D→Outputs→KPIs→Guardrails→Actions)【fileciteturn0file1】.
+
+3. **Promovează această versiune ca Production și blochează regresiile:**
+   - În Vercel: **Promote** acest deploy la Production alias; setează Env Group „prod” cu `NEXT_PUBLIC_APP_URL`.
+   - Scoate din `next.config` orice `ignoreBuildErrors/ignoreDuringBuilds`.
+   - Adaugă `app/sitemap.ts` și `app/robots.ts` (exclude `/api/*`) conform IA【fileciteturn0file6】.
+   - Activează CSP+headers + rate-limit în `middleware` (minimul securitate) din spec【fileciteturn0file5】.
+
+4. **Îngheață agentul care a șters fișierele:**
+   - Pune `agent.ts` în read-only sau restrânge-i allow-listul doar la `app/**`, `components/**`, `lib/**`.
+   - Activează “coming-soon toggle” doar dintr-un endpoint securizat (opțional), cum e prevăzut în IA【fileciteturn0file6】.
+
+5. **Verificări rapide care trebuie să iasă verzi:**
+   - `/`, `/generator`, `/modules`, `/pricing`, `/docs/api`, `/dashboard` – 200, H1 unic, OG/Canonical corecte (IA)【fileciteturn0file6】.
+   - `/api/modules` – returnează 50/50 cu filtrare (vector/difficulty/plan/search)【fileciteturn0file1】.
+   - **Mobile/LCP**: LCP ≤2.5s, fără scroll orizontal, tap≥44×44 (checklist mobil)【fileciteturn0file6】.
+
+---
+
+## Hardening și monetizare (după ce „respiră”)
+
+- **/pricing → Stripe e2e:** produse/price, Checkout Session, Portal, webhooks idempotente (`invoice.paid`, `subscription.updated`)【fileciteturn0file7】.
+- **Gating determinist (UI+API):** `useEntitlements` + `/api/entitlements`; “Run Real Test” & export `.pdf/.json/.zip` doar Pro/Ent; watermark în trial【fileciteturn0file6】【fileciteturn0file7】.
+- **Telemetrie unificată:** `module_open/run_*/export_performed/legacy_redirect_hit` cu `module_id` Mxx; 3 dashboard-uri (Exec, UX/Perf, Module) și SLO p95<300ms, uptime≥99.9%【fileciteturn0file5】.
+
+---
+
+## Dacă vrei un patch minim “lipit” azi
+
+- **Generator (fix rapid):** înlocuiește secțiunea Coming Soon cu grilă SSR din `/api/modules`, adaugă `ModuleCard` + `ModuleOverlay` skeleton (ordinea taburilor ca în DS)【fileciteturn0file1】.
+- **Sitemap/Robots:** adaugă `app/sitemap.ts`/`app/robots.ts` (legal pages incluse: `/legal/terms`, `/legal/privacy`, `/legal/dpa`)【fileciteturn0file6】.
+- **Headers:** CSP + HSTS + X-Content-Type-Options + Permissions-Policy (minim) conform spec【fileciteturn0file5】.
+
+---
+
+### De ce asta e direcția corectă
+
+- IA oficială listează exact rutele și ordinea livrării (P0: Home, Generator, Modules, Pricing, Docs/API, Dashboard + SEO & Legal)【fileciteturn0file6】.
+- Design System definește clar cum arată /generator și gatingul exporturilor pe plan (vizibil dar disabled + motiv)【fileciteturn0file1】.
+- Charter & site spec cer SSR/ISR, CSP, rate-limit, legal & consent înainte de scale și monetizare【fileciteturn0file5】.
+- Checklistul Stripe îți dă pașii exacți pentru plăți, portal și webhooks idempotente (business layer „on”)【fileciteturn0file7】.
+
+Dacă vrei, îți trimit imediat un **diff minimal** (ModuleCard + Overlay skeleton, fetch SSR, `sitemap.ts/robots.ts`, headers în `next.config.mjs`) ca să ridici versiunea bună în Production fără surprize.
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:41:43.039Z" title="9/2/2025, 1:41:43 AM">01:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:41:52.483Z" title="9/2/2025, 1:41:52 AM">01:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:41:57.484Z" title="9/2/2025, 1:41:57 AM">01:41</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:42:13.095Z" title="9/2/2025, 1:42:13 AM">01:42</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:42:18.106Z" title="9/2/2025, 1:42:18 AM">01:42</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:42:30.355Z" title="9/2/2025, 1:42:30 AM">01:42</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:42:36.851Z" title="9/2/2025, 1:42:36 AM">01:42</time>
+
+\[Unsupported Content]
+
+
+#### ChatGPT:
+<time datetime="2025-09-01T22:42:16.046Z" title="9/2/2025, 1:42:16 AM">01:42</time>
+
+Am deschis versiunea „bună” de pe Vercel și am constatat că homepage‑ul se încarcă corect, cu hero‑ul „Stop improvising prompts. Start forging systems.” și un meniu complet【33485527382364†screenshot】. Accesând însă `/generator` am întâmpinat aceeași eroare de runtime („Card is not defined”) ca în versiunea precedentă【464668553594016†screenshot】, ceea ce confirmă că problema este în codul aplicației, nu în instanța de hosting.
+
+Auditul codului sursă arată următoarele:
+
+- Repo‑ul conține în continuare structura App Router completă în directorul `app`, precum și o versiune mai veche sub `apps/site-v4-manus`【131926287647525†L186-L235】. Nu s‑a pierdut codul, dar pagina `app/generator/page.tsx` este un stub („Coming soon”) care nu consumă API‑ul și afişează doar text static【458788387637880†L0-L78】.
+- API‑ul pentru module (`app/api/modules/route.ts`) este complet implementat; returnează 50 de module cu filtre după vector, difficulty, plan şi search【281940465776295†L1-L156】.
+- Neexistând un `ModuleCard` şi nici un overlay, generatorul şi biblioteca de module aruncă un `ReferenceError` când încearcă să randaze carduri【464668553594016†screenshot】.
+
+### Cum restabilești rapid site‑ul:
+
+1. **Opreşte orice agent care şterge fişiere** (setarea `agent.ts` în read‑only sau dezactivarea scriptului respectiv) şi creează un branch de recuperare (de exemplu `restore/preview`) pentru a nu lucra direct pe `main`.
+
+2. **Recuperează codul funcţional**: ia comitul asociat cu deploy‑ul de pe Vercel (prin „Deployments → Commit” în GitHub) şi verifică-l local. Acesta conţine structura `app` completă. Dacă versiunea funcţională se află în `apps/site-v4-manus/promptforge_production/source`, copiază acel folder `app` peste directorul `app` curent.
+
+3. **Repară generatorul**: înlocuieşte componenta stub din `app/generator/page.tsx` cu logică reală:
+   - Foloseşte `fetch('/api/modules')` (cu `revalidate:60`) pentru a încărca catalogul complet de 50 de module, în locul datelor hardcodate【281940465776295†L1-L156】.
+   - Creează componentele lipsă `ModuleCard`, `FilterBar`, `ModuleOverlay` şi `ExportMenu`. `ModuleCard` trebuie să afişeze titlul, rezumatul, dificultatea şi planul minim; `FilterBar` trebuie să filtreze după vectori, dificultate şi plan; `ModuleOverlay` va conţine taburile 7‑D (Overview → Inputs → Outputs → KPIs → Guardrails → Actions).
+   - Pentru început poţi face cardurile şi overlay‑urile doar schelet, cu butoane inactive, pentru a elimina eroarea `Card is not defined`.
+
+4. **Verifică paginile `/modules` şi `/pricing`** şi conectează-le la API‑uri, după acelaşi model: SSR/ISR pentru listă, detalii dinamice pentru modulul selectat şi gating în funcţie de plan.
+
+5. **Reactivează protecţiile minime**: adaugă `middleware.ts` cu CSP şi rate‑limit, rutele `/legal/terms`, `/legal/privacy`, `/legal/dpa`, şi fişierele `sitemap.ts` şi `robots.ts` conform specificaţiei.
+
+6. **Promovează versiunea reparată** pe Vercel şi activează environment variables‑urile (`NEXT_PUBLIC_APP_URL`, chei Stripe/Supabase) pentru un flux corect între front‑end şi back‑end.
+
+Urmand aceşti paşi vei putea readuce site‑ul la starea iniţială din preview, folosind codul existent din repo şi conectând pagina Generator la API‑ul deja implementat.
+
+

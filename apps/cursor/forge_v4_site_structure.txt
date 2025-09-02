@@ -1,0 +1,1016 @@
+
+
+
+
+
+PromptForge™ — Site Structure (IA + Folders)
+Primary Navigation (Top)
+
+/ — Homepage (Hero → Proof → Process → Modules → Testimonials → Pricing → FAQ → Footer)
+
+/generator — 7-D Prompt Generator (filters, run modes, exports)
+
+/modules — Module library index (filters, specs overlay) + /modules/[id] details
+
+/pricing — Plans (Free/Creator/Pro/Enterprise) + FAQ
+
+/dashboard — Runs, scores, artifacts, history (cloud for Pro/Ent)
+
+/docs — Documentation hub; include /docs/api for API reference
+
+Secondary Navigation
+
+/about — Brand/mission/story (trust page)
+
+/blog — Content hub (optional at P1)
+
+/contact — Contact form (support/sales)
+
+/coming-soon — Waitlist landing (toggleable gate)
+
+Legal & Compliance
+
+/legal/terms — Terms of Service
+
+/legal/privacy — Privacy Policy
+
+/legal/dpa — Data Processing Agreement
+(These routes are required by your legal/compliance audit and should be added explicitly.)
+
+System/Utility Pages
+
+/thankyou — Post-submit confirmation (waitlist / checkout)
+
+/404 and /500 — Custom error pages (with branded states)
+
+/sitemap.xml and /robots.txt via app/sitemap.ts and app/robots.ts
+
+App Router Tree (folders/files)
+app/
+  layout.tsx
+  page.tsx                 # Homepage
+  globals.css
+  sitemap.ts               # SEO
+  robots.ts                # SEO
+  not-found.tsx            # 404
+  error.tsx                # 500 (optional)
+
+  coming-soon/
+    page.tsx               # Waitlist landing (gated)
+  thankyou/
+    page.tsx
+
+  pricing/
+    page.tsx               # Plans/FAQ
+
+  generator/
+    page.tsx               # 7-D Prompt Generator
+
+  modules/
+    page.tsx               # Library index
+    [id]/page.tsx          # Module details
+
+  dashboard/
+    page.tsx               # Runs, scores, exports (cloud for Pro/Ent)
+
+  docs/
+    page.tsx               # Docs hub (overview/TOC)
+    api/page.tsx           # API reference (POST /api/run/{moduleId}):contentReference[oaicite:16]{index=16}
+
+  about/
+    page.tsx
+  contact/
+    page.tsx
+
+  legal/
+    terms/page.tsx
+    privacy/page.tsx
+    dpa/page.tsx
+
+  api/
+    entitlements/route.ts      # returns feature flags for gating:contentReference[oaicite:17]{index=17}:contentReference[oaicite:18]{index=18}
+    gpt-editor/route.ts        # prompt editing (live):contentReference[oaicite:19]{index=19}
+    gpt-test/route.ts          # Test Engine live (Pro+):contentReference[oaicite:20]{index=20}
+    export/route.ts            # Export bundle (.md/.json/.pdf/.zip):contentReference[oaicite:21]{index=21}
+    run/[moduleId]/route.ts    # Enterprise API endpoint:contentReference[oaicite:22]{index=22}
+    waitlist/route.ts          # Coming-soon form submit (Supabase):contentReference[oaicite:23]{index=23}:contentReference[oaicite:24]{index=24}
+    toggle-coming-soon/route.ts# Admin toggle for gate (optional):contentReference[oaicite:25]{index=25}
+
+Components (selected)
+components/
+  header.tsx
+  footer.tsx
+  paywall/
+    PaywallModal.tsx
+    PaywallInline.tsx
+    PaywallCTA.tsx            # Upsell on “aha” actions:contentReference[oaicite:26]{index=26}
+  ExportDialog.tsx            # Gated export UI:contentReference[oaicite:27]{index=27}
+  SpecDiff.tsx                # Diff vs. module SPEC (optional):contentReference[oaicite:28]{index=28}
+
+  home/LiveGenerationDemo.tsx # Mini demo on homepage:contentReference[oaicite:29]{index=29}
+
+  modules/
+    module-browser.tsx        # Filter/search/grid for 50+ modules
+    module-card.tsx
+
+  coming-soon-interactive.tsx # Waitlist form + success state:contentReference[oaicite:30]{index=30}
+
+  ui/…                        # shadcn/Radix UI kit
+
+Libraries
+lib/
+  modules.ts                # M01–M50 catalog (purpose, kpi, guardrails):contentReference[oaicite:31]{index=31}
+  prompt-generator.ts       # Industrial prompt builder (7-D sections):contentReference[oaicite:32]{index=32}
+  gpt-editor.ts             # Editor logic (optimize/tighten):contentReference[oaicite:33]{index=33}
+  test-engine.ts            # Scoring (clarity/execution/ambiguity/fit):contentReference[oaicite:34]{index=34}
+  entitlements/
+    types.ts
+    useEntitlements.ts      # FE gating hook
+    cache.ts
+    withEntitlementGate.tsx
+    invalidate.ts           # invalidation after upgrades:contentReference[oaicite:35]{index=35}
+  telemetry.ts              # startRun/finishRun (runs table):contentReference[oaicite:36]{index=36}
+  validator.ts              # 7-D validation (enum-only):contentReference[oaicite:37]{index=37}
+  export-bundle.ts          # manifest + checksum rules (server):contentReference[oaicite:38]{index=38}
+
+Gating & Plans (behavioral)
+Free: core modules (e.g., M01/M10/M18), export .txt/.md; no live test.
+Creator: all modules, export .md.
+Pro: export .pdf/.json, Test Engine live, cloud history.
+Enterprise: API, white-label, bundle .zip exports.
+(Flags enforced in UI + API; upsell on “Run Real Test” and “Export PDF/JSON/ZIP”.)
+
+SEO & Compliance Essentials
+Single H1 per page, canonical URL, OG/Twitter meta via layout.tsx
+sitemap.ts + robots.ts in app/ (exclude /api/*)
+Legal pages present under /legal/* (Terms, Privacy, DPA)
+
+“Coming Soon” Gate (optional switch)
+ENV flag COMING_SOON=true → all routes redirect to /coming-soon (allow: assets, /api/waitlist)
+Admin /api/toggle-coming-soon to flip state in DB (per org/project)
+
+Priority (Launch Phases)
+P0 (pre-launch): Homepage, Generator, Modules, Pricing, Docs/API, Dashboard (MVP), Legal pages, Coming-Soon toggle, SEO (sitemap/robots)
+P1: Blog, richer module overlays, pricing polish, more FAQ
+P2: Test Engine Live telemetry, executive PDF layout, bundle ZIP, admin workspace
+
+
+
+
+
+
+FRONTEND & MOBILE UI/UX
+
+Next.js + Tailwind + shadcn/Radix
+
+Monitoring, fix and alidate the mobile experience so it’s fast, legible, tappable, accessible, and resilient across iOS/Android.
+
+Inputs (fill these):
+Primary URL(s): <site url> (Home, Generator /generator, Modules /modules, Pricing /pricing, Docs /docs, Dashboard /dashboard, Coming Soon /coming-soon)
+Tech stack: Next.js App Router, Tailwind, shadcn/Radix UI
+Design tokens: <link or file> (colors, spacing, typography)
+Brand constraints: industrial/dark, no emoji, one H1/page
+Paywall flags: Free/Creator/Pro/Enterprise (gating actions)
+
+A. Scope & Devices
+Breakpoints to validate
+XS/SM (primary): 320, 360, 390, 414, 430 px
+MD (secondary): 480, 600, 768 px
+Orientation: portrait + landscape
+Safe-area: iPhone (Dynamic Island/notch), Android punch-hole
+DPR: 2× and 3×
+Target platforms
+iOS Safari 16–18
+Android Chrome 118+
+Chrome iOS (WebKit)
+Firefox Android (sanity pass)
+
+B. Acceptance Criteria (must pass)
+1) Layout & Readability
+No horizontal scroll; CLS ≤ 0.02; content fits safe-areas (CSS env(safe-area-inset-*)).
+Tap targets ≥ 44×44px; controls have hit-slop.
+Paragraph width 45–75ch; base font ≥ 16px; headings scale via fluid type.
+Spacing rhythm 4/8/12/16/24/32; consistent vertical rhythm and section breathing.
+Sticky elements (header/CTA) never obscure content; keyboard overlap handled on forms.
+
+2) Navigation & Gestures
+Header collapses predictably; hamburger is accessible; Back doesn’t trap.
+Bottom-of-screen primary CTA visible and reachable (thumb zone).
+Modals/Sheets use native-like gestures; avoid accidental page scroll under modal.
+
+3) Forms & Inputs
+Correct input types (email, tel, url, number); autofill and auto-cap off where needed.
+Labels & errors persist; validation inline; submit disabled until valid; loading states.
+Country code masks for phone; card fields delegated to Stripe (mobile-ready).
+
+4) Media & Performance
+Responsive images (sizes, srcset / next/image), no layout shift.
+Performance budgets (mobile): LCP ≤ 2.5s, INP p95 ≤ 200ms, TTI ≤ 3.5s.
+Lazy-load below the fold; defer non-critical JS; avoid heavy GIFs; prefer CSS animation.
+
+5) Accessibility (mobile)
+Contrast ≥ 4.5:1, visible focus; prefers-reduced-motion respected.
+Landmarks (header/nav/main/footer), skip link; semantic form labels.
+Screen readers: VoiceOver/TalkBack linear, no hidden traps; actionable names read clearly.
+
+6) States & Errors
+Skeletons for data fetch; timeouts with retry; empty states with helpful CTAs.
+Offline/poor network resilience: show cached/placeholder copy; explain failures.
+Paywall and entitlement errors: clear, non-blocking messaging with upgrade CTA.
+
+C. Critical User Flows to Test (end-to-end on mobile)
+Coming Soon → Waitlist: open → fill form → submit → thank you → deep-link back.
+Homepage → Generator: select module → set 7-D → simulate → (Pro+) run real test → export.
+Modules → Module detail: read spec → run sample → return to list (no state loss).
+Pricing → Stripe test checkout: plan select → paywall gating → trial flag reflected in UI.
+Dashboard: view runs, tightens prompts <80, export artifacts; no jank on scroll.
+Docs → API copy: copy endpoint + keys; long code blocks scroll horizontally only within block.
+
+D. Deliverables
+Issues Spreadsheet (CSV)
+Columns: severity{blocker,major,minor}, route, viewport, device, description, steps to repro, expected vs actual, suggested fix, owner, status.
+Prioritize P0 (navigation broken, text unreadable, tap target <44px, blocking modals, CLS spikes).
+Include a screenshot link or short recording for each blocker/major.
+Before/After Screens (ZIP)
+Mobile screenshots per key route (home/generator/modules/pricing/docs/dashboard/coming-soon) at 390×, 430× portrait; include landscape for at least home and generator.
+
+Code-Level Patch (diff)
+Tailwind class refactors for spacing, responsive grids, and tap targets.
+next/image fixes (fill, sizes, priority for LCP hero).
+Safe-area CSS and sticky header/footer fixes.
+A11y: aria-labels, role, focus order, skip link, motion query.
+Paywall/CTA placement for thumbs; bottom-sheet patterns where appropriate.
+Lighthouse & Web Vitals (Mobile)
+
+2 device profiles: “Moto G4 / Slow 4G” & “iPhone 14 / Fast 3G”.
+Report LCP/CLS/INP + screenshot timelines; document any third-party script costs.
+Checklist (DoR/DoD) Signed
+All acceptance criteria met; worst-case viewport validated; screenshots attached.
+Regression plan & watchlist items documented.
+
+E. Fix Order (strict)
+Blockers: viewport, safe-area, nav traps, tap targets, CLS spikes.
+Readability: type scale, paragraph width, spacing rhythm, contrast.
+Performance: LCP hero, image sizing, lazyload, bundle defers.
+A11y: focus order, labels, motion, screen reader landmarks.
+Polish: skeletons, empty/error states, transitions ≤220ms ease-out.
+
+F. Implementation Heuristics (Tailwind/React)
+Replace ad-hoc paddings with tokenized utilities (e.g., px-4 sm:px-6, py-6 md:py-10).
+Grids: grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 for cards/lists.
+Buttons: ensure min-h-[44px] and px-4, hit-slop via wrapper if needed.
+Typography: text-base md:text-[17px], headings clamp() or responsive classes.
+
+Safe areas:
+:root { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+.sticky-cta { padding-bottom: calc(env(safe-area-inset-bottom) + 12px); }
+Motion guard:
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+Forms: native types, inputmode, autocomplete, visible errors below fields.
+Images: next/image with sizes="(max-width: 768px) 100vw, 50vw"; set priority on LCP hero.
+
+G. Reporting Template (paste this at the end)
+Mobile Audit Summary (v1)
+Devices/viewports tested: …
+Key wins (3): …
+P0 fixes shipped (list): …
+Remaining risks (with mitigation): …
+Web Vitals (mobile): LCP … / INP p95 … / CLS …
+Next steps (1–2 weeks): …
+
+
+
+
+
+
+
+
+/dashboard — User Login Board (for day-to-day work)
+Purpose (at a glance)
+
+Show what was run, what scored well, what exported, and what to do next.
+
+One click to re-run, improve, or export artifacts.
+
+Nudge users toward the next meaningful action (generate → test → export).
+
+Page layout (3 zones)
+
+Header bar
+
+Workspace switcher (if multi-org)
+
+Quick actions: New Run, Browse Modules, Try Generator
+
+Search (run ID, module, keyword)
+
+Primary KPIs (top row)
+
+Runs (7d) — total & trend ▲/▼
+
+Avg Score — last 20 runs (composite)
+
+Exports — .md/.json/.pdf/.zip counts
+
+Time-to-Artifact (median) — target < 60s
+
+Pass Rate — % runs with score ≥ 80
+
+Working area (tabs)
+
+Recent Runs (default)
+Table with: Run ID • Module • Score • Verdict • Duration • Owner • Created • Actions
+
+Row actions: View, Re-run, Export, Open in Generator
+
+Filters: date range, module, min score, verdict, format exported
+
+Bulk actions: Export Selected, Delete, Tag
+
+Artifacts / Exports
+Card grid or table: format • filename • checksum • size • exported at • run link • Download
+
+Quick filter chips: .md, .json, .pdf, .zip
+
+Module Usage
+Heatmap/list: module • runs • avg score • exports • last used • Open Module
+
+CTA: “Your top 3 under-used modules” with Try Now buttons
+
+Scores & Quality
+Mini-dashboards:
+
+Score distribution (histogram)
+
+Axis breakdown: clarity / execution / ambiguity / business fit
+
+“Repair candidates” (scores < 80) with Tighten Prompt action
+
+History (long-tail)
+Infinite list of runs with lazy loading, best for audits.
+
+Empty/first-run states
+
+Friendly prompts: “No runs yet. Open Generator to create your first artifact.”
+
+Quick starts: 3 featured modules with Run Sample buttons.
+
+Gating & nudges
+
+If plan < Pro and user clicks Run Real Test or Export PDF/JSON/ZIP → show inline paywall (“Unlock with Pro”).
+
+If score < 80 on an export attempt → block and show Tighten & Re-test.
+
+Buttons you’ll actually use
+
+New Run (primary)
+
+Try the Generator
+
+Run Real Test (Pro+)
+
+Export PDF / JSON / ZIP (contextual)
+
+Tighten Prompt (auto-improve)
+
+Re-run with same 7-D
+
+Open Module / Browse Modules
+
+Download (artifact row)
+
+Copy Checksum (artifact row)
+
+Notifications & toasts
+
+Run started / finished / failed
+
+Export success (with filename + format)
+
+Paywall hits (explain what unlocks the action)
+
+Benefits for users
+
+Clear “what’s next” (tighten low scores; export passes)
+
+Immediate proof of quality (scores, checksums)
+
+Fewer clicks to value (re-run, export, open module from the same place)
+
+/admin — Admin Login Workspace (operators & owners)
+Purpose (at a glance)
+
+Governance, licensing, and reliability: plans, entitlements, seats, API keys, ruleset versions.
+
+Audit & compliance: exports, checksums, incidents, coming-soon gate switch.
+
+Money & access: Stripe state, subscription status, webhook health.
+
+Page layout (3 zones)
+
+Header bar
+
+Org selector • Environment badge (Prod/Staging)
+
+Invite Member, Create API Key, Toggle Coming-Soon
+
+Admin KPIs (top row)
+
+Active Subscriptions (status)
+
+Entitlement Coverage (% features enabled by plan)
+
+API Usage (24h) — calls / rate-limit hits
+
+Export Integrity — 100% artifacts with manifests + checksums
+
+Incidents (7d) — open/closed
+
+Workspace sections (left nav)
+
+Members & Roles
+Table: user • role (owner/admin/member) • last login • actions (Change Role, Remove, Resend Invite)
+
+Button: Invite Member
+
+Plans & Billing
+Current plan, renewal, seats, add-ons.
+
+Buttons: Upgrade Plan, Manage Seats, Open Stripe Portal
+
+Webhook status (last event, last error) with Retry / Reconcile
+
+Entitlements & Feature Flags
+Matrix of features → enabled/disabled; source (plan/add-on/manual).
+
+Toggle (admin-only) for trial overrides (time-boxed)
+
+Button: Invalidate Frontend Cache
+
+API Keys
+Key hash • created • last used • rate limit • status
+
+Buttons: Create Key, Rotate, Pause, Revoke
+
+Download Postman collection; link to API docs
+
+Ruleset & Versions
+Current ruleset version • changelog • rollback option (admin)
+
+Button: Promote Ruleset / Rollback
+
+Guardrail preview (score threshold, enum-only validation)
+
+Exports & Audit
+Bundles list: run → formats → checksum → license notice → download
+
+Filters: date range, module, user
+
+Button: Export Audit CSV
+
+Observability
+System stats: p95 TTA, pass rate, error budget, 4xx/5xx hotspots
+
+Incidents view with Acknowledge, Resolve, Create Postmortem
+
+Legal & Compliance
+Links/health: Terms, Privacy, DPA routes live; cookie banner configured; DLP/PII checks passing
+
+Button: Run Compliance Check
+
+System Controls
+Toggle Coming-Soon (global gate)
+Feature rollout switches (beta flags)
+Maintenance mode (banner / read-only)
+
+Buttons that matter
+
+Invite Member, Change Role
+
+Upgrade Plan, Manage Seats, Open Stripe Portal
+
+Create/Rotate/Revoke API Key, Set Rate Limit
+
+Promote Ruleset / Rollback
+
+Reconcile Stripe Webhooks
+
+Export Audit CSV, Download Bundle
+
+Toggle Coming-Soon (global)
+
+Acknowledge Incident, Resolve Incident
+
+RBAC (simple and safe)
+
+Owner: everything, billing, ruleset promotion
+
+Admin: members, entitlements, API keys, incidents
+
+Member: read-only admin, full user dashboard
+
+Benefits for admins
+
+One pane of glass: plan, seats, flags, API, audit, incidents
+
+Zero guesswork: what’s enabled, why, and for whom
+
+Safety rails baked in (ruleset versioning, rollback, coming-soon kill-switch)
+
+Do they have structure?
+
+Yes. Both pages are intentionally structured:
+
+/dashboard follows a KPI → action list → detail pattern with tabs for Runs, Artifacts, Usage, Scores, History.
+
+/admin follows a governance → access → reliability pattern: Members/Roles, Plan/Billing, Entitlements, API Keys, Ruleset Versions, Exports/Audit, Observability, Legal, System Controls.
+
+
+
+
+STRUCTURA SITE LINK TREE 31.08.25
+
+
+
+
+�� PROMPTFORGE - LINK TREE COMPLET COMPLET
+�� DOMENIU PRINCIPAL: https://chatgpt-prompting.com
+📄 PAGINI PUBLICE (Accesibile tuturor)
+🏡 Pagini Principale
+/ - Homepage
+Componente: HomeInteractive + MainContentInteractive
+Toggle Coming Soon: NEXT_PUBLIC_COMING_SOON=true
+Link-uri interne: /dashboard, /pricing, /ai-editor, /collaborate
+/generator - Generator de Prompturi
+50+ module de prompturi
+Filtre: strategic, rhetoric, content, analytics, branding, crisis, cognitive
+Dificultate: Beginner, Intermediate, Advanced, Expert
+Planuri: FREE, CREATOR, PRO, ENTERPRISE
+Export: PDF, JSON, Markdown, ZIP
+/pricing - Planuri de Prețuri
+4 nivele: FREE, CREATOR, PRO, ENTERPRISE
+Integrare Stripe pentru plăți
+API: /api/stripe/create-checkout
+/docs/api - Documentație API
+Referință completă API
+Endpoint-uri: POST /api/run/{moduleId}
+🔐 PAGINI PROTECTATE (Necesită autentificare)
+👤 Dashboard Utilizator
+/dashboard - Dashboard Principal
+Module Browser cu 50+ module
+Workspace utilizator
+API: /api/modules
+/ai-editor - Editor AI
+Editor avansat de prompturi
+API-uri: /api/ai/generate, /api/ai/optimize, /api/ai/analyze
+Export: PDF, JSON, Markdown, ZIP
+/collaborate - Workspace Colaborare
+Colaborare în echipă
+Share URL: /collaborate/{sessionId}
+API: /api/collaboration/sessions
+�� API ENDPOINTS COMPLETE
+📤 Export & Validare
+/api/export - Export principal
+/api/export/validate - Validare export
+�� Colaborare
+/api/collaboration/sessions - Sesiuni colaborare
+🤖 AI & Generare
+/api/ai/generate - Generare AI
+/api/ai/optimize - Optimizare AI
+/api/ai/analyze - Analiză AI
+�� Stripe & Plăți
+/api/stripe/create-checkout - Creare sesiune checkout
+�� Module
+/api/modules - Management module
+🔐 Autentificare
+/api/auth/login - Login utilizator
+📊 Analytics & Email
+/api/analytics - Tracking analytics
+/api/email - Servicii email
+/api/waitlist - Lista de așteptare
+🗺️ PAGINI PLANIFICATE (Din Sitemap)
+📖 Conținut & Documentație
+/modules - Biblioteca de Module
+/docs - Documentație Generală
+/guides - Ghiduri Utilizator
+⚖️ Legal & Conformitate
+/legal - Hub Informații Legale
+/legal/privacy - Politica de Confidențialitate
+/legal/terms - Termeni și Condiții
+/legal/dpa - Acord de Procesare Date
+📢 Marketing & Comunitate
+/about - Despre Noi
+/contact - Informații Contact
+/blog - Secțiune Blog/Știri
+/launch - Informații Lansare
+/community - Hub Comunitate
+/thankyou - Pagină Mulțumire
+🚫 ZONE RESTRICȚIONATE (Blocate de robots.txt)
+�� Zone Protejate
+/api/ - Toate endpoint-urile API
+/dashboard/ - Dashboard utilizator
+/admin/ - Panou administrare
+/auth/ - Fluxuri autentificare
+/billing/ - Management facturare
+/analytics/ - Dashboard analytics
+/export/ - Instrumente export
+/entitlements/ - Control acces
+🛠️ Zone Tehnice
+/_next/ - Cache Next.js
+/cursor/ - Configurări Cursor
+/supabase/ - Configurări Supabase
+/db/ - Baza de date
+/scripts/ - Scripturi
+/tests/ - Teste
+/node_modules/ - Dependințe
+�� Zone Securitate
+/webhooks/ - Webhook-uri
+/monitoring/ - Monitorizare
+/security/ - Securitate
+/gpt-editor/ - Editor GPT
+/gpt-test/ - Testare GPT
+/run-example/ - Exemple rulare
+/runs/ - Rulări
+/feedback/ - Feedback
+/leads/ - Lead-uri
+/community/join/ - Alăturare comunitate
+📊 REZUMAT STRUCTURĂ SITE
+📈 Statistici Totale
+Rute Publice Confirmate: 7
+Rute Protejate: 3
+API Endpoints: 15+
+Pagini Planificate: 12
+Zone Restricționate: 25+
+🏗️ Arhitectură Tehnică
+Framework: Next.js 14+ cu App Router
+Autentificare: Supabase
+Plăți: Stripe
+Temă: Dark cu accente aurii (#d1a954)
+Fonturi: Montserrat + Open Sans
+Stil: Glassmorphism + Efecte glow
+🔗 Link-uri de Navigare Principale
+Header Navigation: /, /dashboard, /pricing, /ai-editor, /collaborate
+CTA-uri Homepage: /dashboard, /pricing, /ai-editor, /collaborate
+Share URLs: /collaborate/{sessionId}
+�� Funcționalități Avansate
+Export Multi-format: PDF, JSON, Markdown, ZIP
+Colaborare Real-time: Sesiuni partajate
+AI Integration: Generare, optimizare, analiză
+Entitlements: Control acces bazat pe plan
+Analytics: Tracking complet utilizator
+Acesta este link tree-ul complet și detaliat al site-ului PromptForge, cu toate rutele, API-urile, paginile planificate și zonele restricționate!
+
+
+
+
+
+
+
+
+📁 PROMPTFORGE - STRUCTURA COMPLETĂ A FIȘIERELOR
+ROOT DIRECTORY
+📄 Fișiere de Configurare
+.gitignore - Git ignore rules
+pnpm-workspace.yaml - Workspace configuration
+pnpm-lock.yaml - Lock file dependencies
+package.json - Dependencies și scripts
+tsconfig.json - TypeScript configuration
+tsconfig.tsbuildinfo - TypeScript build cache
+next.config.mjs - Next.js configuration
+tailwind.config.ts - Tailwind CSS configuration
+postcss.config.mjs - PostCSS configuration
+eslint.config.js - ESLint configuration
+components.json - Shadcn/ui configuration
+middleware.ts - Next.js middleware
+vercel.json - Vercel deployment config
+redirects.json - URL redirects
+rate-limit.ts - Rate limiting configuration
+rate-limits - Rate limits data
+schema.sql - Database schema
+env.example - Environment variables example
+env.template - Environment variables template
+stripe-config.env - Stripe configuration
+�� Fișiere de Test
+jest.config.js - Jest configuration
+jest.setup.js - Jest setup
+playwright.config.ts - Playwright configuration
+test-p0-pages.js - P0 pages test
+.lighthouserc.js - Lighthouse configuration
+.linkcheckerrc - Link checker configuration
+.pa11yci.json - Pa11y accessibility testing
+�� Documentație
+README.md - Main documentation
+README_SETUP.md - Setup guide
+README_BILLING.md - Billing documentation
+README_STRIPE_INTEGRATION.md - Stripe integration
+CONTRIBUTING.md - Contribution guidelines
+SECURITY.md - Security documentation
+SECURITY_BEST_PRACTICES.md - Security best practices
+SECURITY_ENHANCEMENTS_SUMMARY.md - Security enhancements
+STRIPE_CONFIGURATION.md - Stripe configuration
+VERCEL_INTEGRATION_GUIDE.md - Vercel integration
+SUPABASE_SETUP.md - Supabase setup
+PAYMENT_SYSTEM_PRODUCTION_GUIDE.md - Payment system guide
+OBSERVABILITY_IMPLEMENTATION.md - Observability
+OPTIMIZATION_FINAL_REPORT.md - Optimization report
+ANALYTICS_IMPLEMENTATION.md - Analytics implementation
+API_SMOKE_TESTS_IMPLEMENTATION.md - API smoke tests
+BACKUP_RECOVERY_IMPLEMENTATION.md - Backup recovery
+CONFIGURATION_MANAGEMENT.md - Configuration management
+AGENT_USAGE_EXAMPLES.md - Agent usage examples
+DEMO_DATA_SUMMARY.md - Demo data summary
+DEPLOYMENT_CHECKLIST.md - Deployment checklist
+DEPLOYMENT_SUCCESS.md - Deployment success
+CI_CD_ACTION_PLAN.md - CI/CD action plan
+AUDIT_SUMMARY.md - Audit summary
+FRONTEND_RECOVERY_SUMMARY.md - Frontend recovery
+FAZA2_IMPLEMENTATION_SUMMARY.md - Phase 2 implementation
+BUILD_FIX_SUMMARY.md - Build fix summary
+PROMPTFORGE_V3.1_EXECUTION_SUMMARY.md - V3.1 execution
+PROMPTFORGE_V3.1_IMPLEMENTATION_SUMMARY.md - V3.1 implementation
+DOCUMENTATION_SECURITY_REVIEW_SUMMARY.md - Documentation security
+GITHUB_CI_CD_SETUP.md - GitHub CI/CD setup
+GLASS_EFFECTS_OPTIMIZATION_GUIDE.md - Glass effects optimization
+LEGAL_COMPLIANCE_AUDIT.md - Legal compliance audit
+VOICE_BRANDING_GUIDELINES.md - Voice branding guidelines
+🔧 Fișiere de Sistem
+agent.ts - Agent configuration
+VERSION - Version information
+.vercelignore - Vercel ignore rules
+next-env.d.ts - Next.js environment types
+sentry.client.config.ts.disabled - Sentry client (disabled)
+sentry.server.config.ts.disabled - Sentry server (disabled)
+sentry.edge.config.ts.disabled - Sentry edge (disabled)
+
+
+
+�� DIRECTORII PRINCIPALE
+
+APP DIRECTORY (Next.js App Router)
+app/
+├── globals.css                    # Global styles
+├── layout.tsx                     # Root layout
+├── page.tsx                       # Homepage
+├── loading.tsx                    # Loading component
+├── not-found.tsx                  # 404 page
+├── critical.css                   # Critical CSS
+├── styles/                        # Additional styles
+├── collaborate/                   # Collaboration pages
+│   ├── page.tsx
+│   └── redirect.ts
+├── docs/                          # Documentation
+│   └── api/
+│       └── page.tsx
+├── generator/                     # Generator pages
+│   └── page.tsx
+├── dashboard/                     # Dashboard pages
+│   └── page.tsx
+├── ai-editor/                     # AI Editor pages
+│   └── page.tsx
+├── pricing/                       # Pricing pages
+│   └── page.tsx
+├── api/                           # API routes
+│   ├── export/
+│   │   ├── route.ts
+│   │   └── validate/
+│   │       └── route.ts
+│   ├── collaboration/
+│   │   └── sessions/
+│   │       └── route.ts
+│   ├── ai/
+│   │   └── generate/
+│   │       └── route.ts
+│   ├── stripe/
+│   │   └── create-checkout/
+│   │       └── route.ts
+│   ├── modules/
+│   │   └── route.ts
+│   ├── auth/
+│   │   └── login/
+│   │       └── route.ts
+│   ├── analytics/                 # Empty
+│   ├── email/                     # Empty
+│   └── waitlist/                  # Empty
+├── sitemap.xml/                   # Sitemap
+│   └── route.ts
+└── robots.txt/                    # Robots.txt
+    └── route.ts
+│   ├── ai/
+🧩 COMPONENTS DIRECTORY
+components/
+├── header.tsx                     # Main header
+├── ExportMenu.tsx                 # Export menu
+├── analytics-provider.tsx         # Analytics provider
+├── home-interactive.tsx           # Home interactive
+├── main-content-interactive.tsx   # Main content
+├── coming-soon-interactive.tsx    # Coming soon
+├── admin-toggle.tsx               # Admin toggle
+├── admin-button.tsx               # Admin button
+├── ui/                            # UI components
+│   ├── dropdown-menu.tsx
+│   ├── card.tsx
+│   ├── badge.tsx
+│   ├── button.tsx
+│   └── input.tsx
+├── collaboration/                 # Collaboration components
+│   └── collaboration-workspace.tsx
+├── ai/                            # AI components
+│   └── ai-module-editor.tsx
+├── modules/                       # Module components
+│   └── module-browser.tsx
+└── auth/                          # Auth components
+    ├── register-form.tsx
+    └── login-form.tsx
+📚 LIB DIRECTORY
+lib/
+├── auth.tsx                       # Authentication
+├── modules.ts                     # Module management
+├── supabase.ts                    # Supabase client
+├── ai.ts                          # AI services
+├── email.ts                       # Email services
+├── realtime.ts                    # Realtime services
+├── stripe.ts                      # Stripe integration
+├── analytics.ts                   # Analytics
+├── export.ts                      # Export functionality
+├── entitlements/                  # Entitlements
+│   ├── index.ts
+│   └── types.ts
+└── motion/                        # Motion components
+    └── provider.tsx
+HOOKS DIRECTORY
+hooks/
+├── use-toast.ts                   # Toast notifications
+├── use-fonts-ready.ts             # Font loading
+├── use-fps-tier.ts                # FPS detection
+├── use-export-bundle.ts           # Export bundle
+├── use-reduced-motion.ts          # Reduced motion
+├── useAgent.ts                    # Agent usage
+├── use-entitlements.ts            # Entitlements
+├── use-localization.ts            # Localization
+├── use-mobile.ts                  # Mobile detection
+├── use-stripe-checkout.ts         # Stripe checkout
+├── use-ab-testing.ts              # A/B testing
+├── use-analytics.ts               # Analytics
+└── use-auth.ts                    # Authentication
+TYPES DIRECTORY
+types/
+├── promptforge.ts                 # PromptForge types
+└── global.d.ts                    # Global types
+🛠️ UTILS DIRECTORY
+utils/
+├── promptCompiler.ts              # Prompt compiler
+├── parseInputSchema.ts            # Input schema parser
+├── performance.ts                 # Performance utilities
+└── accessibility.ts               # Accessibility utilities
+PUBLIC DIRECTORY
+public/
+├── glitch-keywords.js             # Glitch effects
+├── robots.txt                     # Robots.txt
+├── site.webmanifest               # Web manifest
+├── sitemap.xml                    # Sitemap
+├── placeholder.jpg                # Placeholder images
+├── placeholder.svg
+├── placeholder-logo.png
+├── placeholder-logo.svg
+├── placeholder-user.jpg
+├── professional-woman-scientist.png
+├── professional-woman-portrait.png
+├── professional-man-portrait.png
+├── professional-engineer.png
+├── organized-tool-library.png
+├── organized-industrial-tool-library.png
+├── industrial-prompt-engineering-dashboard.png
+├── industrial-factory-automation.png
+├── industrial-factory-automation-systems.png
+├── digital-audit-trail-compliance-dashboard.png
+├── digital-audit-compliance.png
+├── og/                            # Open Graph images
+│   └── default.webp
+├── brand/                         # Brand assets
+│   ├── svg/
+│   ├── nav_static_01_hover.png
+│   ├── nav_static_02_click.png
+│   ├── nav_static_03_loading.png
+│   ├── logo_variation_05.png
+│   ├── logo_variation_04.png
+│   ├── logo_variation_03.png
+│   ├── logo_variation_02.png
+│   ├── logo_variation_01.png
+│   ├── logo_transparent_final.png
+│   ├── forge_v3_logo_transparent.png
+│   ├── forge_v3_logo_02.png
+│   ├── forge_v3_logo_01.png
+│   ├── forge_logo_primary.png
+│   ├── forge_logo_with_text.png
+│   └── forge_icon_transparent.png
+├── f_v3_brand_videos/             # Brand videos
+├── f_v3_brand_svg_2d/             # 2D SVG assets
+├── f_v3_brand_images/             # Brand images
+├── f_v3_brand_html_gif/           # HTML/GIF assets
+└── assets/                        # General assets
+🗄️ SUPABASE DIRECTORY
+supabase/
+├── README.md                      # Supabase documentation
+├── config.toml                    # Supabase configuration
+├── .temp/                         # Temporary files
+└── migrations/                    # Database migrations
+    ├── 001_complete_schema.sql
+    ├── 20241220000001_create_analytics_tables.sql
+    ├── 20241220000002_create_user_management_tables.sql
+    ├── 20241220000003_security_lockdown.sql
+    ├── 20241220000004_create_exports_table.sql
+    ├── 20241220000005_stripe_billing.sql
+    ├── 20241220000006_unified_org_schema.sql
+    ├── 20241220000007_ai_cache.sql
+    ├── 20241220000007_payment_analytics.sql
+    ├── 20241220000008_ai_usage_tracking.sql
+    ├── 20241220000008_security_enhancements.sql
+    ├── 20241220000009_email_verification_tokens.sql
+    ├── 20241226000001_module_renames_and_legacy_slugs.sql
+    └── 20241227000001_security_enhancements.sql
+📖 DOCS DIRECTORY
+docs/
+├── LAYOUT_PROTECTION.md           # Layout protection
+├── PERFORMANCE_GUIDE.md           # Performance guide
+├── SECURITY_PIPELINE_INTEGRATION.md # Security pipeline
+├── SITE_STRUCTURE_GUIDE.md        # Site structure
+├── UI_SYSTEM_GUIDE.md             # UI system
+├── ACCESSIBILITY_GUIDE.md         # Accessibility
+└── ACCESSIBILITY_TESTING.md       # Accessibility testing
+�� TESTS DIRECTORY
+__tests__/
+├── pricing-system.test.ts         # Pricing system tests
+├── check-config.test.js           # Config check tests
+├── layout-structure.test.tsx      # Layout structure tests
+├── module-renames.test.ts         # Module rename tests
+└── billing/                       # Billing tests
+
+tests/
+├── redirects.e2e.test.ts          # Redirect E2E tests
+├── modules.spec.ts                # Module tests
+└── e2e/                           # E2E tests
+📦 APPS DIRECTORY
+apps/
+├── site-v4/                       # Site v4 (295 files)
+└── site-v4-manus/                 # Site v4 manus (113 files)
+🎯 CURSOR DIRECTORY
+cursor/
+├── unut                           # Cursor config
+├── init.json                      # Initialization
+├── f_v3_ux_ui_audit_findings.md   # UX/UI audit
+├── f_v3_promptforge_launch_roadmap.md.pdf # Launch roadmap
+├── f_v3_agent_init.txt            # Agent initialization
+├── f_v3_code_audit_findings.md    # Code audit
+├── ruleset.yml                    # Ruleset
+├── init_main/                     # Main initialization
+├── f_v3_rules/                    # V3 rules
+├── f_v3_logo_branding/            # Logo branding
+├── f_v3_files/                    # V3 files
+├── f_v3_after_launch/             # Post-launch
+├── PFv4_UIUX_Kit/                 # V4 UI/UX kit
+└── PFv4_ModuleSync_Bundle/        # V4 module sync
+📤 EXPORTS DIRECTORY
+exports/
+└── demo-bundle/                   # Demo bundle exports
+🗄️ DB DIRECTORY
+db/
+├── backups/                       # Database backups
+└── seeds.sql                      # Database seeds
+📋 SCHEMAS DIRECTORY
+schemas/
+└── api-contracts.json             # API contracts
+📊 STYLES DIRECTORY
+styles/
+├── [3 CSS files]                  # Additional styles
+GITHUB DIRECTORY
+.github/                           # GitHub workflows
+☁️ VERCEL DIRECTORY
+.vercel/                           # Vercel configuration
+⚡ SWC DIRECTORY
+.swc/                              # SWC configuration
+GITHOOKS DIRECTORY
+.githooks/                         # Git hooks
+📊 TEST RESULTS
+test-results/                      # Test results
+playwright-report/                 # Playwright reports
+📈 STATISTICI TOTALE
+Total Fișiere: 1000+ fișiere
+Directoare Principale: 25+
+Fișiere de Configurare: 20+
+Documentație: 40+ fișiere MD
+Teste: 10+ fișiere de test
+Migrații DB: 14 fișiere SQL
+Componente UI: 15+ componente
+Hooks: 13 hooks custom
+API Endpoints: 15+ endpoint-uri
+Assets Public: 50+ imagini/logo-uri
+Aceasta este structura completă și detaliată a tuturor fișierelor din repository-ul PromptForge!
+
+
+
+
+
+
+
+
+

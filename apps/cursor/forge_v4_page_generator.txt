@@ -1,0 +1,972 @@
+
+
+
+
+
+/generator:
+
+🔑 Principii cheie de design
+
+Viteză maximă – utilizatorul trebuie să obțină un prompt valid în ≤60s .
+
+Click-uri minime – 3–5 acțiuni până la rezultat .
+
+Gating clar – butoane vizibile dar blocate cu explicație (tooltip „disponibil în Pro/Enterprise”).
+
+Telemetrie obligatorie – fiecare acțiune logată: filter_change, simulate_run, export_request.
+
+DoR/DoD la runtime – execuția blocată dacă input 7D nu e valid sau scor <80.
+
+🧩 Structura propusă pentru /generator
+1. Header & FilterBar (persistent top)
+
+Căutare globală (⌘K)
+
+Selectoare 7 vectori + slider dificultate + plan filter
+
+Filtre active afișate ca chips (cu „Clear All”).
+
+2. Grid de Module (M01–M50)
+
+ModuleCard: titlu, vectors, BadgePlan, DifficultyMeter, summary scurt
+
+CTA „View” → deschide Overlay.
+
+Locked state: CTA disabled + tooltip motiv („Necesită Pro”).
+
+3. ModuleOverlay (detaliu modul)
+
+Secțiuni fixe (SSOT): Overview → Inputs (7D form) → Outputs → KPI → Guardrails → Actions.
+
+Actions:
+
+Simulate (toți utilizatorii)
+
+Run Real Test (Pro+)
+
+Export (meniul gated: txt/md/json/pdf/zip după plan)
+
+Live score după Run, afișat cu badge (clarity/execution/ambiguity/fit).
+
+4. Quick Actions (sidebar sau sticky bottom)
+
+„Try Prompt Roulette” (random + filtre rapide)
+
+„Voice-to-Prompt” (premium)
+
+„Drag & Drop Builder” (intermediar)
+
+5. ExportMenu (paywall integrat)
+
+Vizibilitate completă a opțiunilor, dar doar planul curent activ.
+
+Tooltip motivațional: „Disponibil pe Pro/Enterprise”.
+
+Checksum obligatoriu la export + manifest.json.
+
+🎯 Recomandare finală
+
+Default UX: Template Blitz (grid + 1-click start) – cel mai rapid și predictibil .
+
+Power users: Smart Auto-Complete + Drag&Drop (control total) .
+
+Premium unlock: Voice-to-Prompt + Export PDF/JSON/ZIP 【48†sourcensistency**: Totul derivă din ruleset.yml și entitlements (nu hardcode în UI)
+
+
+
+
+
+
+
+⚖️ Principii pentru /generator
+1. Viteză maximă (Time-to-Value ≤ 60 secunde)
+De ce
+
+– Charter-ul tău are KPI explicit: Activation ≤10m și primul export în ≤60s.
+– Orice întârziere reduce conversia free→paid și crește churn.
+
+Cum
+
+Default UX simplificat: Template Blitz (1 click + 2 dropdown-uri).
+
+Pre-populare automată: parametrii 7D completati din context (industry pack, defaults de domeniu).
+
+Reducere de fricțiune: input unic („Descrie în 1 frază”) → auto-complete 7D .
+
+Telemetrie: log „time_to_prompt” per user → monitorizare P95.
+
+2. Click-uri minime (3–5 acțiuni până la artefact)
+De ce
+
+– Comparația soluțiilor UI/UX din audit: cele mai eficiente sunt ≤5 acțiuni .
+
+Cum
+
+Grid vizual de module: selectezi modulul → overlay → generate.
+
+Preseturi (plan/domain/urgency) aplicate automat.
+
+ExportMenu afișează doar formatele permise de plan → zero explorare inutilă.
+
+Shortcut-uri: ⌘K search, Spacebar = Prompt Roulette.
+
+3. Gating clar și motivant
+De ce
+
+– Monetizarea se bazează pe upsell la momentele de valoare („aha moments”).
+– Entitlements sunt definite strict pe planuri (Free/Creator/Pro/Enterprise).
+
+Cum
+
+Butoane vizibile dar inactive (nu ascunse).
+
+Tooltip: „Necesită Pro. Deblochează export PDF și Test Engine live.”.
+
+Paywall inline: apare în context (nu redirect).
+
+Contextual upgrade CTA: dacă utilizatorul ajunge la limită (ex. 20 runs/day în Free).
+
+4. Telemetrie obligatorie (nu design ornamental)
+De ce
+
+– KPI-urile comerciale (Free→Paid, WAU/MAU, Export Mix) se bazează pe loguri exacte.
+– Observabilitatea e un strat critic (p95 latency, success rate, exports).
+
+Cum
+
+Evenimente minime logate la fiecare pas:
+
+filter_change, module_open, simulate_run, live_run, export_request, export_success.
+
+Fără PII brut în loguri (doar hash & metadata).
+
+Checksum + manifest obligatorii la export pentru audit.
+
+Dashboards: score distribution, pass rate ≥95%, TTA <60s.
+
+5. DoR/DoD la runtime (gardieni non-negociabili)
+De ce
+
+– Evită artefacte „false positive” sau exporturi invalide → brandul se prăbușește.
+– DoR/DoD sunt deja formalizate ca reguli executabile.
+
+Cum
+
+DoR (Ready): verifici 7D valid, entitlement valid, output_spec încărcat, testcases definite.
+
+DoD (Done): scor ≥80, output complet, checksum valid, manifest scris, telemetrie salvată.
+
+UI reacționează direct:
+
+Score <80 → buton „Export” blocat cu mesaj „Tighten & Re-test”.
+
+Lipsă parametri → banner „Completează 7D”.
+
+Rapoarte săptămânale cu % runs care trec DoR și DoD.
+
+🔧 Concluzie operațională
+
+Principiile nu sunt „nice-to-have”, ci gardieni:
+
+Viteza = conversie.
+
+Click-uri minime = retenție.
+
+Gating clar = monetizare.
+
+Telemetrie = scalabilitate.
+
+DoR/DoD = calitate + brand.
+
+Totul se leagă în SSOT (ruleset.yml + plans.json + entitlements.json) și se aplică uniform UI + API + DB.
+
+
+
+
+
+punctul 1: Header & FilterBar în detaliu tehnic și operațional.
+
+🧩 1. Header & FilterBar (persistent top)
+🎯 Scop
+
+Să ofere control instant asupra întregului set de 50 module.
+
+Să reducă fricțiunea: utilizatorul găsește rapid modulul corect fără scroll excesiv.
+
+Să servească drept punct unic de comandă: search, vectori 7D, dificultate, planuri.
+
+🔍 Funcționalități
+1.1 Căutare globală (⌘K)
+
+Shortcut universal: Cmd/Ctrl+K → deschide search overlay.
+
+Index: module (M01–M50), vectori, descrieri, aliasuri/legacy_slugs.
+
+Rezultate afișate: Titlu modul + vectori + BadgePlan + dificultate.
+
+Fallback: „Nu există module pentru filtrul curent. Resetează”.
+
+1.2 Selectoare 7 vectori (multi-select)
+
+Vectorii canonici: strategic, rhetoric, content, analytics, branding, crisis, cognitive.
+
+Chips togglable cu aria-pressed, focus states, tooltip explicativ.
+
+Telemetrie: filter_change {vectors[], results_count}.
+
+1.3 Slider dificultate (1–5)
+
+UI: slider + etichetă („Beginner…Expert”).
+
+Mapare la metadate modul: difficulty (1–5).
+
+Telemetrie: filter_change {difficulty, results_count}.
+
+1.4 Plan filter
+
+Dropdown: All / Free / Creator / Pro / Enterprise.
+
+Vizibil pentru educație + upsell („Upgrade pentru Pro export PDF/JSON”).
+
+Telemetrie: filter_change {plan, results_count}.
+
+1.5 Filtre active ca chips
+
+Afișate sub FilterBar: Search + Vectori + Dificultate + Plan.
+
+CTA „Clear All” → reset complet.
+
+Skeleton state la loading.
+
+♿ Accesibilitate & UX
+
+Role="search" pentru bara de căutare.
+
+Focus-ring vizibil pe toate controalele.
+
+Hit target ≥ 44×44 px.
+
+aria-valuenow pe slider dificultate.
+
+Filtrele active au aria-label + close button.
+
+⚡ Telemetrie minimă
+
+filter_change → log {q, vectors[], difficulty, plan, results_count}.
+
+search_submit → log {query, results_count, selected_module_id}.
+
+🎨 Design tokens (din PFv4)
+
+Background: var(--surface)
+
+Chips: var(--brand) accentuate cu hover glow.
+
+Slider: track var(--border), thumb var(--focus).
+
+Font: Space Grotesk (UI) + Cinzel pentru titluri.
+
+
+
+
+
+
+punctul 2: Grid de Module (M01–M50) cu tot ce trebuie ca să fie implementabil direct în frontend și aliniat cu gating-ul și entitlements.
+
+🧩 2. Grid de Module (M01–M50)
+🎯 Scop
+
+Listă vizuală și scanabilă a celor 50 module canonice.
+
+Acces rapid: 2–3 click-uri până la generare.
+
+Claritate în gating: vezi imediat ce e accesibil vs. ce e blocat.
+
+📐 Anatomie ModuleCard
+
+Elementele standard (SSOT, fără variații arbitrare):
+
+Titlu
+– Format: Mxx – NUME_MODUL™ (ex: M14 – SOCIAL CONTENT GRID™).
+– Titlul trebuie să fie identic în UI, API, sitemap, docs.
+
+Vectors chips
+– Afișează max. 3 vectori (restul „+n”).
+– Ex.: Strategic, Rhetoric, Branding.
+
+BadgePlan
+– Afișează planul minim necesar: Free / Creator / Pro / Enterprise.
+– Stil vizual: mic badge colorat (semantic tokens).
+
+DifficultyMeter (1–5)
+– Bară sau dots (1–5).
+– Label: „Beginner…Expert”.
+
+Summary scurt
+– ≤160 caractere (metadată din module.spec.json).
+– Ex.: „Optimizează un scroll de vânzare cu structura AIDA completă.”
+
+CTA: „View”
+– Deschide ModuleOverlay.
+– Locked state: buton disabled + tooltip: „Necesită Pro. Încearcă Simulate sau upgradează.”.
+
+🖥️ Comportamente
+
+Hover: glow subtil (glitch pulse, var(--brand)).
+
+Click pe card/CTA: eveniment module_card_open {id}.
+
+Locked click: eveniment module_card_locked_click {id, userPlan, minPlan}.
+
+Keyboard: card focusable + Enter deschide overlay.
+
+♿ Accesibilitate
+
+Card focusable ca <button role="button">.
+
+Titlu = aria-label.
+
+Summary legat prin aria-describedby.
+
+Tooltip accesibil (aria-live, focus).
+
+⚡ Telemetrie
+
+module_card_open {module_id}.
+
+module_card_locked_click {module_id, userPlan, minPlan}.
+
+filter_change deja logat în FilterBar → corelat cu deschiderea.
+
+🎨 Design tokens
+
+Background: var(--surface)
+
+BadgePlan:
+
+Free: gray
+
+Creator: teal
+
+Pro: gold
+
+Enterprise: red
+
+DifficultyMeter: verde→galben→roșu gradient.
+
+Summary: font text-base, max 2 linii (line-clamp).
+
+🔒 Gating
+
+Free: acces doar la subset M01, M10, M18.
+
+Creator+: toate modulele, dar export limitat la txt/md.
+
+Pro+: export PDF/JSON + Test Engine live.
+
+Enterprise: tot + API, Bundle ZIP.
+
+
+
+
+3. ModuleOverlay (detaliu modul) — implementabil direct, aliniat la SSOT (ruleset/entitlements) și cu gardieni DoR/DoD.
+
+🧩 3. ModuleOverlay (detaliu modul)
+🎯 Scop
+
+Spațiul unde utilizatorul transformă rapid un modul în artefact valid: completează 7D, rulează (simulat sau live), vede scorul și exportă conform planului. Overlay-ul urmează exact ordinea canonică: Overview → Inputs (7D) → Outputs → KPI → Guardrails → Actions.
+
+📐 Anatomie (secțiuni fixe, SSOT)
+3.1 Overview
+
+Titlu canonic: Mxx – NUME_MODUL™ (identic în UI, API, sitemap)
+
+Vectori (chips) + DifficultyMeter (1–5) + BadgePlan (minim necesar)
+
+Summary (≤160c) + „Est. tokens/runtime” (dacă există în meta)
+
+3.2 Inputs (7D form)
+
+Câmpuri: domain, scale, urgency, complexity, resources, application, output
+
+Pre-populare din defaults de domeniu / Industry Pack (dacă există)
+
+Validare „enum-only” conform ruleset.yml (nu permiți valori în afara nomenclatorului)
+
+Banner DoR dacă lipsesc câmpuri critice: „Completează 7D”
+
+3.3 Outputs
+
+Listează formatele suportate de modul + ce e permis de plan (vizibil toate, dar disabled ce nu ai voie)
+
+Indică obligatorii de export (ex: spec+json pentru FinTech Pack) dacă există preset de industrie
+
+3.4 KPI
+
+Afișează KPI-urile modulului/industriei (ex: CTR, NRR, fraud_rate) — doar ca „ce urmărești”, nu ca blocant
+
+3.5 Guardrails
+
+Reguli relevante (etice/legale/comerciale) extrase din domain preset (ex: SEC/FCA la FinTech)
+
+Reminder: „No PII în artefacte; exporturile includ manifest + checksum”
+
+3.6 Actions
+
+Simulate (toți): ieftin/instant, pentru iterat rapid
+
+Run Real Test (Pro+): test pe GPT live, log tokens/cost/durată + scoruri Evaluator AI
+
+Export (meniul gated): txt/md/json/pdf/zip după plan; zip doar Enterprise; exporturile au manifest + SHA256
+
+🧪 Scor live (după Run)
+
+După Simulate/Run, afișează badge scor cu cele 4 axe:
+
+Clarity | Execution | Ambiguity (invers) | Business Fit
+
+Prag DoD: Claritate≥80, Execuție≥80, Ambiguitate≤20, Fit≥75; altfel „Tighten & Re-test” (export blocat).
+
+🔒 Gating & Paywall (comportament)
+
+Dacă userPlan < minPlan: buton „Run Real Test”/„Export PDF/JSON/ZIP” disabled + tooltip „Necesită {Plan}” (nu ascunzi butoanele)
+
+Apăsare pe acțiune blocată → Paywall Inline cu beneficii plan + CTA Upgrade
+
+Free rulează numai simulări + export .txt; Creator: +.md; Pro: +PDF/JSON + Test Engine live + Cloud history; Enterprise: +API + White-label + Bundle ZIP
+
+♿ Accesibilitate & UX
+
+Deschidere: fade+scale 220ms; Esc închide; trap-focus în overlay
+
+Toate controalele au focus-ring și aria corecte; slider/checkbox cu aria-* complet
+
+Preferă „prefers-reduced-motion”: tranziții devin instant
+
+⚡ Telemetrie minimă (la fiecare pas)
+
+overlay_open {module_id}
+
+simulate_run {module_id, sevenD_signature} / live_run …
+
+score_recorded {clarity, execution, ambiguity, business_fit, composite}
+
+export_request {format, plan} / export_success {format, size_kb}
+
+Fără PII brut în evenimente; logezi hash + metadata. Exportul salvează manifest + checksum.
+
+✅ DoR/DoD – gardieni runtime
+
+DoR check înainte de Actions: 7D valid (enum), entitlement valid, output_spec încărcat, testcases existente; altfel butoanele blocate cu motiv
+
+DoD check după Run: scoruri la prag, output complet, checksum valid, manifest prezent; altfel export blocat și UI propune „Tighten”/„Optimize enterprise”
+
+🎨 Design & tokens (din PFv4)
+
+Layout pe tab/ancore: Overview → Inputs → Outputs → KPI → Guardrails → Actions
+
+Action bar sticky (bottom) pentru butoanele Simulate / Run / Export
+
+Glow discret la hover, contrast ≥4.5:1, target ≥44×44 px
+
+🛠️ Note de implementare
+
+SSOT: toate textele (titlu, summary, vectors, outputs suportate) provin din registry/spec; nu hardcode în componentă
+
+Entitlements din plans/flags, nu „if(email)” în UI
+
+Pentru viteză, oferă preseturi 7D (auto-complete) și varianta Template Blitz ca flux implicit.
+
+
+
+
+
+
+🧩 4. Quick Actions
+A) „Try Prompt Roulette” (random + filtre rapide)
+Scop
+
+Iterație fulger când utilizatorul nu știe exact ce vrea; maximizează viteză și reduce fricțiunea deciziei. Modelul e susținut de soluția „Prompt Roulette” cu Spacebar pentru „următorul”.
+
+UX & comportament
+
+Buton primar: „Try Prompt Roulette”.
+
+Filtre rapide (toggle-uri vizibile în popover):
+
+Industry (Tech/Health/Finance/Marketing)
+
+Tone (Professional/Creative/Urgent)
+
+Length (Short/Medium/Long)
+
+Goal (Sell/Inform/Persuade/Entertain)
+
+Spacebar = „Next suggestion”; Enter = „Open in Overlay”.
+
+Fallback copy: „Nu există sugerări pentru acest set. Resetează filtrele.”
+
+Gating
+
+Disponibil tuturor. Exportul rămâne limitat de plan (txt free; md Creator; pdf/json Pro; zip Enterprise). Exportul este mereu cu manifest + checksum.
+
+Telemetrie
+
+roulette_open, roulette_next, roulette_select {filters, module_id}
+
+Corelat ulterior cu simulate_run / export_request.
+
+Accesibilitate
+
+Popover cu trap-focus, butoane 44×44, aria-pressed pe toggles; Esc închide.
+
+Gardieni
+
+La „Open in Overlay”, verifici DoR (7D valid) — dacă lipsesc câmpuri, banner „Completează 7D”.
+
+B) „Voice-to-Prompt” (premium)
+Scop
+
+Să ajungi la prompt complet în ≤45–60s doar vorbind; feature diferențiator Pro/Enterprise în linie cu „Voice-to-Prompt în 30s”.
+
+UX & comportament
+
+Buton: „🎤 Voice-to-Prompt”.
+
+Flow minimal:
+
+Sheet/panel cu buton Record + timer 30s.
+
+Transcriere în timp real; indicator „Auto-detected 7D”.
+
+Pre-populare formular 7D + Quick Edit.
+
+CTA: „Run Real Test” (dacă plan permite) sau „Simulate”.
+
+Gating
+
+Pro+ pentru rulare live (GPT) și export pdf/json; Free/Creator pot doar înregistra + simula, export conform plan.
+
+Telemetrie
+
+voice_open, voice_record_start/stop {duration_s},
+voice_autofill_7D {domain, scale, …}, voice_run_sim/live, score_recorded.
+
+Accesibilitate
+
+Capturi tastabile, focus vizibil, text alternativ pentru icon, anunțare status în aria-live (recording on/off).
+
+Gardieni
+
+DoR: validare „enum-only” la 7D generat din vorbire; dacă invalid → highlight câmpuri și blochează Actions până se corectează.
+
+DoD: export blocat sub scor (<80) cu „Tighten & Re-test”.
+
+C) „Drag & Drop Builder” (intermediar)
+Scop
+
+Control vizual asupra structurii promptului, bazat pe blocuri per dimensiune; recomandat utilizatorilor care vor fine-tuning fără a părăsi fluxul rapid.
+
+UX & comportament
+
+Buton: „🧱 Drag & Drop Builder”.
+
+Sidebar blocuri organizate pe categorii:
+
+Tone, Industry, Goal, Constraints, Examples, Output.
+
+Canvas central cu smart snapping în ordinea logică (Context → Cerință → Specificație → KPI → Guardrails → Output).
+
+Fiecare bloc are 2–3 variante „One-Click Variations” (ex. tone: formal/casual/urgent).
+
+Instant Preview (dreapta): promptul rezultat live.
+
+Gating
+
+Toți pot construi; rularea live/expoturile avansate rămân gated pe plan (Pro/Ent).
+
+Telemetrie
+
+builder_open, builder_drop {blockType}, builder_variant_click {blockType, variant},
+simulate_run/live_run, export_request/export_success.
+
+Accesibilitate
+
+Drag-and-drop + alternative cu butoane „Move up/down”, aria-grabbable, focus management; prefers-reduced-motion respectat.
+
+Gardieni
+
+DoR: verifici că rezultatul final mapează corect 7D + output_spec; altfel banner „Completează 7D/Output”.
+
+DoD + export: manifest + checksum obligatorii; zip doar Enterprise.
+
+Plasare & pattern vizual
+
+Sticky bottom bar (mobile-first): 3 butoane egale, icon + label scurt.
+
+Sidebar (desktop ≥1024px): secțiune „Quick Actions” sub filtre.
+
+Motion discret (220ms) și contrast ≥4.5:1; target ≥44×44; un singur H1 pe pagină, cum cere design system.
+
+De ce funcționează (legate de KPI)
+
+Roulette: scade timpul de decizie → crește Activation & TTV (≤60s), susținut explicit ca pattern eficient.
+
+Voice: diferențiator premium → crește Free→Paid și Export Mix behind paywall (pdf/json/zip).
+
+Builder: ridică scorul DoD (claritate/executare) prin structurare vizuală → mai multe exporturi „PASS”.
+
+Rezumat gating & calitate
+
+Toate acțiunile respectă entitlements by plan (UI + API; fără hard-coding pe user).
+
+DoR/DoD aplicate la nivel de acțiuni pentru consistență calitativă și brand safety.
+
+Toate exporturile produc manifest + SHA256 (audit-ready).
+
+
+
+
+
+
+
+🧩 5. ExportMenu (paywall integrat)
+🎯 Scop
+
+Control unificat pentru exportul artefactelor, păstrând vizibilitatea tuturor opțiunilor, dar permițând doar cele incluse în planul curent; fiecare export produce manifest.json + checksum SHA256 pentru audit și integritate.
+
+📐 Anatomie UI
+
+Trigger: „Export” (button/meniu contextual în ModuleOverlay – zona Actions).
+
+Lista opțiuni (vizibile mereu, cu starea aferentă):
+
+.txt (Free+)
+
+.md (Creator+)
+
+.pdf (Pro+)
+
+.json (Pro+)
+
+.zip bundle (Enterprise)
+
+Descrieri scurte sub fiecare item (ex.: „Brand-ready report”, „Machine-readable config”).
+
+Sub-footnote: „All exports include manifest.json & SHA256 checksum.”
+
+Stări vizuale:
+
+enabled (selectabil)
+
+disabled (gated) + tooltip: „Disponibil pe Pro/Enterprise” (sau planul exact)
+
+blocked (DoD fail) + mesaj: „Score < 80. Tighten & Re-test.”
+
+A11y:
+
+Listă cu rol menu / iteme menuitemradio; focus-ring; tooltips accesibile (aria-describedby).
+
+🔒 Gating pe planuri (matrice comportamentală)
+Format	Free	Creator	Pro	Enterprise
+.txt	✅	✅	✅	✅
+.md	❌	✅	✅	✅
+.pdf	❌	❌	✅	✅
+.json	❌	❌	✅	✅
+.zip (bundle)	❌	❌	❌	✅
+
+Regulă: afișezi toate opțiunile, dar numai cele entitled sunt active; celelalte sunt disabled + tooltip „Disponibil pe Pro/Enterprise”. Niciun if(email); verificarea se bazează pe entitlements/flags din config-ul de planuri (UI+API sunt sincronizate cu SSOT).
+
+🧪 Gardieni calitate (DoR/DoD)
+
+DoR gate (înainte de export): 7D valid (enum-only), entitlement valid, output_spec încărcat; altfel blochezi comanda și afișezi motivul.
+
+DoD gate (după Run): scoruri minime (clarity≥80, execution≥80, ambiguity≤20, business_fit≥75); dacă nu trece, Export PDF/JSON/ZIP devin blocked cu mesaj „Score < 80. Tighten & Re-test.”
+
+🧾 Manifest & Checksum (obligatorii)
+
+La orice export valid:
+
+manifest.json: bundle_id, run_id, module_id, version, formats[], artifacts[] (nume, bytes, sha256), timestamp, license_notice.
+
+checksum: SHA256 pentru fiecare fișier; bundle.zip folosește o sumă compusă pe ordonare canonică.
+
+(Enterprise) bundle.zip conține toate artefactele + manifest + checksum.
+
+⚙️ Flux (pseudo)
+
+User → ExportMenu → selectă formatul.
+
+UI cere serverului POST /api/export cu {run_id, format}.
+
+Server validează DoR/DoD + entitlements; generează artefactul(e), calculează SHA256, scrie manifest.json, (opțional) creează bundle.zip; logează telemetrie.
+
+Răspuns: export_id, download_url (semnat, TTL), size_kb.
+
+UI afișează toast „Export ready” + buton „Download”.
+
+🚨 Erori & mesaje
+
+402/403 – gated: „Funcția este disponibilă pe {Plan}. Upgrade pentru a continua.” (inline paywall)
+
+422 – DoD fail: „Score < 80. Tighten & Re-test.”
+
+429 – rate limit: „Ai atins limita de export. Încearcă mai târziu sau upgradează planul.”
+
+500 – export fail: „Exportul a eșuat. Reîncearcă. Dacă persistă, contactează suport.”
+
+📊 Telemetrie minimă
+
+export_request {module_id, run_id, format, plan}
+
+export_blocked {reason: gated|dod_fail|invalid, format}
+
+export_success {format, size_kb, sha256_present:true, manifest:true}
+
+Zero PII în evenimente; doar hash/IDs/meta.
+
+🧱 API contract (schematic)
+
+POST /api/export
+
+{
+  "run_id": "uuid",
+  "format": "txt|md|pdf|json|zip"
+}
+
+
+Răspuns 200:
+
+{
+  "export_id": "uuid",
+  "download_url": "https://... (signed)",
+  "size_kb": 874,
+  "artifacts": [
+    {"file": "prompt.pdf", "sha256": "sha256:..."},
+    {"file": "manifest.json", "sha256": "sha256:..."},
+    {"file": "checksum.txt", "sha256": "sha256:..."}
+  ]
+}
+
+
+Erori: 402/403, 422, 429, 500.
+
+Back-end invariants:
+
+întotdeauna atașezi manifest.json și checksum.txt;
+
+la Enterprise, opțiunea .zip produce bundle complet;
+
+watermark pentru trial dacă politica o cere.
+
+🎨 UX detalii & a11y
+
+Meniu cu iteme „sectioned” (Free/Creator/Pro/Enterprise) – ajută înțelegerea gating-ului.
+
+Tooltips motivaționale, nu punitive: „Disponibil pe Pro. Deblochezi PDF + Test Engine live.”
+
+Preferă sticky action area (mobil): „Export” → sheet cu lista formatelor, atingere ≥44×44, contrast ≥4.5:1.
+
+✅ Checklist de acceptanță (DoD UI)
+
+Toate formatele sunt vizibile; numai entitled sunt activabile.
+
+Tooltip corect pentru fiecare item gated (plan exact).
+
+Exporturile livrează manifest.json + SHA256 (verificat în răspuns).
+
+DoD fail blochează PDF/JSON/ZIP cu mesaj standard.
+
+Telemetrie completă pentru request/blocked/success.
+
+
+
+
+
+
+
+Smart Auto-Complete (1-field → 7D auto)
+UX scurt
+
+Un singur câmp: „Descrie în 1–2 fraze ce vrei să obții”. Pe măsură ce tastezi:
+
+completare predictivă în drop-down,
+
+se deduce 7D (domain/scale/urgency/complexity/resources/application/output),
+
+se vede un preview de prompt care se actualizează live (vezi descrierea și pictogramele din paginile 1–2; tabelul de eficiență la p.6 recomandă 15–30s, 1–2 click-uri).
+
+Pipeline (FE→BE)
+
+Keystroke → debounce(250 ms)
+
+Client classify (ușor, fără costuri): regex+lookup (keyword→domain, ex. „KYC, AML”→FinTech), lungimea frazei→complexity, verbe imperative→urgency.
+
+Server enrich (opțional): /api/nlp/intent:
+
+NER/intent (spaCy/transformer rulată server-side),
+
+mapare la enum-urile 7D (SSOT),
+
+scor de încredere per dimensiune.
+
+Merge rules: dacă client și server diferă, preferă valoarea cu confidence mai mare; altfel fallback pe defaults de domeniu.
+
+Preview: renderPrompt(sevenD, spec) (prompt standard cu secțiuni).
+
+Model de date (FE)
+type SevenD = {
+  domain: Domain; scale: Scale; urgency: Urgency;
+  complexity: Complexity; resources: Resources;
+  application: Application; output: OutputFmt
+}
+type AutoFill = { sevenD: SevenD; confidence: Partial<Record<keyof SevenD, number>>; from: 'client'|'server'|'merge' }
+
+Validare (DoR hard)
+
+enum-only: fiecare 7D ∈ nomenclator; valori nevalide → badge roșu + blocare „Run/Export”.
+
+signature_7d: hash stabil (ex. SHA1(JSON(sevenD))) pentru telemetrie și cache.
+
+Telemetrie minimă
+
+autocomplete_input {chars, t_ms}
+
+autocomplete_7d_inferred {domain, scale, ..., confidence}
+
+simulate_run / live_run → scoruri (clarity, execution, ambiguity_inv, business_fit)
+
+export_* cu sha256_present:true, manifest:true
+
+Gating & acțiuni
+
+Simulate: toți.
+
+Run Real Test / PDF / JSON / ZIP: după plan (Pro/Ent), meniul vede tot dar blochează opțiunile nepermise cu tooltip „Disponibil pe Pro/Enterprise”.
+
+Performanță
+
+Debounce, worker pentru clasificare locală, limită ~2–5 ms/render (RSC/ISR unde e posibil), fallback la defaults dacă serverul întârzie >350 ms.
+
+Drag & Drop Prompt Builder (control total)
+UX scurt
+
+Sidebar cu blocuri (Tone, Industry, Goal, Constraints, Examples, Output),
+
+Canvas central cu „smart snapping” în ordinea logică (Context→Cerință→Specificație→KPI→Guardrails→Output),
+
+Preview instant la dreapta. (Vezi p.4–5 din PDF: blocuri, snapping, 3–5 drop-uri pentru un prompt complet, 20–40s total).
+
+Modelare blocuri
+type BlockKind = 'tone'|'industry'|'goal'|'constraints'|'examples'|'output';
+type Block = { id:string; kind:BlockKind; payload:Record<string,any>; variant?:string };
+type BuilderState = { chain: Block[]; sevenD: SevenD; validity:{dor:boolean; reasons?:string[]} }
+
+Reguli „smart snapping”
+
+root = Context; ordinea permisă: Context→Cerință→Spec→KPI→Guardrails→Output;
+
+blocurile din sidebar au compat matrix (ex.: goal necesită application compatibil; industry setează domain dacă nu e deja);
+
+la drop se rulează:
+
+applyBlock(block, state) → actualizează 7D (de ex. drop „Industry: FinTech” → domain='FIN'),
+
+validate(state) → DoR live.
+
+Validare (DoR)
+
+dor=true dacă:
+
+7D complet și ∈ enum;
+
+output_spec pentru modul e încărcat;
+
+există cel puțin 1 example sau constraints (configurabil per modul).
+
+UI: banner verde „Ready”, altfel listă de lipsuri („Setează output” / „Alege industry”).
+
+Generare prompt
+function renderPrompt(state: BuilderState) {
+  const {sevenD, chain} = state;
+  return `
+# CONTEXT
+Domeniu: ${sevenD.domain} | Scală: ${sevenD.scale} | Urgență: ${sevenD.urgency}
+${printBlocks(chain,'context')}
+
+## CERINȚĂ
+${printBlocks(chain,'goal')}
+
+## SPECIFICAȚIE
+${printBlocks(chain,'constraints')}
+
+## KPI
+${kpiFromDomain(sevenD.domain)}
+
+## GUARDRAILS
+${guardrailsFromDomain(sevenD.domain)}
+
+## OUTPUT
+Format: ${sevenD.output}
+`.trim();
+}
+
+Variants (one-click)
+
+Fiecare bloc are 2–3 variante (ex. tone: formal/casual/urgent). Click pe variantă = înlocuire payload; preview se actualizează.
+
+Telemetrie
+
+builder_open, builder_drop {kind}, builder_variant_click {kind,variant}
+
+la rulare: simulate_run/live_run + scoruri; la export: export_request/success (cu checksum/manifest).
+
+Gating & acțiuni
+
+Toți: pot construi și Simulate.
+
+Pro+: Run Real Test, PDF/JSON; Enterprise: ZIP bundle.
+
+Opțiunile blocate rămân vizibile (tooltip/prompt paywall).
+
+A11y & UX
+
+Drag & drop + alternative „Move up/down” (taste), aria-grabbed, aria-dropeffect, focus order clar;
+
+Esc iese; prefers-reduced-motion = tranziții instant.
+
+Performanță
+
+Canvas cu date imutabile (immer) + memoizarea renderPrompt;
+
+60 FPS: GPU-accelerated transforms la drag;
+
+Persist local (draft) + „Save as preset”.
+
+Integrare între cele două (power-combo)
+
+Auto-Complete → Builder: buton „Open in Builder” ⇒ transformă fraza în chain minimă (Context + Goal) și 7D completat;
+
+Builder → Auto-Complete: tastezi în Quick Edit; completările noi devin blocuri constraints/examples;
+
+În ambele: DoR (ready) înainte de acțiuni; DoD după Run (score gates) — sub scor, Export PDF/JSON/ZIP rămâne blocked până la „Tighten & Re-test”.
+
+Erori & mesaje standard
+
+Enum invalid (7D): „Valoare neacceptată pentru ${dim}. Alege din listă.”
+
+Lipsă output: „Setează formatul livrabilului (txt/md/json/pdf).”
+
+DoD fail: „Score < 80. Tighten & Re-test.”
+
+Gated: „Disponibil pe Pro/Enterprise” (inline paywall cu beneficii).
+
+Checklist de acceptanță (DoD UI)
+
+Auto-Complete: 1 câmp, 7D inferat, preview live, DoR on-the-fly, simulate în ≤30s.
+
+Builder: 3–5 drop-uri produc prompt valid, preview instant, DoR live, simulate/rulează, exportează cu manifest.json + SHA256.
+
+Gating: vizibil complet, opțiuni inactive cu tooltip; paywall inline.
+
+Telemetrie: evenimentele enumerate + sha256_present:true, manifest:true pe export.

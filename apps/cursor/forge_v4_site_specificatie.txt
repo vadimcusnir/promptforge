@@ -1,0 +1,4075 @@
+
+
+SPECIFICATIE SITE
+
+
+1) Charter & KPI — “money-first” version
+1.1 Product charter (what we’re building and why it pays)
+
+Purpose (business outcome): convert audience attention into predictable subscription revenue and high-margin digital product sales, with upsells that increase ARPU and shorten payback.
+
+North Star (one sentence): “Number of paid workspaces that export artifacts monthly.”
+Rationale: it directly drives MRR and correlates with long-term retention.
+
+Target markets (sequenced):
+
+Solo creators/consultants/agencies in EU/US who sell info-products/services;
+
+SMB marketing teams;
+
+Enterprise teams via seats + API.
+
+ICPs (money signals):
+– Creator/Consultant doing €3–30k/mo who wants speed → buys Pro.
+– Agency 3–20 ppl, recurring clients → buys Pro + seats.
+– Company team (legal/brand/security asks) → Enterprise (API, SSO, SLA).
+
+Jobs to be done (top 4):
+JTBD-1: Produce shippable artifacts (.md/.pdf/.json/.zip) fast → sell/fulfill.
+JTBD-2: Test prompts/modules safely (simulated) → upgrade to “live” when needed.
+JTBD-3: Gate features/export by plan → convert free→paid with obvious value.
+JTBD-4: Keep history/telemetry for proof & reuse → reduce time-to-money next time.
+
+Value proposition (why us vs. alternatives): 50 modules, 7-D parameter engine, simulation by default (cheap), “truth” (live) behind paywall (revenue), export pipeline with checksum/zip (professional output).
+
+Business scope (MVP that generates revenue): auth → pricing → checkout → run modules → export → history/telemetry → upsell gates.
+Non-goals now: third-party marketplace, native mobile, POS.
+
+1.2 Revenue model (how cash flows)
+
+Primary: Subscriptions (Free, Creator, Pro, Enterprise).
+Indicative price points (can A/B within ±20%): Creator €19/m, Pro €49/m, Enterprise €299/m base (5 seats) + €59/seat/m. Annual = 10× monthly.
+
+Secondary: Digital products (paid bundles/templates), Add-ons (evaluator_advanced, export_designer), Seats, API (Enterprise).
+
+Monetization levers: plan gates (live tests, pdf/json, bundle.zip, API), export rights, rate-limits, watermarking in trial.
+
+Expansion: seats, add-ons, annual prepay, price-lift on renewals (grandfathering policy).
+
+Unit economics guardrails:
+– Target Gross Margin ≥ 85% (hosting + vendor costs contained).
+– Payback ≤ 2 months on Pro; ≤ 4 months on Enterprise.
+
+1.3 Growth & brand (only metrics that lead to money)
+
+Acquisition loops: SEO content → demo bundles → “Simulate Test” (free) → “Run Real Test” (paywall). Affiliates/partners for Creator/Pro.
+
+Activation: first export within ≤10 minutes from signup (TTV).
+
+Retention: artifact reuse, history, evaluator scores, “resume last run” prompts.
+
+Brand KPIs tied to revenue (leading → lagging):
+– Branded search volume (GSC) → correlates with Direct/Organic MRR share.
+– Direct traffic % that reaches pricing → Signup rate → Free→Paid CR.
+– NPS (Pro/Ent) and Support CSAT → Net Revenue Retention (NRR).
+– PR/mentions/earned links → lift in Organic sessions → MRR growth.
+
+1.4 KPI framework (definitions, targets, owners)
+A) Commercial (board-level)
+
+MRR = Σ(active paid plans monthly net of discounts).
+Targets: M0 baseline; M2 €5k; M6 €25k; M12 €75k.
+
+Churn (logo & revenue) = cancellations in month ÷ start-of-month base.
+Targets: Pro rev. churn <4%/mo by M6; Enterprise <2%/mo by M12.
+
+NRR = (MRR start + expansion − churn − contraction) ÷ MRR start.
+Target: ≥110% (rolling 3-mo) by M9.
+
+LTV/CAC (blended by plan).
+– LTV = ARPA × Gross Margin × Avg. Lifespan (months).
+– CAC = direct paid + attributable content spend ÷ new paid logos.
+Targets: ≥3.0 by M6; stretch ≥5.0 by M12.
+Payback = CAC ÷ (ARPA × GM) → ≤2 mo Pro, ≤4 mo Ent.
+
+Free→Paid Conversion (28-day) = new paid ÷ signups.
+Targets: ≥6% overall by M3; ≥10% by M9 (with gates & trials tuned).
+
+B) Funnel & product usage (drives the above)
+
+Visitor→Signup CR (28-day) target ≥3.5% by M3; ≥5% by M9.
+
+Activation (TTV ≤10m) = % signups exporting ≥1 artifact D0. Target ≥60%.
+
+WAU/MAU stickiness ≥ 0.45 (Pro), 0.35 (Creator).
+
+Export Mix: % exports that are pdf/json/zip (paid-only) → Upsell indicator.
+Target: ≥55% of all exports behind paywall by M6.
+
+Evaluator Score (0–100) median for live tests: ≥80 (DoD gate).
+
+Support tickets per 1000 MAU: ≤15 (Pro), ≤8 (Ent).
+
+C) Performance & reliability (keeps revenue safe)
+
+TTFB < 200 ms (EU/US) P75.
+
+LCP < 2.5 s P75; INP < 200 ms; CLS < 0.1.
+
+Uptime ≥ 99.9%; Error budget ≤ 0.1%/month.
+
+Checkout success rate ≥ 98.5% (post-3DS).
+
+Cold-start to first render (landing) ≤ 1.2 s on 4G P75.
+
+D) Compliance & finance (don’t block revenue)
+
+PCI scope: SAQ A-EP posture verified per release.
+
+GDPR: DSR SLA (export/erase) ≤ 7 days; consent logs 100% coverage.
+
+Tax correctness: VAT OSS & US state mapping 100% on invoices.
+
+1.5 Targets by phase (commit & stretch)
+Phase	Horizon	Commercial	Product/Funnel	Perf/Rel
+P0 Launch	Weeks 0–8	MRR €5k; Free→Paid ≥4%	Activation ≥50%; 1st export ≤10m	TTFB <220ms; LCP <2.8s; 99.9%
+P1 Scale	Weeks 9–16	MRR €15k; LTV/CAC ≥3	WAU/MAU ≥0.4; Export mix paid ≥45%	TTFB <200ms; LCP <2.5s
+P2 Optimize	Weeks 17–24	MRR €25k; NRR ≥105%	Free→Paid ≥8%; Payback ≤2mo	Error budget ≤0.08%
+P3 Enterprise	Months 7–12	MRR €75k; NRR ≥110%	Ent seats avg. ≥7; CSAT ≥4.6/5	Uptime 99.95%
+1.6 Instrumentation & measurement (no data, no bonus)
+
+Event taxonomy (server-side + RUM): pricing_view, signup, module_run_simulated, module_run_live, export_txt|md|pdf|json|zip, checkout_started, checkout_paid, trial_started, trial_converted, addon_purchased, seat_added, api_call, error_client, error_server, web_vitals(LCP/INP/CLS).
+
+Attribution: first-touch (UTM) + last-touch (session) + modelled (content).
+
+Dashboards (single truth):
+– Revenue: MRR/NRR, ARPA, churn, payback, LTV/CAC.
+– Funnel: sessions→pricing→signup→activation→free→paid.
+– Usage: exports by type/plan, evaluator scores, runs per module.
+– Performance: RUM CWV by route/geo, uptime, error budget burn.
+– Compliance: DSR queue, consent coverage, invoice tax map.
+
+1.7 Guardrails (things that protect the P&L)
+
+DoR gate: module cannot “Run Real Test” unless 7-D params valid.
+
+DoD gate: export blocked if Evaluator score < 80 (label “Simulated” or watermark if allowed).
+
+Rate limits: protect cost per user; clear upgrade CTA when hit.
+
+Vendor spend SLO: hosting+vendors ≤ 15% of MRR (rolling 30d).
+
+A/B safety: experiments auto-revert if checkout CR drops > 10% P7D.
+
+1.8 Ownership & cadence
+
+DRIs:
+– Commercial: Head of Growth (MRR, CAC, Free→Paid).
+– Product: PM (Activation, WAU/MAU, Export mix).
+– Reliability: Eng Lead (Uptime, Error budget, CWV).
+– Compliance/Tax: Ops Lead (DSR SLA, invoice correctness).
+
+Reviews: weekly KPI stand-up; monthly board snapshot; quarter re-targets.
+
+
+
+
+
+2) Stakeholderi & RACI — descriere extinsă pentru proiect (PromptForge)
+2.1 Scopul secțiunii
+
+Stabilește cine decide, cine execută, cine este consultat și cine trebuie informat pentru fiecare domeniu critic (payments, tax, content, infra, securitate). Elimină blocajele, scade riscul de „ownership difuz” și leagă responsabilitățile de KPI-urile comerciale (MRR, LTV/CAC, Free→Paid), tehnice (TTFB, LCP, Uptime), de conformitate (GDPR/PCI), și de experiență (CSAT, NPS).
+
+2.2 Roluri și responsabilități (descriere operațională)
+Product Manager (PM)
+
+Responsabilități: direcție produs, roadmap, definire DoR/DoD, prioritizare pe KPI de conversie și retenție, arbitraj trade-off (time-to-market vs. perf/quality).
+
+Decizii finale (A): ce intră în MVP/roadmap, gating pe planuri, experiment design, criterii succes.
+
+KPI: Free→Paid CR, TTV (time-to-value ≤ 10 min), Export mix (paid), NRR.
+
+Engineering Lead (Eng Lead)
+
+Responsabilități: arhitectură, calitate cod, performanță, fiabilitate, incident management, code review policy, CI/CD.
+
+Decizii finale (A): strategia de deploy (trunk/canary), scheme cache/edge, standarde tehnice, buget de eroare.
+
+KPI: Uptime ≥ 99.9%, Error budget ≤ 0.1%/lună, LCP/INP țintă, rata de build verzi.
+
+Design Lead (UX/UI)
+
+Responsabilități: design system (tokens, componente), UX flows, accesibilitate (WCAG 2.2 AA), prototipuri.
+
+Decizii finale (A): standarde vizuale, reguli accesibilitate, pattern-uri UI.
+
+KPI: CR pe funnel (landing→pricing→signup), CWV pe pagini content (CLS < 0.1), CSAT UX.
+
+Data Lead (Analytics/Telemetry)
+
+Responsabilități: event taxonomy, RUM pentru Core Web Vitals, dashboards revenue/funnel, atribuire.
+
+Decizii finale (A): ce evenimente se loghează și cum, definiri metrice, alerte/anomalii.
+
+KPI: acuratețea datelor (≥99%), latență rapoarte (<1h), adoptarea dashboard-urilor.
+
+Legal/GRC Lead (incl. DPO, dacă e externalizat)
+
+Responsabilități: GDPR (DPIA/DPA), consimțământ granular, politici, PCI posture, ToS/Privacy.
+
+Decizii finale (A): politici date, procese DSR (export/ștergere), mapare taxe vs. jurisdicții (cu Finance).
+
+KPI: DSR SLA ≤ 7 zile, conformitate fiscală 100%, audit trail tamper-evident.
+
+Marketing Lead (Growth/Brand)
+
+Responsabilități: SEO, conținut, demo bundles, campanii, pricing page UX, comunicare lansări.
+
+Decizii finale (A): calendar conținut, tactici de creștere, mesaje/poziționare.
+
+KPI: trafic organic→pricing, signup CR, CAC (blended), brand search lift.
+
+Support Lead (CX/Success)
+
+Responsabilități: SLA suport, bază de cunoștințe, macros, triere tichete, feedback loop către PM/Eng.
+
+Decizii finale (A): procese suport, playbook severități, mesaje status/incident.
+
+KPI: CSAT ≥ 4.6/5, tichete/1000 MAU, timpul median de rezolvare.
+
+Extensii specializate
+
+SRE/DevOps: CI/CD, observabilitate, DR/backup, capacity management.
+
+Security Engineer: ASVS L2, CSP/SRI, SAST/DAST, secret management, threat modeling.
+
+Finance/Tax Ops: reconciliere Stripe, dunning, taxe (VAT OSS/US), rapoarte fiscale.
+
+2.3 Domenii critice & proprietari (DRI + KPI țintă)
+Domeniu	DRI (Responsible)	Accountable	Consulted	Informed	KPI cheie
+Payments	Finance/Tax Ops	PM	Eng Lead, Legal, Support	Marketing, Data	Checkout success ≥ 98.5%, dispute rate ≤ 0.8%
+Tax	Finance/Tax Ops	Legal/GRC	PM, Eng Lead	Data, Support	Corectitudine taxe 100%, factură ≤ 5s
+Content (CMS/SEO)	Design + Marketing (co-R)	PM	Data, Legal	Support, Eng	Draft→Publish ≤ 24h P90, CLS < 0.1, CR→Pricing
+Infra	SRE/Eng	Eng Lead	PM, Security	Data, Support, Marketing	Uptime ≥ 99.9%, TTFB P75 < 200ms
+Securitate	Security Engineer	Legal/GRC	Eng Lead, DPO	PM, Support	0 high vulns, DSR ≤ 7 zile, CSP enforced
+
+PM rămâne Accountable pe obiectivul de produs; DRI-urile sunt Responsible pe execuție în domeniile lor.
+
+2.4 RACI pe domenii — detaliu operațional
+
+2.4.1 Payments
+Scope: procesator (Stripe), planuri, upgrade/downgrade, prorratare, dunning, dispute.
+RACI: R=Finance, A=PM, C=Eng/Legal/Support, I=Marketing/Data.
+
+Decizii discrete:
+Alegerea procesator & modele preț: A PM / R Finance / C Legal, Eng / I Marketing.
+Checkout & webhooks: A Eng Lead / R Eng / C Finance, Data / I PM.
+Dunning (retry windows, comms): A Finance / R Finance / C Support, PM / I Data.
+Trigger escaladare: checkout success <98.5% (60 min) → Incident Sev-2 (Eng+Finance); dispute rate >0.8% (7 zile) → revizie funnel/ToS (PM/Legal).
+
+2.4.2 Tax
+Scope: VAT OSS, US sales tax, captură adresă, arhivare facturi.
+RACI: R=Finance, A=Legal/GRC, C=PM/Eng, I=Data/Support.
+Decizii: motor taxe (Stripe Tax/TaxJar), șabloane facturare, storno, audit lunar.
+SLO: factură emisă ≤ 5s post-plată; conformitate 100% la audit.
+
+2.4.3 Content (CMS/Blog/Docs/Changelog)
+Scope: modelare tipuri conținut, workflow draft→review→approve→schedule, SEO tehnic, media library.
+RACI: R=Design+Marketing, A=PM, C=Data/Legal, I=Support/Eng.
+SLO: timp mediu pipeline ≤ 24h P90; alt-text 100%; sitemap/hreflang valide; impact SEO→pricing→signup măsurat.
+
+2.4.4 Infra (Edge/CDN, DB, CI/CD, Observabilitate)
+Scope: arhitectură edge-first, SSR/SSG, Postgres RLS, storage S3-compat, Redis, CI/CD, logs/metrics/traces, DR.
+RACI: R=SRE/Eng, A=Eng Lead, C=PM/Security, I=Data/Support/Marketing.
+SLO: Uptime ≥ 99.9%; TTFB P75 < 200ms (EU/US); error budget ≤ 0.1%/lună; RPO ≤ 1h / RTO ≤ 4h.
+
+2.4.5 Securitate (ASVS L2, CSP, DSR)
+Scope: politici securitate, CSP/SRI, CSRF/XSS/SSRF, secret mgmt, SAST/DAST, DPIA/DSR.
+RACI: R=Security Engineer, A=Legal/GRC, C=Eng Lead/DPO, I=PM/Support.
+SLO: 0 vulnerabilități High/Critical la release; DSR ≤ 7 zile; rapoarte SAST/DAST atașate la release notes.
+
+2.5 Procese transversale
+2.5.1 Template RACI pentru Epics/Features
+EPIC: <Nume>
+Obiectiv/KPI mișcat: <ex: Free→Paid +2pp>
+DRI (Accountable): <rol/persoană>
+R (execuție): <roluri/echipe>
+C (consultat): <roluri/echipe>
+I (informat): <canale/maileri>
+Milestones: M1/M2/M3 (date)
+DoR: scope, owner, estimări, riscuri, plan testare, flag de rollout
+DoD: score ≥80, CWV ok, docs/runbooks, dashboards, changelog
+Riscuri/Mitigări: listă operabilă
+Escaladare: T1 30m (on-call), T2 2h (Lead), T3 24h (SteerCo)
+
+2.5.2 Cadente & ritualuri de comunicare
+Daily 15’ (toți DRIs): blocaje, decizii „A” de azi, riscuri.
+Weekly KPI (PM, Eng, Data, Marketing, Support, Finance/Legal): MRR/NRR, Free→Paid, TTV, CWV, Error budget.
+Fortnightly Roadmap (PM „A”): re-prioritizare în funcție de KPI & debt.
+Monthly Compliance/Tax (Legal/Finance): audit taxe, DSR backlog, politici.
+Incident Review 48h (post-mortem): cauza, acțiuni corective cu SLA.
+
+2.5.3 Canale & instrumente
+Issue tracking: Linear/Jira (epic→issue cu template RACI).
+Repo & CI/CD: GitHub (branch-protection, checks), Vercel (previews, canary).
+Observabilitate: Sentry (erori), RUM CWV, Axiom/Logtail (logs), Grafana/Loki (traces/metrics).
+Plăți & taxe: Stripe Billing/Tax, reconcilieri automate + rapoarte lunare.
+Comunicare: Slack (#product, #eng-oncall, #payments-tax, #sec-alerts, #content), Statuspage.
+
+2.6 On-call, severități, escaladare
+Severități (rezumat):
+Sev-1: Plăți/checkout indisponibile ≥10 min sau Uptime sub 99.9% în fereastra curentă.
+Acțiune: Eng on-call + Finance + PM; update public la 15’; rollback dacă e cauzat de release.
+Sev-2: Exporturi plătite afectate, TTFB degradat ≥50% P75, erori API > 2% 15 min.
+Sev-3: Buguri non-critice, conținut/SEO build fail parțial.
+Rota:
+Primar: SRE/Eng on-call (24×7).
+Secundar: Eng Lead.
+Business: PM + Support (comunicare, changelog, post-mortem).
+
+2.7 Trasabilitate către KPI din Charter
+Payments/Tax → MRR, Payback, LTV/CAC (pipeline de bani sănătos).
+Content (SEO/Docs/Changelog) → acquisition→pricing→signup (cost scăzut la achiziție).
+Infra/Securitate → Uptime, CWV, Error budget (nu pierdem venit la încărcare).
+Support/Data → NRR, churn, CSAT (retenție & expansion).
+
+2.8 Exemple concrete (PromptForge)
+Feature: “Run Real Test” (gating Pro+)
+A (PM), R (Eng), C (Data/Support/Marketing), I (Legal).
+KPI: Free→Paid +2pp; Payback ≤ 2 luni.
+DoD: score ≥80, rate-limit clar, fallback „Simulated” cu watermark, metrice în dashboard.
+Lansare “bundle.zip” (Enterprise)
+A (PM), R (Eng + Exports), C (Legal/Finance pentru licențe & facturi), I (Marketing/Support).
+KPI: ARPA Enterprise +€299/m, NRR ≥110%.
+Taxe SUA (Stripe Tax)
+A (Legal/GRC), R (Finance), C (PM/Eng), I (Support/Data).
+SLO: factură corectă ≤ 5s, hărți jurisdicții 100% acoperire.
+
+2.9 Reguli dure (anti-deraiere)
+Nicio inițiativă fără DRI nominal și template RACI complet → task blocat.
+Accountable este 1 persoană, nu un grup.
+Deciziile „A” sunt logate (link issue/PR), cu motivare KPI.
+Dacă SLO nu este definit, nu se dă GO.
+Orice schimbare ce afectează plăți/checkout trece prin Security & Legal (checklist) + canary.
+
+2.10 „Ready-to-run” (mod aplicabil imediat)
+Creează în tracker un Epic Template RACI (secțiunea 2.5.1).
+Adaugă rubrică obligatorie „DRI & RACI” în PR template.
+Inițiază #payments-tax, #sec-alerts, #eng-oncall canale.
+Pune dashboards minime: Revenue, Funnel, Usage (exports), Perf (RUM CWV), Compliance.
+Publică Playbook Incidente (Sev-1/2/3), anunț în Slack, link în Statuspage.
+
+
+
+
+
+3) Domeniu & Limitări — „ce intră ACUM, ce nu intră, ce blocăm”
+
+3.1 Scop (scope) — livrabilele MVP care produc bani
+Include ACUM (MVP, faza 1): Autentificare & conturi: email+parolă, OAuth (Google), reset parole, email verify. Workspaces & org-uri: 1+ workspace per utilizator, invitații prin email, roluri de bază. Planuri & plăți (Stripe): Free, Creator, Pro, Enterprise; trial Pro; upgrade/downgrade, dunning. Catalog module (M01–M50): căutare/filtre, pagini modul, parametri 7D, „Simulate Test” (free) vs „Run Real Test” (Pro+). Exporturi: .txt (Free), .md (Creator+), .pdf/.json (Pro+), bundle.zip (Enterprise). Istoric & telemetrie: listă de run-uri, scor Evaluator, run_id, checksum, descărcări. CMS & Blog: landing, pricing, changelog, docs/api (stativ), blog (MDX), sitemap, RSS. Admin minim: utilizatori/org-uri, abonamente, exporturi, webhooks log, feature flags. Include CURÂND (faza 2): Produse fizice & fulfillment (SKU, greutate, tracking), i18n (en/ro), webhooks publice, API public (reads). Include MAI TÂRZIU (faza 3): Căutare avansată (embedding + BM25), AI-ops în coadă (jobs programate), marketplace intern (bundles curatori).
+
+3.2 Non-scop (explicit NU intră acum)
+Marketplace terți (vânzători externi, split payments).
+Headless POS / retail fizic.
+Aplicații mobile native (iOS/Android).
+SSO enterprise avansat (SAML/SCIM) — doar OAuth de bază inițial.
+Editor WYSIWYG complex (rămâne MDX + blocuri standard).
+ML custom cu host propriu (folosim furnizori → cost control).
+Integrare CRM bidirecțională (deocamdată webhook out + export CSV/JSON).
+Automatizări „always-on” costisitoare (fără rulări recurente până la P&L pozitiv).
+Dacă ceva nu e în secțiunea „Include ACUM”, e non-scop până la revizuire trimestrială.
+
+3.3 Constrângeri & ipoteze (ca să nu deraiem)
+Edge-first + CDN (Vercel/Cloudflare): TTFB P75 < 200ms EU/US.
+Next.js (SSR/SSG hibrid), TypeScript strict, monorepo (apps/web, apps/admin, packages/ui, packages/lib).
+Persistență: Postgres (Supabase) cu RLS per org_id; media pe S3-compat (semnare URL).
+Procesator plăți: Stripe (Tax, Billing, Checkout).
+Observabilitate: logs structurate, RUM pentru CWV, metrici uptime/error budget.
+GDPR-first: minim PII, consimțământ granular, DSR export/ștergere ≤ 7 zile.
+Cost guardrail: costuri infra+vendor ≤ 15% din MRR (rolling 30d).
+
+3.4 Interfețe (ce deschidem, ce nu)
+Public: site (landing/pricing/docs), blog, sitemap, RSS.
+Autentificat: generator, export manager, istoric, dashboard.
+API: intern pentru FE; public read-only experimental la faza 2 (rate-limit, chei).
+Webhooks: Stripe in; (out) către clienți în faza 2 (semnate, retry exponential).
+
+3.5 Reguli de gating (evităm „scope creep”, monetizăm)
+Simulate Test: permis tuturor (gratis), marcat „Simulated”.
+Run Real Test: Pro+; blocat dacă DoR invalid sau cost-cap depășit.
+Exporturi:
+– .txt Free; .md Creator+; .pdf/.json Pro+; bundle.zip Enterprise.
+– Watermark în trial Pro; checksum la toate exporturile.
+Evaluator Score: export blocat dacă < 80 (DoD).
+Rate limit: când e atins → CTA de upgrade clar.
+
+3.6 Livrabile verificabile (acceptance criteria)
+Auth: create/login/logout, OAuth Google, verify email, reset, MFA (OTP) opțional.
+Plăți: checkout success ≥ 98.5%, taxe corecte, invoice în ≤ 5s, dunning flow verificat.
+Module: run simulare & live, 7D validat, scor salvat, telemetrie completă.
+Export: fișier generat, hash SHA256 salvat, descărcare cu link semnat, watermark în trial.
+CMS: editor MDX, draft→review→schedule, OpenGraph/Schema, sitemap & RSS validate.
+Perf: LCP P75 < 2.5s, INP < 200ms, CLS < 0.1.
+Securitate: CSP strictă, SRI, CSRF, RLS testat, 0 high vulns (SAST/DAST).
+
+3.7 Dependențe externe (minim viabile)
+Stripe (Checkout, Billing, Tax), Supabase (Auth, DB, RLS, Storage), Vercel (hosting/edge),
+Postmark/Resend (email tranzacțional), Sentry (erori), Axiom/Logtail (logs) — opțional.
+
+3.8 Feature flags & rollout
+Fiecare capabilitate nouă are flag (server-side).
+Rollout: internal → 5% → 25% → 100%; auto-revert dacă checkout CR scade >10% P7D.
+Preview deploys obligatorii pentru PR-uri; canary la producție.
+
+3.9 Limite operaționale (cost, risc, timp)
+Cost: fără joburi AI recurente sau vector DB dedicat la P0; doar dacă KPI comercial depășește praguri.
+Risc: fără privilegii wide DB; RLS obligatoriu; secret management centralizat.
+Timp: dacă o cerință adaugă >10 zile la critical path și nu crește KPI-uri MRR/CR/TTV, se amână.
+
+3.10 Legătura cu KPI-urile Charter
+Auth+Plăți+Gating → Free→Paid CR, MRR, Payback.
+Export pipeline → Activation ≤10m, Retenție (artifact reuse).
+Perf & Securitate → Uptime, Error budget, SEO→acquisition.
+CMS/Blog → Organic→Pricing→Signup.
+
+
+
+
+
+4) Arhitectură de Sistem — edge-first, sigură, măsurabilă
+4.1 Principii de proiectare
+Edge-first + CDN: 80% din trafic servit din edge (static/SSG, imagini, cache); SSR doar unde e nevoie (pricing dinamic, dashboard).
+Safety by default: RLS pe fiecare tabel multi-tenant; secret management centralizat; zero PII “necesar-doar”.
+Observabilitate ca produs: logs structurate, metrice, traces; RUM pentru Core Web Vitals; error budget vizibil.
+Gating monetizabil: feature flags server-side, rate-limit, export watermark în trial.
+Fail-safe: degradează la “Simulated” când live test nu e disponibil; rollback automat pe canary fail.
+
+4.2 Tehnologii & topologie (alegeri MVP)
+FE: Next.js (App Router), TypeScript strict, React Server Components, MDX pentru docs/blog.
+Hosting/Edge: Vercel (ISR/SSG/SSR, Image Optimization, Edge Middleware).
+Auth & DB: Supabase (Postgres 15 + RLS; Auth cu OAuth + email/password; Storage S3-compat).
+Plăți/Taxe: Stripe (Checkout, Billing, Tax, Webhooks).
+Cache: Redis (KV pentru ratelimiting, sessions cache, expunere rapidă la edge când e necesar).
+Căutare (faza 2): Algolia sau OpenSearch (BM25 + facets; ulterior hibrid embeddings).
+Cozi/mesagerie: SQS/Cloud Tasks sau Vercel Queues (jobs de export PDF/JSON, evaluare, embedding).
+Observabilitate: Sentry (erori), Axiom/Logtail (logs), Grafana/Loki/Tempo (opțional pentru traces).
+Email: Postmark/Resend (tranzacțional + templates).
+
+4.3 C4 – nivel Context (textual)
+Utilizator → interacționează cu Aplicația Web (PromptForge) pentru a genera și exporta artefacte.
+Aplicația Web → apelează API intern (route handlers Next.js) → Postgres (date business), Storage (fișiere), Stripe (checkout), Queue (joburi), Analytics (telemetrie).
+Admin → UI securizat pentru utilizatori/org-uri, abonamente, exporturi, webhooks, feature flags.
+
+4.4 C4 – nivel Container
+apps/web (Next.js)
+Edge Middleware: auth guard ușor, i18n path, rate-limit global.
+SSR/ISR: pricing, generator, dashboard, blog.
+Route handlers: /api/run/[moduleId], /api/exports, /api/webhooks/stripe.
+apps/admin (Next.js/React)
+UI backoffice: user/org mgmt, plan gates, logs, webhooks, feature flags.
+packages/ui
+Design system (tokens, Nav, Card, Table, Form, Modal, Stepper, Toast, Empty/Error/Skeleton).
+packages/lib
+modules.ts (catalog M01–M50), params.ts (schemă 7D), gating.ts, simulate.ts, scoring.ts, exports.ts, stripe.ts, supabase.ts.
+DB (Supabase Postgres)
+RLS per org_id; funcții SQL pentru audit trail și calcul metrice (ex: run counting).
+Queue/Workers
+Worker “Exports” (generează .pdf/.json/.zip + checksum).
+Worker “Evaluator” (score 0–100, watermark logic).
+Worker “Embeddings” (faza 3).
+Storage
+Bucket privat exports/ cu URL semnat (TTL descărcări).
+Observability Stack
+Ingest logs/metrics/traces; alerte pentru SLO.
+
+4.5 C4 – nivel Component (exemple cheie)
+Auth Gateway (edge middleware + Supabase Auth)
+Verifică cookie/JWT; injectează org_id în request context; device binding (opțional).
+Gating Engine (lib/gating.ts)
+Primește {plan, feature, flags, context} → decide allow/deny/degrade.
+Integrează rate-limit, watermarks, cost caps.
+Test Engine (lib/simulate.ts, lib/live.ts)
+simulateGptResponse(prompt, params7D, seed) → ieftin, determinist.
+liveGptTest(prompt) (Pro+) → log tokens, cost, durată, scor.
+Export Pipeline (lib/exports.ts)
+Generează .txt/.md/.json/.pdf, calculează SHA256, scrie manifest, încărcă în Storage, emite eveniment export.ready.
+Billing Service (lib/stripe.ts)
+Checkout, upgrade/downgrade, prorratare, dunning, Stripe Tax; reconcile job nocturn.
+Analytics Ingestor
+Server-side events (pricing_view, signup, module_run_*, export_*, checkout_*, web_vitals) + RUM CWV.
+
+4.6 Fluxuri evenimente (webhooks & cozi)
+Stripe → Webhook → DB/Queue
+checkout.session.completed → creează/actualizează subscriptions + entitlements.
+invoice.paid / invoice.payment_failed → update status, pornește dunning.
+customer.subscription.updated → sincronizează plan/seats/add-ons.
+Fail-safe: idempotency keys; retry exponential; dead-letter queue + alert.
+
+Run Module → Export
+FE trimite /api/run/[moduleId] cu params7D.
+Server validează DoR (schemă), consultă gating.ts.
+Dacă simulate → răspuns imediat + etichetă; dacă live → push job în queue:exports.
+Worker creează fișierul, calculează checksum, încarcă în Storage, salvează exports în DB, trimite event export.ready.
+FE subscribe (SSE/long-poll) → afișează buton Download (URL semnat, TTL).
+Observabilitate
+Orice job -> log (run_id, module_id, org_id, duration, status, cost), metrici (histograme durata, rate succes), trace ID.
+
+4.7 Tenancy & securitate datelor
+Model: multi-tenant logic prin org_id pe fiecare rând; RLS “deny-by-default”.
+RLS exemplu:
+create policy org_isolation on runs
+for select using (auth.uid() = user_id and org_id = current_setting('app.org_id')::uuid);
+Chei: rotație trimestrială; acces prin secret store; zero secrete în client.
+CSP strictă + SRI pentru resurse; protecții CSRF/XSS/SSRF; upload cu MIME allowlist.
+
+4.8 Persistență & scheme (rezumat aplicativ)
+Postgres:
+users, orgs, memberships, roles, sessions
+products, prices, subscriptions, invoices, payments, refunds, disputes
+orders, order_items, fulfillments (faza 2 fizice)
+posts, pages, media, revisions, categories, tags
+runs, exports, telemetry_events, evaluator_scores
+audits, webhooks, api_keys, consents, preferences
+Storage: exports/<org_id>/<run_id>/... cu URL semnat; limite download & TTL.
+
+4.9 Performanță (pattern-uri concrete)
+ISR pentru pages cu trafic mare (landing, pricing, blog index).
+SSR selective (dashboard, generator, admin).
+Edge caching + stale-while-revalidate; prefetch inteligent pe hover.
+Image Optimization cu dimensiuni declarate; font loading display=swap.
+Code-splitting pe module grele (editor, charts).
+INP: handlers scurte, batching de state, evită re-render global.
+
+4.10 Securitate & conformitate (în arhitectură)
+OWASP ASVS L2 ca țintă: threat modeling per epic, SAST/DAST în CI.
+GDPR: minimizarea datelor, consimțământ granular (server-side), DSR cu SLA ≤ 7 zile.
+PCI SAQ A-EP: tokenize plăți în Stripe; niciun card pe serverele proprii.
+Audit trail: tabel audits nemodificabil (trigger înainte de UPDATE/DELETE).
+
+4.11 Observabilitate & SLO
+SLO: Uptime ≥ 99.9%, TTFB P75 < 200ms (EU/US), LCP P75 < 2.5s, Error budget ≤ 0.1%/lună.
+Alerte: breșă SLO pe 5/15/60 min; degrade → comută „Simulated”.
+Dashboards: Revenue (MRR/NRR), Funnel, Usage (exports), Perf (RUM CWV), Incidente (MTTR/RPO/RTO).
+
+4.12 CI/CD & rollout
+Trunk-based, PR-uri cu preview Vercel, canary 5% trafic.
+Release guard: build green, SAST/DAST clean, migrations aplicate, ruleset.yml OK (DoR/DoD).
+Auto-revert dacă checkout CR scade >10% P7D sau erori 5xx cresc >0.5% 30 min.
+
+4.13 Acceptance (verificabil la livrare)
+/api/webhooks/stripe idempotent + DLQ și alerte.
+exports: fișiere cu checksum SHA256 + manifest; link semnat cu TTL; watermark în trial.
+RLS testat cu 3 org-uri (cross-access imposibil).
+RUM activ pentru CWV; raport săptămânal cu P75 LCP/INP/CLS per route.
+Canary + auto-revert configurate; dashboard SLO live.
+
+4.14 Evoluții planificate
+Faza 2: API public (read), webhooks out semnate, i18n, produse fizice + fulfillment.
+Faza 3: căutare hibridă (BM25 + embeddings), AI-ops (joburi programate), marketplace intern.
+
+
+
+
+
+
+5) Modele de Date (ERD minim) — Postgres + RLS (Supabase-ready)
+5.1 Principii
+
+Multi-tenant logic pe org_id; RLS “deny by default”.
+Chei stabile: id UUID v7, created_at/updated_at timestamptz, created_by/updated_by uuid.
+Enum-uri pentru stări; JSONB doar pentru extensibilitate (metadata), nu pentru câmpuri primare.
+Integritate tranzacțională (FK ON DELETE …), indexare pe FK + câmpuri de căutare.
+Audit trail la UPDATE/DELETE; soft-delete doar dacă e justificat de business.
+
+5.2 Identitate & acces
+users
+id uuid pk, email citext unique not null, name text, avatar_url text
+status user_status_enum (active, blocked, invited) default active
+created_at tsz default now(), updated_at tsz
+metadata jsonb default '{}'::jsonb
+🔗 Index: (email), (status)
+RLS: select/update doar self; fără delete direct (doar admin în org).
+orgs
+id uuid pk, name text not null, slug citext unique not null
+plan plan_enum (free, creator, pro, enterprise) default free
+status org_status_enum (active, past_due, cancelled) default active
+created_at tsz, updated_at tsz, metadata jsonb
+🔗 Index: (slug), (plan,status)
+roles
+key text pk (owner, admin, editor, support, viewer)
+description text
+memberships
+id uuid pk, org_id uuid fk -> orgs, user_id uuid fk -> users, role_key text fk -> roles.key
+invited_by uuid fk -> users, created_at tsz
+status membership_status_enum (active, invited, removed) default active
+🔗 Unique: (org_id, user_id); Index: (org_id), (user_id), (role_key)
+sessions
+id uuid pk, user_id uuid fk, created_at tsz, expires_at tsz, ip inet, ua text
+🔗 Index: (user_id, expires_at)
+
+RLS esențial (exemplu):
+
+-- deny by default
+alter table memberships enable row level security;
+
+create policy org_member_can_select on memberships
+for select using (
+  auth.uid() = user_id
+  or exists(
+    select 1 from memberships m2
+    where m2.org_id = memberships.org_id
+      and m2.user_id = auth.uid()
+  )
+);
+
+create policy org_admin_can_manage on memberships
+for all using (
+  exists(
+    select 1 from memberships m2
+    where m2.org_id = memberships.org_id
+      and m2.user_id = auth.uid()
+      and m2.role_key in ('owner','admin')
+  )
+);
+
+5.3 Comercial: produse, prețuri, stoc, cupoane
+products
+id uuid pk, org_id uuid fk, type product_type_enum (digital, physical, bundle)
+name text, slug citext, description text, active bool default true
+media_url text, metadata jsonb
+🔗 Unique: (org_id, slug); Index: (org_id, active, type)
+variants
+id uuid pk, product_id uuid fk -> products, sku citext, title text
+attributes jsonb (ex: {size:"M", color:"Black"})
+🔗 Unique: (product_id, sku)
+inventory (doar pentru fizice)
+variant_id uuid pk fk -> variants, quantity int, reserved int default 0
+Constraint: quantity >= reserved
+prices
+id uuid pk, product_id uuid fk, currency char(3), unit_amount int (în minor units), interval billing_interval_enum null
+is_recurring bool, active bool default true, external_price_id text (Stripe/Paddle)
+🔗 Index: (product_id, active), (currency, is_recurring)
+coupons
+id uuid pk, org_id uuid fk, code citext, type coupon_type_enum (percent, fixed)
+value numeric(6,2), currency char(3) null, max_redemptions int, redeemed int default 0
+starts_at tsz, ends_at tsz
+🔗 Unique: (org_id, code); check: value > 0
+
+5.4 Abonamente & plăți
+subscriptions
+id uuid pk, org_id uuid fk, plan plan_enum, status sub_status_enum (trialing, active, past_due, canceled)
+current_period_start tsz, current_period_end tsz, cancel_at tsz null, canceled_at tsz null
+seat_count int default 1, external_sub_id text (Stripe)
+🔗 Unique: (org_id); Index: (status, plan)
+invoices
+id uuid pk, org_id uuid fk, external_invoice_id text, status invoice_status_enum (draft, open, paid, void, uncollectible)
+currency char(3), amount_due int, amount_paid int, tax_amount int, hosted_invoice_url text
+issued_at tsz, paid_at tsz null
+🔗 Index: (org_id, issued_at desc)
+payments
+id uuid pk, invoice_id uuid fk, external_payment_id text, status payment_status_enum (succeeded, failed, requires_action)
+amount int, currency char(3), method text, process_at tsz
+🔗 Index: (invoice_id)
+refunds
+id uuid pk, payment_id uuid fk, amount int, reason text, created_at tsz
+disputes
+id uuid pk, payment_id uuid fk, status dispute_status_enum (needs_response, under_review, won, lost)
+reason text, opened_at tsz, closed_at tsz null
+5.5 Conținut (CMS)
+posts
+id uuid pk, org_id uuid fk, slug citext, title text, excerpt text, content_md mdx text
+status content_status_enum (draft, review, scheduled, published)
+published_at tsz null, author_id uuid fk -> users
+🔗 Unique: (org_id, slug); Index: (org_id, status, published_at desc)
+pages
+similar posts, fără author_id, cu is_landing bool și template_key text
+categories, tags, post_categories, post_tags
+Pivot tables FK + unique (post_id, category_id) etc.
+media
+id uuid pk, org_id uuid fk, path text, mime text, size int, alt text
+🔗 Index: (org_id, mime)
+revisions
+id uuid pk, entity_type text (post/page), entity_id uuid, diff jsonb, created_by uuid, created_at tsz
+🔗 Index: (entity_type, entity_id, created_at desc)
+
+5.6 Comenzi (shop)
+orders
+id uuid pk, org_id uuid fk, user_id uuid fk, status order_status_enum (pending, paid, fulfilled, canceled, refunded)
+currency char(3), subtotal int, discount int, tax int, total int
+shipping_address jsonb null, billing_address jsonb, placed_at tsz
+
+🔗 Index: (org_id, status, placed_at desc)
+order_items
+id uuid pk, order_id uuid fk, product_id uuid fk, variant_id uuid fk null
+quantity int, unit_amount int, currency char(3), title text, license_key text null
+fulfillments
+id uuid pk, order_id uuid fk, status fulfillment_status_enum (queued, in_progress, completed, failed)
+carrier text, tracking_number text, created_at tsz, completed_at tsz null
+shipments
+id uuid pk, fulfillment_id uuid fk, weight_grams int, cost int, currency char(3), eta date
+
+5.7 Observabilitate & integrare
+audits
+id uuid pk, org_id uuid, actor_id uuid, entity text, entity_id uuid
+action text (create/update/delete/export/run), diff jsonb, ip inet, ua text, at tsz default now()
+Tamper-evident: hash lanț (prev_hash, hash) opțional.
+events (telemetrie produs)
+id uuid pk, org_id uuid, user_id uuid, name text
+props jsonb, ts tsz default now()
+Index: (org_id, name, ts desc)
+webhooks
+id uuid pk, org_id uuid, source text (stripe, github…), event text, payload jsonb, status text, received_at tsz
+DLQ: retries int, last_error text
+api_keys
+id uuid pk, org_id uuid, name text, hashed_key text, scopes text[], created_at tsz, revoked_at tsz null
+Index: (org_id, revoked_at)
+consents
+id uuid pk, user_id uuid, org_id uuid, purpose text (analytics, marketing), granted bool, at tsz
+Index: (user_id, purpose)
+preferences
+id uuid pk, user_id uuid, key citext, value jsonb, updated_at tsz
+Unique: (user_id, key)
+
+5.8 RLS — reguli tipice per „familie”
+Isolare organizațională: toate tabelele cu org_id au politici USING (org_id = auth.org_id()).
+Conținut public: select permis pentru posts/pages cu status='published' (fără org_id leakage).
+Admin local: INSERT/UPDATE/DELETE permis doar dacă exists membership cu rol în ('owner','admin').
+Exporturi sensibile: exports vizibile doar membrilor org-ului; linkuri de descărcare semnate (nu raw).
+
+5.9 Indexare minimă (performanță)
+Fiecare FK are index.
+org_id + status/date pe tabele mari: subscriptions(status), invoices(issued_at), orders(status, placed_at).
+Căutare CMS: posts (org_id, status, published_at desc), slug unique.
+Telemetrie: events (org_id, name, ts desc) cu partiționare pe lună dacă volumul crește.
+
+5.10 Acceptanță (DoD)
+ERD validat (ex. dbml/Diagram).
+Migrații SQL idempotente + rollback.
+RLS testat cu 3 org-uri (cross-access imposibil).
+Seed minim: roles, plan_prices, 1 org demo, 1 utilizator per rol.
+Teste: FK/unique/enum checks, 10 scenarii CRUD (orders, subs, exports), 5 scenarii RLS negative.
+
+5.11 Snippets utile
+Enum-uri:
+
+create type plan_enum as enum ('free','creator','pro','enterprise');
+create type user_status_enum as enum ('active','blocked','invited');
+create type sub_status_enum as enum ('trialing','active','past_due','canceled');
+create type product_type_enum as enum ('digital','physical','bundle');
+create type content_status_enum as enum ('draft','review','scheduled','published');
+
+Trigger audit:
+create or replace function audit_row() returns trigger as $$
+begin
+  insert into audits(org_id, actor_id, entity, entity_id, action, diff, ip, ua)
+  values (new.org_id, auth.uid(), TG_TABLE_NAME, coalesce(new.id, old.id),
+          TG_OP, to_jsonb(new) - 'updated_at', inet_client_addr(), current_setting('request.header.user-agent', true));
+  return new;
+end; $$ language plpgsql;
+create trigger t_products_audit
+after insert or update or delete on products
+for each row execute function audit_row();
+Policy publicare conținut:
+create policy published_content_read on posts
+for select using (
+  status = 'published'
+);
+
+5.12 Trasabilitate la KPI (din Charter)
+subscriptions/invoices/payments → MRR, NRR, Payback, LTV/CAC.
+orders/order_items/fulfillments → venituri non-recurring; CR checkout.
+posts/pages/media → SEO→Pricing→Signup.
+events/audits → activare (first export ≤10m), stabilitate (error budget), conformitate (DSR).
+
+
+
+
+
+
+6) Autentificare & RBAC — „cine intră, ce vede, ce poate face”
+
+6.1 Obiectiv
+Asigură login sigur și rapid (email/parolă + OAuth), protecție cont (MFA + recovery codes), sesiuni robuste (revocare instant), control fin de acces (RBAC + RLS per org_id), limitare abuz (rate-limit) și legare dispozitiv (device binding). Totul măsurat prin SLO-uri clare.
+
+6.2 Cerințe funcționale (resume)
+SSO: email+parolă, OAuth (Google inițial; extensibil GitHub/Apple).
+MFA: TOTP (RFC 6238) + backup 10 recovery codes (one-time).
+Recuperare: reset parolă via email; dezactivare MFA cu 2× factori (cod recovery + link email).
+Sesiuni: HTTP-only cookies; refresh rotation; revocare instant; logout all devices.
+RBAC (5 roluri): owner, admin, editor, support, viewer.
+Izolare date: RLS pe org_id (deny-by-default).
+Rate limit & device binding: protecție login/OTP/export; token legat de device_id.
+Audit & alertare: evenimente cheie logate (auth, roles, policy denials) + alerte anomalii.
+
+6.3 Fluxuri principale
+6.3.1 Signup / Login
+Signup: email→link verificare → setează parolă → (opțional) MFA on-boarding.
+Login: email/parolă sau OAuth → verifică MFA (dacă activ) → emite session cookie + refresh.
+OAuth (Google): email_verified=true necesar; altfel fallback verificare email.
+
+6.3.2 MFA & Recovery
+Enroll: afișează secret TOTP + QR; confirmă cu 2 coduri consecutive; generează 10 recovery codes.
+Fallback: dacă TOTP indisponibil → 1 recovery code + link confirmare pe email.
+Rotate: invalidarea vechilor recovery; limită descărcare 1× (download/print).
+
+6.3.3 Sesiuni & Revocare
+Session cookie scurt (≤ 8h) + refresh token (≤ 30 zile).
+Rotire refresh la fiecare reîmprospătare (rotate-on-use); scrie în token blacklist pe revocare.
+Logout all: invalidează toate refresh tokens + marchează sesiuni active ca revoked.
+
+6.3.4 Invită în organizație
+Owner/Admin trimite invitație (email, rol).
+Invitatul acceptă → devine member cu role_key stabilit; audit + notificare.
+
+6.4 RBAC — matrice de permisiuni (rezumat)
+Acțiune / Resursă	owner	admin	editor	support	viewer
+Gestionează abonament/org	✅	✅	❌	❌	❌
+Invită/șterge membri, schimbă rol	✅	✅	❌	❌	❌
+Creează/editează conținut (CMS)	✅	✅	✅	❌	❌
+Rulează module (simulate/live)	✅	✅	✅	✅	☑ read-only (simulate if gated)
+Export .pdf/.json/.zip (plan gate)	✅	✅	✅	❌	❌
+Vizualizează telemetrie & rapoarte	✅	✅	✅	✅	✅
+Acces API keys	✅	✅	❌	❌	❌
+
+RBAC este prima barieră; RLS este ultima (aplicată în DB).
+
+6.5 RLS per org_id (tipare esențiale)
+Isolare: USING (org_id = current_setting('app.org_id')::uuid) pentru SELECT/UPDATE/DELETE.
+Inserare controlată: WITH CHECK (org_id = current_setting('app.org_id')::uuid) pe INSERT.
+Admin local: EXISTS (membership.role IN ('owner','admin')) pentru operațiuni sensibile.
+Public content: excepții doar pentru posts/pages cu status='published' (fără scurgere de org_id).
+
+6.6 Rate limiting (valori de start)
+Login password: 5 încercări / 10 min / IP + email.
+OTP TOTP: 5 / 10 min / user.
+Reset password requests: 3 / 60 min / email.
+Exporturi live: 10 / zi / org (plan-dependent).
+API public (faza 2): 60 req / min / key; burst 120; backoff exponențial.
+Reacție: la depășire → 429 + Retry-After + CTA upgrade (dacă e plafon de plan).
+
+6.7 Device binding (opțional, recomandat Pro/Ent)
+La login, se generează device_id (UUID) stocat în cookie secure separat.
+Tokenul de sesiune include device_id în claims; la nepotrivire → re-autentificare.
+Revocare selectivă: „logout all except this device”.
+
+6.8 Politici parole & securitate
+Parolă: min 12 caractere, pwned-passwords check, interzise patternuri simple.
+Cookie: Secure, HttpOnly, SameSite=Lax, expiră la 8h; re-issue la 4h de inactivitate.
+Headers: CSP strict, Referrer-Policy: strict-origin-when-cross-origin, X-Frame-Options: DENY, Permissions-Policy minimizat.
+Secrete: doar server-side; niciun secret în client.
+
+6.9 Evenimente & audit (ce logăm)
+auth.signup, auth.email_verified, auth.login_success/fail, auth.mfa_enrolled, auth.mfa_c hallenge_success/fail, auth.recovery_used, auth.password_reset_requested/completed,session.revoked/all, roles.changed, rls.denied, rate_limit.hit.
+Payload minim: org_id, user_id, IP, UA, timestamp; fără PII inutil.
+Alerte: 5× auth.login_fail în 10 min pe același IP/email → Slack #sec-alerts.
+
+6.10 API & UI (puncte de contact)
+API (route handlers Next.js)
+POST /api/auth/signup → create + email verify.
+POST /api/auth/login → password/OAuth callback → session cookie + refresh.
+POST /api/auth/mfa/enroll|verify|disable
+POST /api/auth/recovery/request|use
+POST /api/auth/logout (curent) / POST /api/auth/logout-all
+GET /api/session (whoami + claims + orgs/roles)
+POST /api/orgs/invite|accept
+POST /api/orgs/members/{id}/role (owner/admin only)
+UI
+/login, /signup (tab OAuth + password)
+/security (MFA, recovery, sessions, devices, logout all)
+/org/settings (roluri, invitații)
+Banners: enforce email verify înainte de acțiuni sensibile.
+
+6.11 Teste & acceptance (DoD pentru capitolul 6)
+Autentificare:
+Signup+verify+login (password & OAuth) — ✅
+MFA enroll+challenge+recovery — ✅
+Reset parolă — ✅
+Revocare sesiune curentă + „logout all” — ✅
+RBAC:
+10 scenarii pozitive (owner/admin/editor/support/viewer) — ✅
+10 scenarii negative (escaladări, acces trans-org) — ✅
+RLS:
+3 org-uri fictive → select/update/delete cross-org imposibil — ✅
+Rate-limit:
+login brute-force blocat; OTP flood blocat; export flood blocat — ✅
+Device binding: nepotrivire device_id → re-login — ✅
+Observabilitate: evenimente în audits/events + alerte Slack la tipare anormale — ✅
+SLO-uri:
+Login (P95) ≤ 400 ms; MFA challenge (P95) ≤ 800 ms;
+Revocare token: efect ≤ 5 s;
+Rata eroare auth < 0.5% 7-day (excluding user mistakes).
+
+6.12 Snippets utile (indicativ)
+RLS (model generic)
+alter table runs enable row level security;
+
+create policy org_isolation_select on runs
+for select using (org_id = current_setting('app.org_id')::uuid);
+
+create policy org_isolation_write on runs
+for insert with check (org_id = current_setting('app.org_id')::uuid)
+for update using (org_id = current_setting('app.org_id')::uuid)
+for delete using (org_id = current_setting('app.org_id')::uuid);
+
+Tabel sesiuni (minimal)
+create table sessions (
+  id uuid primary key,
+  user_id uuid not null references users(id),
+  device_id uuid not null,
+  created_at timestamptz default now(),
+  expires_at timestamptz not null,
+  revoked boolean default false,
+  ip inet, ua text
+);
+create index on sessions (user_id, expires_at);
+
+Blacklist token (revocare instant)
+create table token_blacklist (
+  jti uuid primary key,
+  user_id uuid not null,
+  revoked_at timestamptz default now(),
+  reason text
+);
+
+6.13 Legătura cu KPI-uri (din Charter)
+Mai puțin friction la login → Activation ≤ 10 min → crește Free→Paid.
+MFA + RLS → scade risc incident → Error budget protejat → uptime/încredere → NRR.
+RBAC clar → mai puține tichete suport → CSAT ↑ și cost ↓.
+Rate-limit & device binding → protecție cost (live tests/export) → Payback respectat.
+
+
+
+
+
+7) Abonamente & Plăți — „motorul de bani” (Stripe-first)
+
+Alegere: Stripe Billing + Stripe Tax + Stripe Checkout (primar). Lemon Squeezy/Paddle pot fi evaluate ulterior, dar MVP livrează pe Stripe pentru acoperire globală, taxe automate și API matur.
+
+7.1 Obiective & Principii
+North Star: MRR net + Payback ≤ 2 luni (Pro).
+Arhitectură: Hosted Checkout (minimizăm PCI), Billing Portal (self-service), Stripe Tax (VAT OSS + US sales tax), Webhooks idempotente + DLQ.
+Model: planuri + add-ons (seats, storage, API calls), trial pe Pro, annual = 10× monthly.
+Entitlements: derivate din subscriptions + plan + addons → evaluate în lib/gating.ts.
+Complianta: PCI DSS SAQ A-EP, facturi corecte, evidență jurisdicții.
+
+7.2 Planuri & Add-ons (catalog)
+Planuri
+Plan	Preț lunar	Preț anual	Drepturi cheie
+Free	€0	—	Simulate Test, export .txt, istoric local
+Creator	€19	€190	Toate Free + export .md, module nelimitate (simulate), cloud history
+Pro	€49	€490	Toate Creator + Run Real Test, export .pdf/.json, Evaluator live, RUM dashboards
+Enterprise	€299 (5 seats)	€2990	Toate Pro + API, bundle.zip, seats, white-label, rate-limits extinse
+Trial Pro 7 zile (watermark la export). Annual = 10× lunar (discount ~17%).
+Add-ons (per org)
+Seats extra: €59/seat/m (Enterprise; opțional Pro).
+Evaluator Advanced: €19/m.
+Export Designer (brand kit PDF): €29/m.
+API burst pack: €9 / +50k call-units.
+Toate prețurile în minor units în DB; multipli valutar gestionați de Stripe.
+
+7.3 Model de date & mapare Stripe
+products / prices ↔ Stripe Product/Price (one-to-many).
+subscriptions ↔ Stripe Subscription (status, current_period).
+invoices / payments / refunds / disputes ↔ Stripe Invoice/PaymentIntent/Charge/Refund/Dispute.
+entitlements (intern): (org_id, feature, value, source) calculat la webhook invoice.paid / customer.subscription.updated.
+tax_records (intern): stocăm tax_breakdown din invoice.tax (jurisdicție, rate, amounts).
+Chei externe:
+external_sub_id (Subscription id)
+external_price_id (Price id)
+external_invoice_id, external_payment_id
+
+7.4 Fluxuri principale
+1) Checkout (nou client sau upgrade)
+FE: POST /api/billing/checkout cu {plan, interval, addons?, seats?}.
+BE: creează Checkout Session (mode='subscription'), setează line_items (plan + addons), tax_behaviour=exclusive, allow_promotion_codes=true, success_url, cancel_url.
+User plătește → Stripe redirecționează pe success_url.
+Webhook checkout.session.completed → creăm/actualizăm subscriptions, invoices, entitlements (provițional).
+Webhook invoice.paid → confirmare finală, emitere factură (≤5s), set plan în orgs.
+
+2) Trial → Convert
+trial_period_days=7 pe Pro (Checkout).
+3 emailuri automate: D-5, D-2, D-0 (Stripe + Postmark).
+trial_will_end event → reminder + nudge în UI (badge roșu).
+Conversie = invoice.paid → ridicare watermark.
+
+3) Upgrade / Downgrade / Prorratare
+Upgrade imediat: creează SubscriptionItem nou / modifică price → Stripe face prorratare în invoice prorratare.
+Downgrade la final de perioadă: proration_behavior='none', cancel_at_period_end=true sau schimbare price cu proration_behavior='none'.
+Seats: ajustare quantity pe SubscriptionItem per-seat.
+Webhook customer.subscription.updated → recalcul entitlements.
+
+4) Failed payments & Dunning
+Config Stripe Smart Retries (ex: 3, 5, 7 zile).
+Email-uri: invoice.payment_failed → 1h, 48h, 5 zile (link portal).
+Suspendare soft (read-only, fără export plătit) la +3 zile; cancel la +14 zile (configurabil).
+Re-activare automată la invoice.paid.
+
+5) Anulare / Re-activare
+Cancel now sau at period end (portals).
+Re-activate în 6 luni → păstrează istoricul; reinstaurează entitlements la plată.
+
+6) Dispute / Refund / Credit
+charge.dispute.created → marcăm disputes, reducem provizoriu NRR.
+Refund: total/parțial (backoffice); reclamă internă de licență.
+Credit note: Stripe Credit Notes pentru corecții contabile (invoices).
+
+7.5 Webhooks (idempotent + DLQ)
+Endpoint: POST /api/webhooks/stripe (route handler Next.js)
+Evenimente critice:
+checkout.session.completed → provis entitlements
+invoice.paid / invoice.payment_failed → status + dunning
+customer.subscription.created|updated|deleted → plan + seats + addons
+charge.dispute.created|closed → disputes
+customer.tax_id.created|updated → B2B VAT
+Idempotency: salvați event.id în webhooks (unique); if exists → 200 OK.
+DLQ: eșec > 3 retry → mută payload în webhooks_dlq + alertă #payments-tax.
+
+Pseudocod:
+
+switch (event.type) {
+  case 'invoice.paid':
+    upsertInvoice(event.data);
+    syncSubscription(event.data.subscription);
+    recalcEntitlements(orgId);
+    emit('billing.invoice_paid', { orgId });
+    break;
+  case 'invoice.payment_failed':
+    flagDunning(orgId, invoiceId);
+    notifyOrg(orgId, 'payment_failed');
+    break;
+  case 'customer.subscription.updated':
+    syncSubscription(event.data);
+    recalcEntitlements(orgId);
+    break;
+}
+
+7.6 Entitlements & gating
+Regulă: UI nu se bazează pe „plan string”; cheamă withEntitlementGate(flags):
+const allow = withEntitlementGate({ plan, addons, isTrial, usage, feature: 'export.pdf' });
+if (!allow.ok) showUpgrade(allow.reason);
+Exemple:
+run.live: Pro+; blochează dacă cost_cap depășit.
+export.pdf/export.json: Pro+; watermark în trial.
+export.bundle_zip: Enterprise.
+api.access: Enterprise + seats>=5.
+rate-limit: per plan (Free < Creator < Pro < Ent).
+
+7.7 Taxe (VAT OSS + US sales tax)
+Stripe Tax: automatic_tax=enabled.
+Captură adrese la Checkout (billing + optional shipping); deducere loc/jurisdicție.
+VAT ID (US B2B): verificare VIES; reverse-charge; factură cu mențiunea obligatorie.
+US: configurare nexus + excluderi (servicii digitale).
+Arhivare fiscală: păstrează invoice_pdf, tax_breakdown în tax_records (legal 10 ani în unele jurisdicții).
+
+7.8 Portal & Self-service
+Customer Portal activat: card management, upgrade/downgrade, cancel, extrase.
+Link Manage billing în /dashboard/billing (tokenized redirect).
+Urmărire credit: card expiring → email proactiv.
+
+7.9 UI/UX de plată (acceptance)
+/pricing: toggle monthly/annual; carduri plan; comparație feature list; CTA Checkout.
+/checkout/success|cancel: status clar, buton Back to dashboard.
+/billing: plan curent, usage, addons, seats, facturi (link invoice PDF), tax IDs.
+Empty states: la plan insuficient → CTA „Upgrade pentru …”.
+Error states: fallback clar (ex: webhook down → „Verificăm plata, vei primi email”).
+
+7.10 SLO & metrici operaționale
+Checkout success rate ≥ 98.5% (post-3DS).
+Emitere factură ≤ 5s de la invoice.paid.
+Dunning recover rate ≥ 30% la 7 zile.
+Dispute rate ≤ 0.8%.
+Tax correctness = 100% (audit lunar).
+Lag webhook ≤ 2s P95.
+Dashboards:
+Revenue: MRR, NRR, ARPA, churn, expansion.
+Funnel plăți: checkout started → completed, fail reasons.
+Taxe: split pe țări/state, B2B/B2C.
+Dunning: cohort reușite.
+
+7.11 Rate-limits & cost-guard
+Run live tests: Pro 200/zi/org, Enterprise 2000/zi/org (ajustabil).
+Exports: Pro 100/zi/org; Enterprise 1000/zi/org.
+API calls: Pro 50k/lună; Enterprise 500k/lună (burst packs).
+Cost cap per org (config): dacă estimarea depășește → degrade la „Simulated”.
+
+7.12 Testare (DoD pentru capitolul 7)
+Contracte Stripe: test webhooks cu fixtures → invoice.paid, payment_failed, subscription.updated.
+Prorratare: 6 scenarii (monthly→annual, add seat, remove seat, addon on/off, mid-cycle).
+Dunning: simulează 3 retry; verifică suspendare soft & reactivare.
+Taxe: US B2C, US B2B cu VAT, US (CA/NY) — verify breakdown.
+Dispute/Refund: 1 flux complet fiecare.
+Portal: change plan + cancel at period end + re-activate.
+Idempotency: retrimite 3× același webhook → fără duplicare DB.
+Reconciliere nocturnă: stripe.subscriptions.list(status='all') ↔ DB (diferențe = alert).
+
+7.13 Backoffice & reconciliere
+/admin/billing: căutare org, status subs, seats, addons, facturi, dispute, export CSV.
+Reconciliere zilnică (cron/queue): compară Stripe vs DB (subs/invoices/payments), repară discrepanțe, log „diff_report”.
+Credit notes: generare din admin (cu reason), atașare la invoice.
+Raport fiscal: export lunar pe țări/state; TVA colectat; reverse-charge.
+
+7.14 Edge cases & politici
+Fraud 3DS: fallback cu 3DS; dacă requires_action eșuează → instruct user în UI.
+Card expirate: pre-expiring emails; grace 7 zile.
+Downgrade ce ar încălca entitlements: anunță clar ce se pierde; aplică la EoP.
+Multiple subscriptions per org: interzis (unique constraint).
+Multi-brand: un customer Stripe per org (evită coliziuni cross-brand).
+Refund policy: clară în ToS (ex: 7 zile pentru erori de facturare).
+
+7.15 Interfețe API (server)
+POST /api/billing/checkout → returnează checkout_url.
+GET /api/billing/portal → redirect secure la portal.
+POST /api/billing/seats → {op: 'add'|'remove', qty} (owner/admin).
+POST /api/billing/addons → [{addon, op, qty?}].
+GET /api/billing/invoices → list + links.
+POST /api/webhooks/stripe → procesare evenimente (idempotent).
+
+7.16 Trasabilitate KPI (din Charter)
+Free→Paid CR, MRR, NRR, Payback: planuri/gates/portal → upgrade vizibil.
+Checkout success: >98.5% → mai puține pierderi pe „ultima milă”.
+Tax correctness 100% → risc legal zero, timp salvat.
+Dunning recover → protejează MRR, scade churn.
+
+Verdict practic
+Stripe end-to-end, hosted flows, webhooks robuste, entitlements deterministe și backoffice cu reconciliere automată.
+Dacă webhook-urile cad, nu blocăm în UI: afișăm „Plata în procesare…” și rulăm reconciliere la 5 min.
+Dacă checkout CR scade >10% P7D → auto-revert ultimul change (guardrail comercial).
+
+
+
+
+
+
+
+8) Shop (B2C/B2B) — digital-first, fizic la faza 2
+
+8.1 Obiectiv & KPI
+Obiectiv: vânzare sigură și rapidă de produse digitale (licențe, fișiere, bundle) și, la faza 2, produse fizice.
+KPI comerciale: CR checkout ≥ 2.5%, AOV ↑, refund rate ≤ 2%, timp „add-to-cart → paid” P95 ≤ 90s.
+KPI tehnice: TTFB P75 < 200ms, LCP P75 < 2.5s, erroare 5xx < 0.2%.
+
+8.2 Tipuri de produse
+Digitale (MVP): licențe, template-uri, fișiere (.txt/.md/.pdf/.json/.zip), chei/links semnate, limită descărcări.
+Fizice (faza 2): SKU + greutate, dimensiuni, transportator, tracking.
+Bundle: agregă produse (digital/fizic), preț pachet, reguli combinatorii.
+
+8.3 Catalog & prezentare
+Modelare: products (digital/physical/bundle) → variants (SKU, atribute) → prices (currency, recurring?=false pentru shop).
+Filtre & sortări: categorie, tag, preț, tip, popularitate; sortare: recomandate, cele mai noi, preț ↑/↓.
+Prețuri localizate: Stripe Prices pe valute (afişare în funcție de geo/IP + preferințe user).
+SEO Product: schema.org/Product + Offer; URL stabil: /shop/<slug>; imagini optimizate, OG/Twitter Cards.
+
+8.4 Promoții & prețuri
+Cupoane: percent/fixed, per org, perioadă, max redemptions, stacking off.
+Cart rules: minim comandă, segment (plan, țară), prima comandă.
+Volume pricing: prețuri pe cantitate (variants).
+Gift code / vouchere (opțional P1): emitere, sold, expirare.
+
+8.5 Coș & Checkout
+Cart UX: 1-page, persistent (cookie + server), guest→account în pasul final.
+Adrese & taxe: captură billing (obligatoriu), shipping (fizice), Stripe Tax pentru calcul întimp real.
+Plată: Stripe Checkout (Hosted) cu 3DS, Apple/Google Pay, cupon vizibil, Terms & Refund link.
+Upsell/downsells: recomandări post-add-to-cart & în confirmation (cross-sell digital).
+State: success / pending (webhook în tranzit) / failed cu motive.
+
+8.6 Fulfillment
+Digital (MVP)
+Livrare: după invoice.paid → generezi link semnat (S3) per item; TTL default 7 zile; max N descărcări (ex: 5).
+Licențe: generare license_key (UUIDv4 sau pattern propriu) + validare la download.
+Anti-abuz: rate-limit download (IP+org), revoke pe refund/dispute, watermark PDF (opțional).
+Fizic (faza 2)
+Transportatori: field carrier + tracking_number; webhook la status schimbat.
+Pick/Pack/Ship: status fulfillments: queued → in_progress → completed → failed.
+Estimări cost & ETA: simplu (tabel greutate×zonă) sau integrare 3PL.
+
+8.7 Politici & returnări
+Digital: „nerefundabil” by default; excepții pentru erori de facturare (credit note/refund).
+Fizic: fereastră retur (ex: 14 zile), condiții, flux RMA.
+Dispute: marcare item ca „locked”, revocă acces download; reacții în 48h.
+
+8.8 Admin & backoffice
+Catalog: CRUD produse/variante/prețuri, activ/inactiv, preview.
+Promoții: cupoane, reguli de coș, limitări segment.
+Comenzi: listare, filtrare, statut, re-emitere linkuri digitale, re-trimitere email download.
+Fizic: picking list, AWB, tracking; costuri transport.
+Rapoarte: vânzări pe produs/țară, conversii, cupoane utilizate, top bundle.
+
+8.9 Email & notificări (Post-purchase)
+Digital: „Order confirmed” + „Your downloads” (linkuri cu TTL), „Download expiring” (D-1).
+Fizic: „Order shipped” + tracking, „Delivered” (feedback).
+Failover: dacă webhook down → „Plata în procesare”; reconcilieri la 5 min.
+
+8.10 Securitate & conformitate (shop)
+PCI SAQ A-EP (Hosted Checkout), fără card data on-prem.
+Linkuri semnate pentru download; anti-hotlink; contorizare descărcări.
+GDPR: minim PII; adrese păstrate strict pentru taxe/transport; drept de ștergere.
+Audit trail: create/update/delete product, change price, coupon create/apply, download events.
+
+8.11 Integrare cu abonamente & entitlements
+Cross-gating: achiziția de bundle poate activa temporar entitlements (ex: Export Designer 30 zile).
+Plan awareness: utilizatorii Pro/Ent primesc reduceri sau extra descărcări.
+Licențe enterprise: seat-bound (N chei per org), audit utilizare.
+
+8.12 API & webhooks (intern)
+API (server):
+GET /api/shop/products?filters… (public cacheable)
+POST /api/shop/cart (add/remove/update)
+POST /api/shop/checkout → Stripe Checkout Session
+GET /api/shop/orders (auth)
+GET /api/shop/orders/{id}/downloads (signed links)
+Webhooks:
+invoice.paid → order.paid (creare fulfillments)
+charge.refunded|dispute.created → revoke downloads/lock
+
+8.13 Performanță & SEO (shop)
+Edge caching pentru pagini produs, listări; revalidate la update.
+Imagini: next/image, dimensiuni declarate, AVIF/JPEG, lazy.
+Prefetch inteligent (hover pe card produs).
+CWV: LCP < 2.5s (hero/galerie), INP < 200ms (cart actions), CLS < 0.1.
+Schema.org: Product + AggregateRating (când există), Offer (price, availability).
+
+8.14 Testare & acceptanță (DoD)
+Fluxuri: add-to-cart→checkout→webhook→download (digital), refund/dispute, limită descărcări, expirare link.
+Promoții: cupoane valide/expirate/max redemption, stacking blocat.
+Taxe: EU B2C, EU B2B (VAT ID), US CA/NY — breakdown corect.
+Anti-abuz: download flood → rate-limit + log; partajare link → invalidare.
+Perf: P75 TTFB/LCP ok pe /shop și /shop/<slug>.
+SEO: validare schema.org, sitemap entries, canonical.
+
+8.15 Roadmap incremental
+P0 (MVP digital): catalog, cupon, 1-page checkout, linkuri semnate, limită descărcări, rapoarte de bază.
+P1: bundle avansat, gift codes, recomandări ML-naive (co-occurrence), upsell în confirmation.
+P2 (fizic): inventar, transportatori, tracking, RMA; costuri dinamice; 3PL opțional.
+
+8.16 Trasabilitate KPI (→ Charter)
+CR checkout, AOV, MRR non-recurring, refund ≤2%, Tax correctness 100%, timp add-to-cart→paid ≤90s.
+Perf/CWV susțin SEO → trafic → conversie; audit trail protejează revenue.
+
+
+
+
+
+
+9) CMS & Blog — „publică repede, sigur, SEO-corect”
+
+9.1 Obiectiv & KPI
+Obiectiv: pipeline de conținut care alimentează SEO, pricing și conversia în abonamente/vânzări.
+KPI: timp draft→publish ≤ 24h P90, CR organic→pricing ≥ 6%, erori build <0.2%, acoperire alt-text = 100%, sitemap valabil 100%.
+
+9.2 Tipuri de conținut (schemă minimă)
+post (blog): titlu, slug, excerpt, content_mdx, cover, categories[], tags[], status (draft/review/scheduled/published), published_at, author_id, canonical_url?, og_image?, noindex?
+page (static/landing): titlu, slug, blocks JSON (hero/faq/cta/pricing…), template_key, status, published_at
+docs (documentație/API): slug ierarhic (/docs/:section/:page), sidebar_order, version?
+changelog: versiune, data, „Added/Changed/Fixed/Security” (MDX), linkuri PR
+media: path, mime, dimensiuni, alt obligatoriu, focal point, licență
+redirects: from, to, code (301/302), expires_at?
+Toate entitățile au: org_id (dacă multi-brand), created_at/updated_at, created_by/updated_by, revisions.
+
+9.3 Editor & UX autor
+Editor MDX/Blocks:
+MDX cu componente whitelisted: <Callout>, <Table>, <Code>, <Accordion>, <Video>, <Image> (responsiv + lazy)
+Blocks builder (landing/docs) cu set minim: Hero, Section, Grid, CTA, FeatureList, Testimonial, FAQ, Pricing
+Asistare la scriere: „Read-time”, număr headinguri, densitate intern-links (min 3), linter SEO (H1 unic, H2+ coerent, meta description 120–160)
+OG generator (fallback automat din H1 + cover)
+Media library:
+încărcare drag-drop, cropper (ratios: 1.91:1, 1:1, 1200×630), focal point
+deduplicare hash, optimizare (AVIF/JPEG), alt obligatoriu (nu salvează fără)
+Snippets reutilizabile: „legal disclaimer”, „CTA universal”, „author bio”
+Preview instant (route privată cu token, expiră la 30min)
+
+9.4 Workflow & versionare
+Stări: draft → review → approved → scheduled → published → (rollback)
+Review gates:
+Design gate (contrast, accesibilitate, layout breakpoints)
+SEO gate (title ≤ 60, meta ≤ 160, H1 unic, internal links ≥ 3, schema validă)
+Legal gate (no PII / claims sensibile)
+Scheduling: cron din server; „missed schedule” auto-recuperare la următorul tick
+Revisions: diffs per câmp, restore versiune, comentarii la paragraf (inline notes)
+
+9.5 Generare & livrare (Next.js)
+ISR/SSG pentru post/page/docs; SSR doar unde e necesar (dashboard).
+Revalidare fină: la publish/update → invalidează exact rutele afectate (post, category, index, sitemap, RSS)
+Assets: next/image cu dimensiuni declarate; srcset automat
+Performance: code-splitting pentru editor, lazy pentru media grea; prefetch pe hover pentru linkuri interne
+
+9.6 SEO tehnic (by default)
+Schema.org: Article, BlogPosting, BreadcrumbList, FAQPage (dacă block-ul este FAQ), Product pe landing pricing
+URL & canonical: slug scurt, stabil; rel=canonical setat; trailing slash politică unică
+hreflang & i18n: când există localizări → x-default + perechi corecte
+OpenGraph/Twitter Cards: og:title/description/image; twitter:summary_large_image
+Robots & sitemaps: robots.txt generat, sitemap index + sitemaps per secțiune (blog/docs/pages); RSS/Atom (blog)
+Links interne: generator de „Related posts” (BM25 simplu pe tags/categorii)
+
+9.7 Căutare & indexare
+Index incremental:
+La publish/update → trimite payload minimal în Algolia/OpenSearch: title, slug, excerpt, headings[], tags[], lang, popularity score
+Stop-words & synonyms (EN/RO); typo tolerance
+Preview indexing guard: noindex pentru draft/review
+404 inteligent: sugerează 3 rezultate apropiate + link înapoi
+
+9.8 Acces, RBAC & RLS
+RBAC:
+editor/admin/owner: CRUD pe conținut
+support: poate edita changelog și FAQ
+viewer: read-only
+RLS: conținut published acces public; altfel vizibil doar membrilor org-ului
+Locks: când un editor deschide un document → lock optimistic 15min
+
+9.9 Guvernanță & politici
+Alt-text obligatoriu; imagini fără alt → build eșuat (hard fail)
+Outbound links: deschidere în nou tab, rel="noopener noreferrer", broken link checker în CI
+PII guard: linter blochează email/telefon în corp dacă nu e whitelisted
+Licențe media: câmp obligatoriu; avertismente la „unknown”
+
+9.10 Telemetrie & măsurare
+Events: content.view, content.read_complete (scroll depth 75% + min time), content.cta_click, content.share, content.search
+KPIs: CTR din „related posts”, rata bounce per categorie, organic→pricing CR, timp mediu pe pagină, % pagini cu schema validă
+Rapoarte: săptămânal index nou, cele mai citite, cele mai convertibile, pagini lente (CWV), erori build
+
+9.11 Interfețe API (server)
+GET /api/content/posts?status=published&lang=ro&tag=… (cacheable, SWR)
+POST /api/content/post (create) / PUT /api/content/post/:id (update) — RBAC
+POST /api/content/publish|schedule|rollback
+POST /api/content/preview (link temporar)
+POST /api/revalidate (secure) — rute afectate
+GET /api/sitemap.xml, GET /api/rss.xml
+
+9.12 Build & CI
+Lint SEO/accesibilitate pe PR (axe + reguli custom)
+Test linkuri (intern/extern) + imagini lipsă
+MDX type-check (component props whitelisted)
+Previews Vercel pentru fiecare PR; check „Publishability” (gates)
+
+9.13 Acceptanță (DoD pentru capitolul 9)
+Editor funcțional (MDX + Blocks), preview live, media library cu cropper
+Workflow complet cu review gate (design/SEO/legal) și programare
+Versionare cu rollback la o versiune anterioară
+SEO valid: schema, OG/Twitter, canonical, hreflang (dacă i18n)
+Sitemaps + RSS valide; redirects funcționale
+Căutare: index incremental; rezultate relevante la 3 interogări test
+Perf: P75 LCP < 2.5s pe post/page/docs; CLS < 0.1
+Accesibilitate: axe score „no serious/critical”
+Telemetrie: events apar în dashboard; raport săptămânal generat
+
+9.14 Roadmap incremental
+P0: blog + pages + changelog, MDX, preview, sitemaps/RSS, schema, basic search
+P1: docs cu sidebar & versiuni, Blocks landing, linter SEO avansat, related posts mai bun
+P2: colaborare real-time (CRDT), A/B test headlines, content experiments cu auto-revert dacă CR scade
+
+9.15 Trasabilitate KPI (→ Charter)
+Draft→Publish ≤24h și acoperire SEO corectă → crește Organic→Pricing și Free→Paid
+CWV bune pe conținut → rank & trafic stabil → MRR indirect
+Changelog/Docs -> mai puține tichete → CSAT ↑ și cost suport ↓
+
+
+
+
+
+
+10) Internaționalizare — i18n UI + i10n prețuri/date/valute, SEO corect
+
+10.1 Obiectiv & KPI
+Obiectiv: experiență nativă pe piețe diferite (UI, conținut, prețuri, formatări), fără a rupe SEO.
+KPI: P75 TTFB < 200 ms pe toate localele; hreflang valid 100%; fallback rate UI < 2%; % pagini traduse ≥ 90% pe locale active; checkout CR fără diferențe > ±5% între locale.
+
+10.2 Locale suportate (fazați)
+P0: ro-RO, en-US.
+P1: de-DE, it-IT (pe baza traficului/cererii).
+Reguli: fiecare locale are state: draft | partial | live. Doar live apare în selector și în hreflang.
+
+10.3 Strategia URL & rutare
+Prefix per limbă: /{locale}/… (ex: /en/pricing, /ro/blog).
+Default locale: 301 → /en/ (configurabil).
+Canonical & hreflang: setate pe fiecare pagină:
+link rel="alternate" hreflang="en" href="…/en/…", hreflang="ro", hreflang="x-default".
+Redirecturi: dacă pagina nu există într-un locale, 302 → fallback (cu banner “translated from …”).
+
+10.4 Content negotiation & detecție
+Preferință utilizator: cookie pf_locale dacă a ales manual.
+Detecție inițială: Accept-Language + IP geo → doar pentru prima vizită (soft-redirect, non-blocant).
+Persistență: alegerea manuală bate auto-detectul.
+
+10.5 i18n UI (interfață)
+Format: ICU MessageFormat (plural, gender), fișiere messages.{locale}.json.
+Chei stabile; lint pentru chei lipsă/unused; build fail dacă lipsește cheie critică.
+Fallback: en-US → afișăm badge mic “EN fallback” în dev/preview, logăm metrică i18n.fallback.hit.
+Data/time/numere: Intl.DateTimeFormat, Intl.NumberFormat (per-locale);
+– ex: formatCurrency(amount, currency, locale) cu mapare Stripe prices.
+Timezone-aware: afișări relative folosind TZ browser; server-side în UTC.
+
+10.6 i10n prețuri/valute/taxe
+Prețuri: multiple Stripe Price per valută; selectăm prețul potrivit per locală/geo.
+Afișare: valuta locală dacă există; altfel principală (EUR/USD) + etichetă “≈ converted”.
+Taxe: Stripe Tax calculează din adrese; UI arată subtotal + taxă + total cu localizare numerică.
+
+10.7 Contenut (CMS) & traduceri
+Modelare: câmpurile translatabile au tabel copil *_i18n:
+posts → post_i18n(post_id, locale, title, excerpt, content_mdx, slug_localized, seo_meta…).
+Stări pe traducere: missing | machine | human_review | approved.
+Workflow:
+Autor creează în locale sursă (ex: en-US).
+Pre-traducere (machine) → status machine.
+Editor local verifică → human_review → approved.
+Publish: doar approved intră în sitemap/hreflang.
+Glosar & stil: fișier i18n/glossary.{locale}.md + tone.md pe țară (evităm inconsecvențe).
+Media/OG: texte alternative per locală; OG-title/desc traduceri dedicate.
+
+10.8 Selector de limbă & UX
+Componentă: în header + footer; mereu vizibilă.
+Arată doar localele live; fallback cu modal dacă utilizatorul vine din altă limbă majoră (oferă switch).
+Deep-link cross-locale: /en/page ↔ /ro/page (păstrează ruta când există traducere), altfel anunță fallback.
+
+10.9 SEO i18n
+hreflang complet (inclusiv x-default).
+Sitemap per locală + sitemap index; fiecare URL indică alternate.
+Canonical corect în cadrul aceleiași limbi; fără duplicat cross-locale.
+Slug-uri localizate (slug_localized); redirect 301 dacă se schimbă.
+Noindex pentru pagini non-approved sau partial.
+
+10.10 E-mailuri & tranzacțional
+Șabloane pe limbă: emails/{locale}/… cu fallback en-US.
+Event-driven: la trimitere, determină locale din preferințe/org; pentru invitați → Accept-Language din invitație.
+Conținut legal (ToS/Privacy): versiune/limbă corectă, linkată din emailuri.
+
+10.11 RBAC, RLS & permisiuni
+RBAC editorial: traducătorii au rol editor_{locale} cu acces doar la *_i18n din locală.
+RLS: separă conținutul pe org_id (multi-brand) + locale; published rămâne public.
+
+10.12 Monitorizare & telemetrie
+Events: i18n.fallback.hit, i18n.locale_switch, i18n.missing_key, i18n.machine_to_human, i10n.price_currency_mismatch.
+Dashboards: % trafic per locală, % conținut aprobat, CR per locală, erori hreflang, rate fallback.
+Alerte: hreflang invalid în crawler, missing_key > 20/zi, diferență CR > ±5% între locale 7 zile.
+
+10.13 Performanță
+Edge caching per-limbă (vary by locale), Cache-Control corect.
+Bundle splitting: încărcăm doar messages.{locale}.json necesar.
+Prefetch linkuri interne pe aceeași locală; nu prefetch cross-locale.
+
+10.14 Teste (DoD pentru i18n)
+Unit: formatări Intl, selectare price per valută; slug builder.
+Contract: sitemap/hreflang pentru 3 pagini (home, pricing, blog post).
+E2E: switch limbă păstrând ruta; publish traducere → apare în sitemap/hreflang; fallback banner pe pagini lipsă.
+Accessibility: citire corectă RTL dacă vom adăuga locale RTL (future-proof).
+SEO lint: verificare automată alternate + canonical per pagină.
+
+10.15 Operare
+Cadenta: revizie lunară de localizare (top-20 pagini traffic).
+Prioritizare: întâi pricing/landing/docs critice; apoi blog evergreen.
+SLA traduceri: machine ≤ 1h; human review ≤ 72h; urgent (lansări) ≤ 24h.
+Memorie de traduceri: export/import TMX (pentru continuitate dacă schimbăm furnizorul).
+
+10.16 Interfețe API
+GET /api/i18n/locales → listează locale live + percent coverage.
+GET /api/i18n/messages?locale=ro-RO → pachet UI (cacheable).
+POST /api/i18n/translate (internal) → creează task de traducere (machine) + status.
+POST /api/i18n/approve → marchează ca aprobat (RBAC required).
+POST /api/revalidate → invalidează rutele localizate.
+
+10.17 Trasabilitate KPI (→ Charter)
+hreflang corect + conținut local → creștere Organic pe piețe + CR pricing stabil.
+i10n prețuri reduce fricțiune la checkout → Free→Paid ↑.
+Fallback scăzut și latency mic pe toate localele → NRR și brand trust.
+
+
+
+
+
+
+11) UX & Design System — „un singur limbaj vizual, fără excepții”
+
+11.1 Obiectiv & KPI
+
+Obiectiv: interfață coerentă, accesibilă, rapidă, care convertește.
+
+KPI:
+P75 LCP < 2.5s, INP < 200ms, CLS < 0.1;
+WCAG 2.2 AA – 0 erori critice/serioase pe axe;
+CR landing→pricing ≥ 35%, pricing→signup ≥ 7%;
+timp „primul export” ≤ 10 min (din UX flow, nu doar tehnic).
+
+11.2 Design tokens (singura sursă de adevăr)
+Format recomandat: tokens.json → build pentru Tailwind/React (CSS vars).
+Culori (semantic-first)
+Background: --bg-primary, --bg-secondary, --bg-elevated
+Foreground: --fg-primary, --fg-secondary, --fg-muted
+Accent (brand): --accent, --accent-foreground
+Status: --success, --warning, --danger, --info
+Border: --border, --ring
+States: --hover, --active, --disabled
+Dark/light: mapare automată (media/prefers-color-scheme) + toggle manual (persistă în localStorage).
+Tipografie
+Font families: --font-sans, --font-mono
+Scale: --text-xs/sm/base/lg/xl/2xl/3xl/4xl (valori REM), leading/letter-spacing preset
+Densități: --line-compact (1.2), --line-normal (1.5)
+Spații & radius
+Spacing: --space-1..8 (4px grid), container widths (xs…7xl)
+Radius: --radius-xs/sm/md/lg/full
+Shadow: --shadow-1/2/3 (elevații consistente)
+Z-index & layout
+Layers: --z-header, --z-modal, --z-toast, --z-drawer
+Container: max-w-prose pentru content, max-w-7xl pentru dashboard
+Regula: componentele folosesc doar tokeni semantic; niciun hex în CSS.
+
+11.3 Componente canonice (UI kit)
+Toate livrate ca Headless + Skins (stil separat), cu stări focus/aria.
+Nav (Header + Mobile Drawer): logo, nav primar, CTA, selector limbă/temă.
+Hero (Landing): titlu, sub, bullet value, CTA dual (primar/secundar), proof (badges).
+Card: header, body, footer, suport pentru „selectable/pressable”.
+Table (DataTable): head sticky, sort/filter, empty state, paginare accesibilă.
+Form: input, select, checkbox/radio, switch, fieldset cu descriere/eroare; aria-describedby.
+Modal/Dialog: focus trap, esc, role dialog, aria-labelledby/aria-describedby.
+Stepper (flows multi-pas: Generate → Test → Export): persistă progres, permite back fără pierdere.
+Toast/Inline Alert: role=alert, auto-dismiss cu pauză la hover.
+Empty/Error/Skeleton: icon, titlu, explicație, CTA; skeleton cu lățimi/înalțimi declarate.
+Tabs/Accordion: keyboard-first, aria-controls, roving tabindex.
+Badge/Tag: semantic (plan, status), truncare la overflow.
+Telemetry Badge: run_id, score, duration, status (simulated/live) – compact.
+Pricing Matrix: compară planuri; sticky CTA; col res-friendly; plan recomandat evidențiat.
+Pentru fiecare: stări (default/hover/active/focus/disabled/error/loading), dimensiuni (sm/md/lg), variante (primary/secondary/ghost).
+
+11.4 Accesibilitate — WCAG 2.2 AA (non-negociabil)
+Contrast: min 4.5:1 text normal, 3:1 large. Verificare automată în CI.
+Focus states vizibile: ring semantic (nu doar culoare), ordine tab logică.
+ARIA corect: landmarkuri (header/nav/main/aside/footer), roluri, etichete pentru form.
+Keyboard-first: orice interacțiune esențială se poate face de pe tastatură.
+Motion: respectă prefers-reduced-motion; fără parallax greoi; tranziții ≤ 150ms.
+Ergonomie mobil: ținte ≥ 44×44px; spațiere suficientă; safe-areas.
+
+11.5 Motion & micro-interacțiuni
+Timings: enter 120–150ms, exit 90–120ms; easing standardizate (in/out).
+Feedback: butoanele au „press feedback” (scale subtil), toasts la acțiuni asincrone.
+Transitions: evită animarea layout-urilor mari; animă opacitate/transform.
+
+11.6 Pattern-uri UX critice (legate de KPI)
+Landing → Pricing → Signup: CTA sticky, secțiune “Why Pro/Enterprise”, sociale/dovezi.
+Onboarding scurt: 3 pași max – alege modul → set 7D → rulează „Simulate” → CTA „Run Real Test”.
+Empty states: explică următorul pas (buton direct către acțiunea valoroasă).
+Error states: limbaj clar, fără coduri brute; oferă „Try again” sau „Contact support”.
+Upgrade gates: pagină/overlay cu listă beneficii, preț, „continue where you left off” după plată.
+Download flow: buton clar, format + mărime, notă checksum, info watermark în trial.
+
+11.7 Sistem de iconografie & ilustrații
+Icon set coerent (24px grid); prefer vector mono; semantice (success/warning/danger).
+Ilustrații: greutate mică (SVG/PNG optimizat), stil consistent; nu blochează LCP.
+
+11.8 Redlines & documentare
+Fiecare componentă are pagina de spec: props, state, exemple, cod, redlines (margini, spacing, radius), capcane.
+Storybook cu controls; a11y addon; vizual regresion (Chromatic/Playwright screenshots).
+
+11.9 Theming & branduri multiple
+Theme tokens per brand (overrides pe accent/og-image, nu pe bazele de contrast).
+Suport white-label (Enterprise): favicon/logo/color-accent override, export PDF cu brand-kit.
+
+11.10 Integrare tehnică (Next.js + Tailwind)
+CSS vars la :root + [data-theme="dark"].
+Tailwind config mapează către vars (ex: colors.bg = var(--bg-primary)).
+Avoid stiluri inline/hex; folosește clase utilitare standardizate.
+Server Components: minimizează client bundles; componente interactive doar unde necesar.
+
+11.11 Calitate vizuală pe mobil
+Grid fluid (12 col desktop → 4 col tablet → 1 col mobil), fără orizontal scroll.
+Imagery: sizes corect; priority doar pentru hero.
+CTAs: mari, deasupra fold-ului; „thumb reach” pentru acțiuni frecvente.
+
+11.12 Telemetrie UX
+Evenimente: ui.cta_click, ui.stepper_next, ui.error_view, ui.empty_cta, ui.upgrade_view/accept, ui.download_click, ui.accessibility_fallback.
+Dashboard: funnel pe CTA-uri, heat de erori UI, drop-off pe stepper, clicks pe upgrade gates.
+
+11.13 QA vizual & accesibilitate (checklist DoD)
+Contrast AA verificat (axe ci + raport salvat).
+Focus order corect, fără „tab traps”.
+„Skip to content” prezent.
+alt complet la 100% imagini.
+Nicio săritură layout (CLS < 0.1) la H, W, aspect ratios.
+Trei mărimi ecran testate: 360×740, 768×1024, 1440×900.
+Storybook: toate componentele cu stări (loading/error/disabled).
+
+11.14 Anti-regresie & guvernare
+Design Lint (Figma) + Lint CSS (tokens-only) în CI.
+PR Template: secțiune „Affected components/tokens”.
+Visual Regression la rutele critice (landing, pricing, generator, dashboard, billing).
+
+11.15 Acceptanță (DoD pentru capitolul 11)
+tokens.json + build → CSS vars în producție (dark/light auto + toggle).
+12+ componente canonice implementate cu stări & exemple Storybook.
+Axe: 0 critical/serious, Lighthouse Accessibility ≥ 95 pe 3 rute.
+CWV în RUM: P75 LCP/INP/CLS sub țintele date, pe desktop & mobil.
+Empty/Error/Gates implementate conform pattern-urilor; upgrade flow măsurat.
+Documentație în /docs/design-system/* + link Storybook live.
+
+11.16 Trasabilitate KPI (→ Charter)
+Tokens + componente → viteză de livrare + consistență ⇒ TTV ≤ 10m, CR mai mare.
+A11y + CWV bune ⇒ SEO, bounce mic ⇒ trafic & conversie.
+Gates UX curate ⇒ Free→Paid crește fără suport manual.
+
+
+
+
+
+
+12) Performanță & SEO tehnic — „rapid, stabil, indexabil”
+12.1 Obiectiv & SLO (negociabile doar în sus)
+
+SLO CWV (RUM, P75 pe mobil): LCP < 2.5s, INP < 200ms, CLS < 0.1.
+
+TTFB (EU/US, P75): < 200ms (edge-first).
+
+Error budget performanță: timp > SLO pe >5% din sesiuni 7 zile ⇒ incident Perf Sev-2.
+
+Crawl & index: sitemap valid 100%, robots.txt corect, erori GSC = 0 critice.
+
+12.2 Bugete de performanță (per tip de pagină)
+Pagină	HTML (KB)	JS exec (ms)	JS total (KB)	CSS (KB)	Imagini LCP (KB)	LCP țintă
+Landing /	≤ 25	≤ 120	≤ 160	≤ 40	≤ 120	≤ 1.8s
+Pricing /pricing	≤ 28	≤ 140	≤ 180	≤ 50	≤ 140	≤ 2.0s
+Blog post	≤ 30	≤ 120	≤ 140	≤ 45	≤ 160	≤ 2.2s
+Dashboard	≤ 35	≤ 180	≤ 220	≤ 60	≤ 80	≤ 2.3s
+
+Build eșuează dacă bugetele sunt depășite (lint + CI check).
+
+12.3 Tactici „edge-first”
+
+Caching la margine: Cache-Control: public, s-maxage=86400, stale-while-revalidate=604800 pe SSG/ISR; private, no-store pe dashboard.
+
+ISR/SSG pentru landing, blog, docs; SSR doar unde e obligatoriu (pricing dinamic, dashboard).
+
+Middleware ușor: doar i18n/redirecturi; fără stat sincron blocant.
+
+Compression: Brotli nivel 5+; Accept-Encoding corect.
+
+HTTP/2 push — nu; folosim resource hints moderne (preload/prefetch).
+
+12.4 Imagini & LCP
+
+next/image cu dimensiuni declarate & priority doar pentru LCP.
+
+Formate: AVIF primar, fallback WebP/JPEG; limită max 160KB LCP.
+
+CDN cu Accept negotiation; srcset/sizes corect; lazy pentru non-critical.
+
+Placeholder blur dată-URI; evită layout shift (width/height setate).
+
+12.5 Fonturi
+
+System stack by default; dacă se folosesc web fonts:
+
+display=swap, preconnect la origin, un singur weight per family critic.
+
+Self-hosted WOFF2; subset pe charset; fără FOIT.
+
+Preload doar pentru un font LCP, altfel penalizează.
+
+12.6 JavaScript & CSS
+
+Server Components by default; client components numai unde interactivitatea e indispensabilă.
+
+Code-splitting pe rute + tree-shaking; zero librării grele în layout global.
+
+Defer JS non-critic; module/nomodule pentru fallback vechi.
+
+CSS: doar ceea ce e folosit (Tailwind JIT), CSS vars pentru tokens; fără CSS blocking în <head> peste 50KB.
+
+12.7 Resource Hints & prefetch
+
+rel=preconnect către Stripe/Postmark/Algolia numai pe rutele care le folosesc.
+
+prefetch inteligent (on-hover) pentru linkuri interne cu „intenție”.
+
+preload strict pentru LCP-image, font LCP; fără over-preload.
+
+12.8 Terți & Consent Mode
+
+Consent Mode V2: GA4/Segment rulează numai după consimțământ.
+
+Politica „terți sub 50KB”: orice snippet >50KB sau care blochează LCP → reject/async/late-load.
+
+Data-layer server-side pentru evenimente; client colectează doar RUM & interacțiuni.
+
+12.9 RUM (Real User Monitoring) & măsurare
+
+Colectăm CWV (LCP, INP, CLS) per route × geo × device.
+
+Evenimente: web_vitals, resource_timing, longtask, cls_shift.
+
+Dashboards: percentila 75 pe 7/28 zile; outliers; comparație vs. synthetic.
+
+Alerte: LCP P75 > 2.5s 60m ⇒ sev-2; INP > 250ms pe o rută ⇒ backlog „Perf Fix”.
+
+12.10 Synthetic & CI
+
+Lighthouse CI pe PR (mobile): scor Perf ≥ 90 pe 3 rute cheie; rapoarte artefact în pipeline.
+
+k6 pentru SSR endpoints (p95 < 300ms, error <0.2%).
+
+Bundle analyzer: eșuează PR dacă JS per rută > buget.
+
+Visual diff (optional) pentru a detecta regrese LCP/CLS.
+
+12.11 SEO tehnic (automatizat)
+
+Structured data (JSON-LD): Product, Offer, Article, BreadcrumbList, FAQPage (pe bloc FAQ).
+
+Canonic & noindex: canonical explicit; noindex pe draft/preview/după parametri „?utm=..”.
+
+Sitemaps: sitemap index + sitemaps pe secțiuni (blog/docs/pages/shop); re-generate la publish/update.
+
+Hreflang: pentru locale live + x-default; validare în CI (regex + e2e).
+
+OpenGraph/Twitter: og:title/desc/image; twitter:summary_large_image.
+
+Pagination (liste blog/shop): rel="next/prev"; fără infinite scroll fără fallbacks.
+
+Redirect policy: 301 definitive, 302 temporare; 410 pentru pagini eliminate.
+
+Facete/filtre: parametri cu ?sort=, ?page= indexabili; restul noindex, follow (ex: ?color=, ?debug=).
+
+12.12 Anti-CLS & anti-INP
+
+Dimensiuni declarate la imagini/anunțuri/cards; fallback fonts cu metrici apropiate.
+
+Skeletons cu înălțimi fixe; fără inserare dinamică înaintea LCP.
+
+Evenimente input: debounce/throttle, „optimistic UI” cu confirmări asinc; evită calcul intens pe main thread.
+
+12.13 Logica de auto-revert (guardrail)
+
+Dacă checkout CR scade >10% P7D sau LCP P75 pe /pricing >2.5s 24h după un release ⇒ auto-revert la ultima versiune + alertă „Perf Gate tripped”.
+
+12.14 Check-list PR (fail hard)
+
+ LCP media ≤ buget & preload doar 1 resursă critică
+
+ JS per rută ≤ buget, fără deps noi grele în layout
+
+ Fonts self-hosted + swap, subset
+
+ No blocking third-party fără consimțământ
+
+ JSON-LD valid (Rich Results test)
+
+ Canonical/hreflang corecte
+
+ Sitemaps regenerate la schimbări conținut
+
+ CWV RUM nu a regresat în ultimele 24h pe route-ul editat
+
+12.15 Acceptanță (DoD pentru capitolul 12)
+
+RUM live cu LCP/INP/CLS pe route/geo/device + alerte.
+
+Lighthouse CI integrat, scoruri artefact în PR.
+
+Edge caching & ISR configure, header-e corecte.
+
+Image pipeline: AVIF/WebP, dimensiuni declarate, LCP < 160KB.
+
+Structured data valabil pe pricing/blog; sitemaps & robots OK.
+
+Consent Mode operațional; terți încărcați după consimțământ.
+
+Auto-revert configurat pe scăderi semnificative CWV/checkout.
+
+12.16 Trasabilitate KPI (→ Charter)
+
+CWV bune ⇒ SEO mai bun ⇒ trafic organic → CR pricing ↑.
+
+TTFB mic & INP < 200ms ⇒ percepție de viteză ⇒ TTV ≤ 10 min & NRR mai mare.
+
+Sitemaps/structured data corecte ⇒ indexare stabilă ⇒ MRR indirect.
+
+
+
+
+
+
+13) Securitate & Conformitate — „fără scurgeri, fără surprize, verificabil”
+13.1 Ținte & indicatori
+
+Țintă standard: OWASP ASVS Level 2 (web apps cu date sensibile).
+
+SLO securitate: 0 vulnerabilități High/Critical la release; MTTD ≤ 15 min, MTTR ≤ 4 h (Sev-1); rate 5xx < 0.2%/h.
+
+SLO conformitate: DSR (export/ștergere) ≤ 7 zile, incident notice (dacă e cazul) ≤ 72h, audit trail 100% acoperire.
+
+13.2 Model de amenințare & guvernanță
+
+Threat modeling pe epic (STRIDE) cu checklist ASVS; risc ≥ „Mediu” → task dedicat.
+
+Politici minime (vive în repo /docs/policies): Access Control, Backup & DR, Change Management, Vulnerability Management, Incident Response, Data Retention & Deletion, Acceptable Use (admin), Third-Party Management.
+
+13.3 Control acces & identitate
+
+RBAC: owner/admin/editor/support/viewer (cap. 6).
+
+RLS: izolare org_id (deny-by-default).
+
+Auth: SSO (email+parolă, OAuth), MFA TOTP, recovery codes, device binding.
+
+Principiul cel mai mic drept: acces la producție doar prin conturi personale + Just-In-Time (8h), auditat.
+
+Sesiuni: cookie HttpOnly/Secure/SameSite=Lax; refresh rotation + blacklist; revocare globală ≤ 5s.
+
+13.4 Configurare securitate la nivel HTTP
+
+CSP strictă (default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-<rand>' https://js.stripe.com
+; connect-src 'self' *.stripe.com *.supabase.co; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none').
+
+SRI pe scripturi/stylesheet self-hosted.
+
+Alte headere: X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy: strict-origin-when-cross-origin, Permissions-Policy minimizată (ex: geolocation=()).
+
+CSRF: double submit cookie sau SameSite + token anti-CSRF pe rutele sensibile.
+
+Rate-limit: login/OTP/export/API (cap. 6/7).
+
+SSRF: deny-all outbound; allowlist strict pentru Stripe/Email/Search; timeouts & size caps.
+
+13.5 Securitate aplicație (OWASP ASVS L2 – selecție)
+
+Validare input: schemă zod/Yup la edge; sanitizare MDX (allowlist components).
+
+Output encoding: React escapare by default; dangerouslySetInnerHTML interzis fără review de securitate.
+
+Autorizare: verificări server-side la fiecare acțiune (nu doar în UI).
+
+Uploaduri: MIME allowlist, renumire random, scan AV opțional, URL-uri semnate cu TTL.
+
+Secrets: numai server-side; rotation trimestrial; stocare în secret store; niciun secret în client.
+
+Dependențe: lockfile semnat, approvals pentru postinstall scripts, Dependabot + audit săptămânal; SBOM (CycloneDX) per release.
+
+Criptografie:
+
+In-transit: TLS 1.2+; HSTS (preload) după verificare.
+
+At-rest: Postgres & Storage criptate (provider); chei de semnare token rotite.
+
+13.6 GDPR (EU) — implementare operațională
+
+Temeiuri legale: contract (serviciu), consimțământ (analytics/marketing), interes legitim documentat (securitate).
+
+DPA cu toți sub-procesatorii (Stripe, Supabase, Vercel, Postmark etc.).
+
+DPIA pentru: telemetrie, procesări marketing, joburi AI (dacă prelucrează PII).
+
+Registre prelucrări (RoPA) în /docs/gdpr/ropa.csv (sistem, scop, baza legală, categorii date, retenție, transferuri).
+
+Drepturi utilizator:
+
+Export: JSON + arhivă exporturi (link semnat).
+
+Ștergere: soft-delete imediat + hard-delete în batch (≤ 30 zile), păstrând minime evidențe financiare.
+
+Rectificare, restricționare: UI / ticket.
+
+Consimțământ granular: Consent Mode V2; toggle per scop; logs de consimțământ (cine, ce, când, versiune).
+
+Transferuri internaționale: SCCs pentru US vendors; listă subprocessors publică; notificare prealabilă la schimbări.
+
+Cookie banner: blocare scripturi până la accept (strict necesare exceptate).
+
+13.7 ISO/IEC 27001 – aliniere (minim viabil)
+
+A.5 Politici: cele enumerate la 13.2.
+
+A.6 Organizațional: responsabil securitate (Security Lead), rol DPO (intern/extern).
+
+A.8 Asset mgmt: inventar sisteme & date (data map).
+
+A.9 Control acces: RBAC/JIT, revizuire trimestrială permisiuni.
+
+A.12 Operațiuni: logging, capacity, anti-malware (scan la upload), backup.
+
+A.14 Dezvoltare securizată: SAST/DAST în CI, code review obligatoriu.
+
+A.16 Incidente: playbook, post-mortem 48h, lecții în backlog.
+
+A.17 Continuitate: RPO ≤ 1h, RTO ≤ 4h (cap. 18).
+
+A.18 Conformitate: licențe, DPIA, arhivă fiscale.
+
+13.8 Minim PII & clasificare date
+
+Clasificare: Public / Intern / Confidențial / Sensibil (PII).
+
+Minimizare: colectăm strict email, nume opțional; niciodată card data (Stripe tokenize).
+
+Pseudonimizare: telemetrie agregată; IP trunchiat; user_id/ org_id pseudonime în analytics.
+
+13.9 Logare & audit trail (tamper-evident)
+
+Audit events: auth., roles.changed, org.updated, billing., content.publish, export., webhook., policy_denied.
+
+Tamper-evident: lanț de hash (prev_hash, hash) la audits; semnătură HMAC a rândului; acces doar append.
+
+Retenție: audit 18 luni (minim); loguri tehnice 90 zile (rotire).
+
+Protecție: acces read-only pentru auditori; export CSV/JSON cu checksum.
+
+13.10 Backups & DR
+
+Postgres: snapshot orar (retenție 7 zile) + zilnic (retenție 30 zile).
+
+Storage: versiuni + cross-region (dacă suportă).
+
+Teste: restaurare trimestrială (table-top + restaurare reală în Stage).
+
+RPO ≤ 1h, RTO ≤ 4h documentate și măsurate.
+
+13.11 Vulnerability management
+
+SAST: pe PR (Semgrep/CodeQL) – fail hard la High/Critical.
+
+DAST: săptămânal pe Stage + înainte de lansări majore.
+
+Dependency audit: automat; patch în ≤ 14 zile (High) / ≤ 48h (Critical).
+
+Bug bounty light: adresa security@ + pagina /security; SLA răspuns ≤ 72h.
+
+13.12 Terți & date către exterior
+
+Stripe: plăți, taxe, dispute (date minime de facturare).
+
+Supabase: Auth/DB/Storage (RLS).
+
+Vercel: edge/hosting.
+
+Postmark/Resend: email tranzacțional.
+
+Algolia/OpenSearch: căutare (fără PII).
+
+Contracte & DPA documentate; data map menționează câmpurile exact transmise.
+
+13.13 Reținere & ștergere
+
+Cont: ștergere la cerere → anonimizăm user fields; păstrăm invoicing conform legal.
+
+Exporturi: TTL la linkuri; ștergere fișiere în 30 zile de la cont închis (dacă nu contravine obligațiilor legale).
+
+Telemetrie: agregate după 90 zile; raw events șterse.
+
+13.14 Incident response (Sev-levels)
+
+Sev-1 (date compromise / plăți indisponibile): call rota 24×7, blocare vector, investigație, anunț DPO/management; notificări legale ≤ 72h dacă e necesar.
+
+Sev-2 (degradare performanță / partial outage): rollback/canary stop, update statuspage la 15’.
+
+Post-mortem 48h: cauză, impact, timeline, acțiuni & owner + due date.
+
+13.15 Acceptanță (DoD pentru capitolul 13)
+
+CSP + headere securitate servite pe toate rutele; raport de verificare în CI.
+
+SAST/DAST integrate; 0 High/Critical; Dependency audit verde.
+
+RLS testat (cross-org imposibil).
+
+Politici publicate în /docs/policies/*; RoPA, DPIA șabloane completate.
+
+DSR workflow: cerere → export/erase în ≤ 7 zile; log de consimțământ 100%.
+
+Audit trail cu hash chain activ, export cu checksum.
+
+Backups/verificare DR trecute; RPO/RTO măsurate.
+
+Subprocessors list & DPA semnate; cookie banner + Consent Mode funcțional.
+
+13.16 Exemple „gata de lipit” (indicativ)
+CSP (Next.js middleware – schemă)
+const nonce = crypto.randomUUID().replace(/-/g,'');
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https://js.stripe.com`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "connect-src 'self' https://api.stripe.com https://*.supabase.co",
+  "frame-ancestors 'none'"
+].join('; ');
+
+Politică RLS (ex.)
+alter table exports enable row level security;
+create policy org_scoped on exports
+for all using (org_id = current_setting('app.org_id')::uuid)
+with check (org_id = current_setting('app.org_id')::uuid);
+
+Audit tamper-evident (hash chain)
+-- coloane: id, prev_hash, record_json, hash, at
+create function audit_insert() returns trigger as $$
+declare last_hash text;
+begin
+  select hash into last_hash from audits order by at desc limit 1;
+  new.prev_hash := coalesce(last_hash,'GENESIS');
+  new.hash := encode(digest(new.prev_hash || to_jsonb(new.record_json)::text, 'sha256'),'hex');
+  return new;
+end $$ language plpgsql;
+
+13.17 Trasabilitate KPI (→ Charter)
+
+Zero High/Critical + CSP/RLS/MFA ⇒ risc operațional scăzut ⇒ NRR mai mare & churn mic.
+
+DSR ≤ 7 zile, consimțământ corect ⇒ risc legal scăzut ⇒ focus pe MRR.
+
+Backups/DR ⇒ 99.9% uptime menținut ⇒ Error budget sub 0.1%.
+
+
+
+
+
+14. Analytics & Observabilitate
+Obiectiv (ce măsurăm și de ce)
+
+Asigurăm o buclă completă „vede→înțelege→acționează” prin: evenimente first-party pe server (fără PII), telemetrie unificată (logs structurate, metrics, traces), SLO + error budget, și 4 dashboard-uri operaționale (funnel, cohort, revenue, conținut). Totul rulează cu Consent Mode & first-party analytics, astfel încât trackingul respectă consimțământul utilizatorului.
+
+Instrumentare: server-side events + first-party analytics
+
+Model de evenimente (canon):
+module_open, module_run_requested, module_run_started, module_run_scored, module_run_succeeded | module_run_blocked, export_performed, legacy_redirect_hit — toate conțin module_id (Mxx), trace_id, plan, ts și payload minim necesar pentru KPI-uri (fără PII). Exemplu: module_run_scored = {quality, risk, cost, overall} (0–100).
+
+Colectare: pe server (Next.js App Router) la rutele API / execuție și în middleware pentru legacy_redirect_hit (308). Evenimentele sunt scrise în DB împreună cu run-uri/exporturi; nu trimitem date brute în terți fără consimțământ.
+
+Consent Mode & first-party: activăm Consent Mode; fără consimțământ păstrăm doar evenimente operaționale agregate (fără user identifiers). Când există consimțământ, trimitem și către GA4/Sentry în limitele politicii.
+
+Integrare minimă (MVP): GA4 (trafic, funnel vizite→signup), Sentry (erori client/server). Variabile: GA_MEASUREMENT_ID, SENTRY_DSN.
+
+Telemetrie: logs structurate, metrics, traces
+
+Logs structurate: un singur format JSON cu câmpuri cheie (evt, module_id, trace_id, status, duration_ms, tokens, cost_cents). Se emit în momentele cheie (start, score, success/block, export).
+
+Metrics: contorizăm run_started/run_completed/run_failed, histograme pentru execution_time_ms, token_usage, overall_score. Agregare zilnică în daily_usage (runs, users, exports, avg_score, revenue_usd).
+
+Traces: fiecare execuție poartă trace_id din pre-run până la export, permițând legarea evenimentelor în rapoarte și alerte.
+
+Observabilitate (stivă): librăria de telemetrie expediază metrici locali + opțional către Datadog/PostHog; erorile critice declanșează alerte Slack/email (canal incident).
+
+SLO + Error Budget (gărzi de calitate)
+
+SLO platformă (MVP):
+
+Success-rate (top-10 module) ≥ 95%;
+
+P95 latency: simulate ≤ 3s, live ≤ 8s;
+
+Export success ≥ 98% (0 artefacte fără manifest + checksum);
+
+SEO snapshot (home, index, 2 module) ≥ 90;
+
+Legacy Redirect Share ≤ 5%; 404 pe pagini modul = 0.
+
+Error budget & acțiuni:
+
+Depășire error budget → îngheț lansări, activare auto „degrade-to-simulate” pentru live test, canary/rollback. Alertare în Admin.
+
+Dashboards (MVP)
+1) Funnel (open→run→success)
+
+Carduri: Open→Run Rate, Success Rate, TTV median (<300s), P95 latency, Export success, Redirect share.
+
+Filtre: plan, modul, cohortă 7/14 zile, from_legacy.
+
+Alerte: success_rate < 95%, export fără checksum, 404/5xx spike.
+
+2) Cohort & Retenție
+
+D2/D7 Retention: % utilizatori cu ≥1 run în ziua 2/7;
+
+Cross-module adoption: % utilizatori cu ≥2 module diferite în 14 zile;
+
+TTV: median de la run_started la run_succeeded.
+
+3) Revenue
+
+MRR/ARR estimativ & revenue_usd zilnic (agregat din users/plan, cu upsert în daily_usage); corelăm conversii free→paid și cohortele. (GA4 pentru atribuire, revenue model în daily_usage pentru dashboard intern).
+
+4) Conținut & Cost
+
+Calitate execuție: scoruri quality/risk/cost/overall (medii și distribuții);
+
+Eficiență: tokens/run, cost/rulăre, P95 exec time;
+
+SEO & compat: scor SEO, 308 hits, 404=0.
+
+Model de date & retenție
+
+Tabele cheie: prompt_runs (execuții + scoruri + cost), exports (artefacte, status, checksum), daily_usage (agregate), plus evenimente/analytics.
+
+Retenție recomandată: agregate zilnice pe termen lung; loguri detaliate la 90 zile; fără PII în telemetrie (policy „zero PII”).
+
+Acceptanță (DoR/DoD – „gata de tras la răspundere”)
+
+DoR (gata de instrumentare): evenimentele standard sunt implementate; Consent Mode activ; GA4/Sentry configurate.
+
+DoD (gata de operat):
+
+Dashboard Funnel & Cohort online (filtre, alerte);
+
+daily_usage se populează (runs, users, exports, avg_score, revenue_usd);
+
+SLO verzi pe canary 24h: success-rate ≥95%, export success ≥98%, P95 în țintă, SEO ≥90, 404=0;
+
+Rule „degrade-to-simulate” testată, alerte Slack funcționale.
+
+Note operaționale
+
+Front-end/UX: ruta /dashboard listează run-uri, scoruri, exporturi și KPIs per modul; badge „Telemetry” (run_id + score) vizibil în istorice.
+
+DevOps: adăugăm logging & monitoring în „Critical Week 1–2” (Sentry/Analytics), backup DB zilnic; acestea sunt blocante pentru „go-live”.
+
+Exemple utile (ready-to-use)
+
+SQL – success rate 14 zile / modul:
+„success_rate = sum(run_succeeded) / sum(run_started)” (agregare pe evenimente).
+
+Agregare zilnică (cron): upsert în daily_usage cu total runs/users/exports, avg_score, revenue_usd; folosit de tile-urile din Dashboard.
+
+
+
+
+
+
+
+15) API Public & Integrări — „deschis, dar gated, versiuni clare, observabil”
+15.1 Obiectiv & principii
+
+Enterprise-first: API public pentru clienții Enterprise (și Pro acolo unde e logic), cu rute clare, versionare și rate-limit per plan/flag. Gatingul se face prin entitlements (feature flags), exact ca în produs.
+
+SSOT: respectă ruleset.yml (enum-uri 7D, DoR/DoD, export pipeline, telemetry). Nicio abatere: UI/SDK/API citesc aceleași reguli.
+
+Secure by default: RLS pe DB, chei API cu hash, OAuth2 Client Credentials pentru integrări server-to-server, webhooks semnate, idempotency.
+
+Observabilitate: run_id ca cheie, evenimente standard (open/run/scored/export), fără conținut brut în loguri (redactare by design).
+
+15.2 Suprafața API (MVP) — rute și gating
+
+Namespace REST v1 (path versioning): /api/v1/*. Pentru backward-compat, menținem și rutele existente până la stabilizare.
+
+Rută	Metodă	Cine	Scop (pe scurt)
+/api/v1/run/{moduleId}	POST	Enterprise	Rulează Mxx cu 7D + inputs, produce artefacte (DoD gates)
+/api/v1/gpt-test	POST	Pro+	Teste GPT live + scor (clarity/execution/ambiguity/business_fit)
+/api/v1/gpt-editor	POST	Creator+	„Tighten/optimize” prompt (editor asistat)
+/api/v1/entitlements	GET	Auth	Returnează flags efective (plan + add-ons/packs)
+/api/v1/export	POST	Pro+ / Ent	Export .md/.pdf/.json sau bundle.zip (manifest + checksum)
+
+Aceste rute sunt deja schițate în tree-ul actual (App Router) și în checklist-ul de lansare.
+
+Gating (pre-run)
+
+Verifică planul + entitlements (ex: canUseGptTestReal, canExportBundleZip, hasAPI) înainte de execuție; în caz negativ → 403 ENTITLEMENT_REQUIRED + payload cu „upsell hint”.
+
+Respectă DoR (7D valid/enum-only, output_spec încărcat, tests definite) și DoD (score ≥80, manifest+checksum, telemetry) — altfel nu marchezi success.
+
+15.3 Autentificare & autorizare
+
+API Keys (Enterprise): chei stocate „hash-uite” în api_keys, cu rate-limit per cheie și revocare/rotație. Header: X-PF-Api-Key.
+
+OAuth2 Client Credentials (integrări): pentru parteneri server-to-server; token_url intern, scoping la org. (Compatibil cu HubSpot/Zendesk ingesters.)
+
+JWT (user context): pentru rutele care operează în numele userului (front-end), dar export/bundle și run Enterprise vor prefera API Key.
+
+15.4 Versionare & contract
+
+Path versioning: /api/v1/… (+ X-PF-Ruleset-Version în request). Dacă versiunea ruleset nu corespunde cu serverul → 409 RULESET_CONFLICT.
+
+OpenAPI (YAML) publicat în /docs/api (existent în site tree). SDK-uri ușoare (TS/Python) generate din spec.
+
+15.5 Rate-limits & cost-guard
+
+Exemplu inițial (ajustăm din entitlements):
+
+Pro: 50 req/min (burst 100), API disabled (cheie indisponibilă).
+
+Enterprise: 120 req/min (burst 240), elevat pe rute /run și /export.
+
+Per org + per key + per IP, idempotency prin Idempotency-Key. Depășire → 429 + Retry-After.
+
+15.6 Model de eroare (standardizat)
+
+Payload:
+
+{ "error": "ENTITLEMENT_REQUIRED", "message": "Pro needed for live test", "details": {...} }
+
+
+Coduri uzuale: 400 INVALID_7D_ENUM, 401 UNAUTHENTICATED, 403 ENTITLEMENT_REQUIRED, 409 RULESET_CONFLICT, 422 INPUT_SCHEMA_MISMATCH, 429 RATE_LIMITED, 500 INTERNAL_RUN_ERROR. (Map identic cu arhitectura.)
+
+15.7 Rute cheie (contracte)
+a) POST /api/v1/run/{moduleId} (Enterprise)
+
+Auth: X-PF-Api-Key
+
+Body: { sevenD: {...}, inputs: {...}, options?: {export: ["md","json","pdf"]} }
+
+Flow: validate→execute→evaluate (score)→export (în limitele planului: manifest + checksum)→persist telemetry.
+
+Return: { runId, score, verdict, artifacts: { md, json, pdf? }, manifest, checksum }
+
+Gates: DoR/DoD și entitlements (api, export format).
+
+b) POST /api/v1/gpt-test (Pro+)
+
+Auth: session JWT sau API Key (org)
+
+Body: { prompt, sevenD }
+
+Return: { runId, breakdown: { clarity, execution, ambiguity, business_fit }, verdict }
+
+Note: folosește evaluatorul standard; dacă score <80, „tighten once” (auto-fix) apoi verdict final.
+
+c) POST /api/v1/export (Pro+/Ent)
+
+Body: { runId, formats: ["md","json","pdf","zip?"] }
+
+Return: { artifacts, manifest, checksum } (ZIP numai Enterprise).
+
+d) GET /api/v1/entitlements
+
+Return: { flags: { canUseGptTestReal, canExportPDF, canExportJSON, canExportBundleZip, hasAPI, ... } } (agregat org ⊕ user).
+
+15.8 Webhooks — semnate, sigure, reziliente
+
+Semnare: X-PF-Signature: sha256=<hex> (HMAC cu secret per endpoint).
+
+Evenimente interne (exemple): run.succeeded, run.failed, export.ready.
+
+Retry: backoff exponențial; DLQ pentru 3 eșecuri consecutive; UI admin arată „dead letters”. (Stripe webhooks sunt consolidate într-o singură rută.)
+
+Idempotency: event.id logat; duplicate → 200 OK fără re-procesare.
+
+15.9 Integrări standard (pragmatic, MVP)
+
+Email (Postmark/Resend)
+
+Transactional: welcome, reset, „export ready”; fallback la Resend. Hook în /export → email cu linkuri semnate.
+
+CRM (HubSpot)
+
+Lead-in: form submit & checkout events; OAuth2 CC pentru sync companii/contacts. Mapezi org_id↔company_id.
+
+Support (Zendesk)
+
+Ticket la run.failed Sev-2; include run_id, module, scor, trace.
+
+Marketing (GA4/Segment)
+
+Only after consent (Consent Mode); track pricing_view, signup, module_run_simulated/live, export_*. (Există checklist integrări în requirements.)
+
+Căutare (Algolia/OpenSearch)
+
+Index incremental pe published (CMS); preview/noindex pentru draft. (Aliniat cu CMS & SEO.)
+
+Plăți (Stripe/Paddle), taxe (Stripe Tax/TaxJar)
+
+Stripe principal: Checkout/Billing/Tax + webhook unic → subs/entitlements. TaxJar opțional pentru jurisdicții speciale. (Conform fluxurilor de billing din checklist.)
+
+Storage & bundles
+
+Supabase Storage; linkuri semnate; persist manifest.json + checksum în bundles.
+
+15.10 Telemetrie & observabilitate
+
+Chei minime: run_id, model, tokens_in/out, cost_usd, tta_seconds, score_total, policy_hits, ruleset_version. Nu logăm conținut brut.
+
+Dashboard: funnel open→run→success pe modul; hit-uri legacy_redirect; erori 4xx/5xx per rută. (Există structuri și SLO deja definite.)
+
+15.11 Securitate
+
+DB RLS by membership; api_keys doar server-side; X-Frame-Options: DENY, CSP strict; rotație chei; Idempotency-Key la POST. (Completat de bundle & export constraints.)
+
+15.12 Acceptanță (DoR/DoD pentru API)
+
+DoR (nu expui ruta până nu): 7D enum-only validat; entitlements OK; output_spec & tests încărcate.
+DoD (nu livrezi „success” până nu): score ≥80; manifest+checksum scrise; telemetry salvată; error model standardizat; rate-limits testate.
+
+15.13 Exemple
+cURL — run Enterprise
+curl -X POST "https://app.promptforge.com/api/v1/run/M14" \
+  -H "X-PF-Api-Key: <your_enterprise_key>" \
+  -H "Idempotency-Key: 8c1c8f1f-..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sevenD": {"domain":"ecommerce","output_format":"playbook"},
+    "inputs": {"brand":"ACME","goal":"+15% CR 30 days"},
+    "options": {"export":["md","json","pdf"]}
+  }'
+
+Webhook handler (pseudo)
+app.post('/webhooks/pf', (req,res)=>{
+  verifySignature(req.headers['x-pf-signature'], req.rawBody);
+  const evt = JSON.parse(req.body);
+  switch(evt.type){
+    case 'export.ready': saveArtifacts(evt.data); break;
+    case 'run.failed': openZendeskTicket(evt.data); break;
+  }
+  res.sendStatus(200);
+});
+
+15.14 Implementare în repo (unde pui ce)
+
+Rute: app/api/v1/run/[moduleId]/route.ts, .../gpt-test/route.ts, .../gpt-editor/route.ts, .../export/route.ts, .../entitlements/route.ts. (conform tree-ului actual).
+
+Docs publice: /docs/api (OpenAPI + exemple).
+
+15.15 De ce e corect pentru PromptForge
+
+Conform checklistului v3 (rute, gating, bundle), ruleset.yml (SSOT: 7D/telemetry/export/entitlements) și modelului DB (api_keys/bundles), plus integrarea rutelelor deja prezente în cod.
+
+
+
+
+
+
+16) Admin & Backoffice — „control total, cu frâne și centuri”
+16.1 Obiectiv & rază
+
+Obiectiv: un panou sigur, rapid și auditat pentru operare de zi-cu-zi: utilizatori/org-uri, roluri, conținut, catalog & comenzi, abonamente & finanțe, cupoane, loguri, webhooks, feature flags, exporturi (CSV/JSON) și rapoarte fiscale.
+
+Principii: least-privilege, două confirmări pe acțiuni riscante, audit trail nemodificabil, rollback/undo, preview/canary pe schimbări cu impact.
+
+16.2 Acces & roluri (model operațional)
+
+SuperAdmin (intern, global): numai echipa noastră; scope cross-org; IP allowlist + MFA obligatoriu + break-glass (motiv + OTP).
+
+Owner (per org): tot ce ține de orgul propriu (abonamente, seats, facturi, membri).
+
+Admin (per org): membri/roluri, conținut, catalog, comenzi, cupoane; fără refund/facturi.
+
+Support (per org): tichete, re-trimitere emailuri, re-livrare webhooks; fără prețuri/roluri.
+
+Finance/Tax (intern sau delegat): facturi, refund, dunning, rapoarte fiscale; nu schimbă conținut sau prețuri.
+
+Toate acțiunile sunt verificate și în DB prin RLS pe org_id. Sensitive: 2-person approval (SuperAdmin+Finance).
+
+16.3 Arhitectură de navigație (secțiuni)
+
+Overview: health (uptime, error budget), MRR/NRR, bilete deschise, webhooks restante.
+
+Users & Orgs: căutare, detalii membru, roluri, invitații; mutări între orguri (SuperAdmin only, cu motiv).
+
+Roles & Entitlements: vizualizare/ajustare flags (plan, add-ons, seats).
+
+Content: posts/pages/docs/changelog, workflow, programări, revizii, linkuri rupte.
+
+Catalog (Shop): produse/variante/prețuri, bundle, stoc (faza 2), media.
+
+Orders & Fulfillment: comenzi digitale/fizice, descărcări, tracking (faza 2).
+
+Subscriptions & Billing: plan curent, trial, dunning, facturi, plăți, dispute.
+
+Coupons & Promotions: cupoane, reguli, ferestre, capuri.
+
+Logs & Telemetry: evenimente, erori, RUM CWV, cereri API; filtre rapide.
+
+Webhooks: istoric, payload, re-livrare, DLQ.
+
+Feature Flags: definire, targetare (plan/segment), rollout %, expirare.
+
+Exports & Reports: CSV/JSON, rapoarte fiscale (EU VAT OSS/US), arhivă descărcări.
+
+Settings: branding (Enterprise), zone orare, politicile de retenție.
+
+16.4 Fluxuri cheie (cap-coadă)
+A) User & org management
+
+Invită membru: email → rol → exp editor; revocare instant cu undo 10 min.
+
+Reset rol: admin→editor → audit „who/why”.
+
+Transfer ownership: owner→alt membru (dublă confirmare + e-mail ambelor părți).
+
+B) Subscriptions & Billing (Stripe-first)
+
+Upgrade/Downgrade/Seats: modifică price/quantity (Stripe), confirmă prorratare; recalcul entitlements.
+
+Dunning: vizualizează ciclurile; trimite manual „pay now”; setează suspendare soft.
+
+Refund/Dispute: Finance: refund parțial/total; marchează dispute; read-only pentru restul.
+
+C) Catalog & prețuri
+
+Schimbă preț: creează nou price (nu editezi in-place); marchează vechiul „inactive”; preview live; canary 5% dacă vizibil FE.
+
+Bundle digital: selectezi iteme, setezi discount, generezi art cover automat (opțional).
+
+Fizic (faza 2): inventar, AWB, cost transport; webhook „shipped”.
+
+D) Contenut & workflow
+
+Draft→Review→Approve→Schedule: gates design/SEO/legal; programare cu failover.
+
+Rollback: alege versiune anterioară; regen ISR; log „reverted-to:<rev>”.
+
+E) Webhooks & DLQ
+
+Re-livrare: selectezi eveniment, endpoint; semnătură re-calculată; backoff; blocare dacă 3× fail.
+
+DLQ: filtre (tip, org), inspectezi payload, re-queue; export JSON.
+
+F) Feature Flags (gated rollout)
+
+Creezi flag → target (plan, org, % random) → window (start/end) → strategie (kill-switch, gradual).
+
+Blast radius: afișaj a rute/feature afectate; auto-revert dacă scade checkout CR >10% (7 zile) sau crește 5xx >0.5% (30 min).
+
+G) Exports & rapoarte fiscale
+
+CSV/JSON cu scheme stabile: users, orgs, subscriptions, invoices, orders, downloads, events.
+
+Rapoarte fiscale:
+
+EU VAT OSS (lunar): țară, venit net, TVA colectat, număr tranzacții, COTA; CSV + PDF sumare.
+
+US sales tax (lunar): stat/county/city, venit, taxă, număr tranzacții; coduri nexus.
+
+Semnare & arhivare: fiecare export are checksum SHA256 + manifest; link semnat, TTL configurabil.
+
+16.5 UI & UX (pattern-uri productive)
+
+Tabele rapide: căutare full-text, sortări, filtre salvabile, col. selector, export curent.
+
+Bulk actions: invite/revoke, re-send email, re-deliver webhooks, activate/deactivate SKUs.
+
+Inline edit pentru câmpuri low-risk; side-panel pentru detalii; wizard pentru pași sensibili (refund, price change).
+
+Empty/Error/Skeleton cu acțiune imediat utilă (ex: „Creează cupon”).
+
+Banner „risk” când editezi prețuri/roluri/flags; cere motiv obligatoriu.
+
+16.6 Securitate & guardrails
+
+Break-glass: pentru acțiuni globale (mutare org, ștergere definitivă), ceri motiv + OTP + confirmare 2nd operator.
+
+Redactare PII: în liste apare parțial (email truncat); „View full” cere motiv și e logat.
+
+Rate-limit admin: 60 acțiuni/min/cont; protecție împotriva scriptării.
+
+Rule checks: ruleset.yml (enum-only, DoR/DoD) rulat pe schimbări de module/exports.
+
+RBAC fin: refund/price/flags numai Finance/SuperAdmin; Support nu poate schimba roluri.
+
+16.7 Observabilitate Admin (ce măsurăm)
+
+Evenimente: admin.login, admin.user_invited/role_changed, admin.price_created/activated, admin.refund_issued, admin.flag_changed, admin.webhook_redelivered, admin.export_generated, admin.break_glass_used.
+
+Dashboards:
+
+Operare: t imp mediu de rezolvare ticket, nr. re-delivery reușite, DLQ size, top erori.
+
+Financiar: venit/țară, taxe, refund/dispute rate.
+
+Securitate: break-glass, „view full PII”, încercări eșuate.
+
+Alerte: DLQ > 100, dispute rate >0.8%, fail webhooks 3× în 15 min.
+
+16.8 Performanță & SLO
+
+TTFB Admin P75 < 300 ms; p95 acțiune admin < 800 ms (ex: update produs).
+
+Exporturi: < 30 s pentru 100k rânduri (streaming); webhook re-deliver la click < 2 s până la accept 2xx.
+
+Uptime: ≥ 99.9% (panou).
+
+16.9 API (server) pentru backoffice
+
+GET /api/admin/orgs|users|members (+filtre)
+
+POST /api/admin/invite, POST /api/admin/members/{id}/role
+
+POST /api/admin/catalog/product|price|bundle
+
+POST /api/admin/billing/refund, POST /api/admin/billing/seats
+
+GET /api/admin/webhooks, POST /api/admin/webhooks/{id}/redeliver
+
+GET /api/admin/flags, POST /api/admin/flags/{key}
+
+POST /api/admin/exports (dataset, format, filtre)
+
+GET /api/admin/reports/tax?period=YYYY-MM
+
+Toate cer route handlers cu RLS + role check + audit per acțiune; răspunsurile includ request_id.
+
+16.10 Exporturi & rapoarte (detalii)
+
+CSV/JSON: col. ordonate, header consistent, delimitator ,, escaping RFC4180; JSON „records”.
+
+Tax reports:
+
+EU: country, currency, net_amount, vat_amount, vat_rate, count, period.
+
+US: state, county, city, net_amount, tax_amount, rate, count, period.
+
+Semnare: manifest (dataset, period, row_count, checksum) + checksum.txt (SHA256); arhivă .zip pentru seturi multiple.
+
+16.11 Acceptanță (DoD pentru Admin & Backoffice)
+
+RBAC aplicat corect (teste pozitive/negative pe roluri).
+
+Audit trail complet (hash chain) pentru toate acțiunile; export verificat cu checksum.
+
+Webhooks: re-deliver funcțional; DLQ vizibil și rezolvabil.
+
+Flags: create→target→rollout→expire; auto-revert la condiții de risc.
+
+Billing: upgrade/downgrade/seats/refund acționează corect în Stripe + DB.
+
+Exporturi & rapoarte fiscale: generate, descărcate, validate (schemă + checksum).
+
+PII guard: „view full” cere motiv și loghează.
+
+Perf: SLO atinse pe 3 rute cheie (users, billing, webhooks).
+
+16.12 Trasabilitate KPI (→ Charter)
+
+Backoffice solid → mai puține tichete & re-lucrări → NRR ↑, churn ↓.
+
+Flags & DLQ controlate → Error budget protejat, checkout CR stabil.
+
+Rapoarte fiscale corecte → risc legal 0 → focus pe MRR.
+
+
+
+
+
+
+17) Calitate & Testare — “fără surprize în producție”
+17.1 Ținte & KPI de calitate
+
+Defect escape rate (buguri apărute doar în Prod): ≤ 2 per lună, fără „High/Critical”.
+
+Flake rate E2E ≤ 2% (rolling 14 zile).
+
+Timp PR→verde: ≤ 12 min (unit+contract+build); rulare e2e pe preview ≤ 8 min.
+
+Acoperire: core lib/* ≥ 80% (lines), route handlers „publice” 100% contracte acoperite.
+
+SLO test suite: p95 unit < 4 min, contract < 5 min, e2e < 8 min.
+
+17.2 Piramida de testare (ce, cu ce, unde)
+A) Unit (rapid, izolabil)
+
+Scope: lib/gating.ts, lib/exports.ts, lib/simulate.ts, lib/scoring.ts, utilitare.
+
+Tooling: Vitest (sau Jest), ts-node, ts-morph pentru fixture-uri.
+
+Practici: TDD pentru reguli (entitlements, rate-limit), stubs pentru timp/ID.
+
+B) Contract (API & webhook)
+
+Scope: route handlers Next.js (/api/*), Stripe webhook, /api/run/[moduleId], /api/export.
+
+Tooling: Supertest/undici, validare cu Zod (schema input/output), Prism/Dredd opțional pe OpenAPI.
+
+Asigurări: idempotency, coduri eroare standard, câmpuri obligatorii.
+
+C) Integrare (DB/queue/external in test-mode)
+
+Scope: Supabase (Postgres RLS), Storage S3-compat (linkuri semnate), Stripe test-mode, Postmark sandbox.
+
+Tooling: DB „ephemeral” pe CI, seed deterministic (factory bot), testcontainers (dacă nu folosim Supabase hosted test).
+
+Teste tipice: webhook idempotent, prorratare upgrade, dunning, checksum/manifest la export.
+
+D) E2E (fluxuri reale)
+
+Scope: signup→verify→MFA, pricing→checkout→export, Admin refund, Webhook redeliver, Blog publish→sitemap.
+
+Tooling: Playwright (preferat) sau Cypress pe Preview Deploy.
+
+Practici: date seed per run (org demo), „screenshots+traces as artifacts”, retries 1–2.
+
+E) Accesibilitate
+
+Tooling: axe-core (Playwright), lint ARIA în CI.
+
+Gates: 0 „critical/serious” pe home, pricing, generator, dashboard, billing.
+
+F) Securitate
+
+SAST: Semgrep/CodeQL pe PR (fail la High/Critical).
+
+DAST: OWASP ZAP pe Stage (săptămânal + înainte de lansări majore).
+
+Scannere: dependency audit, secret scanner (regex + trufflehog).
+
+Teste negative: bypass RLS, upload MIME non-allowlist, CSRF pe rute sensibile.
+
+G) Performanță
+
+Lighthouse CI (mobile) pe preview: /, /pricing, /blog/:slug, /dashboard (authed).
+
+k6: /api/run/*, /api/webhooks/stripe (idempotency sub load), p95 < 300 ms, error < 0.2%.
+
+17.3 Medii & date
+
+Dev: DB local sau Supabase project „dev”; fixture-uri.
+
+Preview (per PR): Vercel preview + Supabase „preview-<sha>”; seed cu: 1 org, 5 users (toate rolurile), 1 sub Pro activă, 3 produse, 5 posts.
+
+Stage: Stripe test-mode, Postmark sandbox, domain protejat; DAST/k6 rulează aici.
+
+Prod: doar synthetic probes.
+
+Date test: nu clonăm PII din Prod; generăm sintetic; exportăm doar meta.
+
+17.4 CI: pipeline pe PR (rapid) și pe main (complet)
+
+Pe PR (max ~12 min):
+
+Typecheck + ESLint.
+
+Unit + Contract.
+
+Build + Preview Deploy (Vercel).
+
+Playwright (pe preview) + axe.
+
+Lighthouse CI (mobile) + bugete.
+
+SAST + Dependency Audit.
+
+Artefacte: rapoarte, screenshots, traces, LH JSON.
+
+Pe main:
+
+Tot ce e pe PR + Integration DB, Stripe webhook fixtures.
+
+k6 pe Stage; ZAP scan.
+
+Publică rezultate în Dashboards Calitate; gate „release” dacă e roșu.
+
+17.5 Praguri & quality gates (fail hard)
+
+Coverage: core libs ≥ 80% lines; dacă scade >2pp într-un PR → fail.
+
+Axe: 0 critical/serious (fail).
+
+Lighthouse: Perf ≥ 90, A11y ≥ 95 pe rutele urmărite (fail).
+
+k6: p95 > 300 ms sau error > 0.2% (fail).
+
+SAST: High/Critical (fail), Medium (warn + ticket).
+
+DAST: High/Critical (fail Stage, blocare release).
+
+17.6 DoR / DoD per epic (sablon operabil)
+
+Definition of Ready (DoR)
+
+Scope clar + criterii de succes legate de KPI.
+
+Scheme Zod pentru input/output + OpenAPI draft.
+
+Teste minime definite (unit, contract, e2e).
+
+Flags/rollout plan + metrici (events).
+
+Riscuri & rollback plan.
+
+Definition of Done (DoD)
+
+Toate testele verzi; acoperire atinsă.
+
+Lighthouse & axe trecute pe rutele afectate.
+
+Telemetrie: events & dashboards create/actualizate.
+
+Docs: changelog + runbook (dacă relevant).
+
+Canary OK; auto-revert setat pe KPI critic (ex: checkout CR).
+
+17.7 Checklist de lansare (release)
+
+DB: migrații aplicate, seed minim OK, RLS policies verificate.
+
+Chei: Stripe, Supabase, Postmark – prezente și corecte; rotire dacă e cazul.
+
+Robots: robots.txt conform (Stage: noindex; Prod: allow).
+
+Cache warm: revalidare ISR pagini „grele” (home, pricing, blog index).
+
+Webhooks: health check Stripe → 200; DLQ gol.
+
+Backups: snapshot DB „pre-release”.
+
+Status page: anunț fereastră (dacă există) + monitor pornit.
+
+17.8 P0 scenarii (trebuie să existe teste)
+
+Auth & RBAC: signup+verify, login OAuth, MFA enroll/challenge, revocare sesiune, device binding, rate-limit login, RLS cross-org negativ.
+
+Billing: checkout success, invoice.paid → entitlements, upgrade/downgrade (prorratare), dunning 3 pași, refund, dispute created/closed (efecte).
+
+Exports: .txt/.md/.pdf/.json, checksum SHA256, watermark trial, bundle.zip doar Enterprise, linkuri semnate (TTL, max downloads).
+
+Run: simulate (free) vs live (Pro+), DoR invalid → blocat, DoD score <80 → blocat/label „Simulated”.
+
+CMS: draft→review→approve→schedule→publish, sitemap & RSS regenerat, OG/Schema corect.
+
+Shop digital: add-to-cart→checkout→download; revocare la refund/dispute.
+
+API: /api/v1/run idempotency, /export rights, /entitlements corect; webhooks semnate + retry+DLQ.
+
+Admin: rol schimbat, feature flag on/off (rollout 5%→25%→100%), re-deliver webhook, raport fiscal generat.
+
+Securitate: CSP setată, CSRF token validat, upload allowlist, SSRF blocat.
+
+Perf: bugete LCP/INP/CLS & TTFB respectate pe rutele cheie.
+
+17.9 Exemple minime (indicativ)
+
+Unit (Vitest) – gating export PDF
+
+it('blocks pdf export for non-Pro', () => {
+  const ok = withEntitlementGate({plan:'creator', feature:'export.pdf'});
+  expect(ok).toMatchObject({ok:false, reason:'plan'});
+});
+
+
+Contract – Stripe webhook idempotent
+
+await request(app).post('/api/webhooks/stripe')
+ .set('Stripe-Signature', sig)
+ .send(fixture('invoice.paid'));
+await request(app).post('/api/webhooks/stripe')
+ .set('Stripe-Signature', sig)
+ .send(fixture('invoice.paid'))
+ .expect(200); // no duplicates in DB
+
+
+Playwright – checkout→export
+
+test('pro user can export pdf', async ({ page }) => {
+  await page.goto('/pricing'); await page.getByRole('button', {name:'Go Pro'}).click();
+  await completeStripeTestCheckout(page);
+  await page.goto('/generator'); await runLiveAndWait(page);
+  await expect(page.getByText('Download PDF')).toBeVisible();
+});
+
+
+k6 – /api/run p95
+
+import http from 'k6/http'; import { check, sleep } from 'k6';
+export const options = { vus:20, duration:'2m', thresholds:{http_req_duration:['p(95)<300']}};
+export default ()=>{ const r=http.post(__ENV.API+'/api/v1/run/M01', payload, {headers}); check(r,{ '200':(res)=>res.status===200}); sleep(1); };
+
+17.10 Guvernanță calitate & îmbunătățire continuă
+
+Bug triage săptămânal (PM+Eng+Support): root-cause, etichetă „preventabil”, acțiuni la backlog.
+
+Flake board: testele marcate flaky → fix ≤ 7 zile sau „quarantine + ticket”.
+
+Raport calitate lunar: defecte, flake, SLO test suite, timp PR→verde, trend LH.
+
+17.11 Acceptanță (DoD pentru capitolul 17)
+
+Pipeline PR + main configurat (toate etapele), artefacte salvate.
+
+Bugete Lighthouse + axe + k6 active (gates).
+
+Set minim de teste P0 implementat și verde.
+
+DoR/DoD template în repo; checklist release în /docs/checklists/release.md.
+
+Dashboard „Quality” live (defecte, flake, runtime timpi, LH scoruri).
+
+17.12 Legătura cu KPI (→ Charter)
+
+Gates automate → mai puține outage & regresii ⇒ Error budget în țintă, Uptime ≥ 99.9%.
+
+Bugete CWV ținute în CI ⇒ CR landing→pricing și TTV ≤ 10 min cresc.
+
+Testele P0 pe plăți/export ⇒ protejează MRR, scade churn și suportul.
+
+
+
+
+
+18) CI/CD & Infrastructură — „lansezi des, lansezi sigur”
+18.1 Obiectiv & SLO DevOps
+
+Scop: pipeline rapid, verificat, reversibil, cu vizibilitate totală și cost controlat.
+
+SLO pipeline: p95 „PR→verde” ≤ 12 min (lint+unit+contract+build), e2e pe preview ≤ 8 min.
+
+SLO deploy: p95 „merge→prod canary” ≤ 6 min, „promote canary→100%” ≤ 30 min (dacă trece gates).
+
+MTTR release ratat: ≤ 10 min (rollback automat sau promovare release anterior).
+
+18.2 Branching & release train
+
+Trunk-based: ramuri scurte feat/*, fix/*; PR obligatoriu în main (protecție: 2 review-uri, checks verzi).
+
+Conventional Commits + SemVer (taguri vX.Y.Z pe main).
+
+Release train: zilnic dacă există PR gata (fără „batching” artificial); „freeze” doar pe ferestre comunicate.
+
+18.3 Pipeline (GitHub Actions recomandat)
+
+Pe PR (rapid, ≤ ~12 min):
+
+Typecheck + ESLint
+
+Unit + Contract (Vitest + Supertest/Zod)
+
+Build (Next.js)
+
+Preview Deploy (Vercel) + set env preview
+
+Playwright + axe pe preview (fluxuri P0 scurte)
+
+Lighthouse CI (mobil) pe 3 rute cheie
+
+SAST (Semgrep/CodeQL) + Dependency Audit
+
+Approvals post-install (vezi §18.11) – fail dacă nu sunt aprobate
+
+Pe main (complet):
+
+tot ce e pe PR
+
+Integration (DB/Storage/Stripe test)
+
+k6 (API p95 < 300ms) pe Stage
+
+DAST (OWASP ZAP) pe Stage
+
+Publish artefacte (rapoarte, SBOM, LH, traces)
+
+Gate canary (criterii obiective; vezi §18.6)
+
+18.4 Environments & routing
+
+Dev (local): .env.local, DB dev, Stripe test, Postmark sandbox.
+
+Preview (per PR): Vercel Preview + Supabase „preview-<sha>” (ephemeral) + seed minim.
+
+Stage: domeniu stage.<brand>; Stripe test; acces protejat; rulează DAST/k6.
+
+Prod: app.<brand>; Stripe live; status page conectat.
+
+Config env (exemplu chei critice):
+NEXT_PUBLIC_APP_URL, SUPABASE_URL/ANON/SERVICE, STRIPE_SECRET, POSTMARK_TOKEN, SENTRY_DSN, ALGOLIA_*, CONSENT_MODE_ENABLED, RULESET_VERSION.
+
+18.5 IaC (Terraform/Pulumi)
+
+Module: vercel_project, supabase_project, storage_bucket (S3/R2), dns, status_page, stripe_webhook (url + secret), alerting (PagerDuty/Slack).
+
+State: remote backend (S3 + DynamoDB lock / Supabase pg-state).
+
+Tagging: env, service, owner, cost-center.
+
+Drift check în CI; plan → review → apply numai cu 2 aprobări (infra + securitate).
+
+18.6 Deploy model (Vercel-first) & canary
+
+Preview Deploy per PR (auto).
+
+Prod Canary: distribuție trafic 5% → 25% → 100% (15 min pași).
+
+Gates canary (auto-promote sau auto-revert):
+
+Perf: LCP P75 /pricing ≤ 2.5s; erori 5xx ≤ 0.3% (15 min).
+
+Biz: checkout success ≥ 98.5%, fără scădere CR > 10% față de media 7 zile.
+
+Securitate: 0 hituri noi High/Critical (SAST/DAST).
+
+Auto-revert dacă oricare gate pică; alerte Slack #releases + #sec-alerts.
+
+18.7 Migrații DB (safe rollout)
+
+Strategie „expand → migrate → contract”:
+
+Expand: adaugă coloane/tabele noi compatibile.
+
+Migrate data: job controlat; progres logat.
+
+Contract: scoate vechiul doar după o versiune.
+
+Ordine deploy: Stage (verificări funcționale) → Prod (hold manual scurt).
+
+Rollback: nu facem „down” distrugător în Prod; restore PITR într-o instanță paralelă + „blue/green cutover” dacă e nevoie.
+
+Seed minim pentru preview/stage (fără PII reale).
+
+18.8 Backups & DR
+
+RPO ≤ 1h: snapshot Postgres orar (+ zilnic 30 zile).
+
+RTO ≤ 4h: runbook DR + exercițiu trimestrial (table-top + restaurare reală în Stage).
+
+Storage: versionare + cross-region (dacă suportă).
+
+Checklist DR: cap. separat în /docs/runbooks/dr.md.
+
+18.9 Secret management
+
+Surse: Vercel Encrypted Env + (opțional) un manager central (Doppler/Vault/1Password).
+
+Principii: niciun secret în client; rotație trimestrială; acces pe nevoie; audit acces; pull-request secret scan (trufflehog).
+
+Env groups per mediu; propagare automată la preview cu valori minime/mascate.
+
+18.10 Feature flags (server-side)
+
+Store în DB (feature_flags), citite server-side (nu în client).
+
+Rollout: targetare după plan/org, % random, time window.
+
+Kill-switch global; auto-revert dacă scade checkout CR sau cresc 5xx (vezi §18.6).
+
+Docs per flag (scop, metrici, data de expirare).
+
+18.11 „Approvals” pentru dependențe cu scripturi post-install
+
+Politică: orice pachet cu postinstall/install/preinstall/prepare ne-vendorized cere aprobare explicită.
+
+Mecanică în CI: pas pnpm approve-builds compară pnpm-lock.yaml cu allowlist (approved_builds.json).
+
+Regulă: fără aprobare → pipeline fail; motiv și link securitate în PR.
+
+Audit lunar la allowlist (expiră aprobări vechi).
+
+18.12 Observabilitate DevOps
+
+Events: deploy.started/succeeded/reverted, db.migration.started/completed, canary.promoted/reverted, feature_flag.changed.
+
+Dashboards: timp PR→verde, durată deploy, rata revert, costuri per env, alerte recente.
+
+Alerte: revert automat, eșec migrație, drift IaC, lipsă backup, creștere cost > 20% WoW.
+
+18.13 Change management & aprobări
+
+2-person rule: Stripe/Tax, migrații destructurante, flags cu impact la preț/plan.
+
+Changelog la fiecare release (public + intern).
+
+Status page: anunț ferestre și incidente; post-mortem în 48h.
+
+18.14 Cost guardrails
+
+Bugete pe proiect/mediu (Vercel/Supabase/observabilitate).
+
+Alerte la depășiri; etichetare resurse; autoscale cu limite.
+
+Raport lunar cost/utilizare (€/MRR %) – țintă ≤ 15% din MRR.
+
+18.15 Exemple (schelet)
+
+.github/workflows/ci.yml (extras)
+
+on: [pull_request]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:contract
+      - run: pnpm build
+      - run: pnpm approve-builds  # fail dacă apar postinstall noi
+      - name: Deploy Preview
+        run: pnpm vercel:deploy:preview
+      - run: pnpm test:e2e:playwright
+      - run: pnpm lhci autorun
+      - run: pnpm sast && pnpm deps:audit
+
+
+.github/workflows/release.yml (extras)
+
+on:
+  push:
+    branches: [main]
+jobs:
+  stage:
+    steps: [ ... run integration, k6, zap ... ]
+  prod-canary:
+    needs: stage
+    steps: [ deploy canary, run gates, promote-or-revert ]
+
+18.16 Acceptanță (DoD pentru capitolul 18)
+
+Workflows PR & main operative; artefacte (LH/SAST/k6/ZAP/SBOM) salvate.
+
+Preview deploy funcțional cu seed minim și Playwright pe preview.
+
+Canary cu auto-promote/auto-revert după gates (perf/biz/sec).
+
+IaC aplică proiectele (Vercel, Supabase, DNS, webhooks, alerte) fără drift.
+
+Backups active, test DR trecut; RPO/RTO măsurate.
+
+Secret management configurat; rotație documentată; secret scan activ.
+
+Regula „post-install approvals” activă – testată (blocare fără aprobare).
+
+Dashboards DevOps live (timpi, revert rate, costuri, alerte).
+
+18.17 Legătura cu KPI (→ Charter)
+
+Canary + auto-revert protejează Uptime 99.9% și error budget ≤ 0.1%.
+
+Pipelines rapide + preview cu e2e → TTV ≤ 10 min (utilizator) nu se degradează.
+
+IaC + DR → risc operațional mic → NRR mai bun, churn mai mic.
+
+Cost guardrails → hosting+vendor ≤ 15% MRR (rolling 30d).
+
+
+
+
+
+
+19) Migrare & Import — „fără pierderi, fără dubluri, fără downtime inutil”
+19.1 Obiectiv & KPI
+
+Obiectiv: aducem datele necesare în noul sistem fără pierderi, fără dubluri, cu integritate referențială 100%, și timp de tăiere (cutover) ≤ 60 min.
+
+KPI verificabile:
+– Fidelitate dată: abateri numerice (conturi, comenzi, subs, fișiere) ≤ 0.1%.
+– Dedupliare reziduală: ≤ 0.1% per entitate.
+– Integritate FK: 100%, zero rânduri orfane.
+– Rata reluare job (retry) < 3%.
+– Troughput: ≥ 5k rânduri/min la import incremental; ≥ 50 MB/min media streaming.
+
+19.2 Domenii & prioritate (ce migrăm)
+
+Identitate & acces: users, orgs, memberships, roles (primul).
+
+Comercial: products, variants, prices, coupons.
+
+Financiar (istoric): subscriptions, invoices, payments, refunds, disputes (doar metadate; fără card data).
+
+Conținut: posts, pages, categories, tags, media, revisions.
+
+Comenzi (shop): orders, order_items, fulfillments, shipments.
+
+Telemetrie & audit (opțional, agregat): events, audits (rezumat, NU raw PII).
+
+Multi-tenant: toate rândurile primesc/confirmă org_id corect.
+
+19.3 Strategii (alegere per sursă)
+Strategie	Când	Avantaje	Riscuri
+Big-bang	volum mic/mediu, dependințe simple	un singur freeze; mai puține runde	fereastră mai mare, risc de rollback complex
+Incremental + cutover scurt (recomandat)	volum mare, sisteme active	rehearsal/dry-run, delte mici, rollback ușor	logică delta, reconciliere
+
+Recomandare: incremental (T-14: uscat, T-7: repetiție, T-1: delta finală, T0: freeze scurt + cutover).
+
+19.4 Plan operațional (incremental)
+
+Discovery & inventar: listezi tabele/câmpuri, volume, PII, „surse adevăr”.
+
+Contracte de date: definești schema de destinație + mapping (enum-uri, normalizări).
+
+Registry ID: tabel migration_map(source, table, source_id, target_table, target_id, status, seen_at).
+
+Dry-run #1 (T-14): import parțial (10–20%), măsori KPI, notezi abateri.
+
+Dry-run #2 (T-7): volum întreg fără cutover, validezi rapoarte.
+
+Delta sync (T-7→T-1): rulezi la 6–12h; captezi modificările.
+
+Freeze (T0−60’): oprești scrierile în vechiul sistem (sau redirecționezi), rulezi delta finală.
+
+Cutover (T0): comuți DNS/feature flag; smoke tests; backout predefinit.
+
+Hypercare (T0+72h): monitorizare, fixuri rapide, reconciliere.
+
+19.5 Mapare câmpuri (reguli)
+
+Chei & tipuri: toate ID-urile devin UUID v7 la destinație; păstrezi external_id pentru trasabilitate.
+
+Timp & fus orar: toate datele în UTC (timestamptz), normalizezi input (RFC3339).
+
+Enum-uri: mapare explicită (ex.: status: 'enabled'|'disabled' → 'active'|'blocked').
+
+Monede: sume în minor units (int), păstrezi currency.
+
+i18n: conținut tradus în tabele *_i18n(locale, …).
+
+GDPR: fără parole; dacă există hashuri legacy, marchezi must_reset_password=true.
+
+Exemplu de mapping (produse):
+
+SRC.products.name       → DST.products.name
+SRC.products.slug       → DST.products.slug (slugify strict, unic pe org)
+SRC.products.type       → map(product_type)  // digital|physical|bundle
+SRC.variants.sku        → DST.variants.sku (unique per product)
+SRC.prices.amount_float → DST.prices.unit_amount (int, minor units)
+
+19.6 Dedupliare (reguli per entitate)
+
+users: cheie canonică lower(trim(email)); fuzzy pe name doar pentru raport, nu pentru merge automat.
+
+orgs: slug normalizat; dacă coliziune → sufix „-2”, alertezi operatorul.
+
+products: org_id + slug; variants: product_id + sku; coupons: org_id + code.
+
+posts/pages: org_id + slug (+ locale); mută duplicatele în revisions.
+
+media: SHA256 fișier; dacă același hash → referință unică, nu re-upladezi.
+
+SQL util:
+
+-- găsește duplicate users pe email (case-insensitive)
+select lower(email) e, count(*) c from src_users group by lower(email) having count(*)>1;
+
+19.7 Fișiere & checksum (integritate media)
+
+Calcul SHA256 la sursă; compari cu hash la destinație după upload.
+
+S3 streaming: PUT cu Content-MD5 (dacă suportat) + meta x-hash-sha256; verifici Content-Length.
+
+Multipart: nu te baza pe ETag ca MD5; păstrează propriul SHA256.
+
+Retry: 3× exponential; la eșec → media_dlq cu motiv; niciun link public până la validare.
+
+Node (indicativ):
+
+import { createHash } from 'crypto';
+const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
+
+19.8 Execuție & idempotency
+
+Chunking: 1–5k rânduri / 10–50 MB media; paralelism controlat (CPU×2).
+
+Transacții: „per chunk”; commit la succes.
+
+UPSERT: ON CONFLICT (...) DO UPDATE doar pentru câmpuri non-sensibile; NU suprascrii status plăți.
+
+RLS: importul rulează cu service role; setezi app.org_id înainte de operații; reactivezi RLS la final.
+
+Idempotent: verifici migration_map înainte de inserare; dacă există, sari sau actualizezi.
+
+Exemplu UPSERT:
+
+insert into products(id, org_id, slug, name, type)
+values($1,$2,$3,$4,$5)
+on conflict(org_id, slug) do update set name=excluded.name, type=excluded.type
+returning id;
+
+19.9 Validări pre/post (contabilitate de date)
+
+Pre-import:
+
+contezi rânduri per entitate; sumă venituri pe perioade; număr media & total bytes.
+
+Post-import:
+
+verifici egalitatea (± toleranța admisă);
+
+FK checks (0 orfani);
+
+rapoarte: subs active, MRR estimat, orders status mix;
+
+SEO: sitemap plin, slug unice, linkuri valide.
+
+Raport final (automat): migration_report.json (diferențe, duplicate rezolvate, erori, timp).
+
+19.10 Stripe & plăți (atenție legală & PCI)
+
+Card data NU se migrează (niciodată).
+
+Dacă vii din Stripe: imporți customers/subscriptions prin API/CSV Stripe (mode „import”), păstrezi external_sub_id; facturile istorice rămân la Stripe (link).
+
+Dacă vii din alt procesator: creezi conturi Stripe + „re-collect payment” (portal link) sau coupon compensator pentru perioada rămasă.
+
+MRR de start: calculezi din subs active; verifici vs. sursă.
+
+19.11 Content (CMS) & i18n
+
+posts/pages → creezi întâi rândul sursei (ex: en), apoi *_i18n pentru locale;
+
+media re-inserată cu SHA256; re-scrii referințele în MDX (mapper de căi);
+
+redirects: generezi 301 pentru sluguri schimbate.
+
+19.12 Tooling & CLI (schelet)
+pf-import \
+  --source=csv|mysql|api \
+  --entities=users,orgs,products,media,orders \
+  --org-map=map.json \
+  --dry-run \
+  --chunk=2000 \
+  --parallel=4 \
+  --since=2024-01-01 \
+  --report=/exports/migration_report.json
+
+
+Moduri: discover, validate, import, delta, cutover, rollback.
+
+Loguri: ND-JSON pe disc + tabel migration_logs(run_id, entity, ok, fail, duration_ms, notes).
+
+19.13 Observabilitate & SLO de migrare
+
+Events: migration.started, chunk.ok/fail, entity.done, dlq.media, cutover.started/completed, rollback.triggered.
+
+Dashboards: progres pe entitate, rată erori, timp estimat, throughput, top cauze eșec.
+
+Alerte: eroare > 1% 10min → pauză automată și ping operator; DLQ media > 100 → escaladare.
+
+19.14 Rollback & backout
+
+Înainte de cutover: snapshot DB + listă resurse Storage (manifest).
+
+Backout T0: readuci DNS/flag la vechiul sistem; curăți datele inserate după T0 (folosind migration_map); validezi.
+
+Post-cutover: ferestre „degrupare” 72h; ține ambele sisteme read-only până la „Verde”.
+
+19.15 Securitate & GDPR
+
+DPIA pentru operațiunea de migrare dacă conține PII.
+
+Transport criptat (TLS), fișiere în tranzit ZIP+AES (dacă e nevoie).
+
+Temp storage: șters la final (max 7 zile); accesul pe nevoie; log acces.
+
+Minimizare: nu imporți câmpuri inutile (ex.: IP istoric).
+
+19.16 Acceptanță (DoD pentru capitolul 19)
+
+Plan scris (timeline T-14→T0), dry-runs 2× trecute.
+
+Mapping validat, migration_map & CLI funcționale.
+
+Validări pre/post automate + raport migration_report.json.
+
+Fișiere cu SHA256 verificate; media_dlq gol sau rezolvat.
+
+Stripe: subs active reflectate, portal funcțional pentru re-collect.
+
+Cutover executat în ≤ 60 min; backout testat.
+
+Documente: runbook migrare & rollback în /docs/runbooks/migration.md.
+
+19.17 Trasabilitate KPI (→ Charter)
+
+Cutover scurt & zero dubluri → uptime & încredere (brand) ⇒ NRR protejat.
+
+Integritate financiară (subs/invoices/ordere) → MRR/Payback realiste.
+
+Import media corect (SHA256) → lipsă 404/SEO pierderi ⇒ acquisition stabil.
+
+
+
+
+
+
+20) Ghid Operare & Suport — „când arde, știi ce faci și spui”
+20.1 Obiectiv & arie
+
+Obiectiv: răspuns rapid, previzibil și verificabil la incidente + suport clienți fără fricțiune, cu transparență publică.
+
+Scope: Playbook incidente (sev-levels, rota on-call), runbooks acționabile, status page, SLA public / SLO intern, comunicare schimbări (changelog + newsletter), retenție date & ștergere cont.
+
+20.2 Roluri & responsabilități (în incident)
+
+Incident Commander (IC): decide, deblochează, coordonează (de obicei Eng Lead/SRE on-call).
+
+Comms Lead: redactează update-urile pentru status page / clienți (PM/Support Lead).
+
+Scribe: timestamp/cronologie, linkuri, evidențe (oricine din echipa on-call).
+
+Domain SMEs: payments, infra, securitate, content, tax (DRI per domeniu).
+
+20.3 Severity matrix & timpi
+Nivel	Exemplu	MTTA (ack)	Update public	MTTR (țintă)
+Sev-1	Plăți indisponibile ≥10 min, exporturi plătite blocate global, breach confirmat	≤ 5 min	15 min și apoi la 15 min	≤ 2 h
+Sev-2	Degradare TTFB/LCP globală, API 5xx >0.5% 15 min, webhook DLQ mare	≤ 15 min	30 min și apoi la 30–60 min	≤ 8 h
+Sev-3	Buguri non-critice, regresii UX, indexare SEO parțială	≤ 4 h	la rezolvare sau recap săptămânal	≤ 5 zile
+
+Definiții de închidere: „Mitigated” (impact oprit), „Resolved” (cauză fixată), „Post-mortem publicat”.
+
+20.4 Rota on-call & program
+
+24×7 SRE/Eng primar, secundar: Eng Lead; Business Comms: PM + Support Lead.
+
+Fus orar operațional: EET/EEST; rota acoperă și US/EU prin handed-off.
+
+Handover zilnic (10 minute): tichete deschise, erori, alerte.
+
+20.5 Status Page (public)
+
+Componente: Web App, Admin, API, Exports, Webhooks, Payments, Search, Email.
+
+Indicatori: uptime, latență P50/P95, rate 4xx/5xx, backlog webhooks/DLQ.
+
+Procese: Anunț mentenanțe planificate (≥48h), incident live (template), timeline + RCA (în 48h).
+
+Template update scurt
+
+[Incident • Sev-1] Payments degraded in EU
+Start: 14:05 EEST • Impact: checkout fails ~40% • Workaround: retry
+Next update in 15 min. Track: status.promptforge.com
+
+20.6 Playbook incidente (executive summary)
+A) Payments down (Stripe)
+
+Confirmă sănătatea la Stripe status + logurile noastre.
+
+Canary OFF / auto-revert ultim release dacă corelat cu deploy.
+
+Activează fallback „Plata în procesare” + pornește reconciliere la 5 min.
+
+Comms: update la 15 min; după rezolvare, verifică facturi/entitlements.
+
+B) Exports failing
+
+Verifică coada „exports” și Storage semnături/permisiuni.
+
+Degrade la Simulated cu watermark; marchează exporturile eșuate pentru re-try.
+
+Comms: mesaj UI pe export + status page; după fix → re-livrare automată.
+
+C) Webhooks backlog / DLQ
+
+Inspectează ultimii 50 fails, clasifică (4xx client vs 5xx server).
+
+Crește workers + retry cu backoff; notifică clienții cu endpoint nevalid.
+
+Comms: „degradare livrare” Sev-2; close când backlog < prag.
+
+D) Perf degradat (LCP/TTFB)
+
+Confirmă RUM; corelează cu deploy (assets, image, font).
+
+Auto-revert dacă gating-ul perf pică (vezi CI/CD).
+
+Comms: Sev-2 perf; RCA: asset / query / cache.
+
+E) Securitate (suspect/confirmat)
+
+Izolează vector, oprește rulări riscante, reset secret/chei afectate.
+
+Notifică DPO/Legal; dacă e breach → notificări legale ≤72h.
+
+Comms: model “security advisory”; post-mortem cu acțiuni.
+
+Fiecare playbook are runbook detaliat în /docs/runbooks/* (comenzi, screen-uri, rollback).
+
+20.7 Runbooks (schelet minim reutilizabil)
+RUNBOOK: <Numele>
+Scop & Sev: <Sev-1/2/3>
+Detectare: <alerte, grafice, praguri>
+Diagnoză: <pași, comenzi, dashboards, log queries>
+Mitigare: <feature flag, revert, rate-limit, degrade>
+Remediere: <fix steps, migrații, verificări>
+Verificare: <test P0, KPIs>
+Comms: <status text, frecvență>
+Învățare: <post-mortem TODO>
+
+
+Runbooks predefinite: payments_down, exports_queue_stuck, webhooks_dlq_high, perf_lcp_regression, db_pressure, storage_s3_errors, search_index_lag, auth_spike_login_fail.
+
+20.8 SLA public & SLO intern (pe planuri)
+SLA (public)
+Plan	Uptime lunar	Răspuns suport inițial	Canal
+Free/Creator	best-effort	2 zile lucrătoare	email
+Pro	99.9%	≤ 8 h business	email + in-app
+Enterprise	99.95%	≤ 1 h (24×7 incident)	email + Slack Connect
+
+SLA nu acoperă terți independenți (ex.: Stripe outage).
+
+Credite (Enterprise): la încălcări majore, credite procentuale pe MRR (definite contractual).
+
+SLO (intern)
+
+Uptime: ≥ 99.9%; Error budget ≤ 0.1%/lună.
+
+Checkout success: ≥ 98.5%.
+
+Export success: ≥ 99.0% (excl. user cancel).
+
+MTTA/MTTR: conform tabel §20.3.
+
+Support CSAT: ≥ 4.6/5; backlog tichete > 7 zile = 0.
+
+20.9 Suport & canale
+
+Email (Pro/Ent prioritar), in-app (widget), Slack Connect (Enterprise).
+
+Program: L-V 09:00–18:00 EET/EEST (Pro); 24×7 pentru incidente Sev-1 (Enterprise).
+
+Limbi: EN/RO (ES la cerere Enterprise).
+
+KB/Help Center: ghiduri „Cum să…”, FAQ, diagrame, „Known issues”.
+
+Macros & triere: taxonomy: Billing, Exports, API, Performance, CMS, Shop, Security.
+
+KPIs suport: FRT, FCR (First Contact Resolution), CSAT, tichete/1000 MAU, median resolution time, „reason codes” top.
+
+20.10 Comunicare schimbări
+
+Changelog public (docs/changelog): entry la fiecare release (Added/Changed/Fixed/Security).
+
+Newsletter (lunar): highlight-uri, foaie de parcurs, „breaking changes”.
+
+Deprecation policy: notificare ≥ 60 zile pentru API/flags; email la Pro/Ent; „compat layer” unde e posibil.
+
+Comunicări fiscale/juridice: email targetat (org owners) + entry changelog.
+
+20.11 Politici retenție date & ștergere cont
+
+Retenție:
+
+Loguri tehnice: 90 zile (rotire).
+
+Audit trail: 18 luni.
+
+Facturi/financiar: conform legislației (ex. 10 ani UE).
+
+Backups: snapshot orar 7 zile; zilnic 30 zile.
+
+Ștergere cont (GDPR-ready):
+
+Export date: JSON + arhivă exporturi (link semnat, TTL).
+
+Delete: soft-delete imediat, hard-delete ≤ 30 zile (exceptând evidențe fiscale).
+
+Anonimizare pentru conținut/comentarii asociate, păstrând integritatea rapoartelor.
+
+Excepții: dispute legale, prevenirea fraudei, obligații fiscale.
+
+Flow UI: /account/delete → confirmare → email „Are you sure?” → fereastră de grație 7 zile (undo) → ștergere.
+
+20.12 Telemetrie operațională & rapoarte
+
+Evenimente: incident.open/ack/mitigated/resolved, status.update, ticket.open/closed, sla.breach, dsr.request/closed.
+
+Dashboards:
+
+Incidente: volum/lună, MTTA/MTTR, root-cause clasă (code, config, third-party).
+
+Suport: FRT, CSAT, backlog, rezoluții pe categorie, NPS (Pro/Ent).
+
+Conformitate: DSR SLA, consimțământ, export/erase la timp.
+
+Revizuiri: săptămânal (operare), lunar (board snapshot).
+
+20.13 Șabloane gata de folosit
+
+A) Comunicat incident (status page)
+
+Titlu: [Sev-X] <scurt> • <componentă>
+Impact: <ce vede utilizatorul>
+Timeline: <start, detecție, acțiuni>
+Workaround: <dacă există>
+Următorul update: <timp>
+RCA (după rezolvare): <cauză>, <fix>, <acțiuni preventive>
+
+
+B) Post-mortem (blameless)
+
+Rezumat: <1 paragraf>
+Impact: <metrice, clienți>
+Timeline: <timestamps cheie>
+Cauză rădăcină: <tehnică, proces>
+Ce a mers bine / rău: <bullet-uri>
+Acțiuni & owner & due date: <listă>
+Lecții: <2–3>
+
+
+C) Anunț schimbare (newsletter/changelog)
+
+Ce se schimbă + de ce | Cine e afectat | Când intră în vigoare
+Ce trebuie să faci | Link docs | Suport & întrebări
+
+
+D) Confirmare ștergere cont
+
+Solicitare: <data> | Cont: <org/user>
+Export: <link/TTL> | Ștergere finală în: <data-limită>
+Contact: privacy@<brand>
+
+20.14 Acceptanță (DoD pentru capitolul 20)
+
+Status page live cu componente și uptime monitorizat.
+
+Playbook + runbooks pentru top 8 scenarii (payments, exports, webhooks, perf, DB, storage, search, auth).
+
+Rota on-call documentată + pager integrat.
+
+SLA public & SLO intern publicate și urmărite; alerte la încălcări.
+
+Help Center public (KB), macros suport, triere funcțională.
+
+Changelog & newsletter operaționale; deprecation policy publicată.
+
+Flow DSR & Account Deletion testate end-to-end; retenție aplicată.
+
+Telemetrie live (incidente, suport, conformitate) + rapoarte lunare.
+
+20.15 Legătura cu KPI (→ Charter)
+
+MTTA/MTTR mici + comunicare transparentă ⇒ NRR ↑, churn ↓.
+
+SLA/SLO respectate ⇒ încredere de brand, Free→Paid mai mare.
+
+Politici clare de date ⇒ risc legal scăzut, focus pe MRR.
+
+
+
+
+
+
+
+21) Roadmap & Etapizare — „livrezi în valuri, blochezi riscul la poartă”
+21.1 Vedere de ansamblu
+
+Horizon: 24 săptămâni, 3 faze, release continuu (trunk-based, canary).
+
+Principiu: fiecare fază are KPI comerciale + tehnice măsurabile și un Gate Go/No-Go. Dacă un Gate pică → auto-revert la versiunea anterioară, amânare funcționalități noi, focus pe remediere.
+
+21.2 Faza 1 (săpt. 0–8) — „Baza care produce bani”
+
+Obiectiv: prima monetizare reală (MRR inițial), artefacte exportabile, blog/CMS pentru SEO.
+
+Scope (trebuie să fie live)
+
+Auth & RBAC (email+parolă, OAuth Google, MFA, recovery, RLS).
+
+Plăți (Stripe Billing + Tax): planuri Free/Creator/Pro/Enterprise, trial Pro 7 zile, portal.
+
+Catalog module (M01–M50) + 7D; Simulate Test (gratis) vs Run Real Test (Pro+).
+
+Export pipeline: .txt (Free), .md (Creator+), .pdf/.json (Pro+), checksum; watermark în trial.
+
+CMS & Blog: landing, pricing, docs/api, changelog, blog (MDX), sitemap + RSS.
+
+Shop digital (MVP): liste/produse digitale, cupoane, 1-page checkout.
+
+Admin minim: users/orgs, billing, webhooks log, flags, exporturi.
+
+Observabilitate: RUM CWV, logs metrice, dashboards minime.
+
+Milestones (ritm sugerat)
+
+S0–1: Auth+RBAC, DB+RLS, design tokens, landing/pricing.
+
+S2–3: Stripe (checkout, portal, taxe), gating & entitlements, export .txt/.md.
+
+S4–5: Run Simulate/Live, evaluator & score≥80 gate, export .pdf/.json.
+
+S6: CMS/blog cu SEO, sitemap/RSS, 3 demo bundles pe landing.
+
+S7–8: Shop digital, cupon, Admin minim, stabilizare + hardening.
+
+Gate Faza 1 (Go/No-Go)
+KPI Comercial	Țintă	KPI Tehnic	Țintă
+MRR inițial	≥ €5k	TTFB P75 (EU/US)	< 220 ms
+Free→Paid (28d)	≥ 4%	LCP P75	< 2.8 s
+Activation (primul export ≤10m)	≥ 50%	Uptime lunar	≥ 99.9%
+Checkout success	≥ 98.5%	Error budget	≤ 0.1%
+
+DoD Faza 1: toate rutele critice trec Lighthouse (Perf ≥90, A11y ≥95), SAST/DAST fără High/Critical, webhooks Stripe idempotente, seed + 3 demo bundles publice.
+
+21.3 Faza 2 (săpt. 8–16) — „Deschizi piețe și suprafețe noi”
+
+Obiectiv: extindere ofertă, reducere fricțiune globală, integrabilitate.
+
+Scope (trebuie să fie live)
+
+Produse fizice + fulfillment (inventar, transportator, tracking).
+
+i18n (ro/en + una secundară), hreflang, localizare prețuri.
+
+API public (v1, read + run) cu rate-limit, webhooks out semnate + DLQ.
+
+Căutare (BM25/Algolia) pentru CMS/Shop.
+
+Backoffice extins: rapoarte fiscale (EU VAT OSS/US), re-deliver webhooks, flags avansate.
+
+Milestones
+
+S8–10: fizic+fulfillment, rapoarte fiscale; Admin Orders.
+
+S11–12: i18n (UI+content), hreflang, sitemaps locale.
+
+S13–14: API v1 + OAuth CC, webhooks out + DLQ.
+
+S15–16: căutare, hardening, QA multi-locale.
+
+Gate Faza 2
+KPI Comercial	Țintă	KPI Tehnic	Țintă
+MRR	≥ €15k	hreflang valid	100%
+Free→Paid	≥ 6%	Lag webhook P95	≤ 2 s
+AOV Shop	+10% vs F1	LCP P75 (multi-locale)	< 2.5 s
+NRR (rolling 3m)	≥ 102%	API 95p /run	< 300 ms
+
+DoD Faza 2: API v1 documentat (/docs/api + OpenAPI), webhooks out cu retry+DLQ, rapoarte fiscale validate pe sandbox, i18n fără fallback rate >2%.
+
+21.4 Faza 3 (săpt. 16–24) — „Căutare inteligentă, AI-ops, marketplace intern”
+
+Obiectiv: productivitate & re-venituri prin automări + rețea internă.
+
+Scope (trebuie să fie live)
+
+Căutare avansată: hibrid (BM25 + embeddings) pentru module/conținut.
+
+AI-ops: joburi programate (rezumare, scoring, recrawl), cu cost caps & degrade la Simulated.
+
+Marketplace intern (curatoriat): bundles/module presets (fără terți la început).
+
+Enterprise nicșe: white-label PDF, seats avansate, rate-limits crescute.
+
+Milestones
+
+S16–18: embeddings pipeline, indexare incrementală, UI search.
+
+S19–21: joburi AI-ops (queue, cost guard), dashboards usage.
+
+S22–24: marketplace intern (curatori, licențiere), enterprise add-ons.
+
+Gate Faza 3
+KPI Comercial	Țintă	KPI Tehnic	Țintă
+MRR	≥ €25k	Cost vendors / MRR	≤ 15%
+NRR	≥ 105%	INP P75	< 200 ms
+Exporturi „paid” / total	≥ 55%	Job fail rate AI-ops	< 1%
+
+DoD Faza 3: cost caps + auto-degrade funcționale, marketplace cu licențiere clară, search hibrid măsurat pe relevanță (NDCG@10 ≥ 0.7 pe set de test).
+
+21.5 Guvernanță & ritualuri pe faze
+
+Weekly: KPI stand-up (MRR, Free→Paid, TTV, CWV, error budget, checkout).
+
+Fortnightly: Steering (reprioritizări, flags, canary outcomes).
+
+Pre-Gate Review (final de fază): tabel KPI vs ținte + rapoarte calitate (SAST/DAST/LH/k6), raport fiscal & SEO, RCA-uri închise.
+
+21.6 Resurse & capacitate (estimativ)
+
+Nucleu: 1 PM, 2 FE, 1 BE, 1 SRE/DevOps, 1 Designer, 1 Data/Analytics, 0.5 Legal/GRC, 0.5 Finance/Tax, 1 Support (part-time inițial).
+
+Peak F2–F3: +1 FE (shop/i18n), +0.5 BE (API/webhooks), +0.5 Data (search/AI-ops).
+
+21.7 Pachete de livrare pe fază (artefacte obligatorii)
+
+F1: /, /generator, /pricing, /dashboard, /docs/api live; 3 demo bundles; manual operare billing; dashboards Revenue/Funnel/Perf.
+
+F2: /admin extins (orders, flags, webhooks), /api/v1 + docs, i18n complet, rapoarte fiscale export.
+
+F3: /search avansat, /marketplace, AI-ops dashboards.
+
+21.8 Măsuri de protecție cross-phase
+
+Auto-revert canary: dacă checkout CR scade > 10% P7D sau LCP /pricing > 2.5s 24h.
+
+Cost guardrails: vendor/hosting ≤ 15% MRR (rolling 30d).
+
+Securitate: 0 High/Critical (SAST/DAST) ca Gate absolut.
+
+Legal/GDPR: DSR SLA ≤ 7 zile, consimțământ valid (Consent Mode).
+
+21.9 Roadmap vizual (rezumat)
+
+S0–8: Bazele monetizabile → primul cash.
+
+S8–16: Extindere & integrare → piețe noi.
+
+S16–24: Inteligență & re-venituri → scalare ARPU/NRR.
+
+21.10 Acceptanță (DoD Roadmap)
+
+Tabel KPI pe fază în /docs/spec/21_roadmap_kpi.md.
+
+Checklists Gates (PDF/MD) atașate pe release-urile de fază.
+
+Dashboard „Roadmap” (live) cu semafoare pe KPI: verde/galben/roșu.
+
+
+
+
+
+
+22) Matrice Riscuri — „vezi devreme, lovești repede, revii sigur”
+22.1 Cadru & scorare
+
+Scor risc (R): R = Probabilitate (1–5) × Impact (1–5)
+Praguri: 15–25 = Critic, 8–14 = Major, 4–7 = Mediu, 1–3 = Minor.
+
+Impact măsurat pe: (a) MRR/checkout, (b) Uptime/Error budget, (c) Legal/Tax, (d) Brand/SEO.
+
+Toleranță: niciun risc „Critic” acceptat fără fallback documentat + exercițiu de DR.
+
+22.2 Heatmap (vedere rapidă)
+Domeniu	Risc	P	I	Scor	Status
+Securitate	Breach / RLS misconfig	3	5	15	Critic
+Plăți	Stripe outage / 3DS fail	3	5	15	Critic
+Taxe	TVA/US tax greșit pe facturi	3	4	12	Major
+SEO	De-indexare (robots, canonical, hreflang)	3	4	12	Major
+Cost cloud	Depășire buget >20% WoW	4	3	12	Major
+Third-party	Schimbare de API / limită	3	3	9	Mediu
+Date	Pierdere/Corupție (DB/Storage)	2	5	10	Major
+Performanță	LCP/TTFB degrade – auto-revert	4	2	8	Mediu
+Conformitate	DSR > 7 zile, cookie/consent greșit	2	4	8	Mediu
+AI-ops/cost	Abuz API / export live runaway	3	3	9	Mediu
+22.3 Registru de risc (detaliat — top 8)
+R1. Breach / RLS misconfig (Securitate) — R=15 (Critic)
+
+Cauze: policy RLS lipsă/greșită; token leakage; CSP relaxată.
+
+Semnale timpurii: spike rls.denied, acces cross-org în log simulat, ZAP/DAST hit „High”.
+
+Prevenție: ASVS L2, test RLS pe 3 org, SAST/DAST gates, secrets rotate trimestrial.
+
+Mitigare: kill-switch export/API; izolarea traficului; reset chei; notificare DPO; plan RCA 48h.
+
+Owner: Security Eng + Legal/GRC. Runbook: /docs/runbooks/security_breach.md.
+
+R2. Stripe outage / 3DS fail (Procesator plăți) — R=15 (Critic)
+
+Cauze: incident Stripe, 3DS provider down, greșeli webhooks.
+
+Semnale: checkout success < 98.5% (60m), invoice.payment_failed spike, status Stripe roșu.
+
+Prevenție: hosted Checkout, idempotency, healthcheck webhook, test fixtures pe CI.
+
+Mitigare (fallback provider):
+
+Plan A: queue „Pending Payment” + UI „Plata în procesare”; reconciliere la 5 min.
+
+Plan B: Lemon/Paddle „standby” pentru one-time (doar digitale) — comutare prin feature flag.
+
+Owner: Finance/Tax + Eng Lead. Runbook: /docs/runbooks/payments_down.md.
+
+R3. TVA/US tax greșit (Taxe) — R=12 (Major)
+
+Cauze: configurare greșită Stripe Tax/TaxJar; adrese incomplete; bug localizare.
+
+Semnale: tichete fiscale, diferențe în raport, devieri >1% pe țară/stat.
+
+Prevenție: sandbox fiscal, teste lunare EU/US, șabloane factură verificate, RoPA actualizată.
+
+Mitigare: re-emitere facturi (credit notes), mail clienți, blocare temporară vânzări pe jurisdicția afectată.
+
+Owner: Legal/GRC + Finance. Runbook: /docs/runbooks/tax_correction.md.
+
+R4. De-indexare SEO (robots/canonical/hreflang) — R=12 (Major)
+
+Cauze: robots.txt greșit la deploy, canonical nepotrivit, hreflang incomplet.
+
+Semnale: GSC erori, scădere bruscă în index, crawl anomalies.
+
+Prevenție: CI checks (robots/canonical/hreflang), sitemaps per secțiune, review SEO la PR.
+
+Mitigare: hotfix robots, rebuild sitemaps, „Fetch as Google”/Resubmit; revert release.
+
+Owner: Marketing + PM. Runbook: /docs/runbooks/seo_deindex.md.
+
+R5. Cost cloud > buget (Vercel/Supabase/observ.) — R=12 (Major)
+
+Cauze: trafic neprevăzut, leaks, query scumpe, logs/traces flood.
+
+Semnale: cost ↑ >20% WoW, alerte vendor, cuțite la rate-limit.
+
+Prevenție: hard caps, sampling logs/traces, query budgets, „cost dashboards”.
+
+Mitigare: throttling export/live, sampling agresiv, dezactivare features costisitoare (flags), renegociere limite.
+
+Owner: Eng Lead + Finance. Runbook: /docs/runbooks/cost_overrun.md.
+
+R6. Schimbare API / limită (Third-party) — R=9 (Mediu)
+
+Cauze: versiuni noi, EOL, throttling.
+
+Semnale: 429/4xx pattern, anunțuri vendor, test de compat eșuat.
+
+Prevenție: contract tests cu sandbox, monitor „changelog monitors”, tampon lățime rate-limit.
+
+Mitigare: „compat layer”, retry/backoff, fallback intern (cache), switch provider când există.
+
+Owner: Eng Lead. Runbook: /docs/runbooks/third_party_change.md.
+
+R7. Pierdere/Corupție date (DB/Storage) — R=10 (Major)
+
+Cauze: migrații greșite, bug workers, S3 ACL.
+
+Semnale: integritate FK eșuată, checksum mismatch, 500 pe export link.
+
+Prevenție: expand→migrate→contract, back-ups RPO ≤1h, verif. checksum, test DR trimestrial.
+
+Mitigare: restore PITR în paralel + blue/green cutover; reconstrucție din manifest + SHA256.
+
+Owner: SRE. Runbook: /docs/runbooks/data_restore.md.
+
+R8. Abuz/Runaway cost (API/AI-ops) — R=9 (Mediu)
+
+Cauze: cheie expusă, script flood, bucle export live.
+
+Semnale: spike run.live, api.rate_limit.hit, cost forecast ↑.
+
+Prevenție: rate-limit dur, cost caps per org, degrade la „Simulated”, chei rotație.
+
+Mitigare: revocă chei, throttling temporar, credit „goodwill” dacă e necesar.
+
+Owner: PM + Eng. Runbook: /docs/runbooks/api_abuse.md.
+
+22.4 Măsuri transversale (mitigări obligatorii)
+
+Fallback provider: rezervă Lemon/Paddle pentru vânzări digitale „one-time” (flag).
+
+Contracte SLA: Stripe, Supabase, Vercel, Postmark — SLA/credits & canale „status”.
+
+Rate-limit dur: login/OTP/export/API; „cost caps” pe live tests/export.
+
+Test fiscal sandbox: scenarii EU B2C/B2B + US CA/NY lunar (autotest + raport).
+
+Auto-revert: când checkout CR scade >10% P7D sau LCP /pricing > 2.5s/24h.
+
+Exercițiu DR trimestrial: restore DB + storage + cutover script.
+
+Checklist SEO în CI: robots, canonical, hreflang, sitemaps.
+
+22.5 Monitorizare & alerte (KPI-triggers)
+
+Payments: checkout success < 98.5%/60m → Sev-2.
+
+SEO: erori GSC „Pages dropped” sau hreflang invalid > 50 → alert Marketing.
+
+Cost: > 20% WoW oricărui vendor → alert Finance+Eng.
+
+Security: High/Critical în SAST/DAST → blocare release.
+
+Perf: LCP P75 /pricing > 2.5s 60m → auto-revert.
+
+Tax: diferență > 1% între raport intern și Stripe Tax → Sev-2 fiscal.
+
+22.6 Template registru risc (operabil)
+ID: R-<număr> | Domeniu: <Securitate/Plăți/...> | Scor: <P×I>
+Descriere: <enunț scurt>
+Cauze probabile: <bullets>
+Semnale timpurii: <metrics, evenimente, status vendor>
+Prevenție: <controale/gates/teste>
+Mitigare: <fallback/flags/runbook>
+Owner (A/R): <nume rol> | Revizie: <lunar/trimestrial>
+Stare: Open/Mitigated/Closed | Ultimul review: <data>
+
+22.7 Acceptanță (DoD pentru capitolul 22)
+
+Matrice + registru complet în /docs/risk/risk_register.md (cu scoruri și owner).
+
+Runbooks pentru top 8 riscuri + exercițiu DR logat.
+
+Alerte configurate pe toți triggerii de mai sus (Slack + email).
+
+Fallback provider testat (sandbox) + ghid comutare (flags).
+
+Raport lunar „Risk & Resilience” (scoruri, incidente, acțiuni în curs).
+
+22.8 Legătura cu KPI (→ Charter)
+
+Securitate/Plăți controlate ⇒ protejezi MRR, Payback, NRR.
+
+SEO stabil ⇒ acquisition constant ⇒ Free→Paid mai mare.
+
+Cost guardrails ⇒ hosting+vendor ≤ 15% din MRR.
+
+Auto-revert & DR ⇒ Uptime 99.9%, error budget ≤ 0.1%.
+
+
+
+
+
+23) Anexe Standard — „kitul operabil, verificabil, versiuni la sânge”
+23.1 Structură în repo (SSOT clar)
+/docs/
+  policies/
+    csp_policy.md
+    backup_policy.md
+    incident_response_policy.md
+    access_control_policy.md
+    data_retention_policy.md
+  templates/
+    erd.dbml
+    c4_context.puml
+    c4_container.puml
+    c4_component.puml
+    raci_template.md
+    dod_template.md
+    dpia_template.md
+    dpa_template.md
+    dpia_checklist.md
+    wcag_audit_checklist.md
+    asvs_traceability.csv
+  checklists/
+    release_gate.md
+    seo_gate.md
+    perf_gate.md
+    security_gate.md
+  versions/
+    manifest.json         # hash-uri, versiuni, TTL, owner per anexă
+
+
+Reguli: fiecare anexă are Owner, TTL (revizuire: 90/30/7 zile), Last-Reviewed, checksum SHA256 și link spre testul care o dovedește în CI.
+
+23.2 Politici (operabile, cu dovadă)
+A) CSP Policy (/docs/policies/csp_policy.md)
+
+Obiectiv KPI: 0 rapoarte XSS confirmate; score ZAP „script injection” = 0.
+
+Politică minimă:
+
+default-src 'self';
+script-src 'self' 'strict-dynamic' 'nonce-{runtime}' https://js.stripe.com;
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: blob:;
+connect-src 'self' https://api.stripe.com https://*.supabase.co;
+frame-ancestors 'none';
+
+
+SLO: header prezent pe 100% rute.
+
+Dovadă în CI: test E2E care verifică headerul; raport ZAP atașat la release.
+
+B) Backup Policy (/docs/policies/backup_policy.md)
+
+Ținte: RPO ≤ 1h, RTO ≤ 4h.
+
+Plan: snapshot DB orar + zilnic 30 zile; versionare Storage; cross-region.
+
+Test recurent: restaurare trimestrială (Stage) + raport.
+
+Dovadă: log „DR exercise” + checksum dump.
+
+C) Incident Response (/docs/policies/incident_response_policy.md)
+
+Sev levels, roluri, timpi (MTTA/MTTR) ca în cap. 20.
+
+Obligatoriu: post-mortem în 48h, fără blame.
+
+Dovadă: link post-mortem + timeline statuspage.
+
+D) Access Control (/docs/policies/access_control_policy.md)
+
+Principii: RBAC, JIT, MFA obligatoriu pentru admin, revizie trimestrială permisiuni.
+
+JML: Joiner/Movers/Leaver cu SLA 24h.
+
+Dovadă: export trimestrial permisiuni + semnătura reviewer.
+
+E) Data Retention & Deletion (/docs/policies/data_retention_policy.md)
+
+Retenție: loguri 90d, audit 18m, financiar 10y, backups 30d.
+
+Ștergere cont: export (JSON+ZIP), ștergere ≤ 30 zile (except. fiscale).
+
+Dovadă: tabele de retenție + job logs + E2E delete flow.
+
+23.3 Template-uri (gata de umplut)
+ERD (DBML) — /docs/templates/erd.dbml
+Project PromptForge {
+  database_type: "PostgreSQL"
+}
+Table orgs { id uuid [pk]; name text; plan text; created_at timestamp }
+Table users { id uuid [pk]; email text [unique]; name text; created_at timestamp }
+Table memberships { id uuid [pk]; org_id uuid [ref: > orgs.id]; user_id uuid [ref: > users.id]; role_key text }
+Table subscriptions { id uuid [pk]; org_id uuid [ref: > orgs.id]; plan text; status text; current_period_end timestamp }
+Table runs { id uuid [pk]; org_id uuid [ref: > orgs.id]; module_id text; status text; score int }
+
+C4 Context/Container (PlantUML) — /docs/templates/c4_context.puml
+@startuml
+!include C4_Context.puml
+Person(user, "User")
+System_Boundary(pf, "PromptForge") {
+  System(web, "Web App")
+  SystemDb(db, "Postgres (RLS)")
+  System_Ext(stripe, "Stripe")
+}
+Rel(user, web, "Uses")
+Rel(web, db, "R/W")
+Rel(web, stripe, "Checkout / Billing")
+@enduml
+
+RACI — /docs/templates/raci_template.md
+| Activitate | R | A | C | I | KPI afectat |
+|---|---|---|---|---|---|
+| Checkout & Taxe | Finance | PM | Eng, Legal | Data, Support | Checkout success, Payback |
+
+DoD — /docs/templates/dod_template.md
+**Feature:** <nume> • **Owner:** <nume> • **Due:** <data>
+- [ ] Teste unit/contract/integr./e2e verzi
+- [ ] Lighthouse ≥ 90, axe 0 crit/ser
+- [ ] Telemetrie & dashboards actualizate
+- [ ] Docs + changelog
+- [ ] Gate business: CR/score≥80/… OK
+
+DPIA — /docs/templates/dpia_template.md
+Titlu | Sistem | Date PII | Baza legală | Riscuri | Măsuri | Rezidual | DPO OK
+---|---|---|---|---|---|---|---
+
+DPA — /docs/templates/dpa_template.md
+Părți | Scop | Tip date | Sub-procesatori | Transferuri | SLA | Securitate | Ștergere
+---|---|---|---|---|---|---|---
+
+DPIA Checklist — /docs/templates/dpia_checklist.md
+
+ Mapare date/fluxuri
+
+ Minim PII / scop adecvat
+
+ Drepturi subiect
+
+ Măsuri tehnice (MFA, RLS, CSP)
+
+ Evaluare risc (înainte/după)
+
+ Aprobare DPO
+
+WCAG Audit — /docs/templates/wcag_audit_checklist.md
+
+ Contrast 4.5:1 / 3:1 large
+
+ Focus vizibil / ordine tab
+
+ ARIA landmarks/labels
+
+ Media alt text 100%
+
+ Prefers-reduced-motion respectat
+
+ Raport axe: 0 crit/ser
+
+ASVS Traceability — /docs/templates/asvs_traceability.csv
+ASVS_ID,Descriere,Implementare,Test,Status,PR_Link
+V2.1.1,Autorizare pe fiecare cerere,server route guards + RLS,e2e_auth.spec.ts,PASS,<url>
+
+23.4 Manifest & versionare (tamper-evident)
+
+/docs/versions/manifest.json
+
+{
+  "csp_policy.md": {"sha256":"<hash>","owner":"Security Lead","ttl_days":90,"last_reviewed":"2025-08-15"},
+  "backup_policy.md": {"sha256":"<hash>","owner":"SRE","ttl_days":90,"last_reviewed":"2025-08-12"},
+  "erd.dbml": {"sha256":"<hash>","owner":"Eng Lead","ttl_days":30,"last_reviewed":"2025-08-18"}
+}
+
+
+Gate CI: dacă ttl_days depășit ⇒ eșuează buildul; dacă hash în manifest ≠ hash curent ⇒ cere review.
+
+23.5 Dovada în CI (teste automate pe anexe)
+
+CSP: Playwright verifică header pe 3 rute; ZAP raportează „0 High”.
+
+Backup/DR: scriptul de restaurare rulează trimestrial în Stage; exportă „DR_report.md”.
+
+Access: job care listează permisiuni admin ⇒ diffa față de snapshot; dacă diferă fără ticket, fail.
+
+Retenție: query de verificare a ștergerii logurilor > 90 zile; raport atașat.
+
+WCAG: pnpm axe:check pe rute cheie; rezultate încărcate ca artefacte.
+
+ASVS: verifică asvs_traceability.csv să aibă 100% mape pentru „V2, V3, V4” (auth, session, access control).
+
+23.6 Acceptanță (DoD pentru Anexe)
+
+Toate fișierele de mai sus există, au Owner/TTL/Hash în manifest.
+
+Testele corelate rulează în CI și au artefacte salvate.
+
+Ultimele revizii ≤ TTL; taskuri de review programate (calendar).
+
+Linkuri către anexe apar în release notes și în /docs/README.md.
+
+23.7 Trasabilitate KPI/SLO (cum le influențează)
+
+CSP/ASVS ⇒ reduce riscul (breach) ⇒ NRR stabil, error budget protejat.
+
+Backup/DR ⇒ livrare continuă ⇒ Uptime ≥ 99.9%, RPO/RTO atinse.
+
+WCAG ⇒ SEO + CR mai bun ⇒ Free→Paid crește, TTV ≤ 10m.
+
+DPIA/DPA/Retenție ⇒ risc legal scăzut ⇒ focus pe MRR și extindere.
+
+Verdict (executabil)
+
+Anexele sunt sistem, nu „documente moarte”: au proprietar, TTL, versiune, hash și probe în CI. Fiecare promisiune are testul ei. Proiectează pentru edge, multi-tax, multi-brand, AI-ops, ancorează în KPI/SLO și norme reale (OWASP ASVS, WCAG 2.2, GDPR, PCI).
+Simbolic: „Scheletul decide viteza — definește oasele acum.”

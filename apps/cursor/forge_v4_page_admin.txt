@@ -1,0 +1,1314 @@
+
+
+
+
+
+/admin/statistici – KPIs business+produs (MRR, conversie, churn, runs, exports, pass-rate, TTV, uptime, checkout). Surse + modele sunt deja descrise (KPIs, SLO/SLA, evenimente, funnel).
+/admin/editor – CMS pentru blog + docs (MDX), workflow draft→review→schedule, media, preview, versionare + publicare automată prin API/webhooks (sitemap/RSS, recrawl, Lighthouse).
+/admin/abonamente – planuri, upgrade/downgrade, dunning (Stripe).
+/admin/entitlements – matrice flags pe plan/org + Industry Packs.
+/admin/membri – seats & roluri (owner/admin/member) cu RLS multi-tenant.
+/admin/api-keys – chei, rate-limits, revocare.
+/admin/exporturi – audit bundles, manifest + checksum sha256, descărcare ZIP.
+/admin/incidente – health Stripe webhooks, 4xx/5xx, sev-1/2 + rollback.
+/admin/ruleset – versiunea curentă a ruleset.yml + overrides log (SSOT).
+/admin/gate – buton „Coming-Soon ON/OFF” (switch global).
+
+Backend/DB deja gata de susținut asta
+Posts/Pages/Media/Revisions în ERD (MDX, schedule, OG, sitemap/RSS).
+Org/roles/seats/entitlements/api_keys/subscriptions/runs/bundles (RLS by org).
+
+Exporturi cu manifest+checksum pentru integritate legală.
+Webhooks post-deploy (recrawl, CDN purge, Lighthouse CI).
+Pipeline CI/CD pregătit (testare, performance, deploy, monitoring).
+
+
+
+🔒 Salvarea prompturilor clienților (ISO/Compliance)
+
+De ce e critic
+Prompturile clienților sunt considerate artefacte de business → trebuie să existe trasabilitate.
+Standard: ISO 27001 (info security) + SOC 2 + GDPR → cer loguri, audit trail, drept de export/ștergere.
+
+Cum se salvează
+În tabel prompt_history (vezi schema ta deja modelată).
+Chei: user_id, org_id, module_id, parameter_set, hash, output, created_at.
+Se stochează hash-ul complet (pentru integritate), dar conținutul brut trebuie redactat/anonymizat dacă e sensibil (PII).
+
+Ce se adaugă pentru ISO
+Checksum sha256 per prompt salvat (pentru audit).
+Audit trail (cine a rulat, când, ce entitlement a fost aplicat).
+Retention policy (Free: 7 zile, Pro: 90 zile, Enterprise: nelimitat).
+Export la cerere → clientul poate descărca toate prompturile sale.
+Right to be forgotten → clientul poate cere ștergerea completă.
+
+
+
+
+
+
+
+⚡ Prompt — Build /admin Page (Command Mode)
+
+ROLE: Full-stack web agent (Next.js 15+, TypeScript, Tailwind+Radix, Supabase, Stripe).
+GOAL: Create /admin workspace (Admin Login).
+
+CONSTRAINTS:
+Stack: Next.js App Router, Supabase RLS, Stripe billing.
+Design: dark background #05010A, primary accent #CDA434 (gold), minimal neon green for focus.
+Access: only role=owner|admin.
+Audit: log every action in admin_action table.
+
+ROUTING
+Add app/admin/page.tsx.
+Protect via Supabase RLS + middleware (check org_members.role).
+
+LAYOUT
+
+Header bar: org selector, env badge (Prod/Staging), actions: Invite Member, Create API Key, Toggle Coming-Soon.
+Top KPIs row: Active Subscriptions, Entitlement Coverage %, API Usage 24h, Export Integrity %, Incidents 7d.
+Nav + sections:
+Plans & Subscriptions (Stripe state).
+Entitlements Matrix (editable).
+Seats & Roles (org_members).
+API Keys (create/revoke).
+Exports Audit (bundles, checksum, manifest).
+Incidents & Logs (Stripe/webhooks/errors).
+Ruleset Versions (active, overrides).
+Coming-Soon Gate (switch).
+
+COMPONENTS
+KpiCard (title, value, trend).
+DataTable (with filters).
+ToggleSwitch (for gate).
+ModalForm (invite member, create API key).
+AuditBadge (checksum pass/fail).
+
+DATA
+Fetch with Supabase:
+Subscriptions: status.
+Entitlements coverage: % features enabled.
+Runs count last 24h.
+Bundles with checksum OK vs total.
+Incidents open/closed 7d.
+
+ACTIONS
+Invite Member → insert org_members.
+Create API Key → insert hashed key in api_keys.
+Toggle Coming-Soon → call /api/toggle-coming-soon.
+Revoke API Key → active=false.
+
+DESIGN
+Dark bg #05010A.
+Gold #CDA434 for accents, buttons, headings.
+Minimal neon green (#00FF7F) for focus ring + hover glow.
+Typography: Space Grotesk for UI, Cinzel for headings.
+Responsive grid collapse on mobile.
+A11y: aria-labels, tab order, prefers-reduced-motion.
+
+TELEMETRY
+Every action logs in admin_action table: {user_id, org_id, action, target, ts}.
+Example: "toggle_gate:on", "invite_member:email@x.com".
+
+OUTPUT
+app/admin/page.tsx
+components/admin/*
+lib/admin.ts (Supabase + Stripe helpers)
+api/admin/* endpoints
+
+ACCEPTANCE
+Access restricted to owner/admin.
+KPIs render correctly.
+Toggles/actions persist in DB.
+UI matches black+gold theme.
+Lighthouse: Perf ≥85, A11y ≥90.
+Audit trail complete.
+
+
+
+
+
+
+
+
+
+
+PROMPTS
+
+
+# COMMAND PROMPT — BUILD /admin WORKSPACE (FINAL)
+
+ROLE: Senior full-stack web agent (Next.js 15+ App Router, TypeScript strict, Tailwind + Radix UI, Supabase Postgres RLS, Stripe Billing).
+GOAL: Ship the complete /admin workspace with authenticated access, multi-tenant isolation, and operational tools.
+THEME: Black #05010A background, Gold #CDA434 as primary accent, minimal neon-green (#00FF7F) ONLY for focus ring/active state. No blue/red anywhere.
+ACCESS: Only users with role in ('owner','admin') for the active org. Enforce at route + query level (RLS).
+
+--- TECH CONSTRAINTS
+- Monorepo ready; Server Components where possible; all mutations via API routes (app/api/*) with server auth.
+- Supabase RLS per org_id; never query without org scope.
+- Stripe for subscriptions/entitlements; idempotent webhooks; dunning visible in UI.
+- Audit trail for EVERY admin mutation.
+
+--- ROUTING (PAGES)
+Create pages under app/admin/:
+- layout.tsx             // shared shell: left nav, header, main
+- page.tsx               // overview; show key KPIs + quick links
+- statistici/page.tsx    // KPIs + charts (business/product/ops)
+- editor/page.tsx        // CMS Blog/Docs: MDX editor, media, schedule, publish
+- abonamente/page.tsx    // plans, upgrade/downgrade, invoices
+- entitlements/page.tsx  // matrix of feature flags per plan/org
+- membri/page.tsx        // seats & roles (owner/admin/member)
+- api-keys/page.tsx      // create/revoke API keys, rate limits
+- exporturi/page.tsx     // bundles audit: manifest + checksum, download
+- incidente/page.tsx     // errors, webhooks health, Sev-1/2 timeline
+- ruleset/page.tsx       // ruleset.yml active + overrides log
+- gate/page.tsx          // Coming-Soon switch (global gate)
+
+--- HEADER & NAV
+Header: org selector (dropdown), env badge (Prod/Staging), actions: Invite Member, Create API Key, Toggle Gate.
+Left Nav groups: Operare (Statistici, Exporturi, Incidente), Business (Abonamente, Entitlements, Membri, API Keys), Control (Ruleset, Gate), Conținut (Editor).
+
+--- DB TABLES (ASSUME EXIST)
+orgs, org_members(role), plans, subscriptions, entitlements, api_keys, runs, bundles, incidents, ruleset_versions, ruleset_overrides_log, posts, pages, media, revisions, audits, admin_action.
+
+--- RLS & AUTH
+- Middleware: load session → resolve active org_id → fetch membership → if role NOT IN ('owner','admin') redirect /403.
+- Every query: WHERE org_id = active_org_id.
+- Mutations use service RPC guarded by server-side checks AND RLS policies.
+
+--- KPIs (FOR /admin/statistici)
+Cards row:
+- MRR (this month vs last), Free→Paid %, Churn %, ARPU, Payback (months).
+- Product: Runs 24h/7d/30d, Exports per format (txt/md/pdf/json/zip), Pass-Rate ≥80%, TTV median, WAU/MAU.
+- Ops: Uptime %, Checkout success %, Export Integrity %, Incidents (open/closed 7d).
+Charts:
+- Runs by day (30d), Pass-rate trend, Exports mix, Heavy users, Top 10 modules.
+Filters: date range, plan, org.
+
+--- CMS (/admin/editor)
+Collections tabs: Blog, Docs, Media, Revisions.
+- Editor MDX (slash commands, front-matter: title, description, canonical, og).
+- Workflow: draft → review → scheduled_at → publish.
+- On publish: regenerate sitemap.xml + RSS; enqueue webhooks: recrawl (search), CDN purge, Lighthouse run.
+- Media manager: upload with MIME/size allowlist; alt text required.
+- Revisions diff + rollback.
+
+--- ABONAMENTE (/admin/abonamente)
+- Display current plan, next invoice, proration simulation.
+- Upgrade/downgrade via Stripe Checkout/Portal; reflect seats; show dunning status.
+- Sync job to entitlements on webhook events.
+
+--- ENTITLEMENTS (/admin/entitlements)
+- Matrix view of boolean flags per plan/org.
+- Editable toggles for org-level overrides (admin only); persist snapshot.
+- Show Industry Packs attached; enable/disable per org.
+
+--- MEMBRI (/admin/membri)
+- List members; invite by email; set role; guard "last owner" invariant.
+- Seat usage vs included; prompt to add seats if full.
+
+--- API KEYS (/admin/api-keys)
+- Create (server generates, show once), revoke, rotate.
+- Per-key rate-limit and last_used_at; copy to clipboard; masked in UI.
+
+--- EXPORTURI (/admin/exporturi)
+- Table: bundle_id, run_id, formats, checksum_valid, exported_at, size, license_notice.
+- Verify checksum on demand; download ZIP; manifest viewer.
+
+--- INCIDENTE (/admin/incidente)
+- Feed: last 100 errors (server/client), Stripe webhooks health, SLA timers; quick actions: retry webhook, open post-mortem template.
+
+--- RULESET (/admin/ruleset)
+- Show active ruleset.yml (version + checksum); list history; view overrides per run; promote version (service-role only).
+
+--- GATE (/admin/gate)
+- Toggle Coming-Soon site-wide; confirm modal; persist; broadcast event.
+
+--- COMPONENTS (build under components/admin/*)
+- KpiCard, TrendBadge, DataTable (virtualized), ChartLine/ChartBar/ChartPie (no external heavy libs if possible), ToggleSwitch, ModalForm, ConfirmDialog, EditorMDX, MediaGrid, DiffViewer, ManifestViewer, Empty/State, Skeletons.
+
+--- API ROUTES (MUTATIONS, app/api/admin/*)
+- POST /members/invite {email, role}
+- POST /members/role {user_id, role}
+- POST /api-keys/create  → returns {plain_once, key_id}
+- POST /api-keys/revoke  {key_id}
+- POST /gate/toggle      {state:boolean}
+- POST /entitlements/set {flag, value}
+- POST /cms/post|publish|schedule|upload|rollback
+- Secure all with session + org check; idempotency keys where relevant; write audit logs.
+
+--- AUDIT & TELEMETRY
+- admin_action table insert on EVERY mutation: {user_id, org_id, action, target, meta, ts}.
+- View events: log admin_view:{page} with filters + range.
+
+--- DESIGN SYSTEM
+- Base bg: #05010A. Text high-contrast on dark.
+- Gold #CDA434 for headings, primary buttons, key icons; hover uses subtle opacity; NO blue/red anywhere.
+- Focus ring: 2px #00FF7F (only for accessibility).
+- Typography: Headings = Cinzel; UI = Space Grotesk; Code = JetBrains Mono.
+- Spacing rhythm 4/8/12/16/24; hit targets ≥44×44; prefers-reduced-motion respected.
+
+--- PERFORMANCE & A11Y BUDGETS
+- LCP ≤2.5s P75, INP ≤200ms P95, CLS ≤0.1.
+- Avoid heavy client charts; server-render + small hydration islands.
+- Images via next/image; lazy below fold; no layout shift.
+- A11y score ≥90 (landmarks, labels, focus visible, color contrast).
+
+--- ERROR STATES & EMPTY STATES
+- Each page provides: empty, loading skeleton, error with retry.
+- Global error boundary logs to incidents.
+
+--- ACCEPTANCE CRITERIA
+- All subpages render with correct data scoped to org.
+- Access blocked for non-admin; direct URL protection verified.
+- All mutations persist and produce admin_action audit rows.
+- Stripe webhooks update subscriptions → entitlements reflected within 60s.
+- Export audit verifies checksum; manifest viewer works.
+- CMS publish regenerates sitemap/RSS and fires webhooks with retry.
+- Lighthouse: Perf ≥85, A11y ≥90, Best Practices ≥90 on /admin and /admin/statistici.
+- No blue/red used; black+gold visual identity respected.
+
+--- DELIVERABLES (FILES)
+- app/admin/layout.tsx, page.tsx, */page.tsx as listed
+- components/admin/* (as specified)
+- lib/admin/{supabase.ts,stripe.ts,queries.ts,charts.ts}
+- app/api/admin/* routes
+- middleware.ts guard for /admin/*
+- tests/e2e/admin.spec.ts (access, KPIs render, key flows)
+- scripts/seed_admin_demo.ts (optional data for previews)
+
+EXECUTE. Produce code, then run lint/typecheck/build, and output a summary of implemented routes, components, and pending TODOs.
+
+
+
+
+
+# /admin/statistici — Business & Product KPIs
+
+ROLE: Full-stack agent (Next.js 15+ RSC, TS strict, Supabase RLS).
+GOAL: Dashboard KPI cu filtre și grafice live.
+
+DATA (Supabase, org-scoped):
+- Comercial: subscriptions (MRR this vs last, Free→Paid %, Churn %, ARPU, Payback mo).
+- Produs: runs (24h/7d/30d), exports per format (txt/md/pdf/json/zip), pass-rate (score≥80), TTV median, WAU/MAU.
+- Operațional: uptime %, checkout success %, export integrity %, incidents 7d.
+
+UI:
+- Row 1: KpiCard ×5 (MRR, Conversion, Churn, ARPU, Payback).
+- Row 2: KpiCard ×5 (Runs, Exports mix, Pass-rate, TTV, WAU/MAU).
+- Row 3: Charts (Runs by day 30d, Pass-rate trend, Exports pie).
+- Row 4: Tables (Top 10 module, Heavy users, Errors 24h).
+- Filters: date range, plan, org; Export CSV/PDF.
+
+SECURITY: middleware restrict owner/admin; every query WHERE org_id = active_org_id.
+TELEMETRY: admin_view:stats + filters; click events on charts.
+
+THEME: bg #05010A; gold #CDA434 for headings/primary; focus ring 2px #00FF7F.
+
+ACCEPTANCE: KPIs corecte (this vs last, delta %), filtre reactive <150ms, Perf≥85, A11y≥90.
+OUTPUT: app/admin/statistici/page.tsx, components/admin/{KpiCard,Chart*,DataTable}.tsx, lib/stats.ts.
+
+
+
+
+
+
+
+# /admin/entitlements — Matrix flags + Industry Packs
+
+ROLE: Feature-gating agent.
+GOAL: Vizualizare și editare entitlements plan/org; attach/detach industry packs.
+
+DATA:
+- plans (default flags), entitlements (org overrides), org_industry_packs.
+
+UI:
+- Matrix view: flags vs plan; org override toggles (guard rails).
+- Packs: list available; attach/detach; show enforced export requirements.
+
+SECURITY: owner/admin; write logs in admin_action.
+
+ACCEPTANCE: toggles persist; pack attach updates gating; snapshot saved; A11y≥90.
+OUTPUT: app/admin/entitlements/page.tsx, components/admin/EntitlementsMatrix.tsx, lib/entitlements.ts, app/api/admin/entitlements/*.
+
+
+
+
+
+
+
+# /admin/membri — Seats & Roluri (RLS multi-tenant)
+
+ROLE: Identity agent.
+GOAL: Gestionare membri: invitații, roluri, seats; protecție „last owner”.
+
+DATA: orgs, org_members(role), subscriptions.seats.
+
+UI:
+- Table: user, role, joined, actions (promote/demote/remove).
+- Invite modal (email, role).
+- Seat usage indicator; CTA buy seats if full.
+
+SECURITY: RLS by org; policy prevents removing last owner.
+
+ACCEPTANCE: invariants kept; invites delivered; role changes audited; A11y≥90.
+OUTPUT: app/admin/membri/page.tsx, components/admin/MembersTable.tsx, app/api/admin/members/*.
+
+
+
+
+
+
+
+# /admin/api-keys — Chei API, Rate-limits, Revocare
+
+ROLE: API management agent.
+GOAL: CRUD chei API org-scoped; afișare o singură dată; rate limits.
+
+DATA: api_keys {id, key_hash, active, rate_limit, last_used_at}.
+
+UI:
+- Create Key → show plaintext once → copy.
+- List keys: active, last used, rate limit; revoke/rotate.
+
+SECURITY: server-side gen; never store plaintext; audits.
+
+ACCEPTANCE: key create/revoke/rotate idempotent; last_used_at updates on hits; A11y≥90.
+OUTPUT: app/admin/api-keys/page.tsx, app/api/admin/api-keys/{create,revoke,rotate}.ts, lib/apiKeys.ts.
+
+
+
+
+
+
+
+
+# /admin/exporturi — Audit bundles, Manifest + Checksum, ZIP download
+
+ROLE: Export auditor.
+GOAL: Integritate legală a exporturilor.
+
+DATA: bundles {id, run_id, formats[], paths, checksum, version, license_notice, exported_at}.
+
+UI:
+- Table + filters (date, module, format, checksum status).
+- Verify checksum on demand; Manifest viewer; Download ZIP.
+
+SECURITY: org-scoped; no cross-tenant access; log audits.
+
+ACCEPTANCE: checksum verify ok; manifest complete; downloads signed URLs; Perf≥85.
+OUTPUT: app/admin/exporturi/page.tsx, components/admin/ManifestViewer.tsx, app/api/admin/exports/{verify,download}.ts.
+
+
+
+
+
+
+
+# /admin/incidente — Health, Webhooks, Sev-1/2 + Rollback
+
+ROLE: SRE agent.
+GOAL: Observabilitate & intervenție rapidă.
+
+DATA:
+- incidents (last 100), webhooks (Stripe) status, error rates (aggregated events), releases.
+
+UI:
+- Timeline incidents; filters (sev, route, period).
+- Webhook health (retry action).
+- Quick rollback to last green release (confirm).
+
+SECURITY: owner/admin only; every action audited.
+
+ACCEPTANCE: retry webhooks works; rollback triggers pipeline hook; Perf≥85.
+OUTPUT: app/admin/incidente/page.tsx, app/api/admin/incidents/{retryWebhook,rollback}.ts, lib/ops.ts.
+
+
+
+
+
+
+
+# /admin/ruleset — SSOT ruleset.yml + Overrides Log
+
+ROLE: SSOT guardian.
+GOAL: Vizualizare versiune activă + istoric + overrides per run.
+
+DATA: ruleset_versions {version, checksum, applied_at, meta}, ruleset_overrides_log {run_id, ruleset_version, overrides}.
+
+UI:
+- Current ruleset card (version, checksum, switched_at).
+- List history; diff viewer; per-run overrides table.
+
+ACTIONS: Promote version (service role only), export ruleset snapshot.
+
+ACCEPTANCE: consistent history; promote guarded; overrides discoverable; A11y≥90.
+OUTPUT: app/admin/ruleset/page.tsx, components/admin/RulesetHistory.tsx, app/api/admin/ruleset/{promote,export}.ts.
+
+
+
+# /admin/gate — Coming-Soon ON/OFF (global switch)
+ROLE: Feature flag agent.
+GOAL: Comutator global cu efect instant.
+DATA: config table or kv store {coming_soon:boolean}.
+UI: Toggle with confirm; show current state and last changed by/at.
+SECURITY: owner/admin; audit row on toggle.
+
+
+
+ACCEPTANCE: switch persists, propagates to middleware; broadcast event; Perf≥90.
+OUTPUT: app/admin/gate/page.tsx, app/api/admin/gate/toggle.ts, middleware.ts integration.
+Note generale (valabile pentru toate paginile)
+RLS: toate interogările scoped cu org_id.
+Audit: admin_action insert la fiecare mutație {user_id, org_id, action, target, meta, ts}.
+Perf & A11y: LCP≤2.5s, INP≤200ms, CLS≤0.1; A11y≥90; skeletons + empty/error states.
+Design: black+gold consecvent; fără albastru/roșu; focus ring #00FF7F doar pt. accesibilitate.
+
+
+
+
+
+
+
+“admin”-ul la PromptForge nu e doar un back-office; e turnul de control pentru bani, acces, integritate și uptime. Iată ce merită să știi, pragmatic:
+
+1) Rolul workspace-ului /admin
+
+Guvernanță & fiabilitate: planuri/entitlements, seats/roluri, API keys, versiuni de ruleset, sănătatea webhook-urilor și a incidentelor. Este locul în care legi produsul de bani și SLO-uri (nu doar UI polish).
+
+KPIs de operator (sus în pagină): Active Subscriptions, Entitlement Coverage, API Usage & rate-limit hits, Export Integrity (manifest+checksum=100%), Incidents 7d.
+
+2) Acces & permisiuni
+
+Cine intră: owner/admin de organizație; member nu. Gestionarea rolurilor/seats se face pe org (RLS per org).
+
+SSO/medii: indicator Prod/Staging + acțiuni rapide (Invite Member, Create API Key, Toggle Coming-Soon).
+
+3) Secțiunile cheie din /admin (și ce validezi în fiecare)
+
+Subscriptions & Billing: stare stripe (active/trialing/past_due), schimbări de plan, pro-rata, facturi; dunning vizibil și link în Customer Portal pentru card/adresă/VAT.
+
+Entitlements Matrix: flags efective pe org (ex. canExportPDF, hasAPI, canExportBundleZip), sursa lor (plan/add-on/pack). Asta e „adevărul” gating-ului din tot produsul.
+
+Members & Seats: invitații, roluri, protecția „nu elimina ultimul owner”, seat-count.
+
+API Keys: creare/revocare/regen, rate-limit, „last used”. (Enterprise)
+
+Exports: listă bundle-uri + manifest.json și checksum SHA256 (integritatea exporturilor). (Obiectiv: 100% conforme)
+
+Incidents/Status: sănătatea webhook-urilor (Stripe), 4xx/5xx, sev-1/2, rollback switch.
+
+Ruleset & Feature Flags: versiunea curentă a ruleset.yml, activări „beta” și toggle pentru Coming-Soon global.
+
+4) Ce impune /admin în produs (gating & integritate)
+
+Gating unificat: fiecare acțiune cu impact (run real, export PDF/JSON/ZIP, API) verifică entitlement-ul; dacă nu e true → 402 + paywall. (Ai lista exactă de comportamente pe planuri)
+
+Export „audit-grade”: bundle cu manifest și checksum obligatorii; watermark în trial; obiectivul Admin: 100% bundle-uri valide.
+
+5) Observabilitate & SLO (ce urmărește adminul)
+
+TTA median <60s, Pass-Rate ≥80, erori 4xx/5xx sub prag, status page public + incident log. Admin e responsabil ca aceste SLO-uri să fie măsurabile și vizibile.
+
+CI/CD & monitorizare: în pipeline ai securitate, performanță, backup și health-checks—adminul confirmă că rulează și că burn-rate-ul de eroare e sub buget.
+
+6) Legal & compliance (minimul non-negociabil)
+
+Linkuri /legal (ToS, Privacy, DPA) vizibile; export/erase (GDPR) operațional; retenție by plan clară.
+
+Admin quick-checklist (operațional)
+
+ Stripe OK: subscriptions sync + Customer Portal link; dunning activ.
+
+ Entitlements corecte pe org; flags reflectă plan/packs; Paywall lovește unde trebuie.
+
+ Members/Seats: owner existent, roluri corecte, seat-count sincron.
+
+ API Keys: rate-limit set, chei vechi revocate, „last used” monitorizat.
+
+ Exports Integrity: 100% bundle-uri cu manifest+checksum; watermark pe trial.
+
+ Incidents: webhook Stripe „green”; niciun sev-2 nerezolvat; rollback gata.
+
+ Ruleset: versiunea curentă e activă; feature-flags documentate; Coming-Soon toggle funcționează.
+
+ Status & SLO: TTA/Pass-Rate/CWV în verde; status page link vizibil în produs.
+
+
+
+
+iată „catalogul” de rapoarte pe care ar trebui să le aibă un admin în workspace-ul său. Le-am grupat pe tablouri (dashboards), cu KPI-uri, dimensiuni, drill-down, alerte și (unde ajută) un schelet de query pe schema ta (runs, prompt_scores, bundles, subscriptions etc.). Am inclus cerințele de integritate (manifest+checksum), gating/entitlements, SLO/Status și dunning (Stripe) exact cum apar în specificații.
+
+1) Executive (Board)
+
+Scop: vedere de 60 sec: bani, utilizare, calitate, risc.
+KPI (headline):
+
+MRR / ARR, Free→Paid (28d), NRR, Churn, Payback (Stripe sync)
+
+Activations (primul export ≤10m), Pass-Rate (score≥80), TTA median <60s
+
+Uptime / Error budget / Incidente 7d
+Drill-down: plan, țară, org.
+Alerte: MRR-Δ >±10% P7D, Pass-Rate <80%, TTA p95>120s, Uptime <99.9%.
+
+2) Revenue & Billing
+
+KPI: MRR, ARPA, NRR, Churn (logo & revenue), Free→Paid (28d), dunning rate
+Dimensiuni: plan (Free/Creator/Pro/Ent), țară, org.
+Drill-down: facturi (PDF), status trial/active/past_due, upgrade/downgrade.
+Note: link direct „Open in Customer Portal” pentru update card/VAT (Stripe).
+
+3) Subscriptions Health
+
+KPI: active vs trialing vs past_due, upgrade/downgrade events, seat utilization.
+Dimensiuni: plan, org.
+Alerte: past_due>2 zile (trimite portal link), org fără owner (blochează).
+
+4) Entitlements Coverage (Gating)
+
+KPI: % org-uri cu canExportPDF, canUseGptTestReal, hasAPI, canExportBundleZip etc.
+Dimensiuni: plan, org, source (plan | add-on | pack).
+Drill-down: mismatches UI/API (unde paywallul lovește greșit).
+Alerte: diferențe între plan și flags efective.
+
+De ce contează: fiecare acțiune critică este gated de entitlements; raportul confirmă „adevărul sistemic” din matrice.
+
+5) Usage Funnel (Open → Run → Success → Export)
+
+KPI: vizite generator, rulari (simulate/live), % succes, export rate pe format.
+Dimensiuni: modul (Mxx), plan, pack, 7D domain.
+Drill-down: acțiuni blocate de paywall (unde se cer upgrade-uri).
+SQL schelet:
+
+-- conversie pe etapă
+select date_trunc('day', r.started_at) d, r.module_id,
+  count(*) filter (where r.type='generation') as runs,
+  count(*) filter (where r.status='success') as runs_ok,
+  count(b.id) as exports
+from runs r
+left join bundles b on b.run_id=r.id
+group by 1,2 order by 1;
+
+
+(vezi tabelele runs, bundles).
+
+6) Module Performance (Top/Under-used)
+
+KPI: runs/module, score mediu, export rate, TTA median.
+Dimensiuni: modul (M01–M50), pack (FinTech/E-Comm/Edu).
+Drill-down: „Top 3 under-used modules” cu Try Now în UI (nudge).
+
+7) Quality & Evaluator (DoD)
+
+KPI: Pass-Rate (Score≥80), distribuții pe clarity/execution/ambiguity/business_fit, „repair candidates” sub prag.
+Dimensiuni: modul, plan, 7D domain.
+Alerte: p95 Score <80 pe modul X; Ambiguity medie >20.
+SQL schelet:
+
+select r.module_id,
+  avg(ps.clarity) cl, avg(ps.execution) ex, avg(ps.ambiguity) amb, avg(ps.business_fit) bf,
+  avg(case when (ps.clarity>=80 and ps.execution>=80 and ps.ambiguity<=20 and ps.business_fit>=75) then 1 else 0 end)::float pass_rate
+from runs r
+join prompt_scores ps on ps.run_id=r.id
+group by 1 order by pass_rate asc;
+
+
+(tabele runs, prompt_scores).
+
+8) Export Integrity (Audit-grade)
+
+KPI: % bundle-uri cu manifest.json + checksum sha256 (țintă: 100%), watermark la trial, mărimea artefactelor.
+Dimensiuni: format (txt, md, json, pdf, zip), plan.
+Alerte: orice bundle fără manifest/checksum; export PDF/JSON sub DoD (bloc corect).
+
+9) API Usage (Enterprise)
+
+KPI: calls/min, p95 latency, rate-limit hits, 4xx/5xx, chei active.
+Dimensiuni: org, api_key.
+Drill-down: „last used”, rotație chei, IP allowlist (dacă e activ).
+Alerte: spike 5xx, rate-limit flood, key compromise indicii.
+
+10) Webhooks & Incidents
+
+KPI: Stripe webhook health (OK/fail/retry), timeline incidente (sev-1/2), rollback events.
+Dimensiuni: tip eveniment, status, durată rezolvare.
+Alerte: incident sev-2 nerezolvat >2h; webhook failures >N/min.
+
+11) SLO & Status (Observability)
+
+KPI: Uptime, TTA text p95≤60s / SOP p95≤300s, error budget burn, CWV (LCP/INP/CLS).
+Dimensiuni: rută, geo, plan.
+Drill-down: raport săptămânal SLO + Status page public link.
+Alerte: breșă SLO pe 5/15/60 min; degrade→„Simulated” fallback.
+
+12) Cohorts: Free → Paid
+
+KPI: conversie 7/14/28 zile, timp mediu la „first export ≤10m”.
+Dimensiuni: canal (utm), țară, plan target.
+Alerte: cohort conversie sub țintă; lipsă activare (no export day-1).
+
+13) Seats & Roles (Enterprise Governance)
+
+KPI: seats used/total, invitații acceptate, owners/admins per org.
+Dimensiuni: org, rol.
+Alerte: org fără owner, members inactivi >30 zile.
+
+14) Industry Packs (Adoption & Eficacitate)
+
+KPI: activări pack, runs & exporturi pe pack, scoruri medii cu lints trecute (ex. FinTech: spec+json).
+Dimensiuni: pack (fintech/ecommerce/education), modul.
+Alerte: pack activ dar 0 utilizare în 14 zile (nudge educativ).
+
+15) Compliance & Legal (GDPR)
+
+KPI: export-data requests, delete requests, consent coverage; retenție by plan (7–30–90–unlimited).
+Alerte: cerere DSR >7 zile neînchisă; consimțământ lipsă.
+
+Livrare practică (cum arată în /admin)
+
+Tablou „Admin KPIs” (sus): Active Subs, Entitlement Coverage, API Usage, Export Integrity, Incidents 7d.
+
+Secțiuni drill-down: Subscriptions/Billing, Entitlements Matrix, Members/Seats, API Keys, Exports (manifest+checksum), Incidents & Status.
+
+Filtre: timp (7/14/28/90d), plan, org, modul, pack, canal.
+
+Notițe de implementare
+
+Evenimente & tabele suport sunt deja modelate (runs, prompt_scores, bundles, subscriptions, entitlements, api_keys, audits/events) — folosește-le ca sursă unică de adevăr.
+
+Nu lăsa niciun export „fără manifest/checksum” — ăsta e un P0 de integritate (raport + alertă).
+
+Conectează rapoartele de gating cu Paywall: oriunde vezi cerere mare de PDF/JSON blocată pe Free/Creator, pune „Upgrade CTA” contextual
+
+
+
+
+
+
+
+
+
+
+Raport Complet: Cerințe GDPR și ISO pentru Trasabilitatea Prompturilor în Generatoarele AI
+
+Autor: Manus AI
+Data: 2 septembrie 2025
+
+Introducere
+
+Acest raport oferă o analiză detaliată a cerințelor GDPR, ISO 27001 și SOC 2 pentru trasabilitatea, stocarea, securizarea și utilizarea prompturilor într-un generator de prompturi AI. Raportul răspunde la întrebările specifice ale utilizatorului și oferă recomandări practice pentru implementarea unui sistem conform și securizat.
+
+1. Ce Date Trebuie Stocate pentru o Trasabilitate Exemplară?
+
+Pentru a asigura o trasabilitate exemplară conform standardelor GDPR, ISO 27001 și SOC 2, trebuie să stocați următoarele date pentru fiecare prompt:
+
+Date Esențiale pentru Audit Trail (conform ISO 27001 Annex A 8.15):
+
+•
+ID-uri utilizatori: Cine a rulat promptul.
+
+•
+ID organizație (dacă este cazul): Pentru clienții business.
+
+•
+ID modul: Ce modul al generatorului a fost folosit.
+
+•
+Setul de parametri: Toți parametrii folosiți pentru a genera promptul.
+
+•
+Data și ora: Când a fost rulat promptul (timestamp precis).
+
+•
+Identitatea dispozitivului și locația: De unde a fost rulat promptul.
+
+•
+Adresa de rețea și protocolul: Adresa IP și protocolul folosit.
+
+•
+Output-ul generat: Rezultatul promptului.
+
+•
+Hash-ul promptului (SHA-256): Pentru a asigura integritatea.
+
+•
+Checksum-ul output-ului (SHA-256): Pentru a asigura integritatea rezultatului.
+
+•
+Entitlement aplicat: Ce nivel de acces a fost folosit (ex. Free, Pro, Enterprise).
+
+Date Suplimentare pentru Conformitate GDPR:
+
+•
+Baza legală a procesării: Consimțământ sau interes legitim.
+
+•
+Registrul activităților de procesare: Documentație detaliată a procesării.
+
+•
+Dovada consimțământului (dacă este cazul): Timestamp și textul consimțământului.
+
+•
+Jurnale de acces și modificare: Cine a accesat sau modificat datele și când.
+
+2. Cum Securizăm Totul?
+
+Securizarea prompturilor și a datelor asociate implică o abordare pe mai multe niveluri:
+
+Securitate Tehnică:
+
+•
+Criptare: Criptați datele atât în tranzit (TLS 1.3), cât și în repaus (AES-256).
+
+•
+Hashing: Folosiți SHA-256 pentru a genera hash-uri pentru prompturi și output-uri. Nu folosiți MD5 sau SHA-1.
+
+•
+Checksum-uri: Calculați și stocați checksum-uri pentru a verifica integritatea datelor.
+
+•
+Controlul accesului: Implementați un control al accesului bazat pe roluri (RBAC) pentru a limita accesul la date.
+
+•
+Protecția jurnalelor: Asigurați-vă că jurnalele sunt protejate împotriva modificărilor neautorizate.
+
+Securitate Organizațională:
+
+•
+Politici de securitate: Dezvoltați și implementați politici clare de securitate a informațiilor.
+
+•
+Training: Instruiți angajații cu privire la politicile de securitate și la gestionarea datelor sensibile.
+
+•
+Managementul furnizorilor: Evaluați și monitorizați furnizorii de servicii cloud pentru a vă asigura că respectă standardele de securitate.
+
+Tag-uri pentru Prompturi:
+
+Pentru a gestiona și securiza prompturile eficient, puteți folosi următoarele tag-uri:
+
+•
+Sensibilitate: PII (Personally Identifiable Information), Confidențial, Public
+
+•
+Status: Activ, Arhivat, Șters
+
+•
+Tip de date: Financiar, Medical, Marketing
+
+•
+Origine: Client, Intern, Sintetic
+
+Aceste tag-uri pot fi stocate într-o coloană separată în tabelul prompt_history sau într-un tabel asociat.
+
+3. Cât Timp Stocăm Datele? (Retention Policies)
+
+Politicile de retenție trebuie să fie justificate și documentate, conform GDPR. O abordare pe niveluri este recomandată:
+
+•
+Free Tier (7 zile): O perioadă scurtă pentru a permite utilizatorilor să testeze serviciul.
+
+•
+Pro Tier (90 de zile): O perioadă mai lungă pentru clienții plătitori, care pot avea nevoie de acces la istoricul lor.
+
+•
+Enterprise Tier (nelimitat sau personalizat): Flexibilitate pentru clienții enterprise, care pot avea cerințe specifice de conformitate.
+
+Important: Asigurați-vă că aveți un proces automat de ștergere a datelor la expirarea perioadei de retenție.
+
+4. Avem Voie să Stocăm și să Comercializăm Prompturile?
+
+Da, aveți voie să stocați și să comercializați prompturile, dar cu respectarea strictă a următoarelor condiții:
+
+Stocarea Prompturilor:
+
+•
+Consimțământ: Obțineți consimțământul explicit al utilizatorilor pentru stocarea și utilizarea prompturilor lor. Acest lucru trebuie să fie clar specificat în Termenii și Condițiile serviciului.
+
+•
+Anonimizare: Anonimizați sau pseudonimizați datele personale din prompturi înainte de a le stoca pe termen lung sau de a le folosi în alte scopuri.
+
+•
+Dreptul de ștergere: Respectați dreptul utilizatorilor de a solicita ștergerea prompturilor lor.
+
+Comercializarea Prompturilor (Librăria VIP/Enterprise):
+
+•
+Proprietate intelectuală: Clarificați în Termenii și Condițiile serviciului cine deține proprietatea intelectuală asupra prompturilor. O abordare comună este ca utilizatorul să dețină output-ul, dar să acorde o licență neexclusivă, perpetuă și irevocabilă pentru utilizarea promptului în scopuri de cercetare și dezvoltare.
+
+•
+Transparență: Fiți transparenți cu utilizatorii cu privire la modul în care vor fi folosite prompturile lor.
+
+•
+Valoare adăugată: Asigurați-vă că librăria de prompturi oferă o valoare adăugată reală clienților VIP/Enterprise, cum ar fi prompturi verificate, optimizate și clasificate.
+
+Concluzii și Recomandări
+
+Implementarea unui sistem de trasabilitate a prompturilor conform cu GDPR și ISO 27001 este esențială pentru a construi încredere și a asigura conformitatea. Recomandările cheie sunt:
+
+1.
+Implementați un audit trail complet: Stocați toate datele relevante pentru fiecare prompt.
+
+2.
+Securizați datele: Folosiți criptare, hashing (SHA-256) și controlul accesului.
+
+3.
+Definiți politici clare: Stabiliți politici de retenție și securitate documentate.
+
+4.
+Obțineți consimțământul: Fiți transparenți cu utilizatorii și obțineți consimțământul lor pentru stocarea și utilizarea prompturilor.
+
+5.
+Respectați drepturile utilizatorilor: Asigurați-vă că utilizatorii își pot exercita drepturile de acces, corecție și ștergere.
+
+Prin respectarea acestor principii, puteți crea un generator de prompturi puternic, securizat și conform cu cele mai înalte standarde de protecție a datelor.
+
+
+
+
+
+
+
+
+
+Experiența unui utilizator logat în PromptForge™ v3/v4 este clar structurată și diferă față de vizitatorii neautentificați. Documentele tale descriu atât meniul principal, cât și funcțiile paginii utilizatorului și ale dashboard-ului.
+
+🌐 Meniul utilizatorului logat
+După login, navigația globală afișează:
+Home (/) — Hero, proces, module, pricing, FAQ.
+Generator (/generator) — motorul 7D de prompturi, cu filtre și run-uri.
+Modules (/modules) — librăria completă (M01–M50), cu overlay detaliu.
+Pricing (/pricing) — planuri Free / Creator / Pro / Enterprise.
+Dashboard (/dashboard) — board personal: runs, scoruri, exports, istoric.
+Docs (/docs, /docs/api) — documentație + API reference.
+About / Contact — pagini secundare de brand și suport.
+Avatar menu (dreapta sus) — Profile, Billing, Sign out.
+
+👤 Pagina utilizatorului (Dashboard)
+Scop: spațiu de lucru personal, unde vezi ce ai generat, cum s-a evaluat și ce poți exporta.
+Layout (3 zone)
+Header bar
+Workspace switcher (multi-org)
+Quick actions: New Run, Browse Modules, Try Generator
+Search: run ID, modul, keyword
+KPIs primare
+Runs (7d) + trend
+Avg Score (ultimele 20 runs)
+Exports (count per format)
+
+Time-to-Artifact (median <60s)
+Pass Rate (% runs cu score ≥80)
+Working area (taburi)
+Recent Runs — tabel (Run ID, Modul, Score, Verdict, Duration, Owner, Created, Actions).
+Artifacts/Exports — grid/tabel cu formate, checksum, download.
+Module Usage — heatmap/listă: runs, avg score, exports, „Your top 3 under-used modules”.
+Scores & Quality — histogramă, breakdown pe clarity/execution/ambiguity/fit, listă „repair candidates” (<80).
+History — infinite scroll pentru audit complet.
+
+Funcții practice
+Row actions: View, Re-run, Export, Open in Generator.
+Bulk actions: Export Selected, Delete, Tag.
+Gating: dacă plan <Pro și user apasă pe Run Real Test sau Export PDF/JSON/ZIP → apare paywall.
+Empty state: „No runs yet. Open Generator to create your first artifact.” + quick starts.
+
+📋 Meniul efectiv al userului
+New Run (primar)
+Try the Generator
+Run Real Test (Pro+)
+Export PDF / JSON / ZIP (contextual, în ExportMenu)
+Tighten Prompt (auto-optimizare)
+Re-run with same 7-D
+Open Module / Browse Modules
+Download / Copy Checksum (artefact row)
+
+🔑 Pe scurt:
+Userul logat vede meniul global complet + avatar menu. Pagina centrală este Dashboardul, care funcționează ca „hub personal”: istoric runs, scoruri, exporturi, module folosite și recomandări. Toate acțiunile sunt guvernate de entitlements (plan, flags), iar UX este construit să împingă spre next action (simulate → test real → export).
+mai e un strat care nu se vede imediat în meniu dar e esențial pentru experiența utilizatorului logat: gatingul, entitlements și progresia.
+
+🔒 Gating & Upsell
+Free → doar câteva module (M01, M10, M18), export .txt, fără istoric cloud.
+Creator → toate modulele, export .md, dar fără Test Engine real.
+Pro → PDF/JSON, Test Engine live, Evaluator AI, cloud history.
+Enterprise → API, White-label, bundle .zip, multi-seat.
+UX: dacă apeși pe ceva „blocat”, vezi un paywall inline cu mesaj „Disponibil pe {next plan}” și CTA de upgrade.
+
+📈 Telemetrie & KPI
+Fiecare acțiune (run, export, test) se loghează cu:
+run_id, module_id, score, durata, cost, tokens folosiți.
+se calculează TTA (time-to-artifact), Pass Rate, scoruri clarity/execution/ambiguity/business_fit.
+→ toate se reflectă în Dashboard și servesc ca „dovezi” pentru user.
+
+🏷️ Industry Packs
+Dacă userul a cumpărat un pack vertical (FinTech, E-Commerce, Edu), atunci:
+apar module extra cu jargon și KPI presetate,
+outputurile sunt forțate (ex. FinTech → spec+json audit-like),
+Evaluator AI aplică linturi speciale (ex. „Nu folosi afirmații financiare neverificate”).
+
+👥 Multi-seat (Enterprise)
+Dacă userul e într-o organizație:
+are org switcher + roluri (owner/admin/member).
+poate invita membri, gestiona API keys și entitlements.
+UI diferă: vezi nu doar runs proprii, ci și runs/org, cu audit trail
+
+⚙️ Settings – structura canonică
+1. Profile
+Nume + avatar (upload/URL).
+Email (citit-only, dar vizibil).
+Parolă: resetare prin flow securizat (Supabase Auth + email).
+2FA (opțional): OTP sau TOTP.
+Preferințe: limbă (en/ro), dark/light, notificări email.
+
+2. Billing & Payments
+Plan activ (Free/Creator/Pro/Enterprise).
+Carduri salvate (Stripe Customer Portal).
+Invoices (listă: id, dată, sumă, status, link PDF Stripe).
+History upgrade/downgrade (abonamente trecute).
+Add-ons/Industry Packs (vizibil ce e activ și expirarea).
+Dunning state: dacă plata eșuează, status = past_due + link „Update payment method”.
+
+3. Security
+Change password (flow separat, cu verificare email).
+Sessions: listă cu IP/UA + posibilitate de revoke.
+API Keys (Enterprise): creează/revocă chei, vezi limită/usage.
+Entitlements snapshot: vezi ce flags sunt active pe cont (canExportPDF, hasAPI etc.).
+
+4. Organization / Seats (Enterprise)
+Invita membri prin email.
+Atribuie roluri (owner/admin/member).
+Gestionează seat-uri extra (Stripe seat billing).
+Vezi entitlements la nivel de org (nu doar user).
+
+🔑 Elemente implicite
+Download data (export GDPR).
+Delete account (right to be forgotten).
+Legal links: Terms, Privacy, DPA (obligatoriu în Settings UI).
+
+Pe scurt: Settings = Profile + Security + Billing + Org.
+Stripe gestionează cardurile și facturile, Supabase Auth gestionează user+password, iar DB-ul (plans/entitlements) dictează ce vezi în fiecare tab.
+
+
+
+┌──────────────── Settings ────────────────┐
+│  ◉ Profile                               │
+│  ○ Security                              │
+│  ○ Billing & Payments                    │
+│  ○ Organization & Seats   (Enterprise)   │
+│  ○ API Keys               (Enterprise)   │
+│  ──────────────────────────────────────  │
+│  ○ Data & Privacy                        │
+│  ○ Legal (Terms • Privacy • DPA)         │
+└──────────────────────────────────────────┘
+
+
+
+
+1) Profile
+
+[ Avatar ]  [ Upload ] [ Remove ]
+Name        [ Vadim Cușnir               ]
+Email       [ vadim@...        ] (read-only)
+Language    ( en ▾ ) ( ro ▾ )
+Theme       ( System ▾ )  [Dark] [Light]
+
+[ Change Password ]
+[ Save Changes ]  [ Cancel ]
+
+
+Note:
+
+Parola se schimbă pe un flow securizat (Supabase Auth, email verify) – recomandat separat de „Save Changes”.
+
+Preferințe: limbă, temă, notificări email (on/off).
+
+Link rapid: „Download my data” (GDPR export).
+
+2) Security
+Two-Factor Auth (TOTP)      [ Enable / Disable ]
+Active Sessions
+  • MacOS · Chrome · 89.21.33.1 · Now        [ Revoke ]
+  • iPhone · Safari · 10.0.0.52 · 2d ago      [ Revoke ]
+
+Password
+  [ Change Password ] → email link
+
+Entitlements Snapshot (read-only)
+  canExportPDF: true
+  canUseGptTestReal: true
+  hasCloudHistory: true
+  hasAPI: false
+
+
+Note:
+
+„Entitlements Snapshot” ajută la debugging-ul paywall-ului (ce e activ/inactiv).
+
+Sessions: listă IP/UA, revocare sesiuni vechi.
+
+3) Billing & Payments
+Current Plan:  Pro  ( €49/mo )         [ Downgrade ] [ Upgrade ]
+Status:        Active · Renews on 02 Oct
+
+Payment Method
+  **** **** **** 4242 · 09/27          [ Update in Customer Portal ]
+
+Invoices
+  #INV-1042  02 Sep 2025  €49   Paid   [ PDF ]
+  #INV-1029  02 Aug 2025  €49   Paid   [ PDF ]
+  #INV-1016  02 Jul 2025  €49   Paid   [ PDF ]
+
+Add-ons / Industry Packs
+  FinTech Pack (Pro)      Active · renews 02 Oct  [ Manage ]
+  Education Pack          Expired                  [ Renew ]
+
+
+Note:
+
+Toate operațiile de card/facturi se rulează în Stripe Customer Portal (link out).
+
+Stări: active / trialing / past_due + CTA „Update payment method” (dunning).
+
+Packs apar ca linii separate (activ/expirat), cu gating în UI și API.
+
+4) Organization & Seats (Enterprise)
+Organization:  ACME Global     [ Switch Org ▾ ]
+Seats:  7 used / 10 total      [ Buy seats ]  [ Invite member ]
+
+Members
+  • Ana I.      admin     ana@...     [ Change role ▾ ] [ Remove ]
+  • Mihai S.    member    mihai@...   [ Change role ▾ ] [ Remove ]
+  • You         owner     vadim@...   (cannot remove last owner)
+
+Roles: owner · admin · member
+
+
+Note:
+
+Multi-seat, roluri și invitații; protecție „nu poți elimina ultimul owner”.
+
+Dacă ai mai multe org-uri: Workspace switcher + izolare RLS per org în tot produsul.
+
+5) API Keys (Enterprise)
+API Access: Disabled (your plan: Pro)
+[ Upgrade to Enterprise ]  — unlock API, white-label, bundle.zip
+
+(după upgrade)
+
+API Keys
+  • prod-main   last used: 2m ago     Rate: 60 req/min    [ Revoke ]
+  • staging     last used: 3d ago     Rate: 30 req/min    [ Revoke ]
+[ Create new key ]  [ Regenerate ]
+Docs: /docs/api  (curl POST /api/run/{moduleId})
+
+
+Note:
+
+Cheile au limită / rate-limit, „last used”, revoke/regen; acces numai pe Enterprise.
+
+6) Data & Privacy
+[ Export My Data ]    (zip: profile.json, runs.csv, exports.manifest.json)
+[ Delete Account ]    (irreversible · confirmation dialog)
+Consent & Preferences
+  Analytics    [ On/Off ]
+  Marketing    [ On/Off ]
+
+
+Note:
+
+Exportul include manifest + checksum pentru bundle-uri (conform standardului export).
+
+„Delete Account” = right-to-be-forgotten, cu confirmări.
+
+7) Legal
+Terms of Service   (open)
+Privacy Policy     (open)
+Data Processing Addendum (DPA)  (open)
+
+
+Note:
+
+Rutele /legal/terms, /legal/privacy, /legal/dpa trebuie prezente explicit în app tree.
+
+Fluxuri & stări importante (rezumat)
+
+Upgrade/Downgrade: any action blocată de plan → paywall inline + CTA „Upgrade” (Free→Creator→Pro→Enterprise).
+
+Dunning: past_due în Billing → banner persistent + buton „Update payment method” (Stripe Portal).
+
+Enterprise switch: după upgrade apar secțiuni noi (Organization, API Keys, White-label) și se lărgesc entitlements.
+
+Audit trail: la export, bundle are manifest + checksum; istoricul rămâne accesibil din Dashboard & Data Export.
+
+
+
+Iată „colțurile” pe care lumea le uită des în produsul logat, dar trebuie prevăzute ca să nu te lovești de ele mai târziu:
+
+1) Billing & taxe (dincolo de card/facturi)
+
+Date companie pe factură (firmă, VAT, adresă) + facturi corecte pe jurisdicții (VAT OSS / US state tax), credit notes, cupoane, prorată upgrade/downgrade, grație dunning. Toate sunt în checklist-ul tău (Stripe + Tax + portal).
+
+Grup achiziții: Seats add/remove, transfer ownership (când pleacă owner-ul), istoric modificări plan.
+
+2) Securitate operațională & audit
+
+Jurnal de activitate (audit trail) pentru acțiuni sensibile: exporturi, chei API, setări org; și vizualizare/descărcare din Settings → Data & Privacy. (Schema ta prevede audits/events.)
+
+Sessions manager (terminate all sessions), 2FA/TOTP, IP allowlist (Enterprise) pentru API.
+
+Rate-limit / quota vizibilă în UI (pe org și pe cheie API) + mesajele „retry-after”.
+
+3) Exporturi „curate” (compliance-grade)
+
+În pagina de download, afișează întotdeauna: manifest.json, checksum sha256, dimensiuni fișiere și semnătură (dacă Enterprise), nu doar butonul „PDF”. Standardul tău o cere pentru auditabilitate.
+
+Watermark / trial marcat explicit la export (politică legată de plan/entitlements).
+
+4) Confidențialitate & drepturi utilizator (GDPR-ready)
+
+Export my data (one-click ZIP cu profile.json, runs.csv, exports.manifest.) + Delete account (Right to be Forgotten) în Settings. (Rutele /legal/ sunt în IA.)
+
+Consent granular (analytics/marketing) și Data retention vizibil (Free 7–30–90d vs Pro/Ent).
+
+5) Observabilitate, SLO/Incidente
+
+Status/Incidents public (link în footer + în Settings) și SLO-uri (uptime, TTA, error budget) măsurate real; tu le-ai definit și pentru CI/CD/monitoring/backups – fă-le vizibile și userului (meniu Help/Status).
+
+KPI de calitate în Dashboard (TTA, Pass Rate, Score ≥80) + explainers „de ce a picat exportul” (sub prag DoD/score).
+
+6) Programul de versiuni & „beta features”
+
+Feature flags vizibile la utilizator („Beta: Export Designer v2”), cu opt-in/out pe cont sau pe org. (Template-ul tău de entitlements/flags e deja standardizat.)
+
+Changelog/Release notes (link /docs sau /blog) pentru transparență.
+
+7) Integrații & webhooks (Enterprise)
+
+Webhooks out configurabile per org (URL, secret, retry) pentru export.ready, run.succeeded, billing.updated. (Ai deja schema & workflows—adaugă UI minim de administrare.)
+
+Limite și log pentru webhook (ultimele 100 livrări, replay).
+
+8) White-label & domenii (Enterprise)
+
+Branding: upload logo, culori, favicon; Custom domain cu verificare DNS; custom email sender (SPF/DKIM). (White-label e în entitlements—adu-i panoul în Settings.)
+
+9) Localizare & accesibilitate
+
+i18n pe cont (en/ro) + fallback, fără dublare string-uri; WCAG 2.2: focus, contrast, prefers-reduced-motion. (Design system-ul deja impune reguli.)
+
+10) Mode de rulare & cost vizibil
+
+Simulated vs Live Test explicat în clar (inclusiv estimare cost tokens și model folosit); buton de Tighten Prompt când e sub DoD. (Asta reduce confuzia și costul.)
+
+11) Industry Packs – guvernanță
+
+În Settings → Packs, arată: ce pack-uri sunt active/expirate, preseturi (jargon/KPI/guardrails) și lints aplicate de Evaluator AI (ex.: „nu afirmații financiare neverificate”).
+
+12) Help & suport
+
+Help Center (FAQ, doc, API), Contact/Support rapid + SLA de răspuns (mai strict pt. Pro/Ent). (Rutele /docs, /contact și /legal sunt deja în structura ta.)
+
+
+Iată checklist-ul lansării pentru experiența userului logat (Settings + billing + gating + dashboard + export + observabilitate). Bifează cap-coadă:
+
+A. Navigație & IA (app tree)
+
+ Rute active: /, /generator, /modules, /pricing, /dashboard, /docs, /docs/api, /legal/{terms,privacy,dpa}, /coming-soon toggle.
+
+ Header: tabs + avatar (Profile, Billing, Sign out).
+
+B. Dashboard (user workspace)
+
+ KPIs top: Runs(7d) + trend, Avg Score(20), Exports by format, TTA median <60s, Pass-Rate≥80.
+
+ Tablouri: Recent Runs (view/re-run/export), Artifacts (download + checksum), Module Usage, Scores & Quality, History infinite.
+
+ Empty state + Quick starts (3 module sample).
+
+C. Gating & Entitlements (paywall)
+
+ Free→ 3 module (M01/M10/M18), doar .txt. Creator→ .md. Pro→ .pdf/.json + Test Live + Evaluator + Cloud. Ent→ API + White-label + bundle.zip.
+
+ Acțiuni blocate afişează paywall inline cu „Disponibil pe {plan}”.
+
+ Entitlements vizibile în Settings (debug snapshot).
+
+D. Settings – Profile
+
+ Avatar, Name, Email (read-only), Language (en/ro), Theme (system/dark/light).
+
+ Change Password: flow securizat (email/OTP), separat de „Save profile”.
+
+E. Settings – Security
+
+ 2FA (TOTP), Active Sessions (IP/UA, revoke), „Terminate all”.
+
+ Entitlements Snapshot (read-only flags).
+
+ (Ent) IP allowlist/API rate-limit vizibil pe key (opțional enterprise).
+
+F. Settings – Billing & Payments
+
+ Status abonament: trialing/active/past_due, data reînnoirii, Upgrade/Downgrade.
+
+ Stripe Customer Portal: card update, adresă firmă/VAT, invoice PDF download.
+
+ Invoices list (id, date, amount, status, PDF). Dunning banner pe past_due.
+
+ Add-ons / Industry Packs: activ/expirat + manage.
+
+G. Settings – Organization & Seats (Enterprise)
+
+ Workspace switcher; seats used/total; invite member; role owner/admin/member.
+
+ Protecție „nu elimina ultimul owner”.
+
+H. Settings – API Keys (Enterprise)
+
+ Create/Revoke/Regenerate; „last used”, rate/min.
+
+ Docs link: /docs/api + POST /api/run/{moduleId}.
+
+I. Settings – Data & Privacy
+
+ Export My Data: ZIP cu profile.json, runs.csv, exports.manifest.json (checksum).
+
+ Delete Account (irreversible, confirm dialog).
+
+ Consents: Analytics/Marketing on/off; data retention clar (Free/Creator/Pro/Ent).
+
+J. Industry Packs (verticale)
+
+ Pagină „Packs”: active/expirate; preseturi domeniu (jargon/KPI/guardrails); lints Evaluator AI.
+
+ Gating în run/export după pack & plan (ex.: FinTech → spec+json minim).
+
+K. Export & Integritate
+
+ ExportMenu respectă planul: Free .txt; Creator .txt/.md; Pro +.pdf/.json; Ent bundle.zip.
+
+ Bundle: manifest.json + checksum sha256 afișate în UI; watermark la trial.
+
+L. Test Engine & DoR/DoD
+
+ DoR la pre-run: 7D valid, entitlement valid, output spec, testcases, input minim.
+
+ DoD la export: Score≥80, required fields complete, checksum valid, manifest scris, telemetrie salvată.
+
+ UI explică „de ce a eșuat exportul” (sub prag).
+
+M. Observabilitate & SLO / Incidente
+
+ Evenimente: module_open/run_* / export_* / web_vitals. Dashboards minime.
+
+ Pagină Status/Incidents public + link din Settings/Help.
+
+ CI/CD workflows pentru perf/monitoring/backup active.
+
+N. Legal & Compliance
+
+ /legal/terms, /legal/privacy, /legal/dpa publice + link în Settings.
+
+ GDPR: export/erase ok; cookie consent/consents stocate.
+
+
+

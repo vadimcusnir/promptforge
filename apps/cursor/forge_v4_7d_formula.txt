@@ -1,0 +1,770 @@
+
+
+
+
+
+Șablon prompt v4-mini (max token overhead, executabil)
+ROLE_GOAL: Execută {application.artifact_type} pentru {domain.code}/{scale}/{urgency.timeline}.
+7D:
+- domain={code}, sub_industry={…}, kpis=[K1,K2,K3], style={style_bias}
+- scale={enum}, team_size={…}, decision={…}
+- urgency={enum}, pressure={…}, risk_tol={…}, decision_speed={…}
+- complexity={enum}, steps={3|5|10}, stakeholders={…}, failure_cost={…}
+- resources={enum}, tech_stack={…}, time={…}
+- application={enum}, delivery={…}, metric={…}, maturity={…}
+- output={enum}, structure={SOP|table|narrative}, retention={…}
+CONSTRAINTS:
+- Max steps = {3|5|10}; fără introduceri; fără repetiții.
+- Include DOAR {K1,K2,K3}. Dacă crisis: adaugă „Escalation Path”.
+- Dacă delivery=automated: Triggers/IO/Errors/Owners/SLO obligatorii.
+EVAL_HOOKS: score≥80 pentru export pdf/json/zip.
+RETURN: format={file_format} + structura cerută (fără text extra).
+
+
+(Șablonul se aliniază cu DoR/DoD, gating și export policy.)
+
+
+
+
+Praguri dinamice recomandate (Test-Engine, pe scurt)
+
+crisis: Clarity ≥90, Execution ≥90, Ambiguity ≤10; altfel block export.
+
+advanced/expert: Clarity ≥85/90, Execution ≥85/90; cere secțiuni „Risks/Mitigations” dacă failure_cost=high.
+
+SOP automated: refuză fără „Triggers/IO/Errors/Owners/SLO”.
+
+Checklist anti-deraiere (token-efficiency)
+
+Enum-only peste tot; fără free-text la valori standard.
+
+Cap pași 3/5/10 după Complexity.
+
+timeline scurt (7d/14d/30d); fără povești despre „presiune”.
+
+Top-3 KPI only; style_bias unic.
+
+Derivă resources/scale din plan unde se poate (evită întrebări suplimentare).
+
+Alege 1 format principal; derivat max 1.
+
+Activează DoR/DoD gates: scor ≥80, manifest+checksum pentru pdf/json/zip/bundle.
+
+Blochează export sub scor sau fără secțiunile obligatorii anunțate (repair prompts).
+
+Telemetrie minimă: run_open/run_scored/export_performed (checksum_ok).
+
+Nicio relaxare „temporară” în prompt — schimbările se fac în SSOT/config, nu în text.
+
+
+
+
+
+Mai jos ai o evaluare avansată a șablonului 7D și a mecanicii tale (DoR/DoD, gating, export, telemetrie), cu puncte tari, goluri și patch-uri concrete „ready-to-apply”. Baza de adevăr și cadrul 7D sunt corect definite și executabile (enum-only, SSOT, validări), deci poți împinge linistit spre enterprise dacă închizi găurile de mai jos.
+
+Verdict (pe scurt)
+
+Corectitudine model 7D: solid (enumuri, sub-parametri, rol în DoR/DoD și gating).
+
+Rigoare operațională: foarte bună (gates, score≥80 pentru export, manifest+checksum).
+
+Unde pierde calitate/cost: drift la sub-parametri (liste prea lungi), lipsă „hard caps” pe pași/artefacte, și câteva zone unde regulile sunt implicite dar ne-„executabile” (ex. preset logic neforțat din plan/entitlements).
+
+Puncte tari (ce să păstrezi „ca lege”)
+
+7D = contract, nu descriere (enum-only, JSON Schema, additionalProperties:false). Standardizează input/out și blochează „gonflarea” prompturilor.
+
+DoR/DoD impuse pe runtime: score≥80, export policy, manifest+checksum, blocare sub prag + repair prompts.
+
+Gating comercial & entitlements bine ancorate (format vs plan, paywall on action).
+
+Telemetrie canonică (open→run→scored→export, legacy_redirect_hit) pentru funnel și audit.
+
+Goluri / riscuri (unde scapă calitatea sau urcă costul)
+
+Drift semantic la sub-liste: domain.jargon[] și kpis[] pot crește excesiv → token waste + ieșiri redundante.
+
+Lipsă hard-caps pe steps/artefacte: Complexity definește nivele, dar nu forțează în schema de output un număr maxim de pași (3/5/10) în toate modulele.
+
+Preseturi ne-executate by plan: scale/resources pot fi derivate din plan/entitlements, dar UI încă solicită uneori inutil datele.
+
+Secțiuni obligatorii condiționale (ex. Crisis: Escalation Path; Implementation/automated: Triggers/IO/Errors/Owner/SLO) nu sunt întotdeauna validate „hard” în schema de output.
+
+Score gates ne-specifice pe axe (clarity/execution/ambiguity) în funcție de Urgency/Complexity; există reguli, dar merită transpuse explicit într-o matrice de praguri.
+
+Patch-uri cu impact mare (10 fixuri „executabile”)
+
+Top-8 Jargon / Top-3 KPI rule
+În domain_config, limitează jargon[] la 8 și kpis[] la 3 obligatorii; refuză run dacă depășește (422). Reduce cost și zgomot.
+
+Hard-caps pe pași după Complexity
+Validează în output: foundational=3, standard=5, advanced=5–10, expert≥10 (regex/enum pe lungimea listei). Export blocat dacă depășește.
+
+Auto-derive scale/resources din plan
+Dacă plan=Enterprise → setează implicit scale=enterprise, resources=full_stack_org|enterprise_budget; UI ascunde controalele inutile.
+
+Secțiuni obligatorii condiționale în schema de output
+
+crisis → câmp „escalation_path[]” required.
+
+implementation + delivery_mode=automated → „triggers, inputs, outputs, error_handling, owners, SLO” required.
+Fără ele → 422.
+
+Matrice de praguri dinamice (Evaluator)
+Integrează explicit:
+
+Crisis: Clarity≥90, Execution≥90, Ambiguity≤10.
+
+Advanced/Expert: Clarity/Execution≥85/90, Ambiguity≤15/12.
+Un fișier unic (evaluator_config) pentru toate.
+
+One-true-format per run (+1 derivat max)
+Interzice cererea simultană a mai multor formate „ca să fie” (token & I/O waste). output.file_format = 1 + opțional 1 derivat dacă planul ≥ Pro.
+
+Watermark & policy enforcement
+Trial = watermark forțat; pdf/json/bundle → obligatoriu score≥80, manifest, checksum. Verifică checksum la download, marchează checksum_ok în telemetrie (incident dacă ≠100%).
+
+Timeline compact pentru Urgency
+Normalizează timeline la pattern scurt (7d|14d|30d|72h). Elimină proza „presiunii” din prompt.
+
+Aliasuri Application în 7–8 valori canonice
+Expune în UI doar umbrelele (Training/Audit/Implementation/Strategy/Documentation/Crisis/Experimentation); restul ca aliasuri → scade driftul și lungimea promptului.
+
+Repair-prompts minimale (≤5) + reluare ghidată
+La score<80, returnează max 5 instrucțiuni precise legate de schema lipsă (ex.: „Adaugă Escalation Path”, „Limitează la 5 pași”). Fix oriented, nu „feedback vag”.
+
+Economie de tokeni (reguli „hard”)
+
+Enum-only peste tot; fără liste libere în payload.
+
+style_bias 1 singur (enum), nu fraze.
+
+Preset plan→7D (derive scale/resources/output retention).
+
+Application → 1 artifact_type + 1 measurement_metric (nu multiple).
+
+Output → 1 format principal; derivate doar dacă planul o cere.
+
+QA hooks (DoR/DoD executabile)
+
+DoR: respinge dacă lipsesc câmpurile minime pe modul (input_schema strict; additionalProperties:false).
+
+DoD: bloc export dacă lipsesc secțiunile condiționale, score<80 sau manifest+checksum (422).
+
+Redirect 308: 0×404 pe legacy; log legacy_redirect_hit pentru audit SEO.
+
+Telemetrie & KPI (ce trebuie să vezi în dashboard)
+
+Funnel per modul: open → run_started → run_scored → run_succeeded/export (SuccessRate ≥95% pe top-10 la canary).
+
+Checksum OK Rate = 100%, altfel alertă.
+
+TTV median < 300s, Open→Run ≥60%.
+
+Securitate & GRC (minime obligatorii)
+
+Rate-limit + throttling pe run/export; 429 cu Retry-After + telemetrie.
+
+PII minimization + audit trail (blocare export când evaluatorul ridică risc).
+
+Concluzie
+
+Șablonul tău e „enterprise-grade” în intenție și aproape în execuție. Ca să fie blindat: fă regulile explicit executabile (caps, secțiuni condiționale, derivări din plan), normalizează sub-listele și închide buclele la export/telemetrie. După aceste 10 patch-uri, ai un 7D care livrează predictibil, ieftin în tokens, auditat și monetizabil—exact cum cere blueprint-ul operațional.
+
+
+
+
+
+Am ancorat titlurile, ordinea și artefactele în 7D + DoR/DoD + mecanica PF (gating/export/telemetrie), ca să nu existe drift.
+
+0. Front-matter (1 pagină)
+
+Titlu: „Instrucțiunea Specializată PROMPTFORGE — 7D + Execuție”
+
+Versiune: vX.Y.Z (semver)
+
+Scope scurt (3 linii)
+
+Public țintă: dev / ops / product / sales
+
+Glosar link (IDs/slug/alias)
+
+SSOT linkuri: ruleset.yml, module.spec.schema.json, prompt.run.schema.json, evaluator_config.yaml
+
+1. Scop & Domeniu de aplicare
+
+1.1 Obiectiv (1 paragraf, măsurabil)
+1.2 Cine folosește (dev/ops/creator/sales) — 4 bullet-uri cu output pe rol
+1.3 Rezultat final așteptat = MVP operabil + KPI minime (enumeră 5 KPI)
+
+DoR secțiune: scop măsurabil + KPI enumerate
+Artefact: objective.md (≤200c), kpi_min.json
+
+2. Principii & Guardrails (stil + anti-deraiere)
+
+2.1 Voice & semiotică (1 bloc)
+2.2 SSOT & guardrails (input enum-only, output template, scor≥80, export policy)
+2.3 AMS (afirmația minimă suficientă) — 3 reguli scurte
+
+DoD secțiune: listează 3 verificări automate (ex: additionalProperties:false, scor≥80, manifest+checksum)
+Artefact: guardrails.yml
+
+3. Arhitectură (UI/API/Orchestrare/DB/Licențiere)
+
+3.1 Straturi (UI, API, Orchestrare, DB, Licensing) — 5 bullet-uri
+3.2 Flux utilizator → modul → rezultat (6 pași, o frază/ pas)
+3.3 Observabilitate (evenimente standard)
+
+DoR: diagrame C4 minime / listă rute + contracte
+Artefacte: system_blueprint.md, events_catalog.json
+
+4. Gating Comercial & Entitlements
+
+Planuri: Pilot/Pro/Enterprise (matrice capabilități)
+
+Entitlements/flags/rate-limit: ordinea gate-urilor pre-run
+
+Export policy: allowed_formats, watermark trial, manifest+checksum obligatorii
+
+DoD: test e2e pe 402/403/429 + export 422 dacă lipsește manifest/score
+Artefact: plans.json (SSOT executabil)
+
+5. 7D — Contractul canonic al rularii
+
+Definiție 7D: Domain, Scale, Urgency, Complexity, Resources, Application, Output (enum-uri) + rolul fiecăruia.
+
+Sub-parametri pe scurt (timeline, steps_required, …)
+
+Maparea 7D → gating/DoR/DoD (tabel 1 pag.)
+
+DoR: payload 7D validat JSON-Schema (enum/regex)
+Artefact: prompt.run.schema.json (enum-only + patterns)
+
+6. Model Modul (chei + contracte)
+
+6.1 Chei: id=Mxx, title, slug, legacy_slugs[] (compat 308)
+6.2 Meta & guardrails: difficulty, est_tokens_per_run, min_score, export_policy
+6.3 Contracte: input_schema & output_template (JSON-Schema)
+
+DoD: validare input/output + blocare sub scor; 308 testat
+Artefact: module.spec.schema.json
+
+7. Execuție (pipeline)
+
+Pre-gate: auth→plan→entitlements→flags→rate-limit
+
+Run: core logic (respectă bugetul de tokeni)
+
+Eval: quality/risk/cost/overall + praguri dinamice
+
+Export: policy + manifest & checksum
+
+Persist & expose: artefact + telemetrie
+
+DoD: export permis doar cu overall≥80 & integritate validă
+Artefact: dor_dod.rules.yml, evaluator_config.yaml
+
+8. Telemetrie & KPI
+
+8.1 Evenimente standard (payload canonic)
+8.2 KPIs cross-modul (Open→Run→Success, TTV, SuccessRate, ChecksumOK, SEO)
+8.3 Dashboard MVP (tiles + praguri)
+
+DoD: funnel vizibil; SuccessRate ≥95% pe top-10 la canary
+Artefact: analytics_events.json, kpi_thresholds.json
+
+9. Securitate & Conformitate
+
+Rate-limit & sandbox
+
+PII & audit trail
+
+Gate scor≥80 (DoR/DoD) (export 422 dacă nu)
+
+DoD: 0 exporturi fără manifest/checksum; 0×404 pe pagini modul
+Artefact: security_policy.md
+
+10. UX/SEO/Accesibilitate
+
+Navigație & carduri module
+
+OG/meta, sitemap, 308 legacy → current (fără 404)
+
+A11y + CWV bugete
+
+DoD: Lighthouse SEO ≥90, Perf ≥85; redirect 308 100% ok
+Artefact: ux_acceptance.md
+
+11. Instrucțiuni pe Blocuri (M01–M50) — 1–2 rânduri / modul
+
+Pentru fiecare: scop → input minim → output → KPI → gate
+
+Include link la schema input/output per modul
+
+DoR: fișier modules_registry.json sincron UI/API/SEO
+Artefact: modules_registry.json
+
+12. Matrici de utilizare (When/Why/Who)
+
+Harta problemă → modul → livrabil
+
+Nivel competență (strategist/builder/operator)
+
+Ordine + TTV (48h/7z etc.)
+
+DoD: matrici verificate în e2e; TTV median <300s la canary
+Artefact: use_matrices.md
+
+13. Play-uri complete (scenarii)
+
+„Lansare în 48h”, „Repoziționare 7 zile”, „Criză 24–72h”, „ABM & Sales” — fiecare cu input minim, livrabile, KPI și gates
+
+DoD: exporturi trec policy; telemetrie completă pe play
+Artefact: plays/*.md
+
+14. Testare & Release
+
+Unit (schema/input/output/evaluator/export)
+
+E2E (Open→Run→Export, 308, entitlements, SEO)
+
+Canary & rollback (praguri)
+
+DoD: toate suitele verzi; blocanți: checksum/404/SEO/success<95%
+Artefact: /tests/templates/*, release_checklist.md
+
+15. Mentenanță & Versionare
+
+Semver executabil (major/minor/patch)
+
+Deprecieri & legacy_slugs + 308 (telemetrie from_legacy)
+
+Arhivă & restore (bundle + checksum)
+
+DoD: Legacy Redirect Share ≤5%; 0 erori 404; restore verificat
+Artefact: versioning_policy.md, redirects.json
+
+16. Riscuri & Audit
+
+Top 10 riscuri + Playbook detect→contain→recover→review
+
+Audit lunar/trimestrial/anual + rapoarte PDF
+
+DoD: raport audit livrat, scorecard roșu/galben/verde
+Artefact: risk_register.yaml, audit_report.pdf
+
+Mini-Anexă „Exactă” (copie-lipire)
+
+A. Cap de document (MD):
+
+# Instrucțiunea PROMPTFORGE — 7D + Execuție (vX.Y.Z)
+Scope: MVP operabil (UI/API/DB/licențiere/analytics) cu DoR/DoD executabile.
+KPI minime: SuccessRate≥95% top-10; TTV<300s; SEO≥90; 0 exporturi fără manifest+checksum.
+SSOT: ruleset.yml • module.spec.schema.json • prompt.run.schema.json • evaluator_config.yaml
+
+
+B. Schelet JSON pentru planuri (SSOT):
+
+{
+  "pro": {
+    "export_policy": {
+      "allowed_formats": ["JSON","PDF","ZIP"],
+      "require_manifest": true,
+      "require_checksum": true
+    },
+    "rate_limit": {"run_per_hour": 30, "export_per_hour": 20}
+  }
+}
+
+
+C. Fragment Schema 7D (enum-only):
+
+{
+  "urgency": {"type":"string","enum":["low","planned","sprint","pilot","crisis"]},
+  "output":  {"type":"string","enum":["txt","md","checklist","spec","playbook","json","yaml","diagram","bundle","pdf"]}
+}
+
+
+Cum folosești șablonul (3 pași)
+
+Creezi documentul cu secțiunile 0–16 în ordinea de mai sus.
+
+Atașezi artefactele (fișierele JSON/YAML/MD) ca SSOT; fiecare secțiune are DoR/DoD verificabile.
+
+Rulezi CI: blocant la lipsă manifest/checksum, SEO<90, success<95%, 404>0, scor<80 pe export (exact cum e în mecanica PF).
+
+
+
+
+
+
+
+Mai jos ai un șablon „exact, executabil” pentru instrucțiune—îl poți lipi ca structură de document (MD/Notion) și ca schelet de fișiere (JSON/YAML) în repo. Am ancorat titlurile, ordinea și artefactele în 7D + DoR/DoD + mecanica PF (gating/export/telemetrie), ca să nu existe drift.
+
+0. Front-matter (1 pagină)
+
+Titlu: „Instrucțiunea Specializată PROMPTFORGE — 7D + Execuție”
+
+Versiune: vX.Y.Z (semver)
+
+Scope scurt (3 linii)
+
+Public țintă: dev / ops / product / sales
+
+Glosar link (IDs/slug/alias)
+
+SSOT linkuri: ruleset.yml, module.spec.schema.json, prompt.run.schema.json, evaluator_config.yaml
+
+1. Scop & Domeniu de aplicare
+
+1.1 Obiectiv (1 paragraf, măsurabil)
+1.2 Cine folosește (dev/ops/creator/sales) — 4 bullet-uri cu output pe rol
+1.3 Rezultat final așteptat = MVP operabil + KPI minime (enumeră 5 KPI)
+
+DoR secțiune: scop măsurabil + KPI enumerate
+Artefact: objective.md (≤200c), kpi_min.json
+
+2. Principii & Guardrails (stil + anti-deraiere)
+
+2.1 Voice & semiotică (1 bloc)
+2.2 SSOT & guardrails (input enum-only, output template, scor≥80, export policy)
+2.3 AMS (afirmația minimă suficientă) — 3 reguli scurte
+
+DoD secțiune: listează 3 verificări automate (ex: additionalProperties:false, scor≥80, manifest+checksum)
+Artefact: guardrails.yml
+
+3. Arhitectură (UI/API/Orchestrare/DB/Licențiere)
+
+3.1 Straturi (UI, API, Orchestrare, DB, Licensing) — 5 bullet-uri
+3.2 Flux utilizator → modul → rezultat (6 pași, o frază/ pas)
+3.3 Observabilitate (evenimente standard)
+
+DoR: diagrame C4 minime / listă rute + contracte
+Artefacte: system_blueprint.md, events_catalog.json
+
+4. Gating Comercial & Entitlements
+
+Planuri: Pilot/Pro/Enterprise (matrice capabilități)
+
+Entitlements/flags/rate-limit: ordinea gate-urilor pre-run
+
+Export policy: allowed_formats, watermark trial, manifest+checksum obligatorii
+
+DoD: test e2e pe 402/403/429 + export 422 dacă lipsește manifest/score
+Artefact: plans.json (SSOT executabil)
+
+5. 7D — Contractul canonic al rularii
+
+Definiție 7D: Domain, Scale, Urgency, Complexity, Resources, Application, Output (enum-uri) + rolul fiecăruia.
+
+Sub-parametri pe scurt (timeline, steps_required, …)
+
+Maparea 7D → gating/DoR/DoD (tabel 1 pag.)
+
+DoR: payload 7D validat JSON-Schema (enum/regex)
+Artefact: prompt.run.schema.json (enum-only + patterns)
+
+6. Model Modul (chei + contracte)
+
+6.1 Chei: id=Mxx, title, slug, legacy_slugs[] (compat 308)
+6.2 Meta & guardrails: difficulty, est_tokens_per_run, min_score, export_policy
+6.3 Contracte: input_schema & output_template (JSON-Schema)
+
+DoD: validare input/output + blocare sub scor; 308 testat
+Artefact: module.spec.schema.json
+
+7. Execuție (pipeline)
+
+Pre-gate: auth→plan→entitlements→flags→rate-limit
+
+Run: core logic (respectă bugetul de tokeni)
+
+Eval: quality/risk/cost/overall + praguri dinamice
+
+Export: policy + manifest & checksum
+
+Persist & expose: artefact + telemetrie
+
+DoD: export permis doar cu overall≥80 & integritate validă
+Artefact: dor_dod.rules.yml, evaluator_config.yaml
+
+8. Telemetrie & KPI
+
+8.1 Evenimente standard (payload canonic)
+8.2 KPIs cross-modul (Open→Run→Success, TTV, SuccessRate, ChecksumOK, SEO)
+8.3 Dashboard MVP (tiles + praguri)
+
+DoD: funnel vizibil; SuccessRate ≥95% pe top-10 la canary
+Artefact: analytics_events.json, kpi_thresholds.json
+
+9. Securitate & Conformitate
+
+Rate-limit & sandbox
+
+PII & audit trail
+
+Gate scor≥80 (DoR/DoD) (export 422 dacă nu)
+
+DoD: 0 exporturi fără manifest/checksum; 0×404 pe pagini modul
+Artefact: security_policy.md
+
+10. UX/SEO/Accesibilitate
+
+Navigație & carduri module
+
+OG/meta, sitemap, 308 legacy → current (fără 404)
+
+A11y + CWV bugete
+
+DoD: Lighthouse SEO ≥90, Perf ≥85; redirect 308 100% ok
+Artefact: ux_acceptance.md
+
+11. Instrucțiuni pe Blocuri (M01–M50) — 1–2 rânduri / modul
+
+Pentru fiecare: scop → input minim → output → KPI → gate
+
+Include link la schema input/output per modul
+
+DoR: fișier modules_registry.json sincron UI/API/SEO
+Artefact: modules_registry.json
+
+12. Matrici de utilizare (When/Why/Who)
+
+Harta problemă → modul → livrabil
+
+Nivel competență (strategist/builder/operator)
+
+Ordine + TTV (48h/7z etc.)
+
+DoD: matrici verificate în e2e; TTV median <300s la canary
+Artefact: use_matrices.md
+
+13. Play-uri complete (scenarii)
+
+„Lansare în 48h”, „Repoziționare 7 zile”, „Criză 24–72h”, „ABM & Sales” — fiecare cu input minim, livrabile, KPI și gates
+
+DoD: exporturi trec policy; telemetrie completă pe play
+Artefact: plays/*.md
+
+14. Testare & Release
+
+Unit (schema/input/output/evaluator/export)
+
+E2E (Open→Run→Export, 308, entitlements, SEO)
+
+Canary & rollback (praguri)
+
+DoD: toate suitele verzi; blocanți: checksum/404/SEO/success<95%
+Artefact: /tests/templates/*, release_checklist.md
+
+15. Mentenanță & Versionare
+
+Semver executabil (major/minor/patch)
+
+Deprecieri & legacy_slugs + 308 (telemetrie from_legacy)
+
+Arhivă & restore (bundle + checksum)
+
+DoD: Legacy Redirect Share ≤5%; 0 erori 404; restore verificat
+Artefact: versioning_policy.md, redirects.json
+
+16. Riscuri & Audit
+
+Top 10 riscuri + Playbook detect→contain→recover→review
+
+Audit lunar/trimestrial/anual + rapoarte PDF
+
+DoD: raport audit livrat, scorecard roșu/galben/verde
+Artefact: risk_register.yaml, audit_report.pdf
+
+Mini-Anexă „Exactă” (copie-lipire)
+
+A. Cap de document (MD):
+
+# Instrucțiunea PROMPTFORGE — 7D + Execuție (vX.Y.Z)
+Scope: MVP operabil (UI/API/DB/licențiere/analytics) cu DoR/DoD executabile.
+KPI minime: SuccessRate≥95% top-10; TTV<300s; SEO≥90; 0 exporturi fără manifest+checksum.
+SSOT: ruleset.yml • module.spec.schema.json • prompt.run.schema.json • evaluator_config.yaml
+
+
+B. Schelet JSON pentru planuri (SSOT):
+
+{
+  "pro": {
+    "export_policy": {
+      "allowed_formats": ["JSON","PDF","ZIP"],
+      "require_manifest": true,
+      "require_checksum": true
+    },
+    "rate_limit": {"run_per_hour": 30, "export_per_hour": 20}
+  }
+}
+
+
+C. Fragment Schema 7D (enum-only):
+
+{
+  "urgency": {"type":"string","enum":["low","planned","sprint","pilot","crisis"]},
+  "output":  {"type":"string","enum":["txt","md","checklist","spec","playbook","json","yaml","diagram","bundle","pdf"]}
+}
+
+
+Cum folosești șablonul (3 pași)
+
+Creezi documentul cu secțiunile 0–16 în ordinea de mai sus.
+
+Atașezi artefactele (fișierele JSON/YAML/MD) ca SSOT; fiecare secțiune are DoR/DoD verificabile.
+
+Rulezi CI: blocant la lipsă manifest/checksum, SEO<90, success<95%, 404>0, scor<80 pe export (exact cum e în mecanica PF).
+
+
+
+
+
+0. Front-matter (exact, executabil)
+0.1 Câmpuri obligatorii (SSOT)
+Cheie	Tip	Reguli	Exemplu/Note
+title	string ≤120c	„Instrucțiunea Specializată PROMPTFORGE — 7D + Execuție”	Unic în repo
+version	semver	MAJOR.MINOR.PATCH	Crește la schimbări; vezi semver în instrucțiune
+doc_id	slug	[a-z0-9-]{3,64}	ex. pf-instructiune-7d-executie
+scope	string ≤300c	Scop măsurabil (MVP operabil, rute, export, analytics)	Aliniat cu 7D/DoR/DoD
+owners	list	DRI + backup (nume/rol/handle)	„Product (A), Eng (R), Ops (R), Legal (C)”
+dates	obj	created, last_review, next_review	„revizuire/90z”
+links.ssot	list	Linkuri către fișierele-lege	ruleset.yml, prompt.run.schema.json, module.spec.schema.json, evaluator_config.yaml
+links.registry	list	modules_registry.json, plans.json	Planuri/entitlements/gating
+7d_support	enum[]	[domain,scale,urgency,complexity,resources,application,output]	7D = contract canonic de rulare
+quality_gates	obj	min_overall_score: 80, export: {manifest:true, checksum:true}	DoR/DoD & export policy
+kpi_targets	obj	success_rate≥0.95, ttv_median<300s, seo≥90, checksum_ok=100%	Pentru acceptanță MVP
+routing	obj	legacy_slugs:[], redirect:308	Compat SEO + telemetrie legacy
+distribution	list	Cine primește documentul la update	Product, Eng, Ops, Legal/Tax
+signoff	list	„approved_by” (roluri)	Product/Eng/Ops/Legal
+0.2 Header MD — model „copy-paste”
+# Instrucțiunea Specializată PROMPTFORGE — 7D + Execuție
+**Versiune:** v1.0.0 · **DocID:** pf-instructiune-7d-executie  
+**Public țintă:** Product · Engineering · Ops · Legal
+
+**Scope (≤300c):** Livrează un MVP operabil (UI/API/DB/licențiere/analytics) pe baza motorului 7D; rulează cu DoR/DoD executabile, gating comercial corect, export cu manifest+checksum și telemetrie unificată (open→run→success). :contentReference[oaicite:10]{index=10} :contentReference[oaicite:11]{index=11}
+
+**SSOT:** `ruleset.yml` · `prompt.run.schema.json` · `module.spec.schema.json` · `evaluator_config.yaml` :contentReference[oaicite:12]{index=12}
+
+0.3 YAML front-matter — model „executabil”
+
+Folosește acest bloc ca antet în fișierul principal .md sau ca front_matter.yml distribuit cu documentul.
+
+title: "Instrucțiunea Specializată PROMPTFORGE — 7D + Execuție"
+version: "1.0.0"
+doc_id: "pf-instructiune-7d-executie"
+owners:
+  dri: ["Head of Product"]
+  backup: ["Eng Lead","Ops Lead","Legal/GRC"]
+dates:
+  created: "2025-09-02"
+  last_review: "2025-09-02"
+  next_review: "2025-12-01"
+scope: >
+  MVP operabil cu 7D (enum-only), rute/API corecte, gating comercial,
+  DoR/DoD active (min_overall_score≥80), export cu manifest+checksum,
+  telemetrie unificată (open→run→success) și SEO/redirect 308 fără 404.
+links:
+  ssot:
+    - ./ruleset.yml
+    - ./schemas/prompt.run.schema.json
+    - ./schemas/module.spec.schema.json
+    - ./evaluator/evaluator_config.yaml
+  registry:
+    - ./registry/modules_registry.json
+    - ./licensing/plans.json
+7d_support: [domain, scale, urgency, complexity, resources, application, output] # :contentReference[oaicite:13]{index=13}
+quality_gates:
+  min_overall_score: 80
+  export_policy:
+    require_manifest: true
+    require_checksum: true
+    gated_formats: ["pdf","json","zip"] # scor≥80 obligatoriu pe aceste formate :contentReference[oaicite:14]{index=14}
+kpi_targets:
+  success_rate: ">=0.95"
+  ttv_median_s: "<300"
+  seo_score: ">=90"
+  checksum_ok_rate: "==100%"
+routing:
+  legacy_slugs: []     # populate din modules_registry.json
+  redirect_code: 308   # obligatoriu; 404=interzis pe pagini module :contentReference[oaicite:15]{index=15}
+distribution:
+  - Product Guild
+  - Engineering Chapter
+  - Ops/SRE On-call
+  - Legal/Tax
+signoff:
+  required: ["Product","Engineering","Ops","Legal"]
+
+0.4 Index JSON — referințe maestre (SSOT)
+{
+  "doc_id": "pf-instructiune-7d-executie",
+  "version": "1.0.0",
+  "ssot": {
+    "ruleset": "./ruleset.yml",
+    "schemas": {
+      "run": "./schemas/prompt.run.schema.json",
+      "module": "./schemas/module.spec.schema.json"
+    },
+    "evaluator": "./evaluator/evaluator_config.yaml"
+  },
+  "contracts": {
+    "7d": ["domain","scale","urgency","complexity","resources","application","output"]
+  },
+  "gates": {
+    "min_overall_score": 80,
+    "export": { "manifest": true, "checksum": true, "gated_formats": ["pdf","json","zip"] }
+  },
+  "kpis": { "success_rate": 0.95, "ttv_median_s": 300, "seo_score": 0.90, "checksum_ok": 1.0 },
+  "routing": { "legacy_slugs": [], "redirect": 308 }
+}
+
+0.5 Checklist DoR/DoD (acceptanță la citirea documentului)
+
+DoR (Definition of Ready)
+
+ links.ssot valide → fișierele există și se parsează fără erori.
+
+ 7D declarat complet (enum-only) în front-matter (7d_support).
+
+ quality_gates.min_overall_score setat (≥80) și export_policy prezent.
+
+ kpi_targets definite (success_rate, ttv_median, seo, checksum_ok).
+
+DoD (Definition of Done)
+
+ Document semnat în signoff.required.
+
+ Build de validare trece: rute 200, 308 corecte, 0×404 pe pagini modul.
+
+ KPI minime atinse pe canary (SuccessRate≥95%, TTV<300s, SEO≥90, ChecksumOK=100%).
+
+0.6 Secțiune „Context 7D” (1 paragraf instituțional)
+
+7D este motorul semantic și operațional care standardizează fiecare rulare: Domain, Scale, Urgency, Complexity, Resources, Application, Output — valori enum-only validate de schema JSON, folosite ca DoR, iar la ieșire calitatea/trasabilitatea sunt verificate prin DoD (scor ≥80, export cu manifest+checksum).
+
+0.7 PR-Template (asigură că „punctul 0” e complet la fiecare modificare)
+### PR: Update Front-matter
+- [ ] `version` semver actualizat
+- [ ] `next_review` setat (+90z)
+- [ ] SSOT linkuri verificate (`ruleset.yml`/`schemas`/`evaluator`)
+- [ ] 7D = [domain,scale,urgency,complexity,resources,application,output] în front-matter
+- [ ] Gates: min_overall_score≥80, export→manifest+checksum (gated_formats=pdf/json/zip)
+- [ ] KPI ținte: success_rate≥95%, ttv<300s, seo≥90, checksum_ok=100%
+- [ ] Redirect 308: legacy_slugs actualizat/0×404
+- [ ] Sign-off: Product · Eng · Ops · Legal
+
+0.8 Observații de operare
+
+Ține „punctul 0” scurt și strict executabil. Tot ce e explicație merge în secțiunile 1–16.
+
+Nu publica documentul fără links.ssot. Fără SSOT = fără standard.
+
+Păstrează 7D ca enum-only. Evită text liber la parametri (previne drift și cost de tokens).
+
+
+
+
+
+

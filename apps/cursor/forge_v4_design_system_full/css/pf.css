@@ -1,0 +1,15 @@
+:root{
+  --bg:#05010A; --text:#F5F7FA; --textMuted:#C9CDD4;
+  --brand:#00FF7F; --accent:#FF2F2F; --gold:#CDA434;
+  --surface:#0B0712; --surfaceAlt:#100A18; --border:#2A2036;
+  --focus:#7FFFD4; --shadow-glow:0 0 0 2px rgba(0,255,127,.2),0 0 24px rgba(0,255,127,.35);
+  --r-xs:4px; --r-sm:6px; --r-md:10px; --r-lg:14px; --r-xl:20px; --r-pill:999px;
+  --sp-xs:4px; --sp-sm:8px; --sp-md:12px; --sp-lg:16px; --sp-xl:24px; --sp-2xl:32px; --sp-3xl:48px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:Space Grotesk, ui-sans-serif;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);}
+.badge{border:1px solid var(--border);border-radius:var(--r-pill);padding:.25rem .6rem}
+.btn{padding:.65rem 1rem;border-radius:var(--r-md);border:1px solid var(--border);background:var(--surfaceAlt)}
+.btn--primary{background:var(--brand);color:#0C0C0C}
+.btn--ghost{background:transparent}
+.focusable:focus{outline:2px solid var(--focus);outline-offset:2px}
